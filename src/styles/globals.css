@@ -20,7 +20,6 @@ a {
     color-scheme: dark;
   }
   body {
-    color: white;
-    background: black;
+    background: rgb(16, 14, 20);
   }
 }

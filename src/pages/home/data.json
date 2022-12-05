@@ -1,0 +1,92 @@
+[
+  {
+    "fileName": "ethereum.png",
+    "width": "600px",
+    "height": "600px",
+    "leftOffset": "142px",
+    "topOffset": "-370px",
+    "yDist": "24px",
+    "duration": 6
+  },
+  {
+    "fileName": "aave.png",
+    "width": "500px",
+    "height": "500px",
+    "leftOffset": "160px",
+    "topOffset": "-80px",
+    "yDist": "24px",
+    "duration": 6
+  },
+  {
+    "fileName": "tether.png",
+    "width": "150px",
+    "height": "150px",
+    "leftOffset": "100px",
+    "topOffset": "180px",
+    "yDist": "12px",
+    "duration": 3
+  },
+  {
+    "fileName": "0x.png",
+    "width": "320px",
+    "height": "280px",
+    "leftOffset": "-260px",
+    "topOffset": "120px",
+    "yDist": "24px",
+    "duration": 6
+  },
+  {
+    "fileName": "maker.png",
+    "width": "200px",
+    "height": "200px",
+    "leftOffset": "-340px",
+    "topOffset": "120px",
+    "yDist": "12px",
+    "duration": 3
+  },
+  {
+    "fileName": "avalanche.png",
+    "width": "280px",
+    "height": "280px",
+    "leftOffset": "-740px",
+    "topOffset": "70px",
+    "yDist": "12px",
+    "duration": 3
+  },
+  {
+    "fileName": "polygon.png",
+    "width": "600px",
+    "height": "600px",
+    "leftOffset": "-790px",
+    "topOffset": "-220px",
+    "yDist": "24px",
+    "duration": 6
+  },
+  {
+    "fileName": "uniswap.png",
+    "width": "500px",
+    "height": "500px",
+    "leftOffset": "-710px",
+    "topOffset": "-480px",
+    "yDist": "24px",
+    "duration": 6
+  },
+  {
+    "fileName": "yearn.png",
+    "width": "200px",
+    "height": "200px",
+    "leftOffset": "-280px",
+    "topOffset": "-370px",
+    "yDist": "12px",
+    "duration": 3
+  },
+  {
+    "fileName": "chainlink.png",
+    "width": "300px",
+    "height": "300px",
+    "leftOffset": "0px",
+    "topOffset": "-390px",
+    "yDist": "24px",
+    "duration": 6
+  }
+]

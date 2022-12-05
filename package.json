@@ -3,20 +3,46 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -p 3001",
+    "lint": "next lint",
+    "compile": "graphql-codegen",
+    "watch": "graphql-codegen -w"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.1",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fontsource/noto-sans": "^4.5.11",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.10.16",
+    "@mui/material": "^5.10.16",
+    "@mui/styled-engine-sc": "^5.10.16",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
+    "ethers": "^5.7.2",
+    "framer-motion": "^7.6.18",
+    "graphql": "^16.6.0",
     "next": "13.0.5",
+    "next-transpile-modules": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "4.9.3"
+    "recoil": "^0.7.6",
+    "sharp": "^0.31.2",
+    "styled-components": "^5.3.6",
+    "typescript": "^4.9.3",
+    "wagmi": "^0.8.9"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.14.1",
+    "@graphql-codegen/client-preset": "^1.2.0",
+    "eslint-plugin-next": "^0.0.0",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "2.8.0"
   }
 }
