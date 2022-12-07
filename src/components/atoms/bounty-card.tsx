@@ -1,7 +1,21 @@
 import { Box, Card, CardContent } from "@mui/material";
-import { PropsWithChildren, ReactElement } from "react";
+import {
+  PropsWithChildren,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const BountyCard = (props: PropsWithChildren) => {
+  const cardRef = useRef<HTMLInputElement>(null);
+  const [cardWidth, setCardWidth] = useState(0);
+
+  useEffect(() => {
+    if (cardRef && cardRef?.current)
+      setCardWidth(cardRef?.current?.clientWidth);
+  }, []);
+
   return (
     <>
       <Box
@@ -17,13 +31,15 @@ const BountyCard = (props: PropsWithChildren) => {
               transitionProperty: "box-shadow",
             },
           },
+          flex: 1,
+          // ...props.style
         }}
       >
         <Card
           className={"bountyCard"}
           variant="outlined"
           sx={{
-            minWidth: 580,
+            width: cardWidth,
             position: "absolute",
             marginTop: "-4px",
             marginLeft: "-4px",
@@ -31,11 +47,7 @@ const BountyCard = (props: PropsWithChildren) => {
         >
           <CardContent>{props.children}</CardContent>
         </Card>
-        <Card
-          className={"bountyCard"}
-          variant="outlined"
-          sx={{ minWidth: 580 }}
-        >
+        <Card className={"bountyCard"} variant="outlined" ref={cardRef}>
           <CardContent>{props.children}</CardContent>
         </Card>
       </Box>

@@ -1,29 +1,23 @@
 import { Button, ButtonProps } from "@mui/material";
-import { keyframes, css } from "@emotion/react";
-
-const scaleDown = keyframes`
-  from, to {
-    transform: scale(1);
-  }
-`;
-
-const scaleUp = keyframes`
-  from, to {
-    transform: scale(1.01);
-  }
-`;
 
 const SecondaryButton = (props: ButtonProps) => {
   return (
     <Button
       {...props}
       color={"secondary"}
-      // sx={{
-      //   // animation: `${scaleDown} 0.5s ease`,
-      //   "&:hover": {
-      //     // animation: `${scaleUp} 0.5s ease`,
-      //   },
-      // }}
+      sx={{
+        borderColor: "#ffff00",
+        boxShadow: "0 0 0 1px #ffff00",
+        "&:hover": {
+          transition: "box-shadow 0.1s ease-out 0s",
+          boxShadow: "0 0 0 3px #ffff00",
+          borderColor: "#ffff00",
+          transitionDuration: "0.1s",
+          transitionDelay: "0s",
+          transitionTimingFunction: "ease-out",
+          transitionProperty: "box-shadow",
+        },
+      }}
     >
       {props.children}
     </Button>

@@ -322,7 +322,7 @@ const baseThemeOptions: ThemeOptions = {
     },
     h6: {
       fontWeight: 300,
-      fontSize: "1.1rem",
+      fontSize: "1.25rem",
       lineHeight: 1.375,
       letterSpacing: hLetterSpacing,
     },
