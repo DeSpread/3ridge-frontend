@@ -31,7 +31,7 @@ const NavbarButtonSet = ({
         onClick={bountiesBtnOnClick}
         icon={<BoltIcon sx={{ color: "yellow" }}></BoltIcon>}
       >
-        Bounties
+        Events
       </NavbarButton>
       <NavbarButton
         onClick={contentsBtnOnClick}
