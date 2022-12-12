@@ -2,12 +2,20 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
-
+Build your scheme of graphql to use query if it requires updating.
+Compile target file is codegen.ts.
+Before compile, Check scheme url of codegen.ts.
 ```bash
-npm run dev
-# or
-yarn dev
+yarn run compile
 ```
 
-### apollo client using for typescript 
+For running the development server:
+```bash
+yarn run dev
+```
+
+### Production
+
+```bash
+yarn run build
+```

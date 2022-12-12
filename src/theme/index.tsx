@@ -6,8 +6,6 @@ import { baseThemeOptions } from "./base-theme-options";
 import { darkThemeOptions } from "./dark-theme-options";
 
 export const createTheme = () => {
-  const theme = responsiveFontSizes(
-    createMuiTheme(baseThemeOptions, darkThemeOptions)
-  );
+  const theme = createMuiTheme(baseThemeOptions, darkThemeOptions);
   return theme;
 };

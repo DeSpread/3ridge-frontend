@@ -11,7 +11,7 @@ const neutral = {
   500: "#787687",
   600: "#646176",
   700: "#35333a",
-  800: "#232129",
+  800: "#292630",
   900: "#100e14",
 };
 
@@ -92,7 +92,7 @@ export const darkThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           "&.MuiChip-filledDefault": {
-            backgroundColor: neutral[700],
+            backgroundColor: neutral[800],
             "& .MuiChip-deleteIcon": {
               color: neutral[500],
             },
@@ -180,6 +180,23 @@ export const darkThemeOptions: ThemeOptions = {
           },
         },
       },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          "&.Mui-selected": {
+            color: "#00ffff",
+          },
+        },
+      },
+    },
+  },
+  typography: {
+    body1: {
+      color: neutral["400"],
+    },
+    body2: {
+      color: neutral["400"],
     },
   },
   palette: {

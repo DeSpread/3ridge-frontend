@@ -21,5 +21,7 @@ a {
   }
   body {
     background: rgb(16, 14, 20);
+    overflow: hidden scroll;
+    overscroll-behavior-y: none;
   }
 }

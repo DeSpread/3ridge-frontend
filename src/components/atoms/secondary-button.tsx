@@ -5,6 +5,7 @@ const SecondaryButton = (props: ButtonProps) => {
     <Button
       {...props}
       color={"secondary"}
+      variant={"contained"}
       sx={{
         borderColor: "#ffff00",
         boxShadow: "0 0 0 1px #ffff00",

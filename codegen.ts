@@ -1,7 +1,7 @@
 import { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-  schema: "https://flyby-gateway.herokuapp.com/",
+  schema: "http://api.playground.despread.io:3000/graphql",
   documents: ["src/**/*.tsx"],
   generates: {
     "./src/__generated__/": {

@@ -6,7 +6,7 @@ import NavbarAvatar from "../atoms/navbar-avatar";
 import ConnectButton from "../atoms/connect-button";
 import { useAccount } from "wagmi";
 import { ReactNode } from "react";
-import HomeFooter from "./footer/home-footer";
+import { useRouter } from "next/router";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -15,6 +15,7 @@ type MainLayoutProps = PropsWithChildren & {
 
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
+  const router = useRouter();
   const { address } = useAccount();
   return (
     <Box sx={{ display: "flex" }}>
@@ -45,10 +46,17 @@ const MainLayout = (props: MainLayoutProps) => {
               style={{
                 cursor: "pointer",
               }}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push("/").then();
+              }}
             ></img>
             <Stack direction={"row"} alignItems={"center"} spacing={1}>
               <NavbarButtonSet
-                bountiesBtnOnClick={() => {}}
+                bountiesBtnOnClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/bounties`).then();
+                }}
                 contentsBtnOnClick={() => {}}
                 achievementsBtnOnClick={() => {}}
                 communitiesBtnOnClick={() => {}}
@@ -64,7 +72,7 @@ const MainLayout = (props: MainLayoutProps) => {
         </Box>
       </AppBar>
 
-      <Box sx={{ flex: 1, background: "" }}>
+      <Box sx={{ flex: 1, background: theme.palette.background.default }}>
         {props.backgroundComponent}
         <Toolbar></Toolbar>
         <main>{props.children}</main>
