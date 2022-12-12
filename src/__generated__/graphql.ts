@@ -14,82 +14,159 @@ export type Scalars = {
   Float: number;
 };
 
-export type Location = {
-  __typename?: 'Location';
-  /** A short description about the location */
-  description: Scalars['String'];
-  id: Scalars['ID'];
-  /** The name of the location */
-  name: Scalars['String'];
-  /** The calculated overall rating based on all reviews */
-  overallRating?: Maybe<Scalars['Float']>;
-  /** The location's main photo as a URL */
-  photo: Scalars['String'];
-  /** All submitted reviews about this location */
-  reviewsForLocation: Array<Maybe<Review>>;
-};
-
-export type LocationReviewInput = {
-  /** Written text */
-  comment: Scalars['String'];
-  /** Location Id */
-  locationId: Scalars['String'];
-  /** A number from 1 - 5 with 1 being lowest and 5 being highest */
-  rating: Scalars['Int'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
-  submitReview?: Maybe<SubmitReviewResponse>;
+  createProject: Project;
+  createTicket: Ticket;
+  createUser: User;
+  removeProject: Project;
+  removeTicketById: Ticket;
+  removeUserByUsername: User;
+  updateTicketById: Ticket;
+  updateUserByUsername: User;
 };
 
 
-export type MutationSubmitReviewArgs = {
-  locationReview: LocationReviewInput;
+export type MutationCreateProjectArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  logoUrl?: InputMaybe<Scalars['String']>;
+  managerList?: InputMaybe<Array<UserInput>>;
+  name?: InputMaybe<Scalars['String']>;
+  projectUrl?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateTicketArgs = {
+  event?: InputMaybe<Scalars['String']>;
+  participant: Scalars['String'];
+};
+
+
+export type MutationCreateUserArgs = {
+  address?: InputMaybe<Scalars['String']>;
+  discordId?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  managedProjects?: InputMaybe<Array<ProjectInput>>;
+  participatedProjects?: InputMaybe<Array<ProjectInput>>;
+  role?: InputMaybe<Scalars['String']>;
+  twitterId?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRemoveProjectArgs = {
+  projectId: Scalars['String'];
+};
+
+
+export type MutationRemoveTicketByIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationRemoveUserByUsernameArgs = {
+  username: Scalars['String'];
+};
+
+
+export type MutationUpdateTicketByIdArgs = {
+  event?: InputMaybe<Scalars['String']>;
+  participant: Scalars['String'];
+};
+
+
+export type MutationUpdateUserByUsernameArgs = {
+  address?: InputMaybe<Scalars['String']>;
+  discordId?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  managedProjects?: InputMaybe<Array<ProjectInput>>;
+  participatedProjects?: InputMaybe<Array<ProjectInput>>;
+  role?: InputMaybe<Scalars['String']>;
+  twitterId?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
+};
+
+export type Project = {
+  __typename?: 'Project';
+  description?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
+  managedUsers?: Maybe<Array<User>>;
+  name: Scalars['String'];
+  projectUrl?: Maybe<Scalars['String']>;
+};
+
+export type ProjectInput = {
+  description?: InputMaybe<Scalars['String']>;
+  logoUrl?: InputMaybe<Scalars['String']>;
+  managerList?: InputMaybe<Array<UserInput>>;
+  name?: InputMaybe<Scalars['String']>;
+  projectUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  /** The three latest reviews submitted for FlyBy's locations */
-  latestReviews: Array<Review>;
-  /** The details of a specific location */
-  location?: Maybe<Location>;
-  /** The full list of locations presented by the Interplanetary Space Tourism department */
-  locations: Array<Location>;
+  project: Array<Project>;
+  projects: Array<Project>;
+  ticketById: Ticket;
+  ticketByParticipant: Ticket;
+  tickets: Array<Ticket>;
+  userByUsername: User;
+  users: Array<User>;
 };
 
 
-export type QueryLocationArgs = {
-  id: Scalars['ID'];
+export type QueryProjectArgs = {
+  projectName: Scalars['String'];
 };
 
-export type Review = {
-  __typename?: 'Review';
-  /** Written text */
-  comment?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  /** The location the review is about */
-  location?: Maybe<Location>;
-  /** A number from 1 - 5 with 1 being lowest and 5 being highest */
-  rating?: Maybe<Scalars['Int']>;
+
+export type QueryTicketByIdArgs = {
+  id: Scalars['String'];
 };
 
-export type SubmitReviewResponse = {
-  __typename?: 'SubmitReviewResponse';
-  /** Similar to HTTP status code, represents the status of the mutation */
-  code: Scalars['Int'];
-  /** Newly created review */
-  locationReview?: Maybe<Review>;
-  /** Human-readable message for the UI */
-  message: Scalars['String'];
-  /** Indicates whether the mutation was successful */
-  success: Scalars['Boolean'];
+
+export type QueryTicketByParticipantArgs = {
+  username: Scalars['String'];
 };
 
-export type LocationQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+export type QueryUserByUsernameArgs = {
+  username: Scalars['String'];
+};
+
+export type Ticket = {
+  __typename?: 'Ticket';
+  event?: Maybe<Scalars['String']>;
+  participatedUser: User;
+};
+
+export type User = {
+  __typename?: 'User';
+  address?: Maybe<Scalars['String']>;
+  discordId?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  managedProjects?: Maybe<Array<Project>>;
+  participatedProjects?: Maybe<Array<Project>>;
+  role?: Maybe<Scalars['String']>;
+  twitterId?: Maybe<Scalars['String']>;
+  username: Scalars['String'];
+};
+
+export type UserInput = {
+  address?: InputMaybe<Scalars['String']>;
+  discordId?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  managedProjects?: InputMaybe<Array<ProjectInput>>;
+  participatedProjects?: InputMaybe<Array<ProjectInput>>;
+  role?: InputMaybe<Scalars['String']>;
+  twitterId?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
+};
+
+export type GetUsersQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LocationQueryQuery = { __typename?: 'Query', locations: Array<{ __typename?: 'Location', id: string }> };
+export type GetUsersQueryQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', username: string }> };
 
 
-export const LocationQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LocationQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"locations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<LocationQueryQuery, LocationQueryQueryVariables>;
+export const GetUsersQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUsersQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]} as unknown as DocumentNode<GetUsersQueryQuery, GetUsersQueryQueryVariables>;

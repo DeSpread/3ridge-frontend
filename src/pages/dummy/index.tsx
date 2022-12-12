@@ -1,14 +1,12 @@
 import { useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_ROCKET_INVENTORY } from "../../apollo/queries";
 
 export async function getStaticProps() {
   return { props: {} };
 }
 
 const Dummy = () => {
-  const { loading, data } = useQuery(GET_ROCKET_INVENTORY);
-  useEffect(() => {}, []);
+  // const { loading, data } = useQuery(GET_ROCKET_INVENTORY);
   return (
     <div>
       {/*<h3>Available Inventory</h3>*/}
