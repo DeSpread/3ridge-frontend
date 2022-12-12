@@ -82,9 +82,7 @@ const Bounties = (props: AppProps) => {
   const { loading, data } = useQuery(GET_USERS);
   const [value, setValue] = useState("1");
 
-  useEffect(() => {
-    console.log(data);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -134,52 +132,100 @@ const Bounties = (props: AppProps) => {
                   </Box>
                   <TabPanel value={"1"}>
                     <Box>
-                      <Grid
-                        container
-                        sx={{ flex: 1 }}
-                        columnSpacing={2}
-                        rowSpacing={1}
-                      >
-                        <Grid item sm={12} md={12} lg={6}>
-                          <EventSingleCard
-                            sx={{ margin: 1 }}
-                            title={"aaa"}
-                            summary={"bbb"}
-                          ></EventSingleCard>
+                      {loading && (
+                        <Grid
+                          container
+                          sx={{ flex: 1 }}
+                          columnSpacing={2}
+                          rowSpacing={1}
+                        >
+                          <Grid item sm={12} md={12} lg={6}>
+                            <Skeleton
+                              width={"552px"}
+                              height={"186px"}
+                              variant={"rounded"}
+                              animation={"wave"}
+                            />
+                          </Grid>
+                          <Grid item sm={12} md={12} lg={6}>
+                            <Skeleton
+                              width={"552px"}
+                              height={"186px"}
+                              variant={"rounded"}
+                              animation={"wave"}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item sm={12} md={12} lg={6}>
-                          <EventSingleCard
-                            sx={{ margin: 1 }}
-                            title={"aaa"}
-                            summary={"bbb"}
-                          ></EventSingleCard>
+                      )}
+                      {data && (
+                        <Grid
+                          container
+                          sx={{ flex: 1 }}
+                          columnSpacing={2}
+                          rowSpacing={1}
+                        >
+                          {data?.users?.map((x, index) => {
+                            return (
+                              <Grid key={index} item sm={12} md={12} lg={6}>
+                                <EventSingleCard
+                                  sx={{ margin: 1 }}
+                                  title={x.username}
+                                  summary={"summary"}
+                                ></EventSingleCard>
+                              </Grid>
+                            );
+                          })}
                         </Grid>
-                      </Grid>
+                      )}
                     </Box>
                   </TabPanel>
                   <TabPanel value={"2"}>
                     <Box>
-                      <Grid
-                        container
-                        sx={{ flex: 1 }}
-                        columnSpacing={2}
-                        rowSpacing={1}
-                      >
-                        <Grid item sm={12} md={12} lg={6}>
-                          <EventSingleCard
-                            sx={{ margin: 1 }}
-                            title={"aaa"}
-                            summary={"bbb"}
-                          ></EventSingleCard>
+                      {loading && (
+                        <Grid
+                          container
+                          sx={{ flex: 1 }}
+                          columnSpacing={2}
+                          rowSpacing={1}
+                        >
+                          <Grid item sm={12} md={12} lg={6}>
+                            <Skeleton
+                              width={"552px"}
+                              height={"186px"}
+                              variant={"rounded"}
+                              animation={"wave"}
+                            />
+                          </Grid>
+                          <Grid item sm={12} md={12} lg={6}>
+                            <Skeleton
+                              width={"552px"}
+                              height={"186px"}
+                              variant={"rounded"}
+                              animation={"wave"}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item sm={12} md={12} lg={6}>
-                          <EventSingleCard
-                            sx={{ margin: 1 }}
-                            title={"aaa"}
-                            summary={"bbb"}
-                          ></EventSingleCard>
+                      )}
+                      {data && (
+                        <Grid
+                          container
+                          sx={{ flex: 1 }}
+                          columnSpacing={2}
+                          rowSpacing={1}
+                        >
+                          {data?.users?.map((x, index) => {
+                            return (
+                              <Grid key={index} item sm={12} md={12} lg={6}>
+                                <EventSingleCard
+                                  sx={{ margin: 1 }}
+                                  title={x.username}
+                                  summary={"summary"}
+                                ></EventSingleCard>
+                              </Grid>
+                            );
+                          })}
                         </Grid>
-                      </Grid>
+                      )}
                     </Box>
                   </TabPanel>
                 </TabContext>
