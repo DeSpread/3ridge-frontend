@@ -7,6 +7,7 @@ import ConnectButton from "../atoms/connect-button";
 import { useAccount } from "wagmi";
 import { ReactNode } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;

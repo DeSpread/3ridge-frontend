@@ -77,7 +77,7 @@ export async function getStaticProps() {
   return { props: {} };
 }
 
-const Bounties = (props: AppProps) => {
+const Events = (props: AppProps) => {
   const theme = useTheme();
   const { loading, data } = useQuery(GET_USERS);
   const [value, setValue] = useState("1");
@@ -238,8 +238,8 @@ const Bounties = (props: AppProps) => {
   );
 };
 
-Bounties.getLayout = (page: ReactElement | ReactElement[]) => (
+Events.getLayout = (page: ReactElement | ReactElement[]) => (
   <MainLayout>{page}</MainLayout>
 );
 
-export default Bounties;
+export default Events;
