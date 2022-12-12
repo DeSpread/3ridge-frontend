@@ -7,12 +7,12 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        {process.env.NODE_ENV === "production" && (
-          <meta
-            http-equiv="Content-Security-Policy"
-            content="upgrade-insecure-requests;"
-          />
-        )}
+        {/*{process.env.NODE_ENV === "production" && (*/}
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="upgrade-insecure-requests;"
+        />
+        {/*)}*/}
       </Head>
       <body>
         <Main />
