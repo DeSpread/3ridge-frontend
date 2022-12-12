@@ -1,7 +1,7 @@
 import { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-  schema: "http://api.playground.despread.io:3000/graphql",
+  schema: "https://api.playground.despread.io/graphql",
   documents: ["src/**/*.tsx"],
   generates: {
     "./src/__generated__/": {
