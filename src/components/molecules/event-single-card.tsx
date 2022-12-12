@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { CSSProperties, PropsWithChildren } from "react";
 import CommunityChip from "../atoms/community-chip";
-import XpChip from "../atoms/xp-chip";
+import XpChip from "../atoms/styled/xp-chip";
 
 type BountySingleCardProps = PropsWithChildren & {
   sx?: CSSProperties;

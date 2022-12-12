@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import CommunityChip from "../atoms/community-chip";
-import EventLinearProgress from "../atoms/event-linear-progress";
+import EventLinearProgress from "../atoms/styled/event-linear-progress";
 
 type BountyCollectionCardProps = PropsWithChildren & {
   sx?: CSSProperties;

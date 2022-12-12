@@ -7,12 +7,10 @@ import { Chip, Stack, Typography, Skeleton, Grid, Box } from "@mui/material";
 import BoltIcon from "@mui/icons-material/Bolt";
 import { useQuery } from "@apollo/client";
 import { gql } from "../../../src/__generated__/gql";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import Tab from "@mui/material/Tab";
+import StyledTabs from "../../components/atoms/styled/styled-tabs";
+import StyledTab from "../../components/atoms/styled/styled-tab";
 import EventSingleCard from "../../components/molecules/event-single-card";
-import StyledTabs from "../../components/atoms/styled-tabs";
+import { TabContext, TabPanel } from "@mui/lab";
 
 const GET_USERS = gql(/* GraphQL */ `
   query GetUsersQuery {
@@ -82,7 +80,7 @@ export async function getStaticProps() {
 const Bounties = (props: AppProps) => {
   const theme = useTheme();
   const { loading, data } = useQuery(GET_USERS);
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState("1");
 
   useEffect(() => {
     console.log(data);
@@ -112,17 +110,79 @@ const Bounties = (props: AppProps) => {
           </Stack>
           <Stack direction={"column"} alignItems={"center"}>
             <Box sx={{ maxWidth: "1200px", padding: "24px" }}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <StyledTabs
-                  value={value}
-                  onChange={(event: SyntheticEvent, newValue: number) => {
-                    setValue(newValue);
-                  }}
-                  aria-label="lab API tabs example"
-                >
-                  <Tab label="Item One"></Tab>
-                  <Tab label="Item Two"></Tab>
-                </StyledTabs>
+              <Box sx={{}}>
+                <TabContext value={value}>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      borderBottom: 1,
+                      borderColor: "divider",
+                      background: "",
+                    }}
+                  >
+                    <StyledTabs
+                      centered
+                      value={value}
+                      onChange={(event: SyntheticEvent, newValue: string) => {
+                        setValue(newValue);
+                      }}
+                      aria-label="lab API tabs example"
+                    >
+                      <StyledTab label="Available" value={"1"}></StyledTab>
+                      <StyledTab label="Missed" value={"2"}></StyledTab>
+                    </StyledTabs>
+                  </Box>
+                  <TabPanel value={"1"}>
+                    <Box>
+                      <Grid
+                        container
+                        sx={{ flex: 1 }}
+                        columnSpacing={2}
+                        rowSpacing={1}
+                      >
+                        <Grid item sm={12} md={12} lg={6}>
+                          <EventSingleCard
+                            sx={{ margin: 1 }}
+                            title={"aaa"}
+                            summary={"bbb"}
+                          ></EventSingleCard>
+                        </Grid>
+                        <Grid item sm={12} md={12} lg={6}>
+                          <EventSingleCard
+                            sx={{ margin: 1 }}
+                            title={"aaa"}
+                            summary={"bbb"}
+                          ></EventSingleCard>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </TabPanel>
+                  <TabPanel value={"2"}>
+                    <Box>
+                      <Grid
+                        container
+                        sx={{ flex: 1 }}
+                        columnSpacing={2}
+                        rowSpacing={1}
+                      >
+                        <Grid item sm={12} md={12} lg={6}>
+                          <EventSingleCard
+                            sx={{ margin: 1 }}
+                            title={"aaa"}
+                            summary={"bbb"}
+                          ></EventSingleCard>
+                        </Grid>
+                        <Grid item sm={12} md={12} lg={6}>
+                          <EventSingleCard
+                            sx={{ margin: 1 }}
+                            title={"aaa"}
+                            summary={"bbb"}
+                          ></EventSingleCard>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </TabPanel>
+                </TabContext>
               </Box>
             </Box>
           </Stack>
