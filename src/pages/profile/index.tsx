@@ -11,6 +11,9 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import EthIcon from "../../components/atoms/icon/eth-icon";
 import KakaoIcon from "../../components/atoms/icon/kakao-icon";
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
+import {useAccount} from "wagmi";
+import StringHelper from "../../helper/string-helper";
+import GradientTypography from "../../components/atoms/gradient-typography";
 
 const BorderLinearProgress = styled(LinearProgress)(({theme}) => ({
   height: 10,
@@ -25,6 +28,7 @@ const BorderLinearProgress = styled(LinearProgress)(({theme}) => ({
 }));
 
 const Profile = (props: AppProps) => {
+  const { address } = useAccount();
   useEffect(() => {
   }, []);
 
@@ -75,7 +79,11 @@ const Profile = (props: AppProps) => {
               pt={5}
               spacing={4}>
             <Typography variant="h4">
-              0x6e2B...4f05
+              {
+                StringHelper.getInstance().getMidEllipsisString(
+                    `${address}`
+                )
+              }
             </Typography>
             <Stack
                 direction={"row"}
@@ -85,20 +93,20 @@ const Profile = (props: AppProps) => {
             >
               <Chip
                   icon={<EthIcon/>}
-                  label={"0x6e2B...4f05"}
-              ></Chip>
-              <Chip
-                  icon={<TwitterIcon/>}
-                  label={"Twitter"}
-              ></Chip>
-              <Chip
-                  icon={<KakaoIcon/>}
-                  label={"Kakao"}
+                  label={StringHelper.getInstance().getMidEllipsisString(`${address}`)}
               ></Chip>
               <Chip
                   icon={<MarkEmailReadIcon/>}
                   label={"test@gmail.com"}
               ></Chip>
+              {/*<Chip*/}
+              {/*    icon={<TwitterIcon/>}*/}
+              {/*    label={"Twitter"}*/}
+              {/*></Chip>*/}
+              {/*<Chip*/}
+              {/*    icon={<KakaoIcon/>}*/}
+              {/*    label={"Kakao"}*/}
+              {/*></Chip>*/}
             </Stack>
           </Stack>
           <Stack
@@ -107,8 +115,8 @@ const Profile = (props: AppProps) => {
               sx={{flex: 1, background: ""}}
               pt={5}
               spacing={4}>
-            <ProfileTab headerTitle={"Achievements"}/>
-            <ProfileTab headerTitle={"Quest Achievements"}/>
+            <ProfileTab headerTitle={"Participated Events"}/>
+            {/*<ProfileTab headerTitle={""}/>*/}
           </Stack>
         </Box>
       </>

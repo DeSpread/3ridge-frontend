@@ -19,7 +19,7 @@ import StringHelper from "../../helper/string-helper";
 import GradientTypography from "./gradient-typography";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
-import { useDisconnect } from "wagmi";
+import {useAccount, useDisconnect} from "wagmi";
 
 type StyledMenuProps = PropsWithChildren & {
   open: boolean;
@@ -78,6 +78,7 @@ const NavbarAvatar = ({ src, onProfileItemClick }: NavBarAvatarProps) => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element>();
   const { disconnect } = useDisconnect();
+  const { address } = useAccount();
 
   return (
     <Box
@@ -114,9 +115,11 @@ const NavbarAvatar = ({ src, onProfileItemClick }: NavBarAvatarProps) => {
             <Avatar sx={{ width: 32, height: 32 }} src={src}></Avatar>
             <Stack direction={"column"}>
               <GradientTypography>
-                {StringHelper.getInstance().getMidEllipsisString(
-                  "0xe0d16C071F4eC9f1e3CB7C29b5D2e70c1AD9568d"
-                )}
+                {
+                  StringHelper.getInstance().getMidEllipsisString(
+                      `${address}`
+                  )
+                }
               </GradientTypography>
               <Stack direction={"row"} alignItems={"center"} spacing={1}>
                 <Typography variant={"caption"}>LEVEL 1</Typography>
