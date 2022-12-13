@@ -33,29 +33,29 @@ const NavbarButtonSet = ({
       >
         Events
       </NavbarButton>
-      <NavbarButton
-        onClick={contentsBtnOnClick}
-        icon={
-          <LocalFireDepartmentIcon
-            sx={{ color: "#ff900b" }}
-          ></LocalFireDepartmentIcon>
-        }
-      >
-        Contents
-      </NavbarButton>
-      <NavbarButton
-        onClick={achievementsBtnOnClick}
-        icon={<EmojiEventsIcon sx={{ color: "#ffd15c" }}></EmojiEventsIcon>}
-      >
-        Achievements
-      </NavbarButton>
+      {/*<NavbarButton*/}
+      {/*  onClick={contentsBtnOnClick}*/}
+      {/*  icon={*/}
+      {/*    <LocalFireDepartmentIcon*/}
+      {/*      sx={{ color: "#ff900b" }}*/}
+      {/*    ></LocalFireDepartmentIcon>*/}
+      {/*  }*/}
+      {/*>*/}
+      {/*  Contents*/}
+      {/*</NavbarButton>*/}
+      {/*<NavbarButton*/}
+      {/*  onClick={achievementsBtnOnClick}*/}
+      {/*  icon={<EmojiEventsIcon sx={{ color: "#ffd15c" }}></EmojiEventsIcon>}*/}
+      {/*>*/}
+      {/*  Achievements*/}
+      {/*</NavbarButton>*/}
       <NavbarButton
         onClick={communitiesBtnOnClick}
         icon={
           <WindowIcon sx={{ color: theme.palette.primary.main }}></WindowIcon>
         }
       >
-        Communities
+        Projects
       </NavbarButton>
       <NavbarButton
         onClick={leaderBoardBtnOnClick}

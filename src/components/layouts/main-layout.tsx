@@ -56,7 +56,7 @@ const MainLayout = (props: MainLayoutProps) => {
               <NavbarButtonSet
                 bountiesBtnOnClick={(e) => {
                   e.preventDefault();
-                  router.push(`/bounties`).then();
+                  router.push(`/events`).then();
                 }}
                 contentsBtnOnClick={() => {}}
                 achievementsBtnOnClick={() => {}}
@@ -64,7 +64,10 @@ const MainLayout = (props: MainLayoutProps) => {
                 leaderBoardBtnOnClick={() => {}}
               ></NavbarButtonSet>
               {address ? (
-                <NavbarAvatar></NavbarAvatar>
+                <NavbarAvatar onProfileItemClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/profile`).then();
+                }}></NavbarAvatar>
               ) : (
                 <ConnectButton size={"small"} variant={"outlined"} />
               )}
