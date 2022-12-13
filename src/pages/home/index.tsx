@@ -89,7 +89,7 @@ const Home = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>Staking</title>
+        <title>Sakura</title>
       </Head>
       <Stack
         direction={"column"}

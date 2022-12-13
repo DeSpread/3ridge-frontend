@@ -1,16 +1,15 @@
-import { ReactElement, useEffect, useState, SyntheticEvent } from "react";
+import {ReactElement, SyntheticEvent, useEffect, useState} from "react";
 import MainLayout from "../../components/layouts/main-layout";
-import { AppProps } from "next/app";
-import { useTheme } from "@mui/material/styles";
+import {AppProps} from "next/app";
+import {useTheme} from "@mui/material/styles";
 import Head from "next/head";
-import { Chip, Stack, Typography, Skeleton, Grid, Box } from "@mui/material";
-import BoltIcon from "@mui/icons-material/Bolt";
-import { useQuery } from "@apollo/client";
-import { gql } from "../../../src/__generated__/gql";
+import {Box, Grid, Skeleton, Stack, Typography} from "@mui/material";
+import {useQuery} from "@apollo/client";
+import {gql} from "../../../src/__generated__/gql";
 import StyledTabs from "../../components/atoms/styled/styled-tabs";
 import StyledTab from "../../components/atoms/styled/styled-tab";
 import EventSingleCard from "../../components/molecules/event-single-card";
-import { TabContext, TabPanel } from "@mui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 
 const GET_USERS = gql(/* GraphQL */ `
   query GetUsersQuery {
@@ -87,24 +86,16 @@ const Events = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>Staking</title>
+        <title>Sakura</title>
       </Head>
       <div style={{ flex: 1, background: "", marginTop: 32 }}>
         <Stack
           direction={"column"}
           alignItems={"center"}
           sx={{ background: "" }}
-          spacing={4}
         >
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
             <Typography variant={"h6"}>Explore</Typography>
-            <Chip
-              icon={<BoltIcon color={"secondary"} />}
-              label={"Bounties"}
-            ></Chip>
-            <Typography variant={"body2"} color={"neutral.600"}>
-              Instantly earn crypto by discovering web3
-            </Typography>
           </Stack>
           <Stack direction={"column"} alignItems={"center"}>
             <Box sx={{ maxWidth: "1200px", padding: "24px" }}>

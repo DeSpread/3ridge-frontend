@@ -56,7 +56,7 @@ const MainLayout = (props: MainLayoutProps) => {
               <NavbarButtonSet
                 bountiesBtnOnClick={(e) => {
                   e.preventDefault();
-                  router.push(`/events`).then();
+                  router.push(`/explore`).then();
                 }}
                 contentsBtnOnClick={() => {}}
                 achievementsBtnOnClick={() => {}}
