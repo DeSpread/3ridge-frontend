@@ -92,7 +92,7 @@ const Event = (props: AppProps) => {
       </Head>
       <Grid container spacing={2}>
         <Grid item xs={9}>
-          <Stack direction={"column"} spacing={4}>
+          <Stack direction={"column"} spacing={5}>
             <Stack direction={"row"} alignItems={"center"} spacing={3}>
               <Avatar alt=""
                       src="https://s3.ap-northeast-1.amazonaws.com/quest3.xyz/community/713027752387899472.png"
@@ -123,7 +123,7 @@ const Event = (props: AppProps) => {
               Join Oath of Peak’s Early Access to win big prizes and a ticket to the blockchain beta launching on Jan 1, 2023!
             </Typography>
 
-            <Stack direction={"column"} alignItems={"left"} spacing={4} pr={50}>
+            <Stack direction={"column"} alignItems={"left"} spacing={4} pr={50} pt={5}>
               <Fab variant="extended">
                 Follow @zetablockchain on Twitter
               </Fab>
