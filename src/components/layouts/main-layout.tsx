@@ -12,6 +12,7 @@ import Head from "next/head";
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
   footerComponent?: ReactNode;
+  disableNavButtonSet?: boolean;
 };
 
 const MainLayout = (props: MainLayoutProps) => {
@@ -52,26 +53,30 @@ const MainLayout = (props: MainLayoutProps) => {
                 router.push("/").then();
               }}
             ></img>
-            <Stack direction={"row"} alignItems={"center"} spacing={1}>
-              <NavbarButtonSet
-                bountiesBtnOnClick={(e) => {
-                  e.preventDefault();
-                  router.push(`/explore`).then();
-                }}
-                contentsBtnOnClick={() => {}}
-                achievementsBtnOnClick={() => {}}
-                communitiesBtnOnClick={() => {}}
-                leaderBoardBtnOnClick={() => {}}
-              ></NavbarButtonSet>
-              {address ? (
-                <NavbarAvatar onProfileItemClick={(e) => {
-                  e.preventDefault();
-                  router.push(`/profile`).then();
-                }}></NavbarAvatar>
-              ) : (
-                <ConnectButton size={"small"} variant={"outlined"} />
-              )}
-            </Stack>
+            {!props.disableNavButtonSet && (
+              <Stack direction={"row"} alignItems={"center"} spacing={1}>
+                <NavbarButtonSet
+                  bountiesBtnOnClick={(e) => {
+                    e.preventDefault();
+                    router.push(`/explore`).then();
+                  }}
+                  contentsBtnOnClick={() => {}}
+                  achievementsBtnOnClick={() => {}}
+                  communitiesBtnOnClick={() => {}}
+                  leaderBoardBtnOnClick={() => {}}
+                ></NavbarButtonSet>
+                {address ? (
+                  <NavbarAvatar
+                    onProfileItemClick={(e) => {
+                      e.preventDefault();
+                      router.push(`/profile`).then();
+                    }}
+                  ></NavbarAvatar>
+                ) : (
+                  <ConnectButton size={"small"} variant={"outlined"} />
+                )}
+              </Stack>
+            )}
           </Stack>
         </Box>
       </AppBar>

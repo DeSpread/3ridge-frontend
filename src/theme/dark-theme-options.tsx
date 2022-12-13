@@ -75,7 +75,7 @@ export const darkThemeOptions: ThemeOptions = {
     MuiAvatar: {
       styleOverrides: {
         root: {
-          backgroundColor: neutral[500],
+          backgroundColor: "white",
           color: "#FFFFFF",
         },
       },

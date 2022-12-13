@@ -1,15 +1,15 @@
-import {ReactElement, SyntheticEvent, useEffect, useState} from "react";
+import { ReactElement, SyntheticEvent, useEffect, useState } from "react";
 import MainLayout from "../../components/layouts/main-layout";
-import {AppProps} from "next/app";
-import {useTheme} from "@mui/material/styles";
+import { AppProps } from "next/app";
+import { useTheme } from "@mui/material/styles";
 import Head from "next/head";
-import {Box, Grid, Skeleton, Stack, Typography} from "@mui/material";
-import {useQuery} from "@apollo/client";
-import {gql} from "../../../src/__generated__/gql";
+import { Box, Grid, Skeleton, Stack, Typography, Divider } from "@mui/material";
+import { useQuery } from "@apollo/client";
+import { gql } from "../../../src/__generated__/gql";
 import StyledTabs from "../../components/atoms/styled/styled-tabs";
 import StyledTab from "../../components/atoms/styled/styled-tab";
 import EventSingleCard from "../../components/molecules/event-single-card";
-import {TabContext, TabPanel} from "@mui/lab";
+import { TabContext, TabPanel } from "@mui/lab";
 
 const GET_USERS = gql(/* GraphQL */ `
   query GetUsersQuery {
@@ -88,141 +88,148 @@ const Explore = (props: AppProps) => {
       <Head>
         <title>Sakura</title>
       </Head>
-      <div style={{ flex: 1, background: "", marginTop: 32 }}>
+      <div style={{ flex: 1, background: "" }}>
         <Stack
           direction={"column"}
           alignItems={"center"}
           sx={{ background: "" }}
         >
-          <Stack direction={"row"} alignItems={"center"} spacing={1}>
+          <Stack
+            direction={"row"}
+            alignItems={"center"}
+            spacing={1}
+            sx={{ marginTop: "32px" }}
+          >
             <Typography variant={"h6"}>Explore</Typography>
           </Stack>
-          <Stack direction={"column"} alignItems={"center"}>
-            <Box sx={{ maxWidth: "1200px", padding: "24px" }}>
-              <Box sx={{}}>
-                <TabContext value={value}>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      borderBottom: 1,
-                      borderColor: "divider",
-                      background: "",
+
+          <Box sx={{ maxWidth: "1200px" }}>
+            <Box sx={{}}>
+              <TabContext value={value}>
+                <Box
+                  sx={{
+                    width: "100%",
+                    // borderBottom: 1,
+                    // borderColor: "divider",
+                    background: "",
+                  }}
+                >
+                  <StyledTabs
+                    centered
+                    value={value}
+                    onChange={(event: SyntheticEvent, newValue: string) => {
+                      setValue(newValue);
                     }}
+                    aria-label="lab API tabs example"
                   >
-                    <StyledTabs
-                      centered
-                      value={value}
-                      onChange={(event: SyntheticEvent, newValue: string) => {
-                        setValue(newValue);
-                      }}
-                      aria-label="lab API tabs example"
-                    >
-                      <StyledTab label="Available" value={"1"}></StyledTab>
-                      <StyledTab label="Missed" value={"2"}></StyledTab>
-                    </StyledTabs>
+                    <StyledTab label="Available" value={"1"}></StyledTab>
+                    <StyledTab label="Missed" value={"2"}></StyledTab>
+                  </StyledTabs>
+                </Box>
+                <Divider
+                  sx={{ color: "divider", marginRight: 4, marginLeft: 4 }}
+                ></Divider>
+                <TabPanel value={"1"}>
+                  <Box>
+                    {loading && (
+                      <Grid
+                        container
+                        sx={{ flex: 1 }}
+                        columnSpacing={2}
+                        rowSpacing={1}
+                      >
+                        <Grid item sm={12} md={12} lg={6}>
+                          <Skeleton
+                            width={"552px"}
+                            height={"186px"}
+                            variant={"rounded"}
+                            animation={"wave"}
+                          />
+                        </Grid>
+                        <Grid item sm={12} md={12} lg={6}>
+                          <Skeleton
+                            width={"552px"}
+                            height={"186px"}
+                            variant={"rounded"}
+                            animation={"wave"}
+                          />
+                        </Grid>
+                      </Grid>
+                    )}
+                    {data && (
+                      <Grid
+                        container
+                        sx={{ flex: 1 }}
+                        columnSpacing={2}
+                        rowSpacing={1}
+                      >
+                        {data?.users?.map((x, index) => {
+                          return (
+                            <Grid key={index} item sm={12} md={12} lg={6}>
+                              <EventSingleCard
+                                sx={{ margin: 1 }}
+                                title={x.username}
+                                summary={"summary"}
+                              ></EventSingleCard>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
+                    )}
                   </Box>
-                  <TabPanel value={"1"}>
-                    <Box>
-                      {loading && (
-                        <Grid
-                          container
-                          sx={{ flex: 1 }}
-                          columnSpacing={2}
-                          rowSpacing={1}
-                        >
-                          <Grid item sm={12} md={12} lg={6}>
-                            <Skeleton
-                              width={"552px"}
-                              height={"186px"}
-                              variant={"rounded"}
-                              animation={"wave"}
-                            />
-                          </Grid>
-                          <Grid item sm={12} md={12} lg={6}>
-                            <Skeleton
-                              width={"552px"}
-                              height={"186px"}
-                              variant={"rounded"}
-                              animation={"wave"}
-                            />
-                          </Grid>
+                </TabPanel>
+                <TabPanel value={"2"}>
+                  <Box>
+                    {loading && (
+                      <Grid
+                        container
+                        sx={{ flex: 1 }}
+                        columnSpacing={2}
+                        rowSpacing={1}
+                      >
+                        <Grid item sm={12} md={12} lg={6}>
+                          <Skeleton
+                            width={"552px"}
+                            height={"186px"}
+                            variant={"rounded"}
+                            animation={"wave"}
+                          />
                         </Grid>
-                      )}
-                      {data && (
-                        <Grid
-                          container
-                          sx={{ flex: 1 }}
-                          columnSpacing={2}
-                          rowSpacing={1}
-                        >
-                          {data?.users?.map((x, index) => {
-                            return (
-                              <Grid key={index} item sm={12} md={12} lg={6}>
-                                <EventSingleCard
-                                  sx={{ margin: 1 }}
-                                  title={x.username}
-                                  summary={"summary"}
-                                ></EventSingleCard>
-                              </Grid>
-                            );
-                          })}
+                        <Grid item sm={12} md={12} lg={6}>
+                          <Skeleton
+                            width={"552px"}
+                            height={"186px"}
+                            variant={"rounded"}
+                            animation={"wave"}
+                          />
                         </Grid>
-                      )}
-                    </Box>
-                  </TabPanel>
-                  <TabPanel value={"2"}>
-                    <Box>
-                      {loading && (
-                        <Grid
-                          container
-                          sx={{ flex: 1 }}
-                          columnSpacing={2}
-                          rowSpacing={1}
-                        >
-                          <Grid item sm={12} md={12} lg={6}>
-                            <Skeleton
-                              width={"552px"}
-                              height={"186px"}
-                              variant={"rounded"}
-                              animation={"wave"}
-                            />
-                          </Grid>
-                          <Grid item sm={12} md={12} lg={6}>
-                            <Skeleton
-                              width={"552px"}
-                              height={"186px"}
-                              variant={"rounded"}
-                              animation={"wave"}
-                            />
-                          </Grid>
-                        </Grid>
-                      )}
-                      {data && (
-                        <Grid
-                          container
-                          sx={{ flex: 1 }}
-                          columnSpacing={2}
-                          rowSpacing={1}
-                        >
-                          {data?.users?.map((x, index) => {
-                            return (
-                              <Grid key={index} item sm={12} md={12} lg={6}>
-                                <EventSingleCard
-                                  sx={{ margin: 1 }}
-                                  title={x.username}
-                                  summary={"summary"}
-                                ></EventSingleCard>
-                              </Grid>
-                            );
-                          })}
-                        </Grid>
-                      )}
-                    </Box>
-                  </TabPanel>
-                </TabContext>
-              </Box>
+                      </Grid>
+                    )}
+                    {data && (
+                      <Grid
+                        container
+                        sx={{ flex: 1 }}
+                        columnSpacing={2}
+                        rowSpacing={1}
+                      >
+                        {data?.users?.map((x, index) => {
+                          return (
+                            <Grid key={index} item sm={12} md={12} lg={6}>
+                              <EventSingleCard
+                                sx={{ margin: 1 }}
+                                title={x.username}
+                                summary={"summary"}
+                              ></EventSingleCard>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
+                    )}
+                  </Box>
+                </TabPanel>
+              </TabContext>
             </Box>
-          </Stack>
+          </Box>
         </Stack>
       </div>
     </>
