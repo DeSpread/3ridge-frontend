@@ -76,7 +76,7 @@ export async function getStaticProps() {
   return { props: {} };
 }
 
-const Events = (props: AppProps) => {
+const Explore = (props: AppProps) => {
   const theme = useTheme();
   const { loading, data } = useQuery(GET_USERS);
   const [value, setValue] = useState("1");
@@ -229,8 +229,8 @@ const Events = (props: AppProps) => {
   );
 };
 
-Events.getLayout = (page: ReactElement | ReactElement[]) => (
+Explore.getLayout = (page: ReactElement | ReactElement[]) => (
   <MainLayout>{page}</MainLayout>
 );
 
-export default Events;
+export default Explore;
