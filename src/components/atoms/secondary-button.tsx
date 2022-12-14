@@ -7,6 +7,7 @@ const SecondaryButton = (props: ButtonProps) => {
       color={"secondary"}
       variant={"contained"}
       sx={{
+        ...props.sx,
         borderColor: "#ffff00",
         boxShadow: "0 0 0 1px #ffff00",
         "&:hover": {

@@ -6,6 +6,7 @@ const PrimaryButton = (props: ButtonProps) => {
       {...props}
       color={"primary"}
       sx={{
+        ...props.sx,
         borderColor: "transparent",
         boxShadow: "0 0 0 1px #35333a",
         "&:hover": {

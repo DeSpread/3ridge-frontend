@@ -3,11 +3,13 @@ import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
 import NavbarButtonSet from "../molecules/navbar-button-set";
 import NavbarAvatar from "../atoms/navbar-avatar";
-import ConnectButton from "../atoms/connect-button";
+import ConnectButton from "../molecules/connect-button";
 import { useAccount } from "wagmi";
 import { ReactNode } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import PrimaryButton from "../atoms/primary-button";
+import SecondaryButton from "../atoms/secondary-button";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -73,7 +75,28 @@ const MainLayout = (props: MainLayoutProps) => {
                     }}
                   ></NavbarAvatar>
                 ) : (
-                  <ConnectButton size={"small"} variant={"outlined"} />
+                  <Stack direction={"row"} alignItems={"center"} spacing={2}>
+                    <PrimaryButton
+                      size={"small"}
+                      sx={{ width: 100 }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                      }}
+                    >
+                      Sign In
+                    </PrimaryButton>
+                    <SecondaryButton
+                      size={"small"}
+                      sx={{ width: 100 }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        router.push("/signup").then();
+                      }}
+                    >
+                      Sign Up
+                    </SecondaryButton>
+                  </Stack>
+                  // <ConnectButton size={"small"} variant={"outlined"} />
                 )}
               </Stack>
             )}

@@ -1,5 +1,5 @@
 import { Button, ButtonProps } from "@mui/material";
-import PrimaryButton from "./primary-button";
+import PrimaryButton from "../atoms/primary-button";
 
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { MouseEvent } from "react";
