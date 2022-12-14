@@ -12,6 +12,7 @@ import EventSingleCard from "../../components/molecules/event-single-card";
 import {TabContext, TabPanel} from "@mui/lab";
 import CenterLayout from "../../components/layouts/center-layout";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import VerifyCard from "../../components/molecules/verify-card";
 
 const GET_USERS = gql(/* GraphQL */ `
     query GetUsersQuery {
@@ -90,76 +91,107 @@ const Event = (props: AppProps) => {
         <Head>
           <title>Event</title>
         </Head>
-        <Grid container spacing={2}>
-          <Grid item xs={9}>
-            <Stack direction={"column"} spacing={5}>
-              <Stack direction={"row"} alignItems={"center"} spacing={3}>
-                <Avatar alt=""
-                        src="https://s3.ap-northeast-1.amazonaws.com/quest3.xyz/community/713027752387899472.png"
-                        sx={{
-                          width: 70,
-                          height: 70
-                        }}/>
-                <Typography variant="h5" fontWeight={"bold"}>
-                  DeSpread Labs
-                </Typography>
-              </Stack>
-              <Typography variant="h3">
-                Stake your claim to the $100,000+ prize pool
-              </Typography>
-              <Stack direction={"row"} alignItems={"left"} spacing={1}>
-                <Chip
-                    label={"ongoing"}
-                ></Chip>
-                <Chip
-                    label={"2022/12/09 22:00 ~ 2022/12/27 09:00 (UTC+09:00)"}
-                ></Chip>
-              </Stack>
-
-              <Typography variant="h5">
-                Description
-              </Typography>
-              <Typography variant="body1">
-                Join Oath of Peak’s Early Access to win big prizes and a ticket to the blockchain beta launching on Jan 1, 2023!
-              </Typography>
-
-              <Stack direction={"column"} alignItems={"left"} spacing={4} mr={50}>
-                <Fab variant="extended">
-                  Follow @zetablockchain on Twitter
-                </Fab>
-                <Fab variant="extended">
-                  Join ZetaChain Discord server
-                </Fab>
-                <Fab variant="extended">
-                  Join @zetachainofficial on Telegram
-                </Fab>
-                <Fab variant="extended">
-                  1 Mission Bring ZETA Home NFT for current address
-                </Fab>
-              </Stack>
-            </Stack>
-          </Grid>
-          <Grid item xs={3}>
-            <Stack direction={"column"} spacing={10}>
-              <Box>
-                <Typography variant="h4">
-                  Reward
-                </Typography>
-              </Box>
-
-              <Box>
-                <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                  <Typography variant="h4">
-                    Participants
-                  </Typography>
-                  <Typography variant="h5">
-                    (22,712)
+        <Stack direction={"column"}>
+          <Grid
+              container
+              direction={"row"}
+              justifyContent={"space-between"}
+              spacing={5}>
+            <Grid item>
+              <Stack direction={"column"} spacing={5} mb={5}>
+                <Stack direction={"row"} alignItems={"center"} spacing={3}>
+                  <Avatar alt=""
+                          src="https://s3.ap-northeast-1.amazonaws.com/quest3.xyz/community/713027752387899472.png"
+                          sx={{
+                            width: 70,
+                            height: 70
+                          }}/>
+                  <Typography variant="h5" fontWeight={"bold"}>
+                    DeSpread Labs
                   </Typography>
                 </Stack>
-              </Box>
-            </Stack>
+                <Typography variant="h3">
+                  Stake your claim to the $100,000+ prize pool
+                </Typography>
+                <Stack direction={"row"} alignItems={"left"} spacing={1}>
+                  <Chip
+                      label={"ongoing"}
+                  ></Chip>
+                  <Chip
+                      label={"2022/12/09 22:00 ~ 2022/12/27 09:00 (UTC+09:00)"}
+                  ></Chip>
+                </Stack>
+
+                <Typography variant="h5">
+                  Description
+                </Typography>
+                <Typography variant="body1">
+                  Join Oath of Peak’s Early Access to win big prizes and a ticket to the blockchain beta launching on Jan 1, 2023!
+                </Typography>
+
+                <Stack direction={"column"} alignItems={"left"} spacing={4} pt={5} maxWidth={1200}>
+                  <Typography variant="h5">
+                    Quest
+                  </Typography>
+                  <VerifyCard
+                      community={{
+                        name: "1",
+                      }}
+                      title={"Hold any of the Layer3 NFTs?"}
+                      summary={"If you've hold any of the Layer3 NFTs, you're eligible for this Quest!"}
+                  />
+                  <VerifyCard
+                      community={{
+                        name: "2",
+                      }}
+                      title={"Follow @zetablockchain on Twitter"}
+                  />
+                  <VerifyCard
+                      community={{
+                        name: "3",
+                      }}
+                      title={"Join ZetaChain Discord server"}
+                  />
+                  <VerifyCard
+                      community={{
+                        name: "4",
+                      }}
+                      title={"Join @zetachainofficial on Telegram"}
+                  />
+                  <VerifyCard
+                      community={{
+                        name: "5",
+                      }}
+                      title={"1 Mission Bring ZETA Home NFT for current address"}
+                  />
+                </Stack>
+              </Stack>
+            </Grid>
+            <Grid item>
+              <Stack direction={"column"} spacing={10}>
+                <Stack direction={"column"} spacing={5}>
+                  <Typography variant="h4">
+                    Reward
+                  </Typography>
+                  <Typography variant="body1">
+                    1000 USDT
+                  </Typography>
+                </Stack>
+
+                <Box>
+                  <Stack direction={"row"} alignItems={"center"} spacing={1}>
+                    <Typography variant="h4">
+                      Participants
+                    </Typography>
+                    <Typography variant="h5">
+                      (22,712)
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
+        </Stack>
       </>
   );
 };

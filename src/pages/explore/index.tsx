@@ -1,22 +1,24 @@
-import { ReactElement, SyntheticEvent, useEffect, useState } from "react";
+import {ReactElement, SyntheticEvent, useEffect, useState} from "react";
 import MainLayout from "../../components/layouts/main-layout";
-import { AppProps } from "next/app";
-import { useTheme } from "@mui/material/styles";
+import {AppProps} from "next/app";
+import {useTheme} from "@mui/material/styles";
 import Head from "next/head";
-import { Box, Grid, Skeleton, Stack, Typography, Divider } from "@mui/material";
-import { useQuery } from "@apollo/client";
-import { gql } from "../../../src/__generated__/gql";
+import {Box, Divider, Grid, Skeleton, Stack, Typography} from "@mui/material";
+import {useQuery} from "@apollo/client";
+import {gql} from "../../../src/__generated__/gql";
 import StyledTabs from "../../components/atoms/styled/styled-tabs";
 import StyledTab from "../../components/atoms/styled/styled-tab";
 import EventSingleCard from "../../components/molecules/event-single-card";
-import { TabContext, TabPanel } from "@mui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
+import {useRouter} from "next/router";
+
 
 const GET_USERS = gql(/* GraphQL */ `
-  query GetUsersQuery {
-    users {
-      username
+    query GetUsersQuery {
+        users {
+            username
+        }
     }
-  }
 `);
 
 const eventCardData = [
@@ -80,6 +82,7 @@ const Explore = (props: AppProps) => {
   const theme = useTheme();
   const { loading, data } = useQuery(GET_USERS);
   const [value, setValue] = useState("1");
+  const router = useRouter();
 
   useEffect(() => {}, []);
 
@@ -167,9 +170,14 @@ const Explore = (props: AppProps) => {
                           return (
                             <Grid key={index} item sm={12} md={12} lg={6}>
                               <EventSingleCard
-                                sx={{ margin: 1 }}
-                                title={x.username}
-                                summary={"summary"}
+                                  sx={{margin: 1}}
+                                  title={x.username}
+                                  summary={"summary"}
+                                  onCardItemClick={(e) => {
+                                    e.preventDefault();
+                                    router.push('/event').then();
+                                  }}
+                                  isCursorPointer={true}
                               ></EventSingleCard>
                             </Grid>
                           );

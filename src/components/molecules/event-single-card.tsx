@@ -1,13 +1,5 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Chip,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { CSSProperties, PropsWithChildren } from "react";
+import {Box, Card, CardContent, Chip, Stack, Typography,} from "@mui/material";
+import {CSSProperties, MouseEventHandler, PropsWithChildren} from "react";
 import CommunityChip from "../atoms/community-chip";
 import XpChip from "../atoms/styled/xp-chip";
 
@@ -19,11 +11,14 @@ type BountySingleCardProps = PropsWithChildren & {
     name: string;
     thumbnailUrl?: string;
   };
+  isCursorPointer?: boolean;
+  onCardItemClick?: MouseEventHandler;
 };
 
 const EventSingleCard = (props: BountySingleCardProps) => {
   return (
     <>
+      <a>
       <Box
         sx={{
           "&:hover": {
@@ -36,11 +31,13 @@ const EventSingleCard = (props: BountySingleCardProps) => {
               transitionTimingFunction: "ease-out",
               transitionProperty: "box-shadow",
             },
+            cursor: `${props.isCursorPointer? 'pointer':''}`
           },
           minWidth: 552,
           height: "186px",
           ...props.sx,
         }}
+        onClick={props.onCardItemClick}
       >
         <Card
           className={"bountyCard"}
@@ -94,21 +91,11 @@ const EventSingleCard = (props: BountySingleCardProps) => {
                   </Stack>
                 </Stack>
               </Stack>
-              {/*<img*/}
-              {/*  src={*/}
-              {/*    "https://pinx.layer3.xyz/ipfs/QmcmGhyD31imuhFZw32teTqQSEax4nh9D8gsfVQrDj38Nz"*/}
-              {/*  }*/}
-              {/*  style={{*/}
-              {/*    objectFit: "cover",*/}
-              {/*    borderRadius: 8,*/}
-              {/*  }}*/}
-              {/*  width={120}*/}
-              {/*  height={120}*/}
-              {/*/>*/}
             </Stack>
           </CardContent>
         </Card>
       </Box>
+      </a>
     </>
   );
 };

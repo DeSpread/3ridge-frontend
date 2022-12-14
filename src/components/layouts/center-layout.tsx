@@ -1,14 +1,18 @@
-import {Box} from "@mui/material";
+import {Box, Stack} from "@mui/material";
 import {PropsWithChildren} from "react";
 
 const CenterLayout = ({children}: PropsWithChildren) => {
   return (
-      <Box
-          pt={10}
-          pl={50}
-          pr={50}>
-        {children}
-      </Box>
+      <>
+        <Stack
+            direction={"column"}
+            alignItems={"center"}
+        >
+          <Box sx={{ maxWidth: "1200px", padding: "24px"}}>
+            {children}
+          </Box>
+        </Stack>
+      </>
   );
 };
 
