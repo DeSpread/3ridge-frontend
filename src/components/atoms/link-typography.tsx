@@ -19,7 +19,7 @@ const LinkTypography = (props: LinkTypographyProps) => {
           },
         }}
         {...props}
-        variant={"body2"}
+        // variant={"body2"}
       >
         {props.children}
       </Typography>

@@ -33,7 +33,7 @@ const Signup = () => {
           {formType === "others-form" && <SignUpOthersForm></SignUpOthersForm>}
           <Stack
             direction={"column"}
-            sx={{ paddingTop: 16, minWidth: "500px", paddingBottom: 10 }}
+            sx={{ paddingTop: 0, minWidth: "500px", paddingBottom: 10 }}
             spacing={1}
           >
             <Divider></Divider>

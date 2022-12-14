@@ -1,0 +1,125 @@
+import {
+  Avatar,
+  Dialog,
+  DialogContent,
+  DialogProps,
+  DialogTitle,
+  Divider,
+  Fade,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React, { MouseEventHandler, ReactComponentElement } from "react";
+import { useTheme } from "@mui/material/styles";
+import ConnectButton from "../../connect-button";
+import PrimaryButton from "../../../atoms/primary-button";
+import EmailIcon from "../../../atoms/svg/email-icon";
+import LinkTypography from "../../../atoms/link-typography";
+import { TransitionProps } from "@mui/material/transitions";
+import CloseIcon from "@mui/icons-material/Close";
+
+type SignDialogProps = DialogProps & {
+  title: string;
+  onCloseBtnClicked: MouseEventHandler;
+};
+
+export type { SignDialogProps };
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Fade ref={ref} {...props} />;
+});
+
+const WithBaseSignInDialog = <P extends SignDialogProps>(
+  WrappedContent: React.ComponentType<P>
+) => {
+  const BaseSignDialog = (props: P) => {
+    return (
+      <>
+        <Dialog
+          {...props}
+          open={props.open}
+          fullWidth
+          maxWidth={"xs"}
+          TransitionComponent={Transition}
+        >
+          <DialogTitle>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+            >
+              <Typography textAlign={"left"} variant={"h6"}>
+                {props.title}
+              </Typography>
+              <IconButton
+                sx={{ borderRadius: 32, marginRight: -1 }}
+                onClick={(e) => {
+                  props.onCloseBtnClicked(e);
+                }}
+              >
+                <CloseIcon></CloseIcon>
+              </IconButton>
+            </Stack>
+          </DialogTitle>
+          <DialogContent>
+            <Stack
+              direction={"column"}
+              alignItems={"center"}
+              spacing={2}
+              sx={{ marginTop: 2, background: "" }}
+            >
+              <Stack
+                direction={"column"}
+                alignItems={"center"}
+                spacing={2}
+                sx={{ width: "100%", height: 320, background: "" }}
+              >
+                <WrappedContent {...props}></WrappedContent>
+                {/*<SignInSelectDialogContent*/}
+                {/*  onSignUpClicked={(e) => {*/}
+                {/*    props.onSignUpClicked(e);*/}
+                {/*  }}*/}
+                {/*  onSignUpWithClicked={(e) => {*/}
+                {/*    props.onSignUpWithClicked(e);*/}
+                {/*  }}*/}
+                {/*></SignInSelectDialogContent>*/}
+              </Stack>
+              {/*---*/}
+              <Divider sx={{ width: "100%", paddingTop: 0 }}></Divider>
+              <Grid container direction={"row"}>
+                <Grid item>
+                  <Typography variant={"body2"}>
+                    By signing up, you agree to our
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <LinkTypography variant={"body2"}>
+                    &nbsp;Terms of use
+                  </LinkTypography>
+                </Grid>
+                <Grid item>
+                  <Typography variant={"body2"}>&nbsp;and</Typography>
+                </Grid>
+                <Grid item>
+                  <LinkTypography variant={"body2"}>
+                    Privacy Policy
+                  </LinkTypography>
+                </Grid>
+              </Grid>
+            </Stack>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  };
+  return BaseSignDialog;
+};
+
+export default WithBaseSignInDialog;
