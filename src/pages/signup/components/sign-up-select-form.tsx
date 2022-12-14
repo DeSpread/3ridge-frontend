@@ -17,7 +17,12 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
     <>
       <Stack
         direction={"column"}
-        sx={{ background: "", minWidth: "500px", paddingTop: 16 }}
+        sx={{
+          background: "",
+          minWidth: "500px",
+          paddingTop: 16,
+          height: "500px",
+        }}
         spacing={4}
       >
         <Typography textAlign={"left"} variant={"h5"}>
@@ -32,7 +37,9 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
         <Stack spacing={2}>
           <PrimaryButton fullWidth={true} onClick={props.onClickSignUpWith}>
             <Stack direction={"row"} spacing={1}>
-              <Typography variant={"body2"}>Sign Up with</Typography>
+              <Typography color={"neutral.100"} variant={"body2"}>
+                Sign Up with
+              </Typography>
               <Avatar
                 src={"https://nftbank.ai/static/images/google-28.svg"}
                 sx={{ width: 24, height: 24 }}

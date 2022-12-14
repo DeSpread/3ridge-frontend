@@ -1,13 +1,15 @@
-import { AppBar, Box, Button, Stack, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Stack, Toolbar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
+import { ReactNode, useState } from "react";
 import NavbarButtonSet from "../molecules/navbar-button-set";
 import NavbarAvatar from "../atoms/navbar-avatar";
-import ConnectButton from "../atoms/connect-button";
 import { useAccount } from "wagmi";
-import { ReactNode } from "react";
 import { useRouter } from "next/router";
-import Head from "next/head";
+import PrimaryButton from "../atoms/primary-button";
+import SecondaryButton from "../atoms/secondary-button";
+import SignInDialog from "../molecules/dialog/sign/sign-in-dialog";
+import SignInWithDialog from "../molecules/dialog/sign/sign-in-with-dialog";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -19,6 +21,9 @@ const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const router = useRouter();
   const { address } = useAccount();
+  const [signInVisible, setSignInVisible] = useState(false);
+  const [signUpWithVisible, setSignUpWithVisible] = useState(false);
+
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar component="nav">
@@ -73,7 +78,28 @@ const MainLayout = (props: MainLayoutProps) => {
                     }}
                   ></NavbarAvatar>
                 ) : (
-                  <ConnectButton size={"small"} variant={"outlined"} />
+                  <Stack direction={"row"} alignItems={"center"} spacing={2}>
+                    <PrimaryButton
+                      size={"small"}
+                      sx={{ width: 100 }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSignInVisible(true);
+                      }}
+                    >
+                      Sign In
+                    </PrimaryButton>
+                    <SecondaryButton
+                      size={"small"}
+                      sx={{ width: 100 }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        router.push("/signup").then();
+                      }}
+                    >
+                      Sign Up
+                    </SecondaryButton>
+                  </Stack>
                 )}
               </Stack>
             )}
@@ -87,6 +113,33 @@ const MainLayout = (props: MainLayoutProps) => {
         <main>{props.children}</main>
         <footer>{props.footerComponent}</footer>
       </Box>
+      <SignInDialog
+        title={"Good to see you again!"}
+        open={signInVisible}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setSignInVisible(false);
+        }}
+        onSignUpClicked={(e) => {
+          setSignInVisible(false);
+        }}
+        onSignUpWithClicked={(e) => {
+          setSignInVisible(false);
+          setSignUpWithVisible(true);
+        }}
+        onClose={() => {
+          setSignInVisible(false);
+        }}
+        onContinueWithWalletClicked={(e) => {}}
+      ></SignInDialog>
+      <SignInWithDialog
+        title={"Sign In with others"}
+        open={signUpWithVisible}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setSignUpWithVisible(false);
+        }}
+      ></SignInWithDialog>
     </Box>
   );
 };

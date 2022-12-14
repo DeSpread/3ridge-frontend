@@ -1,26 +1,23 @@
 import { Button, ButtonProps } from "@mui/material";
-import PrimaryButton from "./primary-button";
+import PrimaryButton from "../atoms/primary-button";
 
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { MouseEvent } from "react";
+import SecondaryButton from "../atoms/secondary-button";
 
 const ConnectButton = (props: ButtonProps) => {
-  const { address } = useAccount();
   const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
-  return address ? (
-    <PrimaryButton {...props}>{"Connected"}</PrimaryButton>
-  ) : (
-    <PrimaryButton
+  return (
+    <SecondaryButton
       {...props}
       onClick={(event: MouseEvent) => {
+        connect({ connector: connectors[0] });
         // @ts-ignore
         props.onClick?.(event);
-        connect({ connector: connectors[0] });
       }}
     >
-      {"Connect wallet"}
-    </PrimaryButton>
+      {props.children}
+    </SecondaryButton>
   );
 };
 
