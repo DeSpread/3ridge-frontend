@@ -82,54 +82,33 @@ const Profile = (props: AppProps) => {
           pt={5}
           spacing={4}
         >
-          <Typography variant="h4">0x6e2B...4f05</Typography>
+          <Typography variant="h4">
+            {StringHelper.getInstance().getMidEllipsisString(`${address}`)}
+          </Typography>
           <Stack
             direction={"row"}
             alignItems={"left"}
             sx={{ background: "" }}
             spacing={2}
           >
-            <Chip icon={<EthIcon />} label={"0x6e2B...4f05"}></Chip>
-            <Chip icon={<TwitterIcon />} label={"Twitter"}></Chip>
-            <Chip icon={<KakaoIcon />} label={"Kakao"}></Chip>
-            <Chip icon={<MarkEmailReadIcon />} label={"test@gmail.com"}></Chip>
-          </Stack>
-
-          <Stack
-            direction={"column"}
-            alignItems={"left"}
-            sx={{ flex: 1, background: "" }}
-            pt={5}
-            spacing={4}
-          >
-            <Typography variant="h4">
-              {StringHelper.getInstance().getMidEllipsisString(`${address}`)}
-            </Typography>
-            <Stack
-              direction={"row"}
-              alignItems={"left"}
-              sx={{ background: "" }}
-              spacing={2}
-            >
-              <Chip
-                icon={<EthIcon />}
-                label={StringHelper.getInstance().getMidEllipsisString(
-                  `${address}`
-                )}
-              ></Chip>
-              <Chip
-                icon={<MarkEmailReadIcon />}
-                label={"test@gmail.com"}
-              ></Chip>
-              {/*<Chip*/}
-              {/*    icon={<TwitterIcon/>}*/}
-              {/*    label={"Twitter"}*/}
-              {/*></Chip>*/}
-              {/*<Chip*/}
-              {/*    icon={<KakaoIcon/>}*/}
-              {/*    label={"Kakao"}*/}
-              {/*></Chip>*/}
-            </Stack>
+            <Chip
+              icon={<EthIcon />}
+              label={StringHelper.getInstance().getMidEllipsisString(
+                `${address}`
+              )}
+            ></Chip>
+            <Chip
+              icon={<MarkEmailReadIcon />}
+              label={"test@gmail.com"}
+            ></Chip>
+            {/*<Chip*/}
+            {/*    icon={<TwitterIcon/>}*/}
+            {/*    label={"Twitter"}*/}
+            {/*></Chip>*/}
+            {/*<Chip*/}
+            {/*    icon={<KakaoIcon/>}*/}
+            {/*    label={"Kakao"}*/}
+            {/*></Chip>*/}
           </Stack>
           <Stack
             direction={"column"}
