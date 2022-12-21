@@ -4,7 +4,9 @@ import PrimaryButton from "../../../components/atoms/primary-button";
 import EmailIcon from "../../../components/atoms/svg/email-icon";
 import LinkTypography from "../../../components/atoms/link-typography";
 import { useTheme } from "@mui/material/styles";
-import { MouseEvent, MouseEventHandler, PropsWithChildren } from "react";
+import { MouseEventHandler, PropsWithChildren } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { showSignInDialogState } from "../../../recoil";
 
 type SignUpSelectFormProps = PropsWithChildren & {
   onClickSignUpWith?: MouseEventHandler;
@@ -13,6 +15,9 @@ type SignUpSelectFormProps = PropsWithChildren & {
 
 const SignUpSelectForm = (props: SignUpSelectFormProps) => {
   const theme = useTheme();
+  const showSignInDialog = useRecoilValue(showSignInDialogState);
+  const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
+
   return (
     <>
       <Stack
@@ -58,7 +63,12 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
           </PrimaryButton>
           <Stack direction={"row"} justifyContent={"center"} spacing={1}>
             <Typography variant={"body2"}>Already have an account?</Typography>
-            <LinkTypography variant={"body2"} href={"/"}>
+            <LinkTypography
+              variant={"body2"}
+              onClick={(event) => {
+                setShowSignInDialog(true);
+              }}
+            >
               Sign in
             </LinkTypography>
           </Stack>

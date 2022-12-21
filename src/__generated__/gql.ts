@@ -13,18 +13,23 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
-    "\n    query GetUsersQuery {\n        users {\n            username\n        }\n    }\n": types.GetUsersQueryDocument,
-    "\n  query GetUsersQuery {\n    users {\n      username\n    }\n  }\n": types.GetUsersQueryDocument,
+    "\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      name\n      wallet {\n        address\n        chain\n      }\n    }\n  }\n": types.UserByGmailDocument,
+    "\n  query Tickets {\n    tickets {\n      completed\n    }\n  }\n": types.TicketsDocument,
+    "\n  mutation CreateUserByGmail($gmail: String!) {\n    createUserByGmail(gmail: $gmail) {\n      name\n    }\n  }\n": types.CreateUserByGmailDocument,
 };
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    query GetUsersQuery {\n        users {\n            username\n        }\n    }\n"): (typeof documents)["\n    query GetUsersQuery {\n        users {\n            username\n        }\n    }\n"];
+export function gql(source: "\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      name\n      wallet {\n        address\n        chain\n      }\n    }\n  }\n"): (typeof documents)["\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      name\n      wallet {\n        address\n        chain\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetUsersQuery {\n    users {\n      username\n    }\n  }\n"): (typeof documents)["\n  query GetUsersQuery {\n    users {\n      username\n    }\n  }\n"];
+export function gql(source: "\n  query Tickets {\n    tickets {\n      completed\n    }\n  }\n"): (typeof documents)["\n  query Tickets {\n    tickets {\n      completed\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateUserByGmail($gmail: String!) {\n    createUserByGmail(gmail: $gmail) {\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUserByGmail($gmail: String!) {\n    createUserByGmail(gmail: $gmail) {\n      name\n    }\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

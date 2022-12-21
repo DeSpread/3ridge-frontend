@@ -25,8 +25,10 @@ const Signup = () => {
             <SignUpSelectForm
               onClickSignUpWith={(e: MouseEvent) => {
                 e.preventDefault();
-                console.log("aaa");
                 setFormType("others-form");
+              }}
+              onClickConnectWallet={(e: MouseEvent) => {
+                e.preventDefault();
               }}
             ></SignUpSelectForm>
           )}

@@ -16,10 +16,13 @@ import {
 } from "react";
 import { useTheme } from "@mui/material/styles";
 import StringHelper from "../../helper/string-helper";
-import GradientTypography from "./gradient-typography";
+import GradientTypography from "../atoms/gradient-typography";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
-import {useAccount, useDisconnect} from "wagmi";
+import { useLogin } from "../../provider/login/login-provider";
+import { useRouter } from "next/router";
+import { useQuery } from "@apollo/client";
+import { gql } from "../../__generated__";
 
 type StyledMenuProps = PropsWithChildren & {
   open: boolean;
@@ -36,8 +39,6 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 })) as typeof MenuItem;
 
 const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
-  const theme = useTheme();
-
   return (
     <Menu
       open={open}
@@ -68,6 +69,38 @@ const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
   );
 };
 
+const USER_BY_GMAIL = gql(/* GraphQL */ `
+  query userByGmail($gmail: String!) {
+    userByGmail(gmail: $gmail) {
+      name
+      wallet {
+        address
+        chain
+      }
+    }
+  }
+`);
+
+const useFindUserQuery = () => {
+  const { isGoogleLoggedIn, userInfo } = useLogin();
+
+  const { data, loading } = useQuery(
+    USER_BY_GMAIL,
+    userInfo.gmail
+      ? {
+          variables: {
+            gmail: userInfo.gmail,
+          },
+        }
+      : undefined
+  );
+
+  if (isGoogleLoggedIn) {
+    return { data: data?.userByGmail, loading };
+  }
+  return { data: null, loading: false };
+};
+
 type NavBarAvatarProps = PropsWithChildren & {
   src?: string;
   onProfileItemClick?: MouseEventHandler;
@@ -77,8 +110,9 @@ const NavbarAvatar = ({ src, onProfileItemClick }: NavBarAvatarProps) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element>();
-  const { disconnect } = useDisconnect();
-  const { address } = useAccount();
+  const { logout } = useLogin();
+  const router = useRouter();
+  const { data, loading } = useFindUserQuery();
 
   return (
     <Box
@@ -108,19 +142,18 @@ const NavbarAvatar = ({ src, onProfileItemClick }: NavBarAvatarProps) => {
           <Stack
             direction={"row"}
             alignItems={"center"}
-            // justifyContent={"space-between"}
             spacing={2}
             sx={{ flex: 1, marginBottom: 1 }}
           >
             <Avatar sx={{ width: 32, height: 32 }} src={src}></Avatar>
             <Stack direction={"column"}>
-              <GradientTypography>
-                {
-                  StringHelper.getInstance().getMidEllipsisString(
-                      `${address}`
-                  )
-                }
-              </GradientTypography>
+              {data?.wallet?.[0].address && (
+                <GradientTypography>
+                  {StringHelper.getInstance().getMidEllipsisString(
+                    `${data?.wallet?.[0].address}`
+                  )}
+                </GradientTypography>
+              )}
               <Stack direction={"row"} alignItems={"center"} spacing={1}>
                 <Typography variant={"caption"}>LEVEL 1</Typography>
                 <Box sx={{ width: "100%" }}>
@@ -144,7 +177,14 @@ const NavbarAvatar = ({ src, onProfileItemClick }: NavBarAvatarProps) => {
             borderRadius: 1,
           }}
           onClick={() => {
-            disconnect();
+            logout({
+              onSuccess: () => {
+                router.push("/").then();
+              },
+              onError: (error) => {
+                // todo : show alert error message
+              },
+            });
           }}
         >
           <Stack direction={"row"} alignItems={"center"} spacing={1}>

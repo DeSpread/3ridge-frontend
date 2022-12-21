@@ -10,7 +10,7 @@ import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 type SignInSelectDialogProps = SignDialogProps & {
   onContinueWithWalletClicked: MouseEventHandler;
   onSignUpClicked: MouseEventHandler;
-  onSignUpWithClicked: MouseEventHandler;
+  onSignInWithClicked: MouseEventHandler;
 };
 
 const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
@@ -31,7 +31,7 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
           <PrimaryButton
             fullWidth={true}
             onClick={(e) => {
-              props.onSignUpWithClicked(e);
+              props.onSignInWithClicked(e);
             }}
           >
             <Stack direction={"row"} spacing={1}>

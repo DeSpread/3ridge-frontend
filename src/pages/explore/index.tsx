@@ -1,24 +1,22 @@
-import {ReactElement, SyntheticEvent, useEffect, useState} from "react";
+import { ReactElement, SyntheticEvent, useEffect, useState } from "react";
 import MainLayout from "../../components/layouts/main-layout";
-import {AppProps} from "next/app";
-import {useTheme} from "@mui/material/styles";
+import { AppProps } from "next/app";
 import Head from "next/head";
-import {Box, Divider, Grid, Skeleton, Stack, Typography} from "@mui/material";
-import {useQuery} from "@apollo/client";
-import {gql} from "../../../src/__generated__/gql";
+import { Box, Divider, Grid, Skeleton, Stack, Typography } from "@mui/material";
+import { useQuery } from "@apollo/client";
+import { gql } from "../../../src/__generated__/gql";
 import StyledTabs from "../../components/atoms/styled/styled-tabs";
 import StyledTab from "../../components/atoms/styled/styled-tab";
 import EventSingleCard from "../../components/molecules/event-single-card";
-import {TabContext, TabPanel} from "@mui/lab";
-import {useRouter} from "next/router";
+import { TabContext, TabPanel } from "@mui/lab";
+import { useRouter } from "next/router";
 
-
-const GET_USERS = gql(/* GraphQL */ `
-    query GetUsersQuery {
-        users {
-            username
-        }
+const GET_TICKETS = gql(/* GraphQL */ `
+  query Tickets {
+    tickets {
+      completed
     }
+  }
 `);
 
 const eventCardData = [
@@ -79,8 +77,7 @@ export async function getStaticProps() {
 }
 
 const Explore = (props: AppProps) => {
-  const theme = useTheme();
-  const { loading, data } = useQuery(GET_USERS);
+  const { loading, data } = useQuery(GET_TICKETS);
   const [value, setValue] = useState("1");
   const router = useRouter();
 
@@ -166,18 +163,18 @@ const Explore = (props: AppProps) => {
                         columnSpacing={2}
                         rowSpacing={1}
                       >
-                        {data?.users?.map((x, index) => {
+                        {data?.tickets?.map((x, index) => {
                           return (
                             <Grid key={index} item sm={12} md={12} lg={6}>
                               <EventSingleCard
-                                  sx={{margin: 1}}
-                                  title={x.username}
-                                  summary={"summary"}
-                                  onCardItemClick={(e) => {
-                                    e.preventDefault();
-                                    router.push('/event').then();
-                                  }}
-                                  isCursorPointer={true}
+                                sx={{ margin: 1 }}
+                                title={""}
+                                summary={"summary"}
+                                onCardItemClick={(e) => {
+                                  e.preventDefault();
+                                  router.push("/event").then();
+                                }}
+                                isCursorPointer={true}
                               ></EventSingleCard>
                             </Grid>
                           );
@@ -220,12 +217,12 @@ const Explore = (props: AppProps) => {
                         columnSpacing={2}
                         rowSpacing={1}
                       >
-                        {data?.users?.map((x, index) => {
+                        {data?.tickets?.map((x, index) => {
                           return (
                             <Grid key={index} item sm={12} md={12} lg={6}>
                               <EventSingleCard
                                 sx={{ margin: 1 }}
-                                title={x.username}
+                                title={""}
                                 summary={"summary"}
                               ></EventSingleCard>
                             </Grid>

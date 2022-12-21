@@ -3,13 +3,15 @@ import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
 import { ReactNode, useState } from "react";
 import NavbarButtonSet from "../molecules/navbar-button-set";
-import NavbarAvatar from "../atoms/navbar-avatar";
-import { useAccount } from "wagmi";
+import NavbarAvatar from "../molecules/navbar-avatar";
 import { useRouter } from "next/router";
 import PrimaryButton from "../atoms/primary-button";
 import SecondaryButton from "../atoms/secondary-button";
 import SignInDialog from "../molecules/dialog/sign/sign-in-dialog";
 import SignInWithDialog from "../molecules/dialog/sign/sign-in-with-dialog";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useLogin } from "../../provider/login/login-provider";
+import { showSignInDialogState } from "../../recoil";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -20,12 +22,14 @@ type MainLayoutProps = PropsWithChildren & {
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const router = useRouter();
-  const { address } = useAccount();
-  const [signInVisible, setSignInVisible] = useState(false);
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
+  const { isGoogleLoggedIn } = useLogin();
+  const showSignInDialog = useRecoilValue(showSignInDialogState);
+  const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
 
   return (
     <Box sx={{ display: "flex" }}>
+      {/*--- Navbar ---*/}
       <AppBar component="nav">
         <Box
           sx={{
@@ -70,7 +74,7 @@ const MainLayout = (props: MainLayoutProps) => {
                   communitiesBtnOnClick={() => {}}
                   leaderBoardBtnOnClick={() => {}}
                 ></NavbarButtonSet>
-                {address ? (
+                {isGoogleLoggedIn ? (
                   <NavbarAvatar
                     onProfileItemClick={(e) => {
                       e.preventDefault();
@@ -84,7 +88,7 @@ const MainLayout = (props: MainLayoutProps) => {
                       sx={{ width: 100 }}
                       onClick={(e) => {
                         e.preventDefault();
-                        setSignInVisible(true);
+                        setShowSignInDialog(true);
                       }}
                     >
                       Sign In
@@ -107,28 +111,31 @@ const MainLayout = (props: MainLayoutProps) => {
         </Box>
       </AppBar>
 
+      {/*--- Body ---*/}
       <Box sx={{ flex: 1, background: theme.palette.background.default }}>
         {props.backgroundComponent}
         <Toolbar></Toolbar>
         <main>{props.children}</main>
         <footer>{props.footerComponent}</footer>
       </Box>
+
+      {/*--- Dialog ---*/}
       <SignInDialog
         title={"Good to see you again!"}
-        open={signInVisible}
+        open={showSignInDialog}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
-          setSignInVisible(false);
+          setShowSignInDialog(false);
         }}
         onSignUpClicked={(e) => {
-          setSignInVisible(false);
+          setShowSignInDialog(false);
         }}
-        onSignUpWithClicked={(e) => {
-          setSignInVisible(false);
+        onSignInWithClicked={(e) => {
+          setShowSignInDialog(false);
           setSignUpWithVisible(true);
         }}
         onClose={() => {
-          setSignInVisible(false);
+          setShowSignInDialog(false);
         }}
         onContinueWithWalletClicked={(e) => {}}
       ></SignInDialog>
@@ -137,6 +144,9 @@ const MainLayout = (props: MainLayoutProps) => {
         open={signUpWithVisible}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
+          setSignUpWithVisible(false);
+        }}
+        onClose={() => {
           setSignUpWithVisible(false);
         }}
       ></SignInWithDialog>

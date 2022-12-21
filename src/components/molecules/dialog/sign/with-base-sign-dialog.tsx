@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Dialog,
   DialogContent,
   DialogProps,
@@ -11,11 +10,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { MouseEventHandler, ReactComponentElement } from "react";
-import { useTheme } from "@mui/material/styles";
-import ConnectButton from "../../connect-button";
-import PrimaryButton from "../../../atoms/primary-button";
-import EmailIcon from "../../../atoms/svg/email-icon";
+import React, { MouseEventHandler } from "react";
 import LinkTypography from "../../../atoms/link-typography";
 import { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
@@ -82,14 +77,6 @@ const WithBaseSignInDialog = <P extends SignDialogProps>(
                 sx={{ width: "100%", height: 320, background: "" }}
               >
                 <WrappedContent {...props}></WrappedContent>
-                {/*<SignInSelectDialogContent*/}
-                {/*  onSignUpClicked={(e) => {*/}
-                {/*    props.onSignUpClicked(e);*/}
-                {/*  }}*/}
-                {/*  onSignUpWithClicked={(e) => {*/}
-                {/*    props.onSignUpWithClicked(e);*/}
-                {/*  }}*/}
-                {/*></SignInSelectDialogContent>*/}
               </Stack>
               {/*---*/}
               <Divider sx={{ width: "100%", paddingTop: 0 }}></Divider>

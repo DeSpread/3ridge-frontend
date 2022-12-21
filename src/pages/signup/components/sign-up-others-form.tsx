@@ -1,12 +1,17 @@
 import { Avatar, Stack, Typography } from "@mui/material";
-import SecondaryButton from "../../../components/atoms/secondary-button";
 import PrimaryButton from "../../../components/atoms/primary-button";
 import EmailIcon from "../../../components/atoms/svg/email-icon";
 import LinkTypography from "../../../components/atoms/link-typography";
 import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/router";
+import { useLogin } from "../../../provider/login/login-provider";
+import { AppError } from "../../../error/my-error";
 
 const SignUpOthersForm = () => {
   const theme = useTheme();
+  const router = useRouter();
+  const { googleSignUp } = useLogin();
+
   return (
     <>
       <Stack
@@ -34,6 +39,18 @@ const SignUpOthersForm = () => {
                 }}
               ></Avatar>
             }
+            onClick={(e) => {
+              googleSignUp({
+                onSuccess: () => {
+                  // console.log(email);
+                  router.push("/").then();
+                },
+                onError: (error: AppError) => {
+                  console.log(error);
+                  // todo : show alert message (${error.name}, ${error.message})
+                },
+              });
+            }}
           >
             Sign Up with Google
           </PrimaryButton>

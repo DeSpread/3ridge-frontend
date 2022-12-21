@@ -6,9 +6,13 @@ import EmailIcon from "../../../atoms/svg/email-icon";
 import { useTheme } from "@mui/material/styles";
 import ConnectButton from "../../connect-button";
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
+import { useLogin } from "../../../../provider/login/login-provider";
+import { useRouter } from "next/router";
 
-const SignInWithDialogContent = () => {
+const SignInWithDialogContent = (props: SignDialogProps) => {
   const theme = useTheme();
+  const router = useRouter();
+  const { googleSignUp } = useLogin();
   return (
     <>
       <Stack sx={{ width: "100%" }} spacing={2}>
@@ -23,6 +27,17 @@ const SignInWithDialogContent = () => {
               }}
             ></Avatar>
           }
+          onClick={(event) => {
+            googleSignUp({
+              onSuccess: () => {
+                router.push("/").then();
+                props.onCloseBtnClicked(event);
+              },
+              onError: (error) => {
+                // todo : show error alert
+              },
+            });
+          }}
         >
           Sign In with Google
         </PrimaryButton>
