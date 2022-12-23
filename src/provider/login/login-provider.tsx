@@ -1,37 +1,12 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import GoogleLoginHelper from "../../helper/google-login-helper";
-import { useGoogleLogin } from "@react-oauth/google";
-import {
-  APP_ERROR_NAME,
-  AppError,
-  getErrorMessage,
-} from "../../error/my-error";
-import { gql } from "../../__generated__";
-import { useMutation, useQuery } from "@apollo/client";
-
-type UserInfo = {
-  gmail?: string;
-};
+import { createContext, PropsWithChildren, useContext, useMemo } from "react";
+import { APP_ERROR_NAME, AppError } from "../../error/my-error";
+import { GoogleUserInfo, useMyGoogleLogin } from "./my-google-login-hook";
+import { useWalletLogin } from "./wallet-login-hook";
 
 const LoginContext = createContext<{
   isGoogleLoggedIn: boolean;
   isLoggedIn: boolean;
-  userInfo: UserInfo;
-  googleLogin: ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: () => void;
-    onError?: (error: AppError) => void;
-  }) => void;
+  googleUserInfo: GoogleUserInfo;
   logout: ({
     onSuccess,
     onError,
@@ -46,17 +21,18 @@ const LoginContext = createContext<{
     onSuccess?: (() => void) | undefined;
     onError?: ((error: AppError) => void) | undefined;
   }) => void;
-}>({
-  isGoogleLoggedIn: false,
-  isLoggedIn: false,
-  userInfo: {},
-  googleLogin: ({
+  walletSignUp: ({
     onSuccess,
     onError,
   }: {
-    onSuccess?: () => void;
-    onError?: (error: AppError) => void;
-  }) => {},
+    onSuccess?: (() => void) | undefined;
+    onError?: ((error: AppError) => void) | undefined;
+  }) => void;
+  isWalletConnected: boolean;
+}>({
+  isGoogleLoggedIn: false,
+  isLoggedIn: false,
+  googleUserInfo: {},
   logout: ({
     onSuccess,
     onError,
@@ -71,40 +47,20 @@ const LoginContext = createContext<{
     onSuccess?: () => void;
     onError?: (error: AppError) => void;
   }) => {},
+  walletSignUp: ({
+    onSuccess,
+    onError,
+  }: {
+    onSuccess?: (() => void) | undefined;
+    onError?: ((error: AppError) => void) | undefined;
+  }) => {},
+  isWalletConnected: false,
 });
 
-const CREATE_USER_BY_GMAIL = gql(/* GraphQL */ `
-  mutation CreateUserByGmail($gmail: String!) {
-    createUserByGmail(gmail: $gmail) {
-      name
-    }
-  }
-`);
-
 export const LoginProvider = ({ children }: PropsWithChildren) => {
-  const [isGoogleLoggedIn, setIsGoogleLoggedIn] = useState(false);
-
-  const onGoogleLoginOnSuccessCallback =
-    useRef<({ email, picture }: { email: string; picture: string }) => void>();
-  const onGoogleLoginOnErrorCallback = useRef<(error: AppError) => void>();
-  const [createUserByGmail] = useMutation(CREATE_USER_BY_GMAIL);
-
-  const [userInfo, setUserInfo] = useState<UserInfo>({});
-
-  useEffect(() => {
-    (async () => {
-      const _isGoogleLoggedIn =
-        await GoogleLoginHelper.getInstance().asyncIsLoggedInGoogle();
-      setIsGoogleLoggedIn(_isGoogleLoggedIn);
-      if (_isGoogleLoggedIn && !userInfo.gmail) {
-        await asyncUpdateUserInfo();
-      }
-    })();
-  });
-
-  const isLoggedIn = useMemo(() => {
-    return isGoogleLoggedIn;
-  }, [isGoogleLoggedIn]);
+  const { isGoogleLoggedIn, googleUserInfo, googleSignUp, googleLogout } =
+    useMyGoogleLogin();
+  const { walletSignUp, isWalletConnected } = useWalletLogin();
 
   const logout = ({
     onSuccess,
@@ -115,131 +71,33 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
   }) => {
     try {
       if (isGoogleLoggedIn) {
-        GoogleLoginHelper.getInstance().googleLogout();
+        googleLogout();
       }
+      // asyncWalletLogout();
       onSuccess?.();
     } catch (e) {
       if (e instanceof Error) {
-        onError?.(new AppError(e.toString(), APP_ERROR_NAME.LOGOUT_ERROR));
+        onError?.(new AppError(e.toString(), APP_ERROR_NAME.LOGOUT));
       } else {
-        onError?.(new AppError("unknown", APP_ERROR_NAME.LOGOUT_ERROR));
+        onError?.(new AppError("unknown", APP_ERROR_NAME.LOGOUT));
       }
     }
   };
 
-  const asyncUpdateUserInfo = async () => {
-    const _userInfo =
-      await GoogleLoginHelper.getInstance().asyncFetchUserInfo();
-    if (!_userInfo) {
-      return { email: null, picture: null };
-    }
-    const { email, picture } = _userInfo;
-    setUserInfo((prevState) => {
-      return { ...prevState, gmail: email };
-    });
-    return { email, picture };
-  };
-
-  const _googleLogin = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      (async () => {
-        try {
-          GoogleLoginHelper.getInstance().storeTokenResponse(tokenResponse);
-          const { email, picture } = await asyncUpdateUserInfo();
-          onGoogleLoginOnSuccessCallback.current?.({ email, picture });
-          onGoogleLoginOnSuccessCallback.current = undefined;
-        } catch (e) {
-          onGoogleLoginOnErrorCallback.current?.(
-            new AppError(getErrorMessage(e), APP_ERROR_NAME.GOOGLE_LOGIN)
-          );
-          onGoogleLoginOnErrorCallback.current = undefined;
-        }
-      })();
-    },
-    onError: (errorResponse) => {
-      onGoogleLoginOnErrorCallback.current?.(
-        new AppError(
-          errorResponse.error ?? "unknown",
-          APP_ERROR_NAME.GOOGLE_LOGIN
-        )
-      );
-      onGoogleLoginOnErrorCallback.current = undefined;
-    },
-    onNonOAuthError: ({
-      type,
-    }: {
-      type: "popup_failed_to_open" | "popup_closed" | "unknown";
-    }) => {
-      onGoogleLoginOnErrorCallback.current?.(
-        new AppError(type, APP_ERROR_NAME.GOOGLE_LOGIN_AUTH)
-      );
-      onGoogleLoginOnErrorCallback.current = undefined;
-    },
-  });
-
-  const googleLogin = ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: () => void;
-    onError?: (error: AppError) => void;
-  }) => {
-    onGoogleLoginOnSuccessCallback.current = onSuccess;
-    onGoogleLoginOnErrorCallback.current = onError;
-    _googleLogin();
-  };
-
-  const googleSignUp = ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: () => void;
-    onError?: (error: AppError) => void;
-  }) => {
-    onGoogleLoginOnSuccessCallback.current = ({
-      email,
-      picture,
-    }: {
-      email: string;
-      picture: string;
-    }) => {
-      (async () => {
-        try {
-          if (userInfo.gmail === email) {
-            onSuccess?.();
-            return;
-          }
-          await createUserByGmail({
-            variables: {
-              gmail: email,
-            },
-          });
-          onSuccess?.();
-        } catch (e) {
-          const message = getErrorMessage(e);
-          if (message === "Already exist gmail") {
-            onSuccess?.();
-          } else {
-            onError?.(new AppError(message, APP_ERROR_NAME.GOOGLE_SIGN_UP));
-          }
-        }
-      })();
-    };
-    onGoogleLoginOnErrorCallback.current = (error) => {
-      onError?.(error);
-    };
-    _googleLogin();
-  };
+  const isLoggedIn = useMemo(() => {
+    return isGoogleLoggedIn && isWalletConnected;
+  }, [isGoogleLoggedIn, isWalletConnected]);
 
   return (
     <LoginContext.Provider
       value={{
         isGoogleLoggedIn,
-        googleLogin,
-        logout,
         isLoggedIn,
         googleSignUp,
-        userInfo,
+        logout,
+        googleUserInfo,
+        walletSignUp,
+        isWalletConnected,
       }}
     >
       {children}

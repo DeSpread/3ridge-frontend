@@ -4,8 +4,8 @@ import React, { MouseEventHandler } from "react";
 import LinkTypography from "../../../atoms/link-typography";
 import EmailIcon from "../../../atoms/svg/email-icon";
 import { useTheme } from "@mui/material/styles";
-import ConnectButton from "../../connect-button";
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
+import SecondaryButton from "../../../atoms/secondary-button";
 
 type SignInSelectDialogProps = SignDialogProps & {
   onContinueWithWalletClicked: MouseEventHandler;
@@ -17,14 +17,14 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
   const theme = useTheme();
   return (
     <>
-      <ConnectButton
+      <SecondaryButton
         fullWidth={true}
-        onClick={(e) => {
+        onClick={async (e) => {
           props.onContinueWithWalletClicked(e);
         }}
       >
         Continue with wallet
-      </ConnectButton>
+      </SecondaryButton>
       <Typography variant={"body2"}>Or</Typography>
       <Stack sx={{ width: "100%" }}>
         <Stack direction={"column"} spacing={2}>
@@ -59,9 +59,7 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
             <LinkTypography
               variant={"body2"}
               href={"/signup"}
-              onClick={(e) => {
-                props.onSignUpClicked(e);
-              }}
+              onClick={props.onSignUpClicked}
             >
               &nbsp;SignUp
             </LinkTypography>

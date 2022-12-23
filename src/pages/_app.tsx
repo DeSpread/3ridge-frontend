@@ -11,6 +11,7 @@ import { client as wagmiClient } from "../wagmi/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { RecoilRoot, useSetRecoilState } from "recoil";
 import { LoginProvider } from "../provider/login/login-provider";
+import { AlertProvider } from "../provider/alert/alert-provider";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -32,7 +33,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
             <ApolloProvider client={apolloClient}>
               {/*-- my provider should be below here --*/}
               <LoginProvider>
-                {getLayout(<Component {...pageProps} />)}
+                <AlertProvider>
+                  {getLayout(<Component {...pageProps} />)}
+                </AlertProvider>
               </LoginProvider>
             </ApolloProvider>
           </RecoilRoot>

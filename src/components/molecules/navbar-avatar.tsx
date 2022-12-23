@@ -69,50 +69,22 @@ const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
   );
 };
 
-const USER_BY_GMAIL = gql(/* GraphQL */ `
-  query userByGmail($gmail: String!) {
-    userByGmail(gmail: $gmail) {
-      name
-      wallet {
-        address
-        chain
-      }
-    }
-  }
-`);
-
-const useFindUserQuery = () => {
-  const { isGoogleLoggedIn, userInfo } = useLogin();
-
-  const { data, loading } = useQuery(
-    USER_BY_GMAIL,
-    userInfo.gmail
-      ? {
-          variables: {
-            gmail: userInfo.gmail,
-          },
-        }
-      : undefined
-  );
-
-  if (isGoogleLoggedIn) {
-    return { data: data?.userByGmail, loading };
-  }
-  return { data: null, loading: false };
-};
-
 type NavBarAvatarProps = PropsWithChildren & {
   src?: string;
-  onProfileItemClick?: MouseEventHandler;
+  walletAddress?: string;
+  onProfileItemClicked?: MouseEventHandler;
+  onLogoutBtnClicked?: MouseEventHandler;
 };
 
-const NavbarAvatar = ({ src, onProfileItemClick }: NavBarAvatarProps) => {
+const NavbarAvatar = ({
+  src,
+  walletAddress,
+  onProfileItemClicked,
+  onLogoutBtnClicked,
+}: NavBarAvatarProps) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element>();
-  const { logout } = useLogin();
-  const router = useRouter();
-  const { data, loading } = useFindUserQuery();
 
   return (
     <Box
@@ -137,7 +109,7 @@ const NavbarAvatar = ({ src, onProfileItemClick }: NavBarAvatarProps) => {
           sx={{
             borderRadius: 1,
           }}
-          onClick={onProfileItemClick}
+          onClick={onProfileItemClicked}
         >
           <Stack
             direction={"row"}
@@ -147,10 +119,10 @@ const NavbarAvatar = ({ src, onProfileItemClick }: NavBarAvatarProps) => {
           >
             <Avatar sx={{ width: 32, height: 32 }} src={src}></Avatar>
             <Stack direction={"column"}>
-              {data?.wallet?.[0].address && (
+              {walletAddress && (
                 <GradientTypography>
                   {StringHelper.getInstance().getMidEllipsisString(
-                    `${data?.wallet?.[0].address}`
+                    `${walletAddress}`
                   )}
                 </GradientTypography>
               )}
@@ -176,16 +148,7 @@ const NavbarAvatar = ({ src, onProfileItemClick }: NavBarAvatarProps) => {
           sx={{
             borderRadius: 1,
           }}
-          onClick={() => {
-            logout({
-              onSuccess: () => {
-                router.push("/").then();
-              },
-              onError: (error) => {
-                // todo : show alert error message
-              },
-            });
-          }}
+          onClick={onLogoutBtnClicked}
         >
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
             <PowerSettingsNewIcon

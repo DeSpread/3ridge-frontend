@@ -14,6 +14,17 @@ export type Scalars = {
   Float: number;
 };
 
+export enum CategoryType {
+  Defi = 'DEFI',
+  Layer1 = 'LAYER1',
+  Layer2 = 'LAYER2',
+  Nft = 'NFT'
+}
+
+export enum ChainType {
+  Evm = 'EVM'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   createProject: Project;
@@ -24,17 +35,19 @@ export type Mutation = {
   removeProject: Project;
   removeTicketById: Ticket;
   removeUserByName: User;
+  updateProject: Project;
   updateTicketById: Ticket;
   updateUserByName: User;
 };
 
 
 export type MutationCreateProjectArgs = {
+  categories?: InputMaybe<Array<CategoryType>>;
   description?: InputMaybe<Scalars['String']>;
-  logoUrl?: InputMaybe<Scalars['String']>;
-  managerList?: InputMaybe<Array<UserUpdateInput>>;
-  name?: InputMaybe<Scalars['String']>;
-  projectUrl?: InputMaybe<Scalars['String']>;
+  managedUsers?: InputMaybe<Array<UserInputType>>;
+  name: Scalars['String'];
+  thumbnailUrl?: InputMaybe<Scalars['String']>;
+  tickets?: InputMaybe<Array<TicketInputType>>;
 };
 
 
@@ -52,11 +65,13 @@ export type MutationCreateUserByEmailArgs = {
 
 export type MutationCreateUserByGmailArgs = {
   gmail: Scalars['String'];
+  profileImageUrl?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationCreateUserByWalletArgs = {
-  walletAddress: Scalars['String'];
+  address: Scalars['String'];
+  chainType: ChainType;
 };
 
 
@@ -72,6 +87,17 @@ export type MutationRemoveTicketByIdArgs = {
 
 export type MutationRemoveUserByNameArgs = {
   name: Scalars['String'];
+};
+
+
+export type MutationUpdateProjectArgs = {
+  categories?: InputMaybe<Array<CategoryType>>;
+  description?: InputMaybe<Scalars['String']>;
+  managedUsers?: InputMaybe<Array<UserInputType>>;
+  name?: InputMaybe<Scalars['String']>;
+  projectId: Scalars['String'];
+  thumbnailUrl?: InputMaybe<Scalars['String']>;
+  tickets?: InputMaybe<Array<TicketInputType>>;
 };
 
 
@@ -92,6 +118,7 @@ export type MutationUpdateUserByNameArgs = {
 
 export type Project = {
   __typename?: 'Project';
+  categories?: Maybe<Array<CategoryType>>;
   description?: Maybe<Scalars['String']>;
   managedUsers?: Maybe<Array<User>>;
   name: Scalars['String'];
@@ -100,6 +127,7 @@ export type Project = {
 };
 
 export type ProjectInputType = {
+  categories?: InputMaybe<Array<CategoryType>>;
   description?: InputMaybe<Scalars['String']>;
   managedUsers?: InputMaybe<Array<UserInputType>>;
   name: Scalars['String'];
@@ -111,7 +139,7 @@ export type Query = {
   __typename?: 'Query';
   completedTickets: Array<Ticket>;
   inCompletedTickets: Array<Ticket>;
-  project: Array<Project>;
+  projectByName: Array<Project>;
   projects: Array<Project>;
   ticketById: Ticket;
   tickets: Array<Ticket>;
@@ -123,7 +151,7 @@ export type Query = {
 };
 
 
-export type QueryProjectArgs = {
+export type QueryProjectByNameArgs = {
   projectName: Scalars['String'];
 };
 
@@ -223,7 +251,7 @@ export type UserUpdateInput = {
 export type UserWallet = {
   __typename?: 'UserWallet';
   address: Scalars['String'];
-  chain: Scalars['String'];
+  chainType: ChainType;
 };
 
 export type UserWalletInput = {
@@ -233,7 +261,7 @@ export type UserWalletInput = {
 
 export type UserWalletInputType = {
   address: Scalars['String'];
-  chain: Scalars['String'];
+  chainType: ChainType;
 };
 
 export type UserByGmailQueryVariables = Exact<{
@@ -241,21 +269,31 @@ export type UserByGmailQueryVariables = Exact<{
 }>;
 
 
-export type UserByGmailQuery = { __typename?: 'Query', userByGmail: { __typename?: 'User', name: string, wallet?: Array<{ __typename?: 'UserWallet', address: string, chain: string }> | null } };
+export type UserByGmailQuery = { __typename?: 'Query', userByGmail: { __typename?: 'User', name: string, profileImageUrl?: string | null } };
 
 export type TicketsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type TicketsQuery = { __typename?: 'Query', tickets: Array<{ __typename?: 'Ticket', completed?: boolean | null }> };
 
+export type CreateUserByWalletMutationVariables = Exact<{
+  address: Scalars['String'];
+  chainType: ChainType;
+}>;
+
+
+export type CreateUserByWalletMutation = { __typename?: 'Mutation', createUserByWallet: { __typename?: 'User', name: string } };
+
 export type CreateUserByGmailMutationVariables = Exact<{
   gmail: Scalars['String'];
+  profileImageUrl: Scalars['String'];
 }>;
 
 
 export type CreateUserByGmailMutation = { __typename?: 'Mutation', createUserByGmail: { __typename?: 'User', name: string } };
 
 
-export const UserByGmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userByGmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"gmail"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userByGmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"gmail"},"value":{"kind":"Variable","name":{"kind":"Name","value":"gmail"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"wallet"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}}]}}]}}]} as unknown as DocumentNode<UserByGmailQuery, UserByGmailQueryVariables>;
+export const UserByGmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userByGmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"gmail"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userByGmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"gmail"},"value":{"kind":"Variable","name":{"kind":"Name","value":"gmail"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}}]}}]}}]} as unknown as DocumentNode<UserByGmailQuery, UserByGmailQueryVariables>;
 export const TicketsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Tickets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tickets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"completed"}}]}}]}}]} as unknown as DocumentNode<TicketsQuery, TicketsQueryVariables>;
-export const CreateUserByGmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUserByGmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"gmail"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUserByGmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"gmail"},"value":{"kind":"Variable","name":{"kind":"Name","value":"gmail"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateUserByGmailMutation, CreateUserByGmailMutationVariables>;
+export const CreateUserByWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUserByWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chainType"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ChainType"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUserByWallet"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"address"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}},{"kind":"Argument","name":{"kind":"Name","value":"chainType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chainType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateUserByWalletMutation, CreateUserByWalletMutationVariables>;
+export const CreateUserByGmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUserByGmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"gmail"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"profileImageUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUserByGmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"gmail"},"value":{"kind":"Variable","name":{"kind":"Name","value":"gmail"}}},{"kind":"Argument","name":{"kind":"Name","value":"profileImageUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"profileImageUrl"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateUserByGmailMutation, CreateUserByGmailMutationVariables>;

@@ -6,11 +6,15 @@ import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useLogin } from "../../../provider/login/login-provider";
 import { AppError } from "../../../error/my-error";
+import { MouseEventHandler, PropsWithChildren } from "react";
 
-const SignUpOthersForm = () => {
+type SignUpOtherFormProps = PropsWithChildren & {
+  onSignUpWithGoogleClicked?: MouseEventHandler;
+  onSignUpWithEmailClicked?: MouseEventHandler;
+};
+
+const SignUpOthersForm = (props: SignUpOtherFormProps) => {
   const theme = useTheme();
-  const router = useRouter();
-  const { googleSignUp } = useLogin();
 
   return (
     <>
@@ -39,18 +43,7 @@ const SignUpOthersForm = () => {
                 }}
               ></Avatar>
             }
-            onClick={(e) => {
-              googleSignUp({
-                onSuccess: () => {
-                  // console.log(email);
-                  router.push("/").then();
-                },
-                onError: (error: AppError) => {
-                  console.log(error);
-                  // todo : show alert message (${error.name}, ${error.message})
-                },
-              });
-            }}
+            onClick={props.onSignUpWithGoogleClicked}
           >
             Sign Up with Google
           </PrimaryButton>
@@ -72,6 +65,7 @@ const SignUpOthersForm = () => {
                   <EmailIcon></EmailIcon>
                 </Avatar>
               }
+              onClick={props.onSignUpWithEmailClicked}
             >
               Sign Up with email
             </PrimaryButton>

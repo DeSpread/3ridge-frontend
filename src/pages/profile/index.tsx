@@ -1,5 +1,5 @@
 import { ReactElement, useEffect } from "react";
-import MainLayout from "../../components/layouts/main-layout";
+import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { Avatar, Box, Chip, Stack, Typography } from "@mui/material";
@@ -97,10 +97,7 @@ const Profile = (props: AppProps) => {
                 `${address}`
               )}
             ></Chip>
-            <Chip
-              icon={<MarkEmailReadIcon />}
-              label={"test@gmail.com"}
-            ></Chip>
+            <Chip icon={<MarkEmailReadIcon />} label={"test@gmail.com"}></Chip>
             {/*<Chip*/}
             {/*    icon={<TwitterIcon/>}*/}
             {/*    label={"Twitter"}*/}

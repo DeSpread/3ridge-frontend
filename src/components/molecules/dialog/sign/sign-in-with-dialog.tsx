@@ -1,18 +1,17 @@
-import { Avatar, Stack, Typography } from "@mui/material";
+import { Avatar, Stack } from "@mui/material";
 import PrimaryButton from "../../../atoms/primary-button";
-import React from "react";
-import LinkTypography from "../../../atoms/link-typography";
+import React, { MouseEventHandler } from "react";
 import EmailIcon from "../../../atoms/svg/email-icon";
 import { useTheme } from "@mui/material/styles";
-import ConnectButton from "../../connect-button";
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
-import { useLogin } from "../../../../provider/login/login-provider";
-import { useRouter } from "next/router";
 
-const SignInWithDialogContent = (props: SignDialogProps) => {
+type SignInWithDialogProps = SignDialogProps & {
+  onSignInWithGoogleClicked: MouseEventHandler;
+};
+
+const SignInWithDialogContent = (props: SignInWithDialogProps) => {
   const theme = useTheme();
-  const router = useRouter();
-  const { googleSignUp } = useLogin();
+
   return (
     <>
       <Stack sx={{ width: "100%" }} spacing={2}>
@@ -27,17 +26,7 @@ const SignInWithDialogContent = (props: SignDialogProps) => {
               }}
             ></Avatar>
           }
-          onClick={(event) => {
-            googleSignUp({
-              onSuccess: () => {
-                router.push("/").then();
-                props.onCloseBtnClicked(event);
-              },
-              onError: (error) => {
-                // todo : show error alert
-              },
-            });
-          }}
+          onClick={props.onSignInWithGoogleClicked}
         >
           Sign In with Google
         </PrimaryButton>
