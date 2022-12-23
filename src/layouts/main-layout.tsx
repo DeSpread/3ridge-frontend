@@ -14,6 +14,8 @@ import { useLogin } from "../provider/login/login-provider";
 import { showSignInDialogState } from "../recoil";
 import { gql } from "../__generated__";
 import { useQuery } from "@apollo/client";
+import { AppError } from "../error/my-error";
+import { useAlert } from "../provider/alert/alert-provider";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -54,10 +56,11 @@ const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const router = useRouter();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
-  const { isLoggedIn, logout, googleSignUp } = useLogin();
+  const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
   const { data: userData } = useFindUserQuery();
   const showSignInDialog = useRecoilValue(showSignInDialogState);
   const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
+  const { showErrorAlert } = useAlert();
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -119,7 +122,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           router.push("/").then();
                         },
                         onError: (error) => {
-                          // todo : show alert error message
+                          // showAlert({ title: "Contact", content: error.message });
                         },
                       });
                     }}
@@ -181,7 +184,18 @@ const MainLayout = (props: MainLayoutProps) => {
         onClose={() => {
           setShowSignInDialog(false);
         }}
-        onContinueWithWalletClicked={(e) => {}}
+        onContinueWithWalletClicked={(e) => {
+          e.preventDefault();
+          walletSignUp({
+            onSuccess: () => {
+              router.push("/").then();
+              setShowSignInDialog(false);
+            },
+            onError: (error: AppError) => {
+              showErrorAlert({ content: error.message });
+            },
+          });
+        }}
       ></SignInDialog>
       <SignInWithDialog
         title={"Sign In with others"}
@@ -193,7 +207,7 @@ const MainLayout = (props: MainLayoutProps) => {
         onClose={() => {
           setSignUpWithVisible(false);
         }}
-        onSignInWithGoogleClicked={() => {
+        onSignInWithGoogleClicked={(e) => {
           googleSignUp({
             onSuccess: () => {
               router.push("/").then();

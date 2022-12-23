@@ -2,79 +2,39 @@ import { createContext, PropsWithChildren, useContext, useMemo } from "react";
 import { APP_ERROR_NAME, AppError } from "../../error/my-error";
 import { GoogleUserInfo, useMyGoogleLogin } from "./my-google-login-hook";
 import { useWalletLogin } from "./wallet-login-hook";
+import { SuccessErrorCallback } from "../../type";
 
 const LoginContext = createContext<{
   isGoogleLoggedIn: boolean;
   isLoggedIn: boolean;
   googleUserInfo: GoogleUserInfo;
-  logout: ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: () => void;
-    onError?: (error: AppError) => void;
-  }) => void;
-  googleSignUp: ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: (() => void) | undefined;
-    onError?: ((error: AppError) => void) | undefined;
-  }) => void;
-  walletSignUp: ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: (() => void) | undefined;
-    onError?: ((error: AppError) => void) | undefined;
-  }) => void;
+  logout: SuccessErrorCallback;
+  googleSignUp: SuccessErrorCallback;
+  walletSignUp: SuccessErrorCallback;
   isWalletConnected: boolean;
 }>({
   isGoogleLoggedIn: false,
   isLoggedIn: false,
   googleUserInfo: {},
-  logout: ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: () => void;
-    onError?: (error: AppError) => void;
-  }) => {},
-  googleSignUp: ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: () => void;
-    onError?: (error: AppError) => void;
-  }) => {},
-  walletSignUp: ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: (() => void) | undefined;
-    onError?: ((error: AppError) => void) | undefined;
-  }) => {},
+  logout: ({ onSuccess, onError }) => {},
+  googleSignUp: ({ onSuccess, onError }) => {},
+  walletSignUp: ({ onSuccess, onError }) => {},
   isWalletConnected: false,
 });
 
 export const LoginProvider = ({ children }: PropsWithChildren) => {
   const { isGoogleLoggedIn, googleUserInfo, googleSignUp, googleLogout } =
     useMyGoogleLogin();
-  const { walletSignUp, isWalletConnected } = useWalletLogin();
+  const { walletSignUp, isWalletConnected, walletLogout } = useWalletLogin();
 
-  const logout = ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: () => void;
-    onError?: (error: AppError) => void;
-  }) => {
+  const logout: SuccessErrorCallback = ({ onSuccess, onError }) => {
     try {
       if (isGoogleLoggedIn) {
-        googleLogout();
+        googleLogout({ onSuccess, onError });
       }
-      // asyncWalletLogout();
-      onSuccess?.();
+      if (isWalletConnected) {
+        walletLogout({ onSuccess, onError });
+      }
     } catch (e) {
       if (e instanceof Error) {
         onError?.(new AppError(e.toString(), APP_ERROR_NAME.LOGOUT));
@@ -85,7 +45,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
   };
 
   const isLoggedIn = useMemo(() => {
-    return isGoogleLoggedIn && isWalletConnected;
+    return isGoogleLoggedIn || isWalletConnected;
   }, [isGoogleLoggedIn, isWalletConnected]);
 
   return (
