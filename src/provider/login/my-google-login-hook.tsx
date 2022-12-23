@@ -8,6 +8,7 @@ import { useMutation } from "@apollo/client";
 import { gql } from "../../__generated__";
 import GoogleLoginHelper from "../../helper/google-login-helper";
 import { useGoogleLogin } from "@react-oauth/google";
+import { SuccessErrorCallback } from "../../type";
 
 export type GoogleUserInfo = {
   gmail?: string;
@@ -44,9 +45,13 @@ export function useMyGoogleLogin() {
     return googleUserInfo?.gmail !== undefined ? true : false;
   }, [googleUserInfo]);
 
-  const googleLogout = () => {
-    GoogleLoginHelper.getInstance().googleLogout();
-    setGoogleUserInfo({});
+  const googleLogout: SuccessErrorCallback = ({ onSuccess, onError }) => {
+    try {
+      GoogleLoginHelper.getInstance().googleLogout();
+      setGoogleUserInfo({});
+    } catch (e) {
+      onError?.(new AppError(getErrorMessage(e), APP_ERROR_NAME.GOOGLE_LOGOUT));
+    }
   };
 
   const asyncUpdateGoogleUserInfo = async () => {
@@ -99,13 +104,7 @@ export function useMyGoogleLogin() {
     },
   });
 
-  const googleSignUp = ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: () => void;
-    onError?: (error: AppError) => void;
-  }) => {
+  const googleSignUp: SuccessErrorCallback = ({ onSuccess, onError }) => {
     onGoogleLoginOnSuccessCallback.current = ({
       email,
       picture,

@@ -8,7 +8,7 @@ import {
 import { useMutation } from "@apollo/client";
 import { gql } from "../../__generated__";
 import { useEffect, useMemo, useState } from "react";
-import GoogleLoginHelper from "../../helper/google-login-helper";
+import { SuccessErrorCallback } from "../../type";
 
 const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
   mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {
@@ -41,16 +41,9 @@ export function useWalletLogin() {
     return walletInfo?.address ? true : false;
   }, [walletInfo]);
 
-  const walletSignUp = ({
-    onSuccess,
-    onError,
-  }: {
-    onSuccess?: (() => void) | undefined;
-    onError?: ((error: AppError) => void) | undefined;
-  }) => {
+  const walletSignUp: SuccessErrorCallback = ({ onSuccess, onError }) => {
     (async () => {
       try {
-        await disconnectAsync();
         const { account } = await connectAsync({ connector: connectors[0] });
         setWalletInfo((prevState) => {
           return { ...prevState, address: account };
@@ -77,5 +70,18 @@ export function useWalletLogin() {
     })();
   };
 
-  return { walletSignUp, walletInfo, isWalletConnected };
+  const walletLogout: SuccessErrorCallback = ({ onSuccess, onError }) => {
+    (async () => {
+      try {
+        await disconnectAsync();
+        setWalletInfo({});
+        onSuccess?.();
+      } catch (e) {
+        const message = getErrorMessage(e);
+        onError?.(new AppError(message, APP_ERROR_NAME.WALLET_LOGOUT));
+      }
+    })();
+  };
+
+  return { walletSignUp, walletInfo, isWalletConnected, walletLogout };
 }

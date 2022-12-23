@@ -55,9 +55,7 @@ const WithBaseSignInDialog = <P extends SignDialogProps>(
               </Typography>
               <IconButton
                 sx={{ borderRadius: 32, marginRight: -1 }}
-                onClick={(e) => {
-                  props.onCloseBtnClicked(e);
-                }}
+                onClick={props.onCloseBtnClicked}
               >
                 <CloseIcon></CloseIcon>
               </IconButton>

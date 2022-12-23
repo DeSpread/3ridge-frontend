@@ -19,21 +19,14 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
     <>
       <SecondaryButton
         fullWidth={true}
-        onClick={async (e) => {
-          props.onContinueWithWalletClicked(e);
-        }}
+        onClick={props.onContinueWithWalletClicked}
       >
         Continue with wallet
       </SecondaryButton>
       <Typography variant={"body2"}>Or</Typography>
       <Stack sx={{ width: "100%" }}>
         <Stack direction={"column"} spacing={2}>
-          <PrimaryButton
-            fullWidth={true}
-            onClick={(e) => {
-              props.onSignInWithClicked(e);
-            }}
-          >
+          <PrimaryButton fullWidth={true} onClick={props.onSignInWithClicked}>
             <Stack direction={"row"} spacing={1}>
               <Typography color={"neutral.100"} variant={"body2"}>
                 Sign In with

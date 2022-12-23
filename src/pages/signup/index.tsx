@@ -66,7 +66,6 @@ const Signup = () => {
                 });
               }}
               onSignUpWithEmailClicked={(e) => {
-                console.log("aaa");
                 showAlert({ title: "test", content: "abc" });
               }}
             ></SignUpOthersForm>

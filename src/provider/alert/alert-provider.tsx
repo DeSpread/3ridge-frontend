@@ -1,6 +1,9 @@
 import React, {
   createContext,
   PropsWithChildren,
+  ReactComponentElement,
+  ReactDOM,
+  ReactElement,
   useContext,
   useRef,
   useState,
@@ -25,15 +28,17 @@ import Draggable from "react-draggable";
 
 const AlertContext = createContext<{
   showAlert: ({ title, content }: { title: string; content: string }) => void;
+  showErrorAlert: ({ content }: { content: string }) => void;
   closeAlert: () => void;
 }>({
-  showAlert: ({ title, content }: { title: string; content: string }) => {},
+  showAlert: ({ title, content }) => {},
+  showErrorAlert: ({ content }) => {},
   closeAlert: () => {},
 });
 
 type AlertDesc = {
   title?: String;
-  content?: String;
+  content?: String | ReactElement;
 };
 
 const Transition = React.forwardRef(function Transition(
@@ -61,6 +66,17 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
     setOpen(true);
   };
 
+  const showErrorAlert = ({ content }: { content: string }) => {
+    alertDescRef.current.title = "SOMETHING WRONG";
+    alertDescRef.current.content = (
+      <Stack direction={"column"} sx={{ flex: 1, background: "" }}>
+        <div>{content}</div>
+        <div>Contact to hans@despread.io</div>
+      </Stack>
+    ); //`${content}\n\nContact to hans@despread.io`;
+    setOpen(true);
+  };
+
   const closeAlert = () => {
     alertDescRef.current.title = undefined;
     alertDescRef.current.content = undefined;
@@ -68,7 +84,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <AlertContext.Provider value={{ showAlert, closeAlert }}>
+    <AlertContext.Provider value={{ showAlert, closeAlert, showErrorAlert }}>
       {children}
       <Dialog
         open={open}
@@ -114,7 +130,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
             minHeight: 128,
             background: "",
             paddingTop: 0,
-            paddingBottom: 0,
+            paddingBottom: 3,
           }}
         >
           <Stack
