@@ -1,6 +1,6 @@
 import { Box, Stack, Typography, Link, Grid } from "@mui/material";
 import NextLink from "next/link";
-import SecondaryButton from "../../atoms/secondary-button";
+import SecondaryButton from "../../components/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
 
 const footerData = [

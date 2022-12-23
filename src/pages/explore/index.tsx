@@ -1,5 +1,5 @@
 import { ReactElement, SyntheticEvent, useEffect, useState } from "react";
-import MainLayout from "../../components/layouts/main-layout";
+import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { Box, Divider, Grid, Skeleton, Stack, Typography } from "@mui/material";

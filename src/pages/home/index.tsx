@@ -1,13 +1,13 @@
 import { ReactElement, useEffect } from "react";
 import { Box, Typography, Stack, Grid } from "@mui/material";
 import Head from "next/head";
-import MainLayout from "../../components/layouts/main-layout";
+import MainLayout from "../../layouts/main-layout";
 import type { AppProps } from "next/app";
 import { useTheme } from "@mui/material/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
 import backgroundIconImageProps from "./data.json";
-import HomeFooter from "../../components/layouts/footer/home-footer";
+import HomeFooter from "../../layouts/footer/home-footer";
 import EventCollectionCard from "../../components/molecules/event-collection-card";
 import EventSingleCard from "../../components/molecules/event-single-card";
 import SecondaryButton from "../../components/atoms/secondary-button";

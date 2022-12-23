@@ -2,16 +2,18 @@ import { AppBar, Box, Stack, Toolbar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
 import { ReactNode, useState } from "react";
-import NavbarButtonSet from "../molecules/navbar-button-set";
-import NavbarAvatar from "../molecules/navbar-avatar";
+import NavbarButtonSet from "../components/molecules/navbar-button-set";
+import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
-import PrimaryButton from "../atoms/primary-button";
-import SecondaryButton from "../atoms/secondary-button";
-import SignInDialog from "../molecules/dialog/sign/sign-in-dialog";
-import SignInWithDialog from "../molecules/dialog/sign/sign-in-with-dialog";
+import PrimaryButton from "../components/atoms/primary-button";
+import SecondaryButton from "../components/atoms/secondary-button";
+import SignInDialog from "../components/molecules/dialog/sign/sign-in-dialog";
+import SignInWithDialog from "../components/molecules/dialog/sign/sign-in-with-dialog";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useLogin } from "../../provider/login/login-provider";
-import { showSignInDialogState } from "../../recoil";
+import { useLogin } from "../provider/login/login-provider";
+import { showSignInDialogState } from "../recoil";
+import { gql } from "../__generated__";
+import { useQuery } from "@apollo/client";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -19,11 +21,41 @@ type MainLayoutProps = PropsWithChildren & {
   disableNavButtonSet?: boolean;
 };
 
+const USER_BY_GMAIL = gql(/* GraphQL */ `
+  query userByGmail($gmail: String!) {
+    userByGmail(gmail: $gmail) {
+      name
+      profileImageUrl
+    }
+  }
+`);
+
+const useFindUserQuery = () => {
+  const { isGoogleLoggedIn, googleUserInfo } = useLogin();
+
+  const { data, loading } = useQuery(
+    USER_BY_GMAIL,
+    googleUserInfo.gmail
+      ? {
+          variables: {
+            gmail: googleUserInfo.gmail,
+          },
+        }
+      : undefined
+  );
+
+  if (isGoogleLoggedIn) {
+    return { data: data?.userByGmail, loading };
+  }
+  return { data: null, loading: false };
+};
+
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const router = useRouter();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
-  const { isGoogleLoggedIn } = useLogin();
+  const { isLoggedIn, logout, googleSignUp } = useLogin();
+  const { data: userData } = useFindUserQuery();
   const showSignInDialog = useRecoilValue(showSignInDialogState);
   const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
 
@@ -74,12 +106,24 @@ const MainLayout = (props: MainLayoutProps) => {
                   communitiesBtnOnClick={() => {}}
                   leaderBoardBtnOnClick={() => {}}
                 ></NavbarButtonSet>
-                {isGoogleLoggedIn ? (
+                {isLoggedIn ? (
                   <NavbarAvatar
-                    onProfileItemClick={(e) => {
+                    onProfileItemClicked={(e) => {
                       e.preventDefault();
                       router.push(`/profile`).then();
                     }}
+                    onLogoutBtnClicked={(e) => {
+                      e.preventDefault();
+                      logout({
+                        onSuccess: () => {
+                          router.push("/").then();
+                        },
+                        onError: (error) => {
+                          // todo : show alert error message
+                        },
+                      });
+                    }}
+                    src={userData?.profileImageUrl ?? undefined}
                   ></NavbarAvatar>
                 ) : (
                   <Stack direction={"row"} alignItems={"center"} spacing={2}>
@@ -148,6 +192,17 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         onClose={() => {
           setSignUpWithVisible(false);
+        }}
+        onSignInWithGoogleClicked={() => {
+          googleSignUp({
+            onSuccess: () => {
+              router.push("/").then();
+              setSignUpWithVisible(false);
+            },
+            onError: (error) => {
+              // todo : show error alert
+            },
+          });
         }}
       ></SignInWithDialog>
     </Box>

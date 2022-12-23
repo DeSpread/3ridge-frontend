@@ -11,12 +11,11 @@ import { showSignInDialogState } from "../../../recoil";
 type SignUpSelectFormProps = PropsWithChildren & {
   onClickSignUpWith?: MouseEventHandler;
   onClickConnectWallet?: MouseEventHandler;
+  onShowSignClicked?: MouseEventHandler;
 };
 
 const SignUpSelectForm = (props: SignUpSelectFormProps) => {
   const theme = useTheme();
-  const showSignInDialog = useRecoilValue(showSignInDialogState);
-  const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
 
   return (
     <>
@@ -63,12 +62,7 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
           </PrimaryButton>
           <Stack direction={"row"} justifyContent={"center"} spacing={1}>
             <Typography variant={"body2"}>Already have an account?</Typography>
-            <LinkTypography
-              variant={"body2"}
-              onClick={(event) => {
-                setShowSignInDialog(true);
-              }}
-            >
+            <LinkTypography variant={"body2"} onClick={props.onShowSignClicked}>
               Sign in
             </LinkTypography>
           </Stack>

@@ -1,10 +1,10 @@
 import { ReactElement, useEffect, useState } from "react";
-import MainLayout from "../../components/layouts/main-layout";
+import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import { useTheme } from "@mui/material/styles";
 import Head from "next/head";
 import { Avatar, Box, Chip, Grid, Stack, Typography } from "@mui/material";
-import CenterLayout from "../../components/layouts/center-layout";
+import CenterLayout from "../../layouts/center-layout";
 import VerifyCard from "../../components/molecules/verify-card";
 
 const eventCardData = [
