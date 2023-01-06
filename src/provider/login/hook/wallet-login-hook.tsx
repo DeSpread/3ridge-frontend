@@ -1,14 +1,14 @@
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { ChainType } from "../../__generated__/graphql";
+import { ChainType } from "../../../__generated__/graphql";
 import {
   APP_ERROR_NAME,
   AppError,
   getErrorMessage,
-} from "../../error/my-error";
+} from "../../../error/my-error";
 import { useMutation } from "@apollo/client";
-import { gql } from "../../__generated__";
+import { gql } from "../../../__generated__";
 import { useEffect, useMemo, useState } from "react";
-import { SuccessErrorCallback } from "../../type";
+import { SuccessErrorCallback } from "../../../type";
 
 const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
   mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {

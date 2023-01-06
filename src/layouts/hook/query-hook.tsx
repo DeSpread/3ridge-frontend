@@ -1,5 +1,5 @@
-import { gql } from "../__generated__";
-import { useLogin } from "../provider/login/login-provider";
+import { gql } from "../../__generated__";
+import { useLogin } from "../../provider/login/login-provider";
 import { useQuery } from "@apollo/client";
 
 const USER_BY_GMAIL = gql(/* GraphQL */ `
@@ -31,5 +31,7 @@ const useFindUserQuery = () => {
 
   return { data: null, loading: false };
 };
+
+// const create
 
 export { useFindUserQuery };

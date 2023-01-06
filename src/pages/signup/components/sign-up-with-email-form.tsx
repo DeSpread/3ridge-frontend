@@ -20,7 +20,7 @@ import ValidatedTextInput, {
 } from "../../../components/molecules/validated-text-input";
 import { useAlert } from "../../../provider/alert/alert-provider";
 import { MouseEventWithParam } from "../../../type";
-import { EmailSignUpParams } from "../../../provider/login/email-login-hook";
+import { EmailSignUpParams } from "../../../provider/login/hook/email-login-hook";
 
 type SignUpWithEmailFormProps = PropsWithChildren & {
   onClickSendVerification?: MouseEventHandler;
@@ -140,7 +140,6 @@ const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { showAlert } = useAlert();
 
   const isValidParams = () => {
     return (

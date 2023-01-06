@@ -1,7 +1,7 @@
 import { AppBar, Box, Stack, Toolbar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import NavbarButtonSet from "../components/molecules/navbar-button-set";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
@@ -14,8 +14,7 @@ import { useLogin } from "../provider/login/login-provider";
 import { showSignInDialogState } from "../recoil";
 import { AppError } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
-import { useFindUserQuery } from "../apollo/query-hook";
-import { useFirebaseAuth } from "../firebase/firebase-hook";
+import { useFindUserQuery } from "./hook/query-hook";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;

@@ -1,15 +1,10 @@
+import { MAIL_VERIFY, SuccessErrorCallbackWithParam } from "../../../type";
 import {
-  MAIL_VERIFY,
-  ObjectValues,
-  SuccessErrorCallbackWithParam,
-} from "../../type";
-import {
-  APP_ERROR_MESSAGE,
   APP_ERROR_NAME,
   AppError,
   getErrorMessage,
-} from "../../error/my-error";
-import { useFirebaseAuth } from "../../firebase/firebase-hook";
+} from "../../../error/my-error";
+import { useFirebaseAuth } from "../../../firebase/hook/firebase-hook";
 
 export type EmailSignUpParams = {
   email: string;
@@ -28,17 +23,22 @@ export function useEmailLogin() {
     { onSuccess, onError }
   ) => {
     (async () => {
+      const { email, password } = params;
       try {
-        const { email, password } = params;
         const res = await asyncVerifyUserWithEmailAndPassword(email, password);
         if (res === MAIL_VERIFY.SEND_VERIFICATION) {
           onSuccess?.();
           return;
         }
-        onError?.(new AppError(res, APP_ERROR_NAME.EMAIL_SIGN_UP));
+        onError?.(
+          new AppError(res, APP_ERROR_NAME.EMAIL_SIGN_UP, { email, password })
+        );
       } catch (e) {
         onError?.(
-          new AppError(getErrorMessage(e), APP_ERROR_NAME.EMAIL_SIGN_UP)
+          new AppError(getErrorMessage(e), APP_ERROR_NAME.EMAIL_SIGN_UP, {
+            email,
+            password,
+          })
         );
       }
     })();

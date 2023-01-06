@@ -1,11 +1,15 @@
-import { auth } from "./firebase-client";
+import { auth } from "../firebase-client";
 import {
   createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { APP_ERROR_NAME, AppError, getErrorMessage } from "../error/my-error";
-import { MAIL_VERIFY, MailVerified } from "../type";
+import {
+  APP_ERROR_NAME,
+  AppError,
+  getErrorMessage,
+} from "../../error/my-error";
+import { MAIL_VERIFY, MailVerified } from "../../type";
 
 const useFirebaseAuth = () => {
   const asyncSignInEmailWithVerify = async (

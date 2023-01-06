@@ -24,9 +24,12 @@ export const APP_ERROR_MESSAGE = {
 type AppErrorName = ObjectValues<typeof APP_ERROR_NAME>;
 
 export class AppError extends Error {
-  constructor(message: string, name?: AppErrorName) {
+  payload: any;
+
+  constructor(message: string, name?: AppErrorName, payload?: any) {
     super(message);
     this.name = name ?? "";
+    this.payload = payload;
     Error.captureStackTrace(this, this.constructor);
   }
 }

@@ -3,12 +3,12 @@ import {
   APP_ERROR_NAME,
   AppError,
   getErrorMessage,
-} from "../../error/my-error";
+} from "../../../error/my-error";
 import { useMutation } from "@apollo/client";
-import { gql } from "../../__generated__";
-import GoogleLoginHelper from "../../helper/google-login-helper";
+import { gql } from "../../../__generated__";
+import GoogleLoginHelper from "../../../helper/google-login-helper";
 import { useGoogleLogin } from "@react-oauth/google";
-import { SuccessErrorCallback } from "../../type";
+import { SuccessErrorCallback } from "../../../type";
 
 export type GoogleUserInfo = {
   gmail?: string;
