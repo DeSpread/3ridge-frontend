@@ -3,9 +3,6 @@ import PrimaryButton from "../../../components/atoms/primary-button";
 import EmailIcon from "../../../components/atoms/svg/email-icon";
 import LinkTypography from "../../../components/atoms/link-typography";
 import { useTheme } from "@mui/material/styles";
-import { useRouter } from "next/router";
-import { useLogin } from "../../../provider/login/login-provider";
-import { AppError } from "../../../error/my-error";
 import { MouseEventHandler, PropsWithChildren } from "react";
 
 type SignUpOtherFormProps = PropsWithChildren & {
@@ -23,7 +20,7 @@ const SignUpOthersForm = (props: SignUpOtherFormProps) => {
         sx={{
           background: "",
           minWidth: "500px",
-          paddingTop: 16,
+          paddingTop: 12,
           height: "500px",
         }}
         spacing={4}

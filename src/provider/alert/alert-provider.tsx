@@ -27,8 +27,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import Draggable from "react-draggable";
 
 const AlertContext = createContext<{
-  showAlert: ({ title, content }: { title: string; content: string }) => void;
-  showErrorAlert: ({ content }: { content: string }) => void;
+  showAlert: ({
+    title,
+    content,
+  }: {
+    title: string;
+    content: string | ReactElement;
+  }) => void;
+  showErrorAlert: ({ content }: { content: string | ReactElement }) => void;
   closeAlert: () => void;
 }>({
   showAlert: ({ title, content }) => {},
@@ -59,14 +65,14 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
     content,
   }: {
     title: string;
-    content: string;
+    content: string | ReactElement;
   }) => {
     alertDescRef.current.title = title;
     alertDescRef.current.content = content;
     setOpen(true);
   };
 
-  const showErrorAlert = ({ content }: { content: string }) => {
+  const showErrorAlert = ({ content }: { content: string | ReactElement }) => {
     alertDescRef.current.title = "SOMETHING WRONG";
     alertDescRef.current.content = (
       <Stack direction={"column"} sx={{ flex: 1, background: "" }}>
@@ -137,7 +143,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
             direction={"column"}
             sx={{
               background: "",
-              minHeight: 128,
+              minHeight: 96,
             }}
             justifyContent={"center"}
           >

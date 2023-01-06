@@ -8,17 +8,56 @@ import SignUpSelectForm from "./components/sign-up-select-form";
 import SignUpOthersForm from "./components/sign-up-others-form";
 import { useRouter } from "next/router";
 import { useLogin } from "../../provider/login/login-provider";
-import { AppError } from "../../error/my-error";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { AppError, getErrorMessage } from "../../error/my-error";
+import { useSetRecoilState } from "recoil";
 import { showSignInDialogState } from "../../recoil";
 import { useAlert } from "../../provider/alert/alert-provider";
+import SignUpWithEmailForm from "./components/sign-up-with-email-form";
+import { MAIL_VERIFY, MouseEventWithParam, ObjectValues } from "../../type";
+import { EmailSignUpParams } from "../../provider/login/hook/email-login-hook";
+import VerifyYourEmailForm from "./components/verify-your-email-form";
+import { useMutation } from "@apollo/client";
+import { client } from "../../apollo/client";
+import { gql } from "../../__generated__";
+import { ChainType } from "../../__generated__/graphql";
+
+export const FORM_TYPE = {
+  SELECT: "SELECT",
+  OTHERS: "OTHERS",
+  WITH_EMAIL: "WITH_EMAIL",
+  VERIFY_EMAIL: "VERIFY_EMAIL",
+} as const;
+
+type FormType = ObjectValues<typeof FORM_TYPE>;
+
+const CREATE_USER_BY_EMAIL = gql(/* GraphQL */ `
+  mutation CreateUserByEmail($email: String!) {
+    createUserByEmail(email: $email) {
+      name
+    }
+  }
+`);
+
+const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
+  query GetUserByEmail($email: String!) {
+    userByEmail(email: $email) {
+      name
+    }
+  }
+`);
 
 const Signup = () => {
-  const [formType, setFormType] = useState("select-form");
+  const [formType, setFormType] = useState<FormType>(FORM_TYPE.SELECT);
   const router = useRouter();
   const { googleSignUp, walletSignUp } = useLogin();
   const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
-  const { showAlert, closeAlert } = useAlert();
+  const { showErrorAlert, showAlert, closeAlert } = useAlert();
+  const { emailVerify, emailSignIn, resendEmailVerify } = useLogin();
+  const [signupParams, setSignUpParams] = useState<EmailSignUpParams>({
+    email: "",
+    password: "",
+  });
+  const [createUserByEmail] = useMutation(CREATE_USER_BY_EMAIL);
 
   return (
     <>
@@ -31,11 +70,11 @@ const Signup = () => {
           alignItems={"center"}
           sx={{ background: "" }}
         >
-          {formType === "select-form" && (
+          {formType === FORM_TYPE.SELECT && (
             <SignUpSelectForm
               onClickSignUpWith={(e: MouseEvent) => {
                 e.preventDefault();
-                setFormType("others-form");
+                setFormType(FORM_TYPE.OTHERS);
               }}
               onClickConnectWallet={(e: MouseEvent) => {
                 e.preventDefault();
@@ -52,7 +91,7 @@ const Signup = () => {
               }}
             ></SignUpSelectForm>
           )}
-          {formType === "others-form" && (
+          {formType === FORM_TYPE.OTHERS && (
             <SignUpOthersForm
               onSignUpWithGoogleClicked={(e) => {
                 googleSignUp({
@@ -66,9 +105,135 @@ const Signup = () => {
                 });
               }}
               onSignUpWithEmailClicked={(e) => {
-                showAlert({ title: "test", content: "abc" });
+                setFormType(FORM_TYPE.WITH_EMAIL);
               }}
             ></SignUpOthersForm>
+          )}
+          {formType === FORM_TYPE.WITH_EMAIL && (
+            <SignUpWithEmailForm
+              onClickSendVerification={(e) => {
+                const myEvent = e as MouseEventWithParam<EmailSignUpParams>;
+                emailVerify(myEvent.params, {
+                  onSuccess: () => {
+                    setSignUpParams({ ...myEvent.params });
+                    setFormType(FORM_TYPE.VERIFY_EMAIL);
+                  },
+                  onError: (error: AppError) => {
+                    console.error(error);
+                    let message = "Unknown error occurred";
+                    if (error.message === MAIL_VERIFY.NOT_VERIFIED) {
+                      setSignUpParams({ ...myEvent.params });
+                      setFormType(FORM_TYPE.VERIFY_EMAIL);
+                    } else if (error.message === MAIL_VERIFY.USER_NOT_FOUND) {
+                      message = "Something auth progress problem occurred";
+                      showErrorAlert({ content: message });
+                    } else if (error.message === MAIL_VERIFY.PASSWORD_WRONG) {
+                      message = "Check your password";
+                      showErrorAlert({ content: message });
+                    } else if (error.message === MAIL_VERIFY.VERIFIED) {
+                      const { email, password } =
+                        error.payload as EmailSignUpParams;
+                      console.log("aaa");
+                      console.log(email);
+                      client
+                        .query({
+                          query: GET_USER_BY_EMAIL,
+                          variables: {
+                            email: "",
+                          },
+                        })
+                        .then((res) => {
+                          const { data } = res;
+                          console.log(data);
+                          console.log(error);
+                        })
+                        .catch((e) => {});
+                      // todo: try sign
+                      // 1. check user email exist
+                      // 2. if exist, sign in
+                      // 3. if not exist, create user and sign in
+                    }
+                  },
+                });
+              }}
+            ></SignUpWithEmailForm>
+          )}
+          {formType === FORM_TYPE.VERIFY_EMAIL && (
+            <VerifyYourEmailForm
+              email={signupParams.email}
+              onClickResendVerification={(e) => {
+                const { email, password } = signupParams;
+                resendEmailVerify(
+                  { email, password },
+                  {
+                    onSuccess: () => {
+                      showAlert({
+                        title: "Info",
+                        content: (
+                          <div>
+                            <p style={{ marginBottom: -2 }}>Email is resend</p>
+                            <p>Please check your email</p>
+                          </div>
+                        ),
+                      });
+                    },
+                    onError: (error) => {
+                      if (error.message === MAIL_VERIFY.VERIFIED) {
+                        showAlert({
+                          title: "Info",
+                          content: (
+                            <div>
+                              <p style={{ marginBottom: -2 }}>
+                                Already verified
+                              </p>
+                              <p>Please Sign in</p>
+                            </div>
+                          ),
+                        });
+                        return;
+                      }
+                      showErrorAlert({ content: "Unknown error occurred" });
+                    },
+                  }
+                );
+              }}
+              onClickSignIn={(e) => {
+                const { email, password } = signupParams;
+                emailSignIn(
+                  { email, password },
+                  {
+                    onSuccess: () => {
+                      createUserByEmail({
+                        variables: {
+                          email,
+                        },
+                      })
+                        .then((res) => {
+                          router.push("/").then();
+                        })
+                        .catch((e) => {
+                          showErrorAlert({ content: getErrorMessage(e) });
+                        });
+                    },
+                    onError: (e) => {
+                      if (e.message === MAIL_VERIFY.NOT_VERIFIED) {
+                        showAlert({
+                          title: "Info",
+                          content: (
+                            <div>
+                              <p style={{ marginBottom: -2 }}>
+                                Please check your email
+                              </p>
+                              <p>You should verify your email</p>
+                            </div>
+                          ),
+                        });
+                      }
+                    },
+                  }
+                );
+              }}
+            ></VerifyYourEmailForm>
           )}
           <Stack
             direction={"column"}

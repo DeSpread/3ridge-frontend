@@ -1,12 +1,12 @@
 import {
   Avatar,
   Box,
+  LinearProgress,
   Menu,
   MenuItem,
   Stack,
-  LinearProgress,
-  Typography,
   styled,
+  Typography,
 } from "@mui/material";
 import {
   MouseEvent,
@@ -19,10 +19,6 @@ import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../atoms/gradient-typography";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
-import { useLogin } from "../../provider/login/login-provider";
-import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
-import { gql } from "../../__generated__";
 
 type StyledMenuProps = PropsWithChildren & {
   open: boolean;

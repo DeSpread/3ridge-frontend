@@ -15,8 +15,10 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      name\n      profileImageUrl\n    }\n  }\n": types.UserByGmailDocument,
     "\n  query Tickets {\n    tickets {\n      completed\n    }\n  }\n": types.TicketsDocument,
-    "\n  mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {\n    createUserByWallet(address: $address, chainType: $chainType) {\n      name\n    }\n  }\n": types.CreateUserByWalletDocument,
+    "\n  mutation CreateUserByEmail($email: String!) {\n    createUserByEmail(email: $email) {\n      name\n    }\n  }\n": types.CreateUserByEmailDocument,
+    "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      name\n    }\n  }\n": types.GetUserByEmailDocument,
     "\n  mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {\n    createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {\n      name\n    }\n  }\n": types.CreateUserByGmailDocument,
+    "\n  mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {\n    createUserByWallet(address: $address, chainType: $chainType) {\n      name\n    }\n  }\n": types.CreateUserByWalletDocument,
 };
 
 /**
@@ -30,11 +32,19 @@ export function gql(source: "\n  query Tickets {\n    tickets {\n      completed
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {\n    createUserByWallet(address: $address, chainType: $chainType) {\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {\n    createUserByWallet(address: $address, chainType: $chainType) {\n      name\n    }\n  }\n"];
+export function gql(source: "\n  mutation CreateUserByEmail($email: String!) {\n    createUserByEmail(email: $email) {\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUserByEmail($email: String!) {\n    createUserByEmail(email: $email) {\n      name\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      name\n    }\n  }\n"): (typeof documents)["\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      name\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {\n    createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {\n    createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {\n      name\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {\n    createUserByWallet(address: $address, chainType: $chainType) {\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {\n    createUserByWallet(address: $address, chainType: $chainType) {\n      name\n    }\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
