@@ -1,3 +1,5 @@
+import { ObjectValues } from "../type";
+
 export const APP_ERROR_NAME = {
   GOOGLE_LOGIN: "GOOGLE_LOGIN",
   GOOGLE_SIGN_UP: "GOOGLE_SIGN_UP",
@@ -6,9 +8,18 @@ export const APP_ERROR_NAME = {
   LOGOUT: "LOGOUT",
   WALLET_SIGN_UP: "WALLET_SIGN_UP",
   WALLET_LOGOUT: "WALLET_LOGOUT",
+  EMAIL_SIGN_UP: "EMAIL_SIGN_UP",
+  EMAIL_SIGN_IN: "EMAIL_SIGN_IN",
+  FIREBASE_AUTH: "FIREBASE_AUTH",
+  UNKNOWN: "UNKNOWN",
 } as const;
 
-type ObjectValues<T> = T[keyof T];
+export const APP_ERROR_MESSAGE = {
+  UNKNOWN: "UNKNOWN",
+  EMAIL_ALREADY_USE: "EMAIL_ALREADY_USE",
+  EMAIL_PENDING_VERIFY: "EMAIL_PENDING_VERIFY",
+  EMAIL_ALREADY_VERIFIED: "EMAIL_ALREADY_VERIFIED",
+} as const;
 
 type AppErrorName = ObjectValues<typeof APP_ERROR_NAME>;
 

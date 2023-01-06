@@ -7,15 +7,11 @@ import { styled } from "@mui/material/styles";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
-import { Twitter } from "@mui/icons-material";
 import ProfileTab from "../../components/atoms/profile-tab";
-import TwitterIcon from "@mui/icons-material/Twitter";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import { useAccount } from "wagmi";
 import StringHelper from "../../helper/string-helper";
-import GradientTypography from "../../components/atoms/gradient-typography";
 import EthIcon from "../../components/atoms/svg/eth-icon";
-import KakaoIcon from "../../components/atoms/svg/kakao-icon";
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,

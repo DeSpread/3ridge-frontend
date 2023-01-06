@@ -27,7 +27,6 @@ export function useMyGoogleLogin() {
     useRef<({ email, picture }: { email: string; picture: string }) => void>();
   const onGoogleLoginOnErrorCallback = useRef<(error: AppError) => void>();
   const [createUserByGmail] = useMutation(CREATE_USER_BY_GMAIL);
-  // const [isGoogleLoggedIn, setIsGoogleLoggedIn] = useState(false);
   const [googleUserInfo, setGoogleUserInfo] = useState<GoogleUserInfo>({});
 
   useEffect(() => {
@@ -71,6 +70,8 @@ export function useMyGoogleLogin() {
     onSuccess: (tokenResponse) => {
       (async () => {
         try {
+          GoogleLoginHelper.getInstance().googleLogout();
+          setGoogleUserInfo({});
           GoogleLoginHelper.getInstance().storeTokenResponse(tokenResponse);
           const { email, picture } = await asyncUpdateGoogleUserInfo();
           onGoogleLoginOnSuccessCallback.current?.({ email, picture });

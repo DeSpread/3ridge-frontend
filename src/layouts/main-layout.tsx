@@ -1,7 +1,7 @@
 import { AppBar, Box, Stack, Toolbar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import NavbarButtonSet from "../components/molecules/navbar-button-set";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
@@ -12,44 +12,15 @@ import SignInWithDialog from "../components/molecules/dialog/sign/sign-in-with-d
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLogin } from "../provider/login/login-provider";
 import { showSignInDialogState } from "../recoil";
-import { gql } from "../__generated__";
-import { useQuery } from "@apollo/client";
 import { AppError } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
+import { useFindUserQuery } from "../apollo/query-hook";
+import { useFirebaseAuth } from "../firebase/firebase-hook";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
   footerComponent?: ReactNode;
   disableNavButtonSet?: boolean;
-};
-
-const USER_BY_GMAIL = gql(/* GraphQL */ `
-  query userByGmail($gmail: String!) {
-    userByGmail(gmail: $gmail) {
-      name
-      profileImageUrl
-    }
-  }
-`);
-
-const useFindUserQuery = () => {
-  const { isGoogleLoggedIn, googleUserInfo } = useLogin();
-
-  const { data, loading } = useQuery(
-    USER_BY_GMAIL,
-    googleUserInfo.gmail
-      ? {
-          variables: {
-            gmail: googleUserInfo.gmail,
-          },
-        }
-      : undefined
-  );
-
-  if (isGoogleLoggedIn) {
-    return { data: data?.userByGmail, loading };
-  }
-  return { data: null, loading: false };
 };
 
 const MainLayout = (props: MainLayoutProps) => {

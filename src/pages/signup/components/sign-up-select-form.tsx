@@ -24,7 +24,7 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
         sx={{
           background: "",
           minWidth: "500px",
-          paddingTop: 16,
+          paddingTop: 12,
           height: "500px",
         }}
         spacing={4}

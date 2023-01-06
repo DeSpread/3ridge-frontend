@@ -183,7 +183,9 @@ const baseThemeOptions: ThemeOptions = {
     MuiOutlinedInput: {
       styleOverrides: {
         input: {
-          fontWeight: 500,
+          fontSize: "0.875rem",
+          fontWeight: 400,
+          lineHeight: 1.57,
         },
       },
     },
