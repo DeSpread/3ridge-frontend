@@ -34,6 +34,7 @@
     "next": "13.0.5",
     "next-transpile-modules": "^10.0.0",
     "react": "18.2.0",
+    "react-combine-providers": "^0.9.6",
     "react-dom": "18.2.0",
     "react-draggable": "^4.4.5",
     "recoil": "^0.7.6",

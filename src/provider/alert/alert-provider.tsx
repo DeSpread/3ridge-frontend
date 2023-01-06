@@ -1,8 +1,6 @@
 import React, {
   createContext,
   PropsWithChildren,
-  ReactComponentElement,
-  ReactDOM,
   ReactElement,
   useContext,
   useRef,
@@ -10,7 +8,6 @@ import React, {
 } from "react";
 import {
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
@@ -21,7 +18,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import PrimaryButton from "../../components/atoms/primary-button";
 import { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 import Draggable from "react-draggable";
@@ -79,7 +75,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
         <div>{content}</div>
         <div>Contact to hans@despread.io</div>
       </Stack>
-    ); //`${content}\n\nContact to hans@despread.io`;
+    );
     setOpen(true);
   };
 

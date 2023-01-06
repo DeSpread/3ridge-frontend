@@ -16,6 +16,7 @@ import { showSignInDialogState } from "../recoil";
 import { AppError } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
 import { useFindUserQuery } from "./hook/query-hook";
+import { useLoading } from "../provider/loading/loading-provider";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -33,6 +34,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
   const { showErrorAlert } = useAlert();
+  const { showLoading } = useLoading();
 
   return (
     <Box sx={{ display: "flex" }}>

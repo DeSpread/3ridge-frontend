@@ -6711,6 +6711,11 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-combine-providers@^0.9.6:
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/react-combine-providers/-/react-combine-providers-0.9.6.tgz#7d33934f989109c2f472f213ee7b526d4e7e3109"
+  integrity sha512-UwcIg53130LleiokXLrU3Sp3JGH+w57WjxUSAHFVKKX+HgDDDK/fWSh/AwmAa4Pj1oj9rEkwO33t2SRY35KwHg==
+
 react-dom@18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
