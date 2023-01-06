@@ -8,7 +8,7 @@ import SignUpSelectForm from "./components/sign-up-select-form";
 import SignUpOthersForm from "./components/sign-up-others-form";
 import { useRouter } from "next/router";
 import { useLogin } from "../../provider/login/login-provider";
-import { AppError, getErrorMessage } from "../../error/my-error";
+import { AppError } from "../../error/my-error";
 import { useSetRecoilState } from "recoil";
 import { showSignInDialogState } from "../../recoil";
 import { useAlert } from "../../provider/alert/alert-provider";
@@ -16,10 +16,6 @@ import SignUpWithEmailForm from "./components/sign-up-with-email-form";
 import { MAIL_VERIFY, MouseEventWithParam, ObjectValues } from "../../type";
 import { EmailSignUpParams } from "../../provider/login/hook/email-login-hook";
 import VerifyYourEmailForm from "./components/verify-your-email-form";
-import { useMutation } from "@apollo/client";
-import { client } from "../../apollo/client";
-import { gql } from "../../__generated__";
-import { ChainType } from "../../__generated__/graphql";
 
 export const FORM_TYPE = {
   SELECT: "SELECT",
@@ -29,22 +25,6 @@ export const FORM_TYPE = {
 } as const;
 
 type FormType = ObjectValues<typeof FORM_TYPE>;
-
-const CREATE_USER_BY_EMAIL = gql(/* GraphQL */ `
-  mutation CreateUserByEmail($email: String!) {
-    createUserByEmail(email: $email) {
-      name
-    }
-  }
-`);
-
-const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
-  query GetUserByEmail($email: String!) {
-    userByEmail(email: $email) {
-      name
-    }
-  }
-`);
 
 const Signup = () => {
   const [formType, setFormType] = useState<FormType>(FORM_TYPE.SELECT);
@@ -57,7 +37,6 @@ const Signup = () => {
     email: "",
     password: "",
   });
-  const [createUserByEmail] = useMutation(CREATE_USER_BY_EMAIL);
 
   return (
     <>
@@ -99,8 +78,7 @@ const Signup = () => {
                     router.push("/").then();
                   },
                   onError: (error: AppError) => {
-                    console.log(error);
-                    // todo : show alert message (${error.name}, ${error.message})
+                    showErrorAlert({ content: error.message });
                   },
                 });
               }}
@@ -119,6 +97,7 @@ const Signup = () => {
                     setFormType(FORM_TYPE.VERIFY_EMAIL);
                   },
                   onError: (error: AppError) => {
+                    console.log("aaa");
                     console.error(error);
                     let message = "Unknown error occurred";
                     if (error.message === MAIL_VERIFY.NOT_VERIFIED) {
@@ -133,25 +112,15 @@ const Signup = () => {
                     } else if (error.message === MAIL_VERIFY.VERIFIED) {
                       const { email, password } =
                         error.payload as EmailSignUpParams;
-                      console.log("aaa");
-                      console.log(email);
-                      client
-                        .query({
-                          query: GET_USER_BY_EMAIL,
-                          variables: {
-                            email: "",
+                      emailSignIn(
+                        { email, password },
+                        {
+                          onSuccess: () => {
+                            router.push("/").then();
                           },
-                        })
-                        .then((res) => {
-                          const { data } = res;
-                          console.log(data);
-                          console.log(error);
-                        })
-                        .catch((e) => {});
-                      // todo: try sign
-                      // 1. check user email exist
-                      // 2. if exist, sign in
-                      // 3. if not exist, create user and sign in
+                          onError: (e) => {},
+                        }
+                      );
                     }
                   },
                 });
@@ -203,33 +172,9 @@ const Signup = () => {
                   { email, password },
                   {
                     onSuccess: () => {
-                      createUserByEmail({
-                        variables: {
-                          email,
-                        },
-                      })
-                        .then((res) => {
-                          router.push("/").then();
-                        })
-                        .catch((e) => {
-                          showErrorAlert({ content: getErrorMessage(e) });
-                        });
+                      router.push("/").then();
                     },
-                    onError: (e) => {
-                      if (e.message === MAIL_VERIFY.NOT_VERIFIED) {
-                        showAlert({
-                          title: "Info",
-                          content: (
-                            <div>
-                              <p style={{ marginBottom: -2 }}>
-                                Please check your email
-                              </p>
-                              <p>You should verify your email</p>
-                            </div>
-                          ),
-                        });
-                      }
-                    },
+                    onError: (e) => {},
                   }
                 );
               }}

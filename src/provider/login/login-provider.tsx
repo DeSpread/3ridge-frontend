@@ -19,6 +19,7 @@ const LoginContext = createContext<{
   emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams>;
   emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams>;
   resendEmailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams>;
+  isMailLoggedIn: boolean;
 }>({
   isGoogleLoggedIn: false,
   isLoggedIn: false,
@@ -30,13 +31,15 @@ const LoginContext = createContext<{
   emailVerify: () => {},
   emailSignIn: () => {},
   resendEmailVerify: () => {},
+  isMailLoggedIn: false,
 });
 
 export const LoginProvider = ({ children }: PropsWithChildren) => {
   const { isGoogleLoggedIn, googleUserInfo, googleSignUp, googleLogout } =
     useMyGoogleLogin();
   const { walletSignUp, isWalletConnected, walletLogout } = useWalletLogin();
-  const { emailVerify, emailSignIn, resendEmailVerify } = useEmailLogin();
+  const { emailVerify, emailSignIn, resendEmailVerify, isMailLoggedIn } =
+    useEmailLogin();
 
   const logout: SuccessErrorCallback = ({ onSuccess, onError }) => {
     try {
@@ -56,8 +59,8 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
   };
 
   const isLoggedIn = useMemo(() => {
-    return isGoogleLoggedIn || isWalletConnected;
-  }, [isGoogleLoggedIn, isWalletConnected]);
+    return isGoogleLoggedIn || isWalletConnected || isMailLoggedIn;
+  }, [isGoogleLoggedIn, isWalletConnected, isMailLoggedIn]);
 
   return (
     <LoginContext.Provider
@@ -72,6 +75,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
         emailVerify,
         emailSignIn,
         resendEmailVerify,
+        isMailLoggedIn,
       }}
     >
       {children}

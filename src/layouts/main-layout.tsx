@@ -7,8 +7,9 @@ import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
 import PrimaryButton from "../components/atoms/primary-button";
 import SecondaryButton from "../components/atoms/secondary-button";
-import SignInDialog from "../components/molecules/dialog/sign/sign-in-dialog";
-import SignInWithDialog from "../components/molecules/dialog/sign/sign-in-with-dialog";
+import SignInDialog from "./dialog/sign/sign-in-dialog";
+import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
+import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLogin } from "../provider/login/login-provider";
 import { showSignInDialogState } from "../recoil";
@@ -25,11 +26,12 @@ type MainLayoutProps = PropsWithChildren & {
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const router = useRouter();
-  const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
   const { data: userData } = useFindUserQuery();
   const showSignInDialog = useRecoilValue(showSignInDialogState);
   const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
+  const [signUpWithVisible, setSignUpWithVisible] = useState(false);
+  const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
   const { showErrorAlert } = useAlert();
 
   return (
@@ -188,7 +190,21 @@ const MainLayout = (props: MainLayoutProps) => {
             },
           });
         }}
+        onSignInWithEmailClicked={(e) => {
+          setSignUpWithEmailVisible(true);
+        }}
       ></SignInWithDialog>
+      <SignInWithEmailDialog
+        title={"Sign In with email"}
+        open={signUpWithEmailVisible}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setSignUpWithEmailVisible(false);
+        }}
+        onClose={() => {
+          setSignUpWithEmailVisible(false);
+        }}
+      ></SignInWithEmailDialog>
     </Box>
   );
 };

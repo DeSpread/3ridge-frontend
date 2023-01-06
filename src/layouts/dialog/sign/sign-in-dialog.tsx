@@ -1,11 +1,11 @@
 import { Avatar, Stack, Typography } from "@mui/material";
-import PrimaryButton from "../../../atoms/primary-button";
+import PrimaryButton from "../../../components/atoms/primary-button";
 import React, { MouseEventHandler } from "react";
-import LinkTypography from "../../../atoms/link-typography";
-import EmailIcon from "../../../atoms/svg/email-icon";
+import LinkTypography from "../../../components/atoms/link-typography";
+import EmailIcon from "../../../components/atoms/svg/email-icon";
 import { useTheme } from "@mui/material/styles";
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
-import SecondaryButton from "../../../atoms/secondary-button";
+import SecondaryButton from "../../../components/atoms/secondary-button";
 
 type SignInSelectDialogProps = SignDialogProps & {
   onContinueWithWalletClicked: MouseEventHandler;
