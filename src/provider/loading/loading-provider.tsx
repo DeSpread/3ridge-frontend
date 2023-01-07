@@ -1,5 +1,12 @@
-import { createContext, PropsWithChildren, useContext } from "react";
-import { Dialog, Stack, Typography } from "@mui/material";
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import Backdrop from "@mui/material/Backdrop";
+import { CircularProgress, LinearProgress } from "@mui/material";
 
 const LoadingContext = createContext<{
   showLoading: () => void;
@@ -10,9 +17,25 @@ const LoadingContext = createContext<{
 });
 
 export const LoadingProvider = ({ children }: PropsWithChildren) => {
-  const showLoading = () => {};
+  const [open, setOpen] = useState(false);
+  const refBodyStyleOverflow = React.useRef("");
 
-  const closeLoading = () => {};
+  useEffect(() => {
+    refBodyStyleOverflow.current = document.body.style.overflow;
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open
+      ? "hidden"
+      : refBodyStyleOverflow.current;
+  }, [open]);
+
+  const showLoading = () => {
+    setOpen(true);
+  };
+  const closeLoading = () => {
+    setOpen(false);
+  };
 
   return (
     <LoadingContext.Provider
@@ -22,24 +45,23 @@ export const LoadingProvider = ({ children }: PropsWithChildren) => {
       }}
     >
       {children}
-      <Dialog open={true}>
-        <Stack>
-          <Typography textAlign={"center"} variant={"h3"}>
-            abc
-          </Typography>
-          {/*<Typhography>aaa</Typhography>*/}
-          {/*<Typhography></Typhography>*/}
-        </Stack>
-      </Dialog>
-      {/*<div*/}
-      {/*  style={{*/}
-      {/*    position: "relative",*/}
-      {/*    width: "100%",*/}
-      {/*    height: `100vh`,*/}
-      {/*    background: "red",*/}
-      {/*    backdropFilter: "blur(1px)",*/}
-      {/*  }}*/}
-      {/*></div>*/}
+      <Backdrop
+        sx={{
+          color: "#fff",
+          overflowY: "auto",
+          display: "inline-block",
+          zIndex: (theme) => theme.zIndex.drawer + 2,
+        }}
+        open={open}
+        onClick={() => {
+          closeLoading();
+        }}
+      >
+        <LinearProgress
+          color={"secondary"}
+          sx={{ width: "100%", position: "absolute", top: 0, borderRadius: 0 }}
+        ></LinearProgress>
+      </Backdrop>
     </LoadingContext.Provider>
   );
 };

@@ -8,7 +8,7 @@ import SignUpSelectForm from "./components/sign-up-select-form";
 import SignUpOthersForm from "./components/sign-up-others-form";
 import { useRouter } from "next/router";
 import { useLogin } from "../../provider/login/login-provider";
-import { AppError } from "../../error/my-error";
+import { AppError, getErrorMessage } from "../../error/my-error";
 import { useSetRecoilState } from "recoil";
 import { showSignInDialogState } from "../../recoil";
 import { useAlert } from "../../provider/alert/alert-provider";
@@ -16,6 +16,7 @@ import SignUpWithEmailForm from "./components/sign-up-with-email-form";
 import { MAIL_VERIFY, MouseEventWithParam, ObjectValues } from "../../type";
 import { EmailSignUpParams } from "../../provider/login/hook/email-login-hook";
 import VerifyYourEmailForm from "./components/verify-your-email-form";
+import { useLoading } from "../../provider/loading/loading-provider";
 
 export const FORM_TYPE = {
   SELECT: "SELECT",
@@ -37,6 +38,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const { showLoading, closeLoading } = useLoading();
 
   return (
     <>
@@ -91,22 +93,26 @@ const Signup = () => {
             <SignUpWithEmailForm
               onClickSendVerification={(e) => {
                 const myEvent = e as MouseEventWithParam<EmailSignUpParams>;
+                showLoading();
                 emailVerify(myEvent.params, {
                   onSuccess: () => {
                     setSignUpParams({ ...myEvent.params });
                     setFormType(FORM_TYPE.VERIFY_EMAIL);
+                    closeLoading();
                   },
                   onError: (error: AppError) => {
-                    console.log("aaa");
                     console.error(error);
                     let message = "Unknown error occurred";
                     if (error.message === MAIL_VERIFY.NOT_VERIFIED) {
+                      closeLoading();
                       setSignUpParams({ ...myEvent.params });
                       setFormType(FORM_TYPE.VERIFY_EMAIL);
                     } else if (error.message === MAIL_VERIFY.USER_NOT_FOUND) {
+                      closeLoading();
                       message = "Something auth progress problem occurred";
                       showErrorAlert({ content: message });
                     } else if (error.message === MAIL_VERIFY.PASSWORD_WRONG) {
+                      closeLoading();
                       message = "Check your password";
                       showErrorAlert({ content: message });
                     } else if (error.message === MAIL_VERIFY.VERIFIED) {
@@ -116,9 +122,13 @@ const Signup = () => {
                         { email, password },
                         {
                           onSuccess: () => {
+                            closeLoading();
                             router.push("/").then();
                           },
-                          onError: (e) => {},
+                          onError: (e) => {
+                            closeLoading();
+                            showErrorAlert({ content: getErrorMessage(e) });
+                          },
                         }
                       );
                     }

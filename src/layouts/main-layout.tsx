@@ -34,12 +34,14 @@ const MainLayout = (props: MainLayoutProps) => {
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
   const { showErrorAlert } = useAlert();
-  const { showLoading } = useLoading();
 
   return (
     <Box sx={{ display: "flex" }}>
       {/*--- Navbar ---*/}
-      <AppBar component="nav">
+      <AppBar
+        component="nav"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Box
           sx={{
             flexGlow: 1,
@@ -96,7 +98,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           router.push("/").then();
                         },
                         onError: (error) => {
-                          // showAlert({ title: "Contact", content: error.message });
+                          showErrorAlert({ content: error.message });
                         },
                       });
                     }}
@@ -118,7 +120,6 @@ const MainLayout = (props: MainLayoutProps) => {
                       size={"small"}
                       sx={{ width: 100 }}
                       onClick={(e) => {
-                        e.preventDefault();
                         router.push("/signup").then();
                       }}
                     >
