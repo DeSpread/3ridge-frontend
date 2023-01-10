@@ -5,8 +5,7 @@ import { DefaultPasswordTextField } from "../../../components/molecules/password
 import React, { MouseEventHandler, useState } from "react";
 import MailTextField from "../../../components/molecules/mail-text-field";
 import SecondaryButton from "../../../components/atoms/secondary-button";
-import { MouseEventWithParam } from "../../../type";
-import { EmailSignUpParams } from "../../../provider/login/hook/email-login-hook";
+import { EmailSignUpParams, MouseEventWithParam } from "../../../type";
 
 type SignInWithEmailProps = SignDialogProps & {
   onSignInWithEmailClicked: MouseEventHandler;

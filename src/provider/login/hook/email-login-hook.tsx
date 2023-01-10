@@ -1,40 +1,22 @@
-import { MAIL_VERIFY, SuccessErrorCallbackWithParam } from "../../../type";
+import {
+  EmailSignUpParams,
+  MAIL_VERIFY,
+  MailLoginInfo,
+  SuccessErrorCallback,
+  SuccessErrorCallbackWithParam,
+} from "../../../type";
 import {
   APP_ERROR_NAME,
   AppError,
   getErrorMessage,
 } from "../../../error/my-error";
 import { useFirebaseAuth } from "../../../firebase/hook/firebase-hook";
-import { gql } from "../../../__generated__";
 import { useMutation } from "@apollo/client";
 import { client } from "../../../apollo/client";
-import { useMemo, useState } from "react";
-import { GoogleUserInfo } from "./my-google-login-hook";
-
-export type EmailSignUpParams = {
-  email: string;
-  password: string;
-};
-
-const CREATE_USER_BY_EMAIL = gql(/* GraphQL */ `
-  mutation CreateUserByEmail($email: String!) {
-    createUserByEmail(email: $email) {
-      name
-    }
-  }
-`);
-
-const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
-  query GetUserByEmail($email: String!) {
-    userByEmail(email: $email) {
-      name
-    }
-  }
-`);
-
-export type MailLoginInfo = {
-  mail?: string;
-};
+import { useEffect, useMemo, useState } from "react";
+import { CREATE_USER_BY_EMAIL, GET_USER_BY_EMAIL } from "../../../apollo/query";
+import moment from "moment";
+// import moment = require("moment");
 
 export function useEmailLogin() {
   const {
@@ -42,9 +24,27 @@ export function useEmailLogin() {
     asyncSignInEmailWithVerify,
     asyncResendEmailVerify,
   } = useFirebaseAuth();
-  const [mailLoginInfo, setMailLoginInfo] = useState<MailLoginInfo>({});
+  const [emailLoginInfo, setEmailLoginInfo] = useState<MailLoginInfo>({});
 
   const [createUserByEmail] = useMutation(CREATE_USER_BY_EMAIL);
+
+  useEffect(() => {
+    if (!isMailLoggedIn) {
+      const cacheStr = localStorage.getItem("emailSignInCache");
+      if (!cacheStr) return;
+      const cache = JSON.parse(cacheStr);
+      const curDate = new Date();
+      const limitDate = moment(cache.timestamp).add(4, "hours").toDate();
+      console.log(curDate, limitDate);
+      if (curDate > limitDate) {
+        emailLogout({});
+        return;
+      }
+      setEmailLoginInfo((prevState) => {
+        return { ...prevState, mail: cache.email };
+      });
+    }
+  }, []);
 
   const emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams> = (
     params,
@@ -87,9 +87,16 @@ export function useEmailLogin() {
               email,
             },
           });
-          setMailLoginInfo((prevState) => {
-            return { ...prevState, email };
+          setEmailLoginInfo((prevState) => {
+            return { ...prevState, mail: email };
           });
+          localStorage.setItem(
+            "emailSignInCache",
+            JSON.stringify({
+              email,
+              timestamp: new Date().toISOString(),
+            })
+          );
           onSuccess?.();
           return;
         }
@@ -102,9 +109,16 @@ export function useEmailLogin() {
             },
           })
             .then((res) => {
-              setMailLoginInfo((prevState) => {
-                return { ...prevState, email };
+              setEmailLoginInfo((prevState) => {
+                return { ...prevState, mail: email };
               });
+              localStorage.setItem(
+                "emailSignInCache",
+                JSON.stringify({
+                  email,
+                  timestamp: new Date().toISOString(),
+                })
+              );
               onSuccess?.();
             })
             .catch((e) => {
@@ -137,8 +151,26 @@ export function useEmailLogin() {
   };
 
   const isMailLoggedIn = useMemo(() => {
-    return mailLoginInfo?.mail !== undefined ? true : false;
-  }, [mailLoginInfo]);
+    return emailLoginInfo?.mail !== undefined ? true : false;
+  }, [emailLoginInfo]);
 
-  return { emailVerify, emailSignIn, resendEmailVerify, isMailLoggedIn };
+  const emailLogout: SuccessErrorCallback = ({ onSuccess, onError }) => {
+    try {
+      setEmailLoginInfo((prevState) => {
+        return { ...prevState, mail: undefined };
+      });
+      localStorage.removeItem("emailSignInCache");
+    } catch (e) {
+      onError?.(new AppError(getErrorMessage(e), APP_ERROR_NAME.EMAIL_LOGOUT));
+    }
+  };
+
+  return {
+    emailVerify,
+    emailSignIn,
+    resendEmailVerify,
+    isMailLoggedIn,
+    emailLoginInfo,
+    emailLogout,
+  };
 }

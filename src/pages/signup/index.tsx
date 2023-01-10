@@ -13,8 +13,12 @@ import { useSetRecoilState } from "recoil";
 import { showSignInDialogState } from "../../recoil";
 import { useAlert } from "../../provider/alert/alert-provider";
 import SignUpWithEmailForm from "./components/sign-up-with-email-form";
-import { MAIL_VERIFY, MouseEventWithParam, ObjectValues } from "../../type";
-import { EmailSignUpParams } from "../../provider/login/hook/email-login-hook";
+import {
+  EmailSignUpParams,
+  MAIL_VERIFY,
+  MouseEventWithParam,
+  ObjectValues,
+} from "../../type";
 import VerifyYourEmailForm from "./components/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
 

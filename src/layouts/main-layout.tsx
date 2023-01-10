@@ -13,12 +13,19 @@ import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLogin } from "../provider/login/login-provider";
 import { showSignInDialogState } from "../recoil";
-import { AppError, getErrorMessage } from "../error/my-error";
+import {
+  APP_ERROR_MESSAGE,
+  AppError,
+  getErrorMessage,
+} from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
 import { useFindUserQuery } from "./hook/query-hook";
 import { useLoading } from "../provider/loading/loading-provider";
-import { MouseEventWithParam } from "../type";
-import { EmailSignUpParams } from "../provider/login/hook/email-login-hook";
+import {
+  EmailSignUpParams,
+  MouseEventWithParam,
+  Z_INDEX_OFFSET,
+} from "../type";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -37,13 +44,16 @@ const MainLayout = (props: MainLayoutProps) => {
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
   const { showErrorAlert } = useAlert();
   const { emailSignIn } = useLogin();
+  const { showLoading, closeLoading } = useLoading();
 
   return (
     <Box sx={{ display: "flex" }}>
       {/*--- Navbar ---*/}
       <AppBar
         component="nav"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.NAV_LAYOUT,
+        }}
       >
         <Box
           sx={{
@@ -193,6 +203,13 @@ const MainLayout = (props: MainLayoutProps) => {
               setSignUpWithVisible(false);
             },
             onError: (error) => {
+              if (
+                getErrorMessage(error).includes(
+                  APP_ERROR_MESSAGE.GOOGLE_LOGIN_POPUP_CLOSED
+                )
+              ) {
+                return;
+              }
               setSignUpWithVisible(false);
               showErrorAlert({ content: getErrorMessage(e) });
             },
@@ -216,14 +233,17 @@ const MainLayout = (props: MainLayoutProps) => {
         onSignInWithEmailClicked={(e) => {
           const myEvent = e as MouseEventWithParam<EmailSignUpParams>;
           const { email, password } = myEvent.params;
+          showLoading();
           emailSignIn(
             { email, password },
             {
               onSuccess: () => {
+                closeLoading();
                 setSignUpWithEmailVisible(false);
                 router.push("/").then();
               },
               onError: (e) => {
+                closeLoading();
                 setSignUpWithEmailVisible(false);
                 showErrorAlert({ content: getErrorMessage(e) });
               },

@@ -1,12 +1,16 @@
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
 import { APP_ERROR_NAME, AppError } from "../../error/my-error";
-import { GoogleUserInfo, useMyGoogleLogin } from "./hook/my-google-login-hook";
+import { useMyGoogleLogin } from "./hook/my-google-login-hook";
 import { useWalletLogin } from "./hook/wallet-login-hook";
 import {
+  EmailSignUpParams,
+  GoogleUserInfo,
+  MailLoginInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
+  WalletInfo,
 } from "../../type";
-import { EmailSignUpParams, useEmailLogin } from "./hook/email-login-hook";
+import { useEmailLogin } from "./hook/email-login-hook";
 
 const LoginContext = createContext<{
   isGoogleLoggedIn: boolean;
@@ -15,11 +19,13 @@ const LoginContext = createContext<{
   logout: SuccessErrorCallback;
   googleSignUp: SuccessErrorCallback;
   walletSignUp: SuccessErrorCallback;
-  isWalletConnected: boolean;
+  isWalletLoggedIn: boolean;
+  walletInfo: WalletInfo;
   emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams>;
   emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams>;
   resendEmailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams>;
   isMailLoggedIn: boolean;
+  emailLoginInfo: MailLoginInfo;
 }>({
   isGoogleLoggedIn: false,
   isLoggedIn: false,
@@ -27,27 +33,39 @@ const LoginContext = createContext<{
   logout: () => {},
   googleSignUp: () => {},
   walletSignUp: () => {},
-  isWalletConnected: false,
+  isWalletLoggedIn: false,
+  walletInfo: {},
   emailVerify: () => {},
   emailSignIn: () => {},
   resendEmailVerify: () => {},
   isMailLoggedIn: false,
+  emailLoginInfo: {},
 });
 
 export const LoginProvider = ({ children }: PropsWithChildren) => {
   const { isGoogleLoggedIn, googleUserInfo, googleSignUp, googleLogout } =
     useMyGoogleLogin();
-  const { walletSignUp, isWalletConnected, walletLogout } = useWalletLogin();
-  const { emailVerify, emailSignIn, resendEmailVerify, isMailLoggedIn } =
-    useEmailLogin();
+  const { walletSignUp, isWalletLoggedIn, walletLogout, walletInfo } =
+    useWalletLogin();
+  const {
+    emailVerify,
+    emailSignIn,
+    emailLogout,
+    resendEmailVerify,
+    isMailLoggedIn,
+    emailLoginInfo,
+  } = useEmailLogin();
 
   const logout: SuccessErrorCallback = ({ onSuccess, onError }) => {
     try {
       if (isGoogleLoggedIn) {
         googleLogout({ onSuccess, onError });
       }
-      if (isWalletConnected) {
+      if (isWalletLoggedIn) {
         walletLogout({ onSuccess, onError });
+      }
+      if (isMailLoggedIn) {
+        emailLogout({ onSuccess, onError });
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -59,8 +77,8 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
   };
 
   const isLoggedIn = useMemo(() => {
-    return isGoogleLoggedIn || isWalletConnected || isMailLoggedIn;
-  }, [isGoogleLoggedIn, isWalletConnected, isMailLoggedIn]);
+    return isGoogleLoggedIn || isWalletLoggedIn || isMailLoggedIn;
+  }, [isGoogleLoggedIn, isWalletLoggedIn, isMailLoggedIn]);
 
   return (
     <LoginContext.Provider
@@ -71,11 +89,13 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
         logout,
         googleUserInfo,
         walletSignUp,
-        isWalletConnected,
+        walletInfo,
+        isWalletLoggedIn,
         emailVerify,
         emailSignIn,
         resendEmailVerify,
         isMailLoggedIn,
+        emailLoginInfo,
       }}
     >
       {children}

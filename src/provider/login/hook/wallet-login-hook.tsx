@@ -8,7 +8,7 @@ import {
 import { useMutation } from "@apollo/client";
 import { gql } from "../../../__generated__";
 import { useEffect, useMemo, useState } from "react";
-import { SuccessErrorCallback } from "../../../type";
+import { SuccessErrorCallback, WalletInfo } from "../../../type";
 
 const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
   mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {
@@ -17,10 +17,6 @@ const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
     }
   }
 `);
-
-export type WalletInfo = {
-  address?: string;
-};
 
 export function useWalletLogin() {
   const { connectAsync, connectors } = useConnect();
@@ -83,5 +79,10 @@ export function useWalletLogin() {
     })();
   };
 
-  return { walletSignUp, walletInfo, isWalletConnected, walletLogout };
+  return {
+    walletSignUp,
+    walletInfo,
+    isWalletLoggedIn: isWalletConnected,
+    walletLogout,
+  };
 }

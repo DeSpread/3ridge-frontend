@@ -14,6 +14,7 @@ import React, { MouseEventHandler } from "react";
 import LinkTypography from "../../../components/atoms/link-typography";
 import { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
+import { Z_INDEX_OFFSET } from "../../../type";
 
 type SignDialogProps = DialogProps & {
   title: string;
@@ -43,6 +44,9 @@ const WithBaseSignInDialog = <P extends SignDialogProps>(
           fullWidth
           maxWidth={"xs"}
           TransitionComponent={Transition}
+          sx={{
+            zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.DIALOG,
+          }}
         >
           <DialogTitle>
             <Stack

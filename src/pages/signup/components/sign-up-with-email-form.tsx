@@ -3,8 +3,7 @@ import { Stack, Typography } from "@mui/material";
 import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
 import SecondaryButton from "../../../components/atoms/secondary-button";
 import LinkTypography from "../../../components/atoms/link-typography";
-import { MouseEventWithParam } from "../../../type";
-import { EmailSignUpParams } from "../../../provider/login/hook/email-login-hook";
+import { EmailSignUpParams, MouseEventWithParam } from "../../../type";
 import { validateMail, validatePassword } from "../../../util/validate-string";
 import MailTextField from "../../../components/molecules/mail-text-field";
 import {

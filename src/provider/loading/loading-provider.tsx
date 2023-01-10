@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import { CircularProgress, LinearProgress } from "@mui/material";
+import { Z_INDEX_OFFSET } from "../../type";
 
 const LoadingContext = createContext<{
   showLoading: () => void;
@@ -50,7 +51,8 @@ export const LoadingProvider = ({ children }: PropsWithChildren) => {
           color: "#fff",
           overflowY: "auto",
           display: "inline-block",
-          zIndex: (theme) => theme.zIndex.drawer + 2,
+          zIndex: (theme) =>
+            theme.zIndex.drawer + Z_INDEX_OFFSET.LOADING_BACKDROP,
         }}
         open={open}
         onClick={() => {
