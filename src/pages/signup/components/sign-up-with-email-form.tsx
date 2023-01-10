@@ -9,7 +9,7 @@ import { validateMail, validatePassword } from "../../../util/validate-string";
 import MailTextField from "../../../components/molecules/mail-text-field";
 import {
   ConfirmPasswordTextField,
-  PasswordTextField,
+  ValidatedPasswordTextField,
 } from "../../../components/molecules/password-text-field";
 
 type SignUpWithEmailFormProps = PropsWithChildren & {
@@ -54,13 +54,13 @@ const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
             placeholder={"Email Address"}
           ></MailTextField>
           <Stack spacing={2}>
-            <PasswordTextField
+            <ValidatedPasswordTextField
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
               placeholder={"Password"}
-            ></PasswordTextField>
+            ></ValidatedPasswordTextField>
             {password && !validatePassword(password) && (
               <Typography
                 variant={"body2"}

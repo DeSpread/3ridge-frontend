@@ -4,23 +4,23 @@ import StyledOutlinedInput from "../atoms/styled/styled-outlined-input";
 import { OutlinedInputProps } from "@mui/material";
 
 type ValidatedTextInputProps = OutlinedInputProps & {
-  invalid: boolean;
+  isValid: boolean;
 };
 
 const ValidatedTextInput = (props: ValidatedTextInputProps) => {
   const theme = useTheme();
 
   const getBorderColor = (correctColor: string, errorColor: string) => {
-    return props.invalid ? correctColor : errorColor;
+    return props.isValid ? correctColor : errorColor;
   };
 
   const idleBorderColor = useMemo(() => {
     return getBorderColor("#35333a", theme.palette.error.main);
-  }, [props.invalid]);
+  }, [props.isValid]);
 
   const hoverBorderColor = useMemo(() => {
     return getBorderColor("#787385", theme.palette.error.main);
-  }, [props.invalid]);
+  }, [props.isValid]);
 
   return (
     <StyledOutlinedInput

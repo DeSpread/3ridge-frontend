@@ -13,10 +13,12 @@ import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLogin } from "../provider/login/login-provider";
 import { showSignInDialogState } from "../recoil";
-import { AppError } from "../error/my-error";
+import { AppError, getErrorMessage } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
 import { useFindUserQuery } from "./hook/query-hook";
 import { useLoading } from "../provider/loading/loading-provider";
+import { MouseEventWithParam } from "../type";
+import { EmailSignUpParams } from "../provider/login/hook/email-login-hook";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -34,6 +36,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
   const { showErrorAlert } = useAlert();
+  const { emailSignIn } = useLogin();
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -153,8 +156,8 @@ const MainLayout = (props: MainLayoutProps) => {
           setShowSignInDialog(false);
         }}
         onSignInWithClicked={(e) => {
-          setShowSignInDialog(false);
           setSignUpWithVisible(true);
+          setShowSignInDialog(false);
         }}
         onClose={() => {
           setShowSignInDialog(false);
@@ -167,6 +170,7 @@ const MainLayout = (props: MainLayoutProps) => {
               setShowSignInDialog(false);
             },
             onError: (error: AppError) => {
+              setShowSignInDialog(false);
               showErrorAlert({ content: error.message });
             },
           });
@@ -189,12 +193,14 @@ const MainLayout = (props: MainLayoutProps) => {
               setSignUpWithVisible(false);
             },
             onError: (error) => {
-              // todo : show error alert
+              setSignUpWithVisible(false);
+              showErrorAlert({ content: getErrorMessage(e) });
             },
           });
         }}
         onSignInWithEmailClicked={(e) => {
           setSignUpWithEmailVisible(true);
+          setSignUpWithVisible(false);
         }}
       ></SignInWithDialog>
       <SignInWithEmailDialog
@@ -206,6 +212,23 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         onClose={() => {
           setSignUpWithEmailVisible(false);
+        }}
+        onSignInWithEmailClicked={(e) => {
+          const myEvent = e as MouseEventWithParam<EmailSignUpParams>;
+          const { email, password } = myEvent.params;
+          emailSignIn(
+            { email, password },
+            {
+              onSuccess: () => {
+                setSignUpWithEmailVisible(false);
+                router.push("/").then();
+              },
+              onError: (e) => {
+                setSignUpWithEmailVisible(false);
+                showErrorAlert({ content: getErrorMessage(e) });
+              },
+            }
+          );
         }}
       ></SignInWithEmailDialog>
     </Box>

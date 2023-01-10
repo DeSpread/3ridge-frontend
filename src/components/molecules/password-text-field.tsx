@@ -27,7 +27,7 @@ const DefaultPasswordTextField = (props: ValidatedTextInputProps) => {
             }}
             edge="end"
           >
-            {showPassword ? <VisibilityOff /> : <Visibility />}
+            {showPassword ? <Visibility /> : <VisibilityOff />}
           </IconButton>
         </InputAdornment>
       }
@@ -36,14 +36,14 @@ const DefaultPasswordTextField = (props: ValidatedTextInputProps) => {
           height: 10,
         },
       }}
-      invalid={props.invalid}
+      isValid={props.isValid}
     />
   );
 };
 
 export { DefaultPasswordTextField };
 
-const PasswordTextField = (props: OutlinedInputProps) => {
+const ValidatedPasswordTextField = (props: OutlinedInputProps) => {
   const invalid = useMemo(() => {
     const targetVal = props.value;
     if (
@@ -57,19 +57,19 @@ const PasswordTextField = (props: OutlinedInputProps) => {
   return (
     <DefaultPasswordTextField
       {...props}
-      invalid={invalid}
+      isValid={invalid}
     ></DefaultPasswordTextField>
   );
 };
 
-export { PasswordTextField };
+export { ValidatedPasswordTextField };
 
 type ConfirmPasswordTextFieldProps = OutlinedInputProps & {
   password: string;
 };
 
 const ConfirmPasswordTextField = (props: ConfirmPasswordTextFieldProps) => {
-  const invalid = useMemo(() => {
+  const isValid = useMemo(() => {
     const targetVal = props.value;
     if (
       !targetVal ||
@@ -82,7 +82,7 @@ const ConfirmPasswordTextField = (props: ConfirmPasswordTextFieldProps) => {
   return (
     <DefaultPasswordTextField
       {...props}
-      invalid={invalid}
+      isValid={isValid}
     ></DefaultPasswordTextField>
   );
 };

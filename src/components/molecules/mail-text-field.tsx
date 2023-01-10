@@ -15,7 +15,7 @@ const MailTextField = (props: OutlinedInputProps) => {
   return (
     <ValidatedTextInput
       {...props}
-      invalid={invalid}
+      isValid={invalid}
       inputProps={{
         style: {
           height: 10,
