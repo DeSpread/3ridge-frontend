@@ -8,11 +8,7 @@ import { useMutation } from "@apollo/client";
 import { gql } from "../../../__generated__";
 import GoogleLoginHelper from "../../../helper/google-login-helper";
 import { useGoogleLogin } from "@react-oauth/google";
-import { SuccessErrorCallback } from "../../../type";
-
-export type GoogleUserInfo = {
-  gmail?: string;
-};
+import { GoogleUserInfo, SuccessErrorCallback } from "../../../type";
 
 const CREATE_USER_BY_GMAIL = gql(/* GraphQL */ `
   mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {

@@ -35,3 +35,34 @@ export const MAIL_VERIFY = {
 export type MailVerified = ObjectValues<typeof MAIL_VERIFY>;
 
 export type ObjectValues<T> = T[keyof T];
+
+export const Z_INDEX_OFFSET = {
+  NAV_LAYOUT: 1,
+  DIALOG: 2,
+  LOADING_BACKDROP: 3,
+};
+
+export type SignedUser = {
+  _id?: string;
+  walletAddress?: string;
+  name?: string;
+  email?: string;
+  profileImageUrl?: string;
+};
+
+export type GoogleUserInfo = {
+  gmail?: string;
+};
+
+export type MailLoginInfo = {
+  mail?: string;
+};
+
+export type EmailSignUpParams = {
+  email: string;
+  password: string;
+};
+
+export type WalletInfo = {
+  address?: string;
+};

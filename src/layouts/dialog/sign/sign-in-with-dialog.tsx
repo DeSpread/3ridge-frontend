@@ -1,12 +1,13 @@
 import { Avatar, Stack } from "@mui/material";
-import PrimaryButton from "../../../atoms/primary-button";
+import PrimaryButton from "../../../components/atoms/primary-button";
 import React, { MouseEventHandler } from "react";
-import EmailIcon from "../../../atoms/svg/email-icon";
+import EmailIcon from "../../../components/atoms/svg/email-icon";
 import { useTheme } from "@mui/material/styles";
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 
 type SignInWithDialogProps = SignDialogProps & {
   onSignInWithGoogleClicked: MouseEventHandler;
+  onSignInWithEmailClicked: MouseEventHandler;
 };
 
 const SignInWithDialogContent = (props: SignInWithDialogProps) => {
@@ -44,6 +45,7 @@ const SignInWithDialogContent = (props: SignInWithDialogProps) => {
               <EmailIcon></EmailIcon>
             </Avatar>
           }
+          onClick={props.onSignInWithEmailClicked}
         >
           Sign In with email
         </PrimaryButton>

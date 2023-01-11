@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import type { PropsWithChildren, ReactElement, ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import type { AppProps } from "next/app";
 import type { NextPage } from "next";
 import { createTheme } from "../theme";
@@ -9,9 +9,18 @@ import { client as apolloClient } from "../apollo/client";
 import { WagmiConfig } from "wagmi";
 import { client as wagmiClient } from "../wagmi/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { RecoilRoot, useSetRecoilState } from "recoil";
+import { RecoilRoot } from "recoil";
 import { LoginProvider } from "../provider/login/login-provider";
 import { AlertProvider } from "../provider/alert/alert-provider";
+import { LoadingProvider } from "../provider/loading/loading-provider";
+import { combineProviders } from "react-combine-providers";
+
+const providers = combineProviders();
+providers.push(LoginProvider);
+providers.push(AlertProvider);
+providers.push(LoadingProvider);
+
+const MasterProvider = providers.master();
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -31,12 +40,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         <GoogleOAuthProvider clientId={clientId ?? ""}>
           <RecoilRoot>
             <ApolloProvider client={apolloClient}>
-              {/*-- my provider should be below here --*/}
-              <LoginProvider>
-                <AlertProvider>
-                  {getLayout(<Component {...pageProps} />)}
-                </AlertProvider>
-              </LoginProvider>
+              <MasterProvider>
+                {getLayout(<Component {...pageProps} />)}
+              </MasterProvider>
             </ApolloProvider>
           </RecoilRoot>
         </GoogleOAuthProvider>

@@ -7,14 +7,25 @@ import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
 import PrimaryButton from "../components/atoms/primary-button";
 import SecondaryButton from "../components/atoms/secondary-button";
-import SignInDialog from "../components/molecules/dialog/sign/sign-in-dialog";
-import SignInWithDialog from "../components/molecules/dialog/sign/sign-in-with-dialog";
+import SignInDialog from "./dialog/sign/sign-in-dialog";
+import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
+import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLogin } from "../provider/login/login-provider";
 import { showSignInDialogState } from "../recoil";
-import { AppError } from "../error/my-error";
+import {
+  APP_ERROR_MESSAGE,
+  AppError,
+  getErrorMessage,
+} from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
 import { useFindUserQuery } from "./hook/query-hook";
+import { useLoading } from "../provider/loading/loading-provider";
+import {
+  EmailSignUpParams,
+  MouseEventWithParam,
+  Z_INDEX_OFFSET,
+} from "../type";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -25,17 +36,25 @@ type MainLayoutProps = PropsWithChildren & {
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const router = useRouter();
-  const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
   const { data: userData } = useFindUserQuery();
   const showSignInDialog = useRecoilValue(showSignInDialogState);
   const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
+  const [signUpWithVisible, setSignUpWithVisible] = useState(false);
+  const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
   const { showErrorAlert } = useAlert();
+  const { emailSignIn } = useLogin();
+  const { showLoading, closeLoading } = useLoading();
 
   return (
     <Box sx={{ display: "flex" }}>
       {/*--- Navbar ---*/}
-      <AppBar component="nav">
+      <AppBar
+        component="nav"
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.NAV_LAYOUT,
+        }}
+      >
         <Box
           sx={{
             flexGlow: 1,
@@ -92,7 +111,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           router.push("/").then();
                         },
                         onError: (error) => {
-                          // showAlert({ title: "Contact", content: error.message });
+                          showErrorAlert({ content: error.message });
                         },
                       });
                     }}
@@ -114,7 +133,6 @@ const MainLayout = (props: MainLayoutProps) => {
                       size={"small"}
                       sx={{ width: 100 }}
                       onClick={(e) => {
-                        e.preventDefault();
                         router.push("/signup").then();
                       }}
                     >
@@ -148,8 +166,8 @@ const MainLayout = (props: MainLayoutProps) => {
           setShowSignInDialog(false);
         }}
         onSignInWithClicked={(e) => {
-          setShowSignInDialog(false);
           setSignUpWithVisible(true);
+          setShowSignInDialog(false);
         }}
         onClose={() => {
           setShowSignInDialog(false);
@@ -162,6 +180,7 @@ const MainLayout = (props: MainLayoutProps) => {
               setShowSignInDialog(false);
             },
             onError: (error: AppError) => {
+              setShowSignInDialog(false);
               showErrorAlert({ content: error.message });
             },
           });
@@ -184,11 +203,54 @@ const MainLayout = (props: MainLayoutProps) => {
               setSignUpWithVisible(false);
             },
             onError: (error) => {
-              // todo : show error alert
+              if (
+                getErrorMessage(error).includes(
+                  APP_ERROR_MESSAGE.GOOGLE_LOGIN_POPUP_CLOSED
+                )
+              ) {
+                return;
+              }
+              setSignUpWithVisible(false);
+              showErrorAlert({ content: getErrorMessage(e) });
             },
           });
         }}
+        onSignInWithEmailClicked={(e) => {
+          setSignUpWithEmailVisible(true);
+          setSignUpWithVisible(false);
+        }}
       ></SignInWithDialog>
+      <SignInWithEmailDialog
+        title={"Sign In with email"}
+        open={signUpWithEmailVisible}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setSignUpWithEmailVisible(false);
+        }}
+        onClose={() => {
+          setSignUpWithEmailVisible(false);
+        }}
+        onSignInWithEmailClicked={(e) => {
+          const myEvent = e as MouseEventWithParam<EmailSignUpParams>;
+          const { email, password } = myEvent.params;
+          showLoading();
+          emailSignIn(
+            { email, password },
+            {
+              onSuccess: () => {
+                closeLoading();
+                setSignUpWithEmailVisible(false);
+                router.push("/").then();
+              },
+              onError: (e) => {
+                closeLoading();
+                setSignUpWithEmailVisible(false);
+                showErrorAlert({ content: getErrorMessage(e) });
+              },
+            }
+          );
+        }}
+      ></SignInWithEmailDialog>
     </Box>
   );
 };
