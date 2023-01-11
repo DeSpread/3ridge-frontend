@@ -16,7 +16,7 @@ const useFindUserQuery = () => {
     isGoogleLoggedIn,
     isMailLoggedIn,
     isWalletLoggedIn,
-    mailLoginInfo,
+    emailLoginInfo,
     googleUserInfo,
     walletInfo,
   } = useLogin();
@@ -29,7 +29,7 @@ const useFindUserQuery = () => {
           const res = await client.query({
             query: GET_USER_BY_EMAIL,
             variables: {
-              email: mailLoginInfo.mail ?? "",
+              email: emailLoginInfo.mail ?? "",
             },
           });
           const { email, name, profileImageUrl, wallet, _id } =

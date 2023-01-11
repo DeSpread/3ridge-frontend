@@ -16,7 +16,6 @@ import { client } from "../../../apollo/client";
 import { useEffect, useMemo, useState } from "react";
 import { CREATE_USER_BY_EMAIL, GET_USER_BY_EMAIL } from "../../../apollo/query";
 import moment from "moment";
-// import moment = require("moment");
 
 export function useEmailLogin() {
   const {
