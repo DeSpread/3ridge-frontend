@@ -1,35 +1,42 @@
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { ChainType } from "../../../__generated__/graphql";
 import {
-  APP_ERROR_NAME,
+  APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
 } from "../../../error/my-error";
 import { useMutation } from "@apollo/client";
-import { gql } from "../../../__generated__";
 import { useEffect, useMemo, useState } from "react";
-import { SuccessErrorCallback, WalletInfo } from "../../../type";
-
-const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
-  mutation CreateUserByWallet($address: String!, $chainType: ChainType!) {
-    createUserByWallet(address: $address, chainType: $chainType) {
-      name
-    }
-  }
-`);
+import { SuccessErrorCallback, WalletLoggedInInfo } from "../../../type";
+import { CREATE_USER_BY_WALLET } from "../../../apollo/query";
+import PreferenceHelper from "../../../helper/preference-helper";
+import addHours from "date-fns/addHours";
 
 export function useWalletLogin() {
+  const preference = PreferenceHelper.getInstance();
+
   const { connectAsync, connectors } = useConnect();
   const { disconnectAsync } = useDisconnect();
   const [createUserByWallet] = useMutation(CREATE_USER_BY_WALLET);
   const { address } = useAccount();
-  const [walletInfo, setWalletInfo] = useState<WalletInfo>({});
+  const [walletInfo, setWalletInfo] = useState<WalletLoggedInInfo>({});
 
   useEffect(() => {
     if (address && !walletInfo.address) {
+      const { walletAddress, timestamp } = preference.getWalletSignIn();
+      if (!walletAddress || !timestamp) {
+        return;
+      }
+      const curDate = new Date();
+      const limitDate = addHours(timestamp, 4);
+      if (curDate > limitDate) {
+        walletLogout({});
+        return;
+      }
       setWalletInfo((prevState) => {
         return { ...prevState, address };
       });
+      preference.updateWalletSignIn(address);
     }
   }, [address]);
 
@@ -41,27 +48,28 @@ export function useWalletLogin() {
     (async () => {
       try {
         const { account } = await connectAsync({ connector: connectors[0] });
-        setWalletInfo((prevState) => {
-          return { ...prevState, address: account };
-        });
         await createUserByWallet({
           variables: {
             address: account,
-            chainType: ChainType.Evm,
+            chain: ChainType.Evm,
           },
         });
+        setWalletInfo((prevState) => {
+          return { ...prevState, address: account };
+        });
+        preference.updateWalletSignIn(account);
         onSuccess?.();
       } catch (e) {
         const message = getErrorMessage(e);
-        if (message === "User rejected request") {
+        if (message === APP_ERROR_MESSAGE.WALLET_USER_REJECTED_REQUEST) {
           return;
         }
-        if (message === "Already registered by wallet address") {
+        if (message === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED) {
           onSuccess?.();
           return;
         }
         setWalletInfo({});
-        onError?.(new AppError(message, APP_ERROR_NAME.WALLET_SIGN_UP));
+        onError?.(new AppError(message));
       }
     })();
   };
@@ -71,10 +79,11 @@ export function useWalletLogin() {
       try {
         await disconnectAsync();
         setWalletInfo({});
+        preference.clearWalletSignIn();
         onSuccess?.();
       } catch (e) {
         const message = getErrorMessage(e);
-        onError?.(new AppError(message, APP_ERROR_NAME.WALLET_LOGOUT));
+        onError?.(new AppError(message));
       }
     })();
   };

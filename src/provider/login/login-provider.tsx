@@ -1,45 +1,45 @@
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
-import { APP_ERROR_NAME, AppError } from "../../error/my-error";
+import { AppError, getErrorMessage } from "../../error/my-error";
 import { useMyGoogleLogin } from "./hook/my-google-login-hook";
 import { useWalletLogin } from "./hook/wallet-login-hook";
 import {
   EmailSignUpParams,
-  GoogleUserInfo,
-  MailLoginInfo,
+  GoogleLoggedInInfo,
+  EmailLoggedInInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
-  WalletInfo,
+  WalletLoggedInInfo,
 } from "../../type";
 import { useEmailLogin } from "./hook/email-login-hook";
 
 const LoginContext = createContext<{
   isGoogleLoggedIn: boolean;
   isLoggedIn: boolean;
-  googleUserInfo: GoogleUserInfo;
+  googleLoggedInInfo: GoogleLoggedInInfo;
   logout: SuccessErrorCallback;
   googleSignUp: SuccessErrorCallback;
   walletSignUp: SuccessErrorCallback;
   isWalletLoggedIn: boolean;
-  walletInfo: WalletInfo;
+  walletLoggedInInfo: WalletLoggedInInfo;
   emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams>;
   emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams>;
   resendEmailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams>;
   isMailLoggedIn: boolean;
-  emailLoginInfo: MailLoginInfo;
+  emailLoggedInInfo: EmailLoggedInInfo;
 }>({
   isGoogleLoggedIn: false,
   isLoggedIn: false,
-  googleUserInfo: {},
+  googleLoggedInInfo: {},
   logout: () => {},
   googleSignUp: () => {},
   walletSignUp: () => {},
   isWalletLoggedIn: false,
-  walletInfo: {},
+  walletLoggedInInfo: {},
   emailVerify: () => {},
   emailSignIn: () => {},
   resendEmailVerify: () => {},
   isMailLoggedIn: false,
-  emailLoginInfo: {},
+  emailLoggedInInfo: {},
 });
 
 export const LoginProvider = ({ children }: PropsWithChildren) => {
@@ -68,11 +68,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
         emailLogout({ onSuccess, onError });
       }
     } catch (e) {
-      if (e instanceof Error) {
-        onError?.(new AppError(e.toString(), APP_ERROR_NAME.LOGOUT));
-      } else {
-        onError?.(new AppError("unknown", APP_ERROR_NAME.LOGOUT));
-      }
+      onError?.(new AppError(getErrorMessage(e)));
     }
   };
 
@@ -87,15 +83,15 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
         isLoggedIn,
         googleSignUp,
         logout,
-        googleUserInfo,
+        googleLoggedInInfo: googleUserInfo,
         walletSignUp,
-        walletInfo,
+        walletLoggedInInfo: walletInfo,
         isWalletLoggedIn,
         emailVerify,
         emailSignIn,
         resendEmailVerify,
         isMailLoggedIn,
-        emailLoginInfo,
+        emailLoggedInInfo: emailLoginInfo,
       }}
     >
       {children}

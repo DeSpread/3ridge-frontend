@@ -50,11 +50,11 @@ export type SignedUser = {
   profileImageUrl?: string;
 };
 
-export type GoogleUserInfo = {
+export type GoogleLoggedInInfo = {
   gmail?: string;
 };
 
-export type MailLoginInfo = {
+export type EmailLoggedInInfo = {
   mail?: string;
 };
 
@@ -63,6 +63,6 @@ export type EmailSignUpParams = {
   password: string;
 };
 
-export type WalletInfo = {
+export type WalletLoggedInInfo = {
   address?: string;
 };

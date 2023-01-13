@@ -5,8 +5,6 @@ import EmailIcon from "../../../components/atoms/svg/email-icon";
 import LinkTypography from "../../../components/atoms/link-typography";
 import { useTheme } from "@mui/material/styles";
 import { MouseEventHandler, PropsWithChildren } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { showSignInDialogState } from "../../../recoil";
 
 type SignUpSelectFormProps = PropsWithChildren & {
   onClickSignUpWith?: MouseEventHandler;

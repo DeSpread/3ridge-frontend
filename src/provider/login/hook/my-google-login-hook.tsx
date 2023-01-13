@@ -1,29 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  APP_ERROR_NAME,
-  AppError,
-  getErrorMessage,
-} from "../../../error/my-error";
+import { AppError, getErrorMessage } from "../../../error/my-error";
 import { useMutation } from "@apollo/client";
-import { gql } from "../../../__generated__";
 import GoogleLoginHelper from "../../../helper/google-login-helper";
 import { useGoogleLogin } from "@react-oauth/google";
-import { GoogleUserInfo, SuccessErrorCallback } from "../../../type";
-
-const CREATE_USER_BY_GMAIL = gql(/* GraphQL */ `
-  mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {
-    createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {
-      name
-    }
-  }
-`);
+import { GoogleLoggedInInfo, SuccessErrorCallback } from "../../../type";
+import { CREATE_USER_BY_GMAIL } from "../../../apollo/query";
 
 export function useMyGoogleLogin() {
   const onGoogleLoginOnSuccessCallback =
     useRef<({ email, picture }: { email: string; picture: string }) => void>();
   const onGoogleLoginOnErrorCallback = useRef<(error: AppError) => void>();
   const [createUserByGmail] = useMutation(CREATE_USER_BY_GMAIL);
-  const [googleUserInfo, setGoogleUserInfo] = useState<GoogleUserInfo>({});
+  const [googleUserInfo, setGoogleUserInfo] = useState<GoogleLoggedInInfo>({});
 
   useEffect(() => {
     (async () => {
@@ -45,7 +33,7 @@ export function useMyGoogleLogin() {
       GoogleLoginHelper.getInstance().googleLogout();
       setGoogleUserInfo({});
     } catch (e) {
-      onError?.(new AppError(getErrorMessage(e), APP_ERROR_NAME.GOOGLE_LOGOUT));
+      onError?.(new AppError(getErrorMessage(e)));
     }
   };
 
@@ -74,7 +62,7 @@ export function useMyGoogleLogin() {
           onGoogleLoginOnSuccessCallback.current = undefined;
         } catch (e) {
           onGoogleLoginOnErrorCallback.current?.(
-            new AppError(getErrorMessage(e), APP_ERROR_NAME.GOOGLE_LOGIN)
+            new AppError(getErrorMessage(e))
           );
           onGoogleLoginOnErrorCallback.current = undefined;
         }
@@ -82,10 +70,7 @@ export function useMyGoogleLogin() {
     },
     onError: (errorResponse) => {
       onGoogleLoginOnErrorCallback.current?.(
-        new AppError(
-          errorResponse.error ?? "unknown",
-          APP_ERROR_NAME.GOOGLE_LOGIN
-        )
+        new AppError(errorResponse.error ?? "unknown")
       );
       onGoogleLoginOnErrorCallback.current = undefined;
     },
@@ -94,9 +79,7 @@ export function useMyGoogleLogin() {
     }: {
       type: "popup_failed_to_open" | "popup_closed" | "unknown";
     }) => {
-      onGoogleLoginOnErrorCallback.current?.(
-        new AppError(type, APP_ERROR_NAME.GOOGLE_LOGIN_AUTH)
-      );
+      onGoogleLoginOnErrorCallback.current?.(new AppError(type));
       onGoogleLoginOnErrorCallback.current = undefined;
     },
   });
@@ -123,7 +106,7 @@ export function useMyGoogleLogin() {
           if (message === "Already registered by gmail") {
             onSuccess?.();
           } else {
-            onError?.(new AppError(message, APP_ERROR_NAME.GOOGLE_SIGN_UP));
+            onError?.(new AppError(message));
           }
         }
       })();

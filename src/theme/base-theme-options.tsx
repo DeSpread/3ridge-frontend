@@ -1,12 +1,10 @@
 import { ThemeOptions } from "@mui/material/styles/createTheme";
 
-const hLetterSpacing = ".04rem";
-
 const baseThemeOptions: ThemeOptions = {
   breakpoints: {
     values: {
       xs: 0,
-      sm: 600,
+      sm: 800,
       md: 1000,
       lg: 1200,
       xl: 1920,
