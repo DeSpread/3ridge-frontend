@@ -4,11 +4,7 @@ import {
   sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import {
-  APP_ERROR_NAME,
-  AppError,
-  getErrorMessage,
-} from "../../error/my-error";
+import { AppError, getErrorMessage } from "../../error/my-error";
 import { MAIL_VERIFY, MailVerified } from "../../type";
 
 const useFirebaseAuth = () => {
@@ -37,13 +33,13 @@ const useFirebaseAuth = () => {
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
       if (res.user.emailVerified) {
-        throw new AppError(MAIL_VERIFY.VERIFIED, APP_ERROR_NAME.FIREBASE_AUTH);
+        throw new AppError(MAIL_VERIFY.VERIFIED);
       }
       await sendEmailVerification(res.user);
       return true;
     } catch (e) {
       const message = getErrorMessage(e);
-      throw new AppError(message, APP_ERROR_NAME.FIREBASE_AUTH);
+      throw new AppError(message);
     }
   };
 
@@ -70,7 +66,7 @@ const useFirebaseAuth = () => {
       }
       return MAIL_VERIFY.SEND_VERIFICATION;
     } catch (err) {
-      throw new AppError(getErrorMessage(err), APP_ERROR_NAME.FIREBASE_AUTH);
+      throw new AppError(getErrorMessage(err));
     }
   };
 

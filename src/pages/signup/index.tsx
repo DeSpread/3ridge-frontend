@@ -23,10 +23,10 @@ import {
   MouseEventWithParam,
   ObjectValues,
 } from "../../type";
-import VerifyYourEmailForm from "./components/verify-your-email-form";
+import VerifyYourEmailForm from "../../components/organisms/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
 
-export const FORM_TYPE = {
+const FORM_TYPE = {
   SELECT: "SELECT",
   OTHERS: "OTHERS",
   WITH_EMAIL: "WITH_EMAIL",
@@ -147,7 +147,7 @@ const Signup = () => {
                             closeLoading();
                             router.push("/profile").then();
                           },
-                          onError: (e) => {
+                          onError: (e: Error) => {
                             closeLoading();
                             showErrorAlert({ content: getErrorMessage(e) });
                           },
@@ -178,7 +178,7 @@ const Signup = () => {
                         ),
                       });
                     },
-                    onError: (error) => {
+                    onError: (error: Error) => {
                       if (error.message === MAIL_VERIFY.VERIFIED) {
                         showAlert({
                           title: "Info",
@@ -206,7 +206,7 @@ const Signup = () => {
                     onSuccess: () => {
                       router.push("/profile").then();
                     },
-                    onError: (e) => {},
+                    onError: (e: Error) => {},
                   }
                 );
               }}

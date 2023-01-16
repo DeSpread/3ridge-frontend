@@ -44,7 +44,7 @@ export function useEmailLogin() {
     }
   }, []);
 
-  const emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams> = (
+  const emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams, void> = (
     params,
     { onSuccess, onError }
   ) => {
@@ -68,7 +68,7 @@ export function useEmailLogin() {
     })();
   };
 
-  const emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams> = (
+  const emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams, void> = (
     params,
     { onSuccess, onError }
   ) => {
@@ -121,10 +121,10 @@ export function useEmailLogin() {
     })();
   };
 
-  const resendEmailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams> = (
-    params,
-    { onSuccess, onError }
-  ) => {
+  const resendEmailVerify: SuccessErrorCallbackWithParam<
+    EmailSignUpParams,
+    void
+  > = (params, { onSuccess, onError }) => {
     (async () => {
       try {
         const { email, password } = params;
@@ -140,12 +140,13 @@ export function useEmailLogin() {
     return emailLoginInfo?.mail !== undefined ? true : false;
   }, [emailLoginInfo]);
 
-  const emailLogout: SuccessErrorCallback = ({ onSuccess, onError }) => {
+  const emailLogout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     try {
       setEmailLoginInfo((prevState) => {
         return { ...prevState, mail: undefined };
       });
       preference.clearEmailSignIn();
+      onSuccess?.();
     } catch (e) {
       onError?.(new AppError(getErrorMessage(e)));
     }

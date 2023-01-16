@@ -44,27 +44,40 @@ export function useWalletLogin() {
     return walletInfo?.address ? true : false;
   }, [walletInfo]);
 
-  const walletSignUp: SuccessErrorCallback = ({ onSuccess, onError }) => {
+  const walletSignUp: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     (async () => {
+      let newAccount = address;
       try {
-        const { account } = await connectAsync({ connector: connectors[0] });
+        if (!address) {
+          const { account } = await connectAsync({ connector: connectors[0] });
+          newAccount = account;
+        }
+        if (!newAccount)
+          throw new AppError(APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL);
         await createUserByWallet({
           variables: {
-            address: account,
+            address: newAccount,
             chain: ChainType.Evm,
           },
         });
         setWalletInfo((prevState) => {
-          return { ...prevState, address: account };
+          return { ...prevState, address: newAccount };
         });
-        preference.updateWalletSignIn(account);
+        preference.updateWalletSignIn(newAccount);
         onSuccess?.();
       } catch (e) {
+        console.log(e);
         const message = getErrorMessage(e);
         if (message === APP_ERROR_MESSAGE.WALLET_USER_REJECTED_REQUEST) {
           return;
         }
         if (message === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED) {
+          if (newAccount) {
+            setWalletInfo((prevState) => {
+              return { ...prevState, address: newAccount };
+            });
+            preference.updateWalletSignIn(newAccount);
+          }
           onSuccess?.();
           return;
         }
@@ -74,7 +87,7 @@ export function useWalletLogin() {
     })();
   };
 
-  const walletLogout: SuccessErrorCallback = ({ onSuccess, onError }) => {
+  const walletLogout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     (async () => {
       try {
         await disconnectAsync();

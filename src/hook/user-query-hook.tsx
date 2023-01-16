@@ -126,7 +126,7 @@ const useSignedUserQuery = () => {
     }
   }, [isWalletLoggedIn]);
 
-  const asyncUpdateWalletAddress = async () => {
+  const asyncUpdateWalletAddressByWallet = async () => {
     try {
       if (!userData.name) return;
       let newAccount = address;
@@ -135,7 +135,7 @@ const useSignedUserQuery = () => {
         newAccount = account;
       }
       if (!newAccount) {
-        throw new AppError("");
+        throw new AppError(APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL);
         return;
       }
       await updateUserByName({
@@ -160,7 +160,33 @@ const useSignedUserQuery = () => {
     }
   };
 
-  return { userData, loading, asyncUpdateWalletAddress };
+  const asyncUpdateWalletAddress = async (walletAddress: string) => {
+    try {
+      if (!userData.name) return;
+      await updateUserByName({
+        variables: {
+          name: userData.name,
+          chain: ChainType.Evm,
+          walletAddress: walletAddress,
+        },
+      });
+      setUserData((prevState) => {
+        return {
+          ...prevState,
+          walletAddress: walletAddress,
+        };
+      });
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
+  return {
+    userData,
+    loading,
+    asyncUpdateWalletAddressByWallet,
+    asyncUpdateWalletAddress,
+  };
 };
 
 export { useSignedUserQuery };

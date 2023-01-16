@@ -1,21 +1,22 @@
 import { AppError } from "../error/my-error";
 import React from "react";
+import { SvgIconProps } from "@mui/material";
 
-export type SuccessErrorCallback = ({
+export type SuccessErrorCallback<T> = ({
   onSuccess,
   onError,
 }: {
-  onSuccess?: () => void;
+  onSuccess?: (msg?: T) => void;
   onError?: (error: AppError) => void;
 }) => void;
 
-export type SuccessErrorCallbackWithParam<T> = (
+export type SuccessErrorCallbackWithParam<T, K> = (
   t: T,
   {
     onSuccess,
     onError,
   }: {
-    onSuccess?: () => void;
+    onSuccess?: (msg?: K) => void;
     onError?: (error: AppError) => void;
   }
 ) => void;
@@ -66,3 +67,9 @@ export type EmailSignUpParams = {
 export type WalletLoggedInInfo = {
   address?: string;
 };
+
+export type ReversibleSvgIconProps = SvgIconProps & {
+  reverse?: boolean;
+};
+
+export type MouseEventWithStateParam = MouseEventWithParam<{ state?: string }>;

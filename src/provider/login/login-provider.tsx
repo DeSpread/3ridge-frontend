@@ -16,14 +16,14 @@ const LoginContext = createContext<{
   isGoogleLoggedIn: boolean;
   isLoggedIn: boolean;
   googleLoggedInInfo: GoogleLoggedInInfo;
-  logout: SuccessErrorCallback;
-  googleSignUp: SuccessErrorCallback;
-  walletSignUp: SuccessErrorCallback;
+  logout: SuccessErrorCallback<void>;
+  googleSignUp: SuccessErrorCallback<void>;
+  walletSignUp: SuccessErrorCallback<void>;
   isWalletLoggedIn: boolean;
   walletLoggedInInfo: WalletLoggedInInfo;
-  emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams>;
-  emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams>;
-  resendEmailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams>;
+  emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams, void>;
+  emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams, void>;
+  resendEmailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams, void>;
   isMailLoggedIn: boolean;
   emailLoggedInInfo: EmailLoggedInInfo;
 }>({
@@ -56,7 +56,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     emailLoginInfo,
   } = useEmailLogin();
 
-  const logout: SuccessErrorCallback = ({ onSuccess, onError }) => {
+  const logout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     try {
       if (isGoogleLoggedIn) {
         googleLogout({ onSuccess, onError });

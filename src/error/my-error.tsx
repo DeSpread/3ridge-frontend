@@ -7,6 +7,7 @@ export const APP_ERROR_MESSAGE = {
   WALLET_USER_REJECTED_REQUEST: "User rejected request",
   WALLET_ADDRESS_ALREADY_REGISTERED: "Already registered by wallet address",
   WALLET_USER_ACCOUNT_FETCH_FAIL: "WALLET_USER_ACCOUNT_FETCH_FAIL",
+  FIREBASE_USER_NOT_FOUND: "auth/user-not-found",
 } as const;
 
 export class AppError extends Error {

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { MouseEventHandler, ReactElement, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -17,11 +17,23 @@ import LinearProgress from "@mui/material/LinearProgress";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import { useSignedUserQuery } from "../../hook/user-query-hook";
-import { useLogin } from "../../provider/login/login-provider";
 import EthIcon from "../../components/atoms/svg/eth-icon";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import PrimaryButton from "../../components/atoms/primary-button";
-import ProfileEditDialog from "./dialog/profile-edit-dialog";
+import ProfileEditDialog, {
+  VALIDATOR_BUTTON_STATES,
+} from "./dialog/profile-edit-dialog";
+import { useLoading } from "../../provider/loading/loading-provider";
+import { useLogin } from "../../provider/login/login-provider";
+import {
+  EmailSignUpParams,
+  MouseEventWithParam,
+  MouseEventWithStateParam,
+} from "../../type";
+import ConnectEmailDialog, {
+  CONNECT_MAIL_DIALOG_FORM_TYPE,
+  ConnectMailDialogFormType,
+} from "./dialog/connect-email-dialog";
 
 const StyledChip = styled((props: ChipProps) => (
   <Chip
@@ -36,8 +48,20 @@ const StyledChip = styled((props: ChipProps) => (
 ))(() => ({}));
 
 const Profile = (props: AppProps) => {
-  const { userData, asyncUpdateWalletAddress } = useSignedUserQuery();
-  const [open, setOpen] = useState(false);
+  const {
+    userData,
+    asyncUpdateWalletAddress,
+    asyncUpdateWalletAddressByWallet,
+  } = useSignedUserQuery();
+  const { isWalletLoggedIn, isMailLoggedIn } = useLogin();
+  const { showLoading, closeLoading } = useLoading();
+  const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
+  const [openConnectEmailDialog, setOpenConnectEmailDialog] = useState(false);
+  const [verificationMail, setVerificationMail] = useState("");
+  const [dialogFormType, setDialogFormType] =
+    useState<ConnectMailDialogFormType>(
+      CONNECT_MAIL_DIALOG_FORM_TYPE.SEND_EMAIL
+    );
 
   return (
     <>
@@ -163,7 +187,7 @@ const Profile = (props: AppProps) => {
                 <Grid item>
                   <PrimaryButton
                     onClick={() => {
-                      setOpen(true);
+                      setOpenProfileEditDialog(true);
                     }}
                   >
                     Edit Profile
@@ -177,6 +201,7 @@ const Profile = (props: AppProps) => {
                 Achievements
               </Typography>
             </Stack>
+            {/*--- additional area ---*/}
           </Stack>
         </Grid>
       </Grid>
@@ -184,10 +209,49 @@ const Profile = (props: AppProps) => {
         userData={userData}
         title={"Edit profile"}
         onClose={() => {
-          setOpen(false);
+          setOpenProfileEditDialog(false);
         }}
-        open={open}
+        open={openProfileEditDialog}
+        walletValidatorButtonOnClick={async (e) => {
+          const myEvent = e as MouseEventWithStateParam;
+          showLoading();
+          if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
+            await asyncUpdateWalletAddress("");
+          } else if (
+            myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
+          ) {
+            await asyncUpdateWalletAddressByWallet();
+          }
+          closeLoading();
+        }}
+        emailValidatorButtonOnClick={async (e) => {
+          const myEvent = e as MouseEventWithStateParam;
+          showLoading();
+
+          closeLoading();
+        }}
+        isWalletLoggedIn={isWalletLoggedIn}
+        isMailLoggedIn={isMailLoggedIn}
+        onCloseBtnClicked={(e) => {
+          setOpenProfileEditDialog(false);
+        }}
       ></ProfileEditDialog>
+      <ConnectEmailDialog
+        open={openConnectEmailDialog}
+        onClickSendVerification={(e) => {
+          const myEvent = e as MouseEventWithParam<EmailSignUpParams>;
+          const { email } = myEvent.params;
+          setVerificationMail(verificationMail);
+          setDialogFormType(CONNECT_MAIL_DIALOG_FORM_TYPE.VERIFY_EMAIL);
+        }}
+        email={verificationMail}
+        formType={dialogFormType}
+        onClickResendVerification={(e) => {}}
+        onClickSignIn={(e) => {}}
+        onClose={() => {
+          setOpenConnectEmailDialog(false);
+        }}
+      ></ConnectEmailDialog>
     </>
   );
 };

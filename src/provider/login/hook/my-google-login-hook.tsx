@@ -28,7 +28,7 @@ export function useMyGoogleLogin() {
     return googleUserInfo?.gmail !== undefined ? true : false;
   }, [googleUserInfo]);
 
-  const googleLogout: SuccessErrorCallback = ({ onSuccess, onError }) => {
+  const googleLogout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     try {
       GoogleLoginHelper.getInstance().googleLogout();
       setGoogleUserInfo({});
@@ -84,7 +84,7 @@ export function useMyGoogleLogin() {
     },
   });
 
-  const googleSignUp: SuccessErrorCallback = ({ onSuccess, onError }) => {
+  const googleSignUp: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     onGoogleLoginOnSuccessCallback.current = ({
       email,
       picture,

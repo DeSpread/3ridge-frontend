@@ -1,0 +1,60 @@
+import { Stack, Typography } from "@mui/material";
+import MailTextField from "../molecules/mail-text-field";
+import { validateMail } from "../../util/validate-string";
+import SecondaryButton from "../atoms/secondary-button";
+import { EmailSignUpParams, MouseEventWithParam } from "../../type";
+import LinkTypography from "../atoms/link-typography";
+import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
+
+type SendVerificationEmailFormProps = PropsWithChildren & {
+  onClickSendVerification?: MouseEventHandler;
+};
+
+const SendVerificationEmailForm = (props: SendVerificationEmailFormProps) => {
+  const [mail, setMail] = useState("");
+
+  return (
+    <>
+      <Stack
+        direction={"column"}
+        sx={{
+          background: "",
+          minWidth: "500px",
+          paddingTop: 12,
+          marginBottom: 12,
+        }}
+        spacing={4}
+      >
+        <Typography textAlign={"left"} variant={"h5"}>
+          Send Verification Email
+        </Typography>
+        <Stack spacing={4}>
+          <MailTextField
+            value={mail}
+            onChange={(e) => {
+              setMail(e.target.value);
+            }}
+            placeholder={"Email Address"}
+          ></MailTextField>
+          <Stack spacing={2}>
+            <SecondaryButton
+              disabled={!validateMail(mail)}
+              onClick={(e) => {
+                const myEvent = {} as MouseEventWithParam<EmailSignUpParams>;
+                myEvent.params = {
+                  email: mail,
+                  password: "",
+                };
+                props.onClickSendVerification?.(myEvent);
+              }}
+            >
+              Send verification email
+            </SecondaryButton>
+          </Stack>
+        </Stack>
+      </Stack>
+    </>
+  );
+};
+
+export default SendVerificationEmailForm;
