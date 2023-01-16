@@ -1,17 +1,18 @@
 import { Typography, TypographyProps } from "@mui/material";
 
-const GradientTypography = ({ children, sx }: TypographyProps) => {
+const GradientTypography = (props: TypographyProps) => {
   return (
     <Typography
-      sx={sx}
-      style={{
+      {...props}
+      sx={{
+        ...props.sx,
         background:
-          "-webkit-linear-gradient(45deg, #ffff00 10%, #FFC300 26%, #FF69B4 42%, #8A2BE2 58%, #0000ff 74%, #00BFFF 90%)",
+          "-webkit-linear-gradient(45deg, #ffff00, #FFC300, #FF69B4, #8A2BE2, #0000ff, #00BFFF)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
       }}
     >
-      {children}
+      {props.children}
     </Typography>
   );
 };

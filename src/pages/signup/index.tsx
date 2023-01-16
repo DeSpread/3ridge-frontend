@@ -8,7 +8,11 @@ import SignUpSelectForm from "./components/sign-up-select-form";
 import SignUpOthersForm from "./components/sign-up-others-form";
 import { useRouter } from "next/router";
 import { useLogin } from "../../provider/login/login-provider";
-import { AppError, getErrorMessage } from "../../error/my-error";
+import {
+  APP_ERROR_MESSAGE,
+  AppError,
+  getErrorMessage,
+} from "../../error/my-error";
 import { useSetRecoilState } from "recoil";
 import { showSignInDialogState } from "../../recoil";
 import { useAlert } from "../../provider/alert/alert-provider";
@@ -19,10 +23,10 @@ import {
   MouseEventWithParam,
   ObjectValues,
 } from "../../type";
-import VerifyYourEmailForm from "./components/verify-your-email-form";
+import VerifyYourEmailForm from "../../components/organisms/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
 
-export const FORM_TYPE = {
+const FORM_TYPE = {
   SELECT: "SELECT",
   OTHERS: "OTHERS",
   WITH_EMAIL: "WITH_EMAIL",
@@ -32,17 +36,23 @@ export const FORM_TYPE = {
 type FormType = ObjectValues<typeof FORM_TYPE>;
 
 const Signup = () => {
-  const [formType, setFormType] = useState<FormType>(FORM_TYPE.SELECT);
   const router = useRouter();
-  const { googleSignUp, walletSignUp } = useLogin();
+  const { showErrorAlert, showAlert } = useAlert();
+  const {
+    googleSignUp,
+    walletSignUp,
+    emailVerify,
+    emailSignIn,
+    resendEmailVerify,
+  } = useLogin();
+  const { showLoading, closeLoading } = useLoading();
+
   const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
-  const { showErrorAlert, showAlert, closeAlert } = useAlert();
-  const { emailVerify, emailSignIn, resendEmailVerify } = useLogin();
   const [signupParams, setSignUpParams] = useState<EmailSignUpParams>({
     email: "",
     password: "",
   });
-  const { showLoading, closeLoading } = useLoading();
+  const [formType, setFormType] = useState<FormType>(FORM_TYPE.SELECT);
 
   return (
     <>
@@ -79,11 +89,19 @@ const Signup = () => {
           {formType === FORM_TYPE.OTHERS && (
             <SignUpOthersForm
               onSignUpWithGoogleClicked={(e) => {
+                console.log("aaa");
                 googleSignUp({
                   onSuccess: () => {
-                    router.push("/").then();
+                    router.push("/profile").then();
                   },
                   onError: (error: AppError) => {
+                    if (
+                      getErrorMessage(error).includes(
+                        APP_ERROR_MESSAGE.GOOGLE_LOGIN_POPUP_CLOSED
+                      )
+                    ) {
+                      return;
+                    }
                     showErrorAlert({ content: error.message });
                   },
                 });
@@ -127,9 +145,9 @@ const Signup = () => {
                         {
                           onSuccess: () => {
                             closeLoading();
-                            router.push("/").then();
+                            router.push("/profile").then();
                           },
-                          onError: (e) => {
+                          onError: (e: Error) => {
                             closeLoading();
                             showErrorAlert({ content: getErrorMessage(e) });
                           },
@@ -160,7 +178,7 @@ const Signup = () => {
                         ),
                       });
                     },
-                    onError: (error) => {
+                    onError: (error: Error) => {
                       if (error.message === MAIL_VERIFY.VERIFIED) {
                         showAlert({
                           title: "Info",
@@ -186,9 +204,9 @@ const Signup = () => {
                   { email, password },
                   {
                     onSuccess: () => {
-                      router.push("/").then();
+                      router.push("/profile").then();
                     },
-                    onError: (e) => {},
+                    onError: (e: Error) => {},
                   }
                 );
               }}

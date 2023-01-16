@@ -1,51 +1,50 @@
 import {
   EmailSignUpParams,
   MAIL_VERIFY,
-  MailLoginInfo,
+  EmailLoggedInInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
 } from "../../../type";
-import {
-  APP_ERROR_NAME,
-  AppError,
-  getErrorMessage,
-} from "../../../error/my-error";
+import { AppError, getErrorMessage } from "../../../error/my-error";
 import { useFirebaseAuth } from "../../../firebase/hook/firebase-hook";
 import { useMutation } from "@apollo/client";
 import { client } from "../../../apollo/client";
 import { useEffect, useMemo, useState } from "react";
 import { CREATE_USER_BY_EMAIL, GET_USER_BY_EMAIL } from "../../../apollo/query";
-import moment from "moment";
+import PreferenceHelper from "../../../helper/preference-helper";
+import addHours from "date-fns/addHours";
 
 export function useEmailLogin() {
+  const preference = PreferenceHelper.getInstance();
   const {
     asyncVerifyUserWithEmailAndPassword,
     asyncSignInEmailWithVerify,
     asyncResendEmailVerify,
   } = useFirebaseAuth();
-  const [emailLoginInfo, setEmailLoginInfo] = useState<MailLoginInfo>({});
+  const [emailLoginInfo, setEmailLoginInfo] = useState<EmailLoggedInInfo>({});
 
   const [createUserByEmail] = useMutation(CREATE_USER_BY_EMAIL);
 
   useEffect(() => {
     if (!isMailLoggedIn) {
-      const cacheStr = localStorage.getItem("emailSignInCache");
-      if (!cacheStr) return;
-      const cache = JSON.parse(cacheStr);
+      const { email, timestamp } = preference.getEmailSignIn();
+      if (!email || !timestamp) {
+        return;
+      }
       const curDate = new Date();
-      const limitDate = moment(cache.timestamp).add(4, "hours").toDate();
-      console.log(curDate, limitDate);
+      const limitDate = addHours(timestamp, 4);
       if (curDate > limitDate) {
         emailLogout({});
         return;
       }
       setEmailLoginInfo((prevState) => {
-        return { ...prevState, mail: cache.email };
+        return { ...prevState, mail: email };
       });
+      preference.updateEmailSignIn(email);
     }
   }, []);
 
-  const emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams> = (
+  const emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams, void> = (
     params,
     { onSuccess, onError }
   ) => {
@@ -57,12 +56,10 @@ export function useEmailLogin() {
           onSuccess?.();
           return;
         }
-        onError?.(
-          new AppError(res, APP_ERROR_NAME.EMAIL_SIGN_UP, { email, password })
-        );
+        onError?.(new AppError(res, { email, password }));
       } catch (e) {
         onError?.(
-          new AppError(getErrorMessage(e), APP_ERROR_NAME.EMAIL_SIGN_UP, {
+          new AppError(getErrorMessage(e), {
             email,
             password,
           })
@@ -71,7 +68,7 @@ export function useEmailLogin() {
     })();
   };
 
-  const emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams> = (
+  const emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams, void> = (
     params,
     { onSuccess, onError }
   ) => {
@@ -89,17 +86,11 @@ export function useEmailLogin() {
           setEmailLoginInfo((prevState) => {
             return { ...prevState, mail: email };
           });
-          localStorage.setItem(
-            "emailSignInCache",
-            JSON.stringify({
-              email,
-              timestamp: new Date().toISOString(),
-            })
-          );
+          preference.updateEmailSignIn(email);
           onSuccess?.();
           return;
         }
-        onError?.(new AppError(res, APP_ERROR_NAME.EMAIL_SIGN_IN));
+        onError?.(new AppError(res));
       } catch (e) {
         if (getErrorMessage(e) === "Does not exist user") {
           createUserByEmail({
@@ -121,30 +112,26 @@ export function useEmailLogin() {
               onSuccess?.();
             })
             .catch((e) => {
-              new AppError(getErrorMessage(e), APP_ERROR_NAME.EMAIL_SIGN_IN);
+              throw new AppError(getErrorMessage(e));
             });
           return;
         }
-        onError?.(
-          new AppError(getErrorMessage(e), APP_ERROR_NAME.EMAIL_SIGN_IN)
-        );
+        onError?.(new AppError(getErrorMessage(e)));
       }
     })();
   };
 
-  const resendEmailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams> = (
-    params,
-    { onSuccess, onError }
-  ) => {
+  const resendEmailVerify: SuccessErrorCallbackWithParam<
+    EmailSignUpParams,
+    void
+  > = (params, { onSuccess, onError }) => {
     (async () => {
       try {
         const { email, password } = params;
         await asyncResendEmailVerify(email, password);
         onSuccess?.();
       } catch (e) {
-        onError?.(
-          new AppError(getErrorMessage(e), APP_ERROR_NAME.EMAIL_SIGN_IN)
-        );
+        onError?.(new AppError(getErrorMessage(e)));
       }
     })();
   };
@@ -153,14 +140,15 @@ export function useEmailLogin() {
     return emailLoginInfo?.mail !== undefined ? true : false;
   }, [emailLoginInfo]);
 
-  const emailLogout: SuccessErrorCallback = ({ onSuccess, onError }) => {
+  const emailLogout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     try {
       setEmailLoginInfo((prevState) => {
         return { ...prevState, mail: undefined };
       });
-      localStorage.removeItem("emailSignInCache");
+      preference.clearEmailSignIn();
+      onSuccess?.();
     } catch (e) {
-      onError?.(new AppError(getErrorMessage(e), APP_ERROR_NAME.EMAIL_LOGOUT));
+      onError?.(new AppError(getErrorMessage(e)));
     }
   };
 

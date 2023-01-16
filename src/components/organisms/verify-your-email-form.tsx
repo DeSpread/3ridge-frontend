@@ -1,8 +1,8 @@
 import { Stack, Typography } from "@mui/material";
 import { MouseEventHandler, PropsWithChildren } from "react";
-import SecondaryButton from "../../../components/atoms/secondary-button";
+import SecondaryButton from "../atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
-import LinkTypography from "../../../components/atoms/link-typography";
+import LinkTypography from "../atoms/link-typography";
 
 type VerifyYourEmailFormProps = PropsWithChildren & {
   email: string;

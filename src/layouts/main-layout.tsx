@@ -10,22 +10,22 @@ import SecondaryButton from "../components/atoms/secondary-button";
 import SignInDialog from "./dialog/sign/sign-in-dialog";
 import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
 import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLogin } from "../provider/login/login-provider";
-import { showSignInDialogState } from "../recoil";
 import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
 } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
-import { useFindUserQuery } from "./hook/query-hook";
+import { useSignedUserQuery } from "../hook/user-query-hook";
 import { useLoading } from "../provider/loading/loading-provider";
 import {
   EmailSignUpParams,
+  MAIL_VERIFY,
   MouseEventWithParam,
   Z_INDEX_OFFSET,
 } from "../type";
+import { useDialog } from "./hook/dialog-hook";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -37,12 +37,11 @@ const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const router = useRouter();
   const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
-  const { data: userData } = useFindUserQuery();
-  const showSignInDialog = useRecoilValue(showSignInDialogState);
-  const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
+  const { userData } = useSignedUserQuery();
+  const { setShowSignInDialog, isSignDialogOpen } = useDialog();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
-  const { showErrorAlert } = useAlert();
+  const { showErrorAlert, showAlert } = useAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
 
@@ -116,6 +115,7 @@ const MainLayout = (props: MainLayoutProps) => {
                       });
                     }}
                     src={userData?.profileImageUrl ?? undefined}
+                    walletAddress={userData?.walletAddress}
                   ></NavbarAvatar>
                 ) : (
                   <Stack direction={"row"} alignItems={"center"} spacing={2}>
@@ -157,7 +157,7 @@ const MainLayout = (props: MainLayoutProps) => {
       {/*--- Dialog ---*/}
       <SignInDialog
         title={"Good to see you again!"}
-        open={showSignInDialog}
+        open={isSignDialogOpen}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
           setShowSignInDialog(false);
@@ -243,6 +243,16 @@ const MainLayout = (props: MainLayoutProps) => {
                 router.push("/").then();
               },
               onError: (e) => {
+                const message = getErrorMessage(e);
+                if (message === MAIL_VERIFY.PASSWORD_WRONG) {
+                  closeLoading();
+                  showAlert({ title: "Info", content: "Check your password" });
+                  return;
+                } else if (message === MAIL_VERIFY.USER_NOT_FOUND) {
+                  closeLoading();
+                  showAlert({ title: "Info", content: "User not exist" });
+                  return;
+                }
                 closeLoading();
                 setSignUpWithEmailVisible(false);
                 showErrorAlert({ content: getErrorMessage(e) });

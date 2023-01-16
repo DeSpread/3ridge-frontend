@@ -7,9 +7,9 @@ export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
       name
       profileImageUrl
       email
-      wallet {
+      wallets {
         address
-        chainType
+        chain
       }
     }
   }
@@ -22,9 +22,9 @@ export const GET_USER_BY_GMAIL = gql(/* GraphQL */ `
       name
       profileImageUrl
       gmail
-      wallet {
+      wallets {
         address
-        chainType
+        chain
       }
     }
   }
@@ -37,9 +37,9 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
       name
       profileImageUrl
       email
-      wallet {
+      wallets {
         address
-        chainType
+        chain
       }
     }
   }
@@ -49,6 +49,40 @@ export const CREATE_USER_BY_EMAIL = gql(/* GraphQL */ `
   mutation CreateUserByEmail($email: String!) {
     createUserByEmail(email: $email) {
       name
+    }
+  }
+`);
+
+export const CREATE_USER_BY_GMAIL = gql(/* GraphQL */ `
+  mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {
+    createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {
+      name
+    }
+  }
+`);
+
+export const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
+  mutation CreateUserByWallet($address: String!, $chain: ChainType!) {
+    createUserByWallet(address: $address, chain: $chain) {
+      name
+    }
+  }
+`);
+
+export const UPDATE_USER_WALLET_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateUserByName(
+    $name: String!
+    $chain: ChainType!
+    $walletAddress: String!
+  ) {
+    updateUserByName(
+      name: $name
+      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }
+    ) {
+      wallets {
+        address
+        chain
+      }
     }
   }
 `);
