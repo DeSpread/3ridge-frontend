@@ -25,7 +25,7 @@ import {
   MouseEventWithParam,
   Z_INDEX_OFFSET,
 } from "../type";
-import { useDialog } from "./hook/dialog-hook";
+import { useSignDialog } from "../hook/sign-dialog-hook";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -38,7 +38,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const router = useRouter();
   const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
   const { userData } = useSignedUserQuery();
-  const { setShowSignInDialog, isSignDialogOpen } = useDialog();
+  const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
   const { showErrorAlert, showAlert } = useAlert();

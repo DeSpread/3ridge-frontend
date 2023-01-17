@@ -1,8 +1,8 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { showSignInDialogState } from "../../recoil";
+import { showSignInDialogState } from "../recoil";
 import { useMemo } from "react";
 
-export function useDialog() {
+export function useSignDialog() {
   const showSignInDialog = useRecoilValue(showSignInDialogState);
   const _setShowSignInDialog = useSetRecoilState(showSignInDialogState);
 

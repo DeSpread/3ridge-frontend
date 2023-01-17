@@ -25,6 +25,7 @@ import {
 } from "../../type";
 import VerifyYourEmailForm from "../../components/organisms/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
+import { useSignDialog } from "../../hook/sign-dialog-hook";
 
 const FORM_TYPE = {
   SELECT: "SELECT",
@@ -46,8 +47,7 @@ const Signup = () => {
     resendEmailVerify,
   } = useLogin();
   const { showLoading, closeLoading } = useLoading();
-
-  const setShowSignInDialog = useSetRecoilState(showSignInDialogState);
+  const { setShowSignInDialog } = useSignDialog();
   const [signupParams, setSignUpParams] = useState<EmailSignUpParams>({
     email: "",
     password: "",

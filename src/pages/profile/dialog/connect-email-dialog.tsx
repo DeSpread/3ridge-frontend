@@ -34,7 +34,12 @@ type ConnectEmailDialogProps = DialogProps & {
 
 const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
   return (
-    <Dialog {...props} sx={{ zIndex: Z_INDEX_OFFSET.DIALOG }}>
+    <Dialog
+      {...props}
+      sx={{
+        zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.DIALOG,
+      }}
+    >
       <DialogTitle>
         <Stack
           direction={"row"}

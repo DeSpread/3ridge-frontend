@@ -25,9 +25,7 @@ import { useSignedUserQuery } from "../../hook/user-query-hook";
 import EthIcon from "../../components/atoms/svg/eth-icon";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import PrimaryButton from "../../components/atoms/primary-button";
-import ProfileEditDialog, {
-  VALIDATOR_BUTTON_STATES,
-} from "./dialog/profile-edit-dialog";
+import ProfileEditDialog from "./dialog/profile-edit-dialog";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useLogin } from "../../provider/login/login-provider";
 import {
@@ -45,6 +43,7 @@ import { useAlert } from "../../provider/alert/alert-provider";
 import { APP_ERROR_MESSAGE, getErrorMessage } from "../../error/my-error";
 import PictureEditDialog from "./dialog/picture-edit-dialog";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
+import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/ValidatorButton";
 
 const StyledChip = styled((props: ChipProps) => (
   <Chip

@@ -40,7 +40,7 @@ const PictureEditDialog = (props: ConnectEmailDialogProps) => {
     <Dialog
       {...props}
       sx={{
-        zIndex: Z_INDEX_OFFSET.DIALOG,
+        zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.DIALOG,
         backdropFilter: "blur(2px)",
       }}
       fullWidth
