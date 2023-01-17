@@ -1,11 +1,9 @@
-import { Box, AppBar, Stack, Button, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import NavbarButton from "../atoms/navbar-button";
 import BoltIcon from "@mui/icons-material/Bolt";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import WindowIcon from "@mui/icons-material/Window";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { MouseEventHandler, PropsWithChildren } from "react";
 
 type NavbarButtonSetProps = PropsWithChildren & {

@@ -8,6 +8,8 @@ export const APP_ERROR_MESSAGE = {
   WALLET_ADDRESS_ALREADY_REGISTERED: "Already registered by wallet address",
   WALLET_USER_ACCOUNT_FETCH_FAIL: "WALLET_USER_ACCOUNT_FETCH_FAIL",
   FIREBASE_USER_NOT_FOUND: "auth/user-not-found",
+  FIREBASE_WRONG_PASSWORD: "auth/wrong-password",
+  FIREBASE_TOO_MANY_REQUESTS: "auth/too-many-requests",
 } as const;
 
 export class AppError extends Error {

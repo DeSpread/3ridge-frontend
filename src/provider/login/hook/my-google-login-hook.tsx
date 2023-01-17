@@ -32,6 +32,7 @@ export function useMyGoogleLogin() {
     try {
       GoogleLoginHelper.getInstance().googleLogout();
       setGoogleUserInfo({});
+      onSuccess?.();
     } catch (e) {
       onError?.(new AppError(getErrorMessage(e)));
     }

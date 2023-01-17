@@ -9,21 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import React, { MouseEventHandler, useState } from "react";
-import SignUpWithEmailForm from "../../signup/components/sign-up-with-email-form";
+import React, { MouseEventHandler } from "react";
 import VerifyYourEmailForm from "../../../components/organisms/verify-your-email-form";
 import SendVerificationEmailForm from "../../../components/organisms/send-verification-email-form";
-import {
-  EmailSignUpParams,
-  MAIL_VERIFY,
-  MouseEventWithParam,
-  ObjectValues,
-  SuccessErrorCallback,
-  Z_INDEX_OFFSET,
-} from "../../../type";
-import { useLogin } from "../../../provider/login/login-provider";
-import { APP_ERROR_MESSAGE, getErrorMessage } from "../../../error/my-error";
-import { useLoading } from "../../../provider/loading/loading-provider";
+import { ObjectValues, Z_INDEX_OFFSET } from "../../../type";
 
 export const CONNECT_MAIL_DIALOG_FORM_TYPE = {
   SEND_EMAIL: "SEND_EMAIL",
@@ -40,6 +29,7 @@ type ConnectEmailDialogProps = DialogProps & {
   email: string;
   onClickResendVerification: MouseEventHandler;
   onClickSignIn: MouseEventHandler;
+  onCloseBtnClicked: MouseEventHandler;
 };
 
 const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
@@ -56,7 +46,7 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
           </Typography>
           <IconButton
             sx={{ borderRadius: 32, marginRight: -1 }}
-            // onClick={props.onCloseBtnClicked}
+            onClick={props.onCloseBtnClicked}
           >
             <CloseIcon></CloseIcon>
           </IconButton>
@@ -74,8 +64,8 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
           {props.formType === CONNECT_MAIL_DIALOG_FORM_TYPE.VERIFY_EMAIL && (
             <VerifyYourEmailForm
               email={props.email}
-              onClickResendVerification={(e) => {}}
-              onClickSignIn={(e) => {}}
+              onClickResendVerification={props.onClickResendVerification}
+              onClickSignIn={props.onClickSignIn}
             ></VerifyYourEmailForm>
           )}
         </Box>

@@ -19,7 +19,7 @@ import { useMutation } from "@apollo/client";
 
 const useSignedUserQuery = () => {
   const { connectAsync, connectors } = useConnect();
-  const [updateUserByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
+  const [UpdateUserByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
 
   const [userData, setUserData] = useState<SignedUser>({});
   const [loading, setLoading] = useState(false);
@@ -138,7 +138,7 @@ const useSignedUserQuery = () => {
         throw new AppError(APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL);
         return;
       }
-      await updateUserByName({
+      await UpdateUserByName({
         variables: {
           name: userData.name,
           chain: ChainType.Evm,
@@ -163,7 +163,7 @@ const useSignedUserQuery = () => {
   const asyncUpdateWalletAddress = async (walletAddress: string) => {
     try {
       if (!userData.name) return;
-      await updateUserByName({
+      await UpdateUserByName({
         variables: {
           name: userData.name,
           chain: ChainType.Evm,
@@ -179,6 +179,17 @@ const useSignedUserQuery = () => {
     } catch (e) {
       throw new AppError(getErrorMessage(e));
     }
+  };
+
+  const asyncUpdateEmail = async (email: string) => {
+    try {
+      if (!userData.name) return;
+      // await updateUserByName({
+      //   variables: {
+      //     name: userData.name
+      //   }
+      // });
+    } catch (e) {}
   };
 
   return {

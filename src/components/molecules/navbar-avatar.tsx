@@ -19,6 +19,7 @@ import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../atoms/gradient-typography";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 
 type StyledMenuProps = PropsWithChildren & {
   open: boolean;
@@ -99,7 +100,10 @@ const NavbarAvatar = ({
         setOpen(!open);
       }}
     >
-      <Avatar sx={{ width: 32, height: 32 }} src={src}></Avatar>
+      <Avatar
+        sx={{ width: 32, height: 32 }}
+        src={src ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
+      ></Avatar>
       <StyledMenu open={open} anchorEl={anchorEl}>
         <StyledMenuItem
           sx={{
@@ -113,7 +117,10 @@ const NavbarAvatar = ({
             spacing={2}
             sx={{ flex: 1, marginBottom: 1 }}
           >
-            <Avatar sx={{ width: 32, height: 32 }} src={src}></Avatar>
+            <Avatar
+              sx={{ width: 32, height: 32 }}
+              src={src ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
+            ></Avatar>
             <Stack direction={"column"}>
               {walletAddress && (
                 <GradientTypography>

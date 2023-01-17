@@ -72,6 +72,16 @@ const text = {
 
 export const darkThemeOptions: ThemeOptions = {
   components: {
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          color: secondary.main, //"secondary",
+          "& .MuiSlider-rail": {
+            color: neutral["500"], ////color of the slider outside  teh area between thumbs
+          },
+        },
+      },
+    },
     MuiAvatar: {
       styleOverrides: {
         root: {
