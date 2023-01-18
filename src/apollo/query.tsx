@@ -70,7 +70,7 @@ export const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
 `);
 
 export const UPDATE_USER_WALLET_BY_NAME = gql(/* GraphQL */ `
-  mutation UpdateUserByName(
+  mutation UpdateUserWalletByName(
     $name: String!
     $chain: ChainType!
     $walletAddress: String!
@@ -83,6 +83,20 @@ export const UPDATE_USER_WALLET_BY_NAME = gql(/* GraphQL */ `
         address
         chain
       }
+    }
+  }
+`);
+
+export const UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateUserProfileImageByName(
+    $name: String!
+    $profileImageUrl: String!
+  ) {
+    updateUserByName(
+      name: $name
+      userUpdateInput: { profileImageUrl: $profileImageUrl }
+    ) {
+      profileImageUrl
     }
   }
 `);

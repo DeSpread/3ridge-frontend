@@ -1,7 +1,5 @@
 import {
   Avatar,
-  Button,
-  ButtonProps,
   Dialog,
   DialogContent,
   DialogProps,
@@ -11,28 +9,20 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, {
-  ChangeEventHandler,
-  MouseEventHandler,
-  useMemo,
-  useState,
-} from "react";
+import React, { MouseEventHandler } from "react";
 import {
-  MouseEventWithStateParam,
   ReversibleSvgIconProps,
   SignedUser,
   Z_INDEX_OFFSET,
 } from "../../../type";
 import { useTheme } from "@mui/material/styles";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import PrimaryButton from "../../../components/atoms/primary-button";
 import EthIcon from "../../../components/atoms/svg/eth-icon";
-import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import StringHelper from "../../../helper/string-helper";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
-import { ValidatorButton } from "../../../components/molecules/ValidatorButton";
+import { ValidatorButton } from "../../../components/molecules/validator-button";
 
 const ReversibleMarkEmailReadIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -101,8 +91,9 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
             <Avatar
               alt=""
               src={
-                props.userData?.profileImageUrl ??
-                DEFAULT_PROFILE_IMAGE_DATA_SRC
+                props.userData?.profileImageUrl
+                  ? props.userData?.profileImageUrl
+                  : DEFAULT_PROFILE_IMAGE_DATA_SRC
               }
               sx={{
                 width: 100,

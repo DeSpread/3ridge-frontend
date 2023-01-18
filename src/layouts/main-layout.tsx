@@ -26,6 +26,7 @@ import {
   Z_INDEX_OFFSET,
 } from "../type";
 import { useSignDialog } from "../hook/sign-dialog-hook";
+import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../const";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -44,6 +45,8 @@ const MainLayout = (props: MainLayoutProps) => {
   const { showErrorAlert, showAlert } = useAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
+
+  console.log(userData.profileImageUrl);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -114,7 +117,7 @@ const MainLayout = (props: MainLayoutProps) => {
                         },
                       });
                     }}
-                    src={userData?.profileImageUrl ?? undefined}
+                    src={userData?.profileImageUrl}
                     walletAddress={userData?.walletAddress}
                   ></NavbarAvatar>
                 ) : (

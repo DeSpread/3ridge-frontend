@@ -102,7 +102,7 @@ const NavbarAvatar = ({
     >
       <Avatar
         sx={{ width: 32, height: 32 }}
-        src={src ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
+        src={src ? src : DEFAULT_PROFILE_IMAGE_DATA_SRC}
       ></Avatar>
       <StyledMenu open={open} anchorEl={anchorEl}>
         <StyledMenuItem
@@ -119,7 +119,7 @@ const NavbarAvatar = ({
           >
             <Avatar
               sx={{ width: 32, height: 32 }}
-              src={src ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
+              src={src ? src : DEFAULT_PROFILE_IMAGE_DATA_SRC}
             ></Avatar>
             <Stack direction={"column"}>
               {walletAddress && (

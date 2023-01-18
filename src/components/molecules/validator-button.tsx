@@ -51,21 +51,6 @@ export const ValidatorButton = (props: ValidatorButton) => {
     updateButtonState();
   });
 
-  // const buttonState = useMemo(() => {
-  //   if (props.value && mouseOver) {
-  //     return VALIDATOR_BUTTON_STATES.VALID_HOVER;
-  //   }
-  //   if (!props.value && mouseOver) {
-  //     return VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER;
-  //   }
-  //   if (props.value && !mouseOver) {
-  //     return VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER;
-  //   }
-  //   if (!props.value && !mouseOver) {
-  //     return VALIDATOR_BUTTON_STATES.NOT_VALID_NOT_HOVER;
-  //   }
-  // }, [mouseOver]);
-
   return (
     <PrimaryButton
       onMouseEnter={() => {

@@ -20,7 +20,14 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 type ConnectEmailDialogProps = DialogProps & {
   imageFile?: File;
-  onImageFileSaved?: (f: File) => void;
+  onImageFileSaved?: ({
+    base64Data,
+    ext,
+  }: {
+    base64Data: string;
+    ext: string;
+  }) => void;
+  // onSaveBtnClicked?: MouseEventHandler;
   onBackBtnClicked?: MouseEventHandler;
 };
 
@@ -34,6 +41,10 @@ const PictureEditDialog = (props: ConnectEmailDialogProps) => {
 
   const onSaveButtonClicked = async () => {
     const data = editor.current?.getImageScaledToCanvas().toDataURL();
+    const splits = data.split(",");
+    const ext = splits[0].split("/")[1].split(";")[0].trim();
+    const imageData = splits[1];
+    props.onImageFileSaved?.({ base64Data: imageData, ext });
   };
 
   return (

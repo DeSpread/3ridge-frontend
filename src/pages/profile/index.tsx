@@ -43,7 +43,9 @@ import { useAlert } from "../../provider/alert/alert-provider";
 import { APP_ERROR_MESSAGE, getErrorMessage } from "../../error/my-error";
 import PictureEditDialog from "./dialog/picture-edit-dialog";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
-import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/ValidatorButton";
+import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-button";
+import AwsClient from "../../remote/aws-client";
+import Router from "next/router";
 
 const StyledChip = styled((props: ChipProps) => (
   <Chip
@@ -62,6 +64,7 @@ const Profile = (props: AppProps) => {
     userData,
     asyncUpdateWalletAddress,
     asyncUpdateWalletAddressByWallet,
+    asyncUpdateProfileImageUrl,
   } = useSignedUserQuery();
   const {
     asyncVerifyUserWithEmailAndPassword,
@@ -112,7 +115,11 @@ const Profile = (props: AppProps) => {
           >
             <Avatar
               alt=""
-              src={userData.profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
+              src={
+                userData.profileImageUrl
+                  ? userData.profileImageUrl
+                  : DEFAULT_PROFILE_IMAGE_DATA_SRC
+              }
               sx={{
                 width: 100,
                 height: 100,
@@ -363,7 +370,29 @@ const Profile = (props: AppProps) => {
         imageFile={imageFile}
         title={"Edit Image"}
         open={pictureEditDialogOpen}
-        onImageFileSaved={(f: File) => {}}
+        onImageFileSaved={({ base64Data, ext }) => {
+          showLoading();
+          try {
+            (async () => {
+              const includeQuestion = userData.profileImageUrl?.includes("?");
+              await AwsClient.getInstance().asyncUploadProfileImage({
+                base64Data,
+                imageName: `${userData.name}.${ext}`,
+              });
+
+              let profileImageUrl = `https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/profile/${userData.name}.${ext}`;
+              if (!includeQuestion) {
+                profileImageUrl += "?";
+              }
+              await asyncUpdateProfileImageUrl(profileImageUrl);
+            })();
+          } catch (e) {
+            showErrorAlert({ content: getErrorMessage(e) });
+          } finally {
+            closeLoading();
+            setImageFile(undefined);
+          }
+        }}
         onClose={() => {
           setImageFile(undefined);
         }}

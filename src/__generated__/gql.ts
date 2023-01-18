@@ -19,7 +19,8 @@ const documents = {
     "\n  mutation CreateUserByEmail($email: String!) {\n    createUserByEmail(email: $email) {\n      name\n    }\n  }\n": types.CreateUserByEmailDocument,
     "\n  mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {\n    createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {\n      name\n    }\n  }\n": types.CreateUserByGmailDocument,
     "\n  mutation CreateUserByWallet($address: String!, $chain: ChainType!) {\n    createUserByWallet(address: $address, chain: $chain) {\n      name\n    }\n  }\n": types.CreateUserByWalletDocument,
-    "\n  mutation UpdateUserByName(\n    $name: String!\n    $chain: ChainType!\n    $walletAddress: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }\n    ) {\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n": types.UpdateUserByNameDocument,
+    "\n  mutation UpdateUserWalletByName(\n    $name: String!\n    $chain: ChainType!\n    $walletAddress: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }\n    ) {\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n": types.UpdateUserWalletByNameDocument,
+    "\n  mutation UpdateUserProfileImageByName(\n    $name: String!\n    $profileImageUrl: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { profileImageUrl: $profileImageUrl }\n    ) {\n      profileImageUrl\n    }\n  }\n": types.UpdateUserProfileImageByNameDocument,
     "\n  query Tickets {\n    tickets {\n      completed\n    }\n  }\n": types.TicketsDocument,
 };
 
@@ -50,7 +51,11 @@ export function gql(source: "\n  mutation CreateUserByWallet($address: String!, 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation UpdateUserByName(\n    $name: String!\n    $chain: ChainType!\n    $walletAddress: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }\n    ) {\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserByName(\n    $name: String!\n    $chain: ChainType!\n    $walletAddress: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }\n    ) {\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"];
+export function gql(source: "\n  mutation UpdateUserWalletByName(\n    $name: String!\n    $chain: ChainType!\n    $walletAddress: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }\n    ) {\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserWalletByName(\n    $name: String!\n    $chain: ChainType!\n    $walletAddress: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }\n    ) {\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateUserProfileImageByName(\n    $name: String!\n    $profileImageUrl: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { profileImageUrl: $profileImageUrl }\n    ) {\n      profileImageUrl\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserProfileImageByName(\n    $name: String!\n    $profileImageUrl: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { profileImageUrl: $profileImageUrl }\n    ) {\n      profileImageUrl\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
