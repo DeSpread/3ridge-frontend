@@ -11,9 +11,3 @@ export const userDataState = atom<SignedUser>({
   key: `userDataState/${v1()}`,
   default: {},
 });
-//  const [userData, setUserData] = useState<SignedUser>({});
-// _id?: string;
-// walletAddress?: string;
-// name?: string;
-// email?: string;
-// profileImageUrl?: string;

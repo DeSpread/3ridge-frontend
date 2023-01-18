@@ -45,11 +45,16 @@ const useSignedUserQuery = () => {
       (async () => {
         try {
           setLoading(true);
+          if (!emailLoggedInInfo.mail) {
+            setLoading(false);
+            return;
+          }
           const res = await client.query({
             query: GET_USER_BY_EMAIL,
             variables: {
-              email: emailLoggedInInfo.mail ?? "",
+              email: emailLoggedInInfo.mail,
             },
+            fetchPolicy: "no-cache",
           });
           const { email, name, profileImageUrl, wallets, _id } =
             res.data.userByEmail;
@@ -76,10 +81,14 @@ const useSignedUserQuery = () => {
       (async () => {
         try {
           setLoading(true);
+          if (!googleLoggedInInfo.gmail) {
+            setLoading(false);
+            return;
+          }
           const res = await client.query({
             query: GET_USER_BY_GMAIL,
             variables: {
-              gmail: googleLoggedInInfo.gmail ?? "",
+              gmail: googleLoggedInInfo.gmail,
             },
           });
           const { gmail, name, profileImageUrl, wallets, _id } =
@@ -107,6 +116,10 @@ const useSignedUserQuery = () => {
       (async () => {
         try {
           setLoading(true);
+          if (!walletLoggedInInfo.address) {
+            setLoading(false);
+            return;
+          }
           const res = await client.query({
             query: GET_USER_BY_WALLET_ADDRESS,
             variables: {

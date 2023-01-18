@@ -46,8 +46,6 @@ const MainLayout = (props: MainLayoutProps) => {
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
 
-  console.log(userData.profileImageUrl);
-
   return (
     <Box sx={{ display: "flex" }}>
       {/*--- Navbar ---*/}
