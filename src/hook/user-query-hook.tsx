@@ -1,11 +1,11 @@
 import { useLogin } from "../provider/login/login-provider";
 import { client } from "../apollo/client";
 import { useEffect, useState } from "react";
-import { SignedUser } from "../type";
 import {
   GET_USER_BY_EMAIL,
   GET_USER_BY_GMAIL,
   GET_USER_BY_WALLET_ADDRESS,
+  UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
 } from "../apollo/query";
 import { ChainType } from "../__generated__/graphql";
@@ -16,12 +16,18 @@ import {
 } from "../error/my-error";
 import { useAccount, useConnect } from "wagmi";
 import { useMutation } from "@apollo/client";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { userDataState } from "../recoil";
 
 const useSignedUserQuery = () => {
   const { connectAsync, connectors } = useConnect();
-  const [updateUserByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
+  const [UpdateUserWalletByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
+  const [UpdateUserProfileImageByName] = useMutation(
+    UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME
+  );
 
-  const [userData, setUserData] = useState<SignedUser>({});
+  const userData = useRecoilValue(userDataState);
+  const setUserData = useSetRecoilState(userDataState);
   const [loading, setLoading] = useState(false);
   const { address } = useAccount();
 
@@ -138,7 +144,7 @@ const useSignedUserQuery = () => {
         throw new AppError(APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL);
         return;
       }
-      await updateUserByName({
+      await UpdateUserWalletByName({
         variables: {
           name: userData.name,
           chain: ChainType.Evm,
@@ -163,7 +169,7 @@ const useSignedUserQuery = () => {
   const asyncUpdateWalletAddress = async (walletAddress: string) => {
     try {
       if (!userData.name) return;
-      await updateUserByName({
+      await UpdateUserWalletByName({
         variables: {
           name: userData.name,
           chain: ChainType.Evm,
@@ -181,11 +187,32 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateProfileImageUrl = async (profileImageUrl: string) => {
+    try {
+      if (!userData.name) return;
+      await UpdateUserProfileImageByName({
+        variables: {
+          name: userData.name,
+          profileImageUrl,
+        },
+      });
+      setUserData((prevState) => {
+        return {
+          ...prevState,
+          profileImageUrl: profileImageUrl,
+        };
+      });
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
   return {
     userData,
     loading,
     asyncUpdateWalletAddressByWallet,
     asyncUpdateWalletAddress,
+    asyncUpdateProfileImageUrl,
   };
 };
 

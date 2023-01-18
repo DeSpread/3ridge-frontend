@@ -1,6 +1,5 @@
 import {
   Avatar,
-  ButtonProps,
   Dialog,
   DialogContent,
   DialogProps,
@@ -10,22 +9,20 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { MouseEventHandler, useMemo, useState } from "react";
-import SecondaryButton from "../../../components/atoms/secondary-button";
+import React, { MouseEventHandler } from "react";
 import {
-  MouseEventWithStateParam,
   ReversibleSvgIconProps,
   SignedUser,
   Z_INDEX_OFFSET,
 } from "../../../type";
 import { useTheme } from "@mui/material/styles";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import PrimaryButton from "../../../components/atoms/primary-button";
 import EthIcon from "../../../components/atoms/svg/eth-icon";
-import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import StringHelper from "../../../helper/string-helper";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
+import { ValidatorButton } from "../../../components/molecules/validator-button";
 
 const ReversibleMarkEmailReadIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -44,96 +41,7 @@ type ProfileEditDialogProps = DialogProps & {
   walletValidatorButtonOnClick?: MouseEventHandler;
   emailValidatorButtonOnClick?: MouseEventHandler;
   onCloseBtnClicked?: MouseEventHandler;
-};
-
-type ValidatorButton = ButtonProps & {
-  value: string | undefined;
-  svgIcon: React.ComponentType<ReversibleSvgIconProps> | undefined;
-  label: string | undefined;
-  onClick?: MouseEventHandler;
-};
-
-export const VALIDATOR_BUTTON_STATES = {
-  VALID_HOVER: "VALID_HOVER",
-  NOT_VALID_HOVER: "NOT_VALID_HOVER",
-  VALID_NOT_HOVER: "VALID_NOT_HOVER",
-  NOT_VALID_NOT_HOVER: "NOT_VALID_NOT_HOVER",
-};
-
-const ValidatorButton = (props: ValidatorButton) => {
-  const theme = useTheme();
-  const [mouseOver, setMouseOver] = useState(false);
-
-  const buttonState = useMemo(() => {
-    if (props.value && mouseOver) {
-      return VALIDATOR_BUTTON_STATES.VALID_HOVER;
-    }
-    if (!props.value && mouseOver) {
-      return VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER;
-    }
-    if (props.value && !mouseOver) {
-      return VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER;
-    }
-    if (!props.value && !mouseOver) {
-      return VALIDATOR_BUTTON_STATES.NOT_VALID_NOT_HOVER;
-    }
-  }, [mouseOver]);
-
-  return (
-    <PrimaryButton
-      onMouseEnter={() => {
-        setMouseOver(true);
-      }}
-      onMouseLeave={() => {
-        setMouseOver(false);
-      }}
-      onClick={() => {
-        const myEvent = {} as MouseEventWithStateParam;
-        myEvent.params = {
-          state: buttonState,
-        };
-        props.onClick?.(myEvent);
-      }}
-    >
-      <Stack
-        direction={"row"}
-        spacing={1}
-        sx={{ paddingLeft: 1, paddingRight: 1 }}
-      >
-        {props.svgIcon && (
-          <props.svgIcon
-            reverse={buttonState === VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER}
-          ></props.svgIcon>
-        )}
-        {props.value && (
-          <Typography
-            variant={"body2"}
-            sx={{
-              color:
-                buttonState === VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER
-                  ? //@ts-ignore
-                    theme.palette.neutral["600"]
-                  : //@ts-ignore
-                    theme.palette.neutral["100"],
-            }}
-          >{`${props.label} Connected`}</Typography>
-        )}
-        {buttonState === VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER && (
-          //@ts-ignored
-          <DoneIcon sx={{ color: theme.palette.neutral["600"] }}></DoneIcon>
-        )}
-        {buttonState === VALIDATOR_BUTTON_STATES.VALID_HOVER && (
-          <CloseIcon></CloseIcon>
-        )}
-        {!props.value && (
-          <Typography
-            variant={"body2"}
-            color={"neutral.100"}
-          >{`Connect ${props.label}`}</Typography>
-        )}
-      </Stack>
-    </PrimaryButton>
-  );
+  onFileImageAdded?: (f: File) => void;
 };
 
 const ProfileEditDialog = (props: ProfileEditDialogProps) => {
@@ -147,7 +55,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
       maxWidth={"sm"}
       sx={{
         backdropFilter: "blur(2px)",
-        zIndex: Z_INDEX_OFFSET.DIALOG,
+        zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.DIALOG,
       }}
       PaperProps={{
         style: {
@@ -183,8 +91,9 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
             <Avatar
               alt=""
               src={
-                props.userData?.profileImageUrl ??
-                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAAAXNSR0IArs4c6QAABSdJREFUeF7tnbFtVmEQBP+fyJELQK6AGgipAUISCqEJREJCCBk9GQpw5AjIIZy1vPp2yO/8bm5ueUg8+fr6x6s/l+I/N/cP0ad7vLuN9ks3W5v3qoBphVg/BWT84tVrC1mb1wSMnwxrqICMX7x6bSFr85qA8ZNhDRWQ8YtXry1kbV4TMH4yrKECMn7x6rWFrM1rAsZPhjVUQMYvXr22kLV5TcD4ybCGCsj4xavXFrI2rwkYPxnWUAEZv3j12kLW5jUB4yfDGiog4xevXlvI2rwmYPxkWEMFZPzi1WsLWZvXBIyfDGuogIxfvHptIWvzmoDxk2ENFZDxi1evLWRtXhMwfjKsoQIyfvHqtYWszWsCxk+GNVRAxi9evbaQtXlNwPjJsIYKyPjFq9cWsjavCRg/GdZQARm/ePXaQtbmNQHjJ8MaKiDjF69eW8javCZg/GRYQwVk/OLVawtZm9cEjJ8Ma6iAjF+8em0ha/OagPGTYQ0VkPGLV68tZG1eEzB+MqzhnIA/P3+s/j0h715+Zxsdr/726201gasCVu8HP5wCQoQmIAOogIzfRQEZQAVk/BQQ8lNACNAEZAAVkPEzASE/BYQATUAGUAEZPxMQ8lNACNAEZAAVkPEzASE/BYQATUAGUAEZPxMQ8lNACNAEZAAVkPEzASE/BYQATUAGUAEZPxMQ8lNACNAEZAAVkPEzASE/BYQATUAGsF7AN5/uqr8JYfitbidwVcD2FZ39fAp49n7rp1PA+hWd/YAKePZ+66dTwPoVnf2ACnj2fuunU8D6FZ39gAp49n7rp1PA+hWd/YAKePZ+66dTwPoVnf2ACnj2fuunU8D6FZ39gAp49n7rp1PA+hWd/YAKePZ+66dTwPoVnf2ACnj2fuunU8D6FZ39gPW/qCaNv/0jnbWPsBQwbTjsp4AQYHu5Cdi1IROwax9zH+IroAI+KwEFfFb8//9w3wHLFpJ+HN8B00RZPxOQ8YtXm4BxpF0NTcCufZiAXfvwX8Fl+4g/jgkYR4oamoAIX77Yd8A806qOJmDVOi4mYNc+fAcs20f8cUzAOFLU0ARE+PLFvgPmmVZ1NAGr1uE7YNc6Lr4Dti0k/TwmYJoo6+c7IOMXr/YdMI6UNby5f2AN/ql+vLuN9ks3W5u3PgHXFrI2rwKmIwz2U0AIMF2+tpC1eU3A9MXAfgoIAabL1xayNq8JmL4Y2E8BIcB0+dpC1uY1AdMXA/spIASYLl9byNq8JmD6YmA/BYQA0+VrC1mb1wRMXwzsp4AQYLp8bSFr85qA6YuB/RQQAkyXry1kbV4TMH0xsJ8CQoDp8rWFrM1rAqYvBvZTQAgwXb62kLV54wmY/uos/ZFOesHpg0t/s9K+DwVMGwT7KSAE2H5xJiBbcPpvJBOQ7SNebQJCpCYgA6iAjN9FARlABWT8FBDyU0AI0ARkABWQ8TMBIT8FhABNQAZQARk/ExDyU0AI0ARkABWQ8TMBIT8FhABNQAZQARk/ExDyU0AI0ARkABWQ8TMBIT8FhABNQAZQARk/ExDyU0AI0ARkABWQ8bu0/4/jry8+wAmftvz97y9P+wNg9/SBxP9HtAKyDSsg42cCQn4KCAGagAygAjJ+JiDkp4AQoAnIACog42cCQn4KCAGagAygAjJ+JiDkp4AQoAnIACog42cCQn4KCAGagAygAjJ+JiDkp4AQoAnIACog42cCQn4KCAGagAygAjJ+JiDkp4AQoAnIACog42cCQn4KCAGagAzgmoB/AUkZadkjtJSBAAAAAElFTkSuQmCC"
+                props.userData?.profileImageUrl
+                  ? props.userData?.profileImageUrl
+                  : DEFAULT_PROFILE_IMAGE_DATA_SRC
               }
               sx={{
                 width: 100,
@@ -202,6 +111,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
               }}
             >
               <IconButton
+                component="label"
                 sx={{
                   position: "absolute",
                   top: 30,
@@ -216,6 +126,22 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                   },
                 }}
               >
+                <input
+                  name={"newImage"}
+                  type="file"
+                  hidden
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      const file = e.target.files[0];
+                      if (
+                        /\/(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(file.type)
+                      ) {
+                        props.onFileImageAdded?.(file);
+                      }
+                    }
+                    e.target.value = "";
+                  }}
+                />
                 <AddPhotoAlternateIcon></AddPhotoAlternateIcon>
               </IconButton>
             </div>

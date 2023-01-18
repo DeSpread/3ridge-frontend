@@ -9,7 +9,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import QuestQuizForm from "./quest-quiz-form";
+import QuestQuizForm from "../molecules/quest-quiz-form";
 
 interface SimpleDialogProps {
   open: boolean;

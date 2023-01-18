@@ -129,7 +129,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
         </DialogTitle>
         <DialogContent
           sx={{
-            minHeight: 128,
+            minHeight: 112,
             background: "",
             paddingTop: 0,
             paddingBottom: 3,

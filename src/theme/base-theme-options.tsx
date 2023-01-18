@@ -11,6 +11,16 @@ const baseThemeOptions: ThemeOptions = {
     },
   },
   components: {
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          height: 3,
+          "& .MuiSlider-rail": {
+            height: 3,
+          },
+        },
+      },
+    },
     MuiAvatar: {
       styleOverrides: {
         root: {
