@@ -21,6 +21,7 @@ const documents = {
     "\n  mutation CreateUserByWallet($address: String!, $chain: ChainType!) {\n    createUserByWallet(address: $address, chain: $chain) {\n      name\n    }\n  }\n": types.CreateUserByWalletDocument,
     "\n  mutation UpdateUserWalletByName(\n    $name: String!\n    $chain: ChainType!\n    $walletAddress: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }\n    ) {\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n": types.UpdateUserWalletByNameDocument,
     "\n  mutation UpdateUserProfileImageByName(\n    $name: String!\n    $profileImageUrl: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { profileImageUrl: $profileImageUrl }\n    ) {\n      profileImageUrl\n    }\n  }\n": types.UpdateUserProfileImageByNameDocument,
+    "\n  mutation UpdateUserEmailByName($name: String!, $email: String!) {\n    updateUserByName(name: $name, userUpdateInput: { email: $email }) {\n      email\n    }\n  }\n": types.UpdateUserEmailByNameDocument,
     "\n  query Tickets {\n    tickets {\n      completed\n    }\n  }\n": types.TicketsDocument,
 };
 
@@ -56,6 +57,10 @@ export function gql(source: "\n  mutation UpdateUserWalletByName(\n    $name: St
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateUserProfileImageByName(\n    $name: String!\n    $profileImageUrl: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { profileImageUrl: $profileImageUrl }\n    ) {\n      profileImageUrl\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserProfileImageByName(\n    $name: String!\n    $profileImageUrl: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { profileImageUrl: $profileImageUrl }\n    ) {\n      profileImageUrl\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateUserEmailByName($name: String!, $email: String!) {\n    updateUserByName(name: $name, userUpdateInput: { email: $email }) {\n      email\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserEmailByName($name: String!, $email: String!) {\n    updateUserByName(name: $name, userUpdateInput: { email: $email }) {\n      email\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

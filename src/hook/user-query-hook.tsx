@@ -5,6 +5,7 @@ import {
   GET_USER_BY_EMAIL,
   GET_USER_BY_GMAIL,
   GET_USER_BY_WALLET_ADDRESS,
+  UPDATE_USER_BY_EMAIL,
   UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
 } from "../apollo/query";
@@ -25,6 +26,7 @@ const useSignedUserQuery = () => {
   const [UpdateUserProfileImageByName] = useMutation(
     UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME
   );
+  const [UpdateUserEmailByName] = useMutation(UPDATE_USER_BY_EMAIL);
 
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
@@ -220,12 +222,33 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateEmail = async (email: string) => {
+    try {
+      if (!userData.name) return;
+      await UpdateUserEmailByName({
+        variables: {
+          name: userData.name,
+          email,
+        },
+      });
+      setUserData((prevState) => {
+        return {
+          ...prevState,
+          email,
+        };
+      });
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
   return {
     userData,
     loading,
     asyncUpdateWalletAddressByWallet,
     asyncUpdateWalletAddress,
     asyncUpdateProfileImageUrl,
+    asyncUpdateEmail,
   };
 };
 

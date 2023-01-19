@@ -100,3 +100,11 @@ export const UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const UPDATE_USER_BY_EMAIL = gql(/* GraphQL */ `
+  mutation UpdateUserEmailByName($name: String!, $email: String!) {
+    updateUserByName(name: $name, userUpdateInput: { email: $email }) {
+      email
+    }
+  }
+`);
