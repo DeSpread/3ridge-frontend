@@ -88,16 +88,24 @@ const Profile = (props: AppProps) => {
     return imageFile ? true : false;
   }, [imageFile]);
 
-  const asyncMailSignInWithVerify = async (email: string) => {
+  const asyncMailSignInWithVerify = async (
+    email: string,
+    verified: boolean = false
+  ) => {
     try {
       showLoading();
-      const res = await asyncSignInEmailWithVerify(verificationMail, "123456");
-      if (res === MAIL_VERIFY.NOT_VERIFIED) {
-        showAlert({
-          title: "Info",
-          content: "Check your verification mail",
-        });
-        return;
+      if (!verified) {
+        const res = await asyncSignInEmailWithVerify(
+          verificationMail,
+          "123456"
+        );
+        if (res === MAIL_VERIFY.NOT_VERIFIED) {
+          showAlert({
+            title: "Info",
+            content: "Check your verification mail",
+          });
+          return;
+        }
       }
       await asyncUpdateEmail(email);
       setOpenConnectEmailDialog(false);
@@ -287,7 +295,13 @@ const Profile = (props: AppProps) => {
         emailValidatorButtonOnClick={async (e) => {
           const myEvent = e as MouseEventWithStateParam;
           showLoading();
-          setOpenConnectEmailDialog(true);
+          if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
+            await asyncUpdateEmail("");
+          } else if (
+            myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
+          ) {
+            setOpenConnectEmailDialog(true);
+          }
           closeLoading();
         }}
         isWalletLoggedIn={isWalletLoggedIn}
@@ -310,19 +324,27 @@ const Profile = (props: AppProps) => {
               email,
               "123456"
             );
+            console.log(res);
             if (res === MAIL_VERIFY.PASSWORD_WRONG) {
               showAlert({ title: "Info", content: "This is mail in use" });
               return;
             }
             if (res === MAIL_VERIFY.VERIFIED) {
-              await asyncMailSignInWithVerify(email);
+              await asyncMailSignInWithVerify(email, true);
+              showAlert({
+                title: "Info",
+                content: (
+                  <Stack direction={"column"} sx={{ flex: 1, background: "" }}>
+                    <div>Your mail already is verified</div>
+                    <div>Update completed</div>
+                  </Stack>
+                ),
+              });
               return;
             }
             if (res === MAIL_VERIFY.NOT_VERIFIED) {
               await asyncResendEmailVerify(verificationMail, "123456");
-              return;
             }
-            console.log(res);
             closeLoading();
             setVerificationMail(email);
             setDialogFormType(CONNECT_MAIL_DIALOG_FORM_TYPE.VERIFY_EMAIL);

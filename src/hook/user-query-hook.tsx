@@ -91,6 +91,7 @@ const useSignedUserQuery = () => {
             query: GET_USER_BY_GMAIL,
             variables: {
               gmail: googleLoggedInInfo.gmail,
+              fetchPolicy: "no-cache",
             },
           });
           const { gmail, name, profileImageUrl, wallets, _id } =
@@ -127,6 +128,7 @@ const useSignedUserQuery = () => {
             variables: {
               walletAddress: walletLoggedInInfo.address ?? "",
             },
+            fetchPolicy: "no-cache",
           });
           const { email, name, profileImageUrl, wallets, _id } =
             res.data.userByWalletAddress;
