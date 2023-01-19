@@ -5,6 +5,7 @@ import {
   GET_USER_BY_EMAIL,
   GET_USER_BY_GMAIL,
   GET_USER_BY_WALLET_ADDRESS,
+  UPDATE_USER_BY_EMAIL,
   UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
 } from "../apollo/query";
@@ -25,6 +26,7 @@ const useSignedUserQuery = () => {
   const [UpdateUserProfileImageByName] = useMutation(
     UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME
   );
+  const [UpdateUserEmailByName] = useMutation(UPDATE_USER_BY_EMAIL);
 
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
@@ -45,11 +47,16 @@ const useSignedUserQuery = () => {
       (async () => {
         try {
           setLoading(true);
+          if (!emailLoggedInInfo.mail) {
+            setLoading(false);
+            return;
+          }
           const res = await client.query({
             query: GET_USER_BY_EMAIL,
             variables: {
-              email: emailLoggedInInfo.mail ?? "",
+              email: emailLoggedInInfo.mail,
             },
+            fetchPolicy: "no-cache",
           });
           const { email, name, profileImageUrl, wallets, _id } =
             res.data.userByEmail;
@@ -76,10 +83,15 @@ const useSignedUserQuery = () => {
       (async () => {
         try {
           setLoading(true);
+          if (!googleLoggedInInfo.gmail) {
+            setLoading(false);
+            return;
+          }
           const res = await client.query({
             query: GET_USER_BY_GMAIL,
             variables: {
-              gmail: googleLoggedInInfo.gmail ?? "",
+              gmail: googleLoggedInInfo.gmail,
+              fetchPolicy: "no-cache",
             },
           });
           const { gmail, name, profileImageUrl, wallets, _id } =
@@ -107,11 +119,16 @@ const useSignedUserQuery = () => {
       (async () => {
         try {
           setLoading(true);
+          if (!walletLoggedInInfo.address) {
+            setLoading(false);
+            return;
+          }
           const res = await client.query({
             query: GET_USER_BY_WALLET_ADDRESS,
             variables: {
               walletAddress: walletLoggedInInfo.address ?? "",
             },
+            fetchPolicy: "no-cache",
           });
           const { email, name, profileImageUrl, wallets, _id } =
             res.data.userByWalletAddress;
@@ -207,12 +224,33 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateEmail = async (email: string) => {
+    try {
+      if (!userData.name) return;
+      await UpdateUserEmailByName({
+        variables: {
+          name: userData.name,
+          email,
+        },
+      });
+      setUserData((prevState) => {
+        return {
+          ...prevState,
+          email,
+        };
+      });
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
   return {
     userData,
     loading,
     asyncUpdateWalletAddressByWallet,
     asyncUpdateWalletAddress,
     asyncUpdateProfileImageUrl,
+    asyncUpdateEmail,
   };
 };
 

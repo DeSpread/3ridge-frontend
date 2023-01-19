@@ -215,7 +215,7 @@ export const darkThemeOptions: ThemeOptions = {
       hover: "rgba(255, 255, 255, 0.5)",
       selected: "rgba(255, 255, 255, 0.08)",
       disabledBackground: "rgba(255, 255, 255, 0.12)",
-      disabled: "rgba(255, 255, 255, 0.26)",
+      disabled: neutral[500], //"rgba(255, 255, 255, 0.26)",
     },
     background,
     neutral,

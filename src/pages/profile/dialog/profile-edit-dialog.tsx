@@ -171,7 +171,9 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                   label={"Email"}
                   onClick={props.emailValidatorButtonOnClick}
                   size={"small"}
-                  value={props.userData?.email}
+                  value={
+                    props.userData?.email ? props.userData?.email : undefined
+                  }
                 ></ValidatorButton>
               )}
             </Stack>

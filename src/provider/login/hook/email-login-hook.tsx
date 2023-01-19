@@ -21,8 +21,8 @@ export function useEmailLogin() {
     asyncSignInEmailWithVerify,
     asyncResendEmailVerify,
   } = useFirebaseAuth();
-  const [emailLoginInfo, setEmailLoginInfo] = useState<EmailLoggedInInfo>({});
 
+  const [emailLoginInfo, setEmailLoginInfo] = useState<EmailLoggedInInfo>({});
   const [createUserByEmail] = useMutation(CREATE_USER_BY_EMAIL);
 
   useEffect(() => {
