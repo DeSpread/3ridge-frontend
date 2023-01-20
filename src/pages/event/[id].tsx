@@ -11,6 +11,7 @@ import { useTicketQueryHook } from "./hook/ticket-query-hook";
 import { format } from "date-fns";
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import Image from "next/image";
+import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -140,11 +141,18 @@ const Event = (props: AppProps) => {
           </Stack>
         </Grid>
         <Grid item>
-          <Stack direction={"column"} spacing={10}>
+          <Stack direction={"column"} spacing={10} sx={{ minWidth: 260 }}>
             <Stack direction={"column"} spacing={5}>
-              <Stack direction={"row"} justifyContent={"space-between"}>
+              <Stack
+                direction={"row"}
+                justifyContent={"space-between"}
+                sx={{ background: "" }}
+              >
                 <Typography variant="h5">Reward</Typography>
-                <StyledChip></StyledChip>
+                <StyledChip
+                  label={"FCFS"}
+                  icon={<DirectionsRunIcon></DirectionsRunIcon>}
+                ></StyledChip>
               </Stack>
               <Typography variant="body1">1000 USDT</Typography>
             </Stack>
