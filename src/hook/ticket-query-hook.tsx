@@ -1,10 +1,10 @@
-import { GET_TICKET_BY_ID } from "../../../apollo/query";
-import { client } from "../../../apollo/client";
+import { GET_TICKET_BY_ID } from "../apollo/query";
+import { client } from "../apollo/client";
 import { useEffect, useState } from "react";
-import { Ticket } from "../../../type";
-import TypeParseHelper from "../../../helper/type-parse-helper";
+import { Ticket } from "../type";
+import TypeParseHelper from "../helper/type-parse-helper";
 
-const useTicketQueryHook = ({ id }: { id?: string }) => {
+export function useTicketQuery({ id }: { id?: string }) {
   const [ticketData, setTicketData] = useState<Ticket>({});
   const typeParseHelper = TypeParseHelper.getInstance();
   useEffect(() => {
@@ -64,6 +64,4 @@ const useTicketQueryHook = ({ id }: { id?: string }) => {
     })();
   }, [id]);
   return { ticketData };
-};
-
-export { useTicketQueryHook };
+}

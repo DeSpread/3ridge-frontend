@@ -1,16 +1,13 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
-import { useTheme } from "@mui/material/styles";
 import Head from "next/head";
-import { Avatar, Box, Chip, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import VerifyCard from "../../components/molecules/verify-card";
 import { GetStaticPaths } from "next";
-import { useRouter } from "next/router";
-import { useTicketQueryHook } from "./hook/ticket-query-hook";
+import { useTicketQuery } from "../../hook/ticket-query-hook";
 import { format } from "date-fns";
 import StyledChip from "../../components/atoms/styled/styled-chip";
-import Image from "next/image";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
@@ -25,7 +22,7 @@ export async function getStaticProps() {
 }
 
 const Event = (props: AppProps) => {
-  const { ticketData } = useTicketQueryHook({
+  const { ticketData } = useTicketQuery({
     id: "63bfd87b73405e8b13784612", //router.query.id,
   });
 

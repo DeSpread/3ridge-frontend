@@ -246,7 +246,6 @@ const Home = (props: AppProps) => {
                         bountyCount={x.bountyCount}
                         thumbnailUrl={x.thumbnailUrl}
                         community={x.community}
-                        progress={x.progress!}
                       />
                     )}
                     {x.type === "single" && (

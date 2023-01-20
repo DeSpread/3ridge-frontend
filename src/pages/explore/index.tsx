@@ -9,7 +9,7 @@ import { TabContext, TabPanel } from "@mui/lab";
 import { useRouter } from "next/router";
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import BoltIcon from "@mui/icons-material/Bolt";
-import { useTicketsQueryHook } from "./hook/tickets-query-hook";
+import { useTicketsQuery } from "../../hook/tickets-query-hook";
 import EventCollectionCard from "../../components/molecules/event-collection-card";
 import { useLoading } from "../../provider/loading/loading-provider";
 
@@ -18,7 +18,7 @@ export async function getStaticProps() {
 }
 
 const Explore = (props: AppProps) => {
-  const { ticketData, ticketDataLoading } = useTicketsQueryHook();
+  const { ticketData, ticketDataLoading } = useTicketsQuery();
   const [value, setValue] = useState("1");
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
