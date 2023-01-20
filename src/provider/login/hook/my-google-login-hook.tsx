@@ -22,7 +22,7 @@ export function useMyGoogleLogin() {
         await asyncUpdateGoogleUserInfo();
       }
     })();
-  });
+  }, []);
 
   const isGoogleLoggedIn = useMemo(() => {
     return googleUserInfo?.gmail !== undefined ? true : false;
