@@ -26,7 +26,6 @@ import {
   Z_INDEX_OFFSET,
 } from "../type";
 import { useSignDialog } from "../hook/sign-dialog-hook";
-import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../const";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -89,9 +88,10 @@ const MainLayout = (props: MainLayoutProps) => {
             {!props.disableNavButtonSet && (
               <Stack direction={"row"} alignItems={"center"} spacing={1}>
                 <NavbarButtonSet
-                  bountiesBtnOnClick={(e) => {
-                    e.preventDefault();
-                    router.push(`/explore`).then();
+                  bountiesBtnOnClick={async (e) => {
+                    showLoading();
+                    await router.push(`/explore`);
+                    closeLoading();
                   }}
                   contentsBtnOnClick={() => {}}
                   achievementsBtnOnClick={() => {}}
@@ -100,15 +100,20 @@ const MainLayout = (props: MainLayoutProps) => {
                 ></NavbarButtonSet>
                 {isLoggedIn ? (
                   <NavbarAvatar
-                    onProfileItemClicked={(e) => {
+                    onProfileItemClicked={async (e) => {
                       e.preventDefault();
-                      router.push(`/profile`).then();
+                      showLoading();
+                      await router.push(`/profile`);
+                      closeLoading();
                     }}
                     onLogoutBtnClicked={(e) => {
                       e.preventDefault();
                       logout({
                         onSuccess: () => {
-                          router.push("/").then();
+                          showLoading();
+                          router.push("/").then((res) => {
+                            closeLoading();
+                          });
                         },
                         onError: (error) => {
                           showErrorAlert({ content: error.message });
@@ -133,8 +138,10 @@ const MainLayout = (props: MainLayoutProps) => {
                     <SecondaryButton
                       size={"small"}
                       sx={{ width: 100 }}
-                      onClick={(e) => {
-                        router.push("/signup").then();
+                      onClick={async (e) => {
+                        showLoading();
+                        await router.push("/signup");
+                        closeLoading();
                       }}
                     >
                       Sign Up

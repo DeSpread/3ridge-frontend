@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, Chip, Stack, Typography } from "@mui/material";
 import {
   CSSProperties,
+  MouseEventHandler,
   PropsWithChildren,
   useEffect,
   useRef,
@@ -18,47 +19,64 @@ type BountyCollectionCardProps = PropsWithChildren & {
     name: string;
     thumbnailUrl?: string;
   };
-  progress: number;
+  questsCount?: number;
+  summary?: string;
+  onClick?: MouseEventHandler;
 };
 
 const BountyCollectionCardContent = ({
   title,
   thumbnailUrl,
-  progress,
+  summary,
   community,
+  questsCount,
 }: BountyCollectionCardProps) => {
   return (
     <CardContent>
-      <Stack direction={"row"} justifyContent={"space-between"}>
+      <Stack direction={"row"} justifyContent={"space-between"} spacing={3}>
         <Stack
           direction={"column"}
-          spacing={2}
+          spacing={1}
           sx={{ width: "100%" }}
           justifyContent={"space-evenly"}
         >
           <Stack direction={"column"} spacing={2}>
             <Stack direction={"row"} spacing={1}>
               <Stack direction={"row"} spacing={1}>
-                <Chip label={"4 bounties"} />
-                {community && (
-                  <CommunityChip
-                    thumbnailUrl={community?.thumbnailUrl}
-                    name={community?.name}
-                  ></CommunityChip>
-                )}
+                <Chip label={`${questsCount} Quest`} />
+                {/*{questsCount && <Chip label={questsCount} />}*/}
+                {/*{community && (*/}
+                {/*  <CommunityChip*/}
+                {/*    thumbnailUrl={community?.thumbnailUrl}*/}
+                {/*    name={community?.name}*/}
+                {/*  ></CommunityChip>*/}
+                {/*)}*/}
               </Stack>
             </Stack>
             <Typography variant={"h6"}>{title}</Typography>
           </Stack>
-          <Box sx={{ width: "100%", paddingRight: 4 }}>
-            <EventLinearProgress
-              variant="determinate"
-              value={progress}
-            ></EventLinearProgress>
-          </Box>
+          {summary && (
+            <Stack direction={"row"} alignItems={"flex-end"}>
+              <Typography
+                variant={"body2"}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: "2",
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
+                {summary}
+              </Typography>
+            </Stack>
+          )}
         </Stack>
         <img
-          src={thumbnailUrl}
+          src={
+            "https://imgp.layer3cdn.com/ipfs/QmUnZrLc6F4u4VZyvHoxkerPe9ZvfBdEkx7BSW4naWWBe9"
+          }
+          // src={thumbnailUrl}
           style={{
             objectFit: "cover",
             borderRadius: 8,
@@ -81,7 +99,8 @@ const EventCollectionCard = (props: BountyCollectionCardProps) => {
         title={props.title}
         thumbnailUrl={props.thumbnailUrl}
         community={props.community}
-        progress={props.progress}
+        summary={props.summary}
+        questsCount={props.questsCount}
       ></BountyCollectionCardContent>
     );
   };
@@ -125,7 +144,9 @@ const EventCollectionCard = (props: BountyCollectionCardProps) => {
             background: "",
             zIndex: 0,
             height: { height },
+            cursor: "pointer",
           }}
+          onClick={props.onClick}
         >
           {getBountyCollectionCardContent(props)}
         </Card>

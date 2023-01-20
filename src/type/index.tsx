@@ -43,6 +43,10 @@ export const Z_INDEX_OFFSET = {
   LOADING_BACKDROP: 3,
 };
 
+export const REWARD_POLICY_TYPE = {
+  FCFS: "FCFS",
+};
+
 export type SignedUser = {
   _id?: string;
   walletAddress?: string;
@@ -73,3 +77,30 @@ export type ReversibleSvgIconProps = SvgIconProps & {
 };
 
 export type MouseEventWithStateParam = MouseEventWithParam<{ state?: string }>;
+
+export type FCFSPolicy = {
+  limitNumber: number;
+  untilTime: string;
+};
+
+export type Ticket = {
+  title?: string;
+  description?: string;
+  completed?: boolean;
+  participants?: { name: string }[];
+  quests?: {
+    title?: string;
+    description?: string;
+    questPolicy?: {
+      context?: string;
+      questPolicy?: string;
+    };
+  }[];
+  rewardPolicy?: {
+    context?: FCFSPolicy | undefined;
+    rewardPolicyType?: string;
+  };
+  winners?: {
+    name?: string;
+  }[];
+};
