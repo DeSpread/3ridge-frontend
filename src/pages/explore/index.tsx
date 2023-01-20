@@ -1,87 +1,27 @@
-import { ReactElement, SyntheticEvent, useEffect, useState } from "react";
+import React, { ReactElement, SyntheticEvent, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { Box, Divider, Grid, Skeleton, Stack, Typography } from "@mui/material";
-import { useQuery } from "@apollo/client";
-import { gql } from "../../../src/__generated__/gql";
 import StyledTabs from "../../components/atoms/styled/styled-tabs";
 import StyledTab from "../../components/atoms/styled/styled-tab";
-import EventSingleCard from "../../components/molecules/event-single-card";
 import { TabContext, TabPanel } from "@mui/lab";
 import { useRouter } from "next/router";
-
-const GET_TICKETS = gql(/* GraphQL */ `
-  query Tickets {
-    tickets {
-      completed
-    }
-  }
-`);
-
-const eventCardData = [
-  {
-    type: "collection",
-    title: "Beyond Ethereum ⛓️",
-    bountyCount: 4,
-    thumbnailUrl:
-      "https://pinx.layer3.xyz/ipfs/QmfD9H662bi5fKMsYqFV1bw2BzjcWjd2MitJG3J1zXaaG3",
-    progress: 10,
-  },
-
-  {
-    type: "collection",
-    title: "Beyond Ethereum ⛓️",
-    bountyCount: 4,
-    thumbnailUrl:
-      "https://pinx.layer3.xyz/ipfs/QmfD9H662bi5fKMsYqFV1bw2BzjcWjd2MitJG3J1zXaaG3",
-    progress: 10,
-  },
-  {
-    type: "single",
-    title: "Holiday Cheer 🌟",
-    summary:
-      "Spread the Holiday Cheer! All you need to prepare for the Holidays and participate in Layer3's Winter Extravaganza.aaaaaaaaaaa aaaaaaaaaaa aaaaaaaaaaa aaaaaaaaaaa aaaaaaaaaaa aaaaaaa ",
-    thumbnailUrl:
-      "https://pinx.layer3.xyz/ipfs/QmfTeu2b7opBffc3DPLuT67si63rngLdT46i3cbbSFEtQN",
-    expiredDate: "2022-11-08 09:00:00",
-    reward: {
-      type: "instant",
-      amount: 100,
-      unit: "xp",
-    },
-  },
-  {
-    type: "single",
-    title: "Holiday Cheer 🌟",
-    summary:
-      "Spread the Holiday Cheer! All you need to prepare for the Holidays and participate in Layer3's Winter Extravaganza.",
-    thumbnailUrl:
-      "https://pinx.layer3.xyz/ipfs/QmfTeu2b7opBffc3DPLuT67si63rngLdT46i3cbbSFEtQN",
-    expiredDate: "2022-11-08 09:00:00",
-    community: {
-      name: "uniswap",
-      thumbnailUrl:
-        "https://pinx.layer3.xyz/ipfs/Qmc1k2ARRhYgHTggx3L9E8YjMWtxMtFhuaWmLvApFKsdm3?img-width=16",
-    },
-    reward: {
-      type: "instant",
-      amount: 100,
-      unit: "xp",
-    },
-  },
-];
+import StyledChip from "../../components/atoms/styled/styled-chip";
+import BoltIcon from "@mui/icons-material/Bolt";
+import { useTicketsQuery } from "../../hook/tickets-query-hook";
+import EventCollectionCard from "../../components/molecules/event-collection-card";
+import { useLoading } from "../../provider/loading/loading-provider";
 
 export async function getStaticProps() {
   return { props: {} };
 }
 
 const Explore = (props: AppProps) => {
-  const { loading, data } = useQuery(GET_TICKETS);
+  const { ticketData, ticketDataLoading } = useTicketsQuery();
   const [value, setValue] = useState("1");
+  const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
-
-  useEffect(() => {}, []);
 
   return (
     <>
@@ -101,16 +41,25 @@ const Explore = (props: AppProps) => {
             sx={{ marginTop: "32px" }}
           >
             <Typography variant={"h6"}>Explore</Typography>
+            <StyledChip
+              icon={<BoltIcon color={"secondary"}></BoltIcon>}
+              label={
+                <Typography variant={"body2"} color={"neutral.100"}>
+                  Quests
+                </Typography>
+              }
+            ></StyledChip>
+            <Typography variant={"body2"} color={"neutral.600"}>
+              Learn and explore the best of web3
+            </Typography>
           </Stack>
 
-          <Box sx={{ maxWidth: "1200px" }}>
+          <Box sx={{ maxWidth: "1200px", marginTop: 4 }}>
             <Box sx={{}}>
               <TabContext value={value}>
                 <Box
                   sx={{
                     width: "100%",
-                    // borderBottom: 1,
-                    // borderColor: "divider",
                     background: "",
                   }}
                 >
@@ -131,7 +80,7 @@ const Explore = (props: AppProps) => {
                 ></Divider>
                 <TabPanel value={"1"}>
                   <Box>
-                    {loading && (
+                    {ticketDataLoading && (
                       <Grid
                         container
                         sx={{ flex: 1 }}
@@ -156,26 +105,27 @@ const Explore = (props: AppProps) => {
                         </Grid>
                       </Grid>
                     )}
-                    {data && (
+                    {ticketData && (
                       <Grid
                         container
                         sx={{ flex: 1 }}
                         columnSpacing={2}
                         rowSpacing={1}
                       >
-                        {data?.tickets?.map((x, index) => {
+                        {ticketData?.tickets?.map((x, index) => {
                           return (
                             <Grid key={index} item sm={12} md={12} lg={6}>
-                              <EventSingleCard
+                              <EventCollectionCard
                                 sx={{ margin: 1 }}
-                                title={""}
-                                summary={"summary"}
-                                onCardItemClick={(e) => {
-                                  e.preventDefault();
-                                  router.push("/event").then();
+                                title={x.title ?? undefined}
+                                questsCount={x.quests?.length}
+                                summary={x.description ?? undefined}
+                                onClick={async (e) => {
+                                  showLoading();
+                                  await router.push("/event/1");
+                                  closeLoading();
                                 }}
-                                isCursorPointer={true}
-                              ></EventSingleCard>
+                              ></EventCollectionCard>
                             </Grid>
                           );
                         })}
@@ -185,7 +135,7 @@ const Explore = (props: AppProps) => {
                 </TabPanel>
                 <TabPanel value={"2"}>
                   <Box>
-                    {loading && (
+                    {ticketDataLoading && (
                       <Grid
                         container
                         sx={{ flex: 1 }}
@@ -210,21 +160,26 @@ const Explore = (props: AppProps) => {
                         </Grid>
                       </Grid>
                     )}
-                    {data && (
+                    {ticketData && (
                       <Grid
                         container
                         sx={{ flex: 1 }}
                         columnSpacing={2}
                         rowSpacing={1}
                       >
-                        {data?.tickets?.map((x, index) => {
+                        {ticketData?.tickets?.map((x, index) => {
                           return (
                             <Grid key={index} item sm={12} md={12} lg={6}>
-                              <EventSingleCard
+                              <EventCollectionCard
                                 sx={{ margin: 1 }}
-                                title={""}
-                                summary={"summary"}
-                              ></EventSingleCard>
+                                title={x.title ?? undefined}
+                                questsCount={x.quests?.length}
+                                summary={x.description ?? undefined}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  // router.push("");
+                                }}
+                              ></EventCollectionCard>
                             </Grid>
                           );
                         })}

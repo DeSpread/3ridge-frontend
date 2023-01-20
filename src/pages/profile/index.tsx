@@ -45,18 +45,8 @@ import PictureEditDialog from "./dialog/picture-edit-dialog";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-button";
 import AwsClient from "../../remote/aws-client";
-
-const StyledChip = styled((props: ChipProps) => (
-  <Chip
-    {...props}
-    sx={{
-      paddingTop: 2,
-      paddingBottom: 2,
-      paddingLeft: 1,
-      paddingRight: 1,
-    }}
-  />
-))(() => ({}));
+import StyledChip from "../../components/atoms/styled/styled-chip";
+import BoltIcon from "@mui/icons-material/Bolt";
 
 const Profile = (props: AppProps) => {
   const {

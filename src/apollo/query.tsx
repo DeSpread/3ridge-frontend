@@ -108,3 +108,50 @@ export const UPDATE_USER_BY_EMAIL = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const GET_ALL_TICKETS = gql(/* GraphQL */ `
+  query AllTickets {
+    tickets {
+      description
+      completed
+      title
+      participants {
+        name
+        profileImageUrl
+      }
+      quests {
+        completedUsers {
+          name
+        }
+      }
+    }
+  }
+`);
+
+export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
+  query GetTicketById($id: String!) {
+    ticketById(id: $id) {
+      completed
+      description
+      participants {
+        name
+      }
+      quests {
+        title
+        description
+        questPolicy {
+          context
+          questPolicy
+        }
+      }
+      rewardPolicy {
+        context
+        rewardPolicyType
+      }
+      title
+      winners {
+        name
+      }
+    }
+  }
+`);

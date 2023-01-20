@@ -16,6 +16,8 @@ const StyledTab = styled((props: TabProps) => <Tab disableRipple {...props} />)(
     "&:hover": {
       borderBottomColor: theme.palette.action.selected,
     },
+    width: 120,
+    // padding: 10,
   })
 );
 
