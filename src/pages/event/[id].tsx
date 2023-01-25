@@ -5,7 +5,7 @@ import Head from "next/head";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import VerifyCard from "../../components/molecules/verify-card";
 import { GetStaticPaths } from "next";
-import { useTicketQuery } from "../../hook/ticket-query-hook";
+import { useTicketQuery } from "../../page-hook/ticket-query-hook";
 import { format } from "date-fns";
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";

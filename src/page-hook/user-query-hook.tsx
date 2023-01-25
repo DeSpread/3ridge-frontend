@@ -94,7 +94,6 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          console.log(res.data.userByGmail);
           const { gmail, name, profileImageUrl, wallets, _id } =
             res.data.userByGmail;
           setUserData((prevState) => {

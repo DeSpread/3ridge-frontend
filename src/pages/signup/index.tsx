@@ -13,8 +13,6 @@ import {
   AppError,
   getErrorMessage,
 } from "../../error/my-error";
-import { useSetRecoilState } from "recoil";
-import { showSignInDialogState } from "../../recoil";
 import { useAlert } from "../../provider/alert/alert-provider";
 import SignUpWithEmailForm from "./components/sign-up-with-email-form";
 import {
@@ -25,7 +23,7 @@ import {
 } from "../../type";
 import VerifyYourEmailForm from "../../components/organisms/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
-import { useSignDialog } from "../../hook/sign-dialog-hook";
+import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 
 const FORM_TYPE = {
   SELECT: "SELECT",

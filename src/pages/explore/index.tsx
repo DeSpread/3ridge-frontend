@@ -9,7 +9,7 @@ import { TabContext, TabPanel } from "@mui/lab";
 import { useRouter } from "next/router";
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import BoltIcon from "@mui/icons-material/Bolt";
-import { useTicketsQuery } from "../../hook/tickets-query-hook";
+import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import EventCollectionCard from "../../components/molecules/event-collection-card";
 import { useLoading } from "../../provider/loading/loading-provider";
 

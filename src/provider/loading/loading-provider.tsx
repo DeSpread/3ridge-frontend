@@ -55,9 +55,6 @@ export const LoadingProvider = ({ children }: PropsWithChildren) => {
             theme.zIndex.drawer + Z_INDEX_OFFSET.LOADING_BACKDROP,
         }}
         open={open}
-        // onClick={() => {
-        //   closeLoading();
-        // }}
       >
         <LinearProgress
           color={"secondary"}

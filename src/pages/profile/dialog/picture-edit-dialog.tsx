@@ -27,7 +27,6 @@ type ConnectEmailDialogProps = DialogProps & {
     base64Data: string;
     ext: string;
   }) => void;
-  // onSaveBtnClicked?: MouseEventHandler;
   onBackBtnClicked?: MouseEventHandler;
 };
 
