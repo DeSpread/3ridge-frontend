@@ -58,6 +58,7 @@ export type MutationCreateProjectArgs = {
 
 export type MutationCreateTicketArgs = {
   description?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']>;
   quests: Array<QuestInputType>;
   rewardPolicy?: InputMaybe<RewardPolicyInputType>;
   title?: InputMaybe<Scalars['String']>;
@@ -110,6 +111,7 @@ export type MutationUpdateProjectArgs = {
 export type MutationUpdateTicketByIdArgs = {
   completed?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']>;
   participants?: InputMaybe<Array<UserInputType>>;
   rewardPolicy?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
@@ -124,6 +126,7 @@ export type MutationUpdateUserByNameArgs = {
 
 export type Project = {
   __typename?: 'Project';
+  _id?: Maybe<Scalars['String']>;
   categories?: Maybe<Array<CategoryType>>;
   description?: Maybe<Scalars['String']>;
   managedUsers?: Maybe<Array<User>>;
@@ -133,6 +136,7 @@ export type Project = {
 };
 
 export type ProjectInputType = {
+  _id?: InputMaybe<Scalars['String']>;
   categories?: InputMaybe<Array<CategoryType>>;
   description?: InputMaybe<Scalars['String']>;
   managedUsers?: InputMaybe<Array<UserInputType>>;
@@ -155,6 +159,7 @@ export type Query = {
   userByName: User;
   userByWalletAddress: User;
   users: Array<User>;
+  usersOrderByRewardPointDesc: Array<User>;
 };
 
 
@@ -194,6 +199,7 @@ export type QueryUserByWalletAddressArgs = {
 
 export type Quest = {
   __typename?: 'Quest';
+  _id?: Maybe<Scalars['String']>;
   completedUsers?: Maybe<Array<User>>;
   description?: Maybe<Scalars['String']>;
   questPolicy?: Maybe<QuestPolicy>;
@@ -201,6 +207,7 @@ export type Quest = {
 };
 
 export type QuestInputType = {
+  _id?: InputMaybe<Scalars['String']>;
   completedUsers?: InputMaybe<Array<UserInputType>>;
   description?: InputMaybe<Scalars['String']>;
   questPolicy?: InputMaybe<QuestPolicyInputType>;
@@ -209,13 +216,13 @@ export type QuestInputType = {
 
 export type QuestPolicy = {
   __typename?: 'QuestPolicy';
-  context?: Maybe<Scalars['String']>;
-  questPolicy?: Maybe<QuestPolicyType>;
+  context: Scalars['String'];
+  questPolicy: QuestPolicyType;
 };
 
 export type QuestPolicyInputType = {
-  context?: InputMaybe<Scalars['String']>;
-  questPolicy?: InputMaybe<QuestPolicyType>;
+  context: Scalars['String'];
+  questPolicy: QuestPolicyType;
 };
 
 export enum QuestPolicyType {
@@ -227,13 +234,15 @@ export enum QuestPolicyType {
 
 export type RewardPolicy = {
   __typename?: 'RewardPolicy';
-  context?: Maybe<Scalars['String']>;
-  rewardPolicyType?: Maybe<RewardPolicyType>;
+  context: Scalars['String'];
+  rewardPoint: Scalars['Float'];
+  rewardPolicyType: RewardPolicyType;
 };
 
 export type RewardPolicyInputType = {
-  context?: InputMaybe<Scalars['String']>;
-  rewardPolicyType?: InputMaybe<RewardPolicyType>;
+  context: Scalars['String'];
+  rewardPoint: Scalars['Float'];
+  rewardPolicyType: RewardPolicyType;
 };
 
 export enum RewardPolicyType {
@@ -243,8 +252,10 @@ export enum RewardPolicyType {
 
 export type Ticket = {
   __typename?: 'Ticket';
+  _id?: Maybe<Scalars['String']>;
   completed?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
   participants?: Maybe<Array<User>>;
   quests?: Maybe<Array<Quest>>;
   rewardPolicy?: Maybe<RewardPolicy>;
@@ -253,8 +264,10 @@ export type Ticket = {
 };
 
 export type TicketInputType = {
+  _id?: InputMaybe<Scalars['String']>;
   completed?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']>;
   participants?: InputMaybe<Array<UserInputType>>;
   quests?: InputMaybe<Array<QuestInputType>>;
   rewardPolicy?: InputMaybe<RewardPolicyInputType>;
@@ -271,6 +284,7 @@ export type User = {
   managedProjects?: Maybe<Array<Project>>;
   name: Scalars['String'];
   profileImageUrl?: Maybe<Scalars['String']>;
+  rewardPoint?: Maybe<Scalars['Float']>;
   tickets?: Maybe<Array<Ticket>>;
   twitterId?: Maybe<Scalars['String']>;
   wallets?: Maybe<Array<UserWallet>>;
@@ -284,6 +298,7 @@ export type UserInputType = {
   managedProjects?: InputMaybe<Array<ProjectInputType>>;
   name: Scalars['String'];
   profileImageUrl?: InputMaybe<Scalars['String']>;
+  rewardPoint?: InputMaybe<Scalars['Float']>;
   tickets?: InputMaybe<Array<TicketInputType>>;
   twitterId?: InputMaybe<Scalars['String']>;
   wallets?: InputMaybe<Array<UserWalletInputType>>;
@@ -293,6 +308,7 @@ export type UserUpdateInput = {
   email?: InputMaybe<Scalars['String']>;
   gmail?: InputMaybe<Scalars['String']>;
   profileImageUrl?: InputMaybe<Scalars['String']>;
+  rewardPoint?: InputMaybe<Scalars['Float']>;
   wallets?: InputMaybe<Array<UserWalletInputType>>;
 };
 
@@ -386,7 +402,7 @@ export type GetTicketByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTicketByIdQuery = { __typename?: 'Query', ticketById: { __typename?: 'Ticket', completed?: boolean | null, description?: string | null, title?: string | null, participants?: Array<{ __typename?: 'User', name: string }> | null, quests?: Array<{ __typename?: 'Quest', title?: string | null, description?: string | null, questPolicy?: { __typename?: 'QuestPolicy', context?: string | null, questPolicy?: QuestPolicyType | null } | null }> | null, rewardPolicy?: { __typename?: 'RewardPolicy', context?: string | null, rewardPolicyType?: RewardPolicyType | null } | null, winners?: Array<{ __typename?: 'User', name: string }> | null } };
+export type GetTicketByIdQuery = { __typename?: 'Query', ticketById: { __typename?: 'Ticket', completed?: boolean | null, description?: string | null, title?: string | null, participants?: Array<{ __typename?: 'User', name: string, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id?: string | null, title?: string | null, description?: string | null, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null, completedUsers?: Array<{ __typename?: 'User', _id?: string | null, name: string, profileImageUrl?: string | null, email?: string | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null }> | null }> | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name: string }> | null } };
 
 
 export const GetUserByEmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserByEmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userByEmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"wallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}}]}}]}}]} as unknown as DocumentNode<GetUserByEmailQuery, GetUserByEmailQueryVariables>;
@@ -399,4 +415,4 @@ export const UpdateUserWalletByNameDocument = {"kind":"Document","definitions":[
 export const UpdateUserProfileImageByNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserProfileImageByName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"profileImageUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserByName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"userUpdateInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"profileImageUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"profileImageUrl"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}}]}}]}}]} as unknown as DocumentNode<UpdateUserProfileImageByNameMutation, UpdateUserProfileImageByNameMutationVariables>;
 export const UpdateUserEmailByNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserEmailByName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserByName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"userUpdateInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<UpdateUserEmailByNameMutation, UpdateUserEmailByNameMutationVariables>;
 export const AllTicketsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AllTickets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tickets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"completed"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"participants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"quests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"completedUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<AllTicketsQuery, AllTicketsQueryVariables>;
-export const GetTicketByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTicketById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ticketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"completed"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"participants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"quests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questPolicy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"context"}},{"kind":"Field","name":{"kind":"Name","value":"questPolicy"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"context"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicyType"}}]}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"winners"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetTicketByIdQuery, GetTicketByIdQueryVariables>;
+export const GetTicketByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTicketById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ticketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"completed"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"participants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"quests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questPolicy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"context"}},{"kind":"Field","name":{"kind":"Name","value":"questPolicy"}}]}},{"kind":"Field","name":{"kind":"Name","value":"completedUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"wallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"context"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicyType"}}]}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"winners"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetTicketByIdQuery, GetTicketByIdQueryVariables>;

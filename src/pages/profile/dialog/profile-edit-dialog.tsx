@@ -10,11 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { MouseEventHandler } from "react";
-import {
-  ReversibleSvgIconProps,
-  SignedUser,
-  Z_INDEX_OFFSET,
-} from "../../../type";
+import { ReversibleSvgIconProps, User, Z_INDEX_OFFSET } from "../../../type";
 import { useTheme } from "@mui/material/styles";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import EthIcon from "../../../components/atoms/svg/eth-icon";
@@ -35,7 +31,7 @@ const ReversibleMarkEmailReadIcon = (props: ReversibleSvgIconProps) => {
 
 type ProfileEditDialogProps = DialogProps & {
   title: string;
-  userData: SignedUser;
+  userData: User;
   isWalletLoggedIn: boolean;
   isMailLoggedIn: boolean;
   walletValidatorButtonOnClick?: MouseEventHandler;

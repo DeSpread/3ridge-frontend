@@ -47,7 +47,11 @@ export const REWARD_POLICY_TYPE = {
   FCFS: "FCFS",
 };
 
-export type SignedUser = {
+export const QUEST_POLICY_TYPE = {
+  QUIZ: "QUIZ",
+};
+
+export type User = {
   _id?: string;
   walletAddress?: string;
   name?: string;
@@ -78,8 +82,9 @@ export type ReversibleSvgIconProps = SvgIconProps & {
 
 export type MouseEventWithStateParam = MouseEventWithParam<{ state?: string }>;
 
-export type FCFSPolicy = {
+export type FCFSRewardContext = {
   limitNumber: number;
+  beginTime: string;
   untilTime: string;
 };
 
@@ -87,20 +92,38 @@ export type Ticket = {
   title?: string;
   description?: string;
   completed?: boolean;
-  participants?: { name: string }[];
-  quests?: {
-    title?: string;
-    description?: string;
-    questPolicy?: {
-      context?: string;
-      questPolicy?: string;
-    };
-  }[];
+  participants?: { name: string; profileImageUrl?: string }[];
+  quests?: Quest[];
   rewardPolicy?: {
-    context?: FCFSPolicy | undefined;
+    context?: FCFSRewardContext | undefined;
     rewardPolicyType?: string;
   };
   winners?: {
     name?: string;
   }[];
+};
+
+export type Quest = {
+  title?: string;
+  description?: string;
+  questPolicy?: {
+    context?: QuizQuestContext | undefined;
+    questPolicy?: string;
+  };
+  completedUsers?: User[];
+  isComplete?: boolean;
+};
+
+export type QuizQuestContext = {
+  quizList?: QuizContent[];
+};
+
+export type QuizContent = {
+  title: string;
+  options: string[];
+  correctOptionIndex: number;
+};
+
+export type QuizEventParam = {
+  correct: boolean;
 };

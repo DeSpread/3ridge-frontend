@@ -1,46 +1,111 @@
 import * as React from "react";
+import { MouseEventHandler, useState } from "react";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import {
-  Button,
-  DialogActions,
+  Box,
   DialogContent,
-  DialogContentText,
+  DialogProps,
   Stack,
   Typography,
 } from "@mui/material";
 import QuestQuizForm from "../molecules/quest-quiz-form";
+import {
+  MouseEventWithParam,
+  QuizEventParam,
+  QuizQuestContext,
+  Z_INDEX_OFFSET,
+} from "../../type";
+import SecondaryButton from "../atoms/secondary-button";
+import { useTheme } from "@mui/material/styles";
 
-interface SimpleDialogProps {
-  open: boolean;
-  selectedValue?: string;
-  onClose: (value: string) => void;
-}
+type QuestQuizDialogProps = DialogProps & {
+  onCloseBtnClicked?: MouseEventHandler;
+  context: QuizQuestContext;
+};
 
-const QuestQuizDialog = (props: SimpleDialogProps) => {
-  const { onClose, selectedValue, open } = props;
+const QuestQuizDialog = (props: QuestQuizDialogProps) => {
+  const { context, ...rest } = props;
+  const [activeNextQuestion, setActiveNextQuestion] = useState(true);
+  const [questionIndex, setQuestionIndex] = useState(0);
 
-  const handleClose = () => {
-    onClose("");
+  const theme = useTheme();
+
+  const onNextQuestionButtonClicked = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    if (questionIndex + 1 < (props.context?.quizList?.length ?? 0)) {
+      setQuestionIndex((prevState) => prevState + 1);
+      setActiveNextQuestion(false);
+    } else if (questionIndex + 1 >= (props.context?.quizList?.length ?? 0)) {
+      console.log("completed");
+    }
   };
 
   return (
     <>
-      <Dialog fullWidth maxWidth={"sm"} onClose={handleClose} open={open}>
+      <Dialog
+        {...rest}
+        fullWidth
+        maxWidth={"xs"}
+        sx={{
+          backdropFilter: "blur(2px)",
+          zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.DIALOG,
+        }}
+        PaperProps={{
+          style: {
+            borderRadius: 16,
+            borderWidth: 1,
+            //@ts-ignore
+            borderColor: theme.palette.neutral[800],
+            borderStyle: "solid",
+            padding: 4,
+          },
+        }}
+      >
         <DialogTitle>
           <Stack direction={"column"} spacing={1}>
-            <Typography variant={"body1"}>Question 1 of 2</Typography>
-            <Typography variant={"h5"}>Swapping is</Typography>
+            <Typography variant={"body2"}>{`Question ${questionIndex + 1} of ${
+              context.quizList?.length
+            }`}</Typography>
+            <Typography
+              variant={"h5"}
+              sx={{
+                wordBreak: "break-word",
+              }}
+            >
+              {props.context?.quizList && props.context?.quizList?.length > 0
+                ? props.context?.quizList[questionIndex].title
+                : ""}
+            </Typography>
           </Stack>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <QuestQuizForm />
-          </DialogContentText>
+          <Box sx={{ marginTop: 1 }}>
+            <QuestQuizForm
+              quizContent={
+                props.context?.quizList
+                  ? props.context?.quizList[questionIndex]
+                  : undefined
+              }
+              onSelectChanged={(e) => {
+                const myEvent = e as MouseEventWithParam<QuizEventParam>;
+                setActiveNextQuestion(myEvent.params.correct);
+              }}
+              id={questionIndex}
+            />
+          </Box>
+          <Box sx={{ marginTop: 0 }}>
+            <SecondaryButton
+              disabled={!activeNextQuestion}
+              fullWidth={true}
+              onClick={onNextQuestionButtonClicked}
+            >
+              Next Question
+            </SecondaryButton>
+          </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Next Question</Button>
-        </DialogActions>
       </Dialog>
     </>
   );

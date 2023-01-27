@@ -1,27 +1,12 @@
-import React, {
-  MouseEventHandler,
-  ReactElement,
-  useMemo,
-  useState,
-} from "react";
+import React, { ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import {
-  Avatar,
-  Box,
-  Chip,
-  ChipProps,
-  Grid,
-  Stack,
-  styled,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Grid, Stack, Theme, Typography } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
-import { useSignedUserQuery } from "../../hook/user-query-hook";
+import { useSignedUserQuery } from "../../page-hook/user-query-hook";
 import EthIcon from "../../components/atoms/svg/eth-icon";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import PrimaryButton from "../../components/atoms/primary-button";
@@ -46,7 +31,6 @@ import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-button";
 import AwsClient from "../../remote/aws-client";
 import StyledChip from "../../components/atoms/styled/styled-chip";
-import BoltIcon from "@mui/icons-material/Bolt";
 
 const Profile = (props: AppProps) => {
   const {

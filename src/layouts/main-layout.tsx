@@ -17,7 +17,7 @@ import {
   getErrorMessage,
 } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
-import { useSignedUserQuery } from "../hook/user-query-hook";
+import { useSignedUserQuery } from "../page-hook/user-query-hook";
 import { useLoading } from "../provider/loading/loading-provider";
 import {
   EmailSignUpParams,
@@ -25,7 +25,7 @@ import {
   MouseEventWithParam,
   Z_INDEX_OFFSET,
 } from "../type";
-import { useSignDialog } from "../hook/sign-dialog-hook";
+import { useSignDialog } from "../page-hook/sign-dialog-hook";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
