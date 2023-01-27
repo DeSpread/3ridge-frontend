@@ -389,41 +389,49 @@ const Event = (props: AppProps) => {
                 sx={{ marginTop: 4 }}
                 alignItems={"center"}
               >
-                {[1, 2, 3].map((e) => {
-                  return (
-                    <Avatar
-                      key={e}
-                      alt=""
-                      src={"https://app.quest3.xyz/static/users/avatar8.png"}
+                {(ticketData?.participants?.length ?? 0) > 0 ? (
+                  <>
+                    {ticketData?.participants?.map((e, index) => {
+                      return (
+                        <Avatar
+                          key={index}
+                          alt=""
+                          src={
+                            "https://app.quest3.xyz/static/users/avatar8.png"
+                          }
+                          sx={{
+                            width: 42,
+                            height: 42,
+                          }}
+                        />
+                      );
+                    })}
+                    <Box
                       sx={{
                         width: 42,
                         height: 42,
+                        //@ts-ignore
+                        background: (theme) => theme.palette.neutral["800"],
+                        alignItems: "center",
+                        justifyContent: "center",
+                        display: "flex",
+                        borderRadius: 42,
+                        zIndex: 1,
                       }}
-                    />
-                  );
-                })}
-                {
-                  <Box
-                    sx={{
-                      width: 42,
-                      height: 42,
-                      //@ts-ignore
-                      background: (theme) => theme.palette.neutral["800"],
-                      alignItems: "center",
-                      justifyContent: "center",
-                      display: "flex",
-                      borderRadius: 42,
-                      zIndex: 1,
-                    }}
-                  >
-                    <Typography variant={"caption"} color={"neutral.100"}>
-                      {`+${nFormatter(
-                        ticketData?.participants?.length ?? 0,
-                        4
-                      )}`}
-                    </Typography>
-                  </Box>
-                }
+                    >
+                      <Typography variant={"caption"} color={"neutral.100"}>
+                        {`+${nFormatter(
+                          ticketData?.participants?.length ?? 0,
+                          4
+                        )}`}
+                      </Typography>
+                    </Box>
+                  </>
+                ) : (
+                  <>
+                    <Typography>⛔&nbsp;EMPTY</Typography>
+                  </>
+                )}
               </Stack>
             </Stack>
           </Stack>
