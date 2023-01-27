@@ -1,13 +1,13 @@
 import { atom, selector } from "recoil";
 import { v1 } from "uuid";
-import { SignedUser } from "../type";
+import { User } from "../type";
 
 export const showSignInDialogState = atom({
   key: `showSignInDialogState/${v1()}`,
   default: false,
 });
 
-export const userDataState = atom<SignedUser>({
+export const userDataState = atom<User>({
   key: `userDataState/${v1()}`,
   default: {},
 });

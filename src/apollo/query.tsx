@@ -135,13 +135,25 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       description
       participants {
         name
+        profileImageUrl
       }
       quests {
+        _id
         title
         description
         questPolicy {
           context
           questPolicy
+        }
+        completedUsers {
+          _id
+          name
+          profileImageUrl
+          email
+          wallets {
+            address
+            chain
+          }
         }
       }
       rewardPolicy {
