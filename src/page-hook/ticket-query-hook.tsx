@@ -50,16 +50,16 @@ export function useTicketQuery({
             };
           }),
           quests: quests?.map((e) => {
-            console.log("aaa", userId);
-            let isComplete = false;
-            if (userId) {
-              isComplete =
-                e.completedUsers
-                  ?.map((_e) => {
-                    return _e._id;
-                  })
-                  .includes(userId) ?? false;
-            }
+            // console.log("aaa", userId);
+            // let isComplete = false;
+            // if (userId) {
+            //   isComplete =
+            //     e.completedUsers
+            //       ?.map((_e) => {
+            //         return _e._id;
+            //       })
+            //       .includes(userId) ?? false;
+            // }
             return {
               title: e.title ?? undefined,
               description: e.description ?? undefined,
@@ -70,21 +70,21 @@ export function useTicketQuery({
                 ),
                 questPolicy: e.questPolicy?.questPolicy ?? undefined,
               },
-              isComplete,
-              completedUsers: e.completedUsers
-                ? e.completedUsers.map((_e) => {
-                    return {
-                      _id: _e._id ?? undefined,
-                      walletAddress:
-                        _e.wallets && _e.wallets.length > 0
-                          ? _e.wallets[0].address
-                          : undefined,
-                      name: _e.name ?? undefined,
-                      email: _e.email ?? undefined,
-                      profileImageUrl: _e.profileImageUrl ?? undefined,
-                    };
-                  })
-                : undefined,
+              isComplete: false,
+              // completedUsers: e.completedUsers
+              //   ? e.completedUsers.map((_e) => {
+              //       return {
+              //         _id: _e._id ?? undefined,
+              //         walletAddress:
+              //           _e.wallets && _e.wallets.length > 0
+              //             ? _e.wallets[0].address
+              //             : undefined,
+              //         name: _e.name ?? undefined,
+              //         email: _e.email ?? undefined,
+              //         profileImageUrl: _e.profileImageUrl ?? undefined,
+              //       };
+              //     })
+              //   : undefined,
             };
           }),
           rewardPolicy: {

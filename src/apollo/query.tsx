@@ -112,17 +112,38 @@ export const UPDATE_USER_BY_EMAIL = gql(/* GraphQL */ `
 export const GET_ALL_TICKETS = gql(/* GraphQL */ `
   query AllTickets {
     tickets {
-      description
       completed
-      title
+      description
       participants {
         name
         profileImageUrl
       }
       quests {
-        completedUsers {
-          name
+        _id
+        title
+        description
+        questPolicy {
+          context
+          questPolicy
         }
+        # completedUsers {
+        #   _id
+        #   name
+        #   profileImageUrl
+        #   email
+        #   wallets {
+        #     address
+        #     chain
+        #   }
+        # }
+      }
+      rewardPolicy {
+        context
+        rewardPolicyType
+      }
+      title
+      winners {
+        name
       }
     }
   }
@@ -145,16 +166,16 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
           context
           questPolicy
         }
-        completedUsers {
-          _id
-          name
-          profileImageUrl
-          email
-          wallets {
-            address
-            chain
-          }
-        }
+        # completedUsers {
+        #  _id
+        #  name
+        #  profileImageUrl
+        #  email
+        #  wallets {
+        #  address
+        #  chain
+        #  }
+        # }
       }
       rewardPolicy {
         context

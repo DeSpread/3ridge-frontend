@@ -23,6 +23,8 @@ const Explore = (props: AppProps) => {
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
 
+  console.log(ticketData);
+
   return (
     <>
       <Head>
