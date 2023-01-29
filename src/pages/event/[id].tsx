@@ -1,17 +1,8 @@
-import React, { CSSProperties, ReactElement, useEffect, useState } from "react";
+import React, { CSSProperties, ReactElement, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import {
-  Avatar,
-  Box,
-  CardContent,
-  Divider,
-  Grid,
-  Skeleton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Divider, Grid, Stack, Typography } from "@mui/material";
 import VerifyCard from "../../components/molecules/verify-card";
 import { GetStaticPaths } from "next";
 import { useTicketQuery } from "../../page-hook/ticket-query-hook";
@@ -153,6 +144,8 @@ const Event = (props: AppProps) => {
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
+
+  // console.log(ticketData);
 
   return (
     <>
@@ -333,8 +326,12 @@ const Event = (props: AppProps) => {
                           height={24}
                           style={{ marginRight: 2 }}
                         />
-                        <Typography variant={"h6"}>100</Typography>
-                        <Typography variant={"h6"}>USDT</Typography>
+                        <Typography variant={"h6"}>
+                          {ticketData?.rewardPolicy?.context?.rewardAmount}
+                        </Typography>
+                        <Typography variant={"h6"}>
+                          {ticketData?.rewardPolicy?.context?.rewardUnit.toUpperCase()}
+                        </Typography>
                       </Stack>
                     </Stack>
                     <Divider></Divider>

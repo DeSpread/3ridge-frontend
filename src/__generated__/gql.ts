@@ -13,9 +13,10 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
-    "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n": types.GetUserByEmailDocument,
-    "\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      _id\n      name\n      profileImageUrl\n      gmail\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n": types.UserByGmailDocument,
-    "\n  query GetUserByWalletAddress($walletAddress: String!) {\n    userByWalletAddress(walletAddress: $walletAddress) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n": types.GetUserByWalletAddressDocument,
+    "\n  query GetUsersOrderByRewardPointDesc {\n    usersOrderByRewardPointDesc {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n": types.GetUsersOrderByRewardPointDescDocument,
+    "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n": types.GetUserByEmailDocument,
+    "\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      _id\n      name\n      profileImageUrl\n      gmail\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n": types.UserByGmailDocument,
+    "\n  query GetUserByWalletAddress($walletAddress: String!) {\n    userByWalletAddress(walletAddress: $walletAddress) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n": types.GetUserByWalletAddressDocument,
     "\n  mutation CreateUserByEmail($email: String!) {\n    createUserByEmail(email: $email) {\n      name\n    }\n  }\n": types.CreateUserByEmailDocument,
     "\n  mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {\n    createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {\n      name\n    }\n  }\n": types.CreateUserByGmailDocument,
     "\n  mutation CreateUserByWallet($address: String!, $chain: ChainType!) {\n    createUserByWallet(address: $address, chain: $chain) {\n      name\n    }\n  }\n": types.CreateUserByWalletDocument,
@@ -29,15 +30,19 @@ const documents = {
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query GetUsersOrderByRewardPointDesc {\n    usersOrderByRewardPointDesc {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n"): (typeof documents)["\n  query GetUsersOrderByRewardPointDesc {\n    usersOrderByRewardPointDesc {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      _id\n      name\n      profileImageUrl\n      gmail\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"): (typeof documents)["\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      _id\n      name\n      profileImageUrl\n      gmail\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n"): (typeof documents)["\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetUserByWalletAddress($walletAddress: String!) {\n    userByWalletAddress(walletAddress: $walletAddress) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetUserByWalletAddress($walletAddress: String!) {\n    userByWalletAddress(walletAddress: $walletAddress) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      _id\n      name\n      profileImageUrl\n      gmail\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n"): (typeof documents)["\n  query userByGmail($gmail: String!) {\n    userByGmail(gmail: $gmail) {\n      _id\n      name\n      profileImageUrl\n      gmail\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query GetUserByWalletAddress($walletAddress: String!) {\n    userByWalletAddress(walletAddress: $walletAddress) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n"): (typeof documents)["\n  query GetUserByWalletAddress($walletAddress: String!) {\n    userByWalletAddress(walletAddress: $walletAddress) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,5 +1,21 @@
 import { gql } from "../__generated__";
 
+export const GET_USERS_ORDER_BY_REWARD_POINT_DESC = gql(/* GraphQL */ `
+  query GetUsersOrderByRewardPointDesc {
+    usersOrderByRewardPointDesc {
+      _id
+      name
+      profileImageUrl
+      email
+      wallets {
+        address
+        chain
+      }
+      rewardPoint
+    }
+  }
+`);
+
 export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
   query GetUserByEmail($email: String!) {
     userByEmail(email: $email) {
@@ -11,6 +27,7 @@ export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
         address
         chain
       }
+      rewardPoint
     }
   }
 `);
@@ -26,6 +43,7 @@ export const GET_USER_BY_GMAIL = gql(/* GraphQL */ `
         address
         chain
       }
+      rewardPoint
     }
   }
 `);
@@ -41,6 +59,7 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
         address
         chain
       }
+      rewardPoint
     }
   }
 `);

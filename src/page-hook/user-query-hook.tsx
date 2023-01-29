@@ -58,7 +58,7 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          const { email, name, profileImageUrl, wallets, _id } =
+          const { email, name, profileImageUrl, wallets, _id, rewardPoint } =
             res.data.userByEmail;
           setUserData((prevState) => {
             return {
@@ -68,6 +68,7 @@ const useSignedUserQuery = () => {
               name: name ?? undefined,
               profileImageUrl: profileImageUrl ?? undefined,
               walletAddress: wallets?.at(0)?.address,
+              rewardPoint: rewardPoint ?? undefined,
             };
           });
           setLoading(false);
@@ -94,7 +95,7 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          const { gmail, name, profileImageUrl, wallets, _id } =
+          const { gmail, name, profileImageUrl, wallets, _id, rewardPoint } =
             res.data.userByGmail;
           setUserData((prevState) => {
             return {
@@ -104,6 +105,7 @@ const useSignedUserQuery = () => {
               name: name ?? undefined,
               profileImageUrl: profileImageUrl ?? undefined,
               walletAddress: wallets?.at(0)?.address,
+              rewardPoint: rewardPoint ?? undefined,
             };
           });
           setLoading(false);
@@ -130,7 +132,7 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          const { email, name, profileImageUrl, wallets, _id } =
+          const { email, name, profileImageUrl, wallets, _id, rewardPoint } =
             res.data.userByWalletAddress;
           setUserData((prevState) => {
             return {
@@ -140,6 +142,7 @@ const useSignedUserQuery = () => {
               name: name ?? undefined,
               profileImageUrl: profileImageUrl ?? undefined,
               walletAddress: wallets?.at(0)?.address,
+              rewardPoint: rewardPoint ?? undefined,
             };
           });
         } catch (e) {

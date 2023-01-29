@@ -1,9 +1,9 @@
-import { SvgIcon } from "@mui/material";
+import { SvgIcon, SvgIconProps } from "@mui/material";
 import React from "react";
 
-function EmailIcon() {
+function EmailIcon(props: SvgIconProps) {
   return (
-    <SvgIcon>
+    <SvgIcon {...props}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="20"

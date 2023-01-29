@@ -38,7 +38,6 @@ const eventCardData = [
       "https://pinx.layer3.xyz/ipfs/QmfD9H662bi5fKMsYqFV1bw2BzjcWjd2MitJG3J1zXaaG3",
     progress: 10,
   },
-
   {
     type: "collection",
     title: "Beyond Ethereum ⛓️",

@@ -45,7 +45,7 @@ export function useTicketQuery({
           completed: completed ?? undefined,
           participants: participants?.map((e) => {
             return {
-              name: e.name,
+              name: e.name ?? undefined,
               profileImageUrl: e.profileImageUrl ?? undefined,
             };
           }),
@@ -93,7 +93,7 @@ export function useTicketQuery({
           },
           winners: winners?.map((e) => {
             return {
-              name: e.name,
+              name: e.name ?? undefined,
             };
           }),
         };

@@ -18,12 +18,10 @@ export async function getStaticProps() {
 }
 
 const Explore = (props: AppProps) => {
-  const { ticketData, ticketDataLoading } = useTicketsQuery();
+  const { ticketsData, ticketsDataLoading } = useTicketsQuery();
   const [value, setValue] = useState("1");
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
-
-  console.log(ticketData);
 
   return (
     <>
@@ -82,7 +80,7 @@ const Explore = (props: AppProps) => {
                 ></Divider>
                 <TabPanel value={"1"}>
                   <Box>
-                    {ticketDataLoading && (
+                    {ticketsDataLoading && (
                       <Grid
                         container
                         sx={{ flex: 1 }}
@@ -107,14 +105,14 @@ const Explore = (props: AppProps) => {
                         </Grid>
                       </Grid>
                     )}
-                    {ticketData && (
+                    {ticketsData && (
                       <Grid
                         container
                         sx={{ flex: 1 }}
                         columnSpacing={2}
                         rowSpacing={1}
                       >
-                        {ticketData?.tickets?.map((x, index) => {
+                        {ticketsData?.tickets?.map((x, index) => {
                           return (
                             <Grid key={index} item sm={12} md={12} lg={6}>
                               <EventCollectionCard
@@ -137,7 +135,7 @@ const Explore = (props: AppProps) => {
                 </TabPanel>
                 <TabPanel value={"2"}>
                   <Box>
-                    {ticketDataLoading && (
+                    {ticketsDataLoading && (
                       <Grid
                         container
                         sx={{ flex: 1 }}
@@ -162,14 +160,14 @@ const Explore = (props: AppProps) => {
                         </Grid>
                       </Grid>
                     )}
-                    {ticketData && (
+                    {ticketsData && (
                       <Grid
                         container
                         sx={{ flex: 1 }}
                         columnSpacing={2}
                         rowSpacing={1}
                       >
-                        {ticketData?.tickets?.map((x, index) => {
+                        {ticketsData?.tickets?.map((x, index) => {
                           return (
                             <Grid key={index} item sm={12} md={12} lg={6}>
                               <EventCollectionCard

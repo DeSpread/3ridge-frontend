@@ -57,6 +57,7 @@ export type User = {
   name?: string;
   email?: string;
   profileImageUrl?: string;
+  rewardPoint?: number;
 };
 
 export type GoogleLoggedInInfo = {
@@ -86,13 +87,15 @@ export type FCFSRewardContext = {
   limitNumber: number;
   beginTime: string;
   untilTime: string;
+  rewardUnit: string;
+  rewardAmount: number;
 };
 
 export type Ticket = {
   title?: string;
   description?: string;
   completed?: boolean;
-  participants?: { name: string; profileImageUrl?: string }[];
+  participants?: { name?: string; profileImageUrl?: string }[];
   quests?: Quest[];
   rewardPolicy?: {
     context?: FCFSRewardContext | undefined;

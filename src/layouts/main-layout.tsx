@@ -96,7 +96,11 @@ const MainLayout = (props: MainLayoutProps) => {
                   contentsBtnOnClick={() => {}}
                   achievementsBtnOnClick={() => {}}
                   communitiesBtnOnClick={() => {}}
-                  leaderBoardBtnOnClick={() => {}}
+                  leaderBoardBtnOnClick={async (e) => {
+                    showLoading();
+                    await router.push(`/leaderboard`);
+                    closeLoading();
+                  }}
                 ></NavbarButtonSet>
                 {isLoggedIn ? (
                   <NavbarAvatar

@@ -2,7 +2,7 @@ import { GET_ALL_TICKETS } from "../apollo/query";
 import { useQuery } from "@apollo/client";
 
 export function useTicketsQuery() {
-  const { data: ticketData, loading: ticketDataLoading } =
+  const { data: ticketsData, loading: ticketsDataLoading } =
     useQuery(GET_ALL_TICKETS);
-  return { ticketData, ticketDataLoading };
+  return { ticketsData, ticketsDataLoading };
 }
