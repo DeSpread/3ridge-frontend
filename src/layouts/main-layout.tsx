@@ -95,7 +95,11 @@ const MainLayout = (props: MainLayoutProps) => {
                   }}
                   contentsBtnOnClick={() => {}}
                   achievementsBtnOnClick={() => {}}
-                  communitiesBtnOnClick={() => {}}
+                  communitiesBtnOnClick={async (e) => {
+                    showLoading();
+                    await router.push(`/projects`);
+                    closeLoading();
+                  }}
                   leaderBoardBtnOnClick={async (e) => {
                     showLoading();
                     await router.push(`/leaderboard`);

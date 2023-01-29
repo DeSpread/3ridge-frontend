@@ -172,7 +172,10 @@ const Leaderboard = () => {
                     <Box>
                       <Typography variant={"h6"}>Your ranking</Typography>
                     </Box>
-                    <RankCard user={userData} rank={userRank}></RankCard>
+                    <RankCard
+                      user={userData}
+                      rank={findUserRank(userData._id)}
+                    ></RankCard>
                   </Stack>
                 )}
               </Box>

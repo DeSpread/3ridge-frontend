@@ -1,0 +1,47 @@
+[
+  {
+    "id": "bnb",
+    "name": "BNB Chain",
+    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/logo/bsc-logo.png?optimizer=image&width=200&quality=100"
+  },
+  {
+    "id": "polygon",
+    "name": "Polygon",
+    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/1635133810/1635133810-logo-1635133810.jpeg?optimizer=image&width=200&quality=100"
+  },
+  {
+    "id": "solana",
+    "name": "Solana",
+    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/1643707204/1643707204-logo-1643707204.png?optimizer=image&width=200&quality=100"
+  },
+  {
+    "id": "1Inch",
+    "name": "1Inch Network",
+    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/logo/1inch-logo.jpg?optimizer=image&width=200&quality=100"
+  },
+  {
+    "id": "dodo",
+    "name": "DODO",
+    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/dodo/dodo-logo-1644892328.png?optimizer=image&width=200&quality=100"
+  },
+  {
+    "id": "alpaca",
+    "name": "Alpaca Finance",
+    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/logo/alpaca-icon.png?optimizer=image&width=200&quality=100"
+  },
+  {
+    "id": "stepn",
+    "name": "STEPN",
+    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/stepn/stepn-logo-1643243094.png?optimizer=image&width=200&quality=100"
+  },
+  {
+    "id": "mango",
+    "name": "Mango",
+    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/1643253697/1643253697-logo-1643253697.png?optimizer=image&width=200&quality=100"
+  },
+  {
+    "id": "file",
+    "name": "Filecoin",
+    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/1644878091/1644878091-logo-1644878090.png?optimizer=image&width=200&quality=100"
+  }
+]
