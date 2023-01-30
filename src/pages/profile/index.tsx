@@ -14,7 +14,7 @@ import ProfileEditDialog from "./dialog/profile-edit-dialog";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useLogin } from "../../provider/login/login-provider";
 import {
-  EmailSignUpParams,
+  EmailSignUpEventParams,
   MAIL_VERIFY,
   MouseEventWithParam,
   MouseEventWithStateParam,
@@ -290,7 +290,7 @@ const Profile = (props: AppProps) => {
       <ConnectEmailDialog
         open={openConnectEmailDialog}
         onClickSendVerification={async (e) => {
-          const myEvent = e as MouseEventWithParam<EmailSignUpParams>;
+          const myEvent = e as MouseEventWithParam<EmailSignUpEventParams>;
           const { email } = myEvent.params;
           try {
             showLoading();

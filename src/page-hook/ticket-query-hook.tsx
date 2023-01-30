@@ -25,6 +25,7 @@ export function useTicketQuery({
         },
       });
       const {
+        _id,
         title,
         description,
         completed,
@@ -40,6 +41,7 @@ export function useTicketQuery({
       setTicketData((prevState) => {
         return {
           ...prevState,
+          _id: _id ?? undefined,
           title: title ?? undefined,
           description: description ?? undefined,
           completed: completed ?? undefined,

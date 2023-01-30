@@ -20,7 +20,7 @@ import { useAlert } from "../provider/alert/alert-provider";
 import { useSignedUserQuery } from "../page-hook/user-query-hook";
 import { useLoading } from "../provider/loading/loading-provider";
 import {
-  EmailSignUpParams,
+  EmailSignUpEventParams,
   MAIL_VERIFY,
   MouseEventWithParam,
   Z_INDEX_OFFSET,
@@ -247,7 +247,7 @@ const MainLayout = (props: MainLayoutProps) => {
           setSignUpWithEmailVisible(false);
         }}
         onSignInWithEmailClicked={(e) => {
-          const myEvent = e as MouseEventWithParam<EmailSignUpParams>;
+          const myEvent = e as MouseEventWithParam<EmailSignUpEventParams>;
           const { email, password } = myEvent.params;
           showLoading();
           emailSignIn(

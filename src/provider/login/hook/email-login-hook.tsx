@@ -1,5 +1,5 @@
 import {
-  EmailSignUpParams,
+  EmailSignUpEventParams,
   MAIL_VERIFY,
   EmailLoggedInInfo,
   SuccessErrorCallback,
@@ -44,10 +44,10 @@ export function useEmailLogin() {
     }
   }, []);
 
-  const emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams, void> = (
-    params,
-    { onSuccess, onError }
-  ) => {
+  const emailVerify: SuccessErrorCallbackWithParam<
+    EmailSignUpEventParams,
+    void
+  > = (params, { onSuccess, onError }) => {
     (async () => {
       const { email, password } = params;
       try {
@@ -68,10 +68,10 @@ export function useEmailLogin() {
     })();
   };
 
-  const emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams, void> = (
-    params,
-    { onSuccess, onError }
-  ) => {
+  const emailSignIn: SuccessErrorCallbackWithParam<
+    EmailSignUpEventParams,
+    void
+  > = (params, { onSuccess, onError }) => {
     (async () => {
       const { email, password } = params;
       try {
@@ -122,7 +122,7 @@ export function useEmailLogin() {
   };
 
   const resendEmailVerify: SuccessErrorCallbackWithParam<
-    EmailSignUpParams,
+    EmailSignUpEventParams,
     void
   > = (params, { onSuccess, onError }) => {
     (async () => {

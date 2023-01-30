@@ -2,7 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import MailTextField from "../molecules/mail-text-field";
 import { validateMail } from "../../util/validate-string";
 import SecondaryButton from "../atoms/secondary-button";
-import { EmailSignUpParams, MouseEventWithParam } from "../../type";
+import { EmailSignUpEventParams, MouseEventWithParam } from "../../type";
 import LinkTypography from "../atoms/link-typography";
 import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
 
@@ -40,7 +40,8 @@ const SendVerificationEmailForm = (props: SendVerificationEmailFormProps) => {
             <SecondaryButton
               disabled={!validateMail(mail)}
               onClick={(e) => {
-                const myEvent = {} as MouseEventWithParam<EmailSignUpParams>;
+                const myEvent =
+                  {} as MouseEventWithParam<EmailSignUpEventParams>;
                 myEvent.params = {
                   email: mail,
                   password: "",

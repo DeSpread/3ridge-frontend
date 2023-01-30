@@ -3,7 +3,7 @@ import { Stack, Typography } from "@mui/material";
 import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
 import SecondaryButton from "../../../components/atoms/secondary-button";
 import LinkTypography from "../../../components/atoms/link-typography";
-import { EmailSignUpParams, MouseEventWithParam } from "../../../type";
+import { EmailSignUpEventParams, MouseEventWithParam } from "../../../type";
 import { validateMail, validatePassword } from "../../../util/validate-string";
 import MailTextField from "../../../components/molecules/mail-text-field";
 import {
@@ -81,7 +81,8 @@ const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
             <SecondaryButton
               disabled={!isValidParams()}
               onClick={(e) => {
-                const myEvent = {} as MouseEventWithParam<EmailSignUpParams>;
+                const myEvent =
+                  {} as MouseEventWithParam<EmailSignUpEventParams>;
                 myEvent.params = {
                   email: mail,
                   password,

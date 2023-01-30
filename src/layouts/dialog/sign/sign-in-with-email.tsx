@@ -4,7 +4,7 @@ import { DefaultPasswordTextField } from "../../../components/molecules/password
 import React, { MouseEventHandler, useMemo, useState } from "react";
 import MailTextField from "../../../components/molecules/mail-text-field";
 import SecondaryButton from "../../../components/atoms/secondary-button";
-import { EmailSignUpParams, MouseEventWithParam } from "../../../type";
+import { EmailSignUpEventParams, MouseEventWithParam } from "../../../type";
 import { validateMail } from "../../../util/validate-string";
 
 type SignInWithEmailProps = SignDialogProps & {
@@ -42,7 +42,7 @@ const SignInWithDialogContent = (props: SignInWithEmailProps) => {
         <Stack spacing={2}>
           <SecondaryButton
             onClick={(e) => {
-              const myEvent = {} as MouseEventWithParam<EmailSignUpParams>;
+              const myEvent = {} as MouseEventWithParam<EmailSignUpEventParams>;
               myEvent.params = {
                 email: mail,
                 password,

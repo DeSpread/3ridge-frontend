@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import PrimaryCard from "../atoms/primary-card";
 import {
-  EmailSignUpParams,
+  EmailSignUpEventParams,
   MouseEventWithParam,
   QuizContent,
   QuizEventParam,

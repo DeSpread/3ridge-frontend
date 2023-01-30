@@ -68,7 +68,7 @@ export type EmailLoggedInInfo = {
   mail?: string;
 };
 
-export type EmailSignUpParams = {
+export type EmailSignUpEventParams = {
   email: string;
   password: string;
 };
@@ -92,6 +92,7 @@ export type FCFSRewardContext = {
 };
 
 export type Ticket = {
+  _id?: string;
   title?: string;
   description?: string;
   completed?: boolean;
@@ -129,4 +130,8 @@ export type QuizContent = {
 
 export type QuizEventParam = {
   correct: boolean;
+};
+
+export type TicketEventParam = {
+  ticket: Ticket;
 };

@@ -17,9 +17,9 @@ function CheckIcon(props: SvgIconProps) {
         <path
           d="M7 10L9.5 12.5L14 7.5"
           stroke="url(#paint0_linear_4542_2923)"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <defs>
           <linearGradient
@@ -30,8 +30,8 @@ function CheckIcon(props: SvgIconProps) {
             y2="12.5"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="white"></stop>
-            <stop offset="1" stop-color="white" stop-opacity="0.8"></stop>
+            <stop stopColor="white"></stop>
+            <stop offset="1" stopColor="white" stopOpacity="0.8"></stop>
           </linearGradient>
         </defs>
       </svg>

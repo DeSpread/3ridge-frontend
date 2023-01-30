@@ -20,6 +20,7 @@ import { TabContext, TabPanel } from "@mui/lab";
 import StyledTabs from "../../components/atoms/styled/styled-tabs";
 import StyledTab from "../../components/atoms/styled/styled-tab";
 import EventCollectionCard from "../../components/molecules/event-collection-card";
+import TicketsSection from "../../components/organisms/tickets-section";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -66,18 +67,12 @@ const Project = () => {
             container={true}
             sx={{
               background: "",
-              // height: "100%",
-              // paddingTop: 12,
-              // paddingBottom: 8,
             }}
-            // direction={"column"}
-            // alignItems={"center"}
             spacing={3}
           >
             <Grid item sx={{ background: "" }} lg={10}>
               <Stack
                 direction={"column"}
-                // justifyContent={"center"}
                 sx={{ background: "", height: "100%" }}
                 spacing={2}
               >
@@ -128,143 +123,13 @@ const Project = () => {
             </Grid>
           </Grid>
         </Stack>
-        {/*<Divider sx={{ borderStyle: "dashed" }}></Divider>*/}
-        <Box sx={{ maxWidth: "1200px", marginTop: 4 }}>
-          <Box sx={{}}>
-            <TabContext value={value}>
-              <Box
-                sx={{
-                  width: "100%",
-                  background: "",
-                }}
-              >
-                <StyledTabs
-                  centered
-                  value={value}
-                  onChange={(event: SyntheticEvent, newValue: string) => {
-                    setValue(newValue);
-                  }}
-                  aria-label="lab API tabs example"
-                >
-                  <StyledTab label="Available" value={"1"}></StyledTab>
-                  <StyledTab label="Missed" value={"2"}></StyledTab>
-                </StyledTabs>
-              </Box>
-              <Divider
-                sx={{ color: "divider", marginRight: 4, marginLeft: 4 }}
-              ></Divider>
-              <TabPanel value={"1"}>
-                <Box>
-                  {ticketsDataLoading && (
-                    <Grid
-                      container
-                      sx={{ flex: 1 }}
-                      columnSpacing={2}
-                      rowSpacing={1}
-                    >
-                      <Grid item sm={12} md={12} lg={6}>
-                        <Skeleton
-                          width={"552px"}
-                          height={"186px"}
-                          variant={"rounded"}
-                          animation={"wave"}
-                        />
-                      </Grid>
-                      <Grid item sm={12} md={12} lg={6}>
-                        <Skeleton
-                          width={"552px"}
-                          height={"186px"}
-                          variant={"rounded"}
-                          animation={"wave"}
-                        />
-                      </Grid>
-                    </Grid>
-                  )}
-                  {ticketsData && (
-                    <Grid
-                      container
-                      sx={{ flex: 1 }}
-                      columnSpacing={2}
-                      rowSpacing={1}
-                    >
-                      {ticketsData?.tickets?.map((x, index) => {
-                        return (
-                          <Grid key={index} item sm={12} md={12} lg={6}>
-                            <EventCollectionCard
-                              sx={{ margin: 1 }}
-                              title={x.title ?? undefined}
-                              questsCount={x.quests?.length}
-                              summary={x.description ?? undefined}
-                              onClick={async (e) => {
-                                showLoading();
-                                // await router.push("/event/1");
-                                closeLoading();
-                              }}
-                            ></EventCollectionCard>
-                          </Grid>
-                        );
-                      })}
-                    </Grid>
-                  )}
-                </Box>
-              </TabPanel>
-              <TabPanel value={"2"}>
-                <Box>
-                  {ticketsDataLoading && (
-                    <Grid
-                      container
-                      sx={{ flex: 1 }}
-                      columnSpacing={2}
-                      rowSpacing={1}
-                    >
-                      <Grid item sm={12} md={12} lg={6}>
-                        <Skeleton
-                          width={"552px"}
-                          height={"186px"}
-                          variant={"rounded"}
-                          animation={"wave"}
-                        />
-                      </Grid>
-                      <Grid item sm={12} md={12} lg={6}>
-                        <Skeleton
-                          width={"552px"}
-                          height={"186px"}
-                          variant={"rounded"}
-                          animation={"wave"}
-                        />
-                      </Grid>
-                    </Grid>
-                  )}
-                  {ticketsData && (
-                    <Grid
-                      container
-                      sx={{ flex: 1 }}
-                      columnSpacing={2}
-                      rowSpacing={1}
-                    >
-                      {ticketsData?.tickets?.map((x, index) => {
-                        return (
-                          <Grid key={index} item sm={12} md={12} lg={6}>
-                            <EventCollectionCard
-                              sx={{ margin: 1 }}
-                              title={x.title ?? undefined}
-                              questsCount={x.quests?.length}
-                              summary={x.description ?? undefined}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                // router.push("");
-                              }}
-                            ></EventCollectionCard>
-                          </Grid>
-                        );
-                      })}
-                    </Grid>
-                  )}
-                </Box>
-              </TabPanel>
-            </TabContext>
-          </Box>
-        </Box>
+        <TicketsSection
+          tickets={ticketsData}
+          loading={ticketsDataLoading}
+          onTicketClick={(e) => {
+            console.log(e);
+          }}
+        ></TicketsSection>
       </Stack>
     </>
   );
