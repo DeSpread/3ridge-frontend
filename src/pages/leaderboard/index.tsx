@@ -166,8 +166,8 @@ const Leaderboard = () => {
           <Box sx={{ minWidth: 800, background: "" }}>
             <Stack direction={"column"}>
               <Typography variant={"h4"}>Leaderboard</Typography>
-              <Box sx={{ marginTop: 5 }}>
-                {userData._id && (
+              {userData._id && (
+                <Box sx={{ marginTop: 5 }}>
                   <Stack direction={"column"} spacing={2}>
                     <Box>
                       <Typography variant={"h6"}>Your ranking</Typography>
@@ -177,8 +177,8 @@ const Leaderboard = () => {
                       rank={findUserRank(userData._id)}
                     ></RankCard>
                   </Stack>
-                )}
-              </Box>
+                </Box>
+              )}
               <Box sx={{ marginTop: 5 }}>
                 <Stack direction={"column"} spacing={2}>
                   <Box>
