@@ -25,6 +25,7 @@ export function useTicketQuery({
         },
       });
       const {
+        _id,
         title,
         description,
         completed,
@@ -40,12 +41,13 @@ export function useTicketQuery({
       setTicketData((prevState) => {
         return {
           ...prevState,
+          _id: _id ?? undefined,
           title: title ?? undefined,
           description: description ?? undefined,
           completed: completed ?? undefined,
           participants: participants?.map((e) => {
             return {
-              name: e.name,
+              name: e.name ?? undefined,
               profileImageUrl: e.profileImageUrl ?? undefined,
             };
           }),
@@ -93,7 +95,7 @@ export function useTicketQuery({
           },
           winners: winners?.map((e) => {
             return {
-              name: e.name,
+              name: e.name ?? undefined,
             };
           }),
         };

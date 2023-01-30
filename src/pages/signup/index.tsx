@@ -16,7 +16,7 @@ import {
 import { useAlert } from "../../provider/alert/alert-provider";
 import SignUpWithEmailForm from "./components/sign-up-with-email-form";
 import {
-  EmailSignUpParams,
+  EmailSignUpEventParams,
   MAIL_VERIFY,
   MouseEventWithParam,
   ObjectValues,
@@ -46,7 +46,7 @@ const Signup = () => {
   } = useLogin();
   const { showLoading, closeLoading } = useLoading();
   const { setShowSignInDialog } = useSignDialog();
-  const [signupParams, setSignUpParams] = useState<EmailSignUpParams>({
+  const [signupParams, setSignUpParams] = useState<EmailSignUpEventParams>({
     email: "",
     password: "",
   });
@@ -112,7 +112,8 @@ const Signup = () => {
           {formType === FORM_TYPE.WITH_EMAIL && (
             <SignUpWithEmailForm
               onClickSendVerification={(e) => {
-                const myEvent = e as MouseEventWithParam<EmailSignUpParams>;
+                const myEvent =
+                  e as MouseEventWithParam<EmailSignUpEventParams>;
                 showLoading();
                 emailVerify(myEvent.params, {
                   onSuccess: () => {
@@ -137,7 +138,7 @@ const Signup = () => {
                       showErrorAlert({ content: message });
                     } else if (error.message === MAIL_VERIFY.VERIFIED) {
                       const { email, password } =
-                        error.payload as EmailSignUpParams;
+                        error.payload as EmailSignUpEventParams;
                       emailSignIn(
                         { email, password },
                         {

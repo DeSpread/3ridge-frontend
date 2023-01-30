@@ -3,7 +3,7 @@ import { AppError, getErrorMessage } from "../../error/my-error";
 import { useMyGoogleLogin } from "./hook/my-google-login-hook";
 import { useWalletLogin } from "./hook/wallet-login-hook";
 import {
-  EmailSignUpParams,
+  EmailSignUpEventParams,
   GoogleLoggedInInfo,
   EmailLoggedInInfo,
   SuccessErrorCallback,
@@ -21,9 +21,12 @@ const LoginContext = createContext<{
   walletSignUp: SuccessErrorCallback<void>;
   isWalletLoggedIn: boolean;
   walletLoggedInInfo: WalletLoggedInInfo;
-  emailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams, void>;
-  emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpParams, void>;
-  resendEmailVerify: SuccessErrorCallbackWithParam<EmailSignUpParams, void>;
+  emailVerify: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
+  emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
+  resendEmailVerify: SuccessErrorCallbackWithParam<
+    EmailSignUpEventParams,
+    void
+  >;
   isMailLoggedIn: boolean;
   emailLoggedInInfo: EmailLoggedInInfo;
 }>({

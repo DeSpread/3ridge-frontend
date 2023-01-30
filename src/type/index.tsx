@@ -57,6 +57,7 @@ export type User = {
   name?: string;
   email?: string;
   profileImageUrl?: string;
+  rewardPoint?: number;
 };
 
 export type GoogleLoggedInInfo = {
@@ -67,7 +68,7 @@ export type EmailLoggedInInfo = {
   mail?: string;
 };
 
-export type EmailSignUpParams = {
+export type EmailSignUpEventParams = {
   email: string;
   password: string;
 };
@@ -86,13 +87,16 @@ export type FCFSRewardContext = {
   limitNumber: number;
   beginTime: string;
   untilTime: string;
+  rewardUnit: string;
+  rewardAmount: number;
 };
 
 export type Ticket = {
+  _id?: string;
   title?: string;
   description?: string;
   completed?: boolean;
-  participants?: { name: string; profileImageUrl?: string }[];
+  participants?: { name?: string; profileImageUrl?: string }[];
   quests?: Quest[];
   rewardPolicy?: {
     context?: FCFSRewardContext | undefined;
@@ -126,4 +130,8 @@ export type QuizContent = {
 
 export type QuizEventParam = {
   correct: boolean;
+};
+
+export type TicketEventParam = {
+  ticket: Ticket;
 };
