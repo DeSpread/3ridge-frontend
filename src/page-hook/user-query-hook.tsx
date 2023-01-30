@@ -76,6 +76,8 @@ const useSignedUserQuery = () => {
           setLoading(false);
         }
       })();
+    } else {
+      setUserData({});
     }
   }, [isMailLoggedIn]);
 
@@ -113,6 +115,8 @@ const useSignedUserQuery = () => {
           setLoading(false);
         }
       })();
+    } else {
+      setUserData({});
     }
   }, [isGoogleLoggedIn]);
 
@@ -149,6 +153,8 @@ const useSignedUserQuery = () => {
           setLoading(false);
         }
       })();
+    } else {
+      setUserData({});
     }
   }, [isWalletLoggedIn]);
 
