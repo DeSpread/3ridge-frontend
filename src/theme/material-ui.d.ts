@@ -17,3 +17,9 @@ declare module "@mui/material/styles/createPalette" {
     neutral: NeutralColor;
   }
 }
+
+declare module "@mui/material/styles/createPalette" {
+  export interface Palette {
+    neutral: NeutralColor;
+  }
+}

@@ -14,9 +14,18 @@ import { TimerSettings, useTimer } from "react-timer-hook";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { nFormatter } from "../../util/validate-string";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
-import { QuizQuestContext } from "../../type";
+import {
+  FollowQuestContext,
+  QUEST_POLICY_TYPE,
+  QuizQuestContext,
+  RetweetQuestContext,
+} from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/user-query-hook";
+import { useAlert } from "../../provider/alert/alert-provider";
+import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
+import { getErrorMessage } from "../../error/my-error";
+import { useLoading } from "../../provider/loading/loading-provider";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -136,16 +145,17 @@ const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
 };
 
 const Event = (props: AppProps) => {
-  const { userData } = useSignedUserQuery();
-  const { ticketData } = useTicketQuery({
+  const { userData, asyncUpdateSocialTwitter } = useSignedUserQuery();
+  const { ticketData, asyncVerifyTwitterFollowQuest } = useTicketQuery({
     userId: userData._id,
-    id: "63bfd87b73405e8b13784612", //router.query.id,
+    id: "63c4acac6b1f1cc14ebd9bd4", //router.query.id,
   });
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
-
-  // console.log(ticketData);
+  const { showErrorAlert, closeAlert } = useAlert();
+  const { asyncTwitterSignInPopUp } = useFirebaseAuth();
+  const { showLoading, closeLoading } = useLoading();
 
   return (
     <>
@@ -246,12 +256,75 @@ const Event = (props: AppProps) => {
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
-                      onVerifyBtnClicked={(e) => {}}
-                      onStartBtnClicked={(e) => {
-                        const quizQuestContext = quest.questPolicy
-                          ?.context as QuizQuestContext;
-                        setOpenQuizQuestContext(quizQuestContext);
-                        setOpenQuizQuestDialog(true);
+                      onVerifyBtnClicked={async (e) => {
+                        if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
+                        ) {
+                          try {
+                            await asyncVerifyTwitterFollowQuest(
+                              quest._id ?? ""
+                            );
+                          } catch (e) {
+                            console.log(e);
+                          }
+                        }
+                      }}
+                      onStartBtnClicked={async (e) => {
+                        if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.QUIZ
+                        ) {
+                          const quizQuestContext = quest.questPolicy
+                            ?.context as QuizQuestContext;
+                          setOpenQuizQuestContext(quizQuestContext);
+                          setOpenQuizQuestDialog(true);
+                        } else if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
+                        ) {
+                          try {
+                            if (!userData?.userSocial?.twitterId) {
+                              showLoading();
+                              const res = await asyncTwitterSignInPopUp();
+                              await asyncUpdateSocialTwitter(res);
+                              closeLoading();
+                            }
+                            const followQuestContext = quest.questPolicy
+                              .context as FollowQuestContext;
+                            window.open(
+                              `https://twitter.com/intent/follow?screen_name=${followQuestContext.username}`,
+                              "twitter",
+                              "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                            );
+                          } catch (e) {
+                            closeLoading();
+                            showErrorAlert({ content: getErrorMessage(e) });
+                          }
+                        } else if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
+                        ) {
+                          try {
+                            if (!userData?.userSocial?.twitterId) {
+                              showLoading();
+                              const res = await asyncTwitterSignInPopUp();
+                              await asyncUpdateSocialTwitter(res);
+                              closeLoading();
+                            }
+                            const retweetQuestContext = quest.questPolicy
+                              .context as RetweetQuestContext;
+                            console.log(retweetQuestContext);
+                            window.open(
+                              `https://twitter.com/intent/retweet?tweet_id=${retweetQuestContext.tweetId}`,
+                              "twitter",
+                              "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                            );
+                          } catch (e) {
+                            closeLoading();
+                            showErrorAlert({ content: getErrorMessage(e) });
+                          }
+                        }
                       }}
                       autoVerified={
                         quest.questPolicy?.questPolicy === QuestPolicyType.Quiz
@@ -330,7 +403,7 @@ const Event = (props: AppProps) => {
                           {ticketData?.rewardPolicy?.context?.rewardAmount}
                         </Typography>
                         <Typography variant={"h6"}>
-                          {ticketData?.rewardPolicy?.context?.rewardUnit.toUpperCase()}
+                          {ticketData?.rewardPolicy?.context?.rewardUnit?.toUpperCase()}
                         </Typography>
                       </Stack>
                     </Stack>

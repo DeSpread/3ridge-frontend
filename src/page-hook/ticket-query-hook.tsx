@@ -1,8 +1,9 @@
-import { GET_TICKET_BY_ID } from "../apollo/query";
+import { GET_TICKET_BY_ID, VERIFY_TWITTER_FOLLOW_QUEST } from "../apollo/query";
 import { client } from "../apollo/client";
 import { useEffect, useState } from "react";
 import { Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
+import { useMutation } from "@apollo/client";
 
 export function useTicketQuery({
   userId,
@@ -12,7 +13,9 @@ export function useTicketQuery({
   id?: string;
 }) {
   const [ticketData, setTicketData] = useState<Ticket>({});
+  const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const typeParseHelper = TypeParseHelper.getInstance();
+
   useEffect(() => {
     (async () => {
       if (!id) {
@@ -33,6 +36,7 @@ export function useTicketQuery({
         quests,
         rewardPolicy,
         winners,
+        imageUrl,
       } = data.ticketById;
       const _rewardPolicy = typeParseHelper.parseRewardPolicy(
         rewardPolicy?.context ?? undefined,
@@ -51,6 +55,7 @@ export function useTicketQuery({
               profileImageUrl: e.profileImageUrl ?? undefined,
             };
           }),
+          imageUrl: imageUrl ?? undefined,
           quests: quests?.map((e) => {
             // console.log("aaa", userId);
             // let isComplete = false;
@@ -63,6 +68,7 @@ export function useTicketQuery({
             //       .includes(userId) ?? false;
             // }
             return {
+              _id: e._id ?? undefined,
               title: e.title ?? undefined,
               description: e.description ?? undefined,
               questPolicy: {
@@ -102,5 +108,17 @@ export function useTicketQuery({
       });
     })();
   }, [id]);
-  return { ticketData };
+
+  const asyncVerifyTwitterFollowQuest = async (questId: string) => {
+    if (questId && userId) {
+      const res = await verifyTwitterFollowQuest({
+        variables: {
+          questId,
+          userId,
+        },
+      });
+    }
+  };
+
+  return { ticketData, asyncVerifyTwitterFollowQuest };
 }

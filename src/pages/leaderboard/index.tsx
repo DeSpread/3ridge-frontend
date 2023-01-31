@@ -67,7 +67,6 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
           sx={{
             width: 32,
             height: 32,
-            //@ts-ignore
             color: (theme) => theme.palette.neutral["500"],
           }}
         />

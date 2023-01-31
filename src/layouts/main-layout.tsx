@@ -1,8 +1,7 @@
-import { AppBar, Box, Stack, Toolbar } from "@mui/material";
+import { AppBar, Box, Stack, Toolbar, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
-import { ReactNode, useState } from "react";
-import NavbarButtonSet from "../components/molecules/navbar-button-set";
+import { MouseEventHandler, ReactNode, useState } from "react";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
 import PrimaryButton from "../components/atoms/primary-button";
@@ -26,12 +25,37 @@ import {
   Z_INDEX_OFFSET,
 } from "../type";
 import { useSignDialog } from "../page-hook/sign-dialog-hook";
+import NavbarButton from "../components/atoms/navbar-button";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
   footerComponent?: ReactNode;
   disableNavButtonSet?: boolean;
 };
+
+type NavbarButtonSetProps = PropsWithChildren & {
+  bountiesBtnOnClick: MouseEventHandler;
+  contentsBtnOnClick: MouseEventHandler;
+  achievementsBtnOnClick: MouseEventHandler;
+  communitiesBtnOnClick: MouseEventHandler;
+  leaderBoardBtnOnClick: MouseEventHandler;
+};
+
+const NavbarButtonSet = ({
+  bountiesBtnOnClick,
+  communitiesBtnOnClick,
+  leaderBoardBtnOnClick,
+}: NavbarButtonSetProps) => {
+  return (
+    <Stack direction={"row"}>
+      <NavbarButton onClick={bountiesBtnOnClick}>Events</NavbarButton>
+      <NavbarButton onClick={communitiesBtnOnClick}>Projects</NavbarButton>
+      <NavbarButton onClick={leaderBoardBtnOnClick}>LeaderBoard</NavbarButton>
+    </Stack>
+  );
+};
+
+// const myFont = localFont({ src: "../../public/LINESeedKR-Rg.woff" });
 
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
@@ -49,6 +73,7 @@ const MainLayout = (props: MainLayoutProps) => {
     <Box sx={{ display: "flex" }}>
       {/*--- Navbar ---*/}
       <AppBar
+        // className={myFont.className}
         component="nav"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.NAV_LAYOUT,
@@ -71,20 +96,35 @@ const MainLayout = (props: MainLayoutProps) => {
             justifyContent={"space-between"}
             alignItems={"center"}
           >
-            <img
-              width={160}
-              src={
-                "https://despread.s3.ap-northeast-2.amazonaws.com/logo/despread_studio_white_logo.png"
-              }
-              alt={"DeSpread"}
-              style={{
-                cursor: "pointer",
-              }}
+            <Box
               onClick={(e) => {
                 e.preventDefault();
                 router.push("/").then();
               }}
-            ></img>
+            >
+              <Typography
+                variant={"h4"}
+                sx={{
+                  cursor: "pointer",
+                }}
+              >
+                3ridge
+              </Typography>
+            </Box>
+            {/*<img*/}
+            {/*  width={160}*/}
+            {/*  src={*/}
+            {/*    "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/logo/logo2.png"*/}
+            {/*  }*/}
+            {/*  alt={"DeSpread"}*/}
+            {/*  style={{*/}
+            {/*    cursor: "pointer",*/}
+            {/*  }}*/}
+            {/*  onClick={(e) => {*/}
+            {/*    e.preventDefault();*/}
+            {/*    router.push("/").then();*/}
+            {/*  }}*/}
+            {/*></img>*/}
             {!props.disableNavButtonSet && (
               <Stack direction={"row"} alignItems={"center"} spacing={1}>
                 <NavbarButtonSet
@@ -135,7 +175,9 @@ const MainLayout = (props: MainLayoutProps) => {
                   <Stack direction={"row"} alignItems={"center"} spacing={2}>
                     <PrimaryButton
                       size={"small"}
-                      sx={{ width: 100 }}
+                      sx={{
+                        width: 100,
+                      }}
                       onClick={(e) => {
                         e.preventDefault();
                         setShowSignInDialog(true);
@@ -145,7 +187,9 @@ const MainLayout = (props: MainLayoutProps) => {
                     </PrimaryButton>
                     <SecondaryButton
                       size={"small"}
-                      sx={{ width: 100 }}
+                      sx={{
+                        width: 100,
+                      }}
                       onClick={async (e) => {
                         showLoading();
                         await router.push("/signup");

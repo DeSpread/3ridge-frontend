@@ -1,24 +1,31 @@
 import { Button, ButtonProps } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 const SecondaryButton = (props: ButtonProps) => {
+  const theme = useTheme();
+
   return (
     <Button
       {...props}
       color={"secondary"}
       variant={"contained"}
       sx={{
-        ...props.sx,
-        borderColor: "#ffff00",
-        boxShadow: "0 0 0 1px #ffff00",
+        color: theme.palette.neutral[100],
+        borderColor: theme.palette.neutral[100],
+        borderWidth: 2,
+        borderStyle: "solid",
+        backgroundColor: theme.palette.neutral[900],
         "&:hover": {
-          transition: "box-shadow 0.1s ease-out 0s",
-          boxShadow: "0 0 0 3px #ffff00",
-          borderColor: "#ffff00",
-          transitionDuration: "0.1s",
+          transition: "all 0.1s ease-out 0s",
+          borderColor: "transparent",
+          backgroundColor: theme.palette.secondary.main,
+          transitionDuration: "0.2s",
           transitionDelay: "0s",
           transitionTimingFunction: "ease-out",
-          transitionProperty: "box-shadow",
+          transitionProperty: "all",
+          color: theme.palette.neutral[900],
         },
+        ...props.sx,
       }}
     >
       {props.children}

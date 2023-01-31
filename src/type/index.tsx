@@ -2,6 +2,11 @@ import { AppError } from "../error/my-error";
 import React from "react";
 import { SvgIconProps } from "@mui/material";
 
+export type _SuccessErrorCallback<T> = {
+  onSuccess: (res: T) => void;
+  onError: (error: Error) => void;
+};
+
 export type SuccessErrorCallback<T> = ({
   onSuccess,
   onError,
@@ -49,6 +54,8 @@ export const REWARD_POLICY_TYPE = {
 
 export const QUEST_POLICY_TYPE = {
   QUIZ: "QUIZ",
+  VERIFY_TWITTER_RETWEET: "VERIFY_TWITTER_RETWEET",
+  VERIFY_TWITTER_FOLLOW: "VERIFY_TWITTER_FOLLOW",
 };
 
 export type User = {
@@ -58,6 +65,7 @@ export type User = {
   email?: string;
   profileImageUrl?: string;
   rewardPoint?: number;
+  userSocial?: { twitterId: string };
 };
 
 export type GoogleLoggedInInfo = {
@@ -98,6 +106,7 @@ export type Ticket = {
   completed?: boolean;
   participants?: { name?: string; profileImageUrl?: string }[];
   quests?: Quest[];
+  imageUrl?: string;
   rewardPolicy?: {
     context?: FCFSRewardContext | undefined;
     rewardPolicyType?: string;
@@ -108,14 +117,30 @@ export type Ticket = {
 };
 
 export type Quest = {
+  _id?: string;
   title?: string;
   description?: string;
   questPolicy?: {
-    context?: QuizQuestContext | undefined;
+    context?:
+      | QuizQuestContext
+      | RetweetQuestContext
+      | FollowQuestContext
+      | undefined;
     questPolicy?: string;
   };
   completedUsers?: User[];
   isComplete?: boolean;
+};
+
+export type RetweetQuestContext = {
+  tweetId: string;
+  twitterUrl: string;
+  username: string;
+};
+
+export type FollowQuestContext = {
+  username: string;
+  twitterUrl: string;
 };
 
 export type QuizQuestContext = {

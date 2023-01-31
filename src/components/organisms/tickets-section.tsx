@@ -1,7 +1,18 @@
-import { Box, Divider, Grid, Skeleton } from "@mui/material";
+import {
+  Box,
+  ButtonProps,
+  Divider,
+  Grid,
+  Skeleton,
+  Stack,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 import StyledTabs from "../atoms/styled/styled-tabs";
 import React, {
+  CSSProperties,
   MouseEventHandler,
   PropsWithChildren,
   SyntheticEvent,
@@ -11,19 +22,87 @@ import StyledTab from "../atoms/styled/styled-tab";
 import EventCollectionCard from "../molecules/event-collection-card";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { MouseEventWithParam, Ticket, TicketEventParam } from "../../type";
+import PrimaryButton from "../atoms/primary-button";
+import { useTheme } from "@mui/material/styles";
+import TicketCard from "../molecules/ticket-card";
 
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
   loading?: boolean;
   onTicketClick?: MouseEventHandler;
+  sx?: CSSProperties;
+};
+
+type TabButtonProps = ButtonProps & {
+  index: number;
+  onChange?: MouseEventHandler;
+};
+
+const TabButton = (props: TabButtonProps) => {
+  const theme = useTheme();
+  return (
+    <PrimaryButton
+      {...props}
+      sx={{
+        ":disabled": {
+          backgroundColor: theme.palette.secondary.main,
+          color: theme.palette.neutral[900],
+        },
+        ...props.sx,
+      }}
+      onClick={(e) => {
+        const myEvent = {} as MouseEventWithParam<{ index: number }>;
+        myEvent.params = {
+          index: props.index,
+        };
+        props.onChange?.(myEvent);
+      }}
+      size={props.size}
+    ></PrimaryButton>
+  );
+};
+
+type TabButtonGroupProps = PropsWithChildren & {
+  onChange?: MouseEventHandler;
+};
+
+const TabButtonGroup = (props: TabButtonGroupProps) => {
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const TITLES = ["Available", "Complete", "Missed"];
+  return (
+    <Stack direction={"row"} spacing={2}>
+      {TITLES.map((e, index) => {
+        return (
+          <TabButton
+            key={index}
+            sx={{
+              paddingLeft: 3,
+              paddingRight: 3,
+            }}
+            index={index}
+            onChange={(e) => {
+              const myEvent = e as MouseEventWithParam<{ index: number }>;
+              setSelectedIdx(myEvent.params.index);
+              props?.onChange?.(myEvent);
+            }}
+            disabled={selectedIdx === index}
+            size={"small"}
+          >
+            {e}
+          </TabButton>
+        );
+      })}
+    </Stack>
+  );
 };
 
 const TicketsSection = (props: TicketSectionProps) => {
-  const [tabValue, setTabValue] = useState("1");
+  const [tabValue, setTabValue] = useState(0);
   const { showLoading, closeLoading } = useLoading();
   const { tickets, loading, onTicketClick } = props;
+  const theme = useTheme();
 
-  const onEventCardClick = (ticket: Ticket) => {
+  const onTicketCardClick = (ticket: Ticket) => {
     const myEvent = {} as MouseEventWithParam<TicketEventParam>;
     myEvent.params = {
       ticket,
@@ -32,137 +111,46 @@ const TicketsSection = (props: TicketSectionProps) => {
   };
 
   return (
-    <Box sx={{ maxWidth: "1200px", marginTop: 4 }}>
-      <Box sx={{}}>
-        <TabContext value={tabValue}>
-          <Box
-            sx={{
-              width: "100%",
-              background: "",
-            }}
-          >
-            <StyledTabs
-              centered
-              value={tabValue}
-              onChange={(event: SyntheticEvent, newValue: string) => {
-                setTabValue(newValue);
-              }}
-              aria-label="lab API tabs example"
-            >
-              <StyledTab label="Available" value={"1"}></StyledTab>
-              <StyledTab label="Missed" value={"2"}></StyledTab>
-            </StyledTabs>
-          </Box>
-          <Divider
-            sx={{ color: "divider", marginRight: 4, marginLeft: 4 }}
-          ></Divider>
-          <TabPanel value={"1"}>
-            <Box>
-              {loading && (
-                <Grid
-                  container
-                  sx={{ flex: 1 }}
-                  columnSpacing={2}
-                  rowSpacing={1}
-                >
-                  <Grid item sm={12} md={12} lg={6}>
-                    <Skeleton
-                      width={"552px"}
-                      height={"186px"}
-                      variant={"rounded"}
-                      animation={"wave"}
-                    />
-                  </Grid>
-                  <Grid item sm={12} md={12} lg={6}>
-                    <Skeleton
-                      width={"552px"}
-                      height={"186px"}
-                      variant={"rounded"}
-                      animation={"wave"}
-                    />
-                  </Grid>
+    <Box
+      sx={{
+        ...props.sx,
+      }}
+    >
+      <TabButtonGroup
+        onChange={(e) => {
+          const myEvent = e as MouseEventWithParam<{ index: number }>;
+          setTabValue(myEvent.params.index);
+        }}
+      ></TabButtonGroup>
+      <Box sx={{ marginTop: 6 }}>
+        <Grid container spacing={2}>
+          {loading &&
+            [1, 2, 3, 4].map((e) => {
+              return (
+                <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
+                  <Skeleton
+                    // width={"552px"}
+                    height={"480px"}
+                    variant={"rounded"}
+                    animation={"wave"}
+                  />
                 </Grid>
-              )}
-              {tickets && (
-                <Grid
-                  container
-                  sx={{ flex: 1 }}
-                  columnSpacing={2}
-                  rowSpacing={1}
-                >
-                  {tickets?.map((x, index) => {
-                    return (
-                      <Grid key={index} item sm={12} md={12} lg={6}>
-                        <EventCollectionCard
-                          sx={{ margin: 1 }}
-                          title={x.title ?? undefined}
-                          questsCount={x.quests?.length}
-                          summary={x.description ?? undefined}
-                          onClick={async (e) => {
-                            onEventCardClick(x);
-                          }}
-                        ></EventCollectionCard>
-                      </Grid>
-                    );
-                  })}
+              );
+            })}
+          {!loading &&
+            tickets?.map((ticket, index) => {
+              return (
+                <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
+                  <TicketCard
+                    ticket={ticket}
+                    onClick={(e) => {
+                      onTicketCardClick(ticket);
+                    }}
+                  ></TicketCard>
                 </Grid>
-              )}
-            </Box>
-          </TabPanel>
-          <TabPanel value={"2"}>
-            <Box>
-              {loading && (
-                <Grid
-                  container
-                  sx={{ flex: 1 }}
-                  columnSpacing={2}
-                  rowSpacing={1}
-                >
-                  <Grid item sm={12} md={12} lg={6}>
-                    <Skeleton
-                      width={"552px"}
-                      height={"186px"}
-                      variant={"rounded"}
-                      animation={"wave"}
-                    />
-                  </Grid>
-                  <Grid item sm={12} md={12} lg={6}>
-                    <Skeleton
-                      width={"552px"}
-                      height={"186px"}
-                      variant={"rounded"}
-                      animation={"wave"}
-                    />
-                  </Grid>
-                </Grid>
-              )}
-              {tickets && (
-                <Grid
-                  container
-                  sx={{ flex: 1 }}
-                  columnSpacing={2}
-                  rowSpacing={1}
-                >
-                  {tickets?.map((x, index) => {
-                    return (
-                      <Grid key={index} item sm={12} md={12} lg={6}>
-                        <EventCollectionCard
-                          sx={{ margin: 1 }}
-                          title={x.title ?? undefined}
-                          questsCount={x.quests?.length}
-                          summary={x.description ?? undefined}
-                          onClick={async (e) => {
-                            onEventCardClick(x);
-                          }}
-                        ></EventCollectionCard>
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              )}
-            </Box>
-          </TabPanel>
-        </TabContext>
+              );
+            })}
+        </Grid>
       </Box>
     </Box>
   );

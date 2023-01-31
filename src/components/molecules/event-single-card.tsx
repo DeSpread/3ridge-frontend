@@ -1,7 +1,5 @@
 import { Box, Card, CardContent, Chip, Stack, Typography } from "@mui/material";
 import { CSSProperties, MouseEventHandler, PropsWithChildren } from "react";
-import CommunityChip from "../atoms/community-chip";
-import XpChip from "../atoms/styled/xp-chip";
 
 type BountySingleCardProps = PropsWithChildren & {
   sx?: CSSProperties;
@@ -60,17 +58,6 @@ const EventSingleCard = (props: BountySingleCardProps) => {
                     spacing={2}
                     sx={{ background: "" }}
                   >
-                    {/*<Stack direction={"row"} spacing={1}>*/}
-                    {/*  <Stack direction={"row"} spacing={1}>*/}
-                    {/*    <Chip label={"4 bounties"} />*/}
-                    {/*    {props.community && (*/}
-                    {/*      <CommunityChip*/}
-                    {/*        name={props.community.name}*/}
-                    {/*        thumbnailUrl={props.community.thumbnailUrl}*/}
-                    {/*      />*/}
-                    {/*    )}*/}
-                    {/*  </Stack>*/}
-                    {/*</Stack>*/}
                     <Stack
                       direction={"column"}
                       sx={{ background: "" }}

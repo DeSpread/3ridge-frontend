@@ -8,6 +8,7 @@ import React, {
 import Backdrop from "@mui/material/Backdrop";
 import { CircularProgress, LinearProgress } from "@mui/material";
 import { Z_INDEX_OFFSET } from "../../type";
+import { useTheme } from "@mui/material/styles";
 
 const LoadingContext = createContext<{
   showLoading: () => void;
@@ -20,6 +21,7 @@ const LoadingContext = createContext<{
 export const LoadingProvider = ({ children }: PropsWithChildren) => {
   const [open, setOpen] = useState(false);
   const refBodyStyleOverflow = React.useRef("");
+  const theme = useTheme();
 
   useEffect(() => {
     refBodyStyleOverflow.current = document.body.style.overflow;
@@ -57,8 +59,14 @@ export const LoadingProvider = ({ children }: PropsWithChildren) => {
         open={open}
       >
         <LinearProgress
-          color={"secondary"}
-          sx={{ width: "100%", position: "absolute", top: 0, borderRadius: 0 }}
+          color={"warning"}
+          sx={{
+            width: "100%",
+            position: "absolute",
+            top: 0,
+            borderRadius: 0,
+            height: "2px",
+          }}
         ></LinearProgress>
       </Backdrop>
     </LoadingContext.Provider>
