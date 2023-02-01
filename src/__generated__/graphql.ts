@@ -14,6 +14,11 @@ export type Scalars = {
   Float: number;
 };
 
+export type AptosRequestClaimNftResponse = {
+  __typename?: 'AptosRequestClaimNFTResponse';
+  txHash: Scalars['String'];
+};
+
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   accessToken?: Maybe<Scalars['String']>;
@@ -27,6 +32,7 @@ export enum CategoryType {
 }
 
 export enum ChainType {
+  Aptos = 'APTOS',
   Evm = 'EVM'
 }
 
@@ -47,6 +53,7 @@ export type Mutation = {
   removeProject: Project;
   removeTicketById: Ticket;
   removeUserByName: User;
+  requestClaimNFT: AptosRequestClaimNftResponse;
   updateProject: Project;
   updateTicketById: Ticket;
   updateUserByName: User;
@@ -109,6 +116,11 @@ export type MutationRemoveTicketByIdArgs = {
 
 export type MutationRemoveUserByNameArgs = {
   name: Scalars['String'];
+};
+
+
+export type MutationRequestClaimNftArgs = {
+  receiverAddress: Scalars['String'];
 };
 
 
