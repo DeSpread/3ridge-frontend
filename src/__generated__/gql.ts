@@ -27,7 +27,9 @@ const documents = {
     "\n  query AllTickets {\n    tickets {\n      _id\n      completed\n      description\n      participants {\n        name\n        profileImageUrl\n      }\n      imageUrl\n      quests {\n        _id\n        title\n        description\n        questPolicy {\n          context\n          questPolicy\n        }\n        # completedUsers {\n        #   _id\n        #   name\n        #   profileImageUrl\n        #   email\n        #   wallets {\n        #     address\n        #     chain\n        #   }\n        # }\n      }\n      rewardPolicy {\n        context\n        rewardPolicyType\n      }\n      title\n      winners {\n        name\n      }\n    }\n  }\n": types.AllTicketsDocument,
     "\n  query GetTicketById($id: String!) {\n    ticketById(id: $id) {\n      _id\n      completed\n      description\n      participants {\n        name\n        profileImageUrl\n      }\n      imageUrl\n      quests {\n        _id\n        title\n        description\n        questPolicy {\n          context\n          questPolicy\n        }\n        # completedUsers {\n        #  _id\n        #  name\n        #  profileImageUrl\n        #  email\n        #  wallets {\n        #  address\n        #  chain\n        #  }\n        # }\n      }\n      rewardPolicy {\n        context\n        rewardPolicyType\n      }\n      title\n      winners {\n        name\n      }\n    }\n  }\n": types.GetTicketByIdDocument,
     "\n  mutation VerifyTwitterFollowQuest($questId: String!, $userId: String!) {\n    verifyTwitterFollowQuest(questId: $questId, userId: $userId) {\n      _id\n    }\n  }\n": types.VerifyTwitterFollowQuestDocument,
-    "\n  query IsFollowTwitterByUserId(\n    $targetTwitterUsername: String!\n    $userId: String!\n  ) {\n    isFollowTwitterByUserId(\n      targetTwitterUsername: $targetTwitterUsername\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n": types.IsFollowTwitterByUserIdDocument,
+    "\n  mutation VerifyTwitterRetweetQuest($questId: String!, $userId: String!) {\n    verifyTwitterRetweetQuest(questId: $questId, userId: $userId) {\n      _id\n    }\n  }\n": types.VerifyTwitterRetweetQuestDocument,
+    "\n  query IsCompletedQuestByUserId($questId: String!, $userId: String!) {\n    isCompletedQuestByUserId(questId: $questId, userId: $userId) {\n      isCompleted\n      questId\n    }\n  }\n": types.IsCompletedQuestByUserIdDocument,
+    "\n  mutation CompleteQuestOfUser($questId: String!, $userId: String!) {\n    completeQuestOfUser(questId: $questId, userId: $userId) {\n      _id\n      title\n      description\n      questPolicy {\n        context\n        questPolicy\n      }\n    }\n  }\n": types.CompleteQuestOfUserDocument,
 };
 
 /**
@@ -89,7 +91,15 @@ export function gql(source: "\n  mutation VerifyTwitterFollowQuest($questId: Str
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query IsFollowTwitterByUserId(\n    $targetTwitterUsername: String!\n    $userId: String!\n  ) {\n    isFollowTwitterByUserId(\n      targetTwitterUsername: $targetTwitterUsername\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  query IsFollowTwitterByUserId(\n    $targetTwitterUsername: String!\n    $userId: String!\n  ) {\n    isFollowTwitterByUserId(\n      targetTwitterUsername: $targetTwitterUsername\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"];
+export function gql(source: "\n  mutation VerifyTwitterRetweetQuest($questId: String!, $userId: String!) {\n    verifyTwitterRetweetQuest(questId: $questId, userId: $userId) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation VerifyTwitterRetweetQuest($questId: String!, $userId: String!) {\n    verifyTwitterRetweetQuest(questId: $questId, userId: $userId) {\n      _id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query IsCompletedQuestByUserId($questId: String!, $userId: String!) {\n    isCompletedQuestByUserId(questId: $questId, userId: $userId) {\n      isCompleted\n      questId\n    }\n  }\n"): (typeof documents)["\n  query IsCompletedQuestByUserId($questId: String!, $userId: String!) {\n    isCompletedQuestByUserId(questId: $questId, userId: $userId) {\n      isCompleted\n      questId\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CompleteQuestOfUser($questId: String!, $userId: String!) {\n    completeQuestOfUser(questId: $questId, userId: $userId) {\n      _id\n      title\n      description\n      questPolicy {\n        context\n        questPolicy\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CompleteQuestOfUser($questId: String!, $userId: String!) {\n    completeQuestOfUser(questId: $questId, userId: $userId) {\n      _id\n      title\n      description\n      questPolicy {\n        context\n        questPolicy\n      }\n    }\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

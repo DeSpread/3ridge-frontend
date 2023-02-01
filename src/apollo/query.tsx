@@ -245,16 +245,33 @@ export const VERIFY_TWITTER_FOLLOW_QUEST = gql(/* GraphQL */ `
   }
 `);
 
-export const IS_FOLLOW_TWITTER_BY_USER_ID = gql(/* GraphQL */ `
-  query IsFollowTwitterByUserId(
-    $targetTwitterUsername: String!
-    $userId: String!
-  ) {
-    isFollowTwitterByUserId(
-      targetTwitterUsername: $targetTwitterUsername
-      userId: $userId
-    ) {
+export const VERIFY_TWITTER_RETWEET_QUEST = gql(/* GraphQL */ `
+  mutation VerifyTwitterRetweetQuest($questId: String!, $userId: String!) {
+    verifyTwitterRetweetQuest(questId: $questId, userId: $userId) {
       _id
+    }
+  }
+`);
+
+export const IS_COMPLETED_QUEST_BY_USER_ID = gql(/* GraphQL */ `
+  query IsCompletedQuestByUserId($questId: String!, $userId: String!) {
+    isCompletedQuestByUserId(questId: $questId, userId: $userId) {
+      isCompleted
+      questId
+    }
+  }
+`);
+
+export const COMPLETE_QUEST_OF_USER = gql(/* GraphQL */ `
+  mutation CompleteQuestOfUser($questId: String!, $userId: String!) {
+    completeQuestOfUser(questId: $questId, userId: $userId) {
+      _id
+      title
+      description
+      questPolicy {
+        context
+        questPolicy
+      }
     }
   }
 `);

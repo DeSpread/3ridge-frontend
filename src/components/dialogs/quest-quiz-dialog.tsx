@@ -21,6 +21,7 @@ import { useTheme } from "@mui/material/styles";
 
 type QuestQuizDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
+  onCompleteQuiz?: () => void;
   context: QuizQuestContext;
 };
 
@@ -39,7 +40,7 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
       setQuestionIndex((prevState) => prevState + 1);
       setActiveNextQuestion(false);
     } else if (questionIndex + 1 >= (props.context?.quizList?.length ?? 0)) {
-      console.log("completed");
+      props.onCompleteQuiz?.();
     }
   };
 

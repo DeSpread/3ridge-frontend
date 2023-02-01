@@ -1,6 +1,8 @@
 import { Button, ButtonProps } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
+type PrimaryButtonProps = ButtonProps & {};
+
 const PrimaryButton = (props: ButtonProps) => {
   const theme = useTheme();
   return (
@@ -23,6 +25,14 @@ const PrimaryButton = (props: ButtonProps) => {
           transitionTimingFunction: "ease-out",
           transitionProperty: "all",
           borderWidth: 2,
+          "& .MuiTypography": {
+            color: theme.palette.neutral[100],
+            transition: "all 0.1s ease-out 0s",
+            transitionDuration: "0.1s",
+            transitionDelay: "0s",
+            transitionTimingFunction: "ease-out",
+            transitionProperty: "all",
+          },
         },
         ...props.sx,
       }}

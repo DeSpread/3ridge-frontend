@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactElement, useState } from "react";
+import React, { CSSProperties, ReactElement, useEffect, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -16,6 +16,7 @@ import { nFormatter } from "../../util/validate-string";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import {
   FollowQuestContext,
+  MouseEventWithParam,
   QUEST_POLICY_TYPE,
   QuizQuestContext,
   RetweetQuestContext,
@@ -146,16 +147,53 @@ const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
 
 const Event = (props: AppProps) => {
   const { userData, asyncUpdateSocialTwitter } = useSignedUserQuery();
-  const { ticketData, asyncVerifyTwitterFollowQuest } = useTicketQuery({
+  const {
+    ticketData,
+    asyncVerifyTwitterFollowQuest,
+    asyncIsCompletedQuestByUserId,
+    asyncVerifyTwitterRetweetQuest,
+    asyncCompleteQuestOfUser,
+  } = useTicketQuery({
     userId: userData._id,
     id: "63c4acac6b1f1cc14ebd9bd4", //router.query.id,
   });
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
+  const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
   const { showErrorAlert, closeAlert } = useAlert();
   const { asyncTwitterSignInPopUp } = useFirebaseAuth();
   const { showLoading, closeLoading } = useLoading();
+  const [verifiedList, setVerifiedList] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    if (!userData?._id) return;
+    const ids = ticketData?.quests?.map((e) => {
+      return e._id;
+    });
+    const promiseList: any[] = [];
+    ids?.forEach((e) => {
+      promiseList.push(asyncIsCompletedQuestByUserId(e ?? ""));
+    });
+    if (promiseList.length > 0) {
+      Promise.all(promiseList)
+        .then((res) => {
+          const newVerifiedList: boolean[] = [];
+          res.forEach((e) => {
+            if (ids) {
+              newVerifiedList[ids?.indexOf(e.questId)] = e.isCompleted;
+            }
+          });
+          console.log(userData._id);
+          console.log(ids);
+          console.log(newVerifiedList);
+          setVerifiedList(newVerifiedList);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [ticketData?.quests, userData?._id]);
 
   return (
     <>
@@ -256,18 +294,39 @@ const Event = (props: AppProps) => {
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
+                      verified={verifiedList[index]}
                       onVerifyBtnClicked={async (e) => {
-                        if (
-                          quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
-                        ) {
-                          try {
+                        const myEvent = e as MouseEventWithParam<{
+                          callback: (msg: string) => void;
+                        }>;
+                        try {
+                          if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
+                          ) {
                             await asyncVerifyTwitterFollowQuest(
                               quest._id ?? ""
                             );
-                          } catch (e) {
-                            console.log(e);
+                            myEvent.params.callback("success");
+                            setVerifiedList((prevState) => {
+                              prevState[index] = true;
+                              return prevState;
+                            });
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
+                          ) {
+                            await asyncVerifyTwitterRetweetQuest(
+                              quest._id ?? ""
+                            );
+                            myEvent.params.callback("success");
+                            setVerifiedList((prevState) => {
+                              prevState[index] = true;
+                              return prevState;
+                            });
                           }
+                        } catch (e) {
+                          console.log(e);
                         }
                       }}
                       onStartBtnClicked={async (e) => {
@@ -279,6 +338,7 @@ const Event = (props: AppProps) => {
                             ?.context as QuizQuestContext;
                           setOpenQuizQuestContext(quizQuestContext);
                           setOpenQuizQuestDialog(true);
+                          setOpenQuizQuestId(quest._id);
                         } else if (
                           quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
@@ -512,6 +572,28 @@ const Event = (props: AppProps) => {
         context={openQuizQuestContext}
         onClose={() => {
           setOpenQuizQuestDialog(false);
+        }}
+        onCompleteQuiz={() => {
+          if (openQuizQuestId) {
+            const ids = ticketData?.quests?.map((e) => {
+              return e._id;
+            });
+            const index = ids?.indexOf(openQuizQuestId) as number;
+            if (index !== undefined) {
+              try {
+                asyncCompleteQuestOfUser(openQuizQuestId).then((res) => {
+                  setVerifiedList((prevState) => {
+                    prevState[index] = true;
+                    return prevState;
+                  });
+                  console.log(res);
+                });
+              } catch (e) {
+              } finally {
+                setOpenQuizQuestDialog(false);
+              }
+            }
+          }
         }}
       ></QuestQuizDialog>
     </>

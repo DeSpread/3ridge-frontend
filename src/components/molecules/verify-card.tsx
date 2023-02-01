@@ -15,6 +15,8 @@ import React, {
 } from "react";
 import SecondaryButton from "../atoms/secondary-button";
 import PrimaryButton from "../atoms/primary-button";
+import addSeconds from "date-fns/addSeconds";
+import { MouseEventWithParam } from "../../type";
 
 type VerifyCardProps = PropsWithChildren & {
   sx?: CSSProperties;
@@ -30,6 +32,7 @@ type VerifyCardProps = PropsWithChildren & {
 
 const VerifyCard = (props: VerifyCardProps) => {
   const [cardState, setCardState] = useState("IDLE"); // VERIFYING, VERIFIED, DISABLED
+  const [verifyingProgress, setVerifyingProgress] = useState(0);
 
   return (
     <>
@@ -100,15 +103,34 @@ const VerifyCard = (props: VerifyCardProps) => {
                     size={"medium"}
                     onClick={(e) => {
                       setCardState("VERIFYING");
-                      // setInterval()
-                      // props.onVerifyBtnClicked?.(e);
-                      // let timer = null;
-
-                      // function checkRemain() {
-                      //   var now = new Date();
-                      //   var distDt = _vDate - now;
-                      // }
-                      // timer = setInterval(checkRemain, 1000);
+                      let timer: NodeJS.Timer;
+                      let _vDate = addSeconds(new Date(), 10);
+                      function checkRemain() {
+                        const now = new Date();
+                        //@ts-ignore
+                        const distDt = _vDate - now;
+                        setVerifyingProgress((prevState) => {
+                          return prevState + 1;
+                        });
+                        if (distDt < 0) {
+                          clearInterval(timer);
+                          setCardState("IDLE");
+                          setVerifyingProgress(100);
+                          return;
+                        }
+                      }
+                      timer = setInterval(checkRemain, 100);
+                      setVerifyingProgress(0);
+                      const myEvent = {} as MouseEventWithParam<{
+                        callback: (msg: string) => void;
+                      }>;
+                      myEvent.params = {
+                        callback: (msg: string) => {
+                          setCardState("IDLE");
+                          setVerifyingProgress(0);
+                        },
+                      };
+                      props.onVerifyBtnClicked?.(myEvent);
                     }}
                     disabled={
                       props.verified ||
@@ -116,8 +138,9 @@ const VerifyCard = (props: VerifyCardProps) => {
                       cardState === "VERIFYING"
                     }
                   >
-                    {cardState === "VERIFYING" && "Verifying"}
-                    {cardState !== "VERIFYING" && props.verified
+                    {cardState === "VERIFYING"
+                      ? "Verifying"
+                      : props.verified
                       ? "Verified"
                       : "Verify"}
                   </PrimaryButton>
@@ -134,7 +157,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                   >
                     {cardState === "VERIFYING" && (
                       <LinearProgress
-                        value={50}
+                        value={verifyingProgress}
                         color={"warning"}
                         variant={"determinate"}
                         sx={{

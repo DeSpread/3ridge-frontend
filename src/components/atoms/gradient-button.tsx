@@ -3,8 +3,6 @@ import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
 
 const GradientButton = (props: ButtonProps) => {
-  const theme = useTheme();
-
   const [isHover, setIsHover] = useState(false);
 
   const handleMouseEnter = () => {

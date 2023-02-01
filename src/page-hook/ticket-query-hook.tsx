@@ -1,4 +1,10 @@
-import { GET_TICKET_BY_ID, VERIFY_TWITTER_FOLLOW_QUEST } from "../apollo/query";
+import {
+  COMPLETE_QUEST_OF_USER,
+  GET_TICKET_BY_ID,
+  IS_COMPLETED_QUEST_BY_USER_ID,
+  VERIFY_TWITTER_FOLLOW_QUEST,
+  VERIFY_TWITTER_RETWEET_QUEST,
+} from "../apollo/query";
 import { client } from "../apollo/client";
 import { useEffect, useState } from "react";
 import { Ticket } from "../type";
@@ -14,6 +20,8 @@ export function useTicketQuery({
 }) {
   const [ticketData, setTicketData] = useState<Ticket>({});
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
+  const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
+  const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
   const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
@@ -120,5 +128,62 @@ export function useTicketQuery({
     }
   };
 
-  return { ticketData, asyncVerifyTwitterFollowQuest };
+  const asyncVerifyTwitterRetweetQuest = async (questId: string) => {
+    if (questId && userId) {
+      const res = await verifyTwitterRetweetQuest({
+        variables: {
+          questId,
+          userId,
+        },
+      });
+    }
+  };
+
+  const asyncCompleteQuestOfUser = async (questId: string) => {
+    if (questId && userId) {
+      const res = await completeQuestOfUser({
+        variables: {
+          questId,
+          userId,
+        },
+      });
+    }
+  };
+
+  const asyncIsCompletedQuestByUserId = async (questId: string) => {
+    if (questId && userId) {
+      try {
+        const { data } = await client.query({
+          query: IS_COMPLETED_QUEST_BY_USER_ID,
+          variables: {
+            questId,
+            userId,
+          },
+        });
+        const { isCompleted } = data.isCompletedQuestByUserId;
+        return {
+          isCompleted,
+          questId,
+        };
+      } catch (e) {
+        console.log(e);
+        return {
+          isCompleted: false,
+          questId,
+        };
+      }
+    }
+    return {
+      isCompleted: false,
+      questId,
+    };
+  };
+
+  return {
+    ticketData,
+    asyncVerifyTwitterFollowQuest,
+    asyncIsCompletedQuestByUserId,
+    asyncVerifyTwitterRetweetQuest,
+    asyncCompleteQuestOfUser,
+  };
 }

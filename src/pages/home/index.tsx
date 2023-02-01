@@ -100,13 +100,6 @@ const Home = (props: AppProps) => {
           zIndex: 0,
         }}
       >
-        <Button
-          onClick={async () => {
-            const res = await asyncTwitterSignInPopUp();
-          }}
-        >
-          Test
-        </Button>
         <Stack
           direction={"column"}
           sx={{
