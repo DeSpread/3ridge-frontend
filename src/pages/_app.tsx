@@ -15,6 +15,7 @@ import { AlertProvider } from "../provider/alert/alert-provider";
 import { LoadingProvider } from "../provider/loading/loading-provider";
 import { combineProviders } from "react-combine-providers";
 import { PetraWallet } from "petra-plugin-wallet-adapter";
+
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 
 const providers = combineProviders();

@@ -22,20 +22,25 @@ const TicketCard = (props: EventCardProps) => {
     <Card
       sx={{
         background: "transparent",
-        boxShadow: "inset 3px 3px 3px #35333a, inset -3px -3px 3px #35333a",
+        // boxShadow: "inset 3px 3px 3px #35333a, inset -3px -3px 3px #35333a",
         transform: "translateY(0%)",
         transition: "all 0.2s ease-out 0s",
         transitionDuration: "0.2s",
         transitionDelay: "0s",
         transitionTimingFunction: "ease-out",
         "&:hover": {
-          transform: "translate(0,-10px)",
+          transform: "translate(0,-2px)",
+          boxShadow: "12px 12px 2px 1px rgba(128, 128, 128, .2)",
         },
         ...props.sx,
       }}
       onClick={props.onClick}
     >
-      <CardContent>
+      <CardContent
+        sx={{
+          boxShadow: "inset 4px 4px 4px #35333a, inset -4px -4px 4px #35333a",
+        }}
+      >
         <Stack direction={"column"}>
           <Stack direction={"column"}>
             <Stack

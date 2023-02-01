@@ -38,7 +38,6 @@ export function useWalletLogin() {
         return { ...prevState, address: account.address };
       });
       preference.updateWalletSignIn(account.address);
-      console.log("ddd");
     }
   }, [account]);
 
@@ -68,6 +67,7 @@ export function useWalletLogin() {
           tryWalletSignUpSuccess.current?.();
         } catch (e) {
           const message = getErrorMessage(e);
+          console.log(e);
           if (message === APP_ERROR_MESSAGE.WALLET_USER_REJECTED_REQUEST) {
             return;
           }

@@ -127,27 +127,20 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
             </IconButton>
           </Stack>
         </DialogTitle>
-        <DialogContent
+        <Stack
+          direction={"column"}
           sx={{
-            minHeight: 112,
             background: "",
+            minHeight: 96,
+            padding: 3,
             paddingTop: 0,
-            paddingBottom: 3,
           }}
+          justifyContent={"center"}
         >
-          <Stack
-            direction={"column"}
-            sx={{
-              background: "",
-              minHeight: 96,
-            }}
-            justifyContent={"center"}
-          >
-            <DialogContentText sx={{ background: "" }}>
-              {alertDescRef.current.content}
-            </DialogContentText>
-          </Stack>
-        </DialogContent>
+          <DialogContentText sx={{ background: "" }}>
+            {alertDescRef.current.content}
+          </DialogContentText>
+        </Stack>
       </Dialog>
     </AlertContext.Provider>
   );

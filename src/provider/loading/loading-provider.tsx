@@ -36,6 +36,7 @@ export const LoadingProvider = ({ children }: PropsWithChildren) => {
   const showLoading = () => {
     setOpen(true);
   };
+
   const closeLoading = () => {
     setOpen(false);
   };

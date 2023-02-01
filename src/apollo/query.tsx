@@ -275,3 +275,11 @@ export const COMPLETE_QUEST_OF_USER = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
+  mutation RequestClaimNFT($receiverAddress: String!) {
+    requestClaimNFT(receiverAddress: $receiverAddress) {
+      txHash
+    }
+  }
+`);

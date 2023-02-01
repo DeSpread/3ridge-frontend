@@ -97,6 +97,11 @@ export type FCFSRewardContext = {
   untilTime: string;
   rewardUnit: string;
   rewardAmount: number;
+  rewardChain: number;
+  nftImageUrl: string;
+  collectionName: string;
+  tokenName: string;
+  point: number;
 };
 
 export type Ticket = {

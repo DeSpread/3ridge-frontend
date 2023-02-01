@@ -2,6 +2,7 @@ import {
   COMPLETE_QUEST_OF_USER,
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
+  REQUEST_CLAIM_NFT,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
 } from "../apollo/query";
@@ -22,6 +23,7 @@ export function useTicketQuery({
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
+  const [requestClaimNFT] = useMutation(REQUEST_CLAIM_NFT);
   const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
@@ -150,6 +152,16 @@ export function useTicketQuery({
     }
   };
 
+  const asyncRequestClaimNtf = async (receiverAddress: string) => {
+    if (receiverAddress) {
+      const res = await requestClaimNFT({
+        variables: {
+          receiverAddress,
+        },
+      });
+    }
+  };
+
   const asyncIsCompletedQuestByUserId = async (questId: string) => {
     if (questId && userId) {
       try {
@@ -185,5 +197,6 @@ export function useTicketQuery({
     asyncIsCompletedQuestByUserId,
     asyncVerifyTwitterRetweetQuest,
     asyncCompleteQuestOfUser,
+    asyncRequestClaimNtf,
   };
 }

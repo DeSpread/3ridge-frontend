@@ -78,6 +78,7 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
             sx={{
               paddingLeft: 3,
               paddingRight: 3,
+              width: 128,
             }}
             index={index}
             onChange={(e) => {
@@ -100,7 +101,6 @@ const TicketsSection = (props: TicketSectionProps) => {
   const [tabValue, setTabValue] = useState(0);
   const { showLoading, closeLoading } = useLoading();
   const { tickets, loading, onTicketClick } = props;
-  const theme = useTheme();
 
   const onTicketCardClick = (ticket: Ticket) => {
     const myEvent = {} as MouseEventWithParam<TicketEventParam>;

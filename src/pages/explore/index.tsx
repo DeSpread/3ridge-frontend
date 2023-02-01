@@ -59,7 +59,7 @@ const Explore = (props: AppProps) => {
               padding: 8,
             }}
           >
-            <GradientButton>Load more</GradientButton>
+            <GradientButton sx={{ width: 128 }}>Load more</GradientButton>
           </Box>
         </Stack>
       </Box>

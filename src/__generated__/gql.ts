@@ -30,6 +30,7 @@ const documents = {
     "\n  mutation VerifyTwitterRetweetQuest($questId: String!, $userId: String!) {\n    verifyTwitterRetweetQuest(questId: $questId, userId: $userId) {\n      _id\n    }\n  }\n": types.VerifyTwitterRetweetQuestDocument,
     "\n  query IsCompletedQuestByUserId($questId: String!, $userId: String!) {\n    isCompletedQuestByUserId(questId: $questId, userId: $userId) {\n      isCompleted\n      questId\n    }\n  }\n": types.IsCompletedQuestByUserIdDocument,
     "\n  mutation CompleteQuestOfUser($questId: String!, $userId: String!) {\n    completeQuestOfUser(questId: $questId, userId: $userId) {\n      _id\n      title\n      description\n      questPolicy {\n        context\n        questPolicy\n      }\n    }\n  }\n": types.CompleteQuestOfUserDocument,
+    "\n  mutation RequestClaimNFT($receiverAddress: String!) {\n    requestClaimNFT(receiverAddress: $receiverAddress) {\n      txHash\n    }\n  }\n": types.RequestClaimNftDocument,
 };
 
 /**
@@ -100,6 +101,10 @@ export function gql(source: "\n  query IsCompletedQuestByUserId($questId: String
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation CompleteQuestOfUser($questId: String!, $userId: String!) {\n    completeQuestOfUser(questId: $questId, userId: $userId) {\n      _id\n      title\n      description\n      questPolicy {\n        context\n        questPolicy\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CompleteQuestOfUser($questId: String!, $userId: String!) {\n    completeQuestOfUser(questId: $questId, userId: $userId) {\n      _id\n      title\n      description\n      questPolicy {\n        context\n        questPolicy\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation RequestClaimNFT($receiverAddress: String!) {\n    requestClaimNFT(receiverAddress: $receiverAddress) {\n      txHash\n    }\n  }\n"): (typeof documents)["\n  mutation RequestClaimNFT($receiverAddress: String!) {\n    requestClaimNFT(receiverAddress: $receiverAddress) {\n      txHash\n    }\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

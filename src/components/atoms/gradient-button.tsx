@@ -23,6 +23,7 @@ const GradientButton = (props: ButtonProps) => {
           backgroundOrigin: "border-box",
           backgroundClip: "content-box, border-box",
           cursor: "pointer",
+          ...props.sx,
         }}
       >
         <Box sx={{ padding: 1, paddingRight: 3, paddingLeft: 3 }}>
