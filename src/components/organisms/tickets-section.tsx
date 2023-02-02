@@ -1,27 +1,20 @@
 import {
   Box,
   ButtonProps,
-  Divider,
   Grid,
+  MenuItem,
   Skeleton,
   Stack,
-  Card,
-  CardContent,
+  styled,
   Typography,
-  MenuItem,
 } from "@mui/material";
-import { TabContext, TabPanel } from "@mui/lab";
-import StyledTabs from "../atoms/styled/styled-tabs";
 import React, {
   CSSProperties,
   MouseEventHandler,
   PropsWithChildren,
   ReactNode,
-  SyntheticEvent,
   useState,
 } from "react";
-import StyledTab from "../atoms/styled/styled-tab";
-import EventCollectionCard from "../molecules/event-collection-card";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { MouseEventWithParam, Ticket, TicketEventParam } from "../../type";
 import PrimaryButton from "../atoms/primary-button";
@@ -29,7 +22,6 @@ import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { motion } from "framer-motion";
-import { UpDownAnimatedComponentProps } from "../atoms/animation/up-down-animated-component";
 import StyledMenu from "../atoms/styled/styled-menu";
 
 type TicketSectionProps = PropsWithChildren & {
@@ -97,6 +89,15 @@ const RotateAnimatedComponent = (props: {
   );
 };
 
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  ":focus": {
+    backgroundColor: "transparent",
+  },
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+  },
+})) as typeof MenuItem;
+
 const TabButtonGroup = (props: TabButtonGroupProps) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const TITLES = ["Available", "Complete", "Missed"];
@@ -107,6 +108,7 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = (index?: number) => {
     setAnchorEl(null);
     if (index !== undefined) {
@@ -172,20 +174,20 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
             handleClose(undefined);
           }}
         >
-          <MenuItem
+          <StyledMenuItem
             onClick={() => {
               handleClose(0);
             }}
           >
             <Typography variant={"body2"}>{MENU_ITEMS[0]}</Typography>
-          </MenuItem>
-          <MenuItem
+          </StyledMenuItem>
+          <StyledMenuItem
             onClick={() => {
               handleClose(1);
             }}
           >
             <Typography variant={"body2"}>{MENU_ITEMS[1]}</Typography>
-          </MenuItem>
+          </StyledMenuItem>
         </StyledMenu>
       </>
     </Stack>

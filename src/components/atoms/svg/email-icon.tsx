@@ -1,7 +1,8 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
 import React from "react";
+import { ReversibleSvgIconProps } from "../../../type";
 
-function EmailIcon(props: SvgIconProps) {
+function EmailIcon(props: ReversibleSvgIconProps) {
   return (
     <SvgIcon {...props}>
       <svg
@@ -16,7 +17,8 @@ function EmailIcon(props: SvgIconProps) {
         {/*/>*/}
         <path
           d="M15.667.333H2.333C1.417.333.667 1.083.667 2v10c0 .917.75 1.667 1.666 1.667h13.334c.916 0 1.666-.75 1.666-1.667V2c0-.917-.75-1.667-1.666-1.667zm-.334 3.542l-5.45 3.409a1.65 1.65 0 0 1-1.766 0l-5.45-3.409a.708.708 0 1 1 .75-1.2L9 6.167l5.583-3.492a.708.708 0 1 1 .75 1.2z"
-          fill="#fff"
+          // fill="#fff"
+          fill={props.reverse ? "#313f75" : "#fff"}
         ></path>
       </svg>
     </SvgIcon>

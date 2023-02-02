@@ -240,6 +240,7 @@ const Event = (props: AppProps) => {
   const { asyncTwitterSignInPopUp } = useFirebaseAuth();
   const { showLoading, closeLoading } = useLoading();
   const [verifiedList, setVerifiedList] = useState<boolean[]>([]);
+  const [updateIndex, setUpdateIndex] = useState(0);
 
   useEffect(() => {
     if (!userData?._id) return;
@@ -275,7 +276,7 @@ const Event = (props: AppProps) => {
       true
     );
     return !res;
-  }, [verifiedList]);
+  }, [verifiedList, updateIndex]);
 
   return (
     <>
@@ -403,6 +404,9 @@ const Event = (props: AppProps) => {
                               prevState[index] = true;
                               return prevState;
                             });
+                            setUpdateIndex((prevState) => {
+                              return prevState + 1;
+                            });
                           } else if (
                             quest.questPolicy?.questPolicy ===
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
@@ -414,6 +418,9 @@ const Event = (props: AppProps) => {
                             setVerifiedList((prevState) => {
                               prevState[index] = true;
                               return prevState;
+                            });
+                            setUpdateIndex((prevState) => {
+                              return prevState + 1;
                             });
                           }
                         } catch (e) {
@@ -603,10 +610,16 @@ const Event = (props: AppProps) => {
                         spacing={1}
                       >
                         <StarsIcon
-                          style={{ width: 24, height: 24 }}
+                          color={"warning"}
+                          style={{
+                            width: 24,
+                            height: 24,
+                            background: "yellow",
+                            borderRadius: 24,
+                          }}
                         ></StarsIcon>
                         <Typography variant={"h6"}>
-                          {ticketData?.rewardPolicy?.context?.point}
+                          {ticketData?.rewardPolicy?.context?.point ?? 0}
                         </Typography>
                       </Stack>
                     </Stack>
@@ -735,6 +748,9 @@ const Event = (props: AppProps) => {
                   setVerifiedList((prevState) => {
                     prevState[index] = true;
                     return prevState;
+                  });
+                  setUpdateIndex((prevState) => {
+                    return prevState + 1;
                   });
                 });
               } catch (e) {

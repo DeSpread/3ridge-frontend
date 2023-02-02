@@ -1,56 +1,25 @@
 import Head from "next/head";
 import React, { ReactElement, useMemo } from "react";
-import {
-  Avatar,
-  Box,
-  Card,
-  Grid,
-  Stack,
-  SvgIconProps,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Card, Grid, Stack, Typography } from "@mui/material";
 import MainLayout from "../../layouts/main-layout";
 import { useLeaderUsersQuery } from "../../page-hook/leader-users-query-hook";
 import XpChip from "../../components/atoms/styled/xp-chip";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
-import No1Icon from "../../components/atoms/svg/no1-icon";
-import WithOverlapChildren from "../../hoc/with-overlap-children";
 import { User } from "../../type";
-import No2Icon from "../../components/atoms/svg/no2-icon";
-import No3Icon from "../../components/atoms/svg/no3-icon";
 import { useSignedUserQuery } from "../../page-hook/user-query-hook";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-
-const InnerAbleNo1Icon = WithOverlapChildren(No1Icon);
-const InnerAbleNo2Icon = WithOverlapChildren(No2Icon);
-const InnerAbleNo3Icon = WithOverlapChildren(No3Icon);
+import StringHelper from "../../helper/string-helper";
+import GradientTypography from "../../components/atoms/gradient-typography";
 
 const RankCard = ({ user, rank }: { user: User; rank: number }) => {
   const { profileImageUrl, name, rewardPoint } = user;
 
-  // const renderBadge = (
-  //   WrappedComponent: React.ComponentType<SvgIconProps>,
-  //   rank: number
-  // ) => {
-  //   return (
-  //     <WrappedComponent
-  //       style={{
-  //         width: 32,
-  //         height: 32,
-  //       }}
-  //     >
-  //       <Typography
-  //         variant={"body2"}
-  //         sx={{
-  //           marginBottom: "0px",
-  //           color: "white",
-  //         }}
-  //       >
-  //         {rank}
-  //       </Typography>
-  //     </WrappedComponent>
-  //   );
-  // };
+  const convertedName = useMemo(() => {
+    if (name?.substring(0, 2).toLocaleLowerCase() === "0x") {
+      return StringHelper.getInstance().getMidEllipsisString(name, 10, 8);
+    }
+    return name;
+  }, [name]);
 
   const renderRankBadge = (rank: number) => {
     if (rank > 3 || rank < 1) {
@@ -71,10 +40,7 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
     } else if (rank === 3) {
       return <Typography variant={"h4"}>🥉</Typography>;
     }
-    // return renderBadge(
-    //   [InnerAbleNo1Icon, InnerAbleNo2Icon, InnerAbleNo3Icon][rank - 1],
-    //   rank
-    // );
+    return null;
   };
 
   return (
@@ -87,8 +53,8 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
         transitionDelay: "0s",
         transitionTimingFunction: "ease-out",
         "&:hover": {
-          transform: "translate(0,-1px)",
-          boxShadow: "2px 2px 2px 1px rgba(128, 128, 128, .2)",
+          transform: "translate(0,-2px)",
+          boxShadow: "4px 4px 4px 2px rgba(128, 128, 128, .2)",
         },
         borderWidth: 2,
         borderColor: "#35333a",
@@ -134,20 +100,32 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
             ></Avatar>
           </Box>
           <Stack direction={"column"} sx={{ marginLeft: 3 }}>
-            <Typography variant={"body2"}>{name}</Typography>
+            <GradientTypography variant={"body2"}>
+              {convertedName}
+            </GradientTypography>
           </Stack>
         </Stack>
         <Box sx={{ marginRight: 2 }}>
-          <Stack direction={"row"} alignItems={"center"}>
-            <Typography variant={"body2"}>Total&nbsp;:&nbsp;</Typography>
+          <Stack
+            direction={"column"}
+            alignItems={"flex-end"}
+            justifyContent={"center"}
+          >
             <Typography
-              variant={"body2"}
-              color={"white"}
-              sx={{ fontWeight: "bold" }}
-            >
-              {rewardPoint}
-            </Typography>
-            <Typography variant={"body2"}>&nbsp;{`Point`}</Typography>
+              variant={"h6"}
+              sx={{ color: (theme) => theme.palette.warning.main }}
+            >{`Level ${Math.floor((rewardPoint ?? 0) / 100)}`}</Typography>
+            <Stack direction={"row"} alignItems={"center"}>
+              <Typography variant={"body2"}>Total&nbsp;:&nbsp;</Typography>
+              <Typography
+                variant={"body2"}
+                color={"white"}
+                sx={{ fontWeight: "bold" }}
+              >
+                {rewardPoint ?? 0}
+              </Typography>
+              <Typography variant={"body2"}>&nbsp;{`Point`}</Typography>
+            </Stack>
           </Stack>
         </Box>
       </Stack>
