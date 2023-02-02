@@ -1,47 +1,62 @@
 [
   {
-    "id": "bnb",
-    "name": "BNB Chain",
-    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/logo/bsc-logo.png?optimizer=image&width=200&quality=100"
+    "id": "thala",
+    "name": "Thala Labs",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/thala.png"
   },
   {
-    "id": "polygon",
-    "name": "Polygon",
-    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/1635133810/1635133810-logo-1635133810.jpeg?optimizer=image&width=200&quality=100"
+    "id": "pontem",
+    "name": "Pontem",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/pontem.jpeg"
   },
   {
-    "id": "solana",
-    "name": "Solana",
-    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/1643707204/1643707204-logo-1643707204.png?optimizer=image&width=200&quality=100"
+    "id": "aptos_monkeys",
+    "name": "Aptos Monkeys",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/aptos_monkeys.png"
   },
   {
-    "id": "1Inch",
-    "name": "1Inch Network",
-    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/logo/1inch-logo.jpg?optimizer=image&width=200&quality=100"
+    "id": "aptomingos",
+    "name": "Aptomingos",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/aptomingos.png"
   },
   {
-    "id": "dodo",
-    "name": "DODO",
-    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/dodo/dodo-logo-1644892328.png?optimizer=image&width=200&quality=100"
+    "id": "ans",
+    "name": "Aptos Name Service",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/ans.jpeg"
   },
   {
-    "id": "alpaca",
-    "name": "Alpaca Finance",
-    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/logo/alpaca-icon.png?optimizer=image&width=200&quality=100"
+    "id": "topaz",
+    "name": "Topaz",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/topaz.png"
   },
   {
-    "id": "stepn",
-    "name": "STEPN",
-    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/stepn/stepn-logo-1643243094.png?optimizer=image&width=200&quality=100"
+    "id": "petra",
+    "name": "Petra Wallet",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/petra.jpeg"
   },
   {
-    "id": "mango",
-    "name": "Mango",
-    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/1643253697/1643253697-logo-1643253697.png?optimizer=image&width=200&quality=100"
+    "id": "martian",
+    "name": "Martian Wallet",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/martian.png"
   },
   {
-    "id": "file",
-    "name": "Filecoin",
-    "iconUrl": "https://cdn-2.galxe.com/galaxy/images/1644878091/1644878091-logo-1644878090.png?optimizer=image&width=200&quality=100"
+    "id": "fewcha",
+    "name": "Fewcha Wallet",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/fewcha.jpeg"
+  },
+  {
+    "id": "souffl3",
+    "name": "Souffl3",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/souffl3.png"
+  },
+  {
+    "id": "ferum",
+    "name": "Ferum",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/ferum.jpeg"
+  },
+  {
+    "id": "aptos_labs",
+    "name": "Aptos Labs",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/aptos_labs.jpeg"
   }
 ]
