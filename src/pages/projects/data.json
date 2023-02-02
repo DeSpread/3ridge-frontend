@@ -1,5 +1,10 @@
 [
   {
+    "id": "aptos_labs",
+    "name": "Aptos Labs",
+    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/aptos_labs.jpeg"
+  },
+  {
     "id": "thala",
     "name": "Thala Labs",
     "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/thala.png"
@@ -53,10 +58,5 @@
     "id": "ferum",
     "name": "Ferum",
     "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/ferum.jpeg"
-  },
-  {
-    "id": "aptos_labs",
-    "name": "Aptos Labs",
-    "iconUrl": "https://3ridge.s3.ap-northeast-2.amazonaws.com/project/aptos_labs.jpeg"
   }
 ]
