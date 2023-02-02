@@ -22,7 +22,6 @@ const TicketCard = (props: EventCardProps) => {
     <Card
       sx={{
         background: "transparent",
-        // boxShadow: "inset 3px 3px 3px #35333a, inset -3px -3px 3px #35333a",
         transform: "translateY(0%)",
         transition: "all 0.2s ease-out 0s",
         transitionDuration: "0.2s",

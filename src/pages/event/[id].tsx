@@ -46,6 +46,7 @@ import { useTheme } from "@mui/material/styles";
 import StarsIcon from "@mui/icons-material/Stars";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -267,6 +268,8 @@ const Event = (props: AppProps) => {
   }, [ticketData?.quests, userData?._id]);
 
   const claimRewardDisabled = useMemo(() => {
+    if (userData?._id === undefined) return true;
+    if (verifiedList.length === 0) return true;
     const res = verifiedList.reduce(
       (accumulator, currentValue) => accumulator && currentValue,
       true
@@ -338,6 +341,14 @@ const Event = (props: AppProps) => {
                 </Stack>
               </Grid>
             </Grid>
+            {userData?._id === undefined && (
+              <Typography
+                variant={"h5"}
+                sx={{ color: theme.palette.warning.main }}
+              >
+                --- Please First Sign In ---
+              </Typography>
+            )}
 
             <Stack direction={"column"} spacing={2}>
               <Typography variant={"h5"}>Description</Typography>
@@ -373,6 +384,7 @@ const Event = (props: AppProps) => {
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
+                      disabled={userData?._id ? false : true}
                       verified={verifiedList[index]}
                       onVerifyBtnClicked={async (e) => {
                         const myEvent = e as MouseEventWithParam<{
@@ -665,7 +677,7 @@ const Event = (props: AppProps) => {
                           key={index}
                           alt=""
                           src={
-                            "https://app.quest3.xyz/static/users/avatar8.png"
+                            e.profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC
                           }
                           sx={{
                             width: 42,

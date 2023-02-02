@@ -146,7 +146,7 @@ const HomeFooter = () => {
             //@ts-ignore
             sx={{ color: theme.palette.neutral["600"] }}
           >
-            © Copyright 2022 DeSpread Lab, Inc.
+            © Copyright 2022 DeSpread Labs, Inc.
           </Typography>
         </Box>
       </Stack>

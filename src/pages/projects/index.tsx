@@ -26,80 +26,84 @@ const Projects = () => {
       <Head>
         <title>Leaderboard</title>
       </Head>
-      <Grid
-        container
-        direction={"row"}
-        justifyContent={"center"}
-        spacing={5}
-        sx={{ marginTop: 1, marginBottom: 12, background: "" }}
+      <Box
+        style={{ flex: 1, background: "", paddingLeft: 24, paddingRight: 24 }}
       >
-        <Grid item sx={{ background: "" }}>
-          <Box px={{ xs: 1, sm: 2, md: 3, lg: 4 }}>
-            <Stack direction={"column"}>
-              <Grid container={true} sx={{ background: "" }}>
-                {projectsData.map((e, index) => {
-                  return (
-                    <Grid
-                      item
-                      key={index}
-                      xs={6}
-                      sm={4}
-                      md={3}
-                      lg={2}
-                      sx={{ padding: "10px" }}
+        <Grid
+          container
+          direction={"row"}
+          justifyContent={"center"}
+          sx={{ marginTop: 1, marginBottom: 12, background: "" }}
+        >
+          <Grid container={true} sx={{ background: "" }}>
+            {projectsData.map((e, index) => {
+              return (
+                <Grid
+                  item
+                  key={index}
+                  xs={6}
+                  sm={4}
+                  md={3}
+                  lg={2}
+                  sx={{ padding: "10px" }}
+                >
+                  <Card
+                    sx={{
+                      background: "transparent",
+                      transform: "translateY(0%)",
+                      transition: "all 0.2s ease-out 0s",
+                      transitionDuration: "0.2s",
+                      transitionDelay: "0s",
+                      transitionTimingFunction: "ease-out",
+                      "&:hover": {
+                        transform: "translate(0,-2px)",
+                        boxShadow: "12px 12px 2px 1px rgba(128, 128, 128, .2)",
+                      },
+                    }}
+                    onClick={async (e) => {
+                      showLoading();
+                      await router.push(`/project/1`);
+                      closeLoading();
+                    }}
+                  >
+                    <CardContent
+                      sx={{
+                        boxShadow:
+                          "inset 4px 4px 4px #35333a, inset -4px -4px 4px #35333a",
+                      }}
                     >
-                      <Card
-                        sx={{
-                          transform: "scale(1)",
-                          transition: "all 0.1s ease-in-out",
-                          "&:hover": {
-                            transform: "scale(1.05)",
-                            transition: "all 0.1s ease-in-out",
-                            //@ts-ignore
-                            backgroundColor: theme.palette.neutral["800"],
-                          },
-                        }}
-                        onClick={async (e) => {
-                          showLoading();
-                          await router.push(`/project/1`);
-                          closeLoading();
-                        }}
-                      >
-                        <CardContent>
-                          <Stack direction={"column"} alignItems={"center"}>
-                            <Avatar
-                              sx={{ width: 52, height: 52 }}
-                              src={e.iconUrl}
-                            ></Avatar>
-                            <Box sx={{ marginTop: 2 }}>
-                              <Stack
-                                direction={"row"}
-                                spacing={1}
-                                alignItems={"center"}
-                              >
-                                <Typography
-                                  variant={"body2"}
-                                  color={"neutral.100"}
-                                  sx={{
-                                    wordBreak: "keep-all",
-                                  }}
-                                >
-                                  {e.name}
-                                </Typography>
-                                <CheckIcon></CheckIcon>
-                              </Stack>
-                            </Box>
+                      <Stack direction={"column"} alignItems={"center"}>
+                        <Avatar
+                          sx={{ width: 52, height: 52 }}
+                          src={e.iconUrl}
+                        ></Avatar>
+                        <Box sx={{ marginTop: 2 }}>
+                          <Stack
+                            direction={"row"}
+                            spacing={1}
+                            alignItems={"center"}
+                          >
+                            <Typography
+                              variant={"body2"}
+                              color={"neutral.100"}
+                              sx={{
+                                wordBreak: "keep-all",
+                              }}
+                            >
+                              {e.name}
+                            </Typography>
+                            <CheckIcon></CheckIcon>
                           </Stack>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </Stack>
-          </Box>
+                        </Box>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </>
   );
 };

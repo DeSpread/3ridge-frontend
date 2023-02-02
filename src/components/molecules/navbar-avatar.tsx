@@ -156,7 +156,7 @@ const NavbarAvatar = ({
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
             <PowerSettingsNewIcon
               fontSize={"medium"}
-              sx={{ color: "yellow" }}
+              sx={{ color: theme.palette.warning.main }}
             ></PowerSettingsNewIcon>
             <Typography>Log out</Typography>
           </Stack>

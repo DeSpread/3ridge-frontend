@@ -28,6 +28,7 @@ type VerifyCardProps = PropsWithChildren & {
   onVerifyBtnClicked?: MouseEventHandler;
   verified?: boolean;
   autoVerified?: boolean;
+  disabled?: boolean;
 };
 
 const VerifyCard = (props: VerifyCardProps) => {
@@ -61,7 +62,6 @@ const VerifyCard = (props: VerifyCardProps) => {
                 >
                   <Typography
                     variant={"caption"}
-                    //@ts-ignore
                     sx={{ color: (theme) => theme.palette.neutral[100] }}
                   >
                     {props.index}
@@ -133,6 +133,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                       props.onVerifyBtnClicked?.(myEvent);
                     }}
                     disabled={
+                      props.disabled ||
                       props.verified ||
                       props.autoVerified ||
                       cardState === "VERIFYING"
@@ -170,6 +171,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                   </div>
                 </div>
                 <SecondaryButton
+                  disabled={props.disabled || props.verified}
                   size={"medium"}
                   onClick={props.onStartBtnClicked}
                 >

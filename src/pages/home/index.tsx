@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Box, Typography, Stack, Grid, Button } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
@@ -51,6 +51,9 @@ const Home = (props: AppProps) => {
                 width: "100%",
                 height: "100%",
                 background: "#1a1a1a",
+                // flex: 1,
+                // alignItems: "center",
+                // justifyContent: "center",
                 // zIndex: 0,
               }}
             >
@@ -167,7 +170,7 @@ const Home = (props: AppProps) => {
               }}
             >
               <img
-                style={{ height: "100vh" }}
+                style={{ width: "100%", height: "100vh" }}
                 src={"https://indexer.xyz/assets/top-section-bg.png"}
               />
             </UpDownAnimatedComponent>
@@ -187,7 +190,7 @@ Home.getLayout = (page: ReactElement | ReactElement[]) => (
           backgroundImage: `url("https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/background/dot-grid.png")`,
           backgroundRepeat: "repeat-x",
           width: "100%",
-          height: "280px",
+          height: "213px",
           zIndex: 1,
           backgroundSize: "22px 426px",
           left: 0,
