@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, useMemo, useState } from "react";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import {
@@ -44,6 +44,12 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
     }
   };
 
+  const isLast = useMemo(() => {
+    const length = props.context?.quizList?.length ?? 0;
+    console.log(length);
+    return questionIndex === length - 1;
+  }, [questionIndex]);
+
   return (
     <>
       <Dialog
@@ -61,7 +67,8 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
             //@ts-ignore
             borderColor: theme.palette.neutral[800],
             borderStyle: "solid",
-            padding: 4,
+            padding: 8,
+            boxShadow: "inset 4px 4px 4px #35333a, inset -4px -4px 4px #35333a",
           },
         }}
       >
@@ -95,6 +102,7 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
                 setActiveNextQuestion(myEvent.params.correct);
               }}
               id={questionIndex}
+              isLast={isLast}
             />
           </Box>
           <Box sx={{ marginTop: 0 }}>

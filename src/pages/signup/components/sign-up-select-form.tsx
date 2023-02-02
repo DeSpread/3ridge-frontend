@@ -39,7 +39,11 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
         <Stack spacing={2}>
           <PrimaryButton fullWidth={true} onClick={props.onClickSignUpWith}>
             <Stack direction={"row"} spacing={1}>
-              <Typography color={"neutral.100"} variant={"body2"}>
+              <Typography
+                className={"MuiTypography"}
+                color={"neutral.900"}
+                variant={"body2"}
+              >
                 Sign Up with
               </Typography>
               <Avatar

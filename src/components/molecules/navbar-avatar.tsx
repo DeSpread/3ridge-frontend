@@ -12,6 +12,7 @@ import {
   MouseEvent,
   MouseEventHandler,
   PropsWithChildren,
+  useMemo,
   useState,
 } from "react";
 import { useTheme } from "@mui/material/styles";
@@ -71,6 +72,7 @@ type NavBarAvatarProps = PropsWithChildren & {
   walletAddress?: string;
   onProfileItemClicked?: MouseEventHandler;
   onLogoutBtnClicked?: MouseEventHandler;
+  rewardPoint?: number;
 };
 
 const NavbarAvatar = ({
@@ -78,10 +80,18 @@ const NavbarAvatar = ({
   walletAddress,
   onProfileItemClicked,
   onLogoutBtnClicked,
+  rewardPoint,
 }: NavBarAvatarProps) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element>();
+
+  const levelProgressValue = useMemo(() => {
+    if (rewardPoint === undefined) {
+      return 0;
+    }
+    return (rewardPoint ?? 0) % 100;
+  }, [rewardPoint]);
 
   return (
     <Box
@@ -134,8 +144,8 @@ const NavbarAvatar = ({
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress
                     variant="determinate"
-                    value={1}
-                    color={"secondary"}
+                    value={levelProgressValue}
+                    color={"warning"}
                     sx={{
                       background: theme.palette.action.hover,
                       minWidth: 80,

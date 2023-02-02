@@ -101,30 +101,18 @@ const MainLayout = (props: MainLayoutProps) => {
                 e.preventDefault();
                 router.push("/").then();
               }}
+              sx={{
+                cursor: "pointer",
+                marginLeft: -1,
+              }}
             >
-              <Typography
-                variant={"h4"}
-                sx={{
-                  cursor: "pointer",
-                }}
-              >
-                3ridge
-              </Typography>
+              <img
+                src={
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/3ridge-logo-white.svg"
+                }
+                height={"48px"}
+              />
             </Box>
-            {/*<img*/}
-            {/*  width={160}*/}
-            {/*  src={*/}
-            {/*    "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/logo/logo2.png"*/}
-            {/*  }*/}
-            {/*  alt={"DeSpread"}*/}
-            {/*  style={{*/}
-            {/*    cursor: "pointer",*/}
-            {/*  }}*/}
-            {/*  onClick={(e) => {*/}
-            {/*    e.preventDefault();*/}
-            {/*    router.push("/").then();*/}
-            {/*  }}*/}
-            {/*></img>*/}
             {!props.disableNavButtonSet && (
               <Stack direction={"row"} alignItems={"center"} spacing={1}>
                 <NavbarButtonSet
@@ -148,6 +136,7 @@ const MainLayout = (props: MainLayoutProps) => {
                 ></NavbarButtonSet>
                 {isLoggedIn ? (
                   <NavbarAvatar
+                    rewardPoint={userData?.rewardPoint}
                     onProfileItemClicked={async (e) => {
                       e.preventDefault();
                       showLoading();

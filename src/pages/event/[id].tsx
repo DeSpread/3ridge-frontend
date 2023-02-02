@@ -603,10 +603,16 @@ const Event = (props: AppProps) => {
                         spacing={1}
                       >
                         <StarsIcon
-                          style={{ width: 24, height: 24 }}
+                          color={"warning"}
+                          style={{
+                            width: 24,
+                            height: 24,
+                            background: "yellow",
+                            borderRadius: 24,
+                          }}
                         ></StarsIcon>
                         <Typography variant={"h6"}>
-                          {ticketData?.rewardPolicy?.context?.point}
+                          {ticketData?.rewardPolicy?.context?.point ?? 0}
                         </Typography>
                       </Stack>
                     </Stack>

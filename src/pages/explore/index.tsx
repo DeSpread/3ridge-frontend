@@ -59,7 +59,9 @@ const Explore = (props: AppProps) => {
               padding: 8,
             }}
           >
-            <GradientButton sx={{ width: 128 }}>Load more</GradientButton>
+            <GradientButton size={"large"} sx={{ width: 156, height: 60 }}>
+              Load more
+            </GradientButton>
           </Box>
         </Stack>
       </Box>

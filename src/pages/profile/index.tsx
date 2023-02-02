@@ -40,6 +40,7 @@ import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-button";
 import AwsClient from "../../remote/aws-client";
 import StyledChip from "../../components/atoms/styled/styled-chip";
+import { useTheme } from "@mui/material/styles";
 
 const Profile = (props: AppProps) => {
   const {
@@ -68,6 +69,7 @@ const Profile = (props: AppProps) => {
     );
   const { showAlert, showErrorAlert } = useAlert();
   const [imageFile, setImageFile] = useState<File>();
+  const theme = useTheme();
 
   const pictureEditDialogOpen = useMemo(() => {
     return imageFile ? true : false;
@@ -106,6 +108,13 @@ const Profile = (props: AppProps) => {
       showErrorAlert({ content: message });
     }
   };
+
+  const levelProgressValue = useMemo(() => {
+    if (userData?.rewardPoint === undefined) {
+      return 0;
+    }
+    return (userData?.rewardPoint ?? 0) % 100;
+  }, [userData?.rewardPoint]);
 
   return (
     <>
@@ -152,8 +161,8 @@ const Profile = (props: AppProps) => {
               </Typography>
               <LinearProgress
                 variant="determinate"
-                value={1}
-                color={"secondary"}
+                value={levelProgressValue}
+                color={"warning"}
                 sx={{
                   background: (theme) => theme.palette.action.hover,
                   height: 2,
@@ -198,13 +207,27 @@ const Profile = (props: AppProps) => {
                         onClick={(e: MouseEvent) => {
                           e.preventDefault();
                           const newWindow = window.open(
-                            `https://etherscan.io/address/${userData?.walletAddress}`,
+                            `https://explorer.aptoslabs.com/account/${userData?.walletAddress}`,
                             "_blank",
                             "noopener,noreferrer"
                           );
                           if (newWindow) newWindow.opener = null;
                         }}
-                        icon={<EthIcon />}
+                        icon={
+                          <img
+                            src={
+                              "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/aptos_icon.svg"
+                            }
+                            width={16}
+                            height={16}
+                            style={{
+                              background: theme.palette.neutral[100],
+                              borderRadius: 16,
+                              padding: 1,
+                              marginRight: "2px",
+                            }}
+                          />
+                        }
                         label={
                           <Typography variant={"body2"} color={"neutral.100"}>
                             {StringHelper.getInstance().getMidEllipsisString(
@@ -435,7 +458,7 @@ Profile.getLayout = (page: ReactElement | ReactElement[]) => (
           backgroundSize: "cover",
           backgroundPosition: "center center",
           background:
-            "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/background/header.png')",
+            "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://galxe.com/_nuxt/img/space-detail-bg.569713b.jpg')",
           zIndex: 0,
           left: 0,
           top: 56,

@@ -26,6 +26,7 @@ export type QuestQuizFormProps = PropsWithChildren & {
   quizContent?: QuizContent;
   onSelectChanged?: MouseEventHandler;
   id?: number;
+  isLast?: boolean;
 };
 
 const StyledRadio = styled(Radio)(({ theme }) => ({
@@ -83,6 +84,7 @@ const QuestQuizOption = (props: {
               wordBreak: "break-word",
               //@ts-ignore
               color: (theme) => theme.palette.neutral[100],
+              marginLeft: 1,
             }}
           >
             {props.label}
@@ -153,7 +155,11 @@ const QuestQuizForm = (props: QuestQuizFormProps) => {
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Typography variant={"body2"}>Well Done! 😊</Typography>
+            {props.isLast ? (
+              <Typography variant={"body2"}>Congratulation! 🎉</Typography>
+            ) : (
+              <Typography variant={"body2"}>Good Job! 😊</Typography>
+            )}
           </Stack>
         )}
         {selectedIndex !== -1 &&

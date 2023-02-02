@@ -1,10 +1,8 @@
-import React, { ReactElement, useEffect, useState } from "react";
-import { Box, Typography, Stack, Grid, Button } from "@mui/material";
+import React, { ReactElement } from "react";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
 import type { AppProps } from "next/app";
-import { useTheme } from "@mui/material/styles";
-import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
 import HomeFooter from "../../layouts/footer/home-footer";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
@@ -15,13 +13,10 @@ export async function getStaticProps() {
 }
 
 const Home = (props: AppProps) => {
-  const theme = useTheme();
-  const { asyncTwitterSignInPopUp } = useFirebaseAuth();
-
   return (
     <>
       <Head>
-        <title>Sakura</title>
+        <title>3ridge</title>
       </Head>
       <Stack
         direction={"column"}
@@ -51,10 +46,6 @@ const Home = (props: AppProps) => {
                 width: "100%",
                 height: "100%",
                 background: "#1a1a1a",
-                // flex: 1,
-                // alignItems: "center",
-                // justifyContent: "center",
-                // zIndex: 0,
               }}
             >
               <video
@@ -90,7 +81,16 @@ const Home = (props: AppProps) => {
                   <GradientTypography variant={"h1"}>
                     Bridge your web project
                   </GradientTypography>
-                  <Typography variant={"h2"}>It`s your 3ridge</Typography>
+                  <Stack direction={"row"} alignItems={"center"}>
+                    <Typography variant={"h2"}>It`s your </Typography>
+                    <img
+                      src={
+                        "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/only-logo-white.svg"
+                      }
+                      style={{ marginTop: 2 }}
+                      height={"64px"}
+                    />
+                  </Stack>
                 </Stack>
                 <Grid container>
                   <Grid item>

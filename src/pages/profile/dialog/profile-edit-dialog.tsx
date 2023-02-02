@@ -17,17 +17,16 @@ import EthIcon from "../../../components/atoms/svg/eth-icon";
 import CloseIcon from "@mui/icons-material/Close";
 import StringHelper from "../../../helper/string-helper";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
 import { ValidatorButton } from "../../../components/molecules/validator-button";
 
 const ReversibleMarkEmailReadIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
-    return (
-      <MarkEmailReadIcon {...props} color={"disabled"}></MarkEmailReadIcon>
-    );
+    return <EmailIcon {...props} color={"disabled"}></EmailIcon>;
   }
-  return <MarkEmailReadIcon {...props}></MarkEmailReadIcon>;
+  return <EmailIcon {...props}></EmailIcon>;
 };
 
 const ReversibleTwitterReadIcon = (props: ReversibleSvgIconProps) => {
@@ -69,6 +68,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
           //@ts-ignore
           borderColor: theme.palette.neutral["800"],
           borderStyle: "solid",
+          boxShadow: "inset 4px 4px 4px #35333a, inset -4px -4px 4px #35333a",
         },
       }}
     >
