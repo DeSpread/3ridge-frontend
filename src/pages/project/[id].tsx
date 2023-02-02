@@ -22,6 +22,8 @@ import StyledTab from "../../components/atoms/styled/styled-tab";
 import EventCollectionCard from "../../components/molecules/event-collection-card";
 import TicketsSection from "../../components/organisms/tickets-section";
 import GradientButton from "../../components/atoms/gradient-button";
+import { MouseEventWithParam, TicketEventParam } from "../../type";
+import { useRouter } from "next/router";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -40,6 +42,7 @@ const Project = () => {
   const { ticketsData, ticketsDataLoading } = useTicketsQuery();
   const [value, setValue] = useState("1");
   const { showLoading, closeLoading } = useLoading();
+  const router = useRouter();
 
   return (
     <>
@@ -149,8 +152,12 @@ const Project = () => {
           <TicketsSection
             tickets={ticketsData}
             loading={ticketsDataLoading}
-            onTicketClick={(e) => {
-              console.log(e);
+            onTicketClick={async (e) => {
+              showLoading();
+              const myEvent = e as MouseEventWithParam<TicketEventParam>;
+              const { ticket } = myEvent.params;
+              await router.push(`/event/${ticket._id}`);
+              closeLoading();
             }}
             sx={{
               marginTop: 6,
