@@ -32,6 +32,7 @@ import AwsClient from "../../remote/aws-client";
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
 import { gql, request } from "graphql-request";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Profile = (props: AppProps) => {
   const {
@@ -66,6 +67,7 @@ const Profile = (props: AppProps) => {
       metaDataUri: string;
     }[]
   >([]);
+  const [achievementsLoading, setAchievementsLoading] = useState(false);
 
   const theme = useTheme();
 
@@ -75,11 +77,13 @@ const Profile = (props: AppProps) => {
 
   useEffect(() => {
     (async () => {
+      setAchievementsLoading(true);
       const tokenNames = await asyncQueryTokenByUserName();
       const tokensData = await asyncQueryTokenData(tokenNames);
       if (tokensData) {
         setTokensData(tokensData);
       }
+      setAchievementsLoading(false);
     })();
   }, [userData]);
 
@@ -364,37 +368,64 @@ const Profile = (props: AppProps) => {
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
                 Achievements
               </Typography>
-              {tokensData?.length > 0 ? (
-                <Grid container={true} spacing={2} sx={{ marginTop: 2 }}>
-                  {tokensData.map((e, index) => {
-                    return (
-                      <Grid item key={index}>
-                        <img
-                          src={e?.metaDataUri}
-                          style={{
-                            objectFit: "cover",
-                            width: 128,
-                            borderRadius: 128,
-                            borderColor: theme.palette.neutral[100],
-                            borderStyle: "solid",
-                            borderWidth: 2,
-                          }}
-                        />
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              ) : (
+              {achievementsLoading && (
                 <Stack
                   direction={"column"}
                   alignItems={"center"}
                   sx={{ marginTop: 4 }}
                 >
-                  <Typography variant={"h6"} color={"neutral.500"}>
-                    ⛔ EMPTY
-                  </Typography>
+                  <Stack
+                    direction={"row"}
+                    spacing={2}
+                    alignItems={"center"}
+                    sx={{ height: 128 }}
+                  >
+                    <CircularProgress
+                      sx={{
+                        color: theme.palette.warning.main,
+                      }}
+                    />
+                    <Typography
+                      variant={"h6"}
+                      sx={{ color: theme.palette.warning.main }}
+                    >
+                      Loading ...{" "}
+                    </Typography>
+                  </Stack>
                 </Stack>
               )}
+              {!achievementsLoading &&
+                (tokensData?.length > 0 ? (
+                  <Grid container={true} spacing={2} sx={{ marginTop: 2 }}>
+                    {tokensData.map((e, index) => {
+                      return (
+                        <Grid item key={index}>
+                          <img
+                            src={e?.metaDataUri}
+                            style={{
+                              objectFit: "cover",
+                              width: 128,
+                              borderRadius: 128,
+                              borderColor: theme.palette.neutral[100],
+                              borderStyle: "solid",
+                              borderWidth: 2,
+                            }}
+                          />
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                ) : (
+                  <Stack
+                    direction={"column"}
+                    alignItems={"center"}
+                    sx={{ marginTop: 4 }}
+                  >
+                    <Typography variant={"h6"} color={"neutral.500"}>
+                      ⛔ EMPTY
+                    </Typography>
+                  </Stack>
+                ))}
             </Stack>
             {/*--- additional area ---*/}
           </Stack>

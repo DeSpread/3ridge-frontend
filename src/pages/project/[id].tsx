@@ -1,5 +1,5 @@
 import { GetStaticPaths } from "next";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import Head from "next/head";
 import {
@@ -18,6 +18,8 @@ import TicketsSection from "../../components/organisms/tickets-section";
 import GradientButton from "../../components/atoms/gradient-button";
 import { MouseEventWithParam, TicketEventParam } from "../../type";
 import { useRouter } from "next/router";
+import projectsData from "../projects/data.json";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -37,19 +39,25 @@ const Project = () => {
   const [value, setValue] = useState("1");
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
+  const projectInfo = useMemo(() => {
+    if (router.query.id === undefined) {
+      return undefined;
+    }
+    if (typeof router.query.id === "string") {
+      const id: string = router.query.id;
+      return projectsData[parseInt(id)];
+    }
+    return undefined;
+  }, [router.query.id]);
 
   return (
     <>
       <Head>
-        <title>Leaderboard</title>
+        <title>{projectInfo?.name ?? "Project"}</title>
       </Head>
       <Stack direction={"column"} alignItems={"center"}>
         <Stack
           sx={{
-            // backgroundSize: "contain",
-            // backgroundPosition: "center",
-            // background:
-            //   "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://indexer.xyz/assets/top-section-bg.png')",
             height: 300,
             paddingLeft: 16,
             paddingRight: 16,
@@ -57,6 +65,8 @@ const Project = () => {
             borderWidth: 0,
             borderBottomWidth: 1,
             borderColor: (theme) => theme.palette.divider,
+            background: "",
+            width: "100%",
           }}
           alignItems={"center"}
           justifyContent={"center"}
@@ -64,25 +74,23 @@ const Project = () => {
           <Grid
             container={true}
             sx={{
-              background: "",
               zIndex: 1,
             }}
             spacing={3}
           >
             <Grid item sx={{ background: "" }} lg={9}>
-              <Stack
-                direction={"column"}
-                sx={{ background: "", height: "100%" }}
-                spacing={2}
-              >
+              <Stack direction={"column"} sx={{ height: "100%" }} spacing={2}>
                 <Stack
                   direction={"row"}
                   alignItems={"center"}
                   sx={{ background: "" }}
                 >
-                  <Avatar sx={{ width: 48, height: 48 }} src={iconUrl}></Avatar>
+                  <Avatar
+                    sx={{ width: 48, height: 48 }}
+                    src={projectInfo?.iconUrl}
+                  ></Avatar>
                   <Box sx={{ marginLeft: 2 }}>
-                    <Typography variant={"h5"}>Polygon</Typography>
+                    <Typography variant={"h5"}>{projectInfo?.name}</Typography>
                   </Box>
                   <Box sx={{ marginLeft: 1 }}>
                     <CheckIcon
@@ -100,25 +108,55 @@ const Project = () => {
                     WebkitBoxOrient: "vertical",
                   }}
                 >
-                  Polygon is a protocol and a framework for building and
-                  connecting Ethereum-compatible blockchain networks.
-                  Aggregating scalable solutions on Ethereum supporting a
-                  multi-chain Ethereum ecosystem.
+                  {projectInfo?.description}
                 </Typography>
               </Stack>
             </Grid>
             <Grid item lg={3}>
-              <IconButton
-                sx={{
-                  width: 36,
-                  height: 36,
-                  //@ts-ignore
-                  background: (theme) => theme.palette.neutral["900"],
-                  borderRadius: 16,
-                }}
-              >
-                <LanguageIcon></LanguageIcon>
-              </IconButton>
+              <Stack direction={"row"} spacing={1}>
+                <IconButton
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    //@ts-ignore
+                    background: (theme) => theme.palette.neutral["900"],
+                    borderRadius: 16,
+                  }}
+                  onClick={() => {
+                    if (projectInfo?.web) {
+                      const newWindow = window.open(
+                        projectInfo?.web,
+                        "_blank",
+                        "noopener,noreferrer"
+                      );
+                      if (newWindow) newWindow.opener = null;
+                    }
+                  }}
+                >
+                  <LanguageIcon></LanguageIcon>
+                </IconButton>
+                <IconButton
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    //@ts-ignore
+                    background: (theme) => theme.palette.neutral["900"],
+                    borderRadius: 16,
+                  }}
+                  onClick={() => {
+                    if (projectInfo?.web) {
+                      const newWindow = window.open(
+                        projectInfo?.twitter,
+                        "_blank",
+                        "noopener,noreferrer"
+                      );
+                      if (newWindow) newWindow.opener = null;
+                    }
+                  }}
+                >
+                  <TwitterIcon></TwitterIcon>
+                </IconButton>
+              </Stack>
             </Grid>
           </Grid>
           <div
