@@ -47,6 +47,7 @@ import StarsIcon from "@mui/icons-material/Stars";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
+import { request, gql } from "graphql-request";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -244,6 +245,7 @@ const Event = (props: AppProps) => {
 
   useEffect(() => {
     if (!userData?._id) return;
+    // console.log(ticketData);
     const ids = ticketData?.quests?.map((e) => {
       return e._id;
     });
@@ -265,6 +267,36 @@ const Event = (props: AppProps) => {
         .catch((err) => {
           console.log(err);
         });
+      if (ticketData?.rewardPolicy?.context) {
+        const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
+        try {
+          const query = gql`
+            {
+              token_ownerships(
+                where: {
+                  name: { _eq: "aptos-seoul-hack-2023-testnet-1" }
+                  collection_name: { _eq: "3ridge-testnet-1" }
+                  owner_address: {
+                    _eq: "0x93207d35b8695903259bead6794b56cdb5ec4e133d3b333bf2127b38223e477c"
+                  }
+                }
+              ) {
+                name
+                owner_address
+                collection_name
+              }
+            }
+          `;
+          request(
+            "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+            query
+          ).then((data) => {
+            console.log(data);
+          });
+        } catch (e) {}
+      }
+
+      // console.log(collectionName, tokenName);
     }
   }, [ticketData?.quests, userData?._id]);
 
@@ -649,10 +681,29 @@ const Event = (props: AppProps) => {
               <LoadingButton
                 disabled={claimRewardDisabled}
                 onClick={async (e) => {
-                  if (userData?.walletAddress) {
-                    console.log(userData?.walletAddress);
+                  if (
+                    !(
+                      ticketData &&
+                      ticketData?.rewardPolicy &&
+                      ticketData?.rewardPolicy?.context
+                    )
+                  ) {
+                    return;
+                  }
+                  const { collectionName, tokenName } =
+                    ticketData?.rewardPolicy?.context;
+                  if (userData?.walletAddress && collectionName && tokenName) {
+                    console.log(
+                      userData?.walletAddress,
+                      collectionName,
+                      tokenName
+                    );
                     try {
-                      await asyncRequestClaimNtf(userData?.walletAddress);
+                      await asyncRequestClaimNtf(
+                        collectionName,
+                        tokenName,
+                        userData?.walletAddress
+                      );
                       //@ts-ignore
                       const myEvent = e as MouseEventWithParam<{
                         callback: (msg: string) => void;

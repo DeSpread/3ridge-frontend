@@ -1,25 +1,19 @@
 import { GetStaticPaths } from "next";
-import React, { ReactElement, SyntheticEvent, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import Head from "next/head";
 import {
-  Stack,
-  Box,
-  Typography,
   Avatar,
-  Divider,
+  Box,
   Grid,
   IconButton,
-  Skeleton,
+  Stack,
+  Typography,
 } from "@mui/material";
 import CheckIcon from "../../components/atoms/svg/check-icon";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import { useLoading } from "../../provider/loading/loading-provider";
-import { TabContext, TabPanel } from "@mui/lab";
-import StyledTabs from "../../components/atoms/styled/styled-tabs";
-import StyledTab from "../../components/atoms/styled/styled-tab";
-import EventCollectionCard from "../../components/molecules/event-collection-card";
 import TicketsSection from "../../components/organisms/tickets-section";
 import GradientButton from "../../components/atoms/gradient-button";
 import { MouseEventWithParam, TicketEventParam } from "../../type";
