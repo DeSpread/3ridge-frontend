@@ -62,7 +62,7 @@ const Projects = () => {
                     }}
                     onClick={async (e) => {
                       showLoading();
-                      await router.push(`/project/1`);
+                      await router.push(`/project/${index}`);
                       closeLoading();
                     }}
                   >
