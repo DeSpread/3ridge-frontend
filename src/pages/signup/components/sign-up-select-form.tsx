@@ -54,7 +54,6 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
                 sx={{
                   width: 24,
                   height: 24,
-                  //@ts-ignore
                   background: theme.palette.neutral["400"],
                 }}
               >
