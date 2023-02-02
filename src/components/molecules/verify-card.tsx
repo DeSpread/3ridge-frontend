@@ -101,6 +101,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                 <div style={{ position: "relative" }}>
                   <PrimaryButton
                     size={"medium"}
+                    sx={{ width: 86 }}
                     onClick={(e) => {
                       setCardState("VERIFYING");
                       let timer: NodeJS.Timer;
@@ -171,6 +172,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                   </div>
                 </div>
                 <SecondaryButton
+                  sx={{ width: 86 }}
                   disabled={props.disabled || props.verified}
                   size={"medium"}
                   onClick={props.onStartBtnClicked}

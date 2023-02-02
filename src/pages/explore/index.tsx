@@ -23,7 +23,7 @@ const Explore = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>Sakura</title>
+        <title>Explore</title>
       </Head>
       <Box
         style={{ flex: 1, background: "", paddingLeft: 24, paddingRight: 24 }}

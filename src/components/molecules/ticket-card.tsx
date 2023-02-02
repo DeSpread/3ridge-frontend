@@ -61,9 +61,11 @@ const TicketCard = (props: EventCardProps) => {
                   {ticket?.title}
                 </Typography>
               </Box>
-              <StyledChip label={"1 Quests"}></StyledChip>
+              <StyledChip
+                label={`${ticket?.quests?.length ?? 0} Quests`}
+              ></StyledChip>
             </Stack>
-            <Box sx={{ marginTop: 2 }}>
+            <Box sx={{ marginTop: 2, minHeight: 100 }}>
               <Typography
                 variant={"body2"}
                 sx={{
@@ -94,6 +96,7 @@ const TicketCard = (props: EventCardProps) => {
                 style={{
                   objectFit: "cover",
                   width: "100%",
+                  borderRadius: 10,
                 }}
               />
             </Box>

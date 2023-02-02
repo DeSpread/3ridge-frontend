@@ -168,7 +168,7 @@ const NavbarAvatar = ({
               fontSize={"medium"}
               sx={{ color: theme.palette.warning.main }}
             ></PowerSettingsNewIcon>
-            <Typography>Log out</Typography>
+            <Typography>Disconnect</Typography>
           </Stack>
         </StyledMenuItem>
       </StyledMenu>

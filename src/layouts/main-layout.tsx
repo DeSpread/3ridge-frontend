@@ -48,7 +48,7 @@ const NavbarButtonSet = ({
 }: NavbarButtonSetProps) => {
   return (
     <Stack direction={"row"}>
-      <NavbarButton onClick={bountiesBtnOnClick}>Events</NavbarButton>
+      <NavbarButton onClick={bountiesBtnOnClick}>Explore</NavbarButton>
       <NavbarButton onClick={communitiesBtnOnClick}>Projects</NavbarButton>
       <NavbarButton onClick={leaderBoardBtnOnClick}>LeaderBoard</NavbarButton>
     </Stack>
