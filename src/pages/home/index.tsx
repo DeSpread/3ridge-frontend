@@ -15,24 +15,24 @@ export async function getStaticProps() {
 
 const Home = (props: AppProps) => {
   useEffect(() => {
-    const query = gql`
-      {
-        token_datas(
-          where: {
-            collection_name: { _eq: "3ridge-testnet-1" }
-            name: { _eq: "aptos-seoul-hack-2023-testnet-1" }
-          }
-        ) {
-          collection_name
-          metadata_uri
-          name
-        }
-      }
-    `;
-    request(
-      "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-      query
-    ).then((data) => console.log(data));
+    // const query = gql`
+    //   {
+    //     token_datas(
+    //       where: {
+    //         collection_name: { _eq: "3ridge-testnet-1" }
+    //         name: { _eq: "aptos-seoul-hack-2023-testnet-1" }
+    //       }
+    //     ) {
+    //       collection_name
+    //       metadata_uri
+    //       name
+    //     }
+    //   }
+    // `;
+    // request(
+    //   "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+    //   query
+    // ).then((data) => console.log(data));
   }, []);
 
   return (

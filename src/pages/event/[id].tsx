@@ -14,6 +14,7 @@ import {
   ButtonProps,
   Divider,
   Grid,
+  Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
@@ -45,9 +46,8 @@ import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import StarsIcon from "@mui/icons-material/Stars";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
-import { request, gql } from "graphql-request";
+import { gql, request } from "graphql-request";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -227,12 +227,6 @@ const Event = (props: AppProps) => {
     //@ts-ignore
     id: router.query.id ?? undefined,
   });
-  const {
-    signAndSubmitTransaction,
-    signTransaction,
-    signMessage,
-    signMessageAndVerify,
-  } = useWallet();
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
@@ -242,10 +236,11 @@ const Event = (props: AppProps) => {
   const { showLoading, closeLoading } = useLoading();
   const [verifiedList, setVerifiedList] = useState<boolean[]>([]);
   const [updateIndex, setUpdateIndex] = useState(0);
+  const [claimCompleted, setClaimCompleted] = useState(false);
 
   useEffect(() => {
     if (!userData?._id) return;
-    // console.log(ticketData);
+    console.log(ticketData);
     const ids = ticketData?.quests?.map((e) => {
       return e._id;
     });
@@ -267,38 +262,51 @@ const Event = (props: AppProps) => {
         .catch((err) => {
           console.log(err);
         });
-      if (ticketData?.rewardPolicy?.context) {
-        const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
-        try {
-          const query = gql`
-            {
-              token_ownerships(
-                where: {
-                  name: { _eq: "aptos-seoul-hack-2023-testnet-1" }
-                  collection_name: { _eq: "3ridge-testnet-1" }
-                  owner_address: {
-                    _eq: "0x93207d35b8695903259bead6794b56cdb5ec4e133d3b333bf2127b38223e477c"
-                  }
-                }
-              ) {
-                name
-                owner_address
-                collection_name
-              }
-            }
-          `;
-          request(
-            "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-            query
-          ).then((data) => {
-            console.log(data);
-          });
-        } catch (e) {}
-      }
-
-      // console.log(collectionName, tokenName);
+      updateClaimCompleted();
     }
   }, [ticketData?.quests, userData?._id]);
+
+  const updateClaimCompleted = () => {
+    if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
+      const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
+      try {
+        const query = gql`
+          {
+            token_ownerships(
+              where: {
+                name: { _eq: "${tokenName}" }
+                collection_name: { _eq: "${collectionName}" }
+                owner_address: {
+                  _eq: "${userData?.walletAddress}"
+                }
+              }
+            ) {
+              name
+              owner_address
+              collection_name
+            }
+          }
+        `;
+        console.log(query);
+        request(
+          "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+          query
+        ).then((data) => {
+          console.log(data);
+          if (data?.token_ownerships?.length > 0) {
+            setClaimCompleted(true);
+          }
+        });
+      } catch (e) {
+        setClaimCompleted(false);
+        console.log(e);
+      }
+    }
+  };
+
+  useEffect(() => {
+    updateClaimCompleted();
+  }, [updateIndex]);
 
   const claimRewardDisabled = useMemo(() => {
     if (userData?._id === undefined) return true;
@@ -326,23 +334,33 @@ const Event = (props: AppProps) => {
           <Stack direction={"column"} spacing={8}>
             <Grid
               container
-              spacing={2}
+              spacing={4}
               direction={"row"}
               alignItems="center"
               sx={{ background: "", marginBottom: 2 }}
             >
               <Grid item>
                 <Box sx={{ height: 128, width: 128, background: "" }}>
-                  <img
-                    style={{
-                      width: 128,
-                      height: 128,
-                      borderRadius: 10,
-                    }}
-                    src={
-                      "https://imgp.layer3cdn.com/ipfs/QmUnZrLc6F4u4VZyvHoxkerPe9ZvfBdEkx7BSW4naWWBe9"
-                    }
-                  />
+                  {ticketData?.imageUrl ? (
+                    <img
+                      style={{
+                        width: 128,
+                        height: 128,
+                        borderRadius: 10,
+                        borderWidth: 2,
+                        borderColor: theme.palette.neutral[100],
+                        borderStyle: "solid",
+                      }}
+                      src={ticketData?.imageUrl}
+                    />
+                  ) : (
+                    <Skeleton
+                      width={128}
+                      height={128}
+                      variant={"rounded"}
+                      animation={"wave"}
+                    ></Skeleton>
+                  )}
                 </Box>
               </Grid>
               <Grid item>
@@ -379,7 +397,15 @@ const Event = (props: AppProps) => {
                 variant={"h5"}
                 sx={{ color: theme.palette.warning.main }}
               >
-                --- Please First Sign In ---
+                --- Please Sign In First ---
+              </Typography>
+            )}
+            {userData?._id && userData?.walletAddress === undefined && (
+              <Typography
+                variant={"h5"}
+                sx={{ color: theme.palette.warning.main }}
+              >
+                --- Please Wallet Connect In Profile ---
               </Typography>
             )}
 
@@ -679,7 +705,7 @@ const Event = (props: AppProps) => {
                 </Stack>
               </PrimaryCard>
               <LoadingButton
-                disabled={claimRewardDisabled}
+                disabled={claimRewardDisabled || claimCompleted}
                 onClick={async (e) => {
                   if (
                     !(
@@ -711,7 +737,16 @@ const Event = (props: AppProps) => {
                       myEvent.params.callback("success");
                       showAlert({
                         title: "Info",
-                        content: "Claim Completed !!!",
+                        content: (
+                          <>
+                            <Stack direction={"column"} spacing={1}>
+                              <Typography>Claim Completed !!!</Typography>
+                              <Typography>
+                                Please Check your pending token
+                              </Typography>
+                            </Stack>
+                          </>
+                        ),
                       });
                     } catch (e) {
                       console.log(e);
@@ -719,7 +754,7 @@ const Event = (props: AppProps) => {
                   }
                 }}
               >
-                Claim reward
+                {claimCompleted ? "Claim completed" : "Claim reward"}
               </LoadingButton>
             </Stack>
 
@@ -754,7 +789,6 @@ const Event = (props: AppProps) => {
                       sx={{
                         width: 42,
                         height: 42,
-                        //@ts-ignore
                         background: (theme) => theme.palette.neutral["800"],
                         alignItems: "center",
                         justifyContent: "center",

@@ -1,22 +1,12 @@
-import React, { ReactElement, useMemo, useState } from "react";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import {
-  Avatar,
-  Box,
-  Grid,
-  Link,
-  Stack,
-  Theme,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Avatar, Box, Grid, Stack, Theme, Typography } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import { useSignedUserQuery } from "../../page-hook/user-query-hook";
-import EthIcon from "../../components/atoms/svg/eth-icon";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import PrimaryButton from "../../components/atoms/primary-button";
 import ProfileEditDialog from "./dialog/profile-edit-dialog";
@@ -41,6 +31,7 @@ import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-bu
 import AwsClient from "../../remote/aws-client";
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
+import { gql, request } from "graphql-request";
 
 const Profile = (props: AppProps) => {
   const {
@@ -69,11 +60,114 @@ const Profile = (props: AppProps) => {
     );
   const { showAlert, showErrorAlert } = useAlert();
   const [imageFile, setImageFile] = useState<File>();
+  const [tokensData, setTokensData] = useState<
+    {
+      name: string;
+      metaDataUri: string;
+    }[]
+  >([]);
+
   const theme = useTheme();
 
   const pictureEditDialogOpen = useMemo(() => {
     return imageFile ? true : false;
   }, [imageFile]);
+
+  useEffect(() => {
+    (async () => {
+      const tokenNames = await asyncQueryTokenByUserName();
+      const tokensData = await asyncQueryTokenData(tokenNames);
+      if (tokensData) {
+        setTokensData(tokensData);
+      }
+    })();
+  }, [userData]);
+
+  const asyncQueryTokenData = async (tokenNames: string[] | undefined) => {
+    try {
+      if (tokenNames === undefined || tokenNames.length === 0) {
+        return undefined;
+      }
+      let param = "";
+      tokenNames.forEach((e) => {
+        param += `"${e}", `;
+      });
+      param = param.slice(0, -2);
+      const query = gql`
+        {
+          token_datas(
+            where: { name: { _in: [ ${param} ] } }
+          ) {
+            collection_name
+            metadata_uri
+            name
+          }
+        }
+      `;
+      const res = await request(
+        "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+        query
+      );
+      const metadataUriArray: string[] = [];
+      const tokensData: {
+        name: string;
+        metaDataUri: string;
+      }[] = [];
+      if (res.token_datas?.length > 0) {
+        res.token_datas?.forEach((e: any) => {
+          if (!metadataUriArray.includes(e.metadata_uri)) {
+            metadataUriArray.push(e.metadata_uri);
+            tokensData.push({
+              name: e.name,
+              metaDataUri: e.metadata_uri,
+            });
+          }
+        });
+        return tokensData;
+      }
+    } catch (e) {
+      console.log(e);
+      return undefined;
+    }
+  };
+
+  const asyncQueryTokenByUserName = async () => {
+    if (userData?.walletAddress === undefined) {
+      return undefined;
+    }
+    try {
+      const query = gql`
+        {
+          token_ownerships(
+            where: {
+                owner_address: {
+                    _eq: "${userData?.walletAddress}"
+                }
+            }
+            ) {
+              name
+              owner_address
+              collection_name
+            }
+        }
+      `;
+      const res = await request(
+        "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+        query
+      );
+      if (res.token_ownerships?.length > 0) {
+        const names: string[] = [];
+        res.token_ownerships?.forEach((e: any) => {
+          if (!names.includes(e.name)) names.push(e.name);
+        });
+        return names;
+      }
+      return undefined;
+    } catch (e) {
+      console.log(e);
+      return undefined;
+    }
+  };
 
   const asyncMailSignInWithVerify = async (
     email: string,
@@ -266,15 +360,41 @@ const Profile = (props: AppProps) => {
               </Grid>
             </Stack>
             {/*--- Achievements ---*/}
-            <Stack spacing={4}>
+            <Stack>
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
                 Achievements
               </Typography>
-              <Stack direction={"column"} alignItems={"center"}>
-                <Typography variant={"h6"} color={"neutral.500"}>
-                  ⛔ EMPTY
-                </Typography>
-              </Stack>
+              {tokensData?.length > 0 ? (
+                <Grid container={true} spacing={2} sx={{ marginTop: 2 }}>
+                  {tokensData.map((e, index) => {
+                    return (
+                      <Grid item key={index}>
+                        <img
+                          src={e?.metaDataUri}
+                          style={{
+                            objectFit: "cover",
+                            width: 128,
+                            borderRadius: 128,
+                            borderColor: theme.palette.neutral[100],
+                            borderStyle: "solid",
+                            borderWidth: 2,
+                          }}
+                        />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              ) : (
+                <Stack
+                  direction={"column"}
+                  alignItems={"center"}
+                  sx={{ marginTop: 4 }}
+                >
+                  <Typography variant={"h6"} color={"neutral.500"}>
+                    ⛔ EMPTY
+                  </Typography>
+                </Stack>
+              )}
             </Stack>
             {/*--- additional area ---*/}
           </Stack>

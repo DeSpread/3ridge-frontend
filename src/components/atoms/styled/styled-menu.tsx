@@ -20,7 +20,7 @@ const StyledMenu = styled((props: MenuProps) => (
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 218,
-    background: "transparent", //theme.palette.primary.main,
+    background: theme.palette.neutral[800], //theme.palette.primary.main,
     color: "white",
     // boxShadow: "inset 4px 4px 4px #35333a, inset -4px -4px 4px #35333a",
     "& .MuiMenu-list": {
