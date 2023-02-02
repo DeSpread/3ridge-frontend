@@ -26,8 +26,10 @@ export function useTicketsQuery() {
                 profileImageUrl: _e.profileImageUrl ?? undefined,
               };
             }),
+            imageUrl: e.imageUrl ?? undefined,
             quests: e.quests?.map((_e) => {
               return {
+                _id: _e._id ?? undefined,
                 title: _e.title ?? undefined,
                 description: _e.description ?? undefined,
                 questPolicy: {

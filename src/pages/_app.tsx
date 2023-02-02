@@ -14,6 +14,9 @@ import { LoginProvider } from "../provider/login/login-provider";
 import { AlertProvider } from "../provider/alert/alert-provider";
 import { LoadingProvider } from "../provider/loading/loading-provider";
 import { combineProviders } from "react-combine-providers";
+import { PetraWallet } from "petra-plugin-wallet-adapter";
+
+import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
@@ -33,16 +36,18 @@ type AppPropsWithLayout = AppProps & {
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>);
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
-
+  const wallets = [new PetraWallet()];
   return (
     <ThemeProvider theme={createTheme()}>
       <WagmiConfig client={wagmiClient}>
         <GoogleOAuthProvider clientId={clientId ?? ""}>
           <RecoilRoot>
             <ApolloProvider client={apolloClient}>
-              <MasterProvider>
-                {getLayout(<Component {...pageProps} />)}
-              </MasterProvider>
+              <AptosWalletAdapterProvider plugins={wallets} autoConnect={true}>
+                <MasterProvider>
+                  {getLayout(<Component {...pageProps} />)}
+                </MasterProvider>
+              </AptosWalletAdapterProvider>
             </ApolloProvider>
           </RecoilRoot>
         </GoogleOAuthProvider>

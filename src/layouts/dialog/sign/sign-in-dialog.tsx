@@ -28,7 +28,11 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
         <Stack direction={"column"} spacing={2}>
           <PrimaryButton fullWidth={true} onClick={props.onSignInWithClicked}>
             <Stack direction={"row"} spacing={1}>
-              <Typography color={"neutral.100"} variant={"body2"}>
+              <Typography
+                className={"MuiTypography"}
+                color={"neutral.900"}
+                variant={"body2"}
+              >
                 Sign In with
               </Typography>
               <Avatar

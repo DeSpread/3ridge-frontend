@@ -1,89 +1,22 @@
-import { ReactElement, useEffect } from "react";
-import { Box, Typography, Stack, Grid } from "@mui/material";
+import React, { ReactElement, useEffect, useState } from "react";
+import { Box, Typography, Stack, Grid, Button } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
 import type { AppProps } from "next/app";
 import { useTheme } from "@mui/material/styles";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
-import backgroundIconImageProps from "./data.json";
+import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
 import HomeFooter from "../../layouts/footer/home-footer";
-import EventCollectionCard from "../../components/molecules/event-collection-card";
-import EventSingleCard from "../../components/molecules/event-single-card";
-import SecondaryButton from "../../components/atoms/secondary-button";
+import GradientTypography from "../../components/atoms/gradient-typography";
+import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
+import StyledChip from "../../components/atoms/styled/styled-chip";
 
 export async function getStaticProps() {
   return { props: {} };
 }
 
-const eventCardData = [
-  {
-    type: "collection",
-    title: "The Magic Starts Here ✨",
-    bountyCount: 4,
-    community: {
-      name: "uniswap",
-      thumbnailUrl:
-        "https://pinx.layer3.xyz/ipfs/Qmc1k2ARRhYgHTggx3L9E8YjMWtxMtFhuaWmLvApFKsdm3?img-width=16",
-    },
-    thumbnailUrl:
-      "https://pinx.layer3.xyz/ipfs/QmcmGhyD31imuhFZw32teTqQSEax4nh9D8gsfVQrDj38Nz",
-    progress: 50,
-  },
-  {
-    type: "collection",
-    title: "Beyond Ethereum ⛓️",
-    bountyCount: 4,
-    thumbnailUrl:
-      "https://pinx.layer3.xyz/ipfs/QmfD9H662bi5fKMsYqFV1bw2BzjcWjd2MitJG3J1zXaaG3",
-    progress: 10,
-  },
-  {
-    type: "collection",
-    title: "Beyond Ethereum ⛓️",
-    bountyCount: 4,
-    thumbnailUrl:
-      "https://pinx.layer3.xyz/ipfs/QmfD9H662bi5fKMsYqFV1bw2BzjcWjd2MitJG3J1zXaaG3",
-    progress: 10,
-  },
-  {
-    type: "single",
-    title: "Holiday Cheer 🌟",
-    summary:
-      "Spread the Holiday Cheer! All you need to prepare for the Holidays and participate in Layer3's Winter Extravaganza.aaaaaaaaaaa aaaaaaaaaaa aaaaaaaaaaa aaaaaaaaaaa aaaaaaaaaaa aaaaaaa ",
-    thumbnailUrl:
-      "https://pinx.layer3.xyz/ipfs/QmfTeu2b7opBffc3DPLuT67si63rngLdT46i3cbbSFEtQN",
-    expiredDate: "2022-11-08 09:00:00",
-    reward: {
-      type: "instant",
-      amount: 100,
-      unit: "xp",
-    },
-  },
-  {
-    type: "single",
-    title: "Holiday Cheer 🌟",
-    summary:
-      "Spread the Holiday Cheer! All you need to prepare for the Holidays and participate in Layer3's Winter Extravaganza.",
-    thumbnailUrl:
-      "https://pinx.layer3.xyz/ipfs/QmfTeu2b7opBffc3DPLuT67si63rngLdT46i3cbbSFEtQN",
-    expiredDate: "2022-11-08 09:00:00",
-    community: {
-      name: "uniswap",
-      thumbnailUrl:
-        "https://pinx.layer3.xyz/ipfs/Qmc1k2ARRhYgHTggx3L9E8YjMWtxMtFhuaWmLvApFKsdm3?img-width=16",
-    },
-    reward: {
-      type: "instant",
-      amount: 100,
-      unit: "xp",
-    },
-  },
-];
-
 const Home = (props: AppProps) => {
   const theme = useTheme();
-  useEffect(() => {}, []);
+  const { asyncTwitterSignInPopUp } = useFirebaseAuth();
 
   return (
     <>
@@ -95,174 +28,153 @@ const Home = (props: AppProps) => {
         sx={{
           marginTop: "-8px",
           background: "",
-          zIndex: 0,
         }}
       >
         <Stack
           direction={"column"}
           sx={{
             width: "100%",
-            height: `calc(100vh - 56px)`,
+            height: `calc(100vh - 56px)`, // 56
           }}
         >
-          <img
-            src={
-              "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/background/ellipse.png"
-            }
-            style={{
-              position: "absolute",
-              left: "50%",
-              right: "50%",
-              bottom: "0px",
-              height: "200px",
-              width: "1000px",
-              transform: "translateX(-50%)",
-              userSelect: "none",
-            }}
-          />
           <div
             style={{
               width: "100%",
-              height: "100%",
+              height: `calc(100vh - 56px)`,
               background: "",
-              top: "56px",
               overflow: "hidden",
               position: "absolute",
-              zIndex: 0,
             }}
           >
-            {backgroundIconImageProps.map((e, index) => {
-              return (
-                <UpDownAnimatedComponent
-                  key={index}
-                  yDist={e.yDist}
-                  width={e.width}
-                  height={e.height}
-                  duration={e.duration}
-                  src={`https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/background/${e.fileName}`}
-                  sx={{
-                    position: "absolute",
-                    left: `calc(50% ${
-                      e.leftOffset.includes("-")
-                        ? "-" + e.leftOffset.replace("-", " ")
-                        : "+ " + e.leftOffset
-                    })`,
-                    top: `calc(50% ${
-                      e.topOffset.includes("-")
-                        ? "-" + e.topOffset.replace("-", " ")
-                        : "+ " + e.topOffset
-                    })`,
-                    userSelect: "none",
-                    zIndex: 0,
-                  }}
-                />
-              );
-            })}
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                transform: "translateY(-50%)",
+            <div
+              style={{
                 width: "100%",
-                background: "",
+                height: "100%",
+                background: "#1a1a1a",
+                // flex: 1,
+                // alignItems: "center",
+                // justifyContent: "center",
+                // zIndex: 0,
               }}
             >
-              <Typography textAlign={"center"} variant={"h3"}>
-                You have a wallet.
-              </Typography>
-              <Typography
-                textAlign={"center"}
-                sx={{
-                  fontSize: "4.8rem",
-                  fontWeight: 600,
-                }}
+              <video
+                style={{ marginLeft: 400, height: "100%" }}
+                className="videoTag"
+                autoPlay
+                loop
+                muted
               >
-                Now what?
-              </Typography>
-              <Typography
-                textAlign={"center"}
-                // @ts-ignore
-                sx={{ marginTop: 1, color: theme.palette.neutral["400"] }}
-                variant={"h5"}
-              >
-                Join 100,000+ people exploring
-              </Typography>
-              <Typography
-                textAlign={"center"}
-                // @ts-ignore
-                sx={{ color: theme.palette.neutral["400"] }}
-                variant={"h5"}
-              >
-                web3 every day with us
-              </Typography>
-            </Box>
+                <source
+                  src={
+                    "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/background/background.mp4"
+                  }
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+            <div
+              style={{
+                zIndex: 2,
+                position: "absolute",
+                top: `calc(50vh)`,
+                display: "flex",
+                alignItems: "center",
+                background: "",
+                flex: 1,
+                width: "100%",
+                transform: "translateY(-70%)",
+              }}
+            >
+              <Stack sx={{ marginLeft: 15 }} spacing={3}>
+                <Stack spacing={1}>
+                  <GradientTypography variant={"h1"}>
+                    Bridge your web project
+                  </GradientTypography>
+                  <Typography variant={"h2"}>It`s your 3ridge</Typography>
+                </Stack>
+                <Grid container>
+                  <Grid item>
+                    <StyledChip
+                      label={
+                        <Stack direction={"row"} alignItems={"center"}>
+                          <Box
+                            sx={{
+                              width: 12,
+                              height: 12,
+                              background: "red",
+                              borderRadius: 12,
+                              marginRight: 1,
+                            }}
+                          ></Box>
+                          <Typography>onboarding</Typography>
+                        </Stack>
+                      }
+                    ></StyledChip>
+                  </Grid>
+                  <Grid item>
+                    <StyledChip
+                      label={
+                        <Stack direction={"row"} alignItems={"center"}>
+                          <Box
+                            sx={{
+                              width: 12,
+                              height: 12,
+                              background: "green",
+                              borderRadius: 12,
+                              marginRight: 1,
+                            }}
+                          ></Box>
+                          <Typography>onboarding</Typography>
+                        </Stack>
+                      }
+                    ></StyledChip>
+                  </Grid>
+                  <Grid item>
+                    <StyledChip
+                      label={
+                        <Stack direction={"row"} alignItems={"center"}>
+                          <Box
+                            sx={{
+                              width: 12,
+                              height: 12,
+                              background: "blue",
+                              borderRadius: 12,
+                              marginRight: 1,
+                            }}
+                          ></Box>
+                          <Typography>onboarding</Typography>
+                        </Stack>
+                      }
+                    ></StyledChip>
+                  </Grid>
+                </Grid>
+                <Stack direction={"row"}>
+                  <Box sx={{ marginLeft: 1 }}>
+                    <Typography>Powered by</Typography>
+                  </Box>
+                  <Box sx={{ marginLeft: 2 }}>
+                    <img
+                      style={{ width: 90 }}
+                      src={"https://indexer.xyz/icons/logos/aptos-full.svg"}
+                    />
+                  </Box>
+                </Stack>
+              </Stack>
+            </div>
             <UpDownAnimatedComponent
-              yDist={"6px"}
+              yDist={"8px"}
               duration={1}
               sx={{
                 position: "absolute",
-                bottom: "60px",
-                right: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
+                bottom: "10px",
               }}
             >
-              <KeyboardArrowDownIcon
-                fontSize={"large"}
-                // @ts-ignore
-                sx={{ color: theme.palette.neutral["500"] }}
-              ></KeyboardArrowDownIcon>
+              <img
+                style={{ width: "100%", height: "100vh" }}
+                src={"https://indexer.xyz/assets/top-section-bg.png"}
+              />
             </UpDownAnimatedComponent>
           </div>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{
-            background: theme.palette.background.default,
-            zIndex: 1,
-            marginBottom: 6,
-          }}
-        >
-          <Stack
-            direction={"row"}
-            justifyContent={"center"}
-            sx={{ marginTop: "48px" }}
-          >
-            <Typography variant={"h5"}>
-              Start with these introductory Quests:
-            </Typography>
-          </Stack>
-          <Box sx={{ maxWidth: "1200px", padding: "24px" }}>
-            <Grid container sx={{ flex: 1 }} columnSpacing={2} rowSpacing={1}>
-              {eventCardData.map((x, i) => {
-                return (
-                  <Grid key={i} item sm={12} md={12} lg={6}>
-                    {x.type === "collection" && (
-                      <EventCollectionCard
-                        sx={{ margin: 1 }}
-                        title={x.title}
-                        bountyCount={x.bountyCount}
-                        thumbnailUrl={x.thumbnailUrl}
-                        community={x.community}
-                      />
-                    )}
-                    {x.type === "single" && (
-                      <EventSingleCard
-                        sx={{ margin: 1 }}
-                        title={x.title}
-                        summary={x.summary}
-                        community={x.community}
-                      ></EventSingleCard>
-                    )}
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Box>
-          <SecondaryButton size={"medium"} style={{ marginTop: 16 }}>
-            Explore more Quests
-          </SecondaryButton>
         </Stack>
       </Stack>
     </>
@@ -278,8 +190,8 @@ Home.getLayout = (page: ReactElement | ReactElement[]) => (
           backgroundImage: `url("https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/background/dot-grid.png")`,
           backgroundRepeat: "repeat-x",
           width: "100%",
-          height: "280px",
-          zIndex: 0,
+          height: "213px",
+          zIndex: 1,
           backgroundSize: "22px 426px",
           left: 0,
           top: 56,

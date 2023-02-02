@@ -6,6 +6,7 @@ import {
   GET_USER_BY_GMAIL,
   GET_USER_BY_WALLET_ADDRESS,
   UPDATE_USER_BY_EMAIL,
+  UPDATE_USER_BY_TWITTER,
   UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
 } from "../apollo/query";
@@ -27,6 +28,7 @@ const useSignedUserQuery = () => {
     UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME
   );
   const [UpdateUserEmailByName] = useMutation(UPDATE_USER_BY_EMAIL);
+  const [UpdateUserTwitterByName] = useMutation(UPDATE_USER_BY_TWITTER);
 
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
@@ -58,8 +60,15 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          const { email, name, profileImageUrl, wallets, _id, rewardPoint } =
-            res.data.userByEmail;
+          const {
+            email,
+            name,
+            profileImageUrl,
+            wallets,
+            _id,
+            rewardPoint,
+            userSocial,
+          } = res.data.userByEmail;
           setUserData((prevState) => {
             return {
               ...prevState,
@@ -69,6 +78,9 @@ const useSignedUserQuery = () => {
               profileImageUrl: profileImageUrl ?? undefined,
               walletAddress: wallets?.at(0)?.address,
               rewardPoint: rewardPoint ?? undefined,
+              userSocial: {
+                twitterId: userSocial?.twitterId ?? "",
+              },
             };
           });
           setLoading(false);
@@ -97,8 +109,15 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          const { gmail, name, profileImageUrl, wallets, _id, rewardPoint } =
-            res.data.userByGmail;
+          const {
+            gmail,
+            name,
+            profileImageUrl,
+            wallets,
+            _id,
+            rewardPoint,
+            userSocial,
+          } = res.data.userByGmail;
           setUserData((prevState) => {
             return {
               ...prevState,
@@ -108,6 +127,9 @@ const useSignedUserQuery = () => {
               profileImageUrl: profileImageUrl ?? undefined,
               walletAddress: wallets?.at(0)?.address,
               rewardPoint: rewardPoint ?? undefined,
+              userSocial: {
+                twitterId: userSocial?.twitterId ?? "",
+              },
             };
           });
           setLoading(false);
@@ -136,8 +158,15 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          const { email, name, profileImageUrl, wallets, _id, rewardPoint } =
-            res.data.userByWalletAddress;
+          const {
+            email,
+            name,
+            profileImageUrl,
+            wallets,
+            _id,
+            rewardPoint,
+            userSocial,
+          } = res.data.userByWalletAddress;
           setUserData((prevState) => {
             return {
               ...prevState,
@@ -147,6 +176,9 @@ const useSignedUserQuery = () => {
               profileImageUrl: profileImageUrl ?? undefined,
               walletAddress: wallets?.at(0)?.address,
               rewardPoint: rewardPoint ?? undefined,
+              userSocial: {
+                twitterId: userSocial?.twitterId ?? "",
+              },
             };
           });
         } catch (e) {
@@ -233,6 +265,29 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateSocialTwitter = async (twitterId: string) => {
+    console.log(twitterId);
+    try {
+      if (!userData.name) return;
+      await UpdateUserTwitterByName({
+        variables: {
+          name: userData.name,
+          twitterId: twitterId,
+        },
+      });
+      setUserData((prevState) => {
+        return {
+          ...prevState,
+          userSocial: {
+            twitterId,
+          },
+        };
+      });
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
   const asyncUpdateEmail = async (email: string) => {
     try {
       if (!userData.name) return;
@@ -260,6 +315,7 @@ const useSignedUserQuery = () => {
     asyncUpdateWalletAddress,
     asyncUpdateProfileImageUrl,
     asyncUpdateEmail,
+    asyncUpdateSocialTwitter,
   };
 };
 

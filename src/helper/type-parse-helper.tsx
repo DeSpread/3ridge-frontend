@@ -1,7 +1,9 @@
 import {
   FCFSRewardContext,
+  FollowQuestContext,
   QUEST_POLICY_TYPE,
   QuizQuestContext,
+  RetweetQuestContext,
   REWARD_POLICY_TYPE,
 } from "../type";
 import { QuestPolicyType } from "../__generated__/graphql";
@@ -33,11 +35,15 @@ class TypeParseHelper {
   parseQuestPolicy = (context?: string, questPolicyType?: string) => {
     if (!context) return undefined;
     try {
+      const _context = context.replaceAll("'", '"').trim();
+      const contextJson = JSON.parse(_context);
+
       if (questPolicyType === QUEST_POLICY_TYPE.QUIZ) {
-        const _context = context.replaceAll("'", '"').trim();
-        const contextJson = JSON.parse(_context);
-        const res = contextJson as QuizQuestContext;
-        return res;
+        return contextJson as QuizQuestContext;
+      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET) {
+        return contextJson as RetweetQuestContext;
+      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW) {
+        return contextJson as FollowQuestContext;
       }
     } catch (e) {
       console.log(e);

@@ -21,9 +21,14 @@ const NavbarButton = ({
     <Box
       sx={{
         "&:hover": {
-          backgroundColor: theme.palette.action.hover,
           "& .buttonText": {
-            color: theme.palette.primary.main,
+            color: theme.palette.neutral["400"],
+            transition: "all 0.1s ease-out 0s",
+            borderColor: "transparent",
+            transitionDuration: "0.2s",
+            transitionDelay: "0s",
+            transitionTimingFunction: "ease-out",
+            transitionProperty: "all",
           },
         },
         height: { height },
@@ -43,7 +48,7 @@ const NavbarButton = ({
         className={"buttonText"}
         sx={{
           marginLeft: "8px",
-          color: theme.palette.primary.contrastText,
+          color: theme.palette.neutral[100],
           cursor: "pointer",
         }}
       >

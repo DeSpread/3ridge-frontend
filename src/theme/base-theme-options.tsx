@@ -36,6 +36,8 @@ const baseThemeOptions: ThemeOptions = {
       },
       styleOverrides: {
         root: {
+          borderWidth: 2,
+          borderRadius: 24,
           textTransform: "none",
         },
         sizeSmall: {
@@ -269,8 +271,7 @@ const baseThemeOptions: ThemeOptions = {
     button: {
       fontWeight: 600,
     },
-    fontFamily:
-      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+    fontFamily: '"LINESeedKR-Rg"',
     body1: {
       fontSize: "1rem",
       fontWeight: 400,
@@ -305,7 +306,7 @@ const baseThemeOptions: ThemeOptions = {
     },
     h1: {
       fontWeight: 700,
-      fontSize: "3.5rem",
+      fontSize: "4.1rem",
       lineHeight: 1.375,
     },
     h2: {

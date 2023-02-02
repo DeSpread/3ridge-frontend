@@ -1,8 +1,22 @@
-import React, { CSSProperties, ReactElement, useState } from "react";
+import React, {
+  CSSProperties,
+  ReactElement,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { Avatar, Box, Divider, Grid, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  ButtonProps,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 import VerifyCard from "../../components/molecules/verify-card";
 import { GetStaticPaths } from "next";
 import { useTicketQuery } from "../../page-hook/ticket-query-hook";
@@ -14,9 +28,25 @@ import { TimerSettings, useTimer } from "react-timer-hook";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { nFormatter } from "../../util/validate-string";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
-import { QuizQuestContext } from "../../type";
+import {
+  FollowQuestContext,
+  MouseEventWithParam,
+  QUEST_POLICY_TYPE,
+  QuizQuestContext,
+  RetweetQuestContext,
+} from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/user-query-hook";
+import { useAlert } from "../../provider/alert/alert-provider";
+import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
+import { getErrorMessage } from "../../error/my-error";
+import { useLoading } from "../../provider/loading/loading-provider";
+import { useRouter } from "next/router";
+import { useTheme } from "@mui/material/styles";
+import StarsIcon from "@mui/icons-material/Stars";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -32,6 +62,51 @@ export async function getStaticProps() {
 interface MyTimerSettings extends TimerSettings {
   sx?: CSSProperties;
 }
+
+const LoadingButton = (props: ButtonProps) => {
+  const [loading, setLoading] = useState(false);
+
+  return (
+    <div style={{ position: "relative", width: "100%" }}>
+      <SecondaryButton
+        {...props}
+        fullWidth={true}
+        disabled={props.disabled || loading}
+        onClick={(e) => {
+          setLoading(true);
+          const myEvent = {} as MouseEventWithParam<{
+            callback: (msg: string) => void;
+          }>;
+          myEvent.params = {
+            callback: (msg: string) => {
+              setLoading(false);
+            },
+          };
+          //@ts-ignore
+          props.onClick?.(myEvent);
+        }}
+      >
+        {props.children}
+      </SecondaryButton>
+      {loading && (
+        <div
+          style={{
+            position: "absolute",
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            transform: "translateY(-100%)",
+            height: "100%",
+          }}
+        >
+          <CircularProgress></CircularProgress>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const TimerBoard = (props: MyTimerSettings) => {
   const { seconds, minutes, hours, days } = useTimer(props);
@@ -136,16 +211,71 @@ const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
 };
 
 const Event = (props: AppProps) => {
-  const { userData } = useSignedUserQuery();
-  const { ticketData } = useTicketQuery({
+  const { userData, asyncUpdateSocialTwitter } = useSignedUserQuery();
+  const theme = useTheme();
+  const router = useRouter();
+  const {
+    ticketData,
+    asyncVerifyTwitterFollowQuest,
+    asyncIsCompletedQuestByUserId,
+    asyncVerifyTwitterRetweetQuest,
+    asyncCompleteQuestOfUser,
+    asyncRequestClaimNtf,
+  } = useTicketQuery({
     userId: userData._id,
-    id: "63bfd87b73405e8b13784612", //router.query.id,
+    //@ts-ignore
+    id: router.query.id ?? undefined,
   });
+  const {
+    signAndSubmitTransaction,
+    signTransaction,
+    signMessage,
+    signMessageAndVerify,
+  } = useWallet();
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
+  const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
+  const { showAlert, showErrorAlert, closeAlert } = useAlert();
+  const { asyncTwitterSignInPopUp } = useFirebaseAuth();
+  const { showLoading, closeLoading } = useLoading();
+  const [verifiedList, setVerifiedList] = useState<boolean[]>([]);
 
-  // console.log(ticketData);
+  useEffect(() => {
+    if (!userData?._id) return;
+    const ids = ticketData?.quests?.map((e) => {
+      return e._id;
+    });
+    const promiseList: any[] = [];
+    ids?.forEach((e) => {
+      promiseList.push(asyncIsCompletedQuestByUserId(e ?? ""));
+    });
+    if (promiseList.length > 0) {
+      Promise.all(promiseList)
+        .then((res) => {
+          const newVerifiedList: boolean[] = [];
+          res.forEach((e) => {
+            if (ids) {
+              newVerifiedList[ids?.indexOf(e.questId)] = e.isCompleted;
+            }
+          });
+          setVerifiedList(newVerifiedList);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [ticketData?.quests, userData?._id]);
+
+  const claimRewardDisabled = useMemo(() => {
+    if (userData?._id === undefined) return true;
+    if (verifiedList.length === 0) return true;
+    const res = verifiedList.reduce(
+      (accumulator, currentValue) => accumulator && currentValue,
+      true
+    );
+    return !res;
+  }, [verifiedList]);
 
   return (
     <>
@@ -211,6 +341,14 @@ const Event = (props: AppProps) => {
                 </Stack>
               </Grid>
             </Grid>
+            {userData?._id === undefined && (
+              <Typography
+                variant={"h5"}
+                sx={{ color: theme.palette.warning.main }}
+              >
+                --- Please First Sign In ---
+              </Typography>
+            )}
 
             <Stack direction={"column"} spacing={2}>
               <Typography variant={"h5"}>Description</Typography>
@@ -246,12 +384,98 @@ const Event = (props: AppProps) => {
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
-                      onVerifyBtnClicked={(e) => {}}
-                      onStartBtnClicked={(e) => {
-                        const quizQuestContext = quest.questPolicy
-                          ?.context as QuizQuestContext;
-                        setOpenQuizQuestContext(quizQuestContext);
-                        setOpenQuizQuestDialog(true);
+                      disabled={userData?._id ? false : true}
+                      verified={verifiedList[index]}
+                      onVerifyBtnClicked={async (e) => {
+                        const myEvent = e as MouseEventWithParam<{
+                          callback: (msg: string) => void;
+                        }>;
+                        try {
+                          if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
+                          ) {
+                            await asyncVerifyTwitterFollowQuest(
+                              quest._id ?? ""
+                            );
+                            myEvent.params.callback("success");
+                            setVerifiedList((prevState) => {
+                              prevState[index] = true;
+                              return prevState;
+                            });
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
+                          ) {
+                            await asyncVerifyTwitterRetweetQuest(
+                              quest._id ?? ""
+                            );
+                            myEvent.params.callback("success");
+                            setVerifiedList((prevState) => {
+                              prevState[index] = true;
+                              return prevState;
+                            });
+                          }
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }}
+                      onStartBtnClicked={async (e) => {
+                        if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.QUIZ
+                        ) {
+                          const quizQuestContext = quest.questPolicy
+                            ?.context as QuizQuestContext;
+                          setOpenQuizQuestContext(quizQuestContext);
+                          setOpenQuizQuestDialog(true);
+                          setOpenQuizQuestId(quest._id);
+                        } else if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
+                        ) {
+                          try {
+                            if (!userData?.userSocial?.twitterId) {
+                              showLoading();
+                              const res = await asyncTwitterSignInPopUp();
+                              await asyncUpdateSocialTwitter(res);
+                              closeLoading();
+                            }
+                            const followQuestContext = quest.questPolicy
+                              .context as FollowQuestContext;
+                            window.open(
+                              `https://twitter.com/intent/follow?screen_name=${followQuestContext.username}`,
+                              "twitter",
+                              "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                            );
+                          } catch (e) {
+                            closeLoading();
+                            showErrorAlert({ content: getErrorMessage(e) });
+                          }
+                        } else if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
+                        ) {
+                          try {
+                            if (!userData?.userSocial?.twitterId) {
+                              showLoading();
+                              const res = await asyncTwitterSignInPopUp();
+                              await asyncUpdateSocialTwitter(res);
+                              closeLoading();
+                            }
+                            const retweetQuestContext = quest.questPolicy
+                              .context as RetweetQuestContext;
+                            console.log(retweetQuestContext);
+                            window.open(
+                              `https://twitter.com/intent/retweet?tweet_id=${retweetQuestContext.tweetId}`,
+                              "twitter",
+                              "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                            );
+                          } catch (e) {
+                            closeLoading();
+                            showErrorAlert({ content: getErrorMessage(e) });
+                          }
+                        }
                       }}
                       autoVerified={
                         quest.questPolicy?.questPolicy === QuestPolicyType.Quiz
@@ -284,15 +508,41 @@ const Event = (props: AppProps) => {
                       First Come First Serve In :
                     </Typography>
                     {ticketData?.rewardPolicy?.context?.untilTime ? (
-                      <TimerBoard
-                        sx={{
-                          marginTop: 4,
-                          background: "",
-                        }}
-                        expiryTimestamp={
-                          new Date(ticketData?.rewardPolicy?.context?.untilTime)
-                        }
-                      />
+                      //@ts-ignore
+                      new Date(ticketData?.rewardPolicy?.context?.untilTime) -
+                        //@ts-ignore
+                        new Date() <
+                      0 ? (
+                        <Stack
+                          sx={{
+                            background: "",
+                            paddingTop: 5,
+                            paddingBottom: 2,
+                          }}
+                          direction={"row"}
+                          alignItems={"center"}
+                          justifyContent={"center"}
+                        >
+                          <Typography
+                            variant={"h6"}
+                            sx={{ color: theme.palette.warning.main }}
+                          >
+                            This project is expired
+                          </Typography>
+                        </Stack>
+                      ) : (
+                        <TimerBoard
+                          sx={{
+                            marginTop: 4,
+                            background: "",
+                          }}
+                          expiryTimestamp={
+                            new Date(
+                              ticketData?.rewardPolicy?.context?.untilTime
+                            )
+                          }
+                        />
+                      )
                     ) : (
                       <DummyTimerBoard
                         sx={{
@@ -308,31 +558,37 @@ const Event = (props: AppProps) => {
                 <Stack direction={"column"} spacing={5}>
                   <Stack direction={"column"} spacing={2}>
                     <Stack
-                      direction={"row"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
+                      direction={"column"}
+                      alignItems={"flex-start"}
+                      justifyContent={"center"}
                     >
                       <Typography variant={"body1"}>Reward</Typography>
-                      <Stack
-                        direction={"row"}
-                        alignItems={"center"}
-                        spacing={1}
+                      <Box
+                        sx={{
+                          marginTop: 1,
+                          transform: "translateY(0%)",
+                          transition: "all 0.2s ease-out 0s",
+                          transitionDuration: "0.2s",
+                          transitionDelay: "0s",
+                          "&:hover": {
+                            transform: "translate(0,-2px)",
+                            boxShadow:
+                              "12px 12px 2px 1px rgba(128, 128, 128, .2)",
+                          },
+                          width: 300,
+                          height: 300,
+                          borderRadius: 2,
+                        }}
                       >
                         <img
-                          src={
-                            "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/tether-icon.svg"
-                          }
-                          width={24}
-                          height={24}
-                          style={{ marginRight: 2 }}
+                          src={ticketData?.rewardPolicy?.context?.nftImageUrl}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 16,
+                          }}
                         />
-                        <Typography variant={"h6"}>
-                          {ticketData?.rewardPolicy?.context?.rewardAmount}
-                        </Typography>
-                        <Typography variant={"h6"}>
-                          {ticketData?.rewardPolicy?.context?.rewardUnit.toUpperCase()}
-                        </Typography>
-                      </Stack>
+                      </Box>
                     </Stack>
                     <Divider></Divider>
                     <Stack
@@ -340,21 +596,18 @@ const Event = (props: AppProps) => {
                       alignItems={"center"}
                       justifyContent={"space-between"}
                     >
-                      <Typography variant={"body1"}>XP</Typography>
+                      <Typography variant={"body1"}>POINT</Typography>
                       <Stack
                         direction={"row"}
                         alignItems={"center"}
                         spacing={1}
                       >
-                        <img
-                          src={
-                            "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/xp.png"
-                          }
-                          width={24}
-                          height={24}
-                        />
-                        <Typography variant={"h6"}>60</Typography>
-                        <Typography variant={"h6"}>XP</Typography>
+                        <StarsIcon
+                          style={{ width: 24, height: 24 }}
+                        ></StarsIcon>
+                        <Typography variant={"h6"}>
+                          {ticketData?.rewardPolicy?.context?.point}
+                        </Typography>
                       </Stack>
                     </Stack>
                   </Stack>
@@ -365,15 +618,45 @@ const Event = (props: AppProps) => {
                     spacing={1}
                   >
                     <img
-                      src={"https://beta.layer3.xyz/images/chains/ethereum.svg"}
+                      src={
+                        "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/aptos_icon.svg"
+                      }
                       width={16}
                       height={16}
+                      style={{
+                        background: theme.palette.neutral[100],
+                        borderRadius: 16,
+                        padding: 1,
+                      }}
                     />
-                    <Typography variant={"body2"}>Ethereum Chain</Typography>
+                    <Typography variant={"body2"}>Aptos Chain</Typography>
                   </Stack>
                 </Stack>
               </PrimaryCard>
-              <SecondaryButton disabled={true}>Claim reward</SecondaryButton>
+              <LoadingButton
+                disabled={claimRewardDisabled}
+                onClick={async (e) => {
+                  if (userData?.walletAddress) {
+                    console.log(userData?.walletAddress);
+                    try {
+                      await asyncRequestClaimNtf(userData?.walletAddress);
+                      //@ts-ignore
+                      const myEvent = e as MouseEventWithParam<{
+                        callback: (msg: string) => void;
+                      }>;
+                      myEvent.params.callback("success");
+                      showAlert({
+                        title: "Info",
+                        content: "Claim Completed !!!",
+                      });
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                }}
+              >
+                Claim reward
+              </LoadingButton>
             </Stack>
 
             <Stack direction={"column"}>
@@ -394,7 +677,7 @@ const Event = (props: AppProps) => {
                           key={index}
                           alt=""
                           src={
-                            "https://app.quest3.xyz/static/users/avatar8.png"
+                            e.profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC
                           }
                           sx={{
                             width: 42,
@@ -439,6 +722,27 @@ const Event = (props: AppProps) => {
         context={openQuizQuestContext}
         onClose={() => {
           setOpenQuizQuestDialog(false);
+        }}
+        onCompleteQuiz={() => {
+          if (openQuizQuestId) {
+            const ids = ticketData?.quests?.map((e) => {
+              return e._id;
+            });
+            const index = ids?.indexOf(openQuizQuestId) as number;
+            if (index !== undefined) {
+              try {
+                asyncCompleteQuestOfUser(openQuizQuestId).then((res) => {
+                  setVerifiedList((prevState) => {
+                    prevState[index] = true;
+                    return prevState;
+                  });
+                });
+              } catch (e) {
+              } finally {
+                setOpenQuizQuestDialog(false);
+              }
+            }
+          }
         }}
       ></QuestQuizDialog>
     </>

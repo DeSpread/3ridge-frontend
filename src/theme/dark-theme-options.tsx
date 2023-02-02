@@ -7,11 +7,11 @@ const neutral = {
   100: "#F3F4F6",
   200: "#E5E7EB",
   300: "#D1D5DB",
-  400: "#b6b5c4",
+  400: "#bdbdbd",
   500: "#787687",
   600: "#646176",
-  700: "#35333a",
-  800: "#292630",
+  700: "#383742",
+  800: "#1f1f2c", //383742
   900: "#100e14",
 };
 
@@ -23,17 +23,17 @@ const background = {
 const divider = neutral[700];
 
 const primary = {
-  main: neutral[100], //"#7582EB",
+  main: neutral[100],
   light: "#909BEF",
   dark: neutral[100],
-  contrastText: neutral[500],
+  contrastText: neutral[900],
 };
 
 const secondary = {
-  main: "#ffff00",
+  main: "#ffb8ff",
   light: "#3FC79A",
-  dark: "#ffff00",
-  contrastText: neutral[900],
+  dark: "#374ae9",
+  contrastText: neutral[100],
 };
 
 const success = {
@@ -51,7 +51,7 @@ const info = {
 };
 
 const warning = {
-  main: "#FFB020",
+  main: "#f8810a",
   light: "#FFBF4C",
   dark: "#B27B16",
   contrastText: neutral[900],
@@ -92,10 +92,7 @@ export const darkThemeOptions: ThemeOptions = {
     },
     MuiButton: {
       styleOverrides: {
-        root: {
-          borderWidth: 1,
-          borderRadius: 12,
-        },
+        root: {},
       },
     },
     MuiChip: {
@@ -202,12 +199,12 @@ export const darkThemeOptions: ThemeOptions = {
     },
   },
   typography: {
-    body1: {
-      color: neutral["400"],
-    },
-    body2: {
-      color: neutral["400"],
-    },
+    // body1: {
+    //   color: neutral["400"],
+    // },
+    // body2: {
+    //   color: neutral["400"],
+    // },
   },
   palette: {
     action: {

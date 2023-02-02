@@ -6,8 +6,13 @@ import {
 } from "firebase/auth";
 import { AppError, getErrorMessage } from "../../error/my-error";
 import { MAIL_VERIFY, MailVerified } from "../../type";
+import { asyncJSTwitterSignInPopUp } from "./js-firebase";
 
 const useFirebaseAuth = () => {
+  const asyncTwitterSignInPopUp = async () => {
+    return await asyncJSTwitterSignInPopUp();
+  };
+
   const asyncSignInEmailWithVerify = async (
     email: string,
     password: string
@@ -74,6 +79,7 @@ const useFirebaseAuth = () => {
     asyncVerifyUserWithEmailAndPassword,
     asyncSignInEmailWithVerify,
     asyncResendEmailVerify,
+    asyncTwitterSignInPopUp,
   };
 };
 

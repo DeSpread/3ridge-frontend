@@ -1,24 +1,16 @@
 import Head from "next/head";
-import React, {
-  CSSProperties,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
-  SVGProps,
-  useMemo,
-} from "react";
+import React, { ReactElement, useMemo } from "react";
 import {
   Avatar,
   Box,
+  Card,
   Grid,
-  IconButton,
   Stack,
   SvgIconProps,
   Typography,
 } from "@mui/material";
 import MainLayout from "../../layouts/main-layout";
 import { useLeaderUsersQuery } from "../../page-hook/leader-users-query-hook";
-import PrimaryCard from "../../components/atoms/primary-card";
 import XpChip from "../../components/atoms/styled/xp-chip";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import No1Icon from "../../components/atoms/svg/no1-icon";
@@ -36,29 +28,29 @@ const InnerAbleNo3Icon = WithOverlapChildren(No3Icon);
 const RankCard = ({ user, rank }: { user: User; rank: number }) => {
   const { profileImageUrl, name, rewardPoint } = user;
 
-  const renderBadge = (
-    WrappedComponent: React.ComponentType<SvgIconProps>,
-    rank: number
-  ) => {
-    return (
-      <WrappedComponent
-        style={{
-          width: 32,
-          height: 32,
-        }}
-      >
-        <Typography
-          variant={"body2"}
-          sx={{
-            marginBottom: "0px",
-            color: "white",
-          }}
-        >
-          {rank}
-        </Typography>
-      </WrappedComponent>
-    );
-  };
+  // const renderBadge = (
+  //   WrappedComponent: React.ComponentType<SvgIconProps>,
+  //   rank: number
+  // ) => {
+  //   return (
+  //     <WrappedComponent
+  //       style={{
+  //         width: 32,
+  //         height: 32,
+  //       }}
+  //     >
+  //       <Typography
+  //         variant={"body2"}
+  //         sx={{
+  //           marginBottom: "0px",
+  //           color: "white",
+  //         }}
+  //       >
+  //         {rank}
+  //       </Typography>
+  //     </WrappedComponent>
+  //   );
+  // };
 
   const renderRankBadge = (rank: number) => {
     if (rank > 3 || rank < 1) {
@@ -67,28 +59,50 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
           sx={{
             width: 32,
             height: 32,
-            //@ts-ignore
             color: (theme) => theme.palette.neutral["500"],
           }}
         />
       );
     }
-    return renderBadge(
-      [InnerAbleNo1Icon, InnerAbleNo2Icon, InnerAbleNo3Icon][rank - 1],
-      rank
-    );
+    if (rank === 1) {
+      return <Typography variant={"h4"}>🥇</Typography>;
+    } else if (rank === 2) {
+      return <Typography variant={"h4"}>🥈</Typography>;
+    } else if (rank === 3) {
+      return <Typography variant={"h4"}>🥉</Typography>;
+    }
+    // return renderBadge(
+    //   [InnerAbleNo1Icon, InnerAbleNo2Icon, InnerAbleNo3Icon][rank - 1],
+    //   rank
+    // );
   };
 
   return (
-    <PrimaryCard
-      withCardContent={false}
-      hoverEffect={true}
-      cardSx={{ padding: 3, paddingLeft: 1, paddingRight: 1 }}
+    <Card
+      sx={{
+        background: "transparent",
+        transform: "translateY(0%)",
+        transition: "all 0.2s ease-out 0s",
+        transitionDuration: "0.2s",
+        transitionDelay: "0s",
+        transitionTimingFunction: "ease-out",
+        "&:hover": {
+          transform: "translate(0,-1px)",
+          boxShadow: "2px 2px 2px 1px rgba(128, 128, 128, .2)",
+        },
+        borderWidth: 2,
+        borderColor: "#35333a",
+        borderStyle: "solid",
+        borderRadius: 2,
+      }}
     >
       <Stack
         direction={"row"}
         alignItems={"center"}
         justifyContent={"space-between"}
+        sx={{
+          padding: 2,
+        }}
       >
         <Stack direction={"row"} alignItems={"center"}>
           <Box
@@ -137,7 +151,7 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
           </Stack>
         </Box>
       </Stack>
-    </PrimaryCard>
+    </Card>
   );
 };
 
@@ -160,7 +174,7 @@ const Leaderboard = () => {
         direction={"row"}
         justifyContent={"center"}
         spacing={5}
-        sx={{ marginTop: 1, marginBottom: 12, background: "" }}
+        sx={{ marginTop: 0, marginBottom: 12, background: "" }}
       >
         <Grid item sx={{ background: "" }}>
           <Box sx={{ minWidth: 800, background: "" }}>

@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, TwitterAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -15,6 +15,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+auth.languageCode = "it";
+
 const db = getFirestore(app);
 
-export { auth, db };
+const twitterAuthProvider = new TwitterAuthProvider();
+export { auth, db, twitterAuthProvider };

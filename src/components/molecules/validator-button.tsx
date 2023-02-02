@@ -83,26 +83,31 @@ export const ValidatorButton = (props: ValidatorButton) => {
             sx={{
               color:
                 buttonState === VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER
-                  ? //@ts-ignore
-                    theme.palette.neutral["600"]
-                  : //@ts-ignore
-                    theme.palette.neutral["100"],
+                  ? theme.palette.neutral["600"]
+                  : theme.palette.neutral["100"],
             }}
           >{`${props.label} Connected`}</Typography>
         )}
         {buttonState === VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER && (
-          //@ts-ignored
           <DoneIcon sx={{ color: theme.palette.neutral["600"] }}></DoneIcon>
         )}
         {buttonState === VALIDATOR_BUTTON_STATES.VALID_HOVER && (
           <CloseIcon></CloseIcon>
         )}
-        {!props.value && (
-          <Typography
-            variant={"body2"}
-            color={"neutral.100"}
-          >{`Connect ${props.label}`}</Typography>
-        )}
+        {!props.value &&
+          buttonState === VALIDATOR_BUTTON_STATES.NOT_VALID_NOT_HOVER && (
+            <Typography
+              variant={"body2"}
+              color={"neutral.900"}
+            >{`Connect ${props.label}`}</Typography>
+          )}
+        {!props.value &&
+          buttonState === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER && (
+            <Typography
+              variant={"body2"}
+              color={"neutral.100"}
+            >{`Connect ${props.label}`}</Typography>
+          )}
       </Stack>
     </PrimaryButton>
   );

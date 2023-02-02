@@ -2,7 +2,16 @@ import React, { ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { Avatar, Box, Grid, Stack, Theme, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Grid,
+  Link,
+  Stack,
+  Theme,
+  Typography,
+  Button,
+} from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
@@ -39,11 +48,13 @@ const Profile = (props: AppProps) => {
     asyncUpdateWalletAddressByWallet,
     asyncUpdateProfileImageUrl,
     asyncUpdateEmail,
+    asyncUpdateSocialTwitter,
   } = useSignedUserQuery();
   const {
     asyncVerifyUserWithEmailAndPassword,
     asyncResendEmailVerify,
     asyncSignInEmailWithVerify,
+    asyncTwitterSignInPopUp,
   } = useFirebaseAuth();
   const { isWalletLoggedIn, isMailLoggedIn, isGoogleLoggedIn, emailSignIn } =
     useLogin();
@@ -277,6 +288,14 @@ const Profile = (props: AppProps) => {
             setOpenConnectEmailDialog(true);
           }
           closeLoading();
+        }}
+        twitterValidatorButtonOnClick={async (e) => {
+          try {
+            showLoading();
+            const res = await asyncTwitterSignInPopUp();
+            await asyncUpdateSocialTwitter(res);
+            closeLoading();
+          } catch (e) {}
         }}
         isWalletLoggedIn={isWalletLoggedIn}
         isMailLoggedIn={isMailLoggedIn || isGoogleLoggedIn}

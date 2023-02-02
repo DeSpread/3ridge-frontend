@@ -19,12 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import PrimaryCard from "../atoms/primary-card";
-import {
-  EmailSignUpEventParams,
-  MouseEventWithParam,
-  QuizContent,
-  QuizEventParam,
-} from "../../type";
+import { MouseEventWithParam, QuizContent, QuizEventParam } from "../../type";
 
 export type QuestQuizFormProps = PropsWithChildren & {
   cardSx?: CSSProperties;

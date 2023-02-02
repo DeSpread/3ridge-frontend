@@ -17,6 +17,7 @@ import EthIcon from "../../../components/atoms/svg/eth-icon";
 import CloseIcon from "@mui/icons-material/Close";
 import StringHelper from "../../../helper/string-helper";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
 import { ValidatorButton } from "../../../components/molecules/validator-button";
 
@@ -29,6 +30,13 @@ const ReversibleMarkEmailReadIcon = (props: ReversibleSvgIconProps) => {
   return <MarkEmailReadIcon {...props}></MarkEmailReadIcon>;
 };
 
+const ReversibleTwitterReadIcon = (props: ReversibleSvgIconProps) => {
+  if (props.reverse) {
+    return <TwitterIcon {...props} color={"disabled"}></TwitterIcon>;
+  }
+  return <TwitterIcon {...props} sx={{ color: "#1d9aef" }}></TwitterIcon>;
+};
+
 type ProfileEditDialogProps = DialogProps & {
   title: string;
   userData: User;
@@ -36,6 +44,7 @@ type ProfileEditDialogProps = DialogProps & {
   isMailLoggedIn: boolean;
   walletValidatorButtonOnClick?: MouseEventHandler;
   emailValidatorButtonOnClick?: MouseEventHandler;
+  twitterValidatorButtonOnClick?: MouseEventHandler;
   onCloseBtnClicked?: MouseEventHandler;
   onFileImageAdded?: (f: File) => void;
 };
@@ -145,7 +154,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
           <Stack spacing={2}>
             <Typography variant={"h6"}>Social profiles</Typography>
             <Divider></Divider>
-            <Stack direction={"row"}>
+            <Stack direction={"row"} spacing={1}>
               {!props.isWalletLoggedIn && (
                 <ValidatorButton
                   label={"Wallet"}
@@ -172,6 +181,17 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                   }
                 ></ValidatorButton>
               )}
+              <ValidatorButton
+                svgIcon={ReversibleTwitterReadIcon}
+                label={"Twitter"}
+                onClick={props.twitterValidatorButtonOnClick}
+                size={"small"}
+                value={
+                  props.userData?.userSocial?.twitterId
+                    ? props.userData?.userSocial?.twitterId
+                    : undefined
+                }
+              ></ValidatorButton>
             </Stack>
           </Stack>
         </Stack>

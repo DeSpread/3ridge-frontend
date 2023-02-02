@@ -12,6 +12,9 @@ export const GET_USERS_ORDER_BY_REWARD_POINT_DESC = gql(/* GraphQL */ `
         chain
       }
       rewardPoint
+      userSocial {
+        twitterId
+      }
     }
   }
 `);
@@ -28,6 +31,9 @@ export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
         chain
       }
       rewardPoint
+      userSocial {
+        twitterId
+      }
     }
   }
 `);
@@ -44,6 +50,9 @@ export const GET_USER_BY_GMAIL = gql(/* GraphQL */ `
         chain
       }
       rewardPoint
+      userSocial {
+        twitterId
+      }
     }
   }
 `);
@@ -60,6 +69,9 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
         chain
       }
       rewardPoint
+      userSocial {
+        twitterId
+      }
     }
   }
 `);
@@ -128,6 +140,19 @@ export const UPDATE_USER_BY_EMAIL = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
+  mutation UpdateUserTwitterByName($name: String!, $twitterId: String!) {
+    updateUserByName(
+      name: $name
+      userUpdateInput: { userSocial: { twitterId: $twitterId } }
+    ) {
+      userSocial {
+        twitterId
+      }
+    }
+  }
+`);
+
 export const GET_ALL_TICKETS = gql(/* GraphQL */ `
   query AllTickets {
     tickets {
@@ -138,6 +163,7 @@ export const GET_ALL_TICKETS = gql(/* GraphQL */ `
         name
         profileImageUrl
       }
+      imageUrl
       quests {
         _id
         title
@@ -179,6 +205,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
         name
         profileImageUrl
       }
+      imageUrl
       quests {
         _id
         title
@@ -206,6 +233,53 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       winners {
         name
       }
+    }
+  }
+`);
+
+export const VERIFY_TWITTER_FOLLOW_QUEST = gql(/* GraphQL */ `
+  mutation VerifyTwitterFollowQuest($questId: String!, $userId: String!) {
+    verifyTwitterFollowQuest(questId: $questId, userId: $userId) {
+      _id
+    }
+  }
+`);
+
+export const VERIFY_TWITTER_RETWEET_QUEST = gql(/* GraphQL */ `
+  mutation VerifyTwitterRetweetQuest($questId: String!, $userId: String!) {
+    verifyTwitterRetweetQuest(questId: $questId, userId: $userId) {
+      _id
+    }
+  }
+`);
+
+export const IS_COMPLETED_QUEST_BY_USER_ID = gql(/* GraphQL */ `
+  query IsCompletedQuestByUserId($questId: String!, $userId: String!) {
+    isCompletedQuestByUserId(questId: $questId, userId: $userId) {
+      isCompleted
+      questId
+    }
+  }
+`);
+
+export const COMPLETE_QUEST_OF_USER = gql(/* GraphQL */ `
+  mutation CompleteQuestOfUser($questId: String!, $userId: String!) {
+    completeQuestOfUser(questId: $questId, userId: $userId) {
+      _id
+      title
+      description
+      questPolicy {
+        context
+        questPolicy
+      }
+    }
+  }
+`);
+
+export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
+  mutation RequestClaimNFT($receiverAddress: String!) {
+    requestClaimNFT(receiverAddress: $receiverAddress) {
+      txHash
     }
   }
 `);

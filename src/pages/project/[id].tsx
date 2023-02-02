@@ -21,6 +21,7 @@ import StyledTabs from "../../components/atoms/styled/styled-tabs";
 import StyledTab from "../../components/atoms/styled/styled-tab";
 import EventCollectionCard from "../../components/molecules/event-collection-card";
 import TicketsSection from "../../components/organisms/tickets-section";
+import GradientButton from "../../components/atoms/gradient-button";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -48,10 +49,10 @@ const Project = () => {
       <Stack direction={"column"} alignItems={"center"}>
         <Stack
           sx={{
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-            background:
-              "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://galxe.com/_nuxt/img/space-detail-bg.569713b.jpg')",
+            // backgroundSize: "contain",
+            // backgroundPosition: "center",
+            // background:
+            //   "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://indexer.xyz/assets/top-section-bg.png')",
             height: 300,
             paddingLeft: 16,
             paddingRight: 16,
@@ -67,10 +68,11 @@ const Project = () => {
             container={true}
             sx={{
               background: "",
+              zIndex: 1,
             }}
             spacing={3}
           >
-            <Grid item sx={{ background: "" }} lg={10}>
+            <Grid item sx={{ background: "" }} lg={9}>
               <Stack
                 direction={"column"}
                 sx={{ background: "", height: "100%" }}
@@ -108,7 +110,7 @@ const Project = () => {
                 </Typography>
               </Stack>
             </Grid>
-            <Grid item lg={2}>
+            <Grid item lg={3}>
               <IconButton
                 sx={{
                   width: 36,
@@ -122,14 +124,50 @@ const Project = () => {
               </IconButton>
             </Grid>
           </Grid>
+          <div
+            style={{
+              backgroundSize: "cover",
+              backgroundPosition: "left",
+              backgroundRepeat: "no-repeat",
+              background:
+                "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://galxe.com/_nuxt/img/space-detail-bg.569713b.jpg')",
+              width: "100%",
+              height: 300,
+              position: "absolute",
+              zIndex: 0,
+            }}
+          ></div>
         </Stack>
-        <TicketsSection
-          tickets={ticketsData}
-          loading={ticketsDataLoading}
-          onTicketClick={(e) => {
-            console.log(e);
+        <Box
+          style={{
+            flex: 1,
+            background: "",
+            paddingLeft: 24,
+            paddingRight: 24,
           }}
-        ></TicketsSection>
+        >
+          <TicketsSection
+            tickets={ticketsData}
+            loading={ticketsDataLoading}
+            onTicketClick={(e) => {
+              console.log(e);
+            }}
+            sx={{
+              marginTop: 6,
+              marginBottom: 2,
+            }}
+          ></TicketsSection>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 8,
+            }}
+          >
+            <GradientButton sx={{ width: 128 }}>Load more</GradientButton>
+          </Box>
+        </Box>
       </Stack>
     </>
   );

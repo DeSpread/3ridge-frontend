@@ -5,10 +5,12 @@ const StyledChip = styled((props: ChipProps) => (
   <Chip
     {...props}
     sx={{
-      paddingTop: 2,
-      paddingBottom: 2,
-      paddingLeft: 1,
-      paddingRight: 1,
+      boxShadow: "inset 0px 0px 0px 2px #35333a",
+      paddingTop: "18px",
+      paddingBottom: "20px",
+      paddingLeft: "5px",
+      paddingRight: "5px",
+      borderRadius: 2,
     }}
   />
 ))(() => ({}));
