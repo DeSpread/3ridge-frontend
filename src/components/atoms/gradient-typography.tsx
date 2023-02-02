@@ -6,8 +6,7 @@ const GradientTypography = (props: TypographyProps) => {
       {...props}
       sx={{
         ...props.sx,
-        background:
-          "-webkit-linear-gradient(45deg, #ffff00, #FFC300, #FF69B4, #8A2BE2, #0000ff, #00BFFF)",
+        background: "-webkit-linear-gradient(45deg, #f794fd, #fde3ff)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
       }}

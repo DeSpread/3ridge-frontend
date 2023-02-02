@@ -8,6 +8,7 @@ import {
   Card,
   CardContent,
   Typography,
+  MenuItem,
 } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 import StyledTabs from "../atoms/styled/styled-tabs";
@@ -15,6 +16,7 @@ import React, {
   CSSProperties,
   MouseEventHandler,
   PropsWithChildren,
+  ReactNode,
   SyntheticEvent,
   useState,
 } from "react";
@@ -25,6 +27,10 @@ import { MouseEventWithParam, Ticket, TicketEventParam } from "../../type";
 import PrimaryButton from "../atoms/primary-button";
 import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { motion } from "framer-motion";
+import { UpDownAnimatedComponentProps } from "../atoms/animation/up-down-animated-component";
+import StyledMenu from "../atoms/styled/styled-menu";
 
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
@@ -66,33 +72,122 @@ type TabButtonGroupProps = PropsWithChildren & {
   onChange?: MouseEventHandler;
 };
 
+const RotateAnimatedComponent = (props: {
+  style?: CSSProperties;
+  duration?: number;
+  children?: ReactNode | undefined;
+  up?: boolean;
+}) => {
+  return (
+    <motion.div
+      animate={{
+        rotateZ: props.up ? [0, 180] : [180, 360],
+        // translateY: ["0px", `${yDist}`, "0px"],
+      }}
+      transition={{
+        duration: props?.duration,
+        ease: "easeInOut",
+        times: [0, 1],
+        // repeat: Infinity,
+      }}
+      style={{ ...props.style }}
+    >
+      {props.children}
+    </motion.div>
+  );
+};
+
 const TabButtonGroup = (props: TabButtonGroupProps) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const TITLES = ["Available", "Complete", "Missed"];
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
+  const MENU_ITEMS = ["Recently", "Popular"];
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = (index?: number) => {
+    setAnchorEl(null);
+    if (index !== undefined) {
+      console.log(index);
+      setSelectedMenuIndex(index);
+    }
+  };
+
   return (
-    <Stack direction={"row"} spacing={2}>
-      {TITLES.map((e, index) => {
-        return (
-          <TabButton
-            key={index}
-            sx={{
-              paddingLeft: 3,
-              paddingRight: 3,
-              width: 128,
-            }}
-            index={index}
-            onChange={(e) => {
-              const myEvent = e as MouseEventWithParam<{ index: number }>;
-              setSelectedIdx(myEvent.params.index);
-              props?.onChange?.(myEvent);
-            }}
-            disabled={selectedIdx === index}
-            size={"small"}
+    <Stack direction={"row"} justifyContent={"space-between"}>
+      <Stack direction={"row"} spacing={2}>
+        {TITLES.map((e, index) => {
+          return (
+            <TabButton
+              key={index}
+              sx={{
+                paddingLeft: 3,
+                paddingRight: 3,
+                width: 128,
+              }}
+              index={index}
+              onChange={(e) => {
+                const myEvent = e as MouseEventWithParam<{ index: number }>;
+                setSelectedIdx(myEvent.params.index);
+                props?.onChange?.(myEvent);
+              }}
+              disabled={selectedIdx === index}
+              size={"small"}
+            >
+              {e}
+            </TabButton>
+          );
+        })}
+      </Stack>
+      <>
+        <PrimaryButton onClick={handleClick}>
+          <Stack
+            direction={"row"}
+            alignItems={"center"}
+            sx={{ width: 110 }}
+            justifyContent={"space-evenly"}
           >
-            {e}
-          </TabButton>
-        );
-      })}
+            <Typography className={"MuiTypography"} variant={"body2"}>
+              {MENU_ITEMS[selectedMenuIndex]}
+            </Typography>
+            <RotateAnimatedComponent duration={1}>
+              <Box
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <ArrowDropDownIcon fontSize="small"></ArrowDropDownIcon>
+              </Box>
+            </RotateAnimatedComponent>
+          </Stack>
+        </PrimaryButton>
+        <StyledMenu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={() => {
+            handleClose(undefined);
+          }}
+        >
+          <MenuItem
+            onClick={() => {
+              handleClose(0);
+            }}
+          >
+            <Typography variant={"body2"}>{MENU_ITEMS[0]}</Typography>
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose(1);
+            }}
+          >
+            <Typography variant={"body2"}>{MENU_ITEMS[1]}</Typography>
+          </MenuItem>
+        </StyledMenu>
+      </>
     </Stack>
   );
 };

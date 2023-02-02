@@ -2,6 +2,8 @@ import { Box, Stack, Typography, Link, Grid } from "@mui/material";
 import NextLink from "next/link";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/router";
+import { useLoading } from "../../provider/loading/loading-provider";
 
 const footerData = [
   {
@@ -63,6 +65,9 @@ const footerData = [
 
 const HomeFooter = () => {
   const theme = useTheme();
+  const router = useRouter();
+  const { showLoading, closeLoading } = useLoading();
+
   return (
     <div
       style={{
@@ -80,17 +85,25 @@ const HomeFooter = () => {
         >
           <Grid item>
             <Stack direction={"column"} spacing={2}>
-              <Typography variant={"h5"}>Grow with Layer3</Typography>
+              <Typography variant={"h5"}>Bridge your projects</Typography>
               <Box>
                 <Typography variant={"body1"}>
-                  Layer3 helps you reach, acquire, and retain users
+                  Bridge helps you reach, acquire, and retain users
                 </Typography>
                 <Typography variant={"body1"}>
                   with powerful, interactive experiences.
                 </Typography>
               </Box>
-              <SecondaryButton size={"large"} style={{ width: 180 }}>
-                Get Started
+              <SecondaryButton
+                size={"large"}
+                style={{ width: 180 }}
+                onClick={async () => {
+                  showLoading();
+                  await router.push("/explore");
+                  closeLoading();
+                }}
+              >
+                Let`s Explore
               </SecondaryButton>
             </Stack>
           </Grid>
@@ -133,7 +146,7 @@ const HomeFooter = () => {
             //@ts-ignore
             sx={{ color: theme.palette.neutral["600"] }}
           >
-            © Copyright 2022 Layer3 XYZ, Inc.
+            © Copyright 2022 DeSpread Lab, Inc.
           </Typography>
         </Box>
       </Stack>

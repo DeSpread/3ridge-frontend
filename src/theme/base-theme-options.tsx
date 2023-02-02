@@ -306,7 +306,7 @@ const baseThemeOptions: ThemeOptions = {
     },
     h1: {
       fontWeight: 700,
-      fontSize: "3.5rem",
+      fontSize: "4.1rem",
       lineHeight: 1.375,
     },
     h2: {

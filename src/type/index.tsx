@@ -2,11 +2,6 @@ import { AppError } from "../error/my-error";
 import React from "react";
 import { SvgIconProps } from "@mui/material";
 
-export type _SuccessErrorCallback<T> = {
-  onSuccess: (res: T) => void;
-  onError: (error: Error) => void;
-};
-
 export type SuccessErrorCallback<T> = ({
   onSuccess,
   onError,
