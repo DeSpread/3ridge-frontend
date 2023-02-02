@@ -277,8 +277,16 @@ export const COMPLETE_QUEST_OF_USER = gql(/* GraphQL */ `
 `);
 
 export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
-  mutation RequestClaimNFT($receiverAddress: String!) {
-    requestClaimNFT(receiverAddress: $receiverAddress) {
+  mutation RequestClaimNFT(
+    $collectionName: String!
+    $nftTokenName: String!
+    $receiverAddress: String!
+  ) {
+    requestClaimNFT(
+      collectionName: $collectionName
+      nftTokenName: $nftTokenName
+      receiverAddress: $receiverAddress
+    ) {
       txHash
     }
   }

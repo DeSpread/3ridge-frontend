@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
@@ -7,12 +7,34 @@ import HomeFooter from "../../layouts/footer/home-footer";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
 import StyledChip from "../../components/atoms/styled/styled-chip";
+import { request, gql } from "graphql-request";
 
 export async function getStaticProps() {
   return { props: {} };
 }
 
 const Home = (props: AppProps) => {
+  useEffect(() => {
+    const query = gql`
+      {
+        token_datas(
+          where: {
+            collection_name: { _eq: "3ridge-testnet-1" }
+            name: { _eq: "aptos-seoul-hack-2023-testnet-1" }
+          }
+        ) {
+          collection_name
+          metadata_uri
+          name
+        }
+      }
+    `;
+    request(
+      "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+      query
+    ).then((data) => console.log(data));
+  }, []);
+
   return (
     <>
       <Head>

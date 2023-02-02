@@ -37,6 +37,7 @@
     "firebase": "^9.15.0",
     "framer-motion": "^7.6.18",
     "graphql": "^16.6.0",
+    "graphql-request": "^5.1.0",
     "leva": "^0.9.34",
     "moment": "^2.29.4",
     "next": "13.0.5",

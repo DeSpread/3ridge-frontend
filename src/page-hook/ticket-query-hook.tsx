@@ -152,11 +152,17 @@ export function useTicketQuery({
     }
   };
 
-  const asyncRequestClaimNtf = async (receiverAddress: string) => {
+  const asyncRequestClaimNtf = async (
+    collectionName: string,
+    nftTokenName: string,
+    receiverAddress: string
+  ) => {
     if (receiverAddress) {
       const res = await requestClaimNFT({
         variables: {
+          collectionName,
           receiverAddress,
+          nftTokenName,
         },
       });
     }
