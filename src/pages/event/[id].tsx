@@ -797,10 +797,6 @@ const Event = (props: AppProps) => {
                       }>;
                       myEvent.params.callback("success");
                       setClaimCompleted(true);
-                      // localStorage.setItem(
-                      //   `event/completed/${ticketData?._id}`,
-                      //   "true"
-                      // );
                       showAlert({
                         title: "Congrats ! 🥳",
                         content: (

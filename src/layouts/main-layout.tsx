@@ -55,8 +55,6 @@ const NavbarButtonSet = ({
   );
 };
 
-// const myFont = localFont({ src: "../../public/LINESeedKR-Rg.woff" });
-
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const router = useRouter();
@@ -106,12 +104,17 @@ const MainLayout = (props: MainLayoutProps) => {
                 marginLeft: -1,
               }}
             >
-              <img
-                src={
-                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/3ridge-logo-white.svg"
-                }
-                height={"48px"}
-              />
+              <Stack direction={"row"} alignItems={"flex-start"}>
+                <img
+                  src={
+                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/3ridge-logo-white.svg"
+                  }
+                  height={"48px"}
+                />
+                <Typography sx={{ marginLeft: -1 }} variant={"caption"}>
+                  testnet
+                </Typography>
+              </Stack>
             </Box>
             {!props.disableNavButtonSet && (
               <Stack direction={"row"} alignItems={"center"} spacing={1}>
