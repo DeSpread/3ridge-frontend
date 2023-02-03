@@ -212,7 +212,8 @@ const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
 };
 
 const Event = (props: AppProps) => {
-  const { userData, asyncUpdateSocialTwitter } = useSignedUserQuery();
+  const { userData, asyncUpdateSocialTwitter, asyncUpdateRewardPoint } =
+    useSignedUserQuery();
   const theme = useTheme();
   const router = useRouter();
   const {
@@ -237,10 +238,10 @@ const Event = (props: AppProps) => {
   const [verifiedList, setVerifiedList] = useState<boolean[]>([]);
   const [updateIndex, setUpdateIndex] = useState(0);
   const [claimCompleted, setClaimCompleted] = useState(false);
+  const [updatingClaimCompleted, setUpdatingClaimCompleted] = useState(true);
 
   useEffect(() => {
     if (!userData?._id) return;
-    console.log(ticketData);
     const ids = ticketData?.quests?.map((e) => {
       return e._id;
     });
@@ -262,50 +263,103 @@ const Event = (props: AppProps) => {
         .catch((err) => {
           console.log(err);
         });
-      updateClaimCompleted();
+      asyncUpdateClaimCompleted().then(() => {});
     }
   }, [ticketData?.quests, userData?._id]);
 
-  const updateClaimCompleted = () => {
+  const asyncUpdateClaimCompleted = async () => {
     if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
-      const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
-      try {
+      setUpdatingClaimCompleted(true);
+      const res1 = await asyncCheckTokenExist();
+      const res2 = await asyncPendingTokenExist();
+      const res = res1 || res2;
+      console.log(res1, res2, res);
+      setClaimCompleted(res);
+      setUpdatingClaimCompleted(false);
+    }
+  };
+
+  const asyncCheckTokenExist = async () => {
+    try {
+      if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
+        const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
+        const query = gql`
+            {
+                token_ownerships(
+                    where: {
+                        name: { _eq: "${tokenName}" }
+                        collection_name: { _eq: "${collectionName}" }
+                        owner_address: {
+                            _eq: "${userData?.walletAddress}"
+                        }
+                    }
+                ) {
+                    name
+                    owner_address
+                    collection_name
+                }
+            }
+        `;
+        const res = await request(
+          "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+          query
+        );
+        console.log(query);
+        console.log(res);
+        if (res?.token_ownerships && res?.token_ownerships.length > 0) {
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  };
+
+  const asyncPendingTokenExist = async () => {
+    try {
+      if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
+        const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
         const query = gql`
           {
-            token_ownerships(
+            current_token_pending_claims(
               where: {
+                to_address: {_eq: "${userData?.walletAddress}"}
                 name: { _eq: "${tokenName}" }
                 collection_name: { _eq: "${collectionName}" }
-                owner_address: {
-                  _eq: "${userData?.walletAddress}"
-                }
               }
             ) {
-              name
-              owner_address
-              collection_name
+                amount
+                collection_name
+                name
+                from_address
+                to_address
             }
           }
         `;
-        console.log(query);
-        request(
+        const res = await request(
           "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
           query
-        ).then((data) => {
-          console.log(data);
-          if (data?.token_ownerships?.length > 0) {
-            setClaimCompleted(true);
-          }
-        });
-      } catch (e) {
-        setClaimCompleted(false);
-        console.log(e);
+        );
+        console.log(query);
+        console.log(res);
+        if (
+          res?.current_token_pending_claims &&
+          res?.current_token_pending_claims.length > 0
+        ) {
+          return true;
+        }
       }
+      return false;
+    } catch (e) {
+      console.log(e);
+      return false;
     }
   };
 
   useEffect(() => {
-    updateClaimCompleted();
+    asyncUpdateClaimCompleted().then(() => {});
   }, [updateIndex]);
 
   const claimRewardDisabled = useMemo(() => {
@@ -705,7 +759,11 @@ const Event = (props: AppProps) => {
                 </Stack>
               </PrimaryCard>
               <LoadingButton
-                disabled={claimRewardDisabled || claimCompleted}
+                disabled={
+                  claimRewardDisabled ||
+                  claimCompleted ||
+                  updatingClaimCompleted
+                }
                 onClick={async (e) => {
                   if (
                     !(
@@ -716,7 +774,7 @@ const Event = (props: AppProps) => {
                   ) {
                     return;
                   }
-                  const { collectionName, tokenName } =
+                  const { collectionName, tokenName, rewardAmount } =
                     ticketData?.rewardPolicy?.context;
                   if (userData?.walletAddress && collectionName && tokenName) {
                     console.log(
@@ -730,19 +788,30 @@ const Event = (props: AppProps) => {
                         tokenName,
                         userData?.walletAddress
                       );
+                      const newRewardAmount =
+                        (userData?.rewardPoint ?? 0) + rewardAmount;
+                      await asyncUpdateRewardPoint(newRewardAmount);
                       //@ts-ignore
                       const myEvent = e as MouseEventWithParam<{
                         callback: (msg: string) => void;
                       }>;
                       myEvent.params.callback("success");
+                      setClaimCompleted(true);
+                      // localStorage.setItem(
+                      //   `event/completed/${ticketData?._id}`,
+                      //   "true"
+                      // );
                       showAlert({
-                        title: "Info",
+                        title: "Congrats ! 🥳",
                         content: (
                           <>
                             <Stack direction={"column"} spacing={1}>
-                              <Typography>Claim Completed !!!</Typography>
                               <Typography>
-                                Please Check your pending token
+                                Reward NFT has been sent to your wallet !
+                              </Typography>
+                              <Typography>
+                                Please accept the NFT transmitted from the NFT
+                                tab on Petra Wallet
                               </Typography>
                             </Stack>
                           </>
@@ -796,6 +865,7 @@ const Event = (props: AppProps) => {
                         borderRadius: 42,
                         zIndex: 1,
                       }}
+                      onClick={() => {}}
                     >
                       <Typography variant={"caption"} color={"neutral.100"}>
                         {`+${nFormatter(
@@ -807,7 +877,16 @@ const Event = (props: AppProps) => {
                   </>
                 ) : (
                   <>
-                    <Typography>⛔&nbsp;EMPTY</Typography>
+                    <Box
+                      onClick={() => {
+                        // console.log("aaa");
+                      }}
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Typography>⛔&nbsp;EMPTY</Typography>
+                    </Box>
                   </>
                 )}
               </Stack>

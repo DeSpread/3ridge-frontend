@@ -140,7 +140,9 @@ const NavbarAvatar = ({
                 </GradientTypography>
               )}
               <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                <Typography variant={"caption"}>LEVEL 1</Typography>
+                <Typography variant={"caption"}>
+                  {`Level ${Math.floor((rewardPoint ?? 0) / 100)}`}
+                </Typography>
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress
                     variant="determinate"

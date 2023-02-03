@@ -78,19 +78,63 @@ const Profile = (props: AppProps) => {
   useEffect(() => {
     (async () => {
       setAchievementsLoading(true);
-      const tokenNames = await asyncQueryTokenByUserName();
+      const tokenNames1 = await asyncQueryTokenByUserName();
+      const tokenNames2 = await asyncQueryPendingTokenByUserName();
+      let tokenNames = tokenNames1.concat(tokenNames2);
+      tokenNames = tokenNames.filter((item, index) => {
+        return tokenNames.indexOf(item) == index;
+      });
       const tokensData = await asyncQueryTokenData(tokenNames);
-      if (tokensData) {
+      if (tokensData.length > 0) {
         setTokensData(tokensData);
       }
       setAchievementsLoading(false);
     })();
   }, [userData]);
 
+  const asyncQueryPendingTokenByUserName = async () => {
+    if (userData?.walletAddress === undefined) {
+      return [];
+    }
+    try {
+      const query = gql`
+        {
+          current_token_pending_claims(
+            where: {
+              to_address: {_eq: "${userData?.walletAddress}"}
+              amount: {_gt: "0"}
+            }
+          ) {
+            amount
+            collection_name
+            name
+            from_address
+            to_address
+          }
+        }
+      `;
+      const res = await request(
+        "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+        query
+      );
+      if (res.current_token_pending_claims?.length > 0) {
+        const names: string[] = [];
+        res.current_token_pending_claims?.forEach((e: any) => {
+          if (!names.includes(e.name)) names.push(e.name);
+        });
+        return names;
+      }
+      return [];
+    } catch (e) {
+      console.log(e);
+      return [];
+    }
+  };
+
   const asyncQueryTokenData = async (tokenNames: string[] | undefined) => {
     try {
       if (tokenNames === undefined || tokenNames.length === 0) {
-        return undefined;
+        return [];
       }
       let param = "";
       tokenNames.forEach((e) => {
@@ -129,15 +173,16 @@ const Profile = (props: AppProps) => {
         });
         return tokensData;
       }
+      return [];
     } catch (e) {
       console.log(e);
-      return undefined;
+      return [];
     }
   };
 
   const asyncQueryTokenByUserName = async () => {
     if (userData?.walletAddress === undefined) {
-      return undefined;
+      return [];
     }
     try {
       const query = gql`
@@ -166,10 +211,10 @@ const Profile = (props: AppProps) => {
         });
         return names;
       }
-      return undefined;
+      return [];
     } catch (e) {
       console.log(e);
-      return undefined;
+      return [];
     }
   };
 
@@ -255,7 +300,7 @@ const Profile = (props: AppProps) => {
             {/*--- profile description ---*/}
             <Stack spacing={1}>
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
-                Level 1
+                {`Level ${Math.floor((userData?.rewardPoint ?? 0) / 100)}`}
               </Typography>
               <LinearProgress
                 variant="determinate"
@@ -381,6 +426,7 @@ const Profile = (props: AppProps) => {
                     sx={{ height: 128 }}
                   >
                     <CircularProgress
+                      size="1rem"
                       sx={{
                         color: theme.palette.warning.main,
                       }}
