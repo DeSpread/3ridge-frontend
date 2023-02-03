@@ -101,7 +101,7 @@ const Home = (props: AppProps) => {
               <Stack sx={{ marginLeft: 15 }} spacing={3}>
                 <Stack spacing={1}>
                   <GradientTypography variant={"h1"}>
-                    Bridge your web project
+                    Bridge your web3 project
                   </GradientTypography>
                   <Stack direction={"row"} alignItems={"center"}>
                     <Typography variant={"h2"}>It`s your </Typography>
@@ -114,7 +114,7 @@ const Home = (props: AppProps) => {
                     />
                   </Stack>
                 </Stack>
-                <Grid container>
+                <Grid container columnSpacing={1}>
                   <Grid item>
                     <StyledChip
                       label={
@@ -146,7 +146,7 @@ const Home = (props: AppProps) => {
                               marginRight: 1,
                             }}
                           ></Box>
-                          <Typography>onboarding</Typography>
+                          <Typography>on-chain</Typography>
                         </Stack>
                       }
                     ></StyledChip>
@@ -164,7 +164,7 @@ const Home = (props: AppProps) => {
                               marginRight: 1,
                             }}
                           ></Box>
-                          <Typography>onboarding</Typography>
+                          <Typography>community</Typography>
                         </Stack>
                       }
                     ></StyledChip>
