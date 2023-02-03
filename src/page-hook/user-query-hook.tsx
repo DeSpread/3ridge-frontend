@@ -8,6 +8,7 @@ import {
   UPDATE_USER_BY_EMAIL,
   UPDATE_USER_BY_TWITTER,
   UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
+  UPDATE_USER_REWARD_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
 } from "../apollo/query";
 import { ChainType } from "../__generated__/graphql";
@@ -20,6 +21,7 @@ import { useAccount, useConnect } from "wagmi";
 import { useMutation } from "@apollo/client";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userDataState } from "../recoil";
+import { gql } from "../__generated__";
 
 const useSignedUserQuery = () => {
   const { connectAsync, connectors } = useConnect();
@@ -29,6 +31,7 @@ const useSignedUserQuery = () => {
   );
   const [UpdateUserEmailByName] = useMutation(UPDATE_USER_BY_EMAIL);
   const [UpdateUserTwitterByName] = useMutation(UPDATE_USER_BY_TWITTER);
+  const [UpdateUserRewardByName] = useMutation(UPDATE_USER_REWARD_BY_NAME);
 
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
@@ -308,6 +311,26 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateRewardPoint = async (rewardPoint: number) => {
+    try {
+      if (!userData.name) return;
+      await UpdateUserRewardByName({
+        variables: {
+          name: userData.name,
+          rewardPoint,
+        },
+      });
+      setUserData((prevState) => {
+        return {
+          ...prevState,
+          rewardPoint,
+        };
+      });
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
   return {
     userData,
     loading,
@@ -316,6 +339,7 @@ const useSignedUserQuery = () => {
     asyncUpdateProfileImageUrl,
     asyncUpdateEmail,
     asyncUpdateSocialTwitter,
+    asyncUpdateRewardPoint,
   };
 };
 

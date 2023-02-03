@@ -99,7 +99,7 @@ const Project = () => {
                   </Box>
                 </Stack>
                 <Typography
-                  variant={"body2"}
+                  variant={"h6"}
                   sx={{
                     overflow: "hidden",
                     textOverflow: "ellipsis",

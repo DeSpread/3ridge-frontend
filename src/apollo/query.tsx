@@ -140,6 +140,34 @@ export const UPDATE_USER_BY_EMAIL = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_USER_REWARD_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateUserRewardByName($name: String!, $rewardPoint: Float!) {
+    updateUserByName(
+      name: $name
+      userUpdateInput: { rewardPoint: $rewardPoint }
+    ) {
+      rewardPoint
+    }
+  }
+`);
+
+// completed: Boolean
+// description: String
+// imageUrl: String
+// participants: [UserInputType!]
+// rewardPolicy: String
+// title: String
+// export const UPDATE_TICKET_COMPLETED_BY_ID = gql(/* GraphQL */ `
+//   mutation UpdateTicketCompletedByID($name: String!, $rewardPoint: Float!) {
+//     updateTicketById(
+//       name: $name
+//       userUpdateInput: { rewardPoint: $rewardPoint }
+//     ) {
+//       rewardPoint
+//     }
+//   }
+// `);
+
 export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
   mutation UpdateUserTwitterByName($name: String!, $twitterId: String!) {
     updateUserByName(
