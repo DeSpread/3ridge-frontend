@@ -1,12 +1,16 @@
-import { auth } from "../firebase-client";
 import {
   createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
+  getAuth,
 } from "firebase/auth";
 import { AppError, getErrorMessage } from "../../error/my-error";
 import { MAIL_VERIFY, MailVerified } from "../../type";
 import { asyncJSTwitterSignInPopUp } from "./js-firebase";
+import { firebaseApp } from "../firebase-client";
+
+const auth = getAuth(firebaseApp);
+auth.languageCode = "it";
 
 const useFirebaseAuth = () => {
   const asyncTwitterSignInPopUp = async () => {

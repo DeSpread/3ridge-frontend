@@ -1,6 +1,4 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, TwitterAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env["NEXT_PUBLIC_FIREBASE_API_KEY"],
@@ -14,10 +12,4 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
-auth.languageCode = "it";
-
-const db = getFirestore(app);
-
-const twitterAuthProvider = new TwitterAuthProvider();
-export { auth, db, twitterAuthProvider };
+export { app as firebaseApp };
