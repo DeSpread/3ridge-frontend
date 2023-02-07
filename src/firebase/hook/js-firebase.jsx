@@ -1,5 +1,10 @@
-import { signInWithPopup, signInWithRedirect } from "firebase/auth";
-import { auth, twitterAuthProvider } from "../firebase-client";
+import {
+  signInWithPopup,
+  signInWithRedirect,
+  TwitterAuthProvider,
+} from "firebase/auth";
+
+const twitterAuthProvider = new TwitterAuthProvider();
 
 async function asyncJSTwitterSignInPopUp() {
   try {

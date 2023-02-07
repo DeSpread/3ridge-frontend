@@ -1,6 +1,6 @@
 import { useLogin } from "../provider/login/login-provider";
 import { client } from "../apollo/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   GET_USER_BY_EMAIL,
   GET_USER_BY_GMAIL,
@@ -21,10 +21,13 @@ import { useAccount, useConnect } from "wagmi";
 import { useMutation } from "@apollo/client";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userDataState } from "../recoil";
-import { gql } from "../__generated__";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 const useSignedUserQuery = () => {
-  const { connectAsync, connectors } = useConnect();
+  const { connect, account, network, connected, disconnect, wallet, wallets } =
+    useWallet();
+  const triedConnectWallet = useRef<boolean>(false);
+
   const [UpdateUserWalletByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
   const [UpdateUserProfileImageByName] = useMutation(
     UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME
@@ -36,7 +39,6 @@ const useSignedUserQuery = () => {
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
   const [loading, setLoading] = useState(false);
-  const { address } = useAccount();
 
   const {
     isGoogleLoggedIn,
@@ -193,18 +195,51 @@ const useSignedUserQuery = () => {
     }
   }, [isWalletLoggedIn]);
 
+  useEffect(() => {
+    if (triedConnectWallet.current) {
+      console.log("triedConnectWallet");
+      if (!account) {
+        triedConnectWallet.current = false;
+        return;
+      }
+      const newAccount = account.address;
+      (async () => {
+        if (!userData.name) {
+          triedConnectWallet.current = false;
+          return;
+        }
+        await UpdateUserWalletByName({
+          variables: {
+            name: userData.name,
+            chain: ChainType.Evm,
+            walletAddress: newAccount,
+          },
+        });
+        setUserData((prevState) => {
+          return {
+            ...prevState,
+            walletAddress: newAccount,
+          };
+        });
+      })();
+      triedConnectWallet.current = false;
+    }
+  }, [connected]);
+
   const asyncUpdateWalletAddressByWallet = async () => {
     try {
       if (!userData.name) return;
-      let newAccount = address;
-      if (!address) {
-        const { account } = await connectAsync({ connector: connectors[0] });
-        newAccount = account;
-      }
-      if (!newAccount) {
-        throw new AppError(APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL);
+      let newAccount: string | undefined = undefined;
+      if (wallets[0].readyState === "NotDetected") {
+        throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED);
         return;
       }
+      if (!connected || !account) {
+        await connect(wallets[0].name);
+        triedConnectWallet.current = true;
+        return;
+      }
+      newAccount = account.address;
       await UpdateUserWalletByName({
         variables: {
           name: userData.name,
@@ -233,7 +268,7 @@ const useSignedUserQuery = () => {
       await UpdateUserWalletByName({
         variables: {
           name: userData.name,
-          chain: ChainType.Evm,
+          chain: ChainType.Aptos,
           walletAddress: walletAddress,
         },
       });

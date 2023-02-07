@@ -99,8 +99,7 @@ export function useWalletLogin() {
     (async () => {
       let newAccount: string | undefined = undefined;
       try {
-        // console.log("aaa", wallets, connected, account);
-        if (!(wallets && wallets.length > 0)) {
+        if (wallets[0].readyState === "NotDetected") {
           onError?.(new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED));
           return;
         }
@@ -110,6 +109,7 @@ export function useWalletLogin() {
           tryWalletSignUpOnError.current = onError;
           return;
         }
+        console.log("ccc");
         if (!account) {
           onError?.(
             new AppError(APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL)
