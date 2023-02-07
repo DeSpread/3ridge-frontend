@@ -1,4 +1,11 @@
-import { AppBar, Box, Stack, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Stack,
+  Toolbar,
+  Typography,
+  Link as MuiLink,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
 import { MouseEventHandler, ReactNode, useState } from "react";
@@ -26,6 +33,7 @@ import {
 } from "../type";
 import { useSignDialog } from "../page-hook/sign-dialog-hook";
 import NavbarButton from "../components/atoms/navbar-button";
+import Link from "next/link";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -232,6 +240,40 @@ const MainLayout = (props: MainLayoutProps) => {
               setShowSignInDialog(false);
             },
             onError: (error: AppError) => {
+              if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
+                showAlert({
+                  title: "Info",
+                  content: (
+                    <>
+                      <Stack spacing={1}>
+                        <Typography
+                          style={{ color: theme.palette.neutral[100] }}
+                        >
+                          Please Install PetraWallet
+                        </Typography>
+                        <Link
+                          href={"https://petra.app/"}
+                          rel={"noopener noreferrer"}
+                          target={"_blank"}
+                        >
+                          <MuiLink
+                            sx={{
+                              "&:hover": {
+                                color: "#bdbdbd",
+                              },
+                            }}
+                            color={"warning.main"}
+                            underline="hover"
+                          >
+                            Install Link
+                          </MuiLink>
+                        </Link>
+                      </Stack>
+                    </>
+                  ),
+                });
+                return;
+              }
               setShowSignInDialog(false);
               showErrorAlert({ content: error.message });
             },

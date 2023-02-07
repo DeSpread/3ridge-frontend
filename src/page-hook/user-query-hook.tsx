@@ -230,7 +230,7 @@ const useSignedUserQuery = () => {
     try {
       if (!userData.name) return;
       let newAccount: string | undefined = undefined;
-      if (!(wallets && wallets.length > 0)) {
+      if (wallets[0].readyState === "NotDetected") {
         throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED);
         return;
       }

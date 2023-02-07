@@ -2,7 +2,15 @@ import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { Avatar, Box, Grid, Stack, Theme, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Grid,
+  Link as MuiLink,
+  Stack,
+  Theme,
+  Typography,
+} from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
@@ -24,7 +32,11 @@ import ConnectEmailDialog, {
 } from "./dialog/connect-email-dialog";
 import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
-import { APP_ERROR_MESSAGE, getErrorMessage } from "../../error/my-error";
+import {
+  APP_ERROR_MESSAGE,
+  AppError,
+  getErrorMessage,
+} from "../../error/my-error";
 import PictureEditDialog from "./dialog/picture-edit-dialog";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-button";
@@ -33,6 +45,7 @@ import StyledChip from "../../components/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
 import { gql, request } from "graphql-request";
 import CircularProgress from "@mui/material/CircularProgress";
+import Link from "next/link";
 
 const Profile = (props: AppProps) => {
   const {
@@ -488,14 +501,52 @@ const Profile = (props: AppProps) => {
         walletValidatorButtonOnClick={async (e) => {
           const myEvent = e as MouseEventWithStateParam;
           showLoading();
-          if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
-            await asyncUpdateWalletAddress("");
-          } else if (
-            myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
-          ) {
-            await asyncUpdateWalletAddressByWallet();
+          try {
+            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
+              await asyncUpdateWalletAddress("");
+            } else if (
+              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
+            ) {
+              await asyncUpdateWalletAddressByWallet();
+            }
+          } catch (e) {
+            if (
+              e instanceof AppError &&
+              e.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED
+            ) {
+              showAlert({
+                title: "Info",
+                content: (
+                  <>
+                    <Stack spacing={1}>
+                      <Typography style={{ color: theme.palette.neutral[100] }}>
+                        Please Install PetraWallet
+                      </Typography>
+                      <Link
+                        href={"https://petra.app/"}
+                        rel={"noopener noreferrer"}
+                        target={"_blank"}
+                      >
+                        <MuiLink
+                          sx={{
+                            "&:hover": {
+                              color: "#bdbdbd",
+                            },
+                          }}
+                          color={"warning.main"}
+                          underline="hover"
+                        >
+                          Install Link
+                        </MuiLink>
+                      </Link>
+                    </Stack>
+                  </>
+                ),
+              });
+            }
+          } finally {
+            closeLoading();
           }
-          closeLoading();
         }}
         emailValidatorButtonOnClick={async (e) => {
           const myEvent = e as MouseEventWithStateParam;
