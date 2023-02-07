@@ -273,7 +273,6 @@ const Event = (props: AppProps) => {
       const res1 = await asyncCheckTokenExist();
       const res2 = await asyncPendingTokenExist();
       const res = res1 || res2;
-      console.log(res1, res2, res);
       setClaimCompleted(res);
       setUpdatingClaimCompleted(false);
     }
@@ -774,7 +773,7 @@ const Event = (props: AppProps) => {
                   ) {
                     return;
                   }
-                  const { collectionName, tokenName, rewardAmount } =
+                  const { collectionName, tokenName, point } =
                     ticketData?.rewardPolicy?.context;
                   if (userData?.walletAddress && collectionName && tokenName) {
                     console.log(
@@ -789,7 +788,7 @@ const Event = (props: AppProps) => {
                         userData?.walletAddress
                       );
                       const newRewardAmount =
-                        (userData?.rewardPoint ?? 0) + rewardAmount;
+                        (userData?.rewardPoint ?? 0) + point;
                       await asyncUpdateRewardPoint(newRewardAmount);
                       //@ts-ignore
                       const myEvent = e as MouseEventWithParam<{
