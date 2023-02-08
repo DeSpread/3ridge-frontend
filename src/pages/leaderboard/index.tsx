@@ -1,6 +1,14 @@
 import Head from "next/head";
 import React, { ReactElement, useMemo } from "react";
-import { Avatar, Box, Card, Grid, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import MainLayout from "../../layouts/main-layout";
 import { useLeaderUsersQuery } from "../../page-hook/leader-users-query-hook";
 import XpChip from "../../components/atoms/styled/xp-chip";
@@ -10,13 +18,20 @@ import { useSignedUserQuery } from "../../page-hook/user-query-hook";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
+import { useTheme } from "@mui/material/styles";
 
 const RankCard = ({ user, rank }: { user: User; rank: number }) => {
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
+
   const { profileImageUrl, name, rewardPoint } = user;
 
   const convertedName = useMemo(() => {
     if (name?.substring(0, 2).toLocaleLowerCase() === "0x") {
-      return StringHelper.getInstance().getMidEllipsisString(name, 10, 8);
+      if (smUp)
+        return StringHelper.getInstance().getMidEllipsisString(name, 10, 8);
+      return StringHelper.getInstance().getMidEllipsisString(name);
     }
     return name;
   }, [name]);
@@ -34,11 +49,11 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
       );
     }
     if (rank === 1) {
-      return <Typography variant={"h4"}>🥇</Typography>;
+      return <Typography variant={smUp ? "h4" : "h5"}>🥇</Typography>;
     } else if (rank === 2) {
-      return <Typography variant={"h4"}>🥈</Typography>;
+      return <Typography variant={smUp ? "h4" : "h5"}>🥈</Typography>;
     } else if (rank === 3) {
-      return <Typography variant={"h4"}>🥉</Typography>;
+      return <Typography variant={smUp ? "h4" : "h5"}>🥉</Typography>;
     }
     return null;
   };
@@ -67,13 +82,13 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
         alignItems={"center"}
         justifyContent={"space-between"}
         sx={{
-          padding: 2,
+          padding: smUp ? 2 : 1,
         }}
       >
         <Stack direction={"row"} alignItems={"center"}>
           <Box
             sx={{
-              width: 64,
+              width: smUp ? 64 : 48,
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
@@ -87,44 +102,52 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
                   height: 28,
                   borderRadius: 14,
                 }}
-                label={<Typography variant={"body2"}>{rank}</Typography>}
+                label={
+                  <Typography variant={smUp ? "body2" : "caption"}>
+                    {rank}
+                  </Typography>
+                }
               ></XpChip>
             ) : (
               renderRankBadge(rank)
             )}
           </Box>
-          <Box sx={{ marginLeft: 1 }}>
+          <Box sx={{ marginLeft: smUp ? 1 : "1px" }}>
             <Avatar
-              sx={{ width: 52, height: 52 }}
+              sx={{ width: smUp ? 52 : 38, height: smUp ? 52 : 38 }}
               src={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
             ></Avatar>
           </Box>
           <Stack direction={"column"} sx={{ marginLeft: 3 }}>
-            <GradientTypography variant={"body2"}>
+            <GradientTypography variant={smUp ? "body2" : "caption"}>
               {convertedName}
             </GradientTypography>
           </Stack>
         </Stack>
-        <Box sx={{ marginRight: 2 }}>
+        <Box sx={{ marginRight: smUp ? 2 : 0 }}>
           <Stack
             direction={"column"}
             alignItems={"flex-end"}
             justifyContent={"center"}
           >
             <Typography
-              variant={"h6"}
+              variant={smUp ? "h6" : "caption"}
               sx={{ color: (theme) => theme.palette.warning.main }}
             >{`Level ${Math.floor((rewardPoint ?? 0) / 100)}`}</Typography>
             <Stack direction={"row"} alignItems={"center"}>
-              <Typography variant={"body2"}>Total&nbsp;:&nbsp;</Typography>
+              <Typography variant={smUp ? "body2" : "caption"}>
+                Total&nbsp;:&nbsp;
+              </Typography>
               <Typography
-                variant={"body2"}
+                variant={smUp ? "body2" : "caption"}
                 color={"white"}
                 sx={{ fontWeight: "bold" }}
               >
                 {rewardPoint ?? 0}
               </Typography>
-              <Typography variant={"body2"}>&nbsp;{`Point`}</Typography>
+              <Typography variant={smUp ? "body2" : "caption"}>
+                &nbsp;{`Point`}
+              </Typography>
             </Stack>
           </Stack>
         </Box>
@@ -134,6 +157,9 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
 };
 
 const Leaderboard = () => {
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const { leaderUsersData, leaderUsersDataLoading, findUserRank } =
     useLeaderUsersQuery();
   const { userData } = useSignedUserQuery();
@@ -155,7 +181,7 @@ const Leaderboard = () => {
         sx={{ marginTop: 0, marginBottom: 12, background: "" }}
       >
         <Grid item sx={{ background: "" }}>
-          <Box sx={{ minWidth: 800, background: "" }}>
+          <Box sx={{ minWidth: smUp ? 800 : 200, background: "" }}>
             <Stack direction={"column"}>
               <Typography variant={"h4"}>Leaderboard</Typography>
               {userData._id && (

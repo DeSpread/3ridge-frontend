@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
   Avatar,
+  useMediaQuery,
 } from "@mui/material";
 import Head from "next/head";
 import React, { ReactElement } from "react";
@@ -18,6 +19,8 @@ import { useLoading } from "../../provider/loading/loading-provider";
 
 const Projects = () => {
   const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
 
@@ -27,7 +30,13 @@ const Projects = () => {
         <title>Leaderboard</title>
       </Head>
       <Box
-        style={{ flex: 1, background: "", paddingLeft: 24, paddingRight: 24 }}
+        style={{
+          flex: 1,
+          background: "",
+          paddingLeft: 24,
+          paddingRight: 24,
+          paddingTop: smUp ? 0 : 16,
+        }}
       >
         <Grid
           container
@@ -70,6 +79,7 @@ const Projects = () => {
                       sx={{
                         boxShadow:
                           "inset 4px 4px 4px #35333a, inset -4px -4px 4px #35333a",
+                        // minHeight: 200,
                       }}
                     >
                       <Stack direction={"column"} alignItems={"center"}>
@@ -84,10 +94,14 @@ const Projects = () => {
                             alignItems={"center"}
                           >
                             <Typography
-                              variant={"body2"}
+                              variant={smUp ? "body2" : "caption"}
                               color={"neutral.100"}
                               sx={{
-                                wordBreak: "keep-all",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                display: "-webkit-box",
+                                WebkitLineClamp: "1",
+                                WebkitBoxOrient: "vertical",
                               }}
                             >
                               {e.name}

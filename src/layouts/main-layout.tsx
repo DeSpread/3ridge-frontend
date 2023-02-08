@@ -5,6 +5,8 @@ import {
   Toolbar,
   Typography,
   Link as MuiLink,
+  useMediaQuery,
+  IconButton,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
@@ -34,6 +36,8 @@ import {
 import { useSignDialog } from "../page-hook/sign-dialog-hook";
 import NavbarButton from "../components/atoms/navbar-button";
 import Link from "next/link";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import SubMenuButton from "../components/molecules/sub-menu-button";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -65,6 +69,8 @@ const NavbarButtonSet = ({
 
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
   const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
   const { userData } = useSignedUserQuery();
@@ -74,6 +80,22 @@ const MainLayout = (props: MainLayoutProps) => {
   const { showErrorAlert, showAlert } = useAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
+
+  const asyncGoToExplore = async () => {
+    showLoading();
+    await router.push(`/explore`);
+    closeLoading();
+  };
+  const asyncGoToProjects = async () => {
+    showLoading();
+    await router.push(`/projects`);
+    closeLoading();
+  };
+  const asyncGoToLeaderBoard = async () => {
+    showLoading();
+    await router.push(`/leaderboard`);
+    closeLoading();
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -97,7 +119,12 @@ const MainLayout = (props: MainLayoutProps) => {
           }}
         >
           <Stack
-            sx={{ background: "", flex: 1, height: "100%", padding: 3 }}
+            sx={{
+              background: "",
+              flex: 1,
+              height: "100%",
+              padding: smUp ? 3 : 2,
+            }}
             direction={"row"}
             justifyContent={"space-between"}
             alignItems={"center"}
@@ -117,91 +144,86 @@ const MainLayout = (props: MainLayoutProps) => {
                   src={
                     "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/3ridge-logo-white.svg"
                   }
-                  height={"48px"}
+                  height={smUp ? "48px" : "36px"}
                 />
                 <Typography sx={{ marginLeft: -1 }} variant={"caption"}>
                   testnet
                 </Typography>
               </Stack>
             </Box>
-            {!props.disableNavButtonSet && (
-              <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                <NavbarButtonSet
-                  bountiesBtnOnClick={async (e) => {
-                    showLoading();
-                    await router.push(`/explore`);
-                    closeLoading();
-                  }}
-                  contentsBtnOnClick={() => {}}
-                  achievementsBtnOnClick={() => {}}
-                  communitiesBtnOnClick={async (e) => {
-                    showLoading();
-                    await router.push(`/projects`);
-                    closeLoading();
-                  }}
-                  leaderBoardBtnOnClick={async (e) => {
-                    showLoading();
-                    await router.push(`/leaderboard`);
-                    closeLoading();
-                  }}
-                ></NavbarButtonSet>
-                {isLoggedIn ? (
-                  <NavbarAvatar
-                    rewardPoint={userData?.rewardPoint}
-                    onProfileItemClicked={async (e) => {
-                      e.preventDefault();
-                      showLoading();
-                      await router.push(`/profile`);
-                      closeLoading();
-                    }}
-                    onLogoutBtnClicked={(e) => {
-                      e.preventDefault();
-                      logout({
-                        onSuccess: () => {
-                          showLoading();
-                          router.push("/").then((res) => {
-                            closeLoading();
-                          });
-                        },
-                        onError: (error) => {
-                          showErrorAlert({ content: error.message });
-                        },
-                      });
-                    }}
-                    src={userData?.profileImageUrl}
-                    walletAddress={userData?.walletAddress}
-                  ></NavbarAvatar>
-                ) : (
-                  <Stack direction={"row"} alignItems={"center"} spacing={2}>
-                    <PrimaryButton
-                      size={"small"}
-                      sx={{
-                        width: 100,
-                      }}
-                      onClick={(e) => {
+            {!props.disableNavButtonSet &&
+              (smUp ? (
+                <Stack direction={"row"} alignItems={"center"} spacing={1}>
+                  <NavbarButtonSet
+                    bountiesBtnOnClick={asyncGoToExplore}
+                    contentsBtnOnClick={() => {}}
+                    achievementsBtnOnClick={() => {}}
+                    communitiesBtnOnClick={asyncGoToProjects}
+                    leaderBoardBtnOnClick={asyncGoToLeaderBoard}
+                  ></NavbarButtonSet>
+                  {isLoggedIn ? (
+                    <NavbarAvatar
+                      rewardPoint={userData?.rewardPoint}
+                      onProfileItemClicked={async (e) => {
                         e.preventDefault();
-                        setShowSignInDialog(true);
-                      }}
-                    >
-                      Sign In
-                    </PrimaryButton>
-                    <SecondaryButton
-                      size={"small"}
-                      sx={{
-                        width: 100,
-                      }}
-                      onClick={async (e) => {
                         showLoading();
-                        await router.push("/signup");
+                        await router.push(`/profile`);
                         closeLoading();
                       }}
-                    >
-                      Sign Up
-                    </SecondaryButton>
-                  </Stack>
-                )}
-              </Stack>
-            )}
+                      onLogoutBtnClicked={(e) => {
+                        e.preventDefault();
+                        logout({
+                          onSuccess: () => {
+                            showLoading();
+                            router.push("/").then((res) => {
+                              closeLoading();
+                            });
+                          },
+                          onError: (error) => {
+                            showErrorAlert({ content: error.message });
+                          },
+                        });
+                      }}
+                      src={userData?.profileImageUrl}
+                      walletAddress={userData?.walletAddress}
+                    ></NavbarAvatar>
+                  ) : (
+                    <Stack direction={"row"} alignItems={"center"} spacing={2}>
+                      <PrimaryButton
+                        size={"small"}
+                        sx={{
+                          width: 100,
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setShowSignInDialog(true);
+                        }}
+                      >
+                        Sign In
+                      </PrimaryButton>
+                      <SecondaryButton
+                        size={"small"}
+                        sx={{
+                          width: 100,
+                        }}
+                        onClick={async (e) => {
+                          showLoading();
+                          await router.push("/signup");
+                          closeLoading();
+                        }}
+                      >
+                        Sign Up
+                      </SecondaryButton>
+                    </Stack>
+                  )}
+                </Stack>
+              ) : (
+                <SubMenuButton
+                  onExploreClick={asyncGoToExplore}
+                  onProjectsClick={asyncGoToProjects}
+                  onLeaderBoardClick={asyncGoToLeaderBoard}
+                ></SubMenuButton>
+              ))}
           </Stack>
         </Box>
       </AppBar>

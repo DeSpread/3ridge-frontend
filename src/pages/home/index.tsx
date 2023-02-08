@@ -1,5 +1,5 @@
-import React, { ReactElement, useEffect } from "react";
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import React, { PropsWithChildren, ReactElement, useEffect } from "react";
+import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
 import type { AppProps } from "next/app";
@@ -7,33 +7,49 @@ import HomeFooter from "../../layouts/footer/home-footer";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
 import StyledChip from "../../components/atoms/styled/styled-chip";
-import { request, gql } from "graphql-request";
+import { useTheme } from "@mui/material/styles";
 
 export async function getStaticProps() {
   return { props: {} };
 }
 
+const HomeTag = (props: PropsWithChildren & { color: string }) => {
+  const theme = useTheme();
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+
+  return (
+    <StyledChip
+      sx={{
+        paddingTop: smUp ? "18px" : 0,
+        paddingBottom: smUp ? "20px" : 0,
+        paddingLeft: "5px",
+        paddingRight: "5px",
+      }}
+      label={
+        <Stack direction={"row"} alignItems={"center"}>
+          <Box
+            sx={{
+              width: mdUp ? 12 : smUp ? 12 : 12, //12,
+              height: mdUp ? 12 : smUp ? 12 : 12,
+              background: props.color,
+              borderRadius: 12,
+              marginRight: 1,
+            }}
+          ></Box>
+          <Typography variant={mdUp ? "body1" : smUp ? "body2" : "subtitle2"}>
+            {props.children}
+          </Typography>
+        </Stack>
+      }
+    ></StyledChip>
+  );
+};
+
 const Home = (props: AppProps) => {
-  useEffect(() => {
-    // const query = gql`
-    //   {
-    //     token_datas(
-    //       where: {
-    //         collection_name: { _eq: "3ridge-testnet-1" }
-    //         name: { _eq: "aptos-seoul-hack-2023-testnet-1" }
-    //       }
-    //     ) {
-    //       collection_name
-    //       metadata_uri
-    //       name
-    //     }
-    //   }
-    // `;
-    // request(
-    //   "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-    //   query
-    // ).then((data) => console.log(data));
-  }, []);
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <>
@@ -51,7 +67,7 @@ const Home = (props: AppProps) => {
           direction={"column"}
           sx={{
             width: "100%",
-            height: `calc(100vh - 56px)`, // 56
+            height: `calc(100vh - 56px)`,
           }}
         >
           <div
@@ -68,10 +84,18 @@ const Home = (props: AppProps) => {
                 width: "100%",
                 height: "100%",
                 background: "#1a1a1a",
+                zIndex: 2,
+                flex: 1,
               }}
             >
               <video
-                style={{ marginLeft: 400, height: "100%" }}
+                style={{
+                  display: "block",
+                  margin: "auto",
+                  height: "100%",
+                  zIndex: 2,
+                  transform: mdUp ? "translateX(22%)" : "translateX(-22%)",
+                }}
                 className="videoTag"
                 autoPlay
                 loop
@@ -87,7 +111,7 @@ const Home = (props: AppProps) => {
             </div>
             <div
               style={{
-                zIndex: 2,
+                zIndex: 3,
                 position: "absolute",
                 top: `calc(50vh)`,
                 display: "flex",
@@ -98,104 +122,93 @@ const Home = (props: AppProps) => {
                 transform: "translateY(-70%)",
               }}
             >
-              <Stack sx={{ marginLeft: 15 }} spacing={3}>
-                <Stack spacing={1}>
-                  <GradientTypography variant={"h1"}>
+              <Stack
+                sx={{ marginLeft: mdUp ? 15 : 0, background: "", flex: 1 }}
+                spacing={3}
+                alignItems={mdUp ? "flex-start" : "center"}
+              >
+                <Stack
+                  spacing={1}
+                  sx={{ padding: smUp ? 0 : 4, paddingBottom: 0 }}
+                >
+                  <GradientTypography
+                    variant={mdUp ? "h1" : smUp ? "h2" : "h4"}
+                    sx={{ textAlign: smUp ? "left" : "center" }}
+                  >
                     Bridge your web3 project
                   </GradientTypography>
-                  <Stack direction={"row"} alignItems={"center"}>
-                    <Typography variant={"h2"}>It`s your </Typography>
+                  <Stack
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={smUp ? "flex-start" : "center"}
+                  >
+                    <Typography variant={mdUp ? "h2" : smUp ? "h3" : "h5"}>
+                      It`s your
+                    </Typography>
                     <img
                       src={
                         "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/only-logo-white.svg"
                       }
                       style={{ marginTop: 2 }}
-                      height={"64px"}
+                      height={mdUp ? "64px" : smUp ? "48px" : "32px"}
                     />
                   </Stack>
                 </Stack>
-                <Grid container columnSpacing={1}>
-                  <Grid item>
-                    <StyledChip
-                      label={
-                        <Stack direction={"row"} alignItems={"center"}>
-                          <Box
-                            sx={{
-                              width: 12,
-                              height: 12,
-                              background: "red",
-                              borderRadius: 12,
-                              marginRight: 1,
-                            }}
-                          ></Box>
-                          <Typography>onboarding</Typography>
-                        </Stack>
-                      }
-                    ></StyledChip>
-                  </Grid>
-                  <Grid item>
-                    <StyledChip
-                      label={
-                        <Stack direction={"row"} alignItems={"center"}>
-                          <Box
-                            sx={{
-                              width: 12,
-                              height: 12,
-                              background: "green",
-                              borderRadius: 12,
-                              marginRight: 1,
-                            }}
-                          ></Box>
-                          <Typography>on-chain</Typography>
-                        </Stack>
-                      }
-                    ></StyledChip>
-                  </Grid>
-                  <Grid item>
-                    <StyledChip
-                      label={
-                        <Stack direction={"row"} alignItems={"center"}>
-                          <Box
-                            sx={{
-                              width: 12,
-                              height: 12,
-                              background: "blue",
-                              borderRadius: 12,
-                              marginRight: 1,
-                            }}
-                          ></Box>
-                          <Typography>community</Typography>
-                        </Stack>
-                      }
-                    ></StyledChip>
-                  </Grid>
-                </Grid>
+                <Box>
+                  {smUp && (
+                    <Grid
+                      container
+                      columnSpacing={1}
+                      rowSpacing={1}
+                      justifyContent={mdUp ? "flex-start" : "center"}
+                      sx={{
+                        padding: mdUp ? 0 : 2,
+                        paddingBottom: 0,
+                        paddingTop: 0,
+                      }}
+                    >
+                      <Grid item>
+                        <HomeTag color={"red"}>onboarding</HomeTag>
+                      </Grid>
+                      <Grid item>
+                        <HomeTag color={"green"}>on-chain</HomeTag>
+                      </Grid>
+                      <Grid item>
+                        <HomeTag color={"blue"}>community</HomeTag>
+                      </Grid>
+                    </Grid>
+                  )}
+                </Box>
                 <Stack direction={"row"}>
                   <Box sx={{ marginLeft: 1 }}>
-                    <Typography>Powered by</Typography>
+                    <Typography variant={mdUp ? "body1" : "body2"}>
+                      Powered by
+                    </Typography>
                   </Box>
-                  <Box sx={{ marginLeft: 2 }}>
+                  <Box sx={{ marginLeft: smUp ? 2 : 1 }}>
                     <img
-                      style={{ width: 90 }}
+                      style={{ width: mdUp ? 90 : 68 }}
                       src={"https://indexer.xyz/icons/logos/aptos-full.svg"}
                     />
                   </Box>
                 </Stack>
               </Stack>
             </div>
-            <UpDownAnimatedComponent
-              yDist={"8px"}
-              duration={1}
-              sx={{
+            <div
+              style={{
                 position: "absolute",
-                bottom: "10px",
+                width: "100%",
+                height: "100vh",
+                bottom: 0,
               }}
             >
-              <img
-                style={{ width: "100%", height: "100vh" }}
-                src={"https://indexer.xyz/assets/top-section-bg.png"}
-              />
-            </UpDownAnimatedComponent>
+              <UpDownAnimatedComponent yDist={"8px"} duration={1}>
+                <img
+                  style={{ width: "100%", height: "100vh" }}
+                  src={"https://indexer.xyz/assets/top-section-bg.png"}
+                />
+              </UpDownAnimatedComponent>
+            </div>
           </div>
         </Stack>
       </Stack>
@@ -204,27 +217,7 @@ const Home = (props: AppProps) => {
 };
 
 Home.getLayout = (page: ReactElement | ReactElement[]) => (
-  <MainLayout
-    backgroundComponent={
-      <div
-        style={{
-          position: "absolute",
-          backgroundImage: `url("https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/background/dot-grid.png")`,
-          backgroundRepeat: "repeat-x",
-          width: "100%",
-          height: "213px",
-          zIndex: 1,
-          backgroundSize: "22px 426px",
-          left: 0,
-          top: 56,
-          right: 0,
-        }}
-      />
-    }
-    footerComponent={<HomeFooter />}
-  >
-    {page}
-  </MainLayout>
+  <MainLayout footerComponent={<HomeFooter />}>{page}</MainLayout>
 );
 
 export default Home;

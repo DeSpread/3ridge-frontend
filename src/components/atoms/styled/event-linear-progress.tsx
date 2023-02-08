@@ -1,7 +1,6 @@
 import { LinearProgress, styled } from "@mui/material";
 
 const EventLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  //@ts-ignore
   background: theme.palette.neutral["600"],
   "& .MuiLinearProgress-colorPrimary": {
     background:

@@ -15,6 +15,7 @@ import { AlertProvider } from "../provider/alert/alert-provider";
 import { LoadingProvider } from "../provider/loading/loading-provider";
 import { combineProviders } from "react-combine-providers";
 import { PetraWallet } from "petra-plugin-wallet-adapter";
+import { Analytics } from "@vercel/analytics/react";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 
@@ -46,6 +47,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               <AptosWalletAdapterProvider plugins={wallets} autoConnect={true}>
                 <MasterProvider>
                   {getLayout(<Component {...pageProps} />)}
+                  <Analytics />
                 </MasterProvider>
               </AptosWalletAdapterProvider>
             </ApolloProvider>
