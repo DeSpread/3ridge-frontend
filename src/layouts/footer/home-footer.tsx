@@ -1,4 +1,11 @@
-import { Box, Stack, Typography, Link, Grid } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Link,
+  Grid,
+  useMediaQuery,
+} from "@mui/material";
 import NextLink from "next/link";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
@@ -67,6 +74,8 @@ const HomeFooter = () => {
   const theme = useTheme();
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <div
@@ -82,6 +91,7 @@ const HomeFooter = () => {
           direction={"row"}
           justifyContent={"space-between"}
           sx={{ padding: 3 }}
+          rowSpacing={4}
         >
           <Grid item>
             <Stack direction={"column"} spacing={2}>
@@ -108,23 +118,23 @@ const HomeFooter = () => {
             </Stack>
           </Grid>
           <Grid item>
-            <Stack direction={"row-reverse"} spacing={12}>
+            <Stack direction={"row-reverse"} spacing={smUp ? 12 : 4}>
               {footerData.map((x, xIdx) => {
                 return (
                   <Stack key={xIdx} direction={"column"} spacing={3}>
-                    <Typography variant={"h5"}>{x.title}</Typography>
+                    <Typography variant={smUp ? "h5" : "h6"}>
+                      {x.title}
+                    </Typography>
                     <Stack direction={"column"} spacing={2}>
                       {x.subMenus.map((y, yIdx) => {
                         return (
                           <NextLink key={yIdx} href="/">
                             <Typography
-                              variant={"body1"}
+                              variant={mdUp ? "body1" : "body2"}
                               sx={{
-                                // @ts-ignore
                                 color: theme.palette.neutral["400"],
                                 "&:hover": {
                                   color: theme.palette.action.hover,
-                                  // backgroundColor: theme.palette.action.hover,
                                 },
                               }}
                             >
@@ -143,7 +153,6 @@ const HomeFooter = () => {
         <Box sx={{ padding: 3 }}>
           <Typography
             variant={"body2"}
-            //@ts-ignore
             sx={{ color: theme.palette.neutral["600"] }}
           >
             © Copyright 2022 DeSpread Labs, Inc.

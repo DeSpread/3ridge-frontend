@@ -17,6 +17,7 @@ import {
   Skeleton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import VerifyCard from "../../components/molecules/verify-card";
 import { GetStaticPaths } from "next";
@@ -215,6 +216,8 @@ const Event = (props: AppProps) => {
   const { userData, asyncUpdateSocialTwitter, asyncUpdateRewardPoint } =
     useSignedUserQuery();
   const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
   const {
     ticketData,
@@ -384,21 +387,32 @@ const Event = (props: AppProps) => {
         sx={{ marginTop: 4, marginBottom: 12 }}
       >
         <Grid item>
-          <Stack direction={"column"} spacing={8}>
+          <Stack
+            direction={"column"}
+            spacing={8}
+            sx={{ background: "", padding: mdUp ? 0 : 4 }}
+          >
             <Grid
               container
               spacing={4}
               direction={"row"}
               alignItems="center"
+              justifyContent={mdUp ? "flex-start" : "center"}
               sx={{ background: "", marginBottom: 2 }}
             >
               <Grid item>
-                <Box sx={{ height: 128, width: 128, background: "" }}>
+                <Box
+                  sx={{
+                    height: 128,
+                    width: 128,
+                    background: "",
+                  }}
+                >
                   {ticketData?.imageUrl ? (
                     <img
                       style={{
-                        width: 128,
-                        height: 128,
+                        width: smUp ? 128 : 128,
+                        height: smUp ? 128 : 128,
                         borderRadius: 10,
                         borderWidth: 2,
                         borderColor: theme.palette.neutral[100],
@@ -418,40 +432,85 @@ const Event = (props: AppProps) => {
               </Grid>
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  <Typography variant="h3">{ticketData?.title}</Typography>
-                  <Stack direction={"row"} alignItems={"left"} spacing={1}>
+                  <Typography variant={smUp ? "h3" : "h3"}>
+                    {ticketData?.title}
+                  </Typography>
+                  <Grid container alignItems={"left"} spacing={1}>
                     {!ticketData?.completed && (
-                      <StyledChip label={"Ongoing"}></StyledChip>
+                      <Grid item>
+                        <StyledChip label={"Ongoing"}></StyledChip>
+                      </Grid>
                     )}
                     {ticketData?.completed && (
-                      <StyledChip label={"completed"}></StyledChip>
+                      <Grid item>
+                        <StyledChip label={"completed"}></StyledChip>
+                      </Grid>
                     )}
                     {ticketData?.rewardPolicy?.context?.untilTime && (
-                      <StyledChip
-                        label={`${format(
-                          new Date(
-                            ticketData?.rewardPolicy?.context?.beginTime
-                          ),
-                          "yyyy/MM/dd hh:mm:ss"
-                        )} ~ ${format(
-                          new Date(
-                            ticketData?.rewardPolicy?.context?.untilTime
-                          ),
-                          "yyyy/MM/dd hh:mm:ss"
-                        )} (UTC+09:00)`}
-                      ></StyledChip>
+                      <Grid item>
+                        {smUp ? (
+                          <StyledChip
+                            label={`${format(
+                              new Date(
+                                ticketData?.rewardPolicy?.context?.beginTime
+                              ),
+                              "yyyy/MM/dd hh:mm:ss"
+                            )} ~ ${format(
+                              new Date(
+                                ticketData?.rewardPolicy?.context?.untilTime
+                              ),
+                              "yyyy/MM/dd hh:mm:ss"
+                            )} (UTC+09:00)`}
+                          ></StyledChip>
+                        ) : (
+                          <StyledChip
+                            sx={{ paddingTop: 4, paddingBottom: 4 }}
+                            label={
+                              <Stack sx={{}}>
+                                <Typography variant={"body2"}>
+                                  {`${format(
+                                    new Date(
+                                      ticketData?.rewardPolicy?.context?.beginTime
+                                    ),
+                                    "yyyy/MM/dd hh:mm:ss"
+                                  )}
+                                  ~`}
+                                </Typography>
+                                <Typography variant={"body2"}>
+                                  {`${format(
+                                    new Date(
+                                      ticketData?.rewardPolicy?.context?.untilTime
+                                    ),
+                                    "yyyy/MM/dd hh:mm:ss"
+                                  )} (UTC+09:00)
+                                  `}
+                                </Typography>
+                              </Stack>
+                            }
+                          ></StyledChip>
+                        )}
+                      </Grid>
                     )}
-                  </Stack>
+                  </Grid>
                 </Stack>
               </Grid>
             </Grid>
             {userData?._id === undefined && (
-              <Typography
-                variant={"h5"}
-                sx={{ color: theme.palette.warning.main }}
-              >
-                --- Please Sign In First ---
-              </Typography>
+              <Box sx={{}}>
+                <Typography
+                  variant={smUp ? "h5" : "h6"}
+                  sx={{
+                    color: theme.palette.warning.main,
+                    marginTop: smUp ? 0 : -5,
+                    background: "",
+                    textAlign: smUp ? "left" : "center",
+                  }}
+                >
+                  {smUp
+                    ? "--- Please Sign In First ---\n"
+                    : "--- Mobile is not supported --- "}
+                </Typography>
+              </Box>
             )}
             {userData?._id && userData?.walletAddress === undefined && (
               <Typography
@@ -487,12 +546,12 @@ const Event = (props: AppProps) => {
               maxWidth={790}
             >
               <Typography variant="h5">Quest</Typography>
-              <Stack direction={"column"} spacing={4}>
+              <Stack direction={"column"} spacing={4} alignItems={"center"}>
                 {ticketData?.quests?.map((quest, index) => {
                   return (
                     <VerifyCard
                       key={index + 1}
-                      sx={{ width: 800 }}
+                      sx={{ width: "100%" }} //mdUp ? 800 : smUp ? 600 : 320 }}
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
@@ -606,7 +665,11 @@ const Event = (props: AppProps) => {
           </Stack>
         </Grid>
         <Grid item>
-          <Stack direction={"column"} spacing={10} sx={{ minWidth: 260 }}>
+          <Stack
+            direction={"column"}
+            spacing={10}
+            sx={{ minWidth: smUp ? 260 : 260, padding: smUp ? 0 : 4 }}
+          >
             <Stack direction={"column"} spacing={5}>
               <Stack
                 direction={"row"}
@@ -620,7 +683,7 @@ const Event = (props: AppProps) => {
                 ></StyledChip>
               </Stack>
               <PrimaryCard hoverEffect={false}>
-                <Box sx={{ width: 300 }}>
+                <Box sx={{ width: smUp ? 300 : 260 }}>
                   <Stack>
                     <Typography variant={"body1"}>
                       First Come First Serve In :
@@ -673,7 +736,7 @@ const Event = (props: AppProps) => {
                 </Box>
               </PrimaryCard>
               <PrimaryCard>
-                <Stack direction={"column"} spacing={5}>
+                <Stack direction={"column"} spacing={5} sx={{}}>
                   <Stack direction={"column"} spacing={2}>
                     <Stack
                       direction={"column"}
@@ -693,8 +756,8 @@ const Event = (props: AppProps) => {
                             boxShadow:
                               "12px 12px 2px 1px rgba(128, 128, 128, .2)",
                           },
-                          width: 300,
-                          height: 300,
+                          width: smUp ? 300 : 260,
+                          height: smUp ? 300 : 260,
                           borderRadius: 2,
                         }}
                       >

@@ -2,11 +2,13 @@ import {
   Box,
   ButtonProps,
   Grid,
+  Menu,
   MenuItem,
   Skeleton,
   Stack,
   styled,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, {
   CSSProperties,
@@ -22,8 +24,43 @@ import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { motion } from "framer-motion";
-import StyledMenu from "../atoms/styled/styled-menu";
+// import StyledMenu from "../atoms/styled/styled-menu";
 
+type StyledMenuProps = PropsWithChildren & {
+  open: boolean;
+  anchorEl?: Element;
+};
+
+const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
+  return (
+    <Menu
+      open={open}
+      anchorEl={anchorEl}
+      elevation={0}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      sx={{
+        "& .MuiPaper-root": {
+          marginTop: 2,
+          minWidth: 180,
+          borderWidth: 1,
+          // background: "#19151e",
+          "& .MuiMenu-list": {
+            padding: "8px 4px",
+          },
+        },
+      }}
+    >
+      {children}
+    </Menu>
+  );
+};
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
   loading?: boolean;
@@ -99,9 +136,13 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 })) as typeof MenuItem;
 
 const TabButtonGroup = (props: TabButtonGroupProps) => {
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
+
   const [selectedIdx, setSelectedIdx] = useState(0);
   const TITLES = ["Available", "Complete", "Missed"];
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<Element>();
   const open = Boolean(anchorEl);
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const MENU_ITEMS = ["Recently", "Popular"];
@@ -110,7 +151,7 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
   };
 
   const handleClose = (index?: number) => {
-    setAnchorEl(null);
+    setAnchorEl(undefined);
     if (index !== undefined) {
       console.log(index);
       setSelectedMenuIndex(index);
@@ -118,79 +159,83 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
   };
 
   return (
-    <Stack direction={"row"} justifyContent={"space-between"}>
-      <Stack direction={"row"} spacing={2}>
-        {TITLES.map((e, index) => {
-          return (
-            <TabButton
-              key={index}
-              sx={{
-                paddingLeft: 3,
-                paddingRight: 3,
-                width: 128,
-              }}
-              index={index}
-              onChange={(e) => {
-                const myEvent = e as MouseEventWithParam<{ index: number }>;
-                setSelectedIdx(myEvent.params.index);
-                props?.onChange?.(myEvent);
-              }}
-              disabled={selectedIdx === index}
-              size={"small"}
-            >
-              {e}
-            </TabButton>
-          );
-        })}
-      </Stack>
-      <>
-        <PrimaryButton onClick={handleClick}>
-          <Stack
-            direction={"row"}
-            alignItems={"center"}
-            sx={{ width: 110 }}
-            justifyContent={"space-evenly"}
-          >
-            <Typography className={"MuiTypography"} variant={"body2"}>
-              {MENU_ITEMS[selectedMenuIndex]}
-            </Typography>
-            <RotateAnimatedComponent duration={1}>
-              <Box
+    <Grid container justifyContent={"space-between"} rowSpacing={2}>
+      <Grid item>
+        <Stack direction={"row"} spacing={smUp ? 2 : 1}>
+          {TITLES.map((e, index) => {
+            return (
+              <TabButton
+                key={index}
                 sx={{
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
+                  paddingLeft: 3,
+                  paddingRight: 3,
+                  width: smUp ? 128 : 100,
                 }}
+                index={index}
+                onChange={(e) => {
+                  const myEvent = e as MouseEventWithParam<{ index: number }>;
+                  setSelectedIdx(myEvent.params.index);
+                  props?.onChange?.(myEvent);
+                }}
+                disabled={selectedIdx === index}
+                size={"small"}
               >
-                <ArrowDropDownIcon fontSize="small"></ArrowDropDownIcon>
-              </Box>
-            </RotateAnimatedComponent>
-          </Stack>
-        </PrimaryButton>
-        <StyledMenu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={() => {
-            handleClose(undefined);
-          }}
-        >
-          <StyledMenuItem
-            onClick={() => {
-              handleClose(0);
-            }}
+                {e}
+              </TabButton>
+            );
+          })}
+        </Stack>
+      </Grid>
+      {smUp && (
+        <Grid item>
+          <PrimaryButton onClick={handleClick}>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              sx={{ width: 110 }}
+              justifyContent={"space-evenly"}
+            >
+              <Typography className={"MuiTypography"} variant={"body2"}>
+                {MENU_ITEMS[selectedMenuIndex]}
+              </Typography>
+              <RotateAnimatedComponent duration={1}>
+                <Box
+                  sx={{
+                    alignItems: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ArrowDropDownIcon fontSize="small"></ArrowDropDownIcon>
+                </Box>
+              </RotateAnimatedComponent>
+            </Stack>
+          </PrimaryButton>
+          <StyledMenu
+            anchorEl={anchorEl}
+            open={open}
+            // onClose={() => {
+            //   handleClose(undefined);
+            // }}
           >
-            <Typography variant={"body2"}>{MENU_ITEMS[0]}</Typography>
-          </StyledMenuItem>
-          <StyledMenuItem
-            onClick={() => {
-              handleClose(1);
-            }}
-          >
-            <Typography variant={"body2"}>{MENU_ITEMS[1]}</Typography>
-          </StyledMenuItem>
-        </StyledMenu>
-      </>
-    </Stack>
+            <StyledMenuItem
+              onClick={() => {
+                handleClose(0);
+              }}
+            >
+              <Typography variant={"body2"}>{MENU_ITEMS[0]}</Typography>
+            </StyledMenuItem>
+            <StyledMenuItem
+              onClick={() => {
+                handleClose(1);
+              }}
+            >
+              <Typography variant={"body2"}>{MENU_ITEMS[1]}</Typography>
+            </StyledMenuItem>
+          </StyledMenu>
+        </Grid>
+      )}
+    </Grid>
   );
 };
 

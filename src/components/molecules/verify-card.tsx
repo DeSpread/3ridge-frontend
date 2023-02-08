@@ -6,6 +6,7 @@ import {
   LinearProgress,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, {
   CSSProperties,
@@ -17,6 +18,7 @@ import SecondaryButton from "../atoms/secondary-button";
 import PrimaryButton from "../atoms/primary-button";
 import addSeconds from "date-fns/addSeconds";
 import { MouseEventWithParam } from "../../type";
+import { useTheme } from "@mui/material/styles";
 
 type VerifyCardProps = PropsWithChildren & {
   sx?: CSSProperties;
@@ -34,6 +36,9 @@ type VerifyCardProps = PropsWithChildren & {
 const VerifyCard = (props: VerifyCardProps) => {
   const [cardState, setCardState] = useState("IDLE"); // VERIFYING, VERIFIED, DISABLED
   const [verifyingProgress, setVerifyingProgress] = useState(0);
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <>
@@ -41,62 +46,74 @@ const VerifyCard = (props: VerifyCardProps) => {
         <CardContent>
           <Grid
             container
-            direction={"row"}
+            // direction={"row"}
             alignItems={"center"}
-            justifyContent={"space-between"}
+            justifyContent={smUp ? "space-between" : "center"}
             columns={16}
+            rowSpacing={2}
           >
-            <Grid item xs={1}>
-              {props.index && (
-                <Box
-                  sx={{
-                    background: (theme) => theme.palette.neutral[800],
-                    width: 28,
-                    height: 28,
-                    display: "flex",
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 28,
-                  }}
-                >
-                  <Typography
-                    variant={"caption"}
-                    sx={{ color: (theme) => theme.palette.neutral[100] }}
-                  >
-                    {props.index}
-                  </Typography>
-                </Box>
-              )}
-            </Grid>
-
-            <Grid item xs={11} sx={{ background: "" }}>
-              <Stack direction={"column"} justifyContent={"center"}>
-                <Box>
-                  <Typography
-                    variant={"h6"}
+            <Grid item>
+              <Stack direction={"row"} alignItems={"center"}>
+                {props.index && (
+                  <Box
                     sx={{
-                      wordBreak: "break-word",
+                      background: (theme) => theme.palette.neutral[800],
+                      width: 28,
+                      height: 28,
+                      display: "flex",
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 28,
                     }}
                   >
-                    {props.title}
-                  </Typography>
-                </Box>
-                {props.description && (
-                  <Box sx={{ marginTop: 1 }}>
                     <Typography
-                      variant={"body2"}
+                      variant={"caption"}
+                      sx={{
+                        color: (theme) => theme.palette.neutral[100],
+                        width: 28,
+                        textAlign: "center",
+                      }}
+                    >
+                      {props.index}
+                    </Typography>
+                  </Box>
+                )}
+                <Stack
+                  direction={"column"}
+                  justifyContent={"center"}
+                  sx={{ marginLeft: 3 }}
+                >
+                  <Box>
+                    <Typography
+                      variant={"h6"}
                       sx={{
                         wordBreak: "break-word",
                       }}
                     >
-                      {props.description}
+                      {props.title}
                     </Typography>
                   </Box>
-                )}
+                  {props.description && (
+                    <Box sx={{ marginTop: 1 }}>
+                      <Typography
+                        variant={"body2"}
+                        sx={{
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {props.description}
+                      </Typography>
+                    </Box>
+                  )}
+                </Stack>
               </Stack>
             </Grid>
-            <Grid item xs={4} sx={{ background: "" }}>
+
+            {/*<Grid item sx={{ background: "" }}>*/}
+            {/*  */}
+            {/*</Grid>*/}
+            <Grid item sx={{ background: "" }}>
               <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
                 <div style={{ position: "relative" }}>
                   <PrimaryButton

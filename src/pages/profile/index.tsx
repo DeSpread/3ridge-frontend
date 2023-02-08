@@ -335,7 +335,7 @@ const Profile = (props: AppProps) => {
                     </GradientTypography>
                   </Box>
                 ) : (
-                  <Box sx={{ maxWidth: 300 }}>
+                  <Box sx={{ maxWidth: 320 }}>
                     <GradientTypography variant={"h4"}>
                       Connect your wallet
                     </GradientTypography>
