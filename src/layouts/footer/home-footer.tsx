@@ -18,19 +18,15 @@ const footerData = [
     subMenus: [
       {
         title: "Email Us",
-        url: "/",
+        url: "mailto:support@3ridge.xyz?subject=%F0%9F%91%8B",
       },
       {
         title: "Twitter",
-        url: "/",
+        url: "https://twitter.com/3ridge_xyz",
       },
       {
         title: "Discord",
-        url: "/",
-      },
-      {
-        title: "Discord Bot",
-        url: "/",
+        url: "https://discord.gg/7UB6JjjCNV",
       },
     ],
   },
@@ -128,7 +124,12 @@ const HomeFooter = () => {
                     <Stack direction={"column"} spacing={2}>
                       {x.subMenus.map((y, yIdx) => {
                         return (
-                          <NextLink key={yIdx} href="/">
+                          <NextLink
+                            key={yIdx}
+                            href={y.url}
+                            rel={"noopener noreferrer"}
+                            target={"_blank"}
+                          >
                             <Typography
                               variant={mdUp ? "body1" : "body2"}
                               sx={{

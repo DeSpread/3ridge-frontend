@@ -199,12 +199,42 @@ export const darkThemeOptions: ThemeOptions = {
     },
   },
   typography: {
-    // body1: {
-    //   color: neutral["400"],
-    // },
-    // body2: {
-    //   color: neutral["400"],
-    // },
+    body1: {
+      color: neutral["100"],
+    },
+    body2: {
+      color: neutral["100"],
+    },
+    subtitle1: {
+      color: neutral["100"],
+    },
+    subtitle2: {
+      color: neutral["100"],
+    },
+    overline: {
+      color: neutral["100"],
+    },
+    caption: {
+      color: neutral["100"],
+    },
+    h1: {
+      color: neutral["100"],
+    },
+    h2: {
+      color: neutral["100"],
+    },
+    h3: {
+      color: neutral["100"],
+    },
+    h4: {
+      color: neutral["100"],
+    },
+    h5: {
+      color: neutral["100"],
+    },
+    h6: {
+      color: neutral["100"],
+    },
   },
   palette: {
     action: {

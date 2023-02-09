@@ -16,6 +16,7 @@ async function asyncJSTwitterSignInPopUp() {
     const res = await signInWithPopup(auth, twitterAuthProvider);
     return res.user["reloadUserInfo"]["screenName"];
   } catch (e) {
+    console.log(e);
     const res = await signInWithRedirect(auth, twitterAuthProvider);
     return res.user["reloadUserInfo"]["screenName"];
   }
