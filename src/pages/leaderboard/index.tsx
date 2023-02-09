@@ -118,10 +118,20 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
               src={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
             ></Avatar>
           </Box>
-          <Stack direction={"column"} sx={{ marginLeft: 3 }}>
-            <GradientTypography variant={smUp ? "body2" : "caption"}>
+          <Stack
+            direction={"column"}
+            sx={{ marginLeft: 3, maxWidth: smUp ? "100%" : "50%" }}
+          >
+            {/*<Box sx={{ paddingRight: 2 }}>*/}
+            <GradientTypography
+              variant={smUp ? "body2" : "caption"}
+              sx={{
+                wordBreak: "break-word",
+              }}
+            >
               {convertedName}
             </GradientTypography>
+            {/*</Box>*/}
           </Stack>
         </Stack>
         <Box sx={{ marginRight: smUp ? 2 : 0 }}>
