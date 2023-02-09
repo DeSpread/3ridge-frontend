@@ -143,15 +143,17 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const TITLES = ["Available", "Complete", "Missed"];
   const [anchorEl, setAnchorEl] = useState<Element>();
-  const open = Boolean(anchorEl);
+  const [open, setOpen] = useState(false);
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const MENU_ITEMS = ["Recently", "Popular"];
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+    setOpen(true);
   };
 
   const handleClose = (index?: number) => {
     setAnchorEl(undefined);
+    setOpen(false);
     if (index !== undefined) {
       console.log(index);
       setSelectedMenuIndex(index);
@@ -159,7 +161,15 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
   };
 
   return (
-    <Grid container justifyContent={"space-between"} rowSpacing={2}>
+    <Grid
+      container
+      justifyContent={"space-between"}
+      rowSpacing={2}
+      onClick={() => {
+        // setAnchorEl(undefined);
+        if (anchorEl) setOpen(!open);
+      }}
+    >
       <Grid item>
         <Stack direction={"row"} spacing={smUp ? 2 : 1}>
           {TITLES.map((e, index) => {
@@ -195,7 +205,11 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
               sx={{ width: 110 }}
               justifyContent={"space-evenly"}
             >
-              <Typography className={"MuiTypography"} variant={"body2"}>
+              <Typography
+                className={"MuiTypography"}
+                variant={"body2"}
+                sx={{ color: theme.palette.neutral["900"] }}
+              >
                 {MENU_ITEMS[selectedMenuIndex]}
               </Typography>
               <RotateAnimatedComponent duration={1}>
@@ -214,7 +228,7 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
           <StyledMenu
             anchorEl={anchorEl}
             open={open}
-            // onClose={() => {
+            // onClick={() => {
             //   handleClose(undefined);
             // }}
           >
