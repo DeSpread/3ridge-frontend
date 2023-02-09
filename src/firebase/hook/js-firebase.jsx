@@ -1,8 +1,13 @@
 import {
+  getAuth,
   signInWithPopup,
   signInWithRedirect,
   TwitterAuthProvider,
 } from "firebase/auth";
+import { firebaseApp } from "../firebase-client";
+
+const auth = getAuth(firebaseApp);
+auth.languageCode = "it";
 
 const twitterAuthProvider = new TwitterAuthProvider();
 
