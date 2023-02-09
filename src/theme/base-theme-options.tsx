@@ -271,7 +271,7 @@ const baseThemeOptions: ThemeOptions = {
     button: {
       fontWeight: 600,
     },
-    fontFamily: '"LINESeedKR-Rg"',
+    fontFamily: '"LINESeedKR-Rg", "LINESeedKR-Bd"',
     body1: {
       fontSize: "1rem",
       fontWeight: 400,

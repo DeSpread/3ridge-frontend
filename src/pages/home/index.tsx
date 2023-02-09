@@ -133,7 +133,10 @@ const Home = (props: AppProps) => {
                 >
                   <GradientTypography
                     variant={mdUp ? "h1" : smUp ? "h2" : "h4"}
-                    sx={{ textAlign: smUp ? "left" : "center" }}
+                    sx={{
+                      textAlign: smUp ? "left" : "center",
+                      fontFamily: "LINESeedKR-Bd",
+                    }}
                   >
                     Bridge your web3 project
                   </GradientTypography>

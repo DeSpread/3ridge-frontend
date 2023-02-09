@@ -9,6 +9,7 @@ import {
   IconButton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import CheckIcon from "../../components/atoms/svg/check-icon";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -20,6 +21,7 @@ import { MouseEventWithParam, TicketEventParam } from "../../type";
 import { useRouter } from "next/router";
 import projectsData from "../projects/data.json";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import { useTheme } from "@mui/material/styles";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -33,8 +35,9 @@ export async function getStaticProps() {
 }
 
 const Project = () => {
-  const iconUrl =
-    "https://cdn-2.galxe.com/galaxy/images/1635133810/1635133810-logo-1635133810.jpeg?optimizer=image&width=200&quality=100";
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const { ticketsData, ticketsDataLoading } = useTicketsQuery();
   const [value, setValue] = useState("1");
   const { showLoading, closeLoading } = useLoading();
@@ -58,9 +61,9 @@ const Project = () => {
       <Stack direction={"column"} alignItems={"center"}>
         <Stack
           sx={{
-            height: 300,
-            paddingLeft: 16,
-            paddingRight: 16,
+            height: smUp ? 300 : 400,
+            paddingLeft: smUp ? 16 : 4,
+            paddingRight: smUp ? 16 : 4,
             borderStyle: "dashed",
             borderWidth: 0,
             borderBottomWidth: 1,
@@ -75,29 +78,65 @@ const Project = () => {
             container={true}
             sx={{
               zIndex: 1,
+              background: "",
             }}
             spacing={3}
+            // alignItems={"center"}
+            justifyContent={"center"}
           >
             <Grid item sx={{ background: "" }} lg={9}>
-              <Stack direction={"column"} sx={{ height: "100%" }} spacing={2}>
-                <Stack
-                  direction={"row"}
-                  alignItems={"center"}
-                  sx={{ background: "" }}
-                >
-                  <Avatar
-                    sx={{ width: 48, height: 48 }}
-                    src={projectInfo?.iconUrl}
-                  ></Avatar>
-                  <Box sx={{ marginLeft: 2 }}>
-                    <Typography variant={"h5"}>{projectInfo?.name}</Typography>
-                  </Box>
-                  <Box sx={{ marginLeft: 1 }}>
-                    <CheckIcon
-                      sx={{ width: 36, height: 36, background: "" }}
-                    ></CheckIcon>
-                  </Box>
-                </Stack>
+              <Stack
+                direction={"column"}
+                sx={{ height: "100%", flex: 1, background: "" }}
+                spacing={2}
+              >
+                {smUp ? (
+                  <Stack
+                    direction={"row"}
+                    alignItems={"center"}
+                    sx={{ background: "" }}
+                  >
+                    <Avatar
+                      sx={{ width: 48, height: 48 }}
+                      src={projectInfo?.iconUrl}
+                    ></Avatar>
+                    <Box sx={{ marginLeft: 2 }}>
+                      <Typography variant={"h5"}>
+                        {projectInfo?.name}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ marginLeft: 1 }}>
+                      <CheckIcon
+                        sx={{ width: 36, height: 36, background: "" }}
+                      ></CheckIcon>
+                    </Box>
+                  </Stack>
+                ) : (
+                  <Stack
+                    direction={"column"}
+                    alignItems={"center"}
+                    sx={{ background: "", flex: 1, width: "100%" }}
+                  >
+                    <Avatar
+                      sx={{ width: 64, height: 64 }}
+                      src={projectInfo?.iconUrl}
+                    ></Avatar>
+                    <Stack
+                      direction={"row"}
+                      alignItems={"center"}
+                      sx={{ marginTop: 1, flex: 1 }}
+                    >
+                      <Typography variant={"h5"} textAlign={"center"}>
+                        {projectInfo?.name}
+                      </Typography>
+                      <Box sx={{ marginLeft: 1 }}>
+                        <CheckIcon
+                          sx={{ width: 36, height: 36, background: "" }}
+                        ></CheckIcon>
+                      </Box>
+                    </Stack>
+                  </Stack>
+                )}
                 <Typography
                   variant={"h6"}
                   sx={{
@@ -167,7 +206,7 @@ const Project = () => {
               background:
                 "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://galxe.com/_nuxt/img/space-detail-bg.569713b.jpg')",
               width: "100%",
-              height: 300,
+              height: smUp ? 300 : 400,
               position: "absolute",
               zIndex: 0,
             }}
