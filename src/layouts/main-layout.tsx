@@ -142,9 +142,9 @@ const MainLayout = (props: MainLayoutProps) => {
               <Stack direction={"row"} alignItems={"flex-start"}>
                 <img
                   src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/3ridge-logo-white.svg"
+                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_negative.svg"
                   }
-                  height={smUp ? "48px" : "36px"}
+                  height={smUp ? "52px" : "48px"}
                 />
                 <Typography sx={{ marginLeft: -1 }} variant={"caption"}>
                   testnet

@@ -23,14 +23,14 @@ const background = {
 const divider = neutral[700];
 
 const primary = {
-  main: neutral[100],
+  main: "#6D3EFF",
   light: "#909BEF",
   dark: neutral[100],
   contrastText: neutral[900],
 };
 
 const secondary = {
-  main: "#ffb8ff",
+  main: "#61E1FF",
   light: "#3FC79A",
   dark: "#374ae9",
   contrastText: neutral[100],
@@ -44,14 +44,14 @@ const success = {
 };
 
 const info = {
-  main: "#2196F3",
+  main: "#00FFDA",
   light: "#64B6F7",
   dark: "#0B79D0",
   contrastText: neutral[900],
 };
 
 const warning = {
-  main: "#f8810a",
+  main: "#00FFDA",
   light: "#FFBF4C",
   dark: "#B27B16",
   contrastText: neutral[900],

@@ -60,7 +60,7 @@ export const LoadingProvider = ({ children }: PropsWithChildren) => {
         open={open}
       >
         <LinearProgress
-          color={"warning"}
+          color={"info"}
           sx={{
             background: (theme) => theme.palette.action.hover,
             width: "100%",
