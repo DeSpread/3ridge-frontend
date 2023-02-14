@@ -21,6 +21,15 @@ import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import { useTheme } from "@mui/material/styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { GetServerSideProps } from "next";
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+
+  return {
+    props: {},
+  };
+};
 
 const RankCard = ({ user, rank }: { user: User; rank: number }) => {
   const theme = useTheme();

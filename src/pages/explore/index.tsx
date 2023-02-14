@@ -9,10 +9,15 @@ import { useLoading } from "../../provider/loading/loading-provider";
 import TicketsSection from "../../components/organisms/tickets-section";
 import { MouseEventWithParam, TicketEventParam } from "../../type";
 import GradientButton from "../../components/atoms/gradient-button";
+import { GetServerSideProps } from "next";
 
-export async function getStaticProps() {
-  return { props: {} };
-}
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+
+  return {
+    props: {},
+  };
+};
 
 const Explore = (props: AppProps) => {
   const { ticketsData, ticketsDataLoading } = useTicketsQuery();

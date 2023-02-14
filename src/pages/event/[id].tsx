@@ -49,19 +49,16 @@ import StarsIcon from "@mui/icons-material/Stars";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { gql, request } from "graphql-request";
-import ImageWithSkeleton from "../../components/molecules/image-with-skeleton";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import type { GetServerSideProps } from "next";
 
-export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+
   return {
-    paths: [], //indicates that no page needs be created at build time
-    fallback: "blocking", //indicates the type of fallback
+    props: {},
   };
 };
-
-export async function getStaticProps() {
-  return { props: {} };
-}
 
 interface MyTimerSettings extends TimerSettings {
   sx?: CSSProperties;
@@ -375,6 +372,16 @@ const Event = (props: AppProps) => {
     );
     return !res;
   }, [verifiedList, updateIndex]);
+
+  const isExpired = () => {
+    return ticketData?.rewardPolicy?.context?.untilTime
+      ? //@ts-ignore
+        new Date(ticketData?.rewardPolicy?.context?.untilTime) -
+          //@ts-ignore
+          new Date() <
+          0
+      : true;
+  };
 
   return (
     <>
@@ -702,11 +709,7 @@ const Event = (props: AppProps) => {
                       First Come First Serve In :
                     </Typography>
                     {ticketData?.rewardPolicy?.context?.untilTime ? (
-                      //@ts-ignore
-                      new Date(ticketData?.rewardPolicy?.context?.untilTime) -
-                        //@ts-ignore
-                        new Date() <
-                      0 ? (
+                      isExpired() ? (
                         <Stack
                           sx={{
                             background: "",
@@ -850,7 +853,8 @@ const Event = (props: AppProps) => {
                 disabled={
                   claimRewardDisabled ||
                   claimCompleted ||
-                  updatingClaimCompleted
+                  updatingClaimCompleted ||
+                  isExpired()
                 }
                 onClick={async (e) => {
                   if (
@@ -907,7 +911,11 @@ const Event = (props: AppProps) => {
                   }
                 }}
               >
-                {claimCompleted ? "Claim completed" : "Claim reward"}
+                {isExpired()
+                  ? "Project ended"
+                  : claimCompleted
+                  ? "Claim completed"
+                  : "Claim reward"}
               </LoadingButton>
             </Stack>
 
