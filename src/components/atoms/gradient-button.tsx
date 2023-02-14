@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 const GradientButton = (props: ButtonProps) => {
   const [isHover, setIsHover] = useState(false);
+  const theme = useTheme();
 
   const handleMouseEnter = () => {
     setIsHover(true);
@@ -18,8 +19,7 @@ const GradientButton = (props: ButtonProps) => {
         sx={{
           border: "2px solid transparent",
           borderRadius: 16,
-          backgroundImage:
-            "linear-gradient(black, black), linear-gradient(to right, red 0%, orange 100%)",
+          backgroundImage: `linear-gradient(black, black), linear-gradient(to right, ${theme.palette.secondary.main} 0%, ${theme.palette.info.main} 100%)`,
           backgroundOrigin: "border-box",
           backgroundClip: "content-box, border-box",
           cursor: "pointer",
