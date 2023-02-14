@@ -53,7 +53,7 @@ const GradientButton = (props: ButtonProps) => {
           transitionTimingFunction: "ease-out",
           transitionProperty: "all",
           "&:hover": {
-            background: "#ffb8ff",
+            background: `${theme.palette.secondary.main}`,
           },
         }}
       >

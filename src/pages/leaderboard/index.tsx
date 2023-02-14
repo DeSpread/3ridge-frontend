@@ -5,6 +5,7 @@ import {
   Box,
   Card,
   Grid,
+  Skeleton,
   Stack,
   Typography,
   useMediaQuery,
@@ -19,6 +20,7 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import { useTheme } from "@mui/material/styles";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const RankCard = ({ user, rank }: { user: User; rank: number }) => {
   const theme = useTheme();
@@ -113,10 +115,26 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
             )}
           </Box>
           <Box sx={{ marginLeft: smUp ? 1 : "1px" }}>
-            <Avatar
-              sx={{ width: smUp ? 52 : 38, height: smUp ? 52 : 38 }}
+            <LazyLoadImage
+              width={smUp ? 52 : 38}
+              height={smUp ? 52 : 38}
               src={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
-            ></Avatar>
+              style={{
+                borderRadius: smUp ? 52 : 38,
+                objectFit: "cover",
+              }}
+              effect="blur"
+              beforeLoad={() => {
+                return (
+                  <Skeleton
+                    width={smUp ? 52 : 38}
+                    height={smUp ? 52 : 38}
+                    animation={"wave"}
+                    variant={"rounded"}
+                  ></Skeleton>
+                );
+              }}
+            ></LazyLoadImage>
           </Box>
           <Stack
             direction={"column"}
@@ -142,7 +160,7 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
           >
             <Typography
               variant={smUp ? "h6" : "caption"}
-              sx={{ color: (theme) => theme.palette.warning.main }}
+              sx={{ color: (theme) => theme.palette.info.main }}
             >{`Level ${Math.floor((rewardPoint ?? 0) / 100)}`}</Typography>
             <Stack direction={"row"} alignItems={"center"}>
               <Typography variant={smUp ? "body2" : "caption"}>

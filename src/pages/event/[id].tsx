@@ -49,6 +49,8 @@ import StarsIcon from "@mui/icons-material/Stars";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { gql, request } from "graphql-request";
+import ImageWithSkeleton from "../../components/molecules/image-with-skeleton";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -409,17 +411,28 @@ const Event = (props: AppProps) => {
                   }}
                 >
                   {ticketData?.imageUrl ? (
-                    <img
+                    <LazyLoadImage
+                      width={smUp ? 128 : 128}
+                      height={smUp ? 128 : 128}
+                      src={ticketData?.imageUrl}
                       style={{
-                        width: smUp ? 128 : 128,
-                        height: smUp ? 128 : 128,
                         borderRadius: 10,
-                        borderWidth: 2,
                         borderColor: theme.palette.neutral[100],
                         borderStyle: "solid",
+                        borderWidth: 2,
                       }}
-                      src={ticketData?.imageUrl}
-                    />
+                      effect="blur"
+                      beforeLoad={() => {
+                        return (
+                          <Skeleton
+                            width={smUp ? 128 : 128}
+                            height={smUp ? 128 : 128}
+                            animation={"wave"}
+                            variant={"rounded"}
+                          ></Skeleton>
+                        );
+                      }}
+                    ></LazyLoadImage>
                   ) : (
                     <Skeleton
                       width={128}
@@ -761,14 +774,27 @@ const Event = (props: AppProps) => {
                           borderRadius: 2,
                         }}
                       >
-                        <img
-                          src={ticketData?.rewardPolicy?.context?.nftImageUrl}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            borderRadius: 16,
-                          }}
-                        />
+                        {ticketData?.rewardPolicy?.context?.nftImageUrl && (
+                          <LazyLoadImage
+                            width={smUp ? 300 : 260}
+                            height={smUp ? 300 : 260}
+                            src={ticketData?.rewardPolicy?.context?.nftImageUrl}
+                            style={{
+                              borderRadius: 16,
+                            }}
+                            effect="blur"
+                            beforeLoad={() => {
+                              return (
+                                <Skeleton
+                                  width={smUp ? 300 : 260}
+                                  height={smUp ? 300 : 260}
+                                  animation={"wave"}
+                                  variant={"rounded"}
+                                ></Skeleton>
+                              );
+                            }}
+                          ></LazyLoadImage>
+                        )}
                       </Box>
                     </Stack>
                     <Divider></Divider>
