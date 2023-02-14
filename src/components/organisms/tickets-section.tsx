@@ -24,7 +24,6 @@ import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { motion } from "framer-motion";
-import NavbarButton from "../atoms/navbar-button";
 
 type StyledMenuProps = PropsWithChildren & {
   open: boolean;
@@ -280,7 +279,6 @@ const TicketsSection = (props: TicketSectionProps) => {
               return (
                 <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
                   <Skeleton
-                    // width={"552px"}
                     height={530}
                     variant={"rounded"}
                     animation={"wave"}

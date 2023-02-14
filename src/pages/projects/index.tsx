@@ -17,7 +17,6 @@ import { useTheme } from "@mui/material/styles";
 import CheckIcon from "../../components/atoms/svg/check-icon";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
-import ImageWithSkeleton from "../../components/molecules/image-with-skeleton";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Projects = () => {
