@@ -24,7 +24,7 @@ import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { motion } from "framer-motion";
-// import StyledMenu from "../atoms/styled/styled-menu";
+import NavbarButton from "../atoms/navbar-button";
 
 type StyledMenuProps = PropsWithChildren & {
   open: boolean;
@@ -132,6 +132,7 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   },
   "&:hover": {
     backgroundColor: theme.palette.action.hover,
+    borderRadius: 8,
   },
 })) as typeof MenuItem;
 
@@ -166,8 +167,10 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
       justifyContent={"space-between"}
       rowSpacing={2}
       onClick={() => {
-        // setAnchorEl(undefined);
-        if (anchorEl) setOpen(!open);
+        if (anchorEl) {
+          setAnchorEl(undefined);
+          setOpen(false);
+        }
       }}
     >
       <Grid item>
@@ -212,26 +215,18 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
               >
                 {MENU_ITEMS[selectedMenuIndex]}
               </Typography>
-              <RotateAnimatedComponent duration={1}>
-                <Box
-                  sx={{
-                    alignItems: "center",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <ArrowDropDownIcon fontSize="small"></ArrowDropDownIcon>
-                </Box>
-              </RotateAnimatedComponent>
+              <Box
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <ArrowDropDownIcon fontSize="small"></ArrowDropDownIcon>
+              </Box>
             </Stack>
           </PrimaryButton>
-          <StyledMenu
-            anchorEl={anchorEl}
-            open={open}
-            // onClick={() => {
-            //   handleClose(undefined);
-            // }}
-          >
+          <StyledMenu anchorEl={anchorEl} open={open}>
             <StyledMenuItem
               onClick={() => {
                 handleClose(0);
@@ -286,7 +281,7 @@ const TicketsSection = (props: TicketSectionProps) => {
                 <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
                   <Skeleton
                     // width={"552px"}
-                    height={"552px"}
+                    height={530}
                     variant={"rounded"}
                     animation={"wave"}
                   />

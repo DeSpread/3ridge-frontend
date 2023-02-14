@@ -51,7 +51,7 @@ const info = {
 };
 
 const warning = {
-  main: "#00FFDA",
+  main: "#f8810a",
   light: "#FFBF4C",
   dark: "#B27B16",
   contrastText: neutral[900],

@@ -19,7 +19,7 @@ import { useTheme } from "@mui/material/styles";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../atoms/gradient-typography";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 
 type StyledMenuProps = PropsWithChildren & {
@@ -147,7 +147,7 @@ const NavbarAvatar = ({
                   <LinearProgress
                     variant="determinate"
                     value={levelProgressValue}
-                    color={"warning"}
+                    color={"info"}
                     sx={{
                       background: theme.palette.action.hover,
                       minWidth: 80,
@@ -166,11 +166,17 @@ const NavbarAvatar = ({
           onClick={onLogoutBtnClicked}
         >
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
-            <PowerSettingsNewIcon
-              fontSize={"medium"}
-              sx={{ color: theme.palette.warning.main }}
-            ></PowerSettingsNewIcon>
-            <Typography>Disconnect</Typography>
+            <Stack
+              sx={{ width: 38 }}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+            >
+              <LogoutIcon
+                fontSize={"medium"}
+                sx={{ color: theme.palette.warning.main }}
+              ></LogoutIcon>
+            </Stack>
+            <Typography>SignOut</Typography>
           </Stack>
         </StyledMenuItem>
       </StyledMenu>

@@ -8,6 +8,7 @@ import {
   Typography,
   Avatar,
   useMediaQuery,
+  Skeleton,
 } from "@mui/material";
 import Head from "next/head";
 import React, { ReactElement } from "react";
@@ -16,6 +17,8 @@ import { useTheme } from "@mui/material/styles";
 import CheckIcon from "../../components/atoms/svg/check-icon";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
+import ImageWithSkeleton from "../../components/molecules/image-with-skeleton";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Projects = () => {
   const theme = useTheme();
@@ -79,14 +82,31 @@ const Projects = () => {
                       sx={{
                         boxShadow:
                           "inset 4px 4px 4px #35333a, inset -4px -4px 4px #35333a",
-                        // minHeight: 200,
                       }}
                     >
                       <Stack direction={"column"} alignItems={"center"}>
-                        <Avatar
-                          sx={{ width: 52, height: 52 }}
-                          src={e.iconUrl}
-                        ></Avatar>
+                        {e.iconUrl && (
+                          <LazyLoadImage
+                            width={52}
+                            height={52}
+                            src={e.iconUrl}
+                            style={{
+                              borderRadius: 52,
+                              objectFit: "cover",
+                            }}
+                            effect="blur"
+                            beforeLoad={() => {
+                              return (
+                                <Skeleton
+                                  width={52}
+                                  height={52}
+                                  animation={"wave"}
+                                  variant={"rounded"}
+                                ></Skeleton>
+                              );
+                            }}
+                          ></LazyLoadImage>
+                        )}
                         <Box sx={{ marginTop: 2 }}>
                           <Stack
                             direction={"row"}

@@ -2,6 +2,18 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "3ridge.s3.ap-northeast-2.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "gateway.pinata.cloud",
+      },
+    ],
+  },
   // async redirects() {
   //   return [
   //     {

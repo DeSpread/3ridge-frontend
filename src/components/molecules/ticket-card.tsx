@@ -3,13 +3,14 @@ import {
   Card,
   CardContent,
   CardProps,
+  Skeleton,
   Stack,
   Typography,
-  useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import StyledChip from "../atoms/styled/styled-chip";
 import { Ticket } from "../../type";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;
@@ -17,7 +18,22 @@ type EventCardProps = CardProps & {
 
 const TicketCard = (props: EventCardProps) => {
   const { ticket } = props;
-  const theme = useTheme();
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [height, setHeight] = React.useState(0);
+
+  useLayoutEffect(() => {
+    setHeight(ref.current?.offsetWidth ?? 0);
+  }, []);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      setHeight(ref.current?.offsetWidth ?? 0);
+    });
+    resizeObserver.observe(ref.current);
+    return () => resizeObserver.disconnect(); // clean up
+  }, []);
+
   return (
     <Card
       sx={{
@@ -82,23 +98,36 @@ const TicketCard = (props: EventCardProps) => {
           </Stack>
           <Stack direction={"column"} sx={{ marginTop: 2 }}>
             <Box
+              ref={ref}
               sx={{
-                borderRadius: 4,
-                background: theme.palette.neutral["700"],
                 width: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <img
-                src={ticket?.imageUrl}
-                style={{
-                  objectFit: "cover",
-                  width: "100%",
-                  borderRadius: 10,
-                }}
-              />
+              {ticket?.imageUrl && (
+                <LazyLoadImage
+                  width={height}
+                  height={height}
+                  src={ticket?.imageUrl}
+                  style={{
+                    borderRadius: 4,
+                    objectFit: "cover",
+                  }}
+                  effect="blur"
+                  beforeLoad={() => {
+                    return (
+                      <Skeleton
+                        width={height}
+                        height={height}
+                        animation={"wave"}
+                        variant={"rounded"}
+                      ></Skeleton>
+                    );
+                  }}
+                ></LazyLoadImage>
+              )}
             </Box>
           </Stack>
         </Stack>
