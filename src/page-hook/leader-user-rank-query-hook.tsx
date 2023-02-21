@@ -19,24 +19,8 @@ export function useLeaderUserRankQuery(userId?: string) {
             userId,
           },
         });
-        console.log(data);
-        // setLeaderUsersData((prevState) => {
-        //   return (
-        //     leaderUsersData.usersOrderByRewardPointDesc.map((e) => {
-        //       return {
-        //         _id: e._id ?? undefined,
-        //         walletAddress:
-        //           (e.wallets?.length ?? 0) > 0
-        //             ? e.wallets?.[0].address
-        //             : undefined,
-        //         name: e.name ?? undefined,
-        //         email: e.email ?? undefined,
-        //         profileImageUrl: e.profileImageUrl ?? undefined,
-        //         rewardPoint: e.rewardPoint ?? undefined,
-        //       };
-        //     }) ?? undefined
-        //   );
-        // });
+        setUserRank(data.findRankByUserId);
+        setLoading(false);
       } catch (e) {
         if (e instanceof Error) setError(e);
         console.log(e);

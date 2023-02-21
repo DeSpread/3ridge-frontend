@@ -22,6 +22,7 @@ import GradientTypography from "../../components/atoms/gradient-typography";
 import { useTheme } from "@mui/material/styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { GetServerSideProps } from "next";
+import { useLeaderUserRankQuery } from "../../page-hook/leader-user-rank-query-hook";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
@@ -199,6 +200,9 @@ const Leaderboard = () => {
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const { userData } = useSignedUserQuery();
   const { leaderUsersData, leaderUsersDataLoading } = useLeaderUsersQuery();
+  const { userRank, loading: userRankLoading } = useLeaderUserRankQuery(
+    userData._id
+  );
 
   // const userRank = useMemo(() => {
   //   return findUserRank(userData._id);
@@ -226,10 +230,19 @@ const Leaderboard = () => {
                     <Box>
                       <Typography variant={"h6"}>Your ranking</Typography>
                     </Box>
-                    {/*<RankCard*/}
-                    {/*  user={userData}*/}
-                    {/*  rank={findUserRank(userData._id)}*/}
-                    {/*></RankCard>*/}
+                    {(userRankLoading || !userRank) && (
+                      <Box>
+                        <Skeleton
+                          width={800}
+                          height={86}
+                          animation={"wave"}
+                          variant={"rounded"}
+                        ></Skeleton>
+                      </Box>
+                    )}
+                    {!userRankLoading && userRank && (
+                      <RankCard user={userData} rank={userRank}></RankCard>
+                    )}
                   </Stack>
                 </Box>
               )}
