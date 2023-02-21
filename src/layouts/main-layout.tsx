@@ -110,7 +110,7 @@ const MainLayout = (props: MainLayoutProps) => {
         <Box
           sx={{
             flexGlow: 1,
-            height: "56px",
+            height: "62px",
             borderWidth: 0,
             borderBottomWidth: 1,
             borderStyle: "solid",
@@ -154,13 +154,15 @@ const MainLayout = (props: MainLayoutProps) => {
             {!props.disableNavButtonSet &&
               (smUp ? (
                 <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                  <NavbarButtonSet
-                    bountiesBtnOnClick={asyncGoToExplore}
-                    contentsBtnOnClick={() => {}}
-                    achievementsBtnOnClick={() => {}}
-                    communitiesBtnOnClick={asyncGoToProjects}
-                    leaderBoardBtnOnClick={asyncGoToLeaderBoard}
-                  ></NavbarButtonSet>
+                  <Box sx={{ marginRight: 1 }}>
+                    <NavbarButtonSet
+                      bountiesBtnOnClick={asyncGoToExplore}
+                      contentsBtnOnClick={() => {}}
+                      achievementsBtnOnClick={() => {}}
+                      communitiesBtnOnClick={asyncGoToProjects}
+                      leaderBoardBtnOnClick={asyncGoToLeaderBoard}
+                    ></NavbarButtonSet>
+                  </Box>
                   {isLoggedIn ? (
                     <NavbarAvatar
                       rewardPoint={userData?.rewardPoint}
@@ -199,7 +201,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           setShowSignInDialog(true);
                         }}
                       >
-                        Sign In
+                        Connect
                       </PrimaryButton>
                       <SecondaryButton
                         size={"small"}

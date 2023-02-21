@@ -51,6 +51,7 @@ const NavbarButton = ({
           color: theme.palette.neutral[100],
           cursor: "pointer",
         }}
+        variant={"h6"}
       >
         {children}
       </Typography>

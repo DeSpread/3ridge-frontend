@@ -119,10 +119,14 @@ export function useTicketQuery({
     })();
   }, [id]);
 
-  const asyncVerifyTwitterFollowQuest = async (questId: string) => {
-    if (questId && userId) {
+  const asyncVerifyTwitterFollowQuest = async (
+    ticketId: string,
+    questId: string
+  ) => {
+    if (ticketId && questId && userId) {
       const res = await verifyTwitterFollowQuest({
         variables: {
+          ticketId,
           questId,
           userId,
         },
@@ -130,10 +134,14 @@ export function useTicketQuery({
     }
   };
 
-  const asyncVerifyTwitterRetweetQuest = async (questId: string) => {
-    if (questId && userId) {
+  const asyncVerifyTwitterRetweetQuest = async (
+    ticketId: string,
+    questId: string
+  ) => {
+    if (ticketId && questId && userId) {
       const res = await verifyTwitterRetweetQuest({
         variables: {
+          ticketId,
           questId,
           userId,
         },
@@ -141,10 +149,14 @@ export function useTicketQuery({
     }
   };
 
-  const asyncCompleteQuestOfUser = async (questId: string) => {
+  const asyncCompleteQuestOfUser = async (
+    ticketId: string,
+    questId: string
+  ) => {
     if (questId && userId) {
       const res = await completeQuestOfUser({
         variables: {
+          ticketId,
           questId,
           userId,
         },
@@ -155,14 +167,17 @@ export function useTicketQuery({
   const asyncRequestClaimNtf = async (
     collectionName: string,
     nftTokenName: string,
-    receiverAddress: string
+    receiverAddress: string,
+    ticketId: string
   ) => {
-    if (receiverAddress) {
+    if (receiverAddress && userId) {
       const res = await requestClaimNFT({
         variables: {
           collectionName,
           receiverAddress,
           nftTokenName,
+          ticketId,
+          userId,
         },
       });
     }

@@ -197,13 +197,12 @@ const Leaderboard = () => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
-  const { leaderUsersData, leaderUsersDataLoading, findUserRank } =
-    useLeaderUsersQuery();
   const { userData } = useSignedUserQuery();
+  const { leaderUsersData, leaderUsersDataLoading } = useLeaderUsersQuery();
 
-  const userRank = useMemo(() => {
-    return findUserRank(userData._id);
-  }, [userData]);
+  // const userRank = useMemo(() => {
+  //   return findUserRank(userData._id);
+  // }, [userData]);
 
   return (
     <>
@@ -227,10 +226,10 @@ const Leaderboard = () => {
                     <Box>
                       <Typography variant={"h6"}>Your ranking</Typography>
                     </Box>
-                    <RankCard
-                      user={userData}
-                      rank={findUserRank(userData._id)}
-                    ></RankCard>
+                    {/*<RankCard*/}
+                    {/*  user={userData}*/}
+                    {/*  rank={findUserRank(userData._id)}*/}
+                    {/*></RankCard>*/}
                   </Stack>
                 </Box>
               )}

@@ -582,11 +582,13 @@ const Event = (props: AppProps) => {
                           callback: (msg: string) => void;
                         }>;
                         try {
+                          if (!ticketData._id) return;
                           if (
                             quest.questPolicy?.questPolicy ===
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
                           ) {
                             await asyncVerifyTwitterFollowQuest(
+                              ticketData._id,
                               quest._id ?? ""
                             );
                             myEvent.params.callback("success");
@@ -602,6 +604,7 @@ const Event = (props: AppProps) => {
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
                           ) {
                             await asyncVerifyTwitterRetweetQuest(
+                              ticketData._id,
                               quest._id ?? ""
                             );
                             myEvent.params.callback("success");
@@ -868,7 +871,12 @@ const Event = (props: AppProps) => {
                   }
                   const { collectionName, tokenName, point } =
                     ticketData?.rewardPolicy?.context;
-                  if (userData?.walletAddress && collectionName && tokenName) {
+                  if (
+                    userData?.walletAddress &&
+                    collectionName &&
+                    tokenName &&
+                    ticketData?._id
+                  ) {
                     console.log(
                       userData?.walletAddress,
                       collectionName,
@@ -878,7 +886,8 @@ const Event = (props: AppProps) => {
                       await asyncRequestClaimNtf(
                         collectionName,
                         tokenName,
-                        userData?.walletAddress
+                        userData?.walletAddress,
+                        ticketData?._id
                       );
                       const newRewardAmount =
                         (userData?.rewardPoint ?? 0) + point;
@@ -998,17 +1007,19 @@ const Event = (props: AppProps) => {
               return e._id;
             });
             const index = ids?.indexOf(openQuizQuestId) as number;
-            if (index !== undefined) {
+            if (index !== undefined && ticketData._id) {
               try {
-                asyncCompleteQuestOfUser(openQuizQuestId).then((res) => {
-                  setVerifiedList((prevState) => {
-                    prevState[index] = true;
-                    return prevState;
-                  });
-                  setUpdateIndex((prevState) => {
-                    return prevState + 1;
-                  });
-                });
+                asyncCompleteQuestOfUser(ticketData._id, openQuizQuestId).then(
+                  (res) => {
+                    setVerifiedList((prevState) => {
+                      prevState[index] = true;
+                      return prevState;
+                    });
+                    setUpdateIndex((prevState) => {
+                      return prevState + 1;
+                    });
+                  }
+                );
               } catch (e) {
               } finally {
                 setOpenQuizQuestDialog(false);
