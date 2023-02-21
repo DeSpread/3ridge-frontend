@@ -16,11 +16,11 @@ const ValidatedTextInput = (props: ValidatedTextInputProps) => {
 
   const idleBorderColor = useMemo(() => {
     return getBorderColor("#35333a", theme.palette.error.main);
-  }, [props.isValid]);
+  }, [props.isValid, theme.palette.error.main]);
 
   const hoverBorderColor = useMemo(() => {
     return getBorderColor("#787385", theme.palette.error.main);
-  }, [props.isValid]);
+  }, [props.isValid, theme.palette.error.main]);
 
   return (
     <StyledOutlinedInput

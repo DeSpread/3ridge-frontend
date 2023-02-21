@@ -12,6 +12,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "gateway.pinata.cloud",
       },
+      {
+        protocol: "https",
+        hostname: "indexer.xyz",
+      },
+      {
+        protocol: "https",
+        hostname: "www.supernova.ac",
+      },
     ],
   },
   // async redirects() {

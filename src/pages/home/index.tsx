@@ -1,5 +1,14 @@
 import React, { PropsWithChildren, ReactElement, useEffect } from "react";
-import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
 import type { AppProps } from "next/app";
@@ -8,6 +17,7 @@ import GradientTypography from "../../components/atoms/gradient-typography";
 import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
 
 export async function getStaticProps() {
   return { props: {} };
@@ -43,6 +53,113 @@ const HomeTag = (props: PropsWithChildren & { color: string }) => {
         </Stack>
       }
     ></StyledChip>
+  );
+};
+
+const DescContent = (props: {
+  title: string;
+  index: number;
+  imageUrl: string;
+  contents: string[];
+}) => {
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+
+  return (
+    <Stack direction={"row"} justifyContent={"center"}>
+      <Box>
+        <Grid
+          container
+          sx={{ background: "" }}
+          direction={"row"}
+          rowSpacing={4}
+          justifyContent={"center"}
+        >
+          <Grid item sx={{ background: "" }}>
+            <Stack direction={"column"}>
+              <Box
+                sx={{
+                  background: "",
+                  flex: 1,
+                  width: "100%",
+                }}
+              >
+                <Image
+                  src={"https://www.supernova.ac/assets/icon1.gif?imwidth=1080"}
+                  alt={""}
+                  width={288}
+                  height={288}
+                  style={{
+                    borderRadius: 8,
+                    borderWidth: 2,
+                    borderColor: "white",
+                    borderStyle: "solid",
+                  }}
+                ></Image>
+              </Box>
+            </Stack>
+          </Grid>
+          <Grid item sx={{ marginLeft: mdUp ? 8 : 0 }}>
+            <Stack direction={"column"}>
+              <Box>
+                <Typography variant={"h5"}>
+                  {props.index.toString().padStart(2, "0")}
+                </Typography>
+                <Typography
+                  variant={"h5"}
+                  sx={{
+                    fontFamily: "LINESeedKR-Bd",
+                  }}
+                >
+                  {props.title}
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  marginTop: 2,
+                  maxWidth: 420,
+                  background: "",
+                }}
+              >
+                <ul
+                  style={{
+                    margin: 0,
+                    paddingLeft: 24,
+                    lineHeight: "3em",
+                  }}
+                >
+                  {props.contents.map((e, index) => {
+                    return (
+                      <li key={index}>
+                        <Typography>{e}</Typography>
+                      </li>
+                    );
+                  })}
+                  {/*<li>*/}
+                  {/*  <Typography>*/}
+                  {/*    Stake and mint your snAssets to unlock your liquidity*/}
+                  {/*    while staking!*/}
+                  {/*  </Typography>*/}
+                  {/*</li>*/}
+                  {/*<li>*/}
+                  {/*  <Typography>*/}
+                  {/*    Stake and mint your snAssets to unlock your liquidity*/}
+                  {/*    while staking!*/}
+                  {/*  </Typography>*/}
+                  {/*</li>*/}
+                  {/*<li>*/}
+                  {/*  <Typography>*/}
+                  {/*    Stake and mint your snAssets to unlock your liquidity*/}
+                  {/*    while staking!*/}
+                  {/*  </Typography>*/}
+                  {/*</li>*/}
+                </ul>
+              </Box>
+            </Stack>
+          </Grid>
+        </Grid>
+      </Box>
+    </Stack>
   );
 };
 
@@ -206,13 +323,73 @@ const Home = (props: AppProps) => {
               }}
             >
               <UpDownAnimatedComponent yDist={"8px"} duration={1}>
-                <img
-                  style={{ width: "100%", height: "100vh" }}
-                  src={"https://indexer.xyz/assets/top-section-bg.png"}
-                />
+                <div style={{ flex: 1, width: "100%", height: "100vh" }}>
+                  <Image
+                    fill
+                    src={"https://indexer.xyz/assets/top-section-bg.png"}
+                    alt={""}
+                    style={{ zIndex: 1 }}
+                  />
+                </div>
               </UpDownAnimatedComponent>
             </div>
           </div>
+        </Stack>
+        <Stack
+          direction={"column"}
+          sx={{
+            width: "100%",
+          }}
+        >
+          <Stack
+            direction={"column"}
+            alignItems={"center"}
+            sx={{ marginTop: 8, marginBottom: 8 }}
+          >
+            <Typography
+              variant={"h2"}
+              sx={{
+                fontFamily: "LINESeedKR-Bd",
+              }}
+            >
+              How it works
+            </Typography>
+            <Box sx={{ marginTop: 8 }}>
+              <Card
+                sx={{
+                  background: "transparent",
+                  width: mdUp ? 1000 : smUp ? 600 : 400,
+                  borderWidth: 2,
+                  borderColor: theme.palette.divider,
+                  borderStyle: "solid",
+                }}
+              >
+                <CardContent>
+                  <DescContent
+                    index={1}
+                    title={"Liquid Staking"}
+                    contents={[
+                      "Stake and mint your snAssets to unlock your liquidity while staking!",
+                      "snAssets also auto-compound your staking reward and provide the best yield",
+                      "You can redeem your assets by burning snAssets",
+                      "We shall bring more updates to add utility to the snAssets!\n",
+                    ]}
+                    imageUrl={
+                      "https://www.supernova.ac/assets/icon1.gif?imwidth=1080"
+                    }
+                  ></DescContent>
+                  <Box sx={{ padding: 4, paddingBottom: 2 }}>
+                    <Divider
+                      sx={{
+                        width: "100%",
+                        borderWidth: 1,
+                      }}
+                    ></Divider>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Box>
+          </Stack>
         </Stack>
       </Stack>
     </>

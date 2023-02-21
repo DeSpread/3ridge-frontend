@@ -52,6 +52,7 @@ const NavbarButton = ({
           cursor: "pointer",
         }}
         variant={"h6"}
+        fontFamily={"LINESeedKR-Bd"}
       >
         {children}
       </Typography>
