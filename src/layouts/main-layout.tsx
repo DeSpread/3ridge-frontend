@@ -194,7 +194,7 @@ const MainLayout = (props: MainLayoutProps) => {
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
-                      <PrimaryButton
+                      <SecondaryButton
                         size={"small"}
                         sx={{
                           width: 100,
@@ -205,19 +205,6 @@ const MainLayout = (props: MainLayoutProps) => {
                         }}
                       >
                         Connect
-                      </PrimaryButton>
-                      <SecondaryButton
-                        size={"small"}
-                        sx={{
-                          width: 100,
-                        }}
-                        onClick={async (e) => {
-                          showLoading();
-                          await router.push("/signup");
-                          closeLoading();
-                        }}
-                      >
-                        Sign Up
                       </SecondaryButton>
                     </Stack>
                   )}
