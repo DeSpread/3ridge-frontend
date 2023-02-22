@@ -562,11 +562,20 @@ const Profile = (props: AppProps) => {
         }}
         twitterValidatorButtonOnClick={async (e) => {
           try {
+            const myEvent = e as MouseEventWithStateParam;
             showLoading();
-            const res = await asyncTwitterSignInPopUp();
-            await asyncUpdateSocialTwitter(res);
+            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
+              await asyncUpdateSocialTwitter("");
+            } else if (
+              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
+            ) {
+              const res = await asyncTwitterSignInPopUp();
+              await asyncUpdateSocialTwitter(res);
+            }
+          } catch (e) {
+          } finally {
             closeLoading();
-          } catch (e) {}
+          }
         }}
         isWalletLoggedIn={isWalletLoggedIn}
         isMailLoggedIn={isMailLoggedIn || isGoogleLoggedIn}
