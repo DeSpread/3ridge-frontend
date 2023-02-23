@@ -176,7 +176,7 @@ const NavbarAvatar = ({
                 sx={{ color: theme.palette.warning.main }}
               ></LogoutIcon>
             </Stack>
-            <Typography>SignOut</Typography>
+            <Typography>Disconnect</Typography>
           </Stack>
         </StyledMenuItem>
       </StyledMenu>

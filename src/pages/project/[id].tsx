@@ -154,7 +154,6 @@ const Project = () => {
                   sx={{
                     width: 36,
                     height: 36,
-                    //@ts-ignore
                     background: (theme) => theme.palette.neutral["900"],
                     borderRadius: 16,
                   }}

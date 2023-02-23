@@ -47,7 +47,7 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
   const isLast = useMemo(() => {
     const length = props.context?.quizList?.length ?? 0;
     return questionIndex === length - 1;
-  }, [questionIndex]);
+  }, [questionIndex, props.context?.quizList?.length]);
 
   return (
     <>

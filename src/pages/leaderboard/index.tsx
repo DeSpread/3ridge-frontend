@@ -22,6 +22,7 @@ import GradientTypography from "../../components/atoms/gradient-typography";
 import { useTheme } from "@mui/material/styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { GetServerSideProps } from "next";
+import { useLeaderUserRankQuery } from "../../page-hook/leader-user-rank-query-hook";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
@@ -79,10 +80,11 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
         transitionDelay: "0s",
         transitionTimingFunction: "ease-out",
         "&:hover": {
+          borderColor: theme.palette.secondary.main,
           transform: "translate(0,-2px)",
           boxShadow: "4px 4px 4px 2px rgba(128, 128, 128, .2)",
         },
-        borderWidth: 2,
+        borderWidth: 3,
         borderColor: "#35333a",
         borderStyle: "solid",
         borderRadius: 2,
@@ -197,13 +199,15 @@ const Leaderboard = () => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
-  const { leaderUsersData, leaderUsersDataLoading, findUserRank } =
-    useLeaderUsersQuery();
   const { userData } = useSignedUserQuery();
+  const { leaderUsersData, leaderUsersDataLoading } = useLeaderUsersQuery();
+  const { userRank, loading: userRankLoading } = useLeaderUserRankQuery(
+    userData._id
+  );
 
-  const userRank = useMemo(() => {
-    return findUserRank(userData._id);
-  }, [userData]);
+  // const userRank = useMemo(() => {
+  //   return findUserRank(userData._id);
+  // }, [userData]);
 
   return (
     <>
@@ -227,10 +231,19 @@ const Leaderboard = () => {
                     <Box>
                       <Typography variant={"h6"}>Your ranking</Typography>
                     </Box>
-                    <RankCard
-                      user={userData}
-                      rank={findUserRank(userData._id)}
-                    ></RankCard>
+                    {(userRankLoading || !userRank) && (
+                      <Box>
+                        <Skeleton
+                          width={800}
+                          height={86}
+                          animation={"wave"}
+                          variant={"rounded"}
+                        ></Skeleton>
+                      </Box>
+                    )}
+                    {!userRankLoading && userRank && (
+                      <RankCard user={userData} rank={userRank}></RankCard>
+                    )}
                   </Stack>
                 </Box>
               )}

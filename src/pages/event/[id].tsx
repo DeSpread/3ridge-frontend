@@ -582,11 +582,13 @@ const Event = (props: AppProps) => {
                           callback: (msg: string) => void;
                         }>;
                         try {
+                          if (!ticketData._id) return;
                           if (
                             quest.questPolicy?.questPolicy ===
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
                           ) {
                             await asyncVerifyTwitterFollowQuest(
+                              ticketData._id,
                               quest._id ?? ""
                             );
                             myEvent.params.callback("success");
@@ -602,6 +604,7 @@ const Event = (props: AppProps) => {
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
                           ) {
                             await asyncVerifyTwitterRetweetQuest(
+                              ticketData._id,
                               quest._id ?? ""
                             );
                             myEvent.params.callback("success");
@@ -778,25 +781,47 @@ const Event = (props: AppProps) => {
                         }}
                       >
                         {ticketData?.rewardPolicy?.context?.nftImageUrl && (
-                          <LazyLoadImage
-                            width={smUp ? 300 : 260}
-                            height={smUp ? 300 : 260}
-                            src={ticketData?.rewardPolicy?.context?.nftImageUrl}
-                            style={{
-                              borderRadius: 16,
+                          <Box
+                            sx={{
+                              "&:hover": {
+                                "& .lazyLoadImage": {
+                                  color: theme.palette.neutral["400"],
+                                  transition: "all 0.1s ease-out 0s",
+                                  borderColor: theme.palette.secondary.main,
+                                  transitionDuration: "0.2s",
+                                  transitionDelay: "0s",
+                                  transitionTimingFunction: "ease-out",
+                                  transitionProperty: "all",
+                                },
+                              },
                             }}
-                            effect="blur"
-                            beforeLoad={() => {
-                              return (
-                                <Skeleton
-                                  width={smUp ? 300 : 260}
-                                  height={smUp ? 300 : 260}
-                                  animation={"wave"}
-                                  variant={"rounded"}
-                                ></Skeleton>
-                              );
-                            }}
-                          ></LazyLoadImage>
+                          >
+                            <LazyLoadImage
+                              className={"lazyLoadImage"}
+                              width={smUp ? 300 : 260}
+                              height={smUp ? 300 : 260}
+                              src={
+                                ticketData?.rewardPolicy?.context?.nftImageUrl
+                              }
+                              style={{
+                                borderWidth: 3,
+                                borderRadius: 16,
+                                borderColor: "",
+                                borderStyle: "solid",
+                              }}
+                              effect="blur"
+                              beforeLoad={() => {
+                                return (
+                                  <Skeleton
+                                    width={smUp ? 300 : 260}
+                                    height={smUp ? 300 : 260}
+                                    animation={"wave"}
+                                    variant={"rounded"}
+                                  ></Skeleton>
+                                );
+                              }}
+                            ></LazyLoadImage>
+                          </Box>
                         )}
                       </Box>
                     </Stack>
@@ -868,7 +893,12 @@ const Event = (props: AppProps) => {
                   }
                   const { collectionName, tokenName, point } =
                     ticketData?.rewardPolicy?.context;
-                  if (userData?.walletAddress && collectionName && tokenName) {
+                  if (
+                    userData?.walletAddress &&
+                    collectionName &&
+                    tokenName &&
+                    ticketData?._id
+                  ) {
                     console.log(
                       userData?.walletAddress,
                       collectionName,
@@ -878,7 +908,8 @@ const Event = (props: AppProps) => {
                       await asyncRequestClaimNtf(
                         collectionName,
                         tokenName,
-                        userData?.walletAddress
+                        userData?.walletAddress,
+                        ticketData?._id
                       );
                       const newRewardAmount =
                         (userData?.rewardPoint ?? 0) + point;
@@ -998,17 +1029,19 @@ const Event = (props: AppProps) => {
               return e._id;
             });
             const index = ids?.indexOf(openQuizQuestId) as number;
-            if (index !== undefined) {
+            if (index !== undefined && ticketData._id) {
               try {
-                asyncCompleteQuestOfUser(openQuizQuestId).then((res) => {
-                  setVerifiedList((prevState) => {
-                    prevState[index] = true;
-                    return prevState;
-                  });
-                  setUpdateIndex((prevState) => {
-                    return prevState + 1;
-                  });
-                });
+                asyncCompleteQuestOfUser(ticketData._id, openQuizQuestId).then(
+                  (res) => {
+                    setVerifiedList((prevState) => {
+                      prevState[index] = true;
+                      return prevState;
+                    });
+                    setUpdateIndex((prevState) => {
+                      return prevState + 1;
+                    });
+                  }
+                );
               } catch (e) {
               } finally {
                 setOpenQuizQuestDialog(false);

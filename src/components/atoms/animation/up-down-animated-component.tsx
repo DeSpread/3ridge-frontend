@@ -2,7 +2,6 @@ import { CSSProperties, PropsWithChildren } from "react";
 import { motion } from "framer-motion";
 
 type UpDownAnimatedComponentProps = PropsWithChildren & {
-  src?: string;
   width?: string | number;
   height?: string | number;
   yDist?: string | number;
@@ -13,7 +12,6 @@ type UpDownAnimatedComponentProps = PropsWithChildren & {
 const UpDownAnimatedComponent = ({
   width,
   height,
-  src,
   sx,
   children,
   duration = 5,
@@ -33,7 +31,6 @@ const UpDownAnimatedComponent = ({
       }}
       style={{ width, height, ...sx }}
     >
-      {src && <img src={src} width={width} height={height}></img>}
       {children}
     </motion.div>
   );

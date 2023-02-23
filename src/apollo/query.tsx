@@ -1,8 +1,8 @@
 import { gql } from "../__generated__";
 
 export const GET_USERS_ORDER_BY_REWARD_POINT_DESC = gql(/* GraphQL */ `
-  query GetUsersOrderByRewardPointDesc {
-    usersOrderByRewardPointDesc {
+  query GetUsersOrderByRewardPointDesc($skip: Int = 0, $take: Int = 25) {
+    usersOrderByRewardPointDesc(skip: $skip, take: $take) {
       _id
       name
       profileImageUrl
@@ -16,6 +16,12 @@ export const GET_USERS_ORDER_BY_REWARD_POINT_DESC = gql(/* GraphQL */ `
         twitterId
       }
     }
+  }
+`);
+
+export const FIND_RANK_BY_USER_ID = gql(/* GraphQL */ `
+  query FindRankByUserId($userId: String!) {
+    findRankByUserId(userId: $userId)
   }
 `);
 
@@ -225,7 +231,7 @@ export const GET_ALL_TICKETS = gql(/* GraphQL */ `
 
 export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
   query GetTicketById($id: String!) {
-    ticketById(id: $id) {
+    ticketById(ticketId: $id) {
       _id
       completed
       description
@@ -266,16 +272,32 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
 `);
 
 export const VERIFY_TWITTER_FOLLOW_QUEST = gql(/* GraphQL */ `
-  mutation VerifyTwitterFollowQuest($questId: String!, $userId: String!) {
-    verifyTwitterFollowQuest(questId: $questId, userId: $userId) {
+  mutation VerifyTwitterFollowQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verifyTwitterFollowQuest(
+      questId: $questId
+      ticketId: $ticketId
+      userId: $userId
+    ) {
       _id
     }
   }
 `);
 
 export const VERIFY_TWITTER_RETWEET_QUEST = gql(/* GraphQL */ `
-  mutation VerifyTwitterRetweetQuest($questId: String!, $userId: String!) {
-    verifyTwitterRetweetQuest(questId: $questId, userId: $userId) {
+  mutation VerifyTwitterRetweetQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verifyTwitterRetweetQuest(
+      questId: $questId
+      ticketId: $ticketId
+      userId: $userId
+    ) {
       _id
     }
   }
@@ -291,8 +313,16 @@ export const IS_COMPLETED_QUEST_BY_USER_ID = gql(/* GraphQL */ `
 `);
 
 export const COMPLETE_QUEST_OF_USER = gql(/* GraphQL */ `
-  mutation CompleteQuestOfUser($questId: String!, $userId: String!) {
-    completeQuestOfUser(questId: $questId, userId: $userId) {
+  mutation CompleteQuestOfUser(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    completeQuestOfUser(
+      questId: $questId
+      ticketId: $ticketId
+      userId: $userId
+    ) {
       _id
       title
       description
@@ -309,11 +339,15 @@ export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
     $collectionName: String!
     $nftTokenName: String!
     $receiverAddress: String!
+    $ticketId: String!
+    $userId: String!
   ) {
     requestClaimNFT(
       collectionName: $collectionName
       nftTokenName: $nftTokenName
       receiverAddress: $receiverAddress
+      ticketId: $ticketId
+      userId: $userId
     ) {
       txHash
     }

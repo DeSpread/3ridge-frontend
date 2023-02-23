@@ -38,6 +38,7 @@ import NavbarButton from "../components/atoms/navbar-button";
 import Link from "next/link";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SubMenuButton from "../components/molecules/sub-menu-button";
+import Image from "next/image";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -110,7 +111,7 @@ const MainLayout = (props: MainLayoutProps) => {
         <Box
           sx={{
             flexGlow: 1,
-            height: "56px",
+            height: "62px",
             borderWidth: 0,
             borderBottomWidth: 1,
             borderStyle: "solid",
@@ -140,11 +141,13 @@ const MainLayout = (props: MainLayoutProps) => {
               }}
             >
               <Stack direction={"row"} alignItems={"flex-start"}>
-                <img
+                <Image
                   src={
                     "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_negative.svg"
                   }
-                  height={smUp ? "52px" : "48px"}
+                  height={smUp ? 52 : 48}
+                  width={smUp ? 132 : 120}
+                  alt={""}
                 />
                 <Typography sx={{ marginLeft: -1 }} variant={"caption"}>
                   testnet
@@ -154,13 +157,15 @@ const MainLayout = (props: MainLayoutProps) => {
             {!props.disableNavButtonSet &&
               (smUp ? (
                 <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                  <NavbarButtonSet
-                    bountiesBtnOnClick={asyncGoToExplore}
-                    contentsBtnOnClick={() => {}}
-                    achievementsBtnOnClick={() => {}}
-                    communitiesBtnOnClick={asyncGoToProjects}
-                    leaderBoardBtnOnClick={asyncGoToLeaderBoard}
-                  ></NavbarButtonSet>
+                  <Box sx={{ marginRight: 1 }}>
+                    <NavbarButtonSet
+                      bountiesBtnOnClick={asyncGoToExplore}
+                      contentsBtnOnClick={() => {}}
+                      achievementsBtnOnClick={() => {}}
+                      communitiesBtnOnClick={asyncGoToProjects}
+                      leaderBoardBtnOnClick={asyncGoToLeaderBoard}
+                    ></NavbarButtonSet>
+                  </Box>
                   {isLoggedIn ? (
                     <NavbarAvatar
                       rewardPoint={userData?.rewardPoint}
@@ -189,7 +194,7 @@ const MainLayout = (props: MainLayoutProps) => {
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
-                      <PrimaryButton
+                      <SecondaryButton
                         size={"small"}
                         sx={{
                           width: 100,
@@ -199,20 +204,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           setShowSignInDialog(true);
                         }}
                       >
-                        Sign In
-                      </PrimaryButton>
-                      <SecondaryButton
-                        size={"small"}
-                        sx={{
-                          width: 100,
-                        }}
-                        onClick={async (e) => {
-                          showLoading();
-                          await router.push("/signup");
-                          closeLoading();
-                        }}
-                      >
-                        Sign Up
+                        Connect
                       </SecondaryButton>
                     </Stack>
                   )}

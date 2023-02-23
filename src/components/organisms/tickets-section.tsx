@@ -81,6 +81,7 @@ const TabButton = (props: TabButtonProps) => {
         ":disabled": {
           backgroundColor: theme.palette.secondary.main,
           color: theme.palette.neutral[900],
+          borderColor: theme.palette.secondary.main,
         },
         ...props.sx,
       }}
