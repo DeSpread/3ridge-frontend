@@ -66,7 +66,12 @@ const Projects = () => {
                       transitionDuration: "0.2s",
                       transitionDelay: "0s",
                       transitionTimingFunction: "ease-out",
+                      borderWidth: 3,
+                      borderColor: "",
+                      borderStyle: "solid",
+                      cursor: "pointer",
                       "&:hover": {
+                        borderColor: theme.palette.secondary.main,
                         transform: "translate(0,-2px)",
                         boxShadow: "12px 12px 2px 1px rgba(128, 128, 128, .2)",
                       },

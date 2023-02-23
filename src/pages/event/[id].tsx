@@ -50,15 +50,26 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { gql, request } from "graphql-request";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import type { GetServerSideProps } from "next";
+// import type { GetServerSideProps } from "next";
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+//   res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+//
+//   return {
+//     props: {},
+//   };
+// };
 
+export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
-    props: {},
+    paths: [], //indicates that no page needs be created at build time
+    fallback: "blocking", //indicates the type of fallback
   };
 };
+
+export async function getStaticProps() {
+  return { props: {} };
+}
 
 interface MyTimerSettings extends TimerSettings {
   sx?: CSSProperties;
@@ -781,25 +792,47 @@ const Event = (props: AppProps) => {
                         }}
                       >
                         {ticketData?.rewardPolicy?.context?.nftImageUrl && (
-                          <LazyLoadImage
-                            width={smUp ? 300 : 260}
-                            height={smUp ? 300 : 260}
-                            src={ticketData?.rewardPolicy?.context?.nftImageUrl}
-                            style={{
-                              borderRadius: 16,
+                          <Box
+                            sx={{
+                              "&:hover": {
+                                "& .lazyLoadImage": {
+                                  color: theme.palette.neutral["400"],
+                                  transition: "all 0.1s ease-out 0s",
+                                  borderColor: theme.palette.secondary.main,
+                                  transitionDuration: "0.2s",
+                                  transitionDelay: "0s",
+                                  transitionTimingFunction: "ease-out",
+                                  transitionProperty: "all",
+                                },
+                              },
                             }}
-                            effect="blur"
-                            beforeLoad={() => {
-                              return (
-                                <Skeleton
-                                  width={smUp ? 300 : 260}
-                                  height={smUp ? 300 : 260}
-                                  animation={"wave"}
-                                  variant={"rounded"}
-                                ></Skeleton>
-                              );
-                            }}
-                          ></LazyLoadImage>
+                          >
+                            <LazyLoadImage
+                              className={"lazyLoadImage"}
+                              width={smUp ? 300 : 260}
+                              height={smUp ? 300 : 260}
+                              src={
+                                ticketData?.rewardPolicy?.context?.nftImageUrl
+                              }
+                              style={{
+                                borderWidth: 3,
+                                borderRadius: 16,
+                                borderColor: "",
+                                borderStyle: "solid",
+                              }}
+                              effect="blur"
+                              beforeLoad={() => {
+                                return (
+                                  <Skeleton
+                                    width={smUp ? 300 : 260}
+                                    height={smUp ? 300 : 260}
+                                    animation={"wave"}
+                                    variant={"rounded"}
+                                  ></Skeleton>
+                                );
+                              }}
+                            ></LazyLoadImage>
+                          </Box>
                         )}
                       </Box>
                     </Stack>
