@@ -1,4 +1,4 @@
-import { GetServerSideProps, GetStaticPaths } from "next";
+import { GetStaticPaths } from "next";
 import React, { ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import Head from "next/head";
@@ -23,13 +23,24 @@ import projectsData from "../projects/data.json";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { useTheme } from "@mui/material/styles";
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+//   res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+//
+//   return {
+//     props: {},
+//   };
+// };
 
+export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
-    props: {},
+    paths: [], //indicates that no page needs be created at build time
+    fallback: "blocking", //indicates the type of fallback
   };
 };
+
+export async function getStaticProps() {
+  return { props: {} };
+}
 
 const Project = () => {
   const theme = useTheme();
