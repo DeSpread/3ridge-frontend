@@ -11,6 +11,7 @@ import React, { useEffect, useLayoutEffect } from "react";
 import StyledChip from "../atoms/styled/styled-chip";
 import { Ticket } from "../../type";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useTheme } from "@mui/material/styles";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;
@@ -20,6 +21,7 @@ const TicketCard = (props: EventCardProps) => {
   const { ticket } = props;
   const ref = React.useRef<HTMLDivElement>(null);
   const [height, setHeight] = React.useState(0);
+  const theme = useTheme();
 
   useLayoutEffect(() => {
     setHeight(ref.current?.offsetWidth ?? 0);
@@ -42,11 +44,16 @@ const TicketCard = (props: EventCardProps) => {
         transition: "all 0.2s ease-out 0s",
         transitionDuration: "0.2s",
         transitionDelay: "0s",
+        borderWidth: 3,
+        borderColor: "",
+        borderStyle: "solid",
         transitionTimingFunction: "ease-out",
         "&:hover": {
+          borderColor: theme.palette.secondary.main,
           transform: "translate(0,-2px)",
           boxShadow: "12px 12px 2px 1px rgba(128, 128, 128, .2)",
         },
+        cursor: "pointer",
         ...props.sx,
       }}
       onClick={props.onClick}
@@ -59,10 +66,14 @@ const TicketCard = (props: EventCardProps) => {
         <Stack direction={"column"}>
           <Stack direction={"column"}>
             <Stack
-              direction={"row"}
-              alignItems={"center"}
+              direction={"column"}
+              alignItems={"flex-start"}
               justifyContent={"space-between"}
+              spacing={1}
             >
+              <StyledChip
+                label={`${ticket?.quests?.length ?? 0} Quests`}
+              ></StyledChip>
               <Box sx={{ height: 50, display: "flex", alignItems: "center" }}>
                 <Typography
                   variant={"h6"}
@@ -73,18 +84,17 @@ const TicketCard = (props: EventCardProps) => {
                     WebkitLineClamp: "2",
                     WebkitBoxOrient: "vertical",
                   }}
+                  fontFamily={"LINESeedKR-Bd"}
                 >
                   {ticket?.title}
                 </Typography>
               </Box>
-              <StyledChip
-                label={`${ticket?.quests?.length ?? 0} Quests`}
-              ></StyledChip>
             </Stack>
             <Box sx={{ marginTop: 2, minHeight: 100 }}>
               <Typography
                 variant={"body2"}
                 sx={{
+                  color: (theme) => theme.palette.neutral[400],
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "-webkit-box",

@@ -781,25 +781,47 @@ const Event = (props: AppProps) => {
                         }}
                       >
                         {ticketData?.rewardPolicy?.context?.nftImageUrl && (
-                          <LazyLoadImage
-                            width={smUp ? 300 : 260}
-                            height={smUp ? 300 : 260}
-                            src={ticketData?.rewardPolicy?.context?.nftImageUrl}
-                            style={{
-                              borderRadius: 16,
+                          <Box
+                            sx={{
+                              "&:hover": {
+                                "& .lazyLoadImage": {
+                                  color: theme.palette.neutral["400"],
+                                  transition: "all 0.1s ease-out 0s",
+                                  borderColor: theme.palette.secondary.main,
+                                  transitionDuration: "0.2s",
+                                  transitionDelay: "0s",
+                                  transitionTimingFunction: "ease-out",
+                                  transitionProperty: "all",
+                                },
+                              },
                             }}
-                            effect="blur"
-                            beforeLoad={() => {
-                              return (
-                                <Skeleton
-                                  width={smUp ? 300 : 260}
-                                  height={smUp ? 300 : 260}
-                                  animation={"wave"}
-                                  variant={"rounded"}
-                                ></Skeleton>
-                              );
-                            }}
-                          ></LazyLoadImage>
+                          >
+                            <LazyLoadImage
+                              className={"lazyLoadImage"}
+                              width={smUp ? 300 : 260}
+                              height={smUp ? 300 : 260}
+                              src={
+                                ticketData?.rewardPolicy?.context?.nftImageUrl
+                              }
+                              style={{
+                                borderWidth: 3,
+                                borderRadius: 16,
+                                borderColor: "",
+                                borderStyle: "solid",
+                              }}
+                              effect="blur"
+                              beforeLoad={() => {
+                                return (
+                                  <Skeleton
+                                    width={smUp ? 300 : 260}
+                                    height={smUp ? 300 : 260}
+                                    animation={"wave"}
+                                    variant={"rounded"}
+                                  ></Skeleton>
+                                );
+                              }}
+                            ></LazyLoadImage>
+                          </Box>
                         )}
                       </Box>
                     </Stack>
