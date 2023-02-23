@@ -85,13 +85,13 @@ const DescContent = (props: {
                 }}
               >
                 <Image
-                  src={"https://www.supernova.ac/assets/icon1.gif?imwidth=1080"}
+                  src={props.imageUrl}
                   alt={""}
                   width={288}
                   height={288}
                   style={{
                     borderRadius: 8,
-                    borderWidth: 2,
+                    borderWidth: 0,
                     borderColor: "white",
                     borderStyle: "solid",
                   }}
@@ -99,7 +99,7 @@ const DescContent = (props: {
               </Box>
             </Stack>
           </Grid>
-          <Grid item sx={{ marginLeft: mdUp ? 8 : 0 }}>
+            <Grid item sx={{marginLeft: mdUp ? 8 : 0, minWidth: mdUp ? 400 : 400}}>
             <Stack direction={"column"}>
               <Box>
                 <Typography variant={"h5"}>
@@ -335,6 +335,37 @@ const Home = (props: AppProps) => {
             </div>
           </div>
         </Stack>
+          <Stack
+              direction={"column"}
+              sx={{
+                  width: "100%",
+              }}
+          >
+              <Stack
+                  direction={"column"}
+                  alignItems={"center"}
+                  sx={{ marginTop: 8, marginBottom: 20 }}
+              >
+                  <Typography
+                      variant={"h5"}
+                      sx={{
+                          fontFamily: "LINESeedKR-Bd",
+                          marginBottom: 3
+                      }}
+                  >
+                      Journey to Web3 with 3ridge
+                  </Typography>
+                  <Typography
+                      variant={"h2"}
+                      sx={{
+                          fontFamily: "LINESeedKR-Bd",
+                      }}
+                      color={theme.palette.secondary.main}
+                  >
+                      Join the Web3 community and Earn
+                  </Typography>
+              </Stack>
+          </Stack>
         <Stack
           direction={"column"}
           sx={{
@@ -359,25 +390,51 @@ const Home = (props: AppProps) => {
                 sx={{
                   background: "transparent",
                   width: mdUp ? 1000 : smUp ? 600 : 400,
-                  borderWidth: 2,
-                  borderColor: theme.palette.divider,
-                  borderStyle: "solid",
                 }}
               >
-                <CardContent>
-                  <DescContent
-                    index={1}
-                    title={"Liquid Staking"}
-                    contents={[
-                      "Stake and mint your snAssets to unlock your liquidity while staking!",
-                      "snAssets also auto-compound your staking reward and provide the best yield",
-                      "You can redeem your assets by burning snAssets",
-                      "We shall bring more updates to add utility to the snAssets!\n",
-                    ]}
-                    imageUrl={
-                      "https://www.supernova.ac/assets/icon1.gif?imwidth=1080"
-                    }
-                  ></DescContent>
+                <CardContent >
+
+                    <Stack
+                        alignItems={"center"}
+                        spacing={10}
+                    >
+                        <DescContent
+                            index={1}
+                            title={"Connect your account/wallet"}
+                            contents={[
+                            ]}
+                            imageUrl={
+                              "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_connect.gif"
+                            }
+                          />
+                        <DescContent
+                            index={2}
+                            title={"Join the community"}
+                            contents={[
+                            ]}
+                            imageUrl={
+                                "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_community.gif"
+                            }
+                        />
+                        <DescContent
+                            index={3}
+                            title={"Complete Quests"}
+                            contents={[
+                            ]}
+                            imageUrl={
+                                "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_quest.gif"
+                            }
+                        />
+                        <DescContent
+                            index={4}
+                            title={"Claim your reward"}
+                            contents={[
+                            ]}
+                            imageUrl={
+                                "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_claim.gif"
+                            }
+                        />
+                    </Stack>
                   <Box sx={{ padding: 4, paddingBottom: 2 }}>
                     <Divider
                       sx={{
