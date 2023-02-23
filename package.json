@@ -22,6 +22,7 @@
     "@mui/material": "^5.10.16",
     "@mui/styled-engine-sc": "^5.10.16",
     "@react-oauth/google": "^0.5.1",
+    "@sentry/nextjs": "^7.38.0",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",

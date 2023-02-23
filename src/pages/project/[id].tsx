@@ -23,14 +23,6 @@ import projectsData from "../projects/data.json";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { useTheme } from "@mui/material/styles";
 
-// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-//   res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-//
-//   return {
-//     props: {},
-//   };
-// };
-
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
     paths: [], //indicates that no page needs be created at build time
