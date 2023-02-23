@@ -100,11 +100,11 @@ const DescContent = (props: {
             </Stack>
           </Grid>
             <Grid item sx={{marginLeft: mdUp ? 8 : 0, minWidth: mdUp ? 400 : 400}}>
-            <Stack direction={"column"}>
+            <Stack direction={"column"} justifyContent={"center"} sx={{height: "100%"}}>
               <Box>
-                <Typography variant={"h5"}>
-                  {props.index.toString().padStart(2, "0")}
-                </Typography>
+                {/*<Typography variant={"h5"}>*/}
+                {/*  {props.index.toString().padStart(2, "0")}*/}
+                {/*</Typography>*/}
                 <Typography
                   variant={"h5"}
                   sx={{
@@ -125,13 +125,13 @@ const DescContent = (props: {
                   style={{
                     margin: 0,
                     paddingLeft: 24,
-                    lineHeight: "3em",
+                    lineHeight: "4em",
                   }}
                 >
                   {props.contents.map((e, index) => {
                     return (
                       <li key={index}>
-                        <Typography>{e}</Typography>
+                        <Typography variant={"h6"}>{e}</Typography>
                       </li>
                     );
                   })}
@@ -365,6 +365,14 @@ const Home = (props: AppProps) => {
                       Join the Web3 community and Earn
                   </Typography>
               </Stack>
+              <Box sx={{ padding: 4, paddingBottom: 2 }}>
+                  <Divider
+                      sx={{
+                          width: "100%",
+                          borderWidth: 1,
+                      }}
+                  ></Divider>
+              </Box>
           </Stack>
         <Stack
           direction={"column"}
@@ -396,12 +404,13 @@ const Home = (props: AppProps) => {
 
                     <Stack
                         alignItems={"center"}
-                        spacing={10}
+                        spacing={14}
                     >
                         <DescContent
                             index={1}
                             title={"Connect your account/wallet"}
                             contents={[
+                                "Sign up or Sign in your account/wallet"
                             ]}
                             imageUrl={
                               "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_connect.gif"
@@ -411,6 +420,7 @@ const Home = (props: AppProps) => {
                             index={2}
                             title={"Join the community"}
                             contents={[
+                                "Join your favorite project or community!"
                             ]}
                             imageUrl={
                                 "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_community.gif"
@@ -420,6 +430,7 @@ const Home = (props: AppProps) => {
                             index={3}
                             title={"Complete Quests"}
                             contents={[
+                                "Complete your quest and try to get verified"
                             ]}
                             imageUrl={
                                 "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_quest.gif"
@@ -429,6 +440,7 @@ const Home = (props: AppProps) => {
                             index={4}
                             title={"Claim your reward"}
                             contents={[
+                                "Get reward from completed quests"
                             ]}
                             imageUrl={
                                 "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_claim.gif"
