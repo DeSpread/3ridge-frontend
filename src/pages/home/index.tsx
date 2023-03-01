@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import type { AppProps } from "next/app";
 import HomeFooter from "../../layouts/footer/home-footer";
 import GradientTypography from "../../components/atoms/gradient-typography";
@@ -66,7 +67,16 @@ const DescContent = (props: {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
-    <Stack direction={"row"} justifyContent={"center"}>
+    <Stack
+      direction={"row"}
+      justifyContent={"center"}
+      sx={{
+        borderWidth: 1,
+        // borderStyle: "solid",
+        // borderColor: theme.palette.neutral[100],
+        padding: 2,
+      }}
+    >
       <Box>
         <Grid
           container
@@ -85,13 +95,13 @@ const DescContent = (props: {
                 }}
               >
                 <Image
-                  src={"https://www.supernova.ac/assets/icon1.gif?imwidth=1080"}
+                  src={props.imageUrl}
                   alt={""}
-                  width={288}
-                  height={288}
+                  width={256}
+                  height={256}
                   style={{
                     borderRadius: 8,
-                    borderWidth: 2,
+                    borderWidth: 0,
                     borderColor: "white",
                     borderStyle: "solid",
                   }}
@@ -99,12 +109,19 @@ const DescContent = (props: {
               </Box>
             </Stack>
           </Grid>
-          <Grid item sx={{ marginLeft: mdUp ? 8 : 0 }}>
-            <Stack direction={"column"}>
+          <Grid
+            item
+            sx={{ marginLeft: mdUp ? 8 : 0, minWidth: mdUp ? 400 : 400 }}
+          >
+            <Stack
+              direction={"column"}
+              justifyContent={"center"}
+              sx={{ height: "100%" }}
+            >
               <Box>
-                <Typography variant={"h5"}>
-                  {props.index.toString().padStart(2, "0")}
-                </Typography>
+                {/*<Typography variant={"h5"}>*/}
+                {/*  {props.index.toString().padStart(2, "0")}*/}
+                {/*</Typography>*/}
                 <Typography
                   variant={"h5"}
                   sx={{
@@ -124,35 +141,17 @@ const DescContent = (props: {
                 <ul
                   style={{
                     margin: 0,
-                    paddingLeft: 24,
-                    lineHeight: "3em",
+                    paddingLeft: 18,
+                    lineHeight: "4em",
                   }}
                 >
                   {props.contents.map((e, index) => {
                     return (
                       <li key={index}>
-                        <Typography>{e}</Typography>
+                        <Typography variant={"h6"}>{e}</Typography>
                       </li>
                     );
                   })}
-                  {/*<li>*/}
-                  {/*  <Typography>*/}
-                  {/*    Stake and mint your snAssets to unlock your liquidity*/}
-                  {/*    while staking!*/}
-                  {/*  </Typography>*/}
-                  {/*</li>*/}
-                  {/*<li>*/}
-                  {/*  <Typography>*/}
-                  {/*    Stake and mint your snAssets to unlock your liquidity*/}
-                  {/*    while staking!*/}
-                  {/*  </Typography>*/}
-                  {/*</li>*/}
-                  {/*<li>*/}
-                  {/*  <Typography>*/}
-                  {/*    Stake and mint your snAssets to unlock your liquidity*/}
-                  {/*    while staking!*/}
-                  {/*  </Typography>*/}
-                  {/*</li>*/}
                 </ul>
               </Box>
             </Stack>
@@ -274,31 +273,6 @@ const Home = (props: AppProps) => {
                     />
                   </Stack>
                 </Stack>
-                <Box>
-                  {smUp && (
-                    <Grid
-                      container
-                      columnSpacing={1}
-                      rowSpacing={1}
-                      justifyContent={mdUp ? "flex-start" : "center"}
-                      sx={{
-                        padding: mdUp ? 0 : 2,
-                        paddingBottom: 0,
-                        paddingTop: 0,
-                      }}
-                    >
-                      <Grid item>
-                        <HomeTag color={"red"}>onboarding</HomeTag>
-                      </Grid>
-                      <Grid item>
-                        <HomeTag color={"green"}>on-chain</HomeTag>
-                      </Grid>
-                      <Grid item>
-                        <HomeTag color={"blue"}>community</HomeTag>
-                      </Grid>
-                    </Grid>
-                  )}
-                </Box>
                 <Stack direction={"row"}>
                   <Box sx={{ marginLeft: 1 }}>
                     <Typography variant={mdUp ? "body1" : "body2"}>
@@ -334,6 +308,44 @@ const Home = (props: AppProps) => {
               </UpDownAnimatedComponent>
             </div>
           </div>
+
+          <UpDownAnimatedComponent
+            yDist={"6px"}
+            duration={1}
+            sx={{
+              position: "absolute",
+              bottom: "32px",
+              right: "50%",
+              left: "50%",
+              // transform: "translate(-50%, -50%)",
+            }}
+          >
+            {/*<div*/}
+            {/*  style={{*/}
+            {/*    "& .polyline": {*/}
+            {/*      stroke: "blue",*/}
+            {/*    },*/}
+            {/*  }}*/}
+            {/*></div>*/}
+            <Image
+              src={
+                "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
+              }
+              width={smUp ? 48 : 28}
+              height={smUp ? 48 : 28}
+              style={
+                {
+                  // ".polyline": {},
+                  // fill: "white",
+                }
+              }
+              alt={""}
+            ></Image>
+            {/*<KeyboardArrowDownIcon*/}
+            {/*  fontSize={"large"}*/}
+            {/*  sx={{ color: theme.palette.neutral["500"] }}*/}
+            {/*></KeyboardArrowDownIcon>*/}
+          </UpDownAnimatedComponent>
         </Stack>
         <Stack
           direction={"column"}
@@ -354,38 +366,56 @@ const Home = (props: AppProps) => {
             >
               How it works
             </Typography>
-            <Box sx={{ marginTop: 8 }}>
+            <Box sx={{ marginTop: 4 }}>
               <Card
                 sx={{
                   background: "transparent",
                   width: mdUp ? 1000 : smUp ? 600 : 400,
-                  borderWidth: 2,
-                  borderColor: theme.palette.divider,
-                  borderStyle: "solid",
                 }}
               >
                 <CardContent>
-                  <DescContent
-                    index={1}
-                    title={"Liquid Staking"}
-                    contents={[
-                      "Stake and mint your snAssets to unlock your liquidity while staking!",
-                      "snAssets also auto-compound your staking reward and provide the best yield",
-                      "You can redeem your assets by burning snAssets",
-                      "We shall bring more updates to add utility to the snAssets!\n",
-                    ]}
-                    imageUrl={
-                      "https://www.supernova.ac/assets/icon1.gif?imwidth=1080"
-                    }
-                  ></DescContent>
-                  <Box sx={{ padding: 4, paddingBottom: 2 }}>
-                    <Divider
-                      sx={{
-                        width: "100%",
-                        borderWidth: 1,
-                      }}
-                    ></Divider>
-                  </Box>
+                  <Stack alignItems={"center"} spacing={14}>
+                    <DescContent
+                      index={1}
+                      title={"Connect your account/wallet"}
+                      contents={["Sign up or Sign in your account/wallet"]}
+                      imageUrl={
+                        "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_connect.gif"
+                      }
+                    />
+                    <DescContent
+                      index={2}
+                      title={"Join the community"}
+                      contents={["Join your favorite project or community!"]}
+                      imageUrl={
+                        "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_community.gif"
+                      }
+                    />
+                    <DescContent
+                      index={3}
+                      title={"Complete Quests"}
+                      contents={["Complete your quest and try to get verified"]}
+                      imageUrl={
+                        "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_quest.gif"
+                      }
+                    />
+                    <DescContent
+                      index={4}
+                      title={"Claim your reward"}
+                      contents={["Get reward from completed quests"]}
+                      imageUrl={
+                        "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_claim.gif"
+                      }
+                    />
+                  </Stack>
+                  {/*<Box sx={{ padding: 4, paddingBottom: 2 }}>*/}
+                  {/*  <Divider*/}
+                  {/*    sx={{*/}
+                  {/*      width: "100%",*/}
+                  {/*      borderWidth: 1,*/}
+                  {/*    }}*/}
+                  {/*  ></Divider>*/}
+                  {/*</Box>*/}
                 </CardContent>
               </Card>
             </Box>

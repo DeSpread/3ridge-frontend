@@ -50,15 +50,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { gql, request } from "graphql-request";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-// import type { GetServerSideProps } from "next";
-
-// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-//   res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-//
-//   return {
-//     props: {},
-//   };
-// };
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {

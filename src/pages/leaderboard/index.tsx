@@ -21,19 +21,7 @@ import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import { useTheme } from "@mui/material/styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { GetStaticPaths } from "next";
 import { useLeaderUserRankQuery } from "../../page-hook/leader-user-rank-query-hook";
-
-// export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
-//   return {
-//     paths: [], //indicates that no page needs be created at build time
-//     fallback: "blocking", //indicates the type of fallback
-//   };
-// };
-//
-// export async function getStaticProps() {
-//   return { props: {} };
-// }
 
 const RankCard = ({ user, rank }: { user: User; rank: number }) => {
   const theme = useTheme();
