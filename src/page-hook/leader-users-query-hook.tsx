@@ -1,13 +1,7 @@
-import {
-  GET_TICKET_BY_ID,
-  GET_USERS_ORDER_BY_REWARD_POINT_DESC,
-  FIND_RANK_BY_USER_ID,
-} from "../apollo/query";
-import { useQuery } from "@apollo/client";
+import { GET_USERS_ORDER_BY_REWARD_POINT_DESC } from "../apollo/query";
 import { useEffect, useState } from "react";
 import { User } from "../type";
 import { client } from "../apollo/client";
-import { AppError } from "../error/my-error";
 
 export function useLeaderUsersQuery() {
   const [leaderUsersData, setLeaderUsersData] = useState<User[]>();

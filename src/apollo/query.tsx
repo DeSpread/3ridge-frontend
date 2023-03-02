@@ -157,23 +157,6 @@ export const UPDATE_USER_REWARD_BY_NAME = gql(/* GraphQL */ `
   }
 `);
 
-// completed: Boolean
-// description: String
-// imageUrl: String
-// participants: [UserInputType!]
-// rewardPolicy: String
-// title: String
-// export const UPDATE_TICKET_COMPLETED_BY_ID = gql(/* GraphQL */ `
-//   mutation UpdateTicketCompletedByID($name: String!, $rewardPoint: Float!) {
-//     updateTicketById(
-//       name: $name
-//       userUpdateInput: { rewardPoint: $rewardPoint }
-//     ) {
-//       rewardPoint
-//     }
-//   }
-// `);
-
 export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
   mutation UpdateUserTwitterByName($name: String!, $twitterId: String!) {
     updateUserByName(
@@ -182,6 +165,141 @@ export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
     ) {
       userSocial {
         twitterId
+      }
+    }
+  }
+`);
+
+export const GET_AVAILABLE_TICKETS = gql(/* GraphQL */ `
+  query AvailableTickets {
+    availableTickets {
+      _id
+      completed
+      description
+      participants {
+        name
+        profileImageUrl
+      }
+      imageUrl
+      quests {
+        _id
+        title
+        description
+        questPolicy {
+          context
+          questPolicy
+        }
+      }
+      project {
+        _id
+        categories
+        description
+        imageUrl
+        name
+        projectSocial {
+          discordUrl
+          officialUrl
+          telegramUrl
+          twitterUrl
+        }
+      }
+      rewardPolicy {
+        context
+        rewardPolicyType
+      }
+      title
+      winners {
+        name
+      }
+    }
+  }
+`);
+
+export const GET_COMPLETED_TICKETS = gql(/* GraphQL */ `
+  query CompletedTickets {
+    completedTickets {
+      _id
+      completed
+      description
+      participants {
+        name
+        profileImageUrl
+      }
+      imageUrl
+      quests {
+        _id
+        title
+        description
+        questPolicy {
+          context
+          questPolicy
+        }
+      }
+      project {
+        _id
+        categories
+        description
+        imageUrl
+        name
+        projectSocial {
+          discordUrl
+          officialUrl
+          telegramUrl
+          twitterUrl
+        }
+      }
+      rewardPolicy {
+        context
+        rewardPolicyType
+      }
+      title
+      winners {
+        name
+      }
+    }
+  }
+`);
+
+export const FIND_MISSED_TICKETS = gql(/* GraphQL */ `
+  query FindMissedTickets {
+    findMissedTickets {
+      _id
+      completed
+      description
+      participants {
+        name
+        profileImageUrl
+      }
+      imageUrl
+      quests {
+        _id
+        title
+        description
+        questPolicy {
+          context
+          questPolicy
+        }
+      }
+      project {
+        _id
+        categories
+        description
+        imageUrl
+        name
+        projectSocial {
+          discordUrl
+          officialUrl
+          telegramUrl
+          twitterUrl
+        }
+      }
+      rewardPolicy {
+        context
+        rewardPolicyType
+      }
+      title
+      winners {
+        name
       }
     }
   }
@@ -206,16 +324,19 @@ export const GET_ALL_TICKETS = gql(/* GraphQL */ `
           context
           questPolicy
         }
-        # completedUsers {
-        #   _id
-        #   name
-        #   profileImageUrl
-        #   email
-        #   wallets {
-        #     address
-        #     chain
-        #   }
-        # }
+      }
+      project {
+        _id
+        categories
+        description
+        imageUrl
+        name
+        projectSocial {
+          discordUrl
+          officialUrl
+          telegramUrl
+          twitterUrl
+        }
       }
       rewardPolicy {
         context
@@ -270,6 +391,26 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const GET_PROJECTS = gql(/* GraphQL */ `
+  query Projects {
+    projects {
+      _id
+      categories
+      description
+      imageUrl
+      name
+      projectSocial {
+        discordUrl
+        officialUrl
+        telegramUrl
+        twitterUrl
+      }
+    }
+  }
+`);
+
+export const GET_PROJECT = gql(/* GraphQL */ ``);
 
 export const VERIFY_TWITTER_FOLLOW_QUEST = gql(/* GraphQL */ `
   mutation VerifyTwitterFollowQuest(

@@ -19,6 +19,10 @@ import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-an
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
+import SecondaryButton from "../../components/atoms/secondary-button";
+import { useLoading } from "../../provider/loading/loading-provider";
+import { useRouter } from "next/router";
+import PrimaryButton from "../../components/atoms/primary-button";
 
 export async function getStaticProps() {
   return { props: {} };
@@ -65,6 +69,7 @@ const DescContent = (props: {
 }) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <Stack
@@ -116,20 +121,19 @@ const DescContent = (props: {
             <Stack
               direction={"column"}
               justifyContent={"center"}
+              alignItems={smUp ? "flex-start" : "center"}
               sx={{ height: "100%" }}
             >
               <Box>
-                {/*<Typography variant={"h5"}>*/}
-                {/*  {props.index.toString().padStart(2, "0")}*/}
-                {/*</Typography>*/}
-                <Typography
-                  variant={"h5"}
+                <GradientTypography
+                  variant={smUp ? "h3" : "h4"}
                   sx={{
                     fontFamily: "LINESeedKR-Bd",
                   }}
+                  textAlign={smUp ? "left" : "center"}
                 >
                   {props.title}
-                </Typography>
+                </GradientTypography>
               </Box>
               <Box
                 sx={{
@@ -141,15 +145,20 @@ const DescContent = (props: {
                 <ul
                   style={{
                     margin: 0,
-                    paddingLeft: 18,
+                    paddingLeft: 0,
                     lineHeight: "4em",
                   }}
                 >
                   {props.contents.map((e, index) => {
                     return (
-                      <li key={index}>
-                        <Typography variant={"h6"}>{e}</Typography>
-                      </li>
+                      <div key={index}>
+                        <Typography
+                          variant={"h6"}
+                          sx={{ color: theme.palette.neutral[400] }}
+                        >
+                          {e}
+                        </Typography>
+                      </div>
                     );
                   })}
                 </ul>
@@ -166,6 +175,8 @@ const Home = (props: AppProps) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const { showLoading, closeLoading } = useLoading();
+  const router = useRouter();
 
   return (
     <>
@@ -286,6 +297,38 @@ const Home = (props: AppProps) => {
                     />
                   </Box>
                 </Stack>
+                <Stack
+                  direction={"row"}
+                  justifyContent={mdUp ? "flex-start" : "center"}
+                  sx={{
+                    background: "",
+                    width: "100%",
+                  }}
+                >
+                  <PrimaryButton
+                    sx={{
+                      marginRight: mdUp ? 10 : 0,
+                      width: 186,
+                      marginTop: 1,
+                    }}
+                    onClick={async () => {
+                      showLoading();
+                      await router.push("/explore");
+                      closeLoading();
+                    }}
+                  >
+                    <Box sx={{ padding: smUp ? 0 : 0 }}>
+                      <Typography
+                        className={"MuiTypography"}
+                        variant={smUp ? "h6" : "body2"}
+                        color={theme.palette.neutral[900]}
+                        fontFamily={"LINESeedKR-Bd"}
+                      >
+                        Let`s Start
+                      </Typography>
+                    </Box>
+                  </PrimaryButton>
+                </Stack>
               </Stack>
             </div>
             <div
@@ -314,37 +357,42 @@ const Home = (props: AppProps) => {
             duration={1}
             sx={{
               position: "absolute",
-              bottom: "32px",
+              bottom: "8px",
               right: "50%",
               left: "50%",
               // transform: "translate(-50%, -50%)",
             }}
           >
-            {/*<div*/}
-            {/*  style={{*/}
-            {/*    "& .polyline": {*/}
-            {/*      stroke: "blue",*/}
-            {/*    },*/}
-            {/*  }}*/}
-            {/*></div>*/}
-            <Image
-              src={
-                "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
-              }
-              width={smUp ? 48 : 28}
-              height={smUp ? 48 : 28}
-              style={
-                {
-                  // ".polyline": {},
-                  // fill: "white",
+            <div
+              style={{
+                position: "absolute",
+                bottom: "16px",
+              }}
+            >
+              <Image
+                src={
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
                 }
-              }
-              alt={""}
-            ></Image>
-            {/*<KeyboardArrowDownIcon*/}
-            {/*  fontSize={"large"}*/}
-            {/*  sx={{ color: theme.palette.neutral["500"] }}*/}
-            {/*></KeyboardArrowDownIcon>*/}
+                width={smUp ? 48 : 28}
+                height={smUp ? 48 : 28}
+                alt={""}
+              ></Image>
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                bottom: smUp ? "32px" : "28px",
+              }}
+            >
+              <Image
+                src={
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
+                }
+                width={smUp ? 48 : 28}
+                height={smUp ? 48 : 28}
+                alt={""}
+              ></Image>
+            </div>
           </UpDownAnimatedComponent>
         </Stack>
         <Stack
@@ -367,7 +415,7 @@ const Home = (props: AppProps) => {
               How it works
             </Typography>
             <Box sx={{ marginTop: 4 }}>
-              <Card
+              <Box
                 sx={{
                   background: "transparent",
                   width: mdUp ? 1000 : smUp ? 600 : 400,
@@ -417,7 +465,7 @@ const Home = (props: AppProps) => {
                   {/*  ></Divider>*/}
                   {/*</Box>*/}
                 </CardContent>
-              </Card>
+              </Box>
             </Box>
           </Stack>
         </Stack>

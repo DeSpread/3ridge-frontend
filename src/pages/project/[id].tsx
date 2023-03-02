@@ -17,7 +17,12 @@ import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import { useLoading } from "../../provider/loading/loading-provider";
 import TicketsSection from "../../components/organisms/tickets-section";
 import GradientButton from "../../components/atoms/gradient-button";
-import { MouseEventWithParam, TicketEventParam } from "../../type";
+import {
+  FILTER_TYPE,
+  FilterType,
+  MouseEventWithParam,
+  TicketEventParam,
+} from "../../type";
 import { useRouter } from "next/router";
 import projectsData from "../projects/data.json";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -35,10 +40,14 @@ export async function getStaticProps() {
 }
 
 const Project = () => {
+  const [filterType, setFilterType] = useState<FilterType>(
+    FILTER_TYPE.AVAILABLE
+  );
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
-  const { ticketsData, ticketsDataLoading } = useTicketsQuery();
+
+  const { ticketsData, ticketsDataLoading } = useTicketsQuery({ filterType });
   const [value, setValue] = useState("1");
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
@@ -81,7 +90,6 @@ const Project = () => {
               background: "",
             }}
             spacing={3}
-            // alignItems={"center"}
             justifyContent={"center"}
           >
             <Grid item sx={{ background: "" }} lg={9}>
@@ -214,8 +222,10 @@ const Project = () => {
           style={{
             flex: 1,
             background: "",
+            width: "100%",
             paddingLeft: 24,
             paddingRight: 24,
+            paddingBottom: 24,
           }}
         >
           <TicketsSection
@@ -232,19 +242,30 @@ const Project = () => {
               marginTop: 6,
               marginBottom: 2,
             }}
-          ></TicketsSection>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 8,
+            onTabClick={async (e) => {
+              const myEvent = e as MouseEventWithParam<{ index: number }>;
+              const index = myEvent.params.index;
+              let filterType =
+                index === 0
+                  ? FILTER_TYPE.AVAILABLE
+                  : index === 1
+                  ? FILTER_TYPE.COMPLETE
+                  : FILTER_TYPE.MISSED;
+              setFilterType(filterType);
             }}
-          >
-            <GradientButton size={"large"} sx={{ width: 156, height: 60 }}>
-              Load more
-            </GradientButton>
-          </Box>
+          ></TicketsSection>
+          {/*<Box*/}
+          {/*  sx={{*/}
+          {/*    display: "flex",*/}
+          {/*    alignItems: "center",*/}
+          {/*    justifyContent: "center",*/}
+          {/*    padding: 8,*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  <GradientButton size={"large"} sx={{ width: 156, height: 60 }}>*/}
+          {/*    Load more*/}
+          {/*  </GradientButton>*/}
+          {/*</Box>*/}
         </Box>
       </Stack>
     </>

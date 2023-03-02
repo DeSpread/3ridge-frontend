@@ -64,6 +64,7 @@ type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
   loading?: boolean;
   onTicketClick?: MouseEventHandler;
+  onTabClick?: MouseEventHandler;
   sx?: CSSProperties;
 };
 
@@ -199,51 +200,51 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
           })}
         </Stack>
       </Grid>
-      {smUp && (
-        <Grid item>
-          <PrimaryButton onClick={handleClick}>
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              sx={{ width: 110 }}
-              justifyContent={"space-evenly"}
-            >
-              <Typography
-                className={"MuiTypography"}
-                variant={"body2"}
-                sx={{ color: theme.palette.neutral["900"] }}
-              >
-                {MENU_ITEMS[selectedMenuIndex]}
-              </Typography>
-              <Box
-                sx={{
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <ArrowDropDownIcon fontSize="small"></ArrowDropDownIcon>
-              </Box>
-            </Stack>
-          </PrimaryButton>
-          <StyledMenu anchorEl={anchorEl} open={open}>
-            <StyledMenuItem
-              onClick={() => {
-                handleClose(0);
-              }}
-            >
-              <Typography variant={"body2"}>{MENU_ITEMS[0]}</Typography>
-            </StyledMenuItem>
-            <StyledMenuItem
-              onClick={() => {
-                handleClose(1);
-              }}
-            >
-              <Typography variant={"body2"}>{MENU_ITEMS[1]}</Typography>
-            </StyledMenuItem>
-          </StyledMenu>
-        </Grid>
-      )}
+      {/*{smUp && (*/}
+      {/*  <Grid item>*/}
+      {/*    <PrimaryButton onClick={handleClick}>*/}
+      {/*      <Stack*/}
+      {/*        direction={"row"}*/}
+      {/*        alignItems={"center"}*/}
+      {/*        sx={{ width: 110 }}*/}
+      {/*        justifyContent={"space-evenly"}*/}
+      {/*      >*/}
+      {/*        <Typography*/}
+      {/*          className={"MuiTypography"}*/}
+      {/*          variant={"body2"}*/}
+      {/*          sx={{ color: theme.palette.neutral["900"] }}*/}
+      {/*        >*/}
+      {/*          {MENU_ITEMS[selectedMenuIndex]}*/}
+      {/*        </Typography>*/}
+      {/*        <Box*/}
+      {/*          sx={{*/}
+      {/*            alignItems: "center",*/}
+      {/*            display: "flex",*/}
+      {/*            justifyContent: "center",*/}
+      {/*          }}*/}
+      {/*        >*/}
+      {/*          <ArrowDropDownIcon fontSize="small"></ArrowDropDownIcon>*/}
+      {/*        </Box>*/}
+      {/*      </Stack>*/}
+      {/*    </PrimaryButton>*/}
+      {/*    <StyledMenu anchorEl={anchorEl} open={open}>*/}
+      {/*      <StyledMenuItem*/}
+      {/*        onClick={() => {*/}
+      {/*          handleClose(0);*/}
+      {/*        }}*/}
+      {/*      >*/}
+      {/*        <Typography variant={"body2"}>{MENU_ITEMS[0]}</Typography>*/}
+      {/*      </StyledMenuItem>*/}
+      {/*      <StyledMenuItem*/}
+      {/*        onClick={() => {*/}
+      {/*          handleClose(1);*/}
+      {/*        }}*/}
+      {/*      >*/}
+      {/*        <Typography variant={"body2"}>{MENU_ITEMS[1]}</Typography>*/}
+      {/*      </StyledMenuItem>*/}
+      {/*    </StyledMenu>*/}
+      {/*  </Grid>*/}
+      {/*)}*/}
     </Grid>
   );
 };
@@ -251,7 +252,7 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
 const TicketsSection = (props: TicketSectionProps) => {
   const [tabValue, setTabValue] = useState(0);
   const { showLoading, closeLoading } = useLoading();
-  const { tickets, loading, onTicketClick } = props;
+  const { tickets, loading, onTicketClick, onTabClick } = props;
 
   const onTicketCardClick = (ticket: Ticket) => {
     const myEvent = {} as MouseEventWithParam<TicketEventParam>;
@@ -271,6 +272,7 @@ const TicketsSection = (props: TicketSectionProps) => {
         onChange={(e) => {
           const myEvent = e as MouseEventWithParam<{ index: number }>;
           setTabValue(myEvent.params.index);
+          onTabClick?.(myEvent);
         }}
       ></TabButtonGroup>
       <Box sx={{ marginTop: 6 }}>
@@ -280,7 +282,7 @@ const TicketsSection = (props: TicketSectionProps) => {
               return (
                 <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
                   <Skeleton
-                    height={530}
+                    height={500}
                     variant={"rounded"}
                     animation={"wave"}
                   />
