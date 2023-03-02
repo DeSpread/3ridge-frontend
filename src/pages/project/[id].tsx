@@ -49,10 +49,14 @@ const Project = () => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const { ticketsData, ticketsDataLoading } = useTicketsQuery({ filterType });
   const [value, setValue] = useState("1");
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
+  const { ticketsData, ticketsDataLoading } = useTicketsQuery({
+    filterType,
+    projectId:
+      typeof router.query.id === "string" ? router.query.id : undefined,
+  });
   const { projectData, projectDataLoading } = useProjectQuery({
     projectId:
       typeof router.query.id === "string" ? router.query.id : undefined,

@@ -3,6 +3,7 @@ import {
   GET_ALL_TICKETS,
   GET_AVAILABLE_TICKETS,
   GET_COMPLETED_TICKETS,
+  GET_TICKETS_BY_PROJECT_ID,
 } from "../apollo/query";
 import { client } from "../apollo/client";
 import { useEffect, useState } from "react";
@@ -14,9 +15,13 @@ import {
   CategoryType,
   QuestPolicyType,
   RewardPolicyType,
+  TicketStatusType,
 } from "../__generated__/graphql";
 
-export function useTicketsQuery(props: { filterType: FilterType }) {
+export function useTicketsQuery(props: {
+  projectId?: string;
+  filterType: FilterType;
+}) {
   const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
   const [ticketsDataLoading, setTicketsDataLoading] = useState(false);
   const typeParseHelper = TypeParseHelper.getInstance();
@@ -24,21 +29,36 @@ export function useTicketsQuery(props: { filterType: FilterType }) {
   useEffect(() => {
     (async () => {
       setTicketsDataLoading(true);
-      if (props.filterType === FILTER_TYPE.AVAILABLE) {
-        const { data } = await client.query({ query: GET_AVAILABLE_TICKETS });
-        updateSetTicketsData(data.availableTickets);
-        // const { data } = await client.query({ query: GET_ALL_TICKETS });
-        // updateSetTicketsData(data.tickets);
-      } else if (props.filterType === FILTER_TYPE.COMPLETE) {
-        const { data } = await client.query({ query: GET_COMPLETED_TICKETS });
-        updateSetTicketsData(data.completedTickets);
-      } else if (props.filterType === FILTER_TYPE.MISSED) {
-        const { data } = await client.query({ query: FIND_MISSED_TICKETS });
-        updateSetTicketsData(data.findMissedTickets);
+      if (!props.projectId) {
+        if (props.filterType === FILTER_TYPE.AVAILABLE) {
+          const { data } = await client.query({ query: GET_AVAILABLE_TICKETS });
+          updateSetTicketsData(data.availableTickets);
+        } else if (props.filterType === FILTER_TYPE.COMPLETE) {
+          const { data } = await client.query({ query: GET_COMPLETED_TICKETS });
+          updateSetTicketsData(data.completedTickets);
+        } else if (props.filterType === FILTER_TYPE.MISSED) {
+          const { data } = await client.query({ query: FIND_MISSED_TICKETS });
+          updateSetTicketsData(data.findMissedTickets);
+        }
+      } else {
+        const status =
+          props.filterType === FILTER_TYPE.AVAILABLE
+            ? TicketStatusType.Available
+            : FILTER_TYPE.MISSED
+            ? TicketStatusType.Missed
+            : TicketStatusType.Completed;
+        const { data } = await client.query({
+          query: GET_TICKETS_BY_PROJECT_ID,
+          variables: {
+            projectId: props.projectId,
+            status: status,
+          },
+        });
+        updateSetTicketsData(data.ticketsByProjectId);
       }
       setTicketsDataLoading(false);
     })();
-  }, [props.filterType]);
+  }, [props.filterType, props.projectId]);
 
   const updateSetTicketsData = (
     tickets: Array<{

@@ -184,6 +184,7 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
                   paddingLeft: 3,
                   paddingRight: 3,
                   width: smUp ? 128 : 100,
+                  borderRadius: 1,
                 }}
                 index={index}
                 onChange={(e) => {
@@ -302,6 +303,23 @@ const TicketsSection = (props: TicketSectionProps) => {
                 </Grid>
               );
             })}
+          {!loading && (tickets?.length === 0 || !tickets) && (
+            <Stack
+              direction={"column"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              sx={{
+                marginTop: 4,
+                background: "",
+                width: "100%",
+                minHeight: 500,
+              }}
+            >
+              <Typography variant={"h5"} color={"neutral.500"}>
+                ⛔ EMPTY
+              </Typography>
+            </Stack>
+          )}
         </Grid>
       </Box>
     </Box>

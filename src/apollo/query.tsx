@@ -428,6 +428,51 @@ export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
   }
 `);
 
+export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
+  query TicketsByProjectId($projectId: String!, $status: TicketStatusType) {
+    ticketsByProjectId(projectId: $projectId, status: $status) {
+      _id
+      completed
+      description
+      participants {
+        name
+        profileImageUrl
+      }
+      imageUrl
+      quests {
+        _id
+        title
+        description
+        questPolicy {
+          context
+          questPolicy
+        }
+      }
+      project {
+        _id
+        categories
+        description
+        imageUrl
+        name
+        projectSocial {
+          discordUrl
+          officialUrl
+          telegramUrl
+          twitterUrl
+        }
+      }
+      rewardPolicy {
+        context
+        rewardPolicyType
+      }
+      title
+      winners {
+        name
+      }
+    }
+  }
+`);
+
 export const VERIFY_TWITTER_FOLLOW_QUEST = gql(/* GraphQL */ `
   mutation VerifyTwitterFollowQuest(
     $questId: String!
