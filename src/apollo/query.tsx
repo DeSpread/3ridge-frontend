@@ -410,7 +410,23 @@ export const GET_PROJECTS = gql(/* GraphQL */ `
   }
 `);
 
-export const GET_PROJECT = gql(/* GraphQL */ ``);
+export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
+  query ProjectById($projectId: String!) {
+    projectById(projectId: $projectId) {
+      _id
+      categories
+      description
+      imageUrl
+      name
+      projectSocial {
+        discordUrl
+        officialUrl
+        telegramUrl
+        twitterUrl
+      }
+    }
+  }
+`);
 
 export const VERIFY_TWITTER_FOLLOW_QUEST = gql(/* GraphQL */ `
   mutation VerifyTwitterFollowQuest(
