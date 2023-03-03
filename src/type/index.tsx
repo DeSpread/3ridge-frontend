@@ -1,6 +1,7 @@
 import { AppError } from "../error/my-error";
 import React from "react";
 import { SvgIconProps } from "@mui/material";
+import { CategoryType } from "../__generated__/graphql";
 
 export type SuccessErrorCallback<T> = ({
   onSuccess,
@@ -114,6 +115,7 @@ export type Ticket = {
   winners?: {
     name?: string;
   }[];
+  project?: Project;
 };
 
 export type Quest = {
@@ -160,3 +162,25 @@ export type QuizEventParam = {
 export type TicketEventParam = {
   ticket: Ticket;
 };
+
+export type Project = {
+  _id: string;
+  categories: CategoryType[];
+  description: string;
+  imageUrl: string;
+  name: string;
+  projectSocial: {
+    discordUrl: string;
+    officialUrl: string;
+    telegramUrl: string;
+    twitterUrl: string;
+  };
+};
+
+export const FILTER_TYPE = {
+  AVAILABLE: "AVAILABLE",
+  COMPLETE: "COMPLETE",
+  MISSED: "MISSED",
+};
+
+export type FilterType = ObjectValues<typeof FILTER_TYPE>;

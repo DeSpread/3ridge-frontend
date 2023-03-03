@@ -73,7 +73,7 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
         "&:hover": {
           borderColor: theme.palette.secondary.main,
           transform: "translate(0,-2px)",
-          boxShadow: "4px 4px 4px 2px rgba(128, 128, 128, .2)",
+          // boxShadow: "4px 4px 4px 2px rgba(128, 128, 128, .2)",
         },
         borderWidth: 3,
         borderColor: "#35333a",

@@ -54,7 +54,6 @@ const SignUpOthersForm = (props: SignUpOtherFormProps) => {
                   sx={{
                     width: 24,
                     height: 24,
-                    //@ts-ignore
                     background: theme.palette.neutral["400"],
                     marginRight: 1,
                   }}

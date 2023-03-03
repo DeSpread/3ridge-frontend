@@ -18,8 +18,10 @@ import CheckIcon from "../../components/atoms/svg/check-icon";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useProjectsQuery } from "../../page-hook/projects-query-hook";
 
 const Projects = () => {
+  const { projectsData, projectsDataLoading } = useProjectsQuery();
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -29,7 +31,7 @@ const Projects = () => {
   return (
     <>
       <Head>
-        <title>Leaderboard</title>
+        <title>Projects</title>
       </Head>
       <Box
         style={{
@@ -65,35 +67,29 @@ const Projects = () => {
                       transition: "all 0.2s ease-out 0s",
                       transitionDuration: "0.2s",
                       transitionDelay: "0s",
-                      transitionTimingFunction: "ease-out",
                       borderWidth: 3,
-                      borderColor: "",
+                      borderColor: theme.palette.neutral[700], //"#343238",
                       borderStyle: "solid",
-                      cursor: "pointer",
+                      transitionTimingFunction: "ease-out",
                       "&:hover": {
                         borderColor: theme.palette.secondary.main,
                         transform: "translate(0,-2px)",
-                        boxShadow: "12px 12px 2px 1px rgba(128, 128, 128, .2)",
                       },
+                      cursor: "pointer",
                     }}
-                    onClick={async (e) => {
+                    onClick={async (_e) => {
                       showLoading();
-                      await router.push(`/project/${index}`);
+                      await router.push(`/project/${e._id}`);
                       closeLoading();
                     }}
                   >
-                    <CardContent
-                      sx={{
-                        boxShadow:
-                          "inset 4px 4px 4px #35333a, inset -4px -4px 4px #35333a",
-                      }}
-                    >
+                    <CardContent>
                       <Stack direction={"column"} alignItems={"center"}>
-                        {e.iconUrl && (
+                        {e.imageUrl && (
                           <LazyLoadImage
                             width={52}
                             height={52}
-                            src={e.iconUrl}
+                            src={e.imageUrl}
                             style={{
                               borderRadius: 52,
                               objectFit: "cover",

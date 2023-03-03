@@ -768,15 +768,15 @@ const Event = (props: AppProps) => {
                       <Box
                         sx={{
                           marginTop: 1,
-                          transform: "translateY(0%)",
-                          transition: "all 0.2s ease-out 0s",
-                          transitionDuration: "0.2s",
-                          transitionDelay: "0s",
-                          "&:hover": {
-                            transform: "translate(0,-2px)",
-                            boxShadow:
-                              "12px 12px 2px 1px rgba(128, 128, 128, .2)",
-                          },
+                          // transform: "translateY(0%)",
+                          // transition: "all 0.2s ease-out 0s",
+                          // transitionDuration: "0.2s",
+                          // transitionDelay: "0s",
+                          // "&:hover": {
+                          //   transform: "translate(0,-1px)",
+                          // boxShadow:
+                          //   "12px 12px 2px 1px rgba(128, 128, 128, .2)",
+                          // },
                           width: smUp ? 300 : 260,
                           height: smUp ? 300 : 260,
                           borderRadius: 2,
@@ -784,19 +784,19 @@ const Event = (props: AppProps) => {
                       >
                         {ticketData?.rewardPolicy?.context?.nftImageUrl && (
                           <Box
-                            sx={{
-                              "&:hover": {
-                                "& .lazyLoadImage": {
-                                  color: theme.palette.neutral["400"],
-                                  transition: "all 0.1s ease-out 0s",
-                                  borderColor: theme.palette.secondary.main,
-                                  transitionDuration: "0.2s",
-                                  transitionDelay: "0s",
-                                  transitionTimingFunction: "ease-out",
-                                  transitionProperty: "all",
-                                },
-                              },
-                            }}
+                          // sx={{
+                          //   "&:hover": {
+                          //     "& .lazyLoadImage": {
+                          //       color: theme.palette.neutral["400"],
+                          //       transition: "all 0.1s ease-out 0s",
+                          //       borderColor: theme.palette.secondary.main,
+                          //       transitionDuration: "0.2s",
+                          //       transitionDelay: "0s",
+                          //       transitionTimingFunction: "ease-out",
+                          //       transitionProperty: "all",
+                          //     },
+                          //   },
+                          // }}
                           >
                             <LazyLoadImage
                               className={"lazyLoadImage"}

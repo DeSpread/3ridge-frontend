@@ -179,10 +179,10 @@ const MainLayout = (props: MainLayoutProps) => {
                         e.preventDefault();
                         logout({
                           onSuccess: () => {
-                            showLoading();
-                            router.push("/").then((res) => {
-                              closeLoading();
-                            });
+                            // showLoading();
+                            // router.push("/").then((res) => {
+                            // closeLoading();
+                            // });
                           },
                           onError: (error) => {
                             showErrorAlert({ content: error.message });
@@ -250,7 +250,9 @@ const MainLayout = (props: MainLayoutProps) => {
           e.preventDefault();
           walletSignUp({
             onSuccess: () => {
-              router.push("/").then();
+              if (router.pathname === "/") {
+                router.push("/explore").then();
+              }
               setShowSignInDialog(false);
             },
             onError: (error: AppError) => {
