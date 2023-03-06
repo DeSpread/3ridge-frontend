@@ -428,7 +428,7 @@ const Event = (props: AppProps) => {
                       src={ticketData?.imageUrl}
                       style={{
                         borderRadius: 10,
-                        borderColor: theme.palette.neutral[500],
+                        borderColor: theme.palette.neutral[700],
                         borderStyle: "solid",
                         borderWidth: 2,
                       }}
