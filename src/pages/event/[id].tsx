@@ -16,6 +16,7 @@ import {
   Grid,
   Skeleton,
   Stack,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -394,8 +395,9 @@ const Event = (props: AppProps) => {
         container
         direction={"row"}
         justifyContent={"center"}
-        spacing={5}
-        sx={{ marginTop: 4, marginBottom: 12 }}
+        // spacing={6}
+        columnSpacing={6}
+        sx={{ marginTop: 12, marginBottom: 12 }}
       >
         <Grid item>
           <Stack
@@ -522,7 +524,7 @@ const Event = (props: AppProps) => {
                 <Typography
                   variant={smUp ? "h5" : "h6"}
                   sx={{
-                    color: theme.palette.warning.main,
+                    color: theme.palette.secondary.main,
                     marginTop: smUp ? 0 : -5,
                     background: "",
                     textAlign: smUp ? "left" : "center",
@@ -565,15 +567,21 @@ const Event = (props: AppProps) => {
               direction={"column"}
               alignItems={"left"}
               spacing={2}
-              maxWidth={790}
+              // maxWidth={800}
+              sx={{ background: "" }}
             >
               <Typography variant="h5">Quest</Typography>
-              <Stack direction={"column"} spacing={4} alignItems={"center"}>
+              <Stack
+                direction={"column"}
+                spacing={4}
+                alignItems={"center"}
+                sx={{}}
+              >
                 {ticketData?.quests?.map((quest, index) => {
                   return (
                     <VerifyCard
                       key={index + 1}
-                      sx={{ width: "100%" }} //mdUp ? 800 : smUp ? 600 : 320 }}
+                      sx={{ width: mdUp ? 800 : smUp ? 600 : 320 }}
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
@@ -727,7 +735,7 @@ const Event = (props: AppProps) => {
                         >
                           <Typography
                             variant={"h6"}
-                            sx={{ color: theme.palette.warning.main }}
+                            sx={{ color: theme.palette.secondary.main }}
                           >
                             This project is expired
                           </Typography>
@@ -964,41 +972,46 @@ const Event = (props: AppProps) => {
               >
                 {(ticketData?.participants?.length ?? 0) > 0 ? (
                   <>
-                    {ticketData?.participants?.map((e, index) => {
+                    {ticketData?.participants?.slice(0, 10).map((e, index) => {
                       return (
-                        <Avatar
-                          key={index}
-                          alt=""
-                          src={
-                            e.profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC
-                          }
+                        <Tooltip title={e.name} key={index}>
+                          <Avatar
+                            alt=""
+                            src={
+                              e.profileImageUrl ??
+                              DEFAULT_PROFILE_IMAGE_DATA_SRC
+                            }
+                            sx={{
+                              width: 42,
+                              height: 42,
+                            }}
+                          />
+                        </Tooltip>
+                      );
+                    })}
+                    {ticketData?.participants?.length &&
+                      ticketData?.participants?.length > 10 && (
+                        <Box
                           sx={{
                             width: 42,
                             height: 42,
+                            background: (theme) => theme.palette.neutral["800"],
+                            alignItems: "center",
+                            justifyContent: "center",
+                            display: "flex",
+                            borderRadius: 42,
+                            zIndex: 1,
                           }}
-                        />
-                      );
-                    })}
-                    <Box
-                      sx={{
-                        width: 42,
-                        height: 42,
-                        background: (theme) => theme.palette.neutral["800"],
-                        alignItems: "center",
-                        justifyContent: "center",
-                        display: "flex",
-                        borderRadius: 42,
-                        zIndex: 1,
-                      }}
-                      onClick={() => {}}
-                    >
-                      <Typography variant={"caption"} color={"neutral.100"}>
-                        {`+${nFormatter(
-                          ticketData?.participants?.length ?? 0,
-                          4
-                        )}`}
-                      </Typography>
-                    </Box>
+                          onClick={() => {}}
+                        >
+                          <Typography variant={"caption"} color={"neutral.100"}>
+                            {`+${nFormatter(
+                              10 - ticketData?.participants?.length,
+                              4
+                            )}`}
+                          </Typography>
+                        </Box>
+                      )}
                   </>
                 ) : (
                   <>
