@@ -21,7 +21,7 @@ class TypeParseHelper {
     if (!context) return undefined;
     try {
       if (rewardPolicyType === REWARD_POLICY_TYPE.FCFS) {
-        const _context = context.replaceAll("'", '"').trim();
+        const _context = context.trim();
         const contextJson = JSON.parse(_context);
         const res = contextJson as FCFSRewardContext;
         return res;
@@ -35,7 +35,7 @@ class TypeParseHelper {
   parseQuestPolicy = (context?: string, questPolicyType?: string) => {
     if (!context) return undefined;
     try {
-      const _context = context.replaceAll("'", '"').trim();
+      const _context = context.trim();
       const contextJson = JSON.parse(_context);
 
       if (questPolicyType === QUEST_POLICY_TYPE.QUIZ) {
