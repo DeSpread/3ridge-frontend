@@ -1,10 +1,12 @@
 import {
   FCFSRewardContext,
-  FollowQuestContext,
+  TwitterFollowQuestContext,
   QUEST_POLICY_TYPE,
   QuizQuestContext,
-  RetweetQuestContext,
+  TwitterRetweetQuestContext,
   REWARD_POLICY_TYPE,
+  TwitterLikingQuestContext,
+  DiscordQuestContext,
 } from "../type";
 import { QuestPolicyType } from "../__generated__/graphql";
 
@@ -41,9 +43,13 @@ class TypeParseHelper {
       if (questPolicyType === QUEST_POLICY_TYPE.QUIZ) {
         return contextJson as QuizQuestContext;
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET) {
-        return contextJson as RetweetQuestContext;
+        return contextJson as TwitterRetweetQuestContext;
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW) {
-        return contextJson as FollowQuestContext;
+        return contextJson as TwitterFollowQuestContext;
+      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING) {
+        return contextJson as TwitterLikingQuestContext;
+      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
+        return contextJson as DiscordQuestContext;
       }
     } catch (e) {
       console.log(e);

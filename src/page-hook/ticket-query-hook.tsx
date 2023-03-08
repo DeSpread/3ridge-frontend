@@ -4,6 +4,7 @@ import {
   IS_COMPLETED_QUEST_BY_USER_ID,
   REQUEST_CLAIM_NFT,
   VERIFY_TWITTER_FOLLOW_QUEST,
+  VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
 } from "../apollo/query";
 import { client } from "../apollo/client";
@@ -20,6 +21,7 @@ export function useTicketQuery({
   id?: string;
 }) {
   const [ticketData, setTicketData] = useState<Ticket>({});
+  const [verifyTwitterLikingQuest] = useMutation(VERIFY_TWITTER_LIKING_QUEST);
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
@@ -134,6 +136,21 @@ export function useTicketQuery({
     }
   };
 
+  const asyncVerifyTwitterLikingQuest = async (
+    ticketId: string,
+    questId: string
+  ) => {
+    if (ticketId && questId && userId) {
+      const res = await verifyTwitterLikingQuest({
+        variables: {
+          ticketId,
+          questId,
+          userId,
+        },
+      });
+    }
+  };
+
   const asyncVerifyTwitterRetweetQuest = async (
     ticketId: string,
     questId: string
@@ -214,9 +231,10 @@ export function useTicketQuery({
 
   return {
     ticketData,
-    asyncVerifyTwitterFollowQuest,
     asyncIsCompletedQuestByUserId,
+    asyncVerifyTwitterFollowQuest,
     asyncVerifyTwitterRetweetQuest,
+    asyncVerifyTwitterLikingQuest,
     asyncCompleteQuestOfUser,
     asyncRequestClaimNtf,
   };

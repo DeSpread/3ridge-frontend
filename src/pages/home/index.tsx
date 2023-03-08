@@ -265,7 +265,7 @@ const Home = (props: AppProps) => {
                       fontFamily: "LINESeedKR-Bd",
                     }}
                   >
-                    Bridge your web3 project
+                    We Bridge You and Web3
                   </GradientTypography>
                   <Stack
                     direction={"row"}
@@ -273,21 +273,21 @@ const Home = (props: AppProps) => {
                     justifyContent={smUp ? "flex-start" : "center"}
                   >
                     <Typography variant={mdUp ? "h2" : smUp ? "h3" : "h5"}>
-                      It`s your
+                      Start your journey to web3 here
                     </Typography>
-                    <img
-                      src={
-                        "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/only-logo-white.svg"
-                      }
-                      style={{ marginTop: 2 }}
-                      height={mdUp ? "64px" : smUp ? "48px" : "32px"}
-                    />
+                    {/*<img*/}
+                    {/*  src={*/}
+                    {/*    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/only-logo-white.svg"*/}
+                    {/*  }*/}
+                    {/*  style={{ marginTop: 2 }}*/}
+                    {/*  height={mdUp ? "64px" : smUp ? "48px" : "32px"}*/}
+                    {/*/>*/}
                   </Stack>
                 </Stack>
                 <Stack direction={"row"}>
                   <Box sx={{ marginLeft: 1 }}>
                     <Typography variant={mdUp ? "body1" : "body2"}>
-                      Powered by
+                      Support now
                     </Typography>
                   </Box>
                   <Box sx={{ marginLeft: smUp ? 2 : 1 }}>
@@ -324,7 +324,7 @@ const Home = (props: AppProps) => {
                         color={theme.palette.neutral[900]}
                         fontFamily={"LINESeedKR-Bd"}
                       >
-                        Let`s Start
+                        Start Now
                       </Typography>
                     </Box>
                   </PrimaryButton>
