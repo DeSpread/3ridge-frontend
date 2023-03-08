@@ -61,8 +61,8 @@ const Explore = (props: AppProps) => {
                 marginTop: 4,
               }}
               onTabClick={async (e) => {
-                const myEvent = e as MouseEventWithParam<{ index: number }>;
-                const index = myEvent.params.index;
+                // const myEvent = e as MouseEventWithParam<{ index: number }>;
+                const index = e;
                 let filterType =
                   index === 0
                     ? FILTER_TYPE.AVAILABLE

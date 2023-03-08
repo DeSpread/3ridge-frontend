@@ -271,8 +271,7 @@ const Project = () => {
               marginBottom: 2,
             }}
             onTabClick={async (e) => {
-              const myEvent = e as MouseEventWithParam<{ index: number }>;
-              const index = myEvent.params.index;
+              const index = e;
               let filterType =
                 index === 0
                   ? FILTER_TYPE.AVAILABLE
@@ -282,18 +281,6 @@ const Project = () => {
               setFilterType(filterType);
             }}
           ></TicketsSection>
-          {/*<Box*/}
-          {/*  sx={{*/}
-          {/*    display: "flex",*/}
-          {/*    alignItems: "center",*/}
-          {/*    justifyContent: "center",*/}
-          {/*    padding: 8,*/}
-          {/*  }}*/}
-          {/*>*/}
-          {/*  <GradientButton size={"large"} sx={{ width: 156, height: 60 }}>*/}
-          {/*    Load more*/}
-          {/*  </GradientButton>*/}
-          {/*</Box>*/}
         </Box>
       </Stack>
     </>
