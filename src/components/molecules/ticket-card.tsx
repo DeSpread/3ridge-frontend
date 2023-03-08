@@ -61,7 +61,7 @@ const TicketCard = (props: EventCardProps) => {
       }}
       onClick={props.onClick}
     >
-      <CardContent>
+      <CardContent sx={{ background: "black" }}>
         <Stack direction={"column"}>
           <Stack direction={"column"} sx={{ marginTop: 0 }}>
             <Stack
