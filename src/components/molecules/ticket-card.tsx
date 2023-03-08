@@ -66,45 +66,51 @@ const TicketCard = (props: EventCardProps) => {
           <Stack direction={"column"} sx={{ marginTop: 0 }}>
             <Stack
               direction={"row"}
-              spacing={1}
+              // spacing={1}
               alignItems={"center"}
+              justifyContent={"space-between"}
               sx={{ paddingBottom: 2, paddingLeft: 1 }}
             >
-              {ticket?.project?.imageUrl && (
-                <Image
-                  alt={""}
-                  width={32}
-                  height={32}
-                  src={ticket?.project?.imageUrl}
-                  style={{
-                    borderWidth: 2,
-                    borderColor: "white",
-                    borderStyle: "solid",
-                    borderRadius: 32,
-                  }}
-                />
-              )}
-              {!ticket?.project?.imageUrl && (
-                <Image
-                  alt={""}
-                  width={32}
-                  height={32}
-                  src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/favicon.ico"
-                  }
-                  style={{
-                    borderWidth: 2,
-                    borderColor: "white",
-                    borderStyle: "solid",
-                    borderRadius: 32,
-                  }}
-                />
-              )}
-              {}
-              {ticket?.project?.name && (
-                <Typography>{ticket?.project?.name}</Typography>
-              )}
-              {!ticket?.project?.name && <Typography>3ridge</Typography>}
+              <Stack direction={"row"} spacing={1} alignItems={"center"}>
+                {ticket?.project?.imageUrl && (
+                  <Image
+                    alt={""}
+                    width={32}
+                    height={32}
+                    src={ticket?.project?.imageUrl}
+                    style={{
+                      borderWidth: 2,
+                      borderColor: "white",
+                      borderStyle: "solid",
+                      borderRadius: 32,
+                    }}
+                  />
+                )}
+                {!ticket?.project?.imageUrl && (
+                  <Image
+                    alt={""}
+                    width={32}
+                    height={32}
+                    src={
+                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/favicon.ico"
+                    }
+                    style={{
+                      borderWidth: 2,
+                      borderColor: "white",
+                      borderStyle: "solid",
+                      borderRadius: 32,
+                    }}
+                  />
+                )}
+                {}
+                {ticket?.project?.name && (
+                  <Typography>{ticket?.project?.name}</Typography>
+                )}
+                {!ticket?.project?.name && <Typography>3ridge</Typography>}
+              </Stack>
+              <StyledChip
+                label={`${ticket?.quests?.length ?? 0} Quests`}
+              ></StyledChip>
             </Stack>
             <Box
               ref={ref}
@@ -139,13 +145,7 @@ const TicketCard = (props: EventCardProps) => {
               )}
             </Box>
           </Stack>
-          <Stack direction={"column"} sx={{ marginTop: 1 }}>
-            {/*<Stack*/}
-            {/*  direction={"column"}*/}
-            {/*  alignItems={"flex-start"}*/}
-            {/*  justifyContent={"space-between"}*/}
-            {/*  // spacing={1}*/}
-            {/*>*/}
+          <Stack direction={"column"} sx={{}}>
             <Box sx={{ height: 50, display: "flex", alignItems: "center" }}>
               <Typography
                 variant={"h6"}
@@ -155,61 +155,44 @@ const TicketCard = (props: EventCardProps) => {
                   display: "-webkit-box",
                   WebkitLineClamp: "2",
                   WebkitBoxOrient: "vertical",
+                  paddingTop: 4,
                 }}
                 fontFamily={"LINESeedKR-Bd"}
               >
                 {ticket?.title}
               </Typography>
             </Box>
-            <Grid sx={{ marginTop: 1 }} container columnSpacing={1}>
+            <Grid
+              sx={{ marginTop: 4, marginBottom: -1 }}
+              container
+              columnSpacing={1}
+            >
+              {/*<Grid item>*/}
+
+              {/*</Grid>*/}
               <Grid item>
-                <StyledChip
-                  label={`${ticket?.quests?.length ?? 0} Quests`}
-                ></StyledChip>
-              </Grid>
-              <Grid item>
-                <StyledChip
-                  // label={`${ticket?.rewardPolicy?.context?.point ?? 0} Point`}
-                  label={
-                    <Stack
-                      direction={"row"}
-                      alignItems={"center"}
-                      spacing={1}
-                      justifyContent={"center"}
-                    >
-                      <StarsIcon
-                        color={"warning"}
-                        style={{
-                          width: 16,
-                          height: 16,
-                          background: "yellow",
-                          borderRadius: 16,
-                        }}
-                      ></StarsIcon>
-                      <Typography variant={"body2"}>
-                        {`${ticket?.rewardPolicy?.context?.point ?? 0} point`}
-                      </Typography>
-                    </Stack>
-                  }
-                ></StyledChip>
+                <Stack
+                  direction={"row"}
+                  alignItems={"center"}
+                  spacing={1}
+                  justifyContent={"center"}
+                >
+                  <Image
+                    src={
+                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.png"
+                    }
+                    alt={"StarIcon"}
+                    width={24}
+                    height={24}
+                  ></Image>
+                  <Typography variant={"body1"}>
+                    {`${ticket?.rewardPolicy?.context?.point ?? 0} point`}
+                  </Typography>
+                </Stack>
+                {/*}*/}
+                {/*></StyledChip>*/}
               </Grid>
             </Grid>
-            {/*</Stack>*/}
-            {/*<Box sx={{ marginTop: 2, minHeight: 100 }}>*/}
-            {/*  <Typography*/}
-            {/*    variant={"body2"}*/}
-            {/*    sx={{*/}
-            {/*      color: (theme) => theme.palette.neutral[400],*/}
-            {/*      overflow: "hidden",*/}
-            {/*      textOverflow: "ellipsis",*/}
-            {/*      display: "-webkit-box",*/}
-            {/*      WebkitLineClamp: "4",*/}
-            {/*      WebkitBoxOrient: "vertical",*/}
-            {/*    }}*/}
-            {/*  >*/}
-            {/*    {ticket?.description}*/}
-            {/*  </Typography>*/}
-            {/*</Box>*/}
           </Stack>
         </Stack>
       </CardContent>
