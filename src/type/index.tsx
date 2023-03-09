@@ -3,6 +3,11 @@ import React from "react";
 import { SvgIconProps } from "@mui/material";
 import { CategoryType } from "../__generated__/graphql";
 
+/*
+ * Per QUEST_POLICY_TYPE, It is required to implement context parsing
+ * LinkingQuestContext, RetweetQuestContext
+ * */
+
 export type SuccessErrorCallback<T> = ({
   onSuccess,
   onError,
@@ -52,6 +57,9 @@ export const QUEST_POLICY_TYPE = {
   QUIZ: "QUIZ",
   VERIFY_TWITTER_RETWEET: "VERIFY_TWITTER_RETWEET",
   VERIFY_TWITTER_FOLLOW: "VERIFY_TWITTER_FOLLOW",
+  VERIFY_TWITTER_LIKING: "VERIFY_TWITTER_LIKING",
+  VERIFY_DISCORD: "VERIFY_DISCORD",
+  VERIFY_CONTRACT: "VERIFY_CONTRACT",
 };
 
 export type User = {
@@ -125,8 +133,10 @@ export type Quest = {
   questPolicy?: {
     context?:
       | QuizQuestContext
-      | RetweetQuestContext
-      | FollowQuestContext
+      | TwitterLikingQuestContext
+      | TwitterRetweetQuestContext
+      | TwitterFollowQuestContext
+      | DiscordQuestContext
       | undefined;
     questPolicy?: string;
   };
@@ -134,15 +144,25 @@ export type Quest = {
   isComplete?: boolean;
 };
 
-export type RetweetQuestContext = {
+export type TwitterLikingQuestContext = {
   tweetId: string;
   twitterUrl: string;
   username: string;
 };
 
-export type FollowQuestContext = {
+export type TwitterRetweetQuestContext = {
+  tweetId: string;
+  twitterUrl: string;
+  username: string;
+};
+
+export type TwitterFollowQuestContext = {
   username: string;
   twitterUrl: string;
+};
+
+export type DiscordQuestContext = {
+  channelId: string;
 };
 
 export type QuizQuestContext = {

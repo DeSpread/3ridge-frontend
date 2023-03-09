@@ -27,7 +27,7 @@ type QuestQuizDialogProps = DialogProps & {
 
 const QuestQuizDialog = (props: QuestQuizDialogProps) => {
   const { context, ...rest } = props;
-  const [activeNextQuestion, setActiveNextQuestion] = useState(true);
+  const [activeNextQuestion, setActiveNextQuestion] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(0);
 
   const theme = useTheme();
@@ -62,12 +62,10 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
         PaperProps={{
           style: {
             borderRadius: 16,
-            borderWidth: 1,
-            //@ts-ignore
-            borderColor: theme.palette.neutral[800],
+            borderWidth: 3,
+            borderColor: theme.palette.neutral[700],
             borderStyle: "solid",
             padding: 8,
-            boxShadow: "inset 4px 4px 4px #35333a, inset -4px -4px 4px #35333a",
           },
         }}
       >

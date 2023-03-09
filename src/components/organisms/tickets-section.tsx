@@ -1,12 +1,11 @@
 import {
   Box,
-  ButtonProps,
   Grid,
-  Menu,
-  MenuItem,
   Skeleton,
   Stack,
   styled,
+  Tab,
+  Tabs,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -14,128 +13,40 @@ import React, {
   CSSProperties,
   MouseEventHandler,
   PropsWithChildren,
-  ReactNode,
   useState,
 } from "react";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { MouseEventWithParam, Ticket, TicketEventParam } from "../../type";
-import PrimaryButton from "../atoms/primary-button";
 import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { motion } from "framer-motion";
 
-type StyledMenuProps = PropsWithChildren & {
-  open: boolean;
-  anchorEl?: Element;
-};
-
-const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
-  return (
-    <Menu
-      open={open}
-      anchorEl={anchorEl}
-      elevation={0}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      sx={{
-        "& .MuiPaper-root": {
-          marginTop: 2,
-          minWidth: 180,
-          borderWidth: 1,
-          // background: "#19151e",
-          "& .MuiMenu-list": {
-            padding: "8px 4px",
-          },
-        },
-      }}
-    >
-      {children}
-    </Menu>
-  );
-};
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
   loading?: boolean;
   onTicketClick?: MouseEventHandler;
-  onTabClick?: MouseEventHandler;
+  onTabClick?: (newValue: number) => void;
   sx?: CSSProperties;
 };
 
-type TabButtonProps = ButtonProps & {
-  index: number;
-  onChange?: MouseEventHandler;
-};
-
-const TabButton = (props: TabButtonProps) => {
-  const theme = useTheme();
-  return (
-    <PrimaryButton
-      {...props}
-      sx={{
-        ":disabled": {
-          backgroundColor: theme.palette.secondary.main,
-          color: theme.palette.neutral[900],
-          borderColor: theme.palette.secondary.main,
-        },
-        ...props.sx,
-      }}
-      onClick={(e) => {
-        const myEvent = {} as MouseEventWithParam<{ index: number }>;
-        myEvent.params = {
-          index: props.index,
-        };
-        props.onChange?.(myEvent);
-      }}
-      size={props.size}
-    ></PrimaryButton>
-  );
-};
-
 type TabButtonGroupProps = PropsWithChildren & {
-  onChange?: MouseEventHandler;
+  onChange?: (newValue: number) => void;
 };
 
-const RotateAnimatedComponent = (props: {
-  style?: CSSProperties;
-  duration?: number;
-  children?: ReactNode | undefined;
-  up?: boolean;
-}) => {
-  return (
-    <motion.div
-      animate={{
-        rotateZ: props.up ? [0, 180] : [180, 360],
-        // translateY: ["0px", `${yDist}`, "0px"],
-      }}
-      transition={{
-        duration: props?.duration,
-        ease: "easeInOut",
-        times: [0, 1],
-        // repeat: Infinity,
-      }}
-      style={{ ...props.style }}
-    >
-      {props.children}
-    </motion.div>
-  );
-};
+interface StyledTabProps {
+  label: string;
+}
 
-const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
-  ":focus": {
-    backgroundColor: "transparent",
+const AntTab = styled((props: StyledTabProps) => (
+  <Tab disableRipple {...props} />
+))(({ theme }) => ({
+  textTransform: "none",
+  marginRight: theme.spacing(1),
+  color: "#646176",
+  "&.Mui-selected": {
+    color: "white",
+    fontWeight: theme.typography.fontWeightMedium,
   },
-  "&:hover": {
-    backgroundColor: theme.palette.action.hover,
-    borderRadius: 8,
-  },
-})) as typeof MenuItem;
+}));
 
 const TabButtonGroup = (props: TabButtonGroupProps) => {
   const theme = useTheme();
@@ -162,6 +73,13 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
     }
   };
 
+  const a11yProps = (index: number) => {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  };
+
   return (
     <Grid
       container
@@ -176,76 +94,25 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
     >
       <Grid item>
         <Stack direction={"row"} spacing={smUp ? 2 : 1}>
-          {TITLES.map((e, index) => {
-            return (
-              <TabButton
-                key={index}
-                sx={{
-                  paddingLeft: 3,
-                  paddingRight: 3,
-                  width: smUp ? 128 : 100,
-                  borderRadius: 1,
-                }}
-                index={index}
-                onChange={(e) => {
-                  const myEvent = e as MouseEventWithParam<{ index: number }>;
-                  setSelectedIdx(myEvent.params.index);
-                  props?.onChange?.(myEvent);
-                }}
-                disabled={selectedIdx === index}
-                size={"small"}
-              >
-                {e}
-              </TabButton>
-            );
-          })}
+          <Tabs
+            value={selectedIdx}
+            onChange={(event: React.SyntheticEvent, newValue: number) => {
+              setSelectedIdx(newValue);
+              props?.onChange?.(newValue);
+            }}
+            aria-label="Events"
+            TabIndicatorProps={{
+              style: {
+                backgroundColor: "white", //theme.palette.primary.main,
+              },
+            }}
+          >
+            <AntTab label={TITLES[0]} {...a11yProps(0)} />
+            <AntTab label={TITLES[1]} {...a11yProps(1)} />
+            <AntTab label={TITLES[2]} {...a11yProps(2)} />
+          </Tabs>
         </Stack>
       </Grid>
-      {/*{smUp && (*/}
-      {/*  <Grid item>*/}
-      {/*    <PrimaryButton onClick={handleClick}>*/}
-      {/*      <Stack*/}
-      {/*        direction={"row"}*/}
-      {/*        alignItems={"center"}*/}
-      {/*        sx={{ width: 110 }}*/}
-      {/*        justifyContent={"space-evenly"}*/}
-      {/*      >*/}
-      {/*        <Typography*/}
-      {/*          className={"MuiTypography"}*/}
-      {/*          variant={"body2"}*/}
-      {/*          sx={{ color: theme.palette.neutral["900"] }}*/}
-      {/*        >*/}
-      {/*          {MENU_ITEMS[selectedMenuIndex]}*/}
-      {/*        </Typography>*/}
-      {/*        <Box*/}
-      {/*          sx={{*/}
-      {/*            alignItems: "center",*/}
-      {/*            display: "flex",*/}
-      {/*            justifyContent: "center",*/}
-      {/*          }}*/}
-      {/*        >*/}
-      {/*          <ArrowDropDownIcon fontSize="small"></ArrowDropDownIcon>*/}
-      {/*        </Box>*/}
-      {/*      </Stack>*/}
-      {/*    </PrimaryButton>*/}
-      {/*    <StyledMenu anchorEl={anchorEl} open={open}>*/}
-      {/*      <StyledMenuItem*/}
-      {/*        onClick={() => {*/}
-      {/*          handleClose(0);*/}
-      {/*        }}*/}
-      {/*      >*/}
-      {/*        <Typography variant={"body2"}>{MENU_ITEMS[0]}</Typography>*/}
-      {/*      </StyledMenuItem>*/}
-      {/*      <StyledMenuItem*/}
-      {/*        onClick={() => {*/}
-      {/*          handleClose(1);*/}
-      {/*        }}*/}
-      {/*      >*/}
-      {/*        <Typography variant={"body2"}>{MENU_ITEMS[1]}</Typography>*/}
-      {/*      </StyledMenuItem>*/}
-      {/*    </StyledMenu>*/}
-      {/*  </Grid>*/}
-      {/*)}*/}
     </Grid>
   );
 };
@@ -271,9 +138,9 @@ const TicketsSection = (props: TicketSectionProps) => {
     >
       <TabButtonGroup
         onChange={(e) => {
-          const myEvent = e as MouseEventWithParam<{ index: number }>;
-          setTabValue(myEvent.params.index);
-          onTabClick?.(myEvent);
+          // const myEvent = e as MouseEventWithParam<{ index: number }>;
+          setTabValue(e);
+          onTabClick?.(e);
         }}
       ></TabButtonGroup>
       <Box sx={{ marginTop: 6 }}>
@@ -312,7 +179,7 @@ const TicketsSection = (props: TicketSectionProps) => {
                 marginTop: 4,
                 background: "",
                 width: "100%",
-                minHeight: 500,
+                minHeight: 300,
               }}
             >
               <Typography variant={"h5"} color={"neutral.500"}>

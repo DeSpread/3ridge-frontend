@@ -473,6 +473,22 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
   }
 `);
 
+export const VERIFY_TWITTER_LIKING_QUEST = gql(/* GraphQL */ `
+  mutation VerifyTwitterLikingQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verifyTwitterLikingQuest(
+      questId: $questId
+      ticketId: $ticketId
+      userId: $userId
+    ) {
+      _id
+    }
+  }
+`);
+
 export const VERIFY_TWITTER_FOLLOW_QUEST = gql(/* GraphQL */ `
   mutation VerifyTwitterFollowQuest(
     $questId: String!

@@ -16,6 +16,7 @@ import {
   Grid,
   Skeleton,
   Stack,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -30,12 +31,15 @@ import { TimerSettings, useTimer } from "react-timer-hook";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { nFormatter } from "../../util/validate-string";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
+import SimpleDialog from "../../components/dialogs/simple-dialog";
 import {
-  FollowQuestContext,
+  TwitterFollowQuestContext,
   MouseEventWithParam,
   QUEST_POLICY_TYPE,
   QuizQuestContext,
-  RetweetQuestContext,
+  TwitterRetweetQuestContext,
+  DiscordQuestContext,
+  TwitterLikingQuestContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/user-query-hook";
@@ -222,9 +226,10 @@ const Event = (props: AppProps) => {
   const router = useRouter();
   const {
     ticketData,
-    asyncVerifyTwitterFollowQuest,
     asyncIsCompletedQuestByUserId,
+    asyncVerifyTwitterFollowQuest,
     asyncVerifyTwitterRetweetQuest,
+    asyncVerifyTwitterLikingQuest,
     asyncCompleteQuestOfUser,
     asyncRequestClaimNtf,
   } = useTicketQuery({
@@ -233,6 +238,7 @@ const Event = (props: AppProps) => {
     id: router.query.id ?? undefined,
   });
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
+  const [openDiscordQuestDialog, setDiscordQuestDialog] = useState(false);
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
@@ -307,8 +313,6 @@ const Event = (props: AppProps) => {
           "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
           query
         );
-        console.log(query);
-        console.log(res);
         if (res?.token_ownerships && res?.token_ownerships.length > 0) {
           return true;
         }
@@ -345,8 +349,6 @@ const Event = (props: AppProps) => {
           "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
           query
         );
-        console.log(query);
-        console.log(res);
         if (
           res?.current_token_pending_claims &&
           res?.current_token_pending_claims.length > 0
@@ -385,6 +387,16 @@ const Event = (props: AppProps) => {
       : true;
   };
 
+  const updateVerifyState = (index: number) => {
+    setVerifiedList((prevState) => {
+      prevState[index] = true;
+      return prevState;
+    });
+    setUpdateIndex((prevState) => {
+      return prevState + 1;
+    });
+  };
+
   return (
     <>
       <Head>
@@ -394,8 +406,9 @@ const Event = (props: AppProps) => {
         container
         direction={"row"}
         justifyContent={"center"}
-        spacing={5}
-        sx={{ marginTop: 4, marginBottom: 12 }}
+        // spacing={6}
+        columnSpacing={6}
+        sx={{ marginTop: 12, marginBottom: 12 }}
       >
         <Grid item>
           <Stack
@@ -426,7 +439,7 @@ const Event = (props: AppProps) => {
                       src={ticketData?.imageUrl}
                       style={{
                         borderRadius: 10,
-                        borderColor: theme.palette.neutral[100],
+                        borderColor: theme.palette.neutral[700],
                         borderStyle: "solid",
                         borderWidth: 2,
                       }}
@@ -522,7 +535,7 @@ const Event = (props: AppProps) => {
                 <Typography
                   variant={smUp ? "h5" : "h6"}
                   sx={{
-                    color: theme.palette.warning.main,
+                    color: theme.palette.secondary.main,
                     marginTop: smUp ? 0 : -5,
                     background: "",
                     textAlign: smUp ? "left" : "center",
@@ -565,15 +578,21 @@ const Event = (props: AppProps) => {
               direction={"column"}
               alignItems={"left"}
               spacing={2}
-              maxWidth={790}
+              // maxWidth={800}
+              sx={{ background: "" }}
             >
               <Typography variant="h5">Quest</Typography>
-              <Stack direction={"column"} spacing={4} alignItems={"center"}>
+              <Stack
+                direction={"column"}
+                spacing={4}
+                alignItems={"center"}
+                sx={{}}
+              >
                 {ticketData?.quests?.map((quest, index) => {
                   return (
                     <VerifyCard
                       key={index + 1}
-                      sx={{ width: "100%" }} //mdUp ? 800 : smUp ? 600 : 320 }}
+                      sx={{ width: mdUp ? 800 : smUp ? 600 : 320 }}
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
@@ -594,13 +613,7 @@ const Event = (props: AppProps) => {
                               quest._id ?? ""
                             );
                             myEvent.params.callback("success");
-                            setVerifiedList((prevState) => {
-                              prevState[index] = true;
-                              return prevState;
-                            });
-                            setUpdateIndex((prevState) => {
-                              return prevState + 1;
-                            });
+                            updateVerifyState(index);
                           } else if (
                             quest.questPolicy?.questPolicy ===
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
@@ -610,19 +623,30 @@ const Event = (props: AppProps) => {
                               quest._id ?? ""
                             );
                             myEvent.params.callback("success");
-                            setVerifiedList((prevState) => {
-                              prevState[index] = true;
-                              return prevState;
-                            });
-                            setUpdateIndex((prevState) => {
-                              return prevState + 1;
-                            });
+                            updateVerifyState(index);
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
+                          ) {
+                            await asyncVerifyTwitterLikingQuest(
+                              ticketData._id,
+                              quest._id ?? ""
+                            );
+                            myEvent.params.callback("success");
+                            updateVerifyState(index);
                           }
                         } catch (e) {
-                          console.log(e);
+                          if (
+                            getErrorMessage(e) ===
+                            "user already participated ticket"
+                          ) {
+                            myEvent.params.callback("success");
+                            updateVerifyState(index);
+                          }
                         }
                       }}
                       onStartBtnClicked={async (e) => {
+                        if (!ticketData._id || !quest._id) return;
                         if (
                           quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.QUIZ
@@ -644,7 +668,7 @@ const Event = (props: AppProps) => {
                               closeLoading();
                             }
                             const followQuestContext = quest.questPolicy
-                              .context as FollowQuestContext;
+                              .context as TwitterFollowQuestContext;
                             window.open(
                               `https://twitter.com/intent/follow?screen_name=${followQuestContext.username}`,
                               "twitter",
@@ -654,6 +678,29 @@ const Event = (props: AppProps) => {
                             closeLoading();
                             showErrorAlert({ content: getErrorMessage(e) });
                           }
+                        } else if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
+                        ) {
+                          try {
+                            if (!userData?.userSocial?.twitterId) {
+                              showLoading();
+                              const res = await asyncTwitterSignInPopUp();
+                              await asyncUpdateSocialTwitter(res);
+                              closeLoading();
+                            }
+                          } catch (e) {
+                            closeLoading();
+                            showErrorAlert({ content: getErrorMessage(e) });
+                          }
+                          const likingQuestContext = quest.questPolicy
+                            .context as TwitterLikingQuestContext;
+                          console.log(likingQuestContext);
+                          window.open(
+                            `https://twitter.com/intent/like?tweet_id=${likingQuestContext.tweetId}`,
+                            "twitter",
+                            "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                          );
                         } else if (
                           quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
@@ -666,7 +713,7 @@ const Event = (props: AppProps) => {
                               closeLoading();
                             }
                             const retweetQuestContext = quest.questPolicy
-                              .context as RetweetQuestContext;
+                              .context as TwitterRetweetQuestContext;
                             console.log(retweetQuestContext);
                             window.open(
                               `https://twitter.com/intent/retweet?tweet_id=${retweetQuestContext.tweetId}`,
@@ -677,10 +724,37 @@ const Event = (props: AppProps) => {
                             closeLoading();
                             showErrorAlert({ content: getErrorMessage(e) });
                           }
+                        } else if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_DISCORD
+                        ) {
+                          const discordQuestContext = quest.questPolicy
+                            ?.context as DiscordQuestContext;
+                          window.open(
+                            `https://discord.gg/${discordQuestContext.channelId}`,
+                            "discord",
+                            "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                          );
+                          await asyncCompleteQuestOfUser(
+                            ticketData._id,
+                            quest?._id
+                          ).then((res) => {
+                            setVerifiedList((prevState) => {
+                              prevState[index] = true;
+                              return prevState;
+                            });
+                            setUpdateIndex((prevState) => {
+                              return prevState + 1;
+                            });
+                          });
+                          setDiscordQuestDialog(true);
                         }
                       }}
                       autoVerified={
-                        quest.questPolicy?.questPolicy === QuestPolicyType.Quiz
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.Quiz ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyDiscord
                       }
                     ></VerifyCard>
                   );
@@ -727,7 +801,7 @@ const Event = (props: AppProps) => {
                         >
                           <Typography
                             variant={"h6"}
-                            sx={{ color: theme.palette.warning.main }}
+                            sx={{ color: theme.palette.secondary.main }}
                           >
                             This project is expired
                           </Typography>
@@ -964,41 +1038,46 @@ const Event = (props: AppProps) => {
               >
                 {(ticketData?.participants?.length ?? 0) > 0 ? (
                   <>
-                    {ticketData?.participants?.map((e, index) => {
+                    {ticketData?.participants?.slice(0, 10).map((e, index) => {
                       return (
-                        <Avatar
-                          key={index}
-                          alt=""
-                          src={
-                            e.profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC
-                          }
+                        <Tooltip title={e.name} key={index}>
+                          <Avatar
+                            alt=""
+                            src={
+                              e.profileImageUrl ??
+                              DEFAULT_PROFILE_IMAGE_DATA_SRC
+                            }
+                            sx={{
+                              width: 42,
+                              height: 42,
+                            }}
+                          />
+                        </Tooltip>
+                      );
+                    })}
+                    {ticketData?.participants?.length &&
+                      ticketData?.participants?.length > 10 && (
+                        <Box
                           sx={{
                             width: 42,
                             height: 42,
+                            background: (theme) => theme.palette.neutral["800"],
+                            alignItems: "center",
+                            justifyContent: "center",
+                            display: "flex",
+                            borderRadius: 42,
+                            zIndex: 1,
                           }}
-                        />
-                      );
-                    })}
-                    <Box
-                      sx={{
-                        width: 42,
-                        height: 42,
-                        background: (theme) => theme.palette.neutral["800"],
-                        alignItems: "center",
-                        justifyContent: "center",
-                        display: "flex",
-                        borderRadius: 42,
-                        zIndex: 1,
-                      }}
-                      onClick={() => {}}
-                    >
-                      <Typography variant={"caption"} color={"neutral.100"}>
-                        {`+${nFormatter(
-                          ticketData?.participants?.length ?? 0,
-                          4
-                        )}`}
-                      </Typography>
-                    </Box>
+                          onClick={() => {}}
+                        >
+                          <Typography variant={"caption"} color={"neutral.100"}>
+                            {`+${nFormatter(
+                              10 - ticketData?.participants?.length,
+                              4
+                            )}`}
+                          </Typography>
+                        </Box>
+                      )}
                   </>
                 ) : (
                   <>
@@ -1019,6 +1098,18 @@ const Event = (props: AppProps) => {
           </Stack>
         </Grid>
       </Grid>
+      <SimpleDialog
+        open={openDiscordQuestDialog}
+        title={"Notification"}
+        onClose={() => {
+          setDiscordQuestDialog(false);
+        }}
+      >
+        <Typography>
+          We will periodically check the participation status for the Discord
+          invitation link.
+        </Typography>
+      </SimpleDialog>
       <QuestQuizDialog
         open={openQuizQuestDialog}
         context={openQuizQuestContext}
