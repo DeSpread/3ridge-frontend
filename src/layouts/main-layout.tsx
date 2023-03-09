@@ -221,7 +221,7 @@ const MainLayout = (props: MainLayoutProps) => {
       </AppBar>
 
       {/*--- Body ---*/}
-      <Box sx={{ flex: 1, background: theme.palette.background.default }}>
+      <Box sx={{ flex: 1, background: "#0f0e15" }}>
         {props.backgroundComponent}
         <Toolbar></Toolbar>
         <main>{props.children}</main>

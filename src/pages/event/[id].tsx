@@ -54,6 +54,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { gql, request } from "graphql-request";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import Image from "next/image";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -408,6 +409,7 @@ const Event = (props: AppProps) => {
         justifyContent={"center"}
         // spacing={6}
         columnSpacing={6}
+        rowSpacing={6}
         sx={{ marginTop: 12, marginBottom: 12 }}
       >
         <Grid item>
@@ -467,10 +469,20 @@ const Event = (props: AppProps) => {
               </Grid>
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  <Typography variant={smUp ? "h3" : "h3"}>
+                  <Typography
+                    variant={smUp ? "h3" : "h3"}
+                    textAlign={smUp ? "left" : "center"}
+                  >
                     {ticketData?.title}
                   </Typography>
-                  <Grid container alignItems={"left"} spacing={1}>
+                  <Grid
+                    container
+                    alignItems={"left"}
+                    // direction={smUp ? "row" : "column"}
+                    // spacing={1}
+                    // rowSpacing={1}
+                    // sx={{ marginLeft: -10 }}
+                  >
                     {!ticketData?.completed && (
                       <Grid item>
                         <StyledChip label={"Ongoing"}></StyledChip>
@@ -482,7 +494,7 @@ const Event = (props: AppProps) => {
                       </Grid>
                     )}
                     {ticketData?.rewardPolicy?.context?.untilTime && (
-                      <Grid item>
+                      <Grid item sx={{ marginLeft: 1 }}>
                         {smUp ? (
                           <StyledChip
                             label={`${format(
@@ -557,10 +569,13 @@ const Event = (props: AppProps) => {
             )}
 
             <Stack direction={"column"} spacing={2}>
-              <Typography variant={"h5"}>Description</Typography>
+              <Typography textAlign={smUp ? "left" : "center"} variant={"h5"}>
+                Description
+              </Typography>
               <Box sx={{ maxWidth: 800 }}>
                 <Typography
                   variant={"body1"}
+                  textAlign={smUp ? "left" : "center"}
                   sx={{
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -581,7 +596,9 @@ const Event = (props: AppProps) => {
               // maxWidth={800}
               sx={{ background: "" }}
             >
-              <Typography variant="h5">Quest</Typography>
+              <Typography variant="h5" textAlign={smUp ? "left" : "center"}>
+                Quest
+              </Typography>
               <Stack
                 direction={"column"}
                 spacing={4}
@@ -913,15 +930,23 @@ const Event = (props: AppProps) => {
                         alignItems={"center"}
                         spacing={1}
                       >
-                        <StarsIcon
-                          color={"warning"}
-                          style={{
-                            width: 24,
-                            height: 24,
-                            background: "yellow",
-                            borderRadius: 24,
-                          }}
-                        ></StarsIcon>
+                        {/*<StarsIcon*/}
+                        {/*  color={"warning"}*/}
+                        {/*  style={{*/}
+                        {/*    width: 24,*/}
+                        {/*    height: 24,*/}
+                        {/*    background: "yellow",*/}
+                        {/*    borderRadius: 24,*/}
+                        {/*  }}*/}
+                        {/*></StarsIcon>*/}
+                        <Image
+                          src={
+                            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.png"
+                          }
+                          alt={"StarIcon"}
+                          width={24}
+                          height={24}
+                        ></Image>
                         <Typography variant={"h6"}>
                           {ticketData?.rewardPolicy?.context?.point ?? 0}
                         </Typography>
