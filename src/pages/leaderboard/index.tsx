@@ -64,7 +64,7 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
   return (
     <Card
       sx={{
-        background: "transparent",
+        background: theme.palette.neutral[800],
         transform: "translateY(0%)",
         transition: "all 0.2s ease-out 0s",
         transitionDuration: "0.2s",
