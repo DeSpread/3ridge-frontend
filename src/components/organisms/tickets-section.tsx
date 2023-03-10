@@ -23,6 +23,7 @@ import TicketCard from "../molecules/ticket-card";
 import PrimaryButton from "../atoms/primary-button";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
+import Image from "next/image";
 
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
@@ -328,9 +329,16 @@ const TicketsSection = (props: TicketSectionProps) => {
                 minHeight: 300,
               }}
             >
-              <Typography variant={"h5"} color={"neutral.500"}>
-                ⛔ EMPTY
-              </Typography>
+              <Image
+                src={
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/empty-box_.svg"
+                }
+                alt={""}
+                width={256}
+                height={256}
+                style={{}}
+              ></Image>
+              <Typography variant={"h5"}>Empty Contents</Typography>
             </Stack>
           )}
         </Grid>
