@@ -156,7 +156,7 @@ const HomeFooter = () => {
             variant={"body2"}
             sx={{ color: theme.palette.neutral["600"] }}
           >
-            © Copyright 2022 DeSpread Labs, Inc.
+            © Copyright 2023 DeSpread, Inc.
           </Typography>
         </Box>
       </Stack>

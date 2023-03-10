@@ -42,6 +42,8 @@ export function useTicketQuery({
       const {
         _id,
         title,
+        beginTime,
+        untilTime,
         description,
         completed,
         participants,
@@ -59,6 +61,8 @@ export function useTicketQuery({
           ...prevState,
           _id: _id ?? undefined,
           title: title ?? undefined,
+          beginTime: beginTime ?? undefined,
+          untilTime: untilTime ?? undefined,
           description: description ?? undefined,
           completed: completed ?? undefined,
           participants: participants?.map((e) => {

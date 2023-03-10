@@ -174,6 +174,8 @@ export const GET_AVAILABLE_TICKETS = gql(/* GraphQL */ `
   query AvailableTickets {
     availableTickets {
       _id
+      beginTime
+      untilTime
       completed
       description
       participants {
@@ -219,6 +221,8 @@ export const GET_COMPLETED_TICKETS = gql(/* GraphQL */ `
   query CompletedTickets {
     completedTickets {
       _id
+      beginTime
+      untilTime
       completed
       description
       participants {
@@ -264,6 +268,8 @@ export const FIND_MISSED_TICKETS = gql(/* GraphQL */ `
   query FindMissedTickets {
     findMissedTickets {
       _id
+      beginTime
+      untilTime
       completed
       description
       participants {
@@ -354,6 +360,8 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
   query GetTicketById($id: String!) {
     ticketById(ticketId: $id) {
       _id
+      beginTime
+      untilTime
       completed
       description
       participants {

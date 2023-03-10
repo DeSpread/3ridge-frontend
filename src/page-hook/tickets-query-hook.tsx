@@ -64,6 +64,8 @@ export function useTicketsQuery(props: {
     tickets: Array<{
       __typename?: "Ticket";
       _id?: string | null;
+      beginTime?: any | null;
+      untilTime?: any | null;
       completed?: boolean | null;
       description?: string | null;
       imageUrl?: string | null;
@@ -111,6 +113,8 @@ export function useTicketsQuery(props: {
       return tickets.map((e) => {
         return {
           _id: e._id ?? undefined,
+          beginTime: e.beginTime ?? undefined,
+          untilTime: e.untilTime ?? undefined,
           title: e.title ?? undefined,
           description: e.description ?? undefined,
           completed: e.completed ?? undefined,

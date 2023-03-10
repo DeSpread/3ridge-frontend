@@ -379,9 +379,9 @@ const Event = (props: AppProps) => {
   }, [verifiedList, updateIndex]);
 
   const isExpired = () => {
-    return ticketData?.rewardPolicy?.context?.untilTime
+    return ticketData?.untilTime //rewardPolicy?.context?.untilTime
       ? //@ts-ignore
-        new Date(ticketData?.rewardPolicy?.context?.untilTime) -
+        new Date(ticketData?.untilTime) -
           //@ts-ignore
           new Date() <
           0
@@ -493,18 +493,18 @@ const Event = (props: AppProps) => {
                         <StyledChip label={"completed"}></StyledChip>
                       </Grid>
                     )}
-                    {ticketData?.rewardPolicy?.context?.untilTime && (
+                    {ticketData?.beginTime && (
                       <Grid item sx={{ marginLeft: 1 }}>
                         {smUp ? (
                           <StyledChip
                             label={`${format(
                               new Date(
-                                ticketData?.rewardPolicy?.context?.beginTime
+                                ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
                               ),
                               "yyyy/MM/dd hh:mm:ss"
                             )} ~ ${format(
                               new Date(
-                                ticketData?.rewardPolicy?.context?.untilTime
+                                ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                               ),
                               "yyyy/MM/dd hh:mm:ss"
                             )} (UTC+09:00)`}
@@ -517,7 +517,7 @@ const Event = (props: AppProps) => {
                                 <Typography variant={"body2"}>
                                   {`${format(
                                     new Date(
-                                      ticketData?.rewardPolicy?.context?.beginTime
+                                      ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
                                     ),
                                     "yyyy/MM/dd hh:mm:ss"
                                   )}
@@ -526,7 +526,7 @@ const Event = (props: AppProps) => {
                                 <Typography variant={"body2"}>
                                   {`${format(
                                     new Date(
-                                      ticketData?.rewardPolicy?.context?.untilTime
+                                      ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                                     ),
                                     "yyyy/MM/dd hh:mm:ss"
                                   )} (UTC+09:00)
@@ -831,7 +831,7 @@ const Event = (props: AppProps) => {
                           }}
                           expiryTimestamp={
                             new Date(
-                              ticketData?.rewardPolicy?.context?.untilTime
+                              ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                             )
                           }
                         />
