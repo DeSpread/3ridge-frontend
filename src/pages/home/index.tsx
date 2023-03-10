@@ -250,19 +250,31 @@ const Home = (props: AppProps) => {
               }}
             >
               <Stack
-                sx={{ marginLeft: mdUp ? 15 : 0, background: "", flex: 1 }}
+                sx={{
+                  paddingLeft: 12,
+                  paddingRight: 12,
+                  background: "",
+                  flex: 1,
+                }}
                 spacing={3}
-                alignItems={mdUp ? "flex-start" : "center"}
+                alignItems={"center"}
               >
                 <Stack
-                  spacing={1}
-                  sx={{ padding: smUp ? 0 : 4, paddingBottom: 0 }}
+                  // spacing={1}
+                  sx={{
+                    padding: smUp ? 0 : 4,
+                    paddingBottom: 0,
+                    background: "",
+                    width: "100%",
+                  }}
                 >
                   <GradientTypography
-                    variant={mdUp ? "h1" : smUp ? "h2" : "h4"}
+                    // variant={mdUp ? "h1" : smUp ? "h2" : "h4"}
                     sx={{
                       textAlign: smUp ? "left" : "center",
                       fontFamily: "LINESeedKR-Bd",
+                      fontSize: mdUp ? "6.7rem" : smUp ? "5.7rem" : "2.7rem",
+                      lineHeight: 1.3,
                     }}
                   >
                     We Bridge You and Web3
@@ -271,6 +283,7 @@ const Home = (props: AppProps) => {
                     direction={"row"}
                     alignItems={"center"}
                     justifyContent={smUp ? "flex-start" : "center"}
+                    sx={{ marginTop: 4 }}
                   >
                     <Typography variant={mdUp ? "h2" : smUp ? "h3" : "h5"}>
                       Start your journey to web3 here
@@ -283,52 +296,59 @@ const Home = (props: AppProps) => {
                     {/*  height={mdUp ? "64px" : smUp ? "48px" : "32px"}*/}
                     {/*/>*/}
                   </Stack>
-                </Stack>
-                <Stack direction={"row"}>
-                  <Box sx={{ marginLeft: 1 }}>
-                    <Typography variant={mdUp ? "body1" : "body2"}>
-                      Support now
-                    </Typography>
-                  </Box>
-                  <Box sx={{ marginLeft: smUp ? 2 : 1 }}>
-                    <img
-                      style={{ width: mdUp ? 90 : 68 }}
-                      src={"https://indexer.xyz/icons/logos/aptos-full.svg"}
-                    />
-                  </Box>
-                </Stack>
-                <Stack
-                  direction={"row"}
-                  justifyContent={mdUp ? "flex-start" : "center"}
-                  sx={{
-                    background: "",
-                    width: "100%",
-                  }}
-                >
-                  <PrimaryButton
-                    sx={{
-                      marginRight: mdUp ? 10 : 0,
-                      width: 186,
-                      marginTop: 1,
-                    }}
-                    onClick={async () => {
-                      showLoading();
-                      await router.push("/explore");
-                      closeLoading();
-                    }}
-                  >
-                    <Box sx={{ padding: smUp ? 0 : 0 }}>
-                      <Typography
-                        className={"MuiTypography"}
-                        variant={smUp ? "h6" : "body2"}
-                        color={theme.palette.neutral[900]}
-                        fontFamily={"LINESeedKR-Bd"}
-                      >
-                        Start Now
+                  <Stack direction={"row"} sx={{ marginTop: 2 }}>
+                    <Box sx={{ marginLeft: 1 }}>
+                      <Typography variant={mdUp ? "body1" : "body2"}>
+                        Support now
                       </Typography>
                     </Box>
-                  </PrimaryButton>
+                    <Box sx={{ marginLeft: smUp ? 2 : 1 }}>
+                      <img
+                        style={{ width: mdUp ? 90 : 68 }}
+                        src={"https://indexer.xyz/icons/logos/aptos-full.svg"}
+                      />
+                    </Box>
+                  </Stack>
+                  <Stack
+                    direction={"row"}
+                    justifyContent={smUp ? "flex-start" : "center"}
+                    sx={{
+                      background: "",
+                      width: "100%",
+                      marginTop: smUp ? 4 : 2,
+                    }}
+                  >
+                    <PrimaryButton
+                      sx={{
+                        marginRight: mdUp ? 10 : 0,
+                        width: 186,
+                        marginTop: 4,
+                      }}
+                      onClick={async () => {
+                        showLoading();
+                        await router.push("/explore");
+                        closeLoading();
+                      }}
+                    >
+                      <Box sx={{ padding: smUp ? 0 : 0 }}>
+                        <Typography
+                          className={"MuiTypography"}
+                          variant={smUp ? "h6" : "body2"}
+                          color={theme.palette.neutral[900]}
+                          fontFamily={"LINESeedKR-Bd"}
+                        >
+                          Start Now
+                        </Typography>
+                      </Box>
+                    </PrimaryButton>
+                  </Stack>
                 </Stack>
+                {/*<Stack*/}
+                {/*  direction={"row"}*/}
+                {/*  sx={{ background: "white", width: "100%" }}*/}
+                {/*>*/}
+
+                {/*</Stack>*/}
               </Stack>
             </div>
             <div
@@ -343,7 +363,9 @@ const Home = (props: AppProps) => {
                 <div style={{ flex: 1, width: "100%", height: "100vh" }}>
                   <Image
                     fill
-                    src={"https://indexer.xyz/assets/top-section-bg.png"}
+                    src={
+                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/top-section-bg.png"
+                    }
                     alt={""}
                     style={{ zIndex: 1 }}
                   />

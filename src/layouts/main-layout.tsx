@@ -143,15 +143,15 @@ const MainLayout = (props: MainLayoutProps) => {
               <Stack direction={"row"} alignItems={"flex-start"}>
                 <Image
                   src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_negative.svg"
+                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_white.svg"
                   }
                   height={smUp ? 52 : 48}
                   width={smUp ? 132 : 120}
                   alt={""}
                 />
-                <Typography sx={{ marginLeft: -1 }} variant={"caption"}>
-                  testnet
-                </Typography>
+                {/*<Typography sx={{ marginLeft: -1 }} variant={"caption"}>*/}
+                {/*  testnet*/}
+                {/*</Typography>*/}
               </Stack>
             </Box>
             {!props.disableNavButtonSet &&

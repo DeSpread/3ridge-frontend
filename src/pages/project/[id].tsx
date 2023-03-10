@@ -235,12 +235,26 @@ const Project = () => {
           <div
             style={{
               backgroundSize: "cover",
-              backgroundPosition: "left",
+              backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-              background:
-                "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://galxe.com/_nuxt/img/space-detail-bg.569713b.jpg')",
+              backgroundImage:
+                "url('https://3ridge.s3.ap-northeast-2.amazonaws.com/space-detail-bg.569713b.jpg')",
+              // background:
+              //   "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)))",
               width: "100%",
+              // height: "100%",
               height: smUp ? 300 : 400,
+              position: "absolute",
+              zIndex: 0,
+            }}
+          ></div>
+          <div
+            style={{
+              width: "100%",
+              // height: "100%",
+              height: smUp ? 300 : 400,
+              background:
+                "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1))",
               position: "absolute",
               zIndex: 0,
             }}

@@ -44,7 +44,7 @@ const Explore = (props: AppProps) => {
             spacing={1}
             sx={{ marginTop: "32px" }}
           >
-            <Typography variant={"h4"}>Explore Events</Typography>
+            <Typography variant={"h4"}>Explore</Typography>
           </Stack>
           {ticketsData && (
             <TicketsSection
