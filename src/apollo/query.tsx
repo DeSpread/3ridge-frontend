@@ -170,6 +170,53 @@ export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
   }
 `);
 
+export const GET_TICKETS = gql(/* GraphQL */ `
+  query Tickets($sort: TicketSortType, $status: TicketStatusType) {
+    tickets(sort: $sort, status: $status) {
+      _id
+      beginTime
+      untilTime
+      completed
+      description
+      participants {
+        name
+        profileImageUrl
+      }
+      imageUrl
+      quests {
+        _id
+        title
+        description
+        questPolicy {
+          context
+          questPolicy
+        }
+      }
+      project {
+        _id
+        categories
+        description
+        imageUrl
+        name
+        projectSocial {
+          discordUrl
+          officialUrl
+          telegramUrl
+          twitterUrl
+        }
+      }
+      rewardPolicy {
+        context
+        rewardPolicyType
+      }
+      title
+      winners {
+        name
+      }
+    }
+  }
+`);
+
 export const GET_AVAILABLE_TICKETS = gql(/* GraphQL */ `
   query AvailableTickets {
     availableTickets {

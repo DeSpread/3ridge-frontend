@@ -1,5 +1,5 @@
 import { GetStaticPaths } from "next";
-import React, { ReactElement, useMemo, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import Head from "next/head";
 import {
@@ -29,6 +29,7 @@ import { useTheme } from "@mui/material/styles";
 import { useProjectQuery } from "../../page-hook/project-query-hook";
 import { LinkIconButton } from "../../components/molecules/link-icon-button";
 import Image from "next/image";
+import { TicketSortType } from "../../__generated__/graphql";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
   return {
@@ -49,13 +50,16 @@ const Project = () => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const [value, setValue] = useState("1");
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
+  const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
+    TicketSortType.Trending
+  );
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType,
     projectId:
       typeof router.query.id === "string" ? router.query.id : undefined,
+    sort: ticketSortType,
   });
   const { projectData, projectDataLoading } = useProjectQuery({
     projectId:
@@ -293,6 +297,11 @@ const Project = () => {
                   ? FILTER_TYPE.COMPLETE
                   : FILTER_TYPE.MISSED;
               setFilterType(filterType);
+            }}
+            onTab2Click={async (e) => {
+              const sortType =
+                e === 0 ? TicketSortType.Trending : TicketSortType.Newest;
+              setTicketSortType(sortType);
             }}
           ></TicketsSection>
         </Box>

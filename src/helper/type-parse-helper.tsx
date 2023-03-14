@@ -52,6 +52,7 @@ class TypeParseHelper {
         return contextJson as DiscordQuestContext;
       }
     } catch (e) {
+      console.log(context, questPolicyType);
       console.log(e);
       return undefined;
     }

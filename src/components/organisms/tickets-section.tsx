@@ -16,7 +16,6 @@ import React, {
   PropsWithChildren,
   useState,
 } from "react";
-import { useLoading } from "../../provider/loading/loading-provider";
 import { MouseEventWithParam, Ticket, TicketEventParam } from "../../type";
 import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
@@ -30,6 +29,7 @@ type TicketSectionProps = PropsWithChildren & {
   loading?: boolean;
   onTicketClick?: MouseEventHandler;
   onTabClick?: (newValue: number) => void;
+  onTab2Click?: (newValue: number) => void;
   sx?: CSSProperties;
 };
 
@@ -77,20 +77,16 @@ const TabButton = (props: TabButtonProps) => {
 const AntTab = styled((props: StyledTabProps) => (
   <Tab disableRipple {...props} />
 ))(({ theme }) => ({
-  // textTransform: "none",
-  // marginRight: theme.spacing(1),
   color: "#646176",
   fontSize: "1.125rem",
   "&.Mui-selected": {
     color: "white",
     fontWeight: theme.typography.fontWeightMedium,
   },
-  // marginLeft: "auto",
 }));
 
 const TabButtonGroup2 = (props: TabButtonGroupProps) => {
   const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   const [selectedIdx, setSelectedIdx] = useState(0);
@@ -108,36 +104,9 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
       icon: <QueryBuilderIcon sx={{ color: "#62cbff" }}></QueryBuilderIcon>,
     },
   ];
-  const [anchorEl, setAnchorEl] = useState<Element>();
-  const [open, setOpen] = useState(false);
-  const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
-  const MENU_ITEMS = ["Recently", "Popular"];
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setOpen(true);
-  };
-
-  const handleClose = (index?: number) => {
-    setAnchorEl(undefined);
-    setOpen(false);
-    if (index !== undefined) {
-      console.log(index);
-      setSelectedMenuIndex(index);
-    }
-  };
 
   return (
-    <Grid
-      container
-      justifyContent={"space-between"}
-      rowSpacing={2}
-      onClick={() => {
-        if (anchorEl) {
-          setAnchorEl(undefined);
-          setOpen(false);
-        }
-      }}
-    >
+    <Grid container justifyContent={"space-between"} rowSpacing={2}>
       <Grid item>
         <Stack direction={"row"} spacing={smUp ? 2 : 1}>
           {TITLES.map((e, index) => {
@@ -152,7 +121,6 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
                 }}
                 index={index}
                 onChange={(e) => {
-                  // const myEvent = e as MouseEventWithParam<{ index: number }>;
                   setSelectedIdx(index);
                   props?.onChange?.(index);
                 }}
@@ -175,29 +143,8 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
 };
 
 const TabButtonGroup = (props: TabButtonGroupProps) => {
-  const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
-  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
-
   const [selectedIdx, setSelectedIdx] = useState(0);
   const TITLES = ["Available", "Complete", "Missed"];
-  const [anchorEl, setAnchorEl] = useState<Element>();
-  const [open, setOpen] = useState(false);
-  const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
-  const MENU_ITEMS = ["Recently", "Popular"];
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setOpen(true);
-  };
-
-  const handleClose = (index?: number) => {
-    setAnchorEl(undefined);
-    setOpen(false);
-    if (index !== undefined) {
-      console.log(index);
-      setSelectedMenuIndex(index);
-    }
-  };
 
   const a11yProps = (index: number) => {
     return {
@@ -216,7 +163,7 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
       aria-label="Events"
       TabIndicatorProps={{
         style: {
-          backgroundColor: "white", //theme.palette.primary.main,
+          backgroundColor: "white",
         },
       }}
       sx={{ background: "" }}
@@ -229,12 +176,10 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
 };
 
 const TicketsSection = (props: TicketSectionProps) => {
-  const [tabValue, setTabValue] = useState(0);
-  const { showLoading, closeLoading } = useLoading();
-  const { tickets, loading, onTicketClick, onTabClick } = props;
+  const { tickets, loading, onTicketClick, onTabClick, onTab2Click } = props;
   const theme = useTheme();
-  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   const onTicketCardClick = (ticket: Ticket) => {
     const myEvent = {} as MouseEventWithParam<TicketEventParam>;
@@ -259,32 +204,15 @@ const TicketsSection = (props: TicketSectionProps) => {
         alignItems={smUp ? "center" : "flex-start"}
       >
         <Grid item>
-          <TabButtonGroup2></TabButtonGroup2>
-          {/*<Stack direction={"row"} alignItems={"center"} spacing={1}>*/}
-          {/*  {[{ title: "Trending" }, { title: "Newest" }].map((e, index) => {*/}
-          {/*    return (*/}
-          {/*      <PrimaryButton sx={{ borderRadius: "8px" }} key={index}>*/}
-          {/*        <Stack direction={"row"} spacing={"4px"}>*/}
-          {/*          <LocalFireDepartmentIcon*/}
-          {/*            sx={{ color: "red" }}*/}
-          {/*          ></LocalFireDepartmentIcon>*/}
-          {/*          <Typography*/}
-          {/*            className={"MuiTypography"}*/}
-          {/*            sx={{ color: "black" }}*/}
-          {/*          >*/}
-          {/*            Trending*/}
-          {/*          </Typography>*/}
-          {/*        </Stack>*/}
-          {/*      </PrimaryButton>*/}
-          {/*    );*/}
-          {/*  })}*/}
-          {/*</Stack>*/}
+          <TabButtonGroup2
+            onChange={(e) => {
+              onTab2Click?.(e);
+            }}
+          ></TabButtonGroup2>
         </Grid>
         <Grid item>
           <TabButtonGroup
             onChange={(e) => {
-              // const myEvent = e as MouseEventWithParam<{ index: number }>;
-              setTabValue(e);
               onTabClick?.(e);
             }}
           ></TabButtonGroup>
