@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import type { ReactElement, ReactNode } from "react";
-import type { AppProps } from "next/app";
+import type { AppProps, NextWebVitalsMetric } from "next/app";
 import type { NextPage } from "next";
 import { createTheme } from "../theme";
 import { ThemeProvider } from "@mui/material/styles";
@@ -15,7 +15,6 @@ import { AlertProvider } from "../provider/alert/alert-provider";
 import { LoadingProvider } from "../provider/loading/loading-provider";
 import { combineProviders } from "react-combine-providers";
 import { PetraWallet } from "petra-plugin-wallet-adapter";
-import { Analytics } from "@vercel/analytics/react";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 
@@ -34,6 +33,10 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+export function reportWebVitals(metric: NextWebVitalsMetric) {
+  console.log(metric);
+}
+
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>);
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
@@ -47,7 +50,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               <AptosWalletAdapterProvider plugins={wallets} autoConnect={true}>
                 <MasterProvider>
                   {getLayout(<Component {...pageProps} />)}
-                  <Analytics />
                 </MasterProvider>
               </AptosWalletAdapterProvider>
             </ApolloProvider>

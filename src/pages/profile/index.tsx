@@ -46,6 +46,7 @@ import { useTheme } from "@mui/material/styles";
 import { gql, request } from "graphql-request";
 import CircularProgress from "@mui/material/CircularProgress";
 import Link from "next/link";
+import BlockIcon from "../../components/molecules/block-icon";
 
 const Profile = (props: AppProps) => {
   const {
@@ -298,18 +299,17 @@ const Profile = (props: AppProps) => {
             sx={{ background: "" }}
             spacing={4}
           >
-            <Avatar
-              alt=""
-              src={
-                userData.profileImageUrl
-                  ? userData.profileImageUrl
-                  : DEFAULT_PROFILE_IMAGE_DATA_SRC
-              }
-              sx={{
-                width: 100,
-                height: 100,
-              }}
-            />
+            {userData.profileImageUrl && (
+              <Avatar
+                sx={{ width: 100, height: 100 }}
+                src={userData.profileImageUrl}
+              ></Avatar>
+            )}
+            {!userData.profileImageUrl && userData._id && (
+              <div style={{ zIndex: 2 }}>
+                <BlockIcon seed={userData._id} scale={12}></BlockIcon>
+              </div>
+            )}
             {/*--- profile description ---*/}
             <Stack spacing={1}>
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>

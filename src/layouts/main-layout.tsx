@@ -39,6 +39,7 @@ import Link from "next/link";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SubMenuButton from "../components/molecules/sub-menu-button";
 import Image from "next/image";
+import BlockIcon from "../components/molecules/block-icon";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -181,7 +182,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           onSuccess: () => {
                             // showLoading();
                             // router.push("/").then((res) => {
-                            // closeLoading();
+                            //   closeLoading();
                             // });
                           },
                           onError: (error) => {
@@ -189,6 +190,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           },
                         });
                       }}
+                      userId={userData?._id}
                       src={userData?.profileImageUrl}
                       walletAddress={userData?.walletAddress}
                     ></NavbarAvatar>

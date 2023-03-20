@@ -22,13 +22,14 @@ import GradientTypography from "../../components/atoms/gradient-typography";
 import { useTheme } from "@mui/material/styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useLeaderUserRankQuery } from "../../page-hook/leader-user-rank-query-hook";
+import BlockIcon from "../../components/molecules/block-icon";
 
 const RankCard = ({ user, rank }: { user: User; rank: number }) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const { profileImageUrl, name, rewardPoint } = user;
+  const { profileImageUrl, name, rewardPoint, _id } = user;
 
   const convertedName = useMemo(() => {
     if (name?.substring(0, 2).toLocaleLowerCase() === "0x") {
@@ -117,26 +118,31 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
             )}
           </Box>
           <Box sx={{ marginLeft: smUp ? 1 : "1px" }}>
-            <LazyLoadImage
-              width={smUp ? 52 : 38}
-              height={smUp ? 52 : 38}
-              src={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
-              style={{
-                borderRadius: smUp ? 52 : 38,
-                objectFit: "cover",
-              }}
-              effect="blur"
-              beforeLoad={() => {
-                return (
-                  <Skeleton
-                    width={smUp ? 52 : 38}
-                    height={smUp ? 52 : 38}
-                    animation={"wave"}
-                    variant={"rounded"}
-                  ></Skeleton>
-                );
-              }}
-            ></LazyLoadImage>
+            {profileImageUrl && (
+              <LazyLoadImage
+                width={smUp ? 52 : 38}
+                height={smUp ? 52 : 38}
+                src={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
+                style={{
+                  borderRadius: smUp ? 52 : 38,
+                  objectFit: "cover",
+                }}
+                effect="blur"
+                beforeLoad={() => {
+                  return (
+                    <Skeleton
+                      width={smUp ? 52 : 38}
+                      height={smUp ? 52 : 38}
+                      animation={"wave"}
+                      variant={"rounded"}
+                    ></Skeleton>
+                  );
+                }}
+              ></LazyLoadImage>
+            )}
+            {!profileImageUrl && _id && (
+              <BlockIcon seed={_id} scale={smUp ? 6 : 5}></BlockIcon>
+            )}
           </Box>
           <Stack
             direction={"column"}
