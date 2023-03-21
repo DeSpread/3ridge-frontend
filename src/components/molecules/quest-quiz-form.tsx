@@ -20,6 +20,8 @@ import {
 } from "@mui/material";
 import PrimaryCard from "../atoms/primary-card";
 import { MouseEventWithParam, QuizContent, QuizEventParam } from "../../type";
+import { useTh } from "leva/plugin";
+import { useTheme } from "@mui/material/styles";
 
 export type QuestQuizFormProps = PropsWithChildren & {
   cardSx?: CSSProperties;
@@ -40,6 +42,7 @@ const QuestQuizOption = (props: {
   selected: boolean;
   onCardItemClick: MouseEventHandler;
 }) => {
+  const theme = useTheme();
   return (
     <PrimaryCard
       cardSx={{
@@ -66,13 +69,13 @@ const QuestQuizOption = (props: {
                 ? props.correct
                   ? "#4fdc8b"
                   : "#e8374c"
-                : "",
+                : theme.palette.neutral[100],
               "&.Mui-checked": {
                 color: props.selected
                   ? props.correct
                     ? "#4fdc8b"
                     : "#e8374c"
-                  : "",
+                  : theme.palette.neutral[100],
               },
             }}
           />
