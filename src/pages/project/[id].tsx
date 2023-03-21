@@ -31,16 +31,16 @@ import { LinkIconButton } from "../../components/molecules/link-icon-button";
 import Image from "next/image";
 import { TicketSortType } from "../../__generated__/graphql";
 
-export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
-  return {
-    paths: [], //indicates that no page needs be created at build time
-    fallback: "blocking", //indicates the type of fallback
-  };
-};
-
-export async function getStaticProps() {
-  return { props: {} };
-}
+// export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
+//   return {
+//     paths: [], //indicates that no page needs be created at build time
+//     fallback: "blocking", //indicates the type of fallback
+//   };
+// };
+//
+// export async function getStaticProps() {
+//   return { props: {} };
+// }
 
 const Project = () => {
   const [filterType, setFilterType] = useState<FilterType>(
@@ -69,7 +69,7 @@ const Project = () => {
   return (
     <>
       <Head>
-        <title>{projectData?.name ?? "Project"}</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Stack direction={"column"} alignItems={"center"}>
         <Stack

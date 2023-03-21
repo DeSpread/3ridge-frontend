@@ -32,7 +32,7 @@ const Explore = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>Explore</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Box
         style={{

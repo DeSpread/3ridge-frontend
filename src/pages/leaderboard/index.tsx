@@ -209,7 +209,7 @@ const Leaderboard = () => {
   return (
     <>
       <Head>
-        <title>Leaderboard</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Grid
         container

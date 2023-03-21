@@ -33,13 +33,13 @@ import { nFormatter } from "../../util/validate-string";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import {
-  TwitterFollowQuestContext,
+  DiscordQuestContext,
   MouseEventWithParam,
   QUEST_POLICY_TYPE,
   QuizQuestContext,
-  TwitterRetweetQuestContext,
-  DiscordQuestContext,
+  TwitterFollowQuestContext,
   TwitterLikingQuestContext,
+  TwitterRetweetQuestContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/user-query-hook";
@@ -49,23 +49,22 @@ import { getErrorMessage } from "../../error/my-error";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
-import StarsIcon from "@mui/icons-material/Stars";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { gql, request } from "graphql-request";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
 
-export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
-  return {
-    paths: [], //indicates that no page needs be created at build time
-    fallback: "blocking", //indicates the type of fallback
-  };
-};
-
-export async function getStaticProps() {
-  return { props: {} };
-}
+// export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
+//   return {
+//     paths: [], //indicates that no page needs be created at build time
+//     fallback: "blocking", //indicates the type of fallback
+//   };
+// };
+//
+// export async function getStaticProps() {
+//   return { props: {} };
+// }
 
 interface MyTimerSettings extends TimerSettings {
   sx?: CSSProperties;
@@ -401,7 +400,7 @@ const Event = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>Event</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Grid
         container

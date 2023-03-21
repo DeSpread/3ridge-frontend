@@ -29,7 +29,7 @@ const Projects = () => {
   return (
     <>
       <Head>
-        <title>Projects</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Box
         style={{

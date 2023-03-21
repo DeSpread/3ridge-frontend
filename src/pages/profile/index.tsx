@@ -276,7 +276,7 @@ const Profile = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>Profile</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Grid
         flex={1}

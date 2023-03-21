@@ -181,7 +181,7 @@ const Home = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>3ridge</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Stack
         direction={"column"}
