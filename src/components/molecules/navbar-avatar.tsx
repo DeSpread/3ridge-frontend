@@ -21,6 +21,7 @@ import GradientTypography from "../atoms/gradient-typography";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
+import BlockIcon from "./block-icon";
 
 type StyledMenuProps = PropsWithChildren & {
   open: boolean;
@@ -68,6 +69,7 @@ const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
 };
 
 type NavBarAvatarProps = PropsWithChildren & {
+  userId?: string;
   src?: string;
   walletAddress?: string;
   onProfileItemClicked?: MouseEventHandler;
@@ -76,6 +78,7 @@ type NavBarAvatarProps = PropsWithChildren & {
 };
 
 const NavbarAvatar = ({
+  userId,
   src,
   walletAddress,
   onProfileItemClicked,
@@ -110,10 +113,8 @@ const NavbarAvatar = ({
         setOpen(!open);
       }}
     >
-      <Avatar
-        sx={{ width: 32, height: 32 }}
-        src={src ? src : DEFAULT_PROFILE_IMAGE_DATA_SRC}
-      ></Avatar>
+      {src && <Avatar sx={{ width: 32, height: 32 }} src={src}></Avatar>}
+      {!src && userId && <BlockIcon seed={userId}></BlockIcon>}
       <StyledMenu open={open} anchorEl={anchorEl}>
         <StyledMenuItem
           sx={{
@@ -127,10 +128,8 @@ const NavbarAvatar = ({
             spacing={2}
             sx={{ flex: 1, marginBottom: 1 }}
           >
-            <Avatar
-              sx={{ width: 32, height: 32 }}
-              src={src ? src : DEFAULT_PROFILE_IMAGE_DATA_SRC}
-            ></Avatar>
+            {src && <Avatar sx={{ width: 32, height: 32 }} src={src}></Avatar>}
+            {!src && <BlockIcon seed={userId || "jake"}></BlockIcon>}
             <Stack direction={"column"}>
               {walletAddress && (
                 <GradientTypography>
@@ -184,7 +183,7 @@ const NavbarAvatar = ({
         className={"curtain"}
         style={{
           position: "absolute",
-          marginTop: -32,
+          marginTop: src ? -32 : -35,
           width: 32,
           height: 32,
           borderRadius: 32,

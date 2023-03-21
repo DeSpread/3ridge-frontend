@@ -116,7 +116,7 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
                 sx={{
                   paddingLeft: 3,
                   paddingRight: 3,
-                  width: smUp ? 128 : 100,
+                  width: smUp ? 128 : 128,
                   borderRadius: 1,
                 }}
                 index={index}
