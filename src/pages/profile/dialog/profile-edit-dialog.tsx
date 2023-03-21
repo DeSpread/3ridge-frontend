@@ -115,15 +115,15 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
       <DialogContent>
         <Stack spacing={4} sx={{ padding: 4 }}>
           <div style={{ position: "relative" }}>
-            {props.userData.profileImageUrl && (
+            {props.userData?.profileImageUrl && (
               <Avatar
                 sx={{ width: 100, height: 100 }}
-                src={props.userData.profileImageUrl}
+                src={props.userData?.profileImageUrl}
               ></Avatar>
             )}
-            {!props.userData.profileImageUrl && props.userData._id && (
+            {!props.userData?.profileImageUrl && props.userData?._id && (
               <div style={{ zIndex: 2 }}>
-                <BlockIcon seed={props.userData._id} scale={12}></BlockIcon>
+                <BlockIcon seed={props.userData?._id} scale={12}></BlockIcon>
               </div>
             )}
             {/*<Avatar*/}
@@ -144,8 +144,8 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                 width: 100,
                 height: 100,
                 background: "rgba(0, 0, 0, 0.5)",
-                top: props.userData.profileImageUrl ? 0 : -2,
-                left: props.userData.profileImageUrl ? 0 : -2,
+                top: props.userData?.profileImageUrl ? 0 : -2,
+                left: props.userData?.profileImageUrl ? 0 : -2,
                 borderRadius: 50,
               }}
             >
