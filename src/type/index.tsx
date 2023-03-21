@@ -111,6 +111,8 @@ export type FCFSRewardContext = {
 export type Ticket = {
   _id?: string;
   title?: string;
+  beginTime?: string;
+  untilTime?: string;
   description?: string;
   completed?: boolean;
   participants?: { name?: string; profileImageUrl?: string }[];

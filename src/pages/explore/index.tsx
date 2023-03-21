@@ -13,20 +13,26 @@ import {
   MouseEventWithParam,
   TicketEventParam,
 } from "../../type";
-import GradientButton from "../../components/atoms/gradient-button";
+import { TicketSortType } from "../../__generated__/graphql";
 
 const Explore = (props: AppProps) => {
   const [filterType, setFilterType] = useState<FilterType>(
     FILTER_TYPE.AVAILABLE
   );
-  const { ticketsData, ticketsDataLoading } = useTicketsQuery({ filterType });
+  const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
+    TicketSortType.Trending
+  );
+  const { ticketsData, ticketsDataLoading } = useTicketsQuery({
+    filterType,
+    sort: ticketSortType,
+  });
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
 
   return (
     <>
       <Head>
-        <title>Explore</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Box
         style={{
@@ -44,7 +50,7 @@ const Explore = (props: AppProps) => {
             spacing={1}
             sx={{ marginTop: "32px" }}
           >
-            <Typography variant={"h4"}>Explore Events</Typography>
+            <Typography variant={"h4"}>Explore</Typography>
           </Stack>
           {ticketsData && (
             <TicketsSection
@@ -61,15 +67,19 @@ const Explore = (props: AppProps) => {
                 marginTop: 4,
               }}
               onTabClick={async (e) => {
-                // const myEvent = e as MouseEventWithParam<{ index: number }>;
                 const index = e;
-                let filterType =
+                const filterType =
                   index === 0
                     ? FILTER_TYPE.AVAILABLE
                     : index === 1
                     ? FILTER_TYPE.COMPLETE
                     : FILTER_TYPE.MISSED;
                 setFilterType(filterType);
+              }}
+              onTab2Click={async (e) => {
+                const sortType =
+                  e === 0 ? TicketSortType.Trending : TicketSortType.Newest;
+                setTicketSortType(sortType);
               }}
             ></TicketsSection>
           )}

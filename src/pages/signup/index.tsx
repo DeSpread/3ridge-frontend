@@ -55,7 +55,7 @@ const Signup = () => {
   return (
     <>
       <Head>
-        <title>Home</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <div style={{ flex: 1, background: "" }}>
         <Stack

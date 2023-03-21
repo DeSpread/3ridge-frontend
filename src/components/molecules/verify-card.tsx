@@ -43,7 +43,7 @@ const VerifyCard = (props: VerifyCardProps) => {
   return (
     <>
       <Card sx={props.sx}>
-        <CardContent>
+        <CardContent sx={{ background: theme.palette.neutral[800] }}>
           <Grid
             container
             // direction={"row"}

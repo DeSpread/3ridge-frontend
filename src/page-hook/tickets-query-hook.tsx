@@ -1,26 +1,20 @@
-import {
-  FIND_MISSED_TICKETS,
-  GET_ALL_TICKETS,
-  GET_AVAILABLE_TICKETS,
-  GET_COMPLETED_TICKETS,
-  GET_TICKETS_BY_PROJECT_ID,
-} from "../apollo/query";
+import { GET_TICKETS, GET_TICKETS_BY_PROJECT_ID } from "../apollo/query";
 import { client } from "../apollo/client";
 import { useEffect, useState } from "react";
 import { FILTER_TYPE, FilterType, Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import {
-  AllTicketsQuery,
-  AvailableTicketsQuery,
   CategoryType,
   QuestPolicyType,
   RewardPolicyType,
+  TicketSortType,
   TicketStatusType,
 } from "../__generated__/graphql";
 
 export function useTicketsQuery(props: {
   projectId?: string;
   filterType: FilterType;
+  sort: TicketSortType;
 }) {
   const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
   const [ticketsDataLoading, setTicketsDataLoading] = useState(false);
@@ -30,16 +24,22 @@ export function useTicketsQuery(props: {
     (async () => {
       setTicketsDataLoading(true);
       if (!props.projectId) {
-        if (props.filterType === FILTER_TYPE.AVAILABLE) {
-          const { data } = await client.query({ query: GET_AVAILABLE_TICKETS });
-          updateSetTicketsData(data.availableTickets);
-        } else if (props.filterType === FILTER_TYPE.COMPLETE) {
-          const { data } = await client.query({ query: GET_COMPLETED_TICKETS });
-          updateSetTicketsData(data.completedTickets);
-        } else if (props.filterType === FILTER_TYPE.MISSED) {
-          const { data } = await client.query({ query: FIND_MISSED_TICKETS });
-          updateSetTicketsData(data.findMissedTickets);
-        }
+        const status =
+          props.filterType === FILTER_TYPE.AVAILABLE
+            ? TicketStatusType.Available
+            : props.filterType === FILTER_TYPE.MISSED
+            ? TicketStatusType.Missed
+            : props.filterType === FILTER_TYPE.COMPLETE
+            ? TicketStatusType.Completed
+            : TicketStatusType.All;
+        const { data } = await client.query({
+          query: GET_TICKETS,
+          variables: {
+            sort: props.sort,
+            status,
+          },
+        });
+        updateSetTicketsData(data.tickets);
       } else {
         const status =
           props.filterType === FILTER_TYPE.AVAILABLE
@@ -58,12 +58,14 @@ export function useTicketsQuery(props: {
       }
       setTicketsDataLoading(false);
     })();
-  }, [props.filterType, props.projectId]);
+  }, [props.filterType, props.projectId, props.sort]);
 
   const updateSetTicketsData = (
     tickets: Array<{
       __typename?: "Ticket";
       _id?: string | null;
+      beginTime?: any | null;
+      untilTime?: any | null;
       completed?: boolean | null;
       description?: string | null;
       imageUrl?: string | null;
@@ -111,6 +113,8 @@ export function useTicketsQuery(props: {
       return tickets.map((e) => {
         return {
           _id: e._id ?? undefined,
+          beginTime: e.beginTime ?? undefined,
+          untilTime: e.untilTime ?? undefined,
           title: e.title ?? undefined,
           description: e.description ?? undefined,
           completed: e.completed ?? undefined,

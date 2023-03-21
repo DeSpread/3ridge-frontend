@@ -1,5 +1,5 @@
 import { GetStaticPaths } from "next";
-import React, { ReactElement, useMemo, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import Head from "next/head";
 import {
@@ -29,17 +29,18 @@ import { useTheme } from "@mui/material/styles";
 import { useProjectQuery } from "../../page-hook/project-query-hook";
 import { LinkIconButton } from "../../components/molecules/link-icon-button";
 import Image from "next/image";
+import { TicketSortType } from "../../__generated__/graphql";
 
-export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
-  return {
-    paths: [], //indicates that no page needs be created at build time
-    fallback: "blocking", //indicates the type of fallback
-  };
-};
-
-export async function getStaticProps() {
-  return { props: {} };
-}
+// export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
+//   return {
+//     paths: [], //indicates that no page needs be created at build time
+//     fallback: "blocking", //indicates the type of fallback
+//   };
+// };
+//
+// export async function getStaticProps() {
+//   return { props: {} };
+// }
 
 const Project = () => {
   const [filterType, setFilterType] = useState<FilterType>(
@@ -49,13 +50,16 @@ const Project = () => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const [value, setValue] = useState("1");
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
+  const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
+    TicketSortType.Trending
+  );
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType,
     projectId:
       typeof router.query.id === "string" ? router.query.id : undefined,
+    sort: ticketSortType,
   });
   const { projectData, projectDataLoading } = useProjectQuery({
     projectId:
@@ -65,7 +69,7 @@ const Project = () => {
   return (
     <>
       <Head>
-        <title>{projectData?.name ?? "Project"}</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Stack direction={"column"} alignItems={"center"}>
         <Stack
@@ -235,12 +239,26 @@ const Project = () => {
           <div
             style={{
               backgroundSize: "cover",
-              backgroundPosition: "left",
+              backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-              background:
-                "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://galxe.com/_nuxt/img/space-detail-bg.569713b.jpg')",
+              backgroundImage:
+                "url('https://3ridge.s3.ap-northeast-2.amazonaws.com/space-detail-bg.569713b.jpg')",
+              // background:
+              //   "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)))",
               width: "100%",
+              // height: "100%",
               height: smUp ? 300 : 400,
+              position: "absolute",
+              zIndex: 0,
+            }}
+          ></div>
+          <div
+            style={{
+              width: "100%",
+              // height: "100%",
+              height: smUp ? 300 : 400,
+              background:
+                "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1))",
               position: "absolute",
               zIndex: 0,
             }}
@@ -279,6 +297,11 @@ const Project = () => {
                   ? FILTER_TYPE.COMPLETE
                   : FILTER_TYPE.MISSED;
               setFilterType(filterType);
+            }}
+            onTab2Click={async (e) => {
+              const sortType =
+                e === 0 ? TicketSortType.Trending : TicketSortType.Newest;
+              setTicketSortType(sortType);
             }}
           ></TicketsSection>
         </Box>

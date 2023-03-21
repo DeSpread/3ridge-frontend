@@ -21,6 +21,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
 import { ValidatorButton } from "../../../components/molecules/validator-button";
 import AptosIcon from "../../../components/atoms/svg/aptos-icon";
+import BlockIcon from "../../../components/molecules/block-icon";
 
 const ReversibleMarkEmailReadIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -114,25 +115,37 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
       <DialogContent>
         <Stack spacing={4} sx={{ padding: 4 }}>
           <div style={{ position: "relative" }}>
-            <Avatar
-              alt=""
-              src={
-                props.userData?.profileImageUrl
-                  ? props.userData?.profileImageUrl
-                  : DEFAULT_PROFILE_IMAGE_DATA_SRC
-              }
-              sx={{
-                width: 100,
-                height: 100,
-              }}
-            />
+            {props.userData?.profileImageUrl && (
+              <Avatar
+                sx={{ width: 100, height: 100 }}
+                src={props.userData?.profileImageUrl}
+              ></Avatar>
+            )}
+            {!props.userData?.profileImageUrl && props.userData?._id && (
+              <div style={{ zIndex: 2 }}>
+                <BlockIcon seed={props.userData?._id} scale={12}></BlockIcon>
+              </div>
+            )}
+            {/*<Avatar*/}
+            {/*  alt=""*/}
+            {/*  src={*/}
+            {/*    props.userData?.profileImageUrl*/}
+            {/*      ? props.userData?.profileImageUrl*/}
+            {/*      : DEFAULT_PROFILE_IMAGE_DATA_SRC*/}
+            {/*  }*/}
+            {/*  sx={{*/}
+            {/*    width: 100,*/}
+            {/*    height: 100,*/}
+            {/*  }}*/}
+            {/*/>*/}
             <div
               style={{
                 position: "absolute",
                 width: 100,
                 height: 100,
                 background: "rgba(0, 0, 0, 0.5)",
-                top: 0,
+                top: props.userData?.profileImageUrl ? 0 : -2,
+                left: props.userData?.profileImageUrl ? 0 : -2,
                 borderRadius: 50,
               }}
             >

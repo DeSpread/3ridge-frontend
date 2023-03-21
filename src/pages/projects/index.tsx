@@ -1,14 +1,12 @@
-import projectsData from "./data.json";
 import {
+  Box,
   Card,
   CardContent,
   Grid,
-  Box,
+  Skeleton,
   Stack,
   Typography,
-  Avatar,
   useMediaQuery,
-  Skeleton,
 } from "@mui/material";
 import Head from "next/head";
 import React, { ReactElement } from "react";
@@ -31,7 +29,7 @@ const Projects = () => {
   return (
     <>
       <Head>
-        <title>Projects</title>
+        <title>3ridge : Bridge to Web3</title>
       </Head>
       <Box
         style={{
@@ -83,7 +81,9 @@ const Projects = () => {
                       closeLoading();
                     }}
                   >
-                    <CardContent>
+                    <CardContent
+                      sx={{ background: theme.palette.neutral[800] }}
+                    >
                       <Stack direction={"column"} alignItems={"center"}>
                         {e.imageUrl && (
                           <LazyLoadImage

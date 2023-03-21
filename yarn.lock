@@ -3077,11 +3077,6 @@
   dependencies:
     "@use-gesture/core" "10.2.24"
 
-"@vercel/analytics@^0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@vercel/analytics/-/analytics-0.1.8.tgz#71f1f8c7bb98ac0c5c47eb3fb8ccbe8141b9fe47"
-  integrity sha512-PQrOI8BJ9qUiVJuQfnKiJd15eDjDJH9TBKsNeMrtelT4NAk7d9mBVz1CoZkvoFnHQ0OW7Xnqmr1F2nScfAnznQ==
-
 "@wagmi/core@0.7.8":
   version "0.7.8"
   resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.7.8.tgz#7de90977021bde2eaef3d116f0718a771d76dc9c"

@@ -39,6 +39,7 @@ import Link from "next/link";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SubMenuButton from "../components/molecules/sub-menu-button";
 import Image from "next/image";
+import BlockIcon from "../components/molecules/block-icon";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -143,15 +144,15 @@ const MainLayout = (props: MainLayoutProps) => {
               <Stack direction={"row"} alignItems={"flex-start"}>
                 <Image
                   src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_negative.svg"
+                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_white.svg"
                   }
                   height={smUp ? 52 : 48}
                   width={smUp ? 132 : 120}
                   alt={""}
                 />
-                <Typography sx={{ marginLeft: -1 }} variant={"caption"}>
-                  testnet
-                </Typography>
+                {/*<Typography sx={{ marginLeft: -1 }} variant={"caption"}>*/}
+                {/*  testnet*/}
+                {/*</Typography>*/}
               </Stack>
             </Box>
             {!props.disableNavButtonSet &&
@@ -181,7 +182,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           onSuccess: () => {
                             // showLoading();
                             // router.push("/").then((res) => {
-                            // closeLoading();
+                            //   closeLoading();
                             // });
                           },
                           onError: (error) => {
@@ -189,6 +190,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           },
                         });
                       }}
+                      userId={userData?._id}
                       src={userData?.profileImageUrl}
                       walletAddress={userData?.walletAddress}
                     ></NavbarAvatar>
@@ -221,7 +223,7 @@ const MainLayout = (props: MainLayoutProps) => {
       </AppBar>
 
       {/*--- Body ---*/}
-      <Box sx={{ flex: 1, background: theme.palette.background.default }}>
+      <Box sx={{ flex: 1, background: "#0f0e15" }}>
         {props.backgroundComponent}
         <Toolbar></Toolbar>
         <main>{props.children}</main>
