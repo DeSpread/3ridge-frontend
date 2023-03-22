@@ -20,7 +20,6 @@ import {
 } from "@mui/material";
 import PrimaryCard from "../atoms/primary-card";
 import { MouseEventWithParam, QuizContent, QuizEventParam } from "../../type";
-import { useTh } from "leva/plugin";
 import { useTheme } from "@mui/material/styles";
 
 export type QuestQuizFormProps = PropsWithChildren & {
