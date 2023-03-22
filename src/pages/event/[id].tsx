@@ -55,17 +55,6 @@ import { gql, request } from "graphql-request";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
 
-// export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
-//   return {
-//     paths: [], //indicates that no page needs be created at build time
-//     fallback: "blocking", //indicates the type of fallback
-//   };
-// };
-//
-// export async function getStaticProps() {
-//   return { props: {} };
-// }
-
 interface MyTimerSettings extends TimerSettings {
   sx?: CSSProperties;
 }
