@@ -764,10 +764,11 @@ const Event = (props: AppProps) => {
                             "discord",
                             "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
                           );
-                          await asyncCompleteQuestOfUser(
-                            ticketData._id,
-                            quest?._id
-                          ).then((res) => {
+                          try {
+                            const res = await asyncCompleteQuestOfUser(
+                              ticketData._id,
+                              quest?._id
+                            );
                             setVerifiedList((prevState) => {
                               prevState[index] = true;
                               return prevState;
@@ -775,7 +776,20 @@ const Event = (props: AppProps) => {
                             setUpdateIndex((prevState) => {
                               return prevState + 1;
                             });
-                          });
+                          } catch (e) {
+                            if (
+                              getErrorMessage(e) ===
+                              "user already participated ticket"
+                            ) {
+                              setVerifiedList((prevState) => {
+                                prevState[index] = true;
+                                return prevState;
+                              });
+                              setUpdateIndex((prevState) => {
+                                return prevState + 1;
+                              });
+                            }
+                          }
                           setDiscordQuestDialog(true);
                         }
                       }}
