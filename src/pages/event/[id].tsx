@@ -1059,7 +1059,11 @@ const Event = (props: AppProps) => {
                       return (
                         <>
                           {e.profileImageUrl && (
-                            <Tooltip title={e.name} key={index}>
+                            <Tooltip
+                              title={e.name}
+                              key={index}
+                              sx={{ zIndex: 1 }}
+                            >
                               <Avatar
                                 alt=""
                                 src={
@@ -1074,8 +1078,14 @@ const Event = (props: AppProps) => {
                             </Tooltip>
                           )}
                           {!e.profileImageUrl && e?._id && (
-                            <Tooltip title={e.name} key={index}>
-                              <BlockIcon seed={e?._id} scale={5}></BlockIcon>
+                            <Tooltip
+                              title={e.name}
+                              key={index}
+                              sx={{ zIndex: 1 }}
+                            >
+                              <div style={{ width: 42, height: 42 }}>
+                                <BlockIcon seed={e?._id} scale={5}></BlockIcon>
+                              </div>
                             </Tooltip>
                           )}
                         </>
