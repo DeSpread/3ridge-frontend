@@ -9,7 +9,6 @@ export function useProjectQuery(props: { projectId?: string }) {
 
   useEffect(() => {
     (async () => {
-      console.log(props.projectId);
       if (!props.projectId) return;
       setProjectDataLoading(true);
       const { data } = await client.query({
@@ -36,7 +35,7 @@ export function useProjectQuery(props: { projectId?: string }) {
       });
       setProjectDataLoading(false);
     })();
-  }, []);
+  }, [props.projectId]);
 
   return { projectData, projectDataLoading };
 }

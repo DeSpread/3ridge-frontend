@@ -46,17 +46,19 @@ const Project = () => {
   );
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType,
-    //@ts-ignore
-    projectId: router.query.id ?? undefined,
-    // projectId:
-    //   typeof router.query.id === "string" ? router.query.id : undefined,
+    projectId: router.isReady
+      ? typeof router.query.id === "string"
+        ? router.query.id
+        : undefined
+      : undefined,
     sort: ticketSortType,
   });
   const { projectData, projectDataLoading } = useProjectQuery({
-    //@ts-ignore
-    projectId: router.query.id ?? undefined,
-    // projectId:
-    //   typeof router.query.id === "string" ? router.query.id : undefined,
+    projectId: router.isReady
+      ? typeof router.query.id === "string"
+        ? router.query.id
+        : undefined
+      : undefined,
   });
 
   return (

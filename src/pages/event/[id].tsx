@@ -223,8 +223,11 @@ const Event = (props: AppProps) => {
     asyncRequestClaimNtf,
   } = useTicketQuery({
     userId: userData._id,
-    //@ts-ignore
-    id: router.query.id ?? undefined,
+    id: router.isReady
+      ? typeof router.query.id === "string"
+        ? router.query.id
+        : undefined
+      : undefined,
   });
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
   const [openDiscordQuestDialog, setDiscordQuestDialog] = useState(false);
