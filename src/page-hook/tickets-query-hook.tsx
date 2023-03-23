@@ -13,8 +13,8 @@ import {
 
 export function useTicketsQuery(props: {
   projectId?: string;
-  filterType: FilterType;
-  sort: TicketSortType;
+  filterType?: FilterType;
+  sort?: TicketSortType;
 }) {
   const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
   const [ticketsDataLoading, setTicketsDataLoading] = useState(false);
@@ -22,6 +22,10 @@ export function useTicketsQuery(props: {
 
   useEffect(() => {
     (async () => {
+      if (!props.filterType || !props.sort) {
+        return;
+      }
+
       setTicketsDataLoading(true);
       if (!props.projectId) {
         const status =

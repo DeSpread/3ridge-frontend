@@ -45,13 +45,13 @@ const Project = () => {
     TicketSortType.Trending
   );
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
-    filterType,
+    filterType: router.isReady ? filterType : undefined,
     projectId: router.isReady
       ? typeof router.query.id === "string"
         ? router.query.id
         : undefined
       : undefined,
-    sort: ticketSortType,
+    sort: router.isReady ? ticketSortType : undefined,
   });
   const { projectData, projectDataLoading } = useProjectQuery({
     projectId: router.isReady
