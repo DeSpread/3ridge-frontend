@@ -67,22 +67,13 @@ export function useTicketQuery({
           completed: completed ?? undefined,
           participants: participants?.map((e) => {
             return {
+              _id: e._id ?? undefined,
               name: e.name ?? undefined,
               profileImageUrl: e.profileImageUrl ?? undefined,
             };
           }),
           imageUrl: imageUrl ?? undefined,
           quests: quests?.map((e) => {
-            // console.log("aaa", userId);
-            // let isComplete = false;
-            // if (userId) {
-            //   isComplete =
-            //     e.completedUsers
-            //       ?.map((_e) => {
-            //         return _e._id;
-            //       })
-            //       .includes(userId) ?? false;
-            // }
             return {
               _id: e._id ?? undefined,
               title: e.title ?? undefined,
@@ -95,20 +86,6 @@ export function useTicketQuery({
                 questPolicy: e.questPolicy?.questPolicy ?? undefined,
               },
               isComplete: false,
-              // completedUsers: e.completedUsers
-              //   ? e.completedUsers.map((_e) => {
-              //       return {
-              //         _id: _e._id ?? undefined,
-              //         walletAddress:
-              //           _e.wallets && _e.wallets.length > 0
-              //             ? _e.wallets[0].address
-              //             : undefined,
-              //         name: _e.name ?? undefined,
-              //         email: _e.email ?? undefined,
-              //         profileImageUrl: _e.profileImageUrl ?? undefined,
-              //       };
-              //     })
-              //   : undefined,
             };
           }),
           rewardPolicy: {

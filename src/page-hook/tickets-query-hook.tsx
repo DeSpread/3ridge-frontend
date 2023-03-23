@@ -76,6 +76,7 @@ export function useTicketsQuery(props: {
       title?: string | null;
       participants?: Array<{
         __typename?: "User";
+        _id?: string | null;
         name?: string | null;
         profileImageUrl?: string | null;
       }> | null;
@@ -124,6 +125,7 @@ export function useTicketsQuery(props: {
           completed: e.completed ?? undefined,
           participants: e.participants?.map((_e) => {
             return {
+              _id: _e._id ?? undefined,
               name: _e.name ?? undefined,
               profileImageUrl: _e.profileImageUrl ?? undefined,
             };

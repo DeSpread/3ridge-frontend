@@ -115,7 +115,7 @@ export type Ticket = {
   untilTime?: string;
   description?: string;
   completed?: boolean;
-  participants?: { name?: string; profileImageUrl?: string }[];
+  participants?: { _id?: string; name?: string; profileImageUrl?: string }[];
   quests?: Quest[];
   imageUrl?: string;
   rewardPolicy?: {

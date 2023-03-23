@@ -54,6 +54,7 @@ import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { gql, request } from "graphql-request";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
+import BlockIcon from "../../components/molecules/block-icon";
 
 interface MyTimerSettings extends TimerSettings {
   sx?: CSSProperties;
@@ -1056,19 +1057,28 @@ const Event = (props: AppProps) => {
                   <>
                     {ticketData?.participants?.slice(0, 10).map((e, index) => {
                       return (
-                        <Tooltip title={e.name} key={index}>
-                          <Avatar
-                            alt=""
-                            src={
-                              e.profileImageUrl ??
-                              DEFAULT_PROFILE_IMAGE_DATA_SRC
-                            }
-                            sx={{
-                              width: 42,
-                              height: 42,
-                            }}
-                          />
-                        </Tooltip>
+                        <>
+                          {e.profileImageUrl && (
+                            <Tooltip title={e.name} key={index}>
+                              <Avatar
+                                alt=""
+                                src={
+                                  e.profileImageUrl ??
+                                  DEFAULT_PROFILE_IMAGE_DATA_SRC
+                                }
+                                sx={{
+                                  width: 42,
+                                  height: 42,
+                                }}
+                              />
+                            </Tooltip>
+                          )}
+                          {!e.profileImageUrl && e?._id && (
+                            <Tooltip title={e.name} key={index}>
+                              <BlockIcon seed={e?._id} scale={5}></BlockIcon>
+                            </Tooltip>
+                          )}
+                        </>
                       );
                     })}
                     {ticketData?.participants?.length &&

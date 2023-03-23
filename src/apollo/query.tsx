@@ -179,192 +179,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
       completed
       description
       participants {
-        name
-        profileImageUrl
-      }
-      imageUrl
-      quests {
         _id
-        title
-        description
-        questPolicy {
-          context
-          questPolicy
-        }
-      }
-      project {
-        _id
-        categories
-        description
-        imageUrl
-        name
-        projectSocial {
-          discordUrl
-          officialUrl
-          telegramUrl
-          twitterUrl
-        }
-      }
-      rewardPolicy {
-        context
-        rewardPolicyType
-      }
-      title
-      winners {
-        name
-      }
-    }
-  }
-`);
-
-export const GET_AVAILABLE_TICKETS = gql(/* GraphQL */ `
-  query AvailableTickets {
-    availableTickets {
-      _id
-      beginTime
-      untilTime
-      completed
-      description
-      participants {
-        name
-        profileImageUrl
-      }
-      imageUrl
-      quests {
-        _id
-        title
-        description
-        questPolicy {
-          context
-          questPolicy
-        }
-      }
-      project {
-        _id
-        categories
-        description
-        imageUrl
-        name
-        projectSocial {
-          discordUrl
-          officialUrl
-          telegramUrl
-          twitterUrl
-        }
-      }
-      rewardPolicy {
-        context
-        rewardPolicyType
-      }
-      title
-      winners {
-        name
-      }
-    }
-  }
-`);
-
-export const GET_COMPLETED_TICKETS = gql(/* GraphQL */ `
-  query CompletedTickets {
-    completedTickets {
-      _id
-      beginTime
-      untilTime
-      completed
-      description
-      participants {
-        name
-        profileImageUrl
-      }
-      imageUrl
-      quests {
-        _id
-        title
-        description
-        questPolicy {
-          context
-          questPolicy
-        }
-      }
-      project {
-        _id
-        categories
-        description
-        imageUrl
-        name
-        projectSocial {
-          discordUrl
-          officialUrl
-          telegramUrl
-          twitterUrl
-        }
-      }
-      rewardPolicy {
-        context
-        rewardPolicyType
-      }
-      title
-      winners {
-        name
-      }
-    }
-  }
-`);
-
-export const FIND_MISSED_TICKETS = gql(/* GraphQL */ `
-  query FindMissedTickets {
-    findMissedTickets {
-      _id
-      beginTime
-      untilTime
-      completed
-      description
-      participants {
-        name
-        profileImageUrl
-      }
-      imageUrl
-      quests {
-        _id
-        title
-        description
-        questPolicy {
-          context
-          questPolicy
-        }
-      }
-      project {
-        _id
-        categories
-        description
-        imageUrl
-        name
-        projectSocial {
-          discordUrl
-          officialUrl
-          telegramUrl
-          twitterUrl
-        }
-      }
-      rewardPolicy {
-        context
-        rewardPolicyType
-      }
-      title
-      winners {
-        name
-      }
-    }
-  }
-`);
-
-export const GET_ALL_TICKETS = gql(/* GraphQL */ `
-  query AllTickets {
-    tickets {
-      _id
-      completed
-      description
-      participants {
         name
         profileImageUrl
       }
@@ -412,6 +227,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       completed
       description
       participants {
+        _id
         name
         profileImageUrl
       }
@@ -424,16 +240,6 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
           context
           questPolicy
         }
-        # completedUsers {
-        #  _id
-        #  name
-        #  profileImageUrl
-        #  email
-        #  wallets {
-        #  address
-        #  chain
-        #  }
-        # }
       }
       rewardPolicy {
         context
