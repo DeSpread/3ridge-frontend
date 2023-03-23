@@ -76,32 +76,32 @@ const WithBaseSignInDialog = <P extends SignDialogProps>(
                 direction={"column"}
                 alignItems={"center"}
                 spacing={2}
-                sx={{ width: "100%", height: 320, background: "" }}
+                sx={{ width: "100%", height: 218, background: "" }}
               >
                 <WrappedContent {...props}></WrappedContent>
               </Stack>
               {/*---*/}
-              <Divider sx={{ width: "100%", paddingTop: 0 }}></Divider>
-              <Grid container direction={"row"}>
-                <Grid item>
-                  <Typography variant={"body2"}>
-                    By signing up, you agree to our
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <LinkTypography variant={"body2"}>
-                    &nbsp;Terms of use
-                  </LinkTypography>
-                </Grid>
-                <Grid item>
-                  <Typography variant={"body2"}>&nbsp;and</Typography>
-                </Grid>
-                <Grid item>
-                  <LinkTypography variant={"body2"}>
-                    Privacy Policy
-                  </LinkTypography>
-                </Grid>
-              </Grid>
+              {/*<Divider sx={{ width: "100%", paddingTop: 0 }}></Divider>*/}
+              {/*<Grid container direction={"row"}>*/}
+              {/*  <Grid item>*/}
+              {/*    <Typography variant={"body2"}>*/}
+              {/*      By signing up, you agree to our*/}
+              {/*    </Typography>*/}
+              {/*  </Grid>*/}
+              {/*  <Grid item>*/}
+              {/*    <LinkTypography variant={"body2"}>*/}
+              {/*      &nbsp;Terms of use*/}
+              {/*    </LinkTypography>*/}
+              {/*  </Grid>*/}
+              {/*  <Grid item>*/}
+              {/*    <Typography variant={"body2"}>&nbsp;and</Typography>*/}
+              {/*  </Grid>*/}
+              {/*  <Grid item>*/}
+              {/*    <LinkTypography variant={"body2"}>*/}
+              {/*      Privacy Policy*/}
+              {/*    </LinkTypography>*/}
+              {/*  </Grid>*/}
+              {/*</Grid>*/}
             </Stack>
           </DialogContent>
         </Dialog>
