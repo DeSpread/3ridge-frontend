@@ -60,6 +60,7 @@ export const QUEST_POLICY_TYPE = {
   VERIFY_TWITTER_LIKING: "VERIFY_TWITTER_LIKING",
   VERIFY_DISCORD: "VERIFY_DISCORD",
   VERIFY_CONTRACT: "VERIFY_CONTRACT",
+  VERIFY_3RIDGE_POINT: "VERIFY_3RIDGE_POINT",
 };
 
 export type User = {
@@ -139,6 +140,7 @@ export type Quest = {
       | TwitterRetweetQuestContext
       | TwitterFollowQuestContext
       | DiscordQuestContext
+      | Verify3ridgePoint
       | undefined;
     questPolicy?: string;
   };
@@ -165,6 +167,10 @@ export type TwitterFollowQuestContext = {
 
 export type DiscordQuestContext = {
   channelId: string;
+};
+
+export type Verify3ridgePoint = {
+  point: number;
 };
 
 export type QuizQuestContext = {

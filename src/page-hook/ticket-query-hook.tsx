@@ -3,6 +3,7 @@ import {
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
   REQUEST_CLAIM_NFT,
+  VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
@@ -24,6 +25,7 @@ export function useTicketQuery({
   const [verifyTwitterLikingQuest] = useMutation(VERIFY_TWITTER_LIKING_QUEST);
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
+  const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
   const [requestClaimNFT] = useMutation(REQUEST_CLAIM_NFT);
   const typeParseHelper = TypeParseHelper.getInstance();
@@ -181,6 +183,22 @@ export function useTicketQuery({
     }
   };
 
+  const asyncVerify3ridgePoint = async (ticketId: string, questId: string) => {
+    try {
+      if (ticketId && questId && userId) {
+        const res = await verify3ridgePoint({
+          variables: {
+            ticketId,
+            questId,
+            userId,
+          },
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const asyncIsCompletedQuestByUserId = async (questId: string) => {
     if (questId && userId) {
       try {
@@ -218,5 +236,6 @@ export function useTicketQuery({
     asyncVerifyTwitterLikingQuest,
     asyncCompleteQuestOfUser,
     asyncRequestClaimNtf,
+    asyncVerify3ridgePoint,
   };
 }

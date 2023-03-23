@@ -31,6 +31,7 @@ type VerifyCardProps = PropsWithChildren & {
   verified?: boolean;
   autoVerified?: boolean;
   disabled?: boolean;
+  hideStartButton?: boolean;
 };
 
 const VerifyCard = (props: VerifyCardProps) => {
@@ -161,6 +162,8 @@ const VerifyCard = (props: VerifyCardProps) => {
                       ? "Verifying"
                       : props.verified
                       ? "Verified"
+                      : props.autoVerified
+                      ? "Verify"
                       : "Verify"}
                   </PrimaryButton>
                   <div
@@ -188,14 +191,16 @@ const VerifyCard = (props: VerifyCardProps) => {
                     )}
                   </div>
                 </div>
-                <SecondaryButton
-                  sx={{ width: 86 }}
-                  disabled={props.disabled || props.verified}
-                  size={"medium"}
-                  onClick={props.onStartBtnClicked}
-                >
-                  Start
-                </SecondaryButton>
+                {!props.hideStartButton && (
+                  <SecondaryButton
+                    sx={{ width: 86 }}
+                    disabled={props.disabled || props.verified}
+                    size={"medium"}
+                    onClick={props.onStartBtnClicked}
+                  >
+                    Start
+                  </SecondaryButton>
+                )}
               </Stack>
             </Grid>
           </Grid>

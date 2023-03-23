@@ -7,6 +7,7 @@ import {
   REWARD_POLICY_TYPE,
   TwitterLikingQuestContext,
   DiscordQuestContext,
+  Verify3ridgePoint,
 } from "../type";
 import { QuestPolicyType } from "../__generated__/graphql";
 
@@ -39,7 +40,6 @@ class TypeParseHelper {
     try {
       const _context = context.trim();
       const contextJson = JSON.parse(_context);
-
       if (questPolicyType === QUEST_POLICY_TYPE.QUIZ) {
         return contextJson as QuizQuestContext;
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET) {
@@ -50,6 +50,8 @@ class TypeParseHelper {
         return contextJson as TwitterLikingQuestContext;
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
         return contextJson as DiscordQuestContext;
+      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT) {
+        return contextJson as Verify3ridgePoint;
       }
     } catch (e) {
       console.log(context, questPolicyType);

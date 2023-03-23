@@ -222,6 +222,7 @@ const Event = (props: AppProps) => {
     asyncVerifyTwitterLikingQuest,
     asyncCompleteQuestOfUser,
     asyncRequestClaimNtf,
+    asyncVerify3ridgePoint,
   } = useTicketQuery({
     userId: userData._id,
     id: router.isReady
@@ -598,6 +599,11 @@ const Event = (props: AppProps) => {
                 sx={{}}
               >
                 {ticketData?.quests?.map((quest, index) => {
+                  const autoVerified =
+                    quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyDiscord;
+
                   return (
                     <VerifyCard
                       key={index + 1}
@@ -607,6 +613,10 @@ const Event = (props: AppProps) => {
                       description={quest.description}
                       disabled={userData?._id ? false : true}
                       verified={verifiedList[index]}
+                      hideStartButton={
+                        quest.questPolicy?.questPolicy ===
+                        QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT
+                      }
                       onVerifyBtnClicked={async (e) => {
                         const myEvent = e as MouseEventWithParam<{
                           callback: (msg: string) => void;
@@ -638,6 +648,16 @@ const Event = (props: AppProps) => {
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
                           ) {
                             await asyncVerifyTwitterLikingQuest(
+                              ticketData._id,
+                              quest._id ?? ""
+                            );
+                            myEvent.params.callback("success");
+                            updateVerifyState(index);
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT
+                          ) {
+                            await asyncVerify3ridgePoint(
                               ticketData._id,
                               quest._id ?? ""
                             );
@@ -759,12 +779,7 @@ const Event = (props: AppProps) => {
                           setDiscordQuestDialog(true);
                         }
                       }}
-                      autoVerified={
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.Quiz ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyDiscord
-                      }
+                      autoVerified={autoVerified}
                     ></VerifyCard>
                   );
                 })}
@@ -1049,7 +1064,7 @@ const Event = (props: AppProps) => {
               </Stack>
               <Stack
                 direction={"row"}
-                spacing={-2}
+                // spacing={-2}
                 sx={{ marginTop: 4 }}
                 alignItems={"center"}
               >
@@ -1062,7 +1077,7 @@ const Event = (props: AppProps) => {
                             <Tooltip
                               title={e.name}
                               key={index}
-                              sx={{ zIndex: 1 }}
+                              // sx={{ zIndex: 1 + index }}
                             >
                               <Avatar
                                 alt=""
@@ -1081,7 +1096,7 @@ const Event = (props: AppProps) => {
                             <Tooltip
                               title={e.name}
                               key={index}
-                              sx={{ zIndex: 1 }}
+                              // sx={{ zIndex: 1 + index }}
                             >
                               <div style={{ width: 42, height: 42 }}>
                                 <BlockIcon seed={e?._id} scale={5}></BlockIcon>
