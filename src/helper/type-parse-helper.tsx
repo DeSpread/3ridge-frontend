@@ -7,9 +7,8 @@ import {
   REWARD_POLICY_TYPE,
   TwitterLikingQuestContext,
   DiscordQuestContext,
-  Verify3ridgePoint,
+  Verify3ridgePointContext,
 } from "../type";
-import { QuestPolicyType } from "../__generated__/graphql";
 
 class TypeParseHelper {
   private static instance: TypeParseHelper;
@@ -51,7 +50,7 @@ class TypeParseHelper {
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
         return contextJson as DiscordQuestContext;
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT) {
-        return contextJson as Verify3ridgePoint;
+        return contextJson as Verify3ridgePointContext;
       }
     } catch (e) {
       console.log(context, questPolicyType);

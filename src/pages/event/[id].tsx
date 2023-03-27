@@ -223,6 +223,7 @@ const Event = (props: AppProps) => {
     asyncCompleteQuestOfUser,
     asyncRequestClaimNtf,
     asyncVerify3ridgePoint,
+    asyncVerifyAptosQuest,
   } = useTicketQuery({
     userId: userData._id,
     id: router.isReady
@@ -615,7 +616,15 @@ const Event = (props: AppProps) => {
                       verified={verifiedList[index]}
                       hideStartButton={
                         quest.questPolicy?.questPolicy ===
-                        QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT
+                          QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT ||
+                        quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||
+                        quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||
+                        quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
+                        quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
                       }
                       onVerifyBtnClicked={async (e) => {
                         const myEvent = e as MouseEventWithParam<{
@@ -658,6 +667,22 @@ const Event = (props: AppProps) => {
                             QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT
                           ) {
                             await asyncVerify3ridgePoint(
+                              ticketData._id,
+                              quest._id ?? ""
+                            );
+                            myEvent.params.callback("success");
+                            updateVerifyState(index);
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                              QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||
+                            quest.questPolicy?.questPolicy ===
+                              QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
+                            quest.questPolicy?.questPolicy ===
+                              QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS ||
+                            quest.questPolicy?.questPolicy ===
+                              QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT
+                          ) {
+                            await asyncVerifyAptosQuest(
                               ticketData._id,
                               quest._id ?? ""
                             );

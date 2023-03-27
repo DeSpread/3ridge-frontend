@@ -38,6 +38,7 @@ const documents = {
     "\n  query IsCompletedQuestByUserId($questId: String!, $userId: String!) {\n    isCompletedQuestByUserId(questId: $questId, userId: $userId) {\n      isCompleted\n      questId\n    }\n  }\n": types.IsCompletedQuestByUserIdDocument,
     "\n  mutation CompleteQuestOfUser(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    completeQuestOfUser(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n      title\n      description\n      questPolicy {\n        context\n        questPolicy\n      }\n    }\n  }\n": types.CompleteQuestOfUserDocument,
     "\n  mutation RequestClaimNFT(\n    $collectionName: String!\n    $nftTokenName: String!\n    $receiverAddress: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    requestClaimNFT(\n      collectionName: $collectionName\n      nftTokenName: $nftTokenName\n      receiverAddress: $receiverAddress\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      txHash\n    }\n  }\n": types.RequestClaimNftDocument,
+    "\n  mutation VerifyAptosQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyAptosQuest(questId: $questId, ticketId: $ticketId, userId: $userId) {\n      _id\n    }\n  }\n": types.VerifyAptosQuestDocument,
 };
 
 /**
@@ -140,6 +141,10 @@ export function gql(source: "\n  mutation CompleteQuestOfUser(\n    $questId: St
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation RequestClaimNFT(\n    $collectionName: String!\n    $nftTokenName: String!\n    $receiverAddress: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    requestClaimNFT(\n      collectionName: $collectionName\n      nftTokenName: $nftTokenName\n      receiverAddress: $receiverAddress\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      txHash\n    }\n  }\n"): (typeof documents)["\n  mutation RequestClaimNFT(\n    $collectionName: String!\n    $nftTokenName: String!\n    $receiverAddress: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    requestClaimNFT(\n      collectionName: $collectionName\n      nftTokenName: $nftTokenName\n      receiverAddress: $receiverAddress\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      txHash\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation VerifyAptosQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyAptosQuest(questId: $questId, ticketId: $ticketId, userId: $userId) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation VerifyAptosQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyAptosQuest(questId: $questId, ticketId: $ticketId, userId: $userId) {\n      _id\n    }\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

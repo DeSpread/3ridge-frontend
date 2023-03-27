@@ -11,6 +11,7 @@ export const APP_ERROR_MESSAGE = {
   FIREBASE_USER_NOT_FOUND: "auth/user-not-found",
   FIREBASE_WRONG_PASSWORD: "auth/wrong-password",
   FIREBASE_TOO_MANY_REQUESTS: "auth/too-many-requests",
+  PARAMETER_ERROR: "parameter error",
 } as const;
 
 export class AppError extends Error {
@@ -18,7 +19,7 @@ export class AppError extends Error {
 
   constructor(message: string, payload?: any) {
     super(message);
-    this.name = "Sakura";
+    this.name = "bridge";
     this.payload = payload;
     Error.captureStackTrace(this, this.constructor);
   }

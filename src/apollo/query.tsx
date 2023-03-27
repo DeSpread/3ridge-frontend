@@ -444,3 +444,15 @@ export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const VERIFY_APTOS_QUEST = gql(/* GraphQL */ `
+  mutation VerifyAptosQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verifyAptosQuest(questId: $questId, ticketId: $ticketId, userId: $userId) {
+      _id
+    }
+  }
+`);

@@ -59,8 +59,11 @@ export const QUEST_POLICY_TYPE = {
   VERIFY_TWITTER_FOLLOW: "VERIFY_TWITTER_FOLLOW",
   VERIFY_TWITTER_LIKING: "VERIFY_TWITTER_LIKING",
   VERIFY_DISCORD: "VERIFY_DISCORD",
-  VERIFY_CONTRACT: "VERIFY_CONTRACT",
   VERIFY_3RIDGE_POINT: "VERIFY_3RIDGE_POINT",
+  VERIFY_APTOS_BRIDGE_TO_APTOS: "VERIFY_APTOS_BRIDGE_TO_APTOS",
+  VERIFY_APTOS_HAS_NFT: "VERIFY_APTOS_HAS_NFT",
+  VERIFY_APTOS_EXIST_TX: "VERIFY_APTOS_EXIST_TX",
+  VERIFY_APTOS_HAS_ANS: "VERIFY_APTOS_HAS_ANS",
 };
 
 export type User = {
@@ -140,7 +143,7 @@ export type Quest = {
       | TwitterRetweetQuestContext
       | TwitterFollowQuestContext
       | DiscordQuestContext
-      | Verify3ridgePoint
+      | Verify3ridgePointContext
       | undefined;
     questPolicy?: string;
   };
@@ -169,7 +172,7 @@ export type DiscordQuestContext = {
   channelId: string;
 };
 
-export type Verify3ridgePoint = {
+export type Verify3ridgePointContext = {
   point: number;
 };
 

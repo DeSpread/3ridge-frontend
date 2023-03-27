@@ -4,6 +4,7 @@ import {
   IS_COMPLETED_QUEST_BY_USER_ID,
   REQUEST_CLAIM_NFT,
   VERIFY_3RIDGE_POINT_QUEST,
+  VERIFY_APTOS_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
@@ -13,6 +14,7 @@ import { useEffect, useState } from "react";
 import { Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
+import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
 
 export function useTicketQuery({
   userId,
@@ -27,6 +29,7 @@ export function useTicketQuery({
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
+  const [verifyAptosQuest] = useMutation(VERIFY_APTOS_QUEST);
   const [requestClaimNFT] = useMutation(REQUEST_CLAIM_NFT);
   const typeParseHelper = TypeParseHelper.getInstance();
 
@@ -146,6 +149,8 @@ export function useTicketQuery({
           userId,
         },
       });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
     }
   };
 
@@ -161,6 +166,8 @@ export function useTicketQuery({
           userId,
         },
       });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
     }
   };
 
@@ -180,22 +187,36 @@ export function useTicketQuery({
           userId,
         },
       });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
+    }
+  };
+
+  const asyncVerifyAptosQuest = async (ticketId: string, questId: string) => {
+    if (ticketId && questId && userId) {
+      const res = await verifyAptosQuest({
+        variables: {
+          ticketId,
+          questId,
+          userId,
+        },
+      });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
     }
   };
 
   const asyncVerify3ridgePoint = async (ticketId: string, questId: string) => {
-    try {
-      if (ticketId && questId && userId) {
-        const res = await verify3ridgePoint({
-          variables: {
-            ticketId,
-            questId,
-            userId,
-          },
-        });
-      }
-    } catch (e) {
-      console.log(e);
+    if (ticketId && questId && userId) {
+      const res = await verify3ridgePoint({
+        variables: {
+          ticketId,
+          questId,
+          userId,
+        },
+      });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
     }
   };
 
@@ -237,5 +258,6 @@ export function useTicketQuery({
     asyncCompleteQuestOfUser,
     asyncRequestClaimNtf,
     asyncVerify3ridgePoint,
+    asyncVerifyAptosQuest,
   };
 }
