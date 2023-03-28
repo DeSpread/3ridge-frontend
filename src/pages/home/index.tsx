@@ -1,9 +1,12 @@
-import React, { PropsWithChildren, ReactElement, useEffect } from "react";
+import React, {
+  PropsWithChildren,
+  ReactElement,
+  useEffect,
+  useState,
+} from "react";
 import {
   Box,
-  Card,
   CardContent,
-  Divider,
   Grid,
   Stack,
   Typography,
@@ -11,7 +14,6 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import type { AppProps } from "next/app";
 import HomeFooter from "../../layouts/footer/home-footer";
 import GradientTypography from "../../components/atoms/gradient-typography";
@@ -19,7 +21,6 @@ import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-an
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import SecondaryButton from "../../components/atoms/secondary-button";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import PrimaryButton from "../../components/atoms/primary-button";
@@ -61,6 +62,31 @@ const HomeTag = (props: PropsWithChildren & { color: string }) => {
   );
 };
 
+// function getWindowDimensions() {
+//   const { innerWidth: width, innerHeight: height } = window;
+//   return {
+//     width,
+//     height,
+//   };
+// }
+//
+// function useWindowDimensions() {
+//   const [windowDimensions, setWindowDimensions] = useState(
+//     getWindowDimensions()
+//   );
+//
+//   useEffect(() => {
+//     function handleResize() {
+//       setWindowDimensions(getWindowDimensions());
+//     }
+//
+//     window.addEventListener("resize", handleResize);
+//     return () => window.removeEventListener("resize", handleResize);
+//   }, []);
+//
+//   return windowDimensions;
+// }
+
 const DescContent = (props: {
   title: string;
   index: number;
@@ -77,8 +103,6 @@ const DescContent = (props: {
       justifyContent={"center"}
       sx={{
         borderWidth: 1,
-        // borderStyle: "solid",
-        // borderColor: theme.palette.neutral[100],
         padding: 2,
       }}
     >
@@ -102,8 +126,8 @@ const DescContent = (props: {
                 <Image
                   src={props.imageUrl}
                   alt={""}
-                  width={256}
-                  height={256}
+                  width={smUp ? 256 : 218}
+                  height={smUp ? 256 : 218}
                   style={{
                     borderRadius: 8,
                     borderWidth: 0,
@@ -116,7 +140,7 @@ const DescContent = (props: {
           </Grid>
           <Grid
             item
-            sx={{ marginLeft: mdUp ? 8 : 0, minWidth: mdUp ? 400 : 400 }}
+            sx={{ marginLeft: mdUp ? 8 : 0, minWidth: mdUp ? 400 : 320 }}
           >
             <Stack
               direction={"column"}
@@ -126,7 +150,7 @@ const DescContent = (props: {
             >
               <Box>
                 <GradientTypography
-                  variant={smUp ? "h3" : "h4"}
+                  variant={smUp ? "h3" : "h5"}
                   sx={{
                     fontFamily: "LINESeedKR-Bd",
                   }}
@@ -138,7 +162,7 @@ const DescContent = (props: {
               <Box
                 sx={{
                   marginTop: 2,
-                  maxWidth: 420,
+                  maxWidth: smUp ? 420 : 320,
                   background: "",
                 }}
               >
@@ -153,7 +177,7 @@ const DescContent = (props: {
                     return (
                       <div key={index}>
                         <Typography
-                          variant={"h6"}
+                          variant={smUp ? "h6" : "body2"}
                           sx={{ color: theme.palette.neutral[400] }}
                         >
                           {e}
@@ -171,12 +195,45 @@ const DescContent = (props: {
   );
 };
 
+function useWindowDimensions() {
+  const hasWindow = typeof window !== "undefined";
+
+  function getWindowDimensions() {
+    const width = hasWindow ? window.innerWidth : null;
+    const height = hasWindow ? window.innerHeight : null;
+    return {
+      width,
+      height,
+    };
+  }
+
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
+
+  function handleResize() {
+    setWindowDimensions(getWindowDimensions());
+  }
+
+  useEffect(() => {
+    if (hasWindow) {
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, [hasWindow]);
+
+  return windowDimensions;
+}
+
 const Home = (props: AppProps) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
+  const windowDimensions = useWindowDimensions();
+  console.log(windowDimensions);
+  // const { height, width } = useWindowDimensions();
 
   return (
     <>
@@ -188,19 +245,157 @@ const Home = (props: AppProps) => {
         sx={{
           marginTop: "-8px",
           background: "",
+          width: "100%",
         }}
       >
         <Stack
           direction={"column"}
+          justifyContent={"center"}
+          // alignItems={"center"}
           sx={{
             width: "100%",
             height: `calc(100vh - 56px)`,
+            background: "",
           }}
         >
+          <Stack
+            sx={{
+              paddingLeft: 12,
+              paddingRight: 12,
+              background: "",
+              flex: 1,
+              zIndex: 3,
+            }}
+            spacing={3}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Stack
+              sx={{
+                padding: smUp ? 0 : 4,
+                paddingBottom: 0,
+                background: "",
+                width: "100%",
+              }}
+            >
+              {smUp ? (
+                <GradientTypography
+                  sx={{
+                    textAlign: smUp ? "left" : "center",
+                    fontFamily: "LINESeedKR-Bd",
+                    fontSize: mdUp ? "6.7rem" : smUp ? "5.7rem" : "2.7rem",
+                    lineHeight: 1.3,
+                  }}
+                >
+                  We Bridge You and Web3
+                </GradientTypography>
+              ) : (
+                <Stack direction={"column"}>
+                  <GradientTypography
+                    sx={{
+                      textAlign: "center",
+                      fontFamily: "LINESeedKR-Bd",
+                      fontSize: "2.3rem",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    We
+                  </GradientTypography>
+                  <GradientTypography
+                    sx={{
+                      textAlign: "center",
+                      fontFamily: "LINESeedKR-Bd",
+                      fontSize: "2.3rem",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    Bridge
+                  </GradientTypography>
+                  <GradientTypography
+                    sx={{
+                      textAlign: "center",
+                      fontFamily: "LINESeedKR-Bd",
+                      fontSize: "2.3rem",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    You and Web3
+                  </GradientTypography>
+                </Stack>
+              )}
+
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={smUp ? "flex-start" : "center"}
+                sx={{ marginTop: 4 }}
+              >
+                <Typography
+                  variant={mdUp ? "h2" : smUp ? "h3" : "h5"}
+                  textAlign={smUp ? "left" : "center"}
+                >
+                  Start your journey to web3 here
+                </Typography>
+              </Stack>
+              <Stack
+                direction={smUp ? "row" : "column"}
+                sx={{ marginTop: 2 }}
+                alignItems={smUp ? "flex-start" : "center"}
+              >
+                <Box sx={{ marginLeft: 1 }}>
+                  <Typography variant={mdUp ? "body1" : "body2"}>
+                    Support now
+                  </Typography>
+                </Box>
+                <Box sx={{ marginLeft: mdUp ? 2 : smUp ? 1 : 0 }}>
+                  <img
+                    style={{ width: mdUp ? 90 : smUp ? 68 : 42 }}
+                    src={
+                      "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/logo/aptos-full.svg"
+                    }
+                  />
+                </Box>
+              </Stack>
+              <Stack
+                direction={"row"}
+                justifyContent={smUp ? "flex-start" : "center"}
+                sx={{
+                  background: "",
+                  width: "100%",
+                  marginTop: smUp ? 4 : 2,
+                }}
+              >
+                <PrimaryButton
+                  sx={{
+                    marginRight: mdUp ? 10 : 0,
+                    width: smUp ? 186 : 100,
+                    marginTop: 4,
+                  }}
+                  onClick={async () => {
+                    showLoading();
+                    await router.push("/explore");
+                    closeLoading();
+                  }}
+                >
+                  <Box sx={{ padding: smUp ? 0 : 0 }}>
+                    <Typography
+                      className={"MuiTypography"}
+                      variant={smUp ? "h6" : "caption"}
+                      color={theme.palette.neutral[900]}
+                      fontFamily={"LINESeedKR-Bd"}
+                    >
+                      Start Now
+                    </Typography>
+                  </Box>
+                </PrimaryButton>
+              </Stack>
+            </Stack>
+          </Stack>
+
           <div
             style={{
               width: "100%",
-              height: `calc(100vh - 56px)`,
+              height: `calc(100vh - 42px)`,
               background: "",
               overflow: "hidden",
               position: "absolute",
@@ -248,109 +443,7 @@ const Home = (props: AppProps) => {
                 width: "100%",
                 transform: "translateY(-70%)",
               }}
-            >
-              <Stack
-                sx={{
-                  paddingLeft: 12,
-                  paddingRight: 12,
-                  background: "",
-                  flex: 1,
-                }}
-                spacing={3}
-                alignItems={"center"}
-              >
-                <Stack
-                  // spacing={1}
-                  sx={{
-                    padding: smUp ? 0 : 4,
-                    paddingBottom: 0,
-                    background: "",
-                    width: "100%",
-                  }}
-                >
-                  <GradientTypography
-                    // variant={mdUp ? "h1" : smUp ? "h2" : "h4"}
-                    sx={{
-                      textAlign: smUp ? "left" : "center",
-                      fontFamily: "LINESeedKR-Bd",
-                      fontSize: mdUp ? "6.7rem" : smUp ? "5.7rem" : "2.7rem",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    We Bridge You and Web3
-                  </GradientTypography>
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    justifyContent={smUp ? "flex-start" : "center"}
-                    sx={{ marginTop: 4 }}
-                  >
-                    <Typography variant={mdUp ? "h2" : smUp ? "h3" : "h5"}>
-                      Start your journey to web3 here
-                    </Typography>
-                    {/*<img*/}
-                    {/*  src={*/}
-                    {/*    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/only-logo-white.svg"*/}
-                    {/*  }*/}
-                    {/*  style={{ marginTop: 2 }}*/}
-                    {/*  height={mdUp ? "64px" : smUp ? "48px" : "32px"}*/}
-                    {/*/>*/}
-                  </Stack>
-                  <Stack direction={"row"} sx={{ marginTop: 2 }}>
-                    <Box sx={{ marginLeft: 1 }}>
-                      <Typography variant={mdUp ? "body1" : "body2"}>
-                        Support now
-                      </Typography>
-                    </Box>
-                    <Box sx={{ marginLeft: smUp ? 2 : 1 }}>
-                      <img
-                        style={{ width: mdUp ? 90 : 68 }}
-                        src={"https://indexer.xyz/icons/logos/aptos-full.svg"}
-                      />
-                    </Box>
-                  </Stack>
-                  <Stack
-                    direction={"row"}
-                    justifyContent={smUp ? "flex-start" : "center"}
-                    sx={{
-                      background: "",
-                      width: "100%",
-                      marginTop: smUp ? 4 : 2,
-                    }}
-                  >
-                    <PrimaryButton
-                      sx={{
-                        marginRight: mdUp ? 10 : 0,
-                        width: 186,
-                        marginTop: 4,
-                      }}
-                      onClick={async () => {
-                        showLoading();
-                        await router.push("/explore");
-                        closeLoading();
-                      }}
-                    >
-                      <Box sx={{ padding: smUp ? 0 : 0 }}>
-                        <Typography
-                          className={"MuiTypography"}
-                          variant={smUp ? "h6" : "body2"}
-                          color={theme.palette.neutral[900]}
-                          fontFamily={"LINESeedKR-Bd"}
-                        >
-                          Start Now
-                        </Typography>
-                      </Box>
-                    </PrimaryButton>
-                  </Stack>
-                </Stack>
-                {/*<Stack*/}
-                {/*  direction={"row"}*/}
-                {/*  sx={{ background: "white", width: "100%" }}*/}
-                {/*>*/}
-
-                {/*</Stack>*/}
-              </Stack>
-            </div>
+            ></div>
             <div
               style={{
                 position: "absolute",
@@ -374,48 +467,49 @@ const Home = (props: AppProps) => {
             </div>
           </div>
 
-          <UpDownAnimatedComponent
-            yDist={"6px"}
-            duration={1}
-            sx={{
-              position: "absolute",
-              bottom: "8px",
-              right: "50%",
-              left: "50%",
-              // transform: "translate(-50%, -50%)",
-            }}
-          >
-            <div
-              style={{
+          {smUp && (
+            <UpDownAnimatedComponent
+              yDist={"6px"}
+              duration={1}
+              sx={{
                 position: "absolute",
-                bottom: "16px",
+                bottom: "8px",
+                right: "50%",
+                left: "50%",
               }}
             >
-              <Image
-                src={
-                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
-                }
-                width={smUp ? 48 : 28}
-                height={smUp ? 48 : 28}
-                alt={""}
-              ></Image>
-            </div>
-            <div
-              style={{
-                position: "absolute",
-                bottom: smUp ? "32px" : "28px",
-              }}
-            >
-              <Image
-                src={
-                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
-                }
-                width={smUp ? 48 : 28}
-                height={smUp ? 48 : 28}
-                alt={""}
-              ></Image>
-            </div>
-          </UpDownAnimatedComponent>
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "16px",
+                }}
+              >
+                <Image
+                  src={
+                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
+                  }
+                  width={smUp ? 48 : 28}
+                  height={smUp ? 48 : 28}
+                  alt={""}
+                ></Image>
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: smUp ? "32px" : "28px",
+                }}
+              >
+                <Image
+                  src={
+                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
+                  }
+                  width={smUp ? 48 : 28}
+                  height={smUp ? 48 : 28}
+                  alt={""}
+                ></Image>
+              </div>
+            </UpDownAnimatedComponent>
+          )}
         </Stack>
         <Stack
           direction={"column"}
@@ -429,7 +523,7 @@ const Home = (props: AppProps) => {
             sx={{ marginTop: 8, marginBottom: 8 }}
           >
             <Typography
-              variant={"h2"}
+              variant={smUp ? "h2" : "h4"}
               sx={{
                 fontFamily: "LINESeedKR-Bd",
               }}
@@ -440,7 +534,7 @@ const Home = (props: AppProps) => {
               <Box
                 sx={{
                   background: "transparent",
-                  width: mdUp ? 1000 : smUp ? 600 : 400,
+                  width: mdUp ? 1000 : smUp ? 600 : 360,
                 }}
               >
                 <CardContent>
@@ -478,14 +572,6 @@ const Home = (props: AppProps) => {
                       }
                     />
                   </Stack>
-                  {/*<Box sx={{ padding: 4, paddingBottom: 2 }}>*/}
-                  {/*  <Divider*/}
-                  {/*    sx={{*/}
-                  {/*      width: "100%",*/}
-                  {/*      borderWidth: 1,*/}
-                  {/*    }}*/}
-                  {/*  ></Divider>*/}
-                  {/*</Box>*/}
                 </CardContent>
               </Box>
             </Box>
@@ -499,5 +585,5 @@ const Home = (props: AppProps) => {
 Home.getLayout = (page: ReactElement | ReactElement[]) => (
   <MainLayout footerComponent={<HomeFooter />}>{page}</MainLayout>
 );
-
+//
 export default Home;

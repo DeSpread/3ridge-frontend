@@ -89,14 +89,32 @@ const HomeFooter = () => {
           sx={{ padding: 3 }}
           rowSpacing={4}
         >
-          <Grid item>
-            <Stack direction={"column"} spacing={2}>
-              <Typography variant={"h5"}>Bridge your projects</Typography>
+          <Grid
+            item
+            sx={{
+              width: "100%",
+            }}
+          >
+            <Stack
+              direction={"column"}
+              // justifyContent={"center"}
+              spacing={2}
+              alignItems={mdUp ? "flex-start" : "center"}
+            >
+              <Typography variant={"h5"} textAlign={smUp ? "left" : "center"}>
+                Bridge your projects
+              </Typography>
               <Box>
-                <Typography variant={"body1"}>
+                <Typography
+                  variant={"body1"}
+                  textAlign={smUp ? "left" : "center"}
+                >
                   Bridge helps you reach, acquire, and retain users
                 </Typography>
-                <Typography variant={"body1"}>
+                <Typography
+                  variant={"body1"}
+                  textAlign={smUp ? "left" : "center"}
+                >
                   with powerful, interactive experiences.
                 </Typography>
               </Box>
@@ -113,9 +131,19 @@ const HomeFooter = () => {
               </SecondaryButton>
             </Stack>
           </Grid>
-          <Grid item>
-            <Stack direction={"row-reverse"} spacing={smUp ? 12 : 4}>
-              {footerData.map((x, xIdx) => {
+          <Grid
+            item
+            sx={{
+              background: "",
+              width: mdUp ? "" : "100%",
+            }}
+          >
+            <Stack
+              direction={"row-reverse"}
+              spacing={smUp ? 12 : 4}
+              justifyContent={mdUp ? "flex-start" : "center"}
+            >
+              {footerData.slice(0, smUp ? 3 : 2).map((x, xIdx) => {
                 return (
                   <Stack key={xIdx} direction={"column"} spacing={3}>
                     <Typography variant={smUp ? "h5" : "h6"}>

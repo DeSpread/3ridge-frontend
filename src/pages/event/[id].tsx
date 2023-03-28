@@ -404,7 +404,7 @@ const Event = (props: AppProps) => {
         // spacing={6}
         columnSpacing={6}
         rowSpacing={6}
-        sx={{ marginTop: 12, marginBottom: 12 }}
+        sx={{ marginTop: smUp ? 8 : 0, marginBottom: 12 }}
       >
         <Grid item>
           <Stack
@@ -472,10 +472,8 @@ const Event = (props: AppProps) => {
                   <Grid
                     container
                     alignItems={"left"}
-                    // direction={smUp ? "row" : "column"}
-                    // spacing={1}
-                    // rowSpacing={1}
-                    // sx={{ marginLeft: -10 }}
+                    justifyContent={smUp ? "flex-start" : "center"}
+                    rowSpacing={1}
                   >
                     {!ticketData?.completed && (
                       <Grid item>
@@ -1098,7 +1096,12 @@ const Event = (props: AppProps) => {
             </Stack>
 
             <Stack direction={"column"}>
-              <Stack direction={"row"} alignItems={"center"} spacing={1}>
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                spacing={1}
+                justifyContent={smUp ? "flex-start" : "center"}
+              >
                 <Typography variant="h5">Participants</Typography>
               </Stack>
               <Stack
@@ -1106,6 +1109,7 @@ const Event = (props: AppProps) => {
                 // spacing={-2}
                 sx={{ marginTop: 4 }}
                 alignItems={"center"}
+                justifyContent={smUp ? "flex-start" : "center"}
               >
                 {(ticketData?.participants?.length ?? 0) > 0 ? (
                   <>
