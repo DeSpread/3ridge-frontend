@@ -1,9 +1,4 @@
-import React, {
-  PropsWithChildren,
-  ReactElement,
-  useEffect,
-  useState,
-} from "react";
+import React, { ReactElement } from "react";
 import {
   Box,
   CardContent,
@@ -18,7 +13,6 @@ import type { AppProps } from "next/app";
 import HomeFooter from "../../layouts/footer/home-footer";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
-import StyledChip from "../../components/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import { useLoading } from "../../provider/loading/loading-provider";
@@ -28,64 +22,6 @@ import PrimaryButton from "../../components/atoms/primary-button";
 export async function getStaticProps() {
   return { props: {} };
 }
-
-const HomeTag = (props: PropsWithChildren & { color: string }) => {
-  const theme = useTheme();
-  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
-
-  return (
-    <StyledChip
-      sx={{
-        paddingTop: smUp ? "18px" : 0,
-        paddingBottom: smUp ? "20px" : 0,
-        paddingLeft: "5px",
-        paddingRight: "5px",
-      }}
-      label={
-        <Stack direction={"row"} alignItems={"center"}>
-          <Box
-            sx={{
-              width: mdUp ? 12 : smUp ? 12 : 12, //12,
-              height: mdUp ? 12 : smUp ? 12 : 12,
-              background: props.color,
-              borderRadius: 12,
-              marginRight: 1,
-            }}
-          ></Box>
-          <Typography variant={mdUp ? "body1" : smUp ? "body2" : "subtitle2"}>
-            {props.children}
-          </Typography>
-        </Stack>
-      }
-    ></StyledChip>
-  );
-};
-
-// function getWindowDimensions() {
-//   const { innerWidth: width, innerHeight: height } = window;
-//   return {
-//     width,
-//     height,
-//   };
-// }
-//
-// function useWindowDimensions() {
-//   const [windowDimensions, setWindowDimensions] = useState(
-//     getWindowDimensions()
-//   );
-//
-//   useEffect(() => {
-//     function handleResize() {
-//       setWindowDimensions(getWindowDimensions());
-//     }
-//
-//     window.addEventListener("resize", handleResize);
-//     return () => window.removeEventListener("resize", handleResize);
-//   }, []);
-//
-//   return windowDimensions;
-// }
 
 const DescContent = (props: {
   title: string;
@@ -195,45 +131,12 @@ const DescContent = (props: {
   );
 };
 
-function useWindowDimensions() {
-  const hasWindow = typeof window !== "undefined";
-
-  function getWindowDimensions() {
-    const width = hasWindow ? window.innerWidth : null;
-    const height = hasWindow ? window.innerHeight : null;
-    return {
-      width,
-      height,
-    };
-  }
-
-  const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions()
-  );
-
-  function handleResize() {
-    setWindowDimensions(getWindowDimensions());
-  }
-
-  useEffect(() => {
-    if (hasWindow) {
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, [hasWindow]);
-
-  return windowDimensions;
-}
-
 const Home = (props: AppProps) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
-  const windowDimensions = useWindowDimensions();
-  console.log(windowDimensions);
-  // const { height, width } = useWindowDimensions();
 
   return (
     <>
