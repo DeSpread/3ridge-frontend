@@ -42,7 +42,7 @@ const Signup = () => {
     walletSignUp,
     emailVerify,
     emailSignIn,
-    resendEmailVerify,
+    // resendEmailVerify,
   } = useLogin();
   const { showLoading, closeLoading } = useLoading();
   const { setShowSignInDialog } = useSignDialog();
@@ -122,37 +122,45 @@ const Signup = () => {
                     closeLoading();
                   },
                   onError: (error: AppError) => {
-                    console.error(error);
-                    let message = "Unknown error occurred";
-                    if (error.message === MAIL_VERIFY.NOT_VERIFIED) {
-                      closeLoading();
+                    console.log(error);
+                    if (error.message === "auth already requested") {
                       setSignUpParams({ ...myEvent.params });
                       setFormType(FORM_TYPE.VERIFY_EMAIL);
-                    } else if (error.message === MAIL_VERIFY.USER_NOT_FOUND) {
                       closeLoading();
-                      message = "Something auth progress problem occurred";
-                      showErrorAlert({ content: message });
-                    } else if (error.message === MAIL_VERIFY.PASSWORD_WRONG) {
-                      closeLoading();
-                      message = "Check your password";
-                      showErrorAlert({ content: message });
-                    } else if (error.message === MAIL_VERIFY.VERIFIED) {
-                      const { email, password } =
-                        error.payload as EmailSignUpEventParams;
-                      emailSignIn(
-                        { email, password },
-                        {
-                          onSuccess: () => {
-                            closeLoading();
-                            router.push("/profile").then();
-                          },
-                          onError: (e: Error) => {
-                            closeLoading();
-                            showErrorAlert({ content: getErrorMessage(e) });
-                          },
-                        }
-                      );
+                      return;
                     }
+                    showErrorAlert({ content: getErrorMessage(e) });
+                    closeLoading();
+                    // let message = "Unknown error occurred";
+                    // if (error.message === MAIL_VERIFY.NOT_VERIFIED) {
+                    // closeLoading();
+                    //   setSignUpParams({ ...myEvent.params });
+                    //   setFormType(FORM_TYPE.VERIFY_EMAIL);
+                    // } else if (error.message === MAIL_VERIFY.USER_NOT_FOUND) {
+                    //   closeLoading();
+                    //   message = "Something auth progress problem occurred";
+                    //   showErrorAlert({ content: message });
+                    // } else if (error.message === MAIL_VERIFY.PASSWORD_WRONG) {
+                    //   closeLoading();
+                    //   message = "Check your password";
+                    //   showErrorAlert({ content: message });
+                    // } else if (error.message === MAIL_VERIFY.VERIFIED) {
+                    //   const { email, password } =
+                    //     error.payload as EmailSignUpEventParams;
+                    //   emailSignIn(
+                    //     { email, password },
+                    //     {
+                    //       onSuccess: () => {
+                    //         closeLoading();
+                    //         router.push("/profile").then();
+                    //       },
+                    //       onError: (e: Error) => {
+                    //         closeLoading();
+                    //         showErrorAlert({ content: getErrorMessage(e) });
+                    //       },
+                    //     }
+                    //   );
+                    // }
                   },
                 });
               }}
@@ -163,7 +171,7 @@ const Signup = () => {
               email={signupParams.email}
               onClickResendVerification={(e) => {
                 const { email, password } = signupParams;
-                resendEmailVerify(
+                emailVerify(
                   { email, password },
                   {
                     onSuccess: () => {
@@ -178,24 +186,43 @@ const Signup = () => {
                       });
                     },
                     onError: (error: Error) => {
-                      if (error.message === MAIL_VERIFY.VERIFIED) {
+                      if (error.message === "auth already requested") {
                         showAlert({
                           title: "Info",
                           content: (
                             <div>
                               <p style={{ marginBottom: -2 }}>
-                                Already verified
+                                Email is resend
                               </p>
-                              <p>Please Sign in</p>
+                              <p>Please check your email</p>
                             </div>
                           ),
                         });
+                        // showAlert({
+                        //   title: "Info",
+                        //   content: (
+                        //     <div>
+                        //       <p style={{ marginBottom: -2 }}>
+                        //         Already verified
+                        //       </p>
+                        //       <p>Please Sign in</p>
+                        //     </div>
+                        //   ),
+                        // });
+                        return;
+                      } else if (error.message === "auth already requested") {
                         return;
                       }
                       showErrorAlert({ content: "Unknown error occurred" });
                     },
                   }
                 );
+                // resendEmailVerify(
+                //   { email, password },
+                //   {
+
+                //   }
+                // );
               }}
               onClickSignIn={(e) => {
                 const { email, password } = signupParams;
@@ -217,8 +244,12 @@ const Signup = () => {
             spacing={1}
           >
             <Divider></Divider>
-            <Stack direction={"row"}>
-              <Typography variant={"body2"}>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"center"}
+            >
+              <Typography variant={"body2"} textAlign={"center"}>
                 By signing up, you agree to our
               </Typography>
               <LinkTypography variant={"body2"}>

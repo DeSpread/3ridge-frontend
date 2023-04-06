@@ -17,11 +17,6 @@ import AwsClient from "../../../remote/aws-client";
 
 export function useEmailLogin() {
   const preference = PreferenceHelper.getInstance();
-  const {
-    asyncVerifyUserWithEmailAndPassword,
-    asyncSignInEmailWithVerify,
-    asyncResendEmailVerify,
-  } = useFirebaseAuth();
 
   const [emailLoginInfo, setEmailLoginInfo] = useState<EmailLoggedInInfo>({});
   const [createUserByEmail] = useMutation(CREATE_USER_BY_EMAIL);
@@ -52,17 +47,64 @@ export function useEmailLogin() {
     (async () => {
       const { email, password } = params;
       try {
-        const res = await asyncVerifyUserWithEmailAndPassword(email, password);
-        if (res === MAIL_VERIFY.SEND_VERIFICATION) {
-          onSuccess?.();
+        const res = await AwsClient.getInstance().asyncRequestAuthMail(
+          email,
+          password
+        );
+        if (res.status === 400 || res.status === 500) {
+          const data = await res.text();
+          console.log(data);
+          const message = JSON.parse(data).message;
+          console.log(message, JSON.parse(data));
+          onError?.(new AppError(message, { email, password }));
           return;
         }
-        onError?.(new AppError(res, { email, password }));
+        onSuccess?.();
       } catch (e) {
+        console.log(e);
         onError?.(
           new AppError(getErrorMessage(e), {
             email,
             password,
+          })
+        );
+      }
+    })();
+  };
+
+  const updateAuthMail: SuccessErrorCallbackWithParam<
+    EmailLoggedInInfo,
+    void
+  > = (params, { onSuccess, onError }) => {
+    (async () => {
+      const { mail } = params;
+      try {
+        if (!mail) {
+          onError?.(
+            new AppError("Empty mail", {
+              mail,
+            })
+          );
+          return;
+        }
+
+        const res = await AwsClient.getInstance().asyncUpdateAuthMail(mail);
+        if (res.status === 400 || res.status === 500) {
+          const data = await res.text();
+          const message = JSON.parse(data).message;
+          onError?.(new AppError(message, { mail }));
+          return;
+        }
+        await createUserByEmail({
+          variables: {
+            email: mail,
+          },
+        });
+        onSuccess?.();
+      } catch (e) {
+        onError?.(
+          new AppError(getErrorMessage(e), {
+            mail,
           })
         );
       }
@@ -80,41 +122,18 @@ export function useEmailLogin() {
           email,
           password
         );
-        if (res.status === 400) {
+        if (res.status === 400 || res.status === 500) {
           const data = await res.text();
           const message = JSON.parse(data).message;
           onError?.(new AppError(message));
           return;
         }
-        // const res = await asyncSignInEmailWithVerify(email, password);
-        // if (res === MAIL_VERIFY.VERIFIED) {
-        //   const { data } = await client.query({
-        //     query: GET_USER_BY_EMAIL,
-        //     variables: {
-        //       email,
-        //     },
-        //   });
         setEmailLoginInfo((prevState) => {
           return { ...prevState, mail: email };
         });
         preference.updateEmailSignIn(email);
         onSuccess?.();
         return;
-      } catch (e) {
-        onError?.(new AppError(getErrorMessage(e)));
-      }
-    })();
-  };
-
-  const resendEmailVerify: SuccessErrorCallbackWithParam<
-    EmailSignUpEventParams,
-    void
-  > = (params, { onSuccess, onError }) => {
-    (async () => {
-      try {
-        const { email, password } = params;
-        await asyncResendEmailVerify(email, password);
-        onSuccess?.();
       } catch (e) {
         onError?.(new AppError(getErrorMessage(e)));
       }
@@ -140,7 +159,7 @@ export function useEmailLogin() {
   return {
     emailVerify,
     emailSignIn,
-    resendEmailVerify,
+    updateAuthMail,
     isMailLoggedIn,
     emailLoginInfo,
     emailLogout,

@@ -8,6 +8,7 @@ import NextLink from "next/link";
 import { useTheme } from "@mui/material/styles";
 import AwsClient from "../../remote/aws-client";
 import { getErrorMessage } from "../../error/my-error";
+import { useLogin } from "../../provider/login/login-provider";
 
 const Skelton = () => {
   return (
@@ -126,6 +127,7 @@ const AuthComplete = () => {
 const Auth = () => {
   const router = useRouter();
   const theme = useTheme();
+  const { updateAuthMail } = useLogin();
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -140,19 +142,25 @@ const Auth = () => {
       (async () => {
         try {
           console.log(`mail: ${mail}`);
-          const res = await AwsClient.getInstance().asyncUpdateAuthMail(mail);
-          if (!(res.status === 200 || res.status === 204)) {
-            const data = await res.text();
-            const message = JSON.parse(data).message;
-            const capitalizedStr = message.replace(/^\w/, (c: string) =>
-              c.toUpperCase()
-            );
-            setErrorMsg(`${capitalizedStr}`);
-          }
+          updateAuthMail(
+            { mail },
+            {
+              onSuccess: (msg) => {
+                setLoading(false);
+              },
+              onError: (error) => {
+                const capitalizedStr = error.message.replace(
+                  /^\w/,
+                  (c: string) => c.toUpperCase()
+                );
+                setErrorMsg(`${capitalizedStr}`);
+                setLoading(false);
+              },
+            }
+          );
         } catch (e) {
           console.log(e);
           setErrorMsg(`Internal Error : ${getErrorMessage(e)}`);
-        } finally {
           setLoading(false);
         }
       })();

@@ -31,8 +31,8 @@ const VerifyYourEmailForm = ({
         <Typography textAlign={"left"} variant={"h5"}>
           Verify your email
         </Typography>
-        <Stack spacing={9} alignItems={"center"}>
-          <Stack spacing={4}>
+        <Stack spacing={5} alignItems={"center"}>
+          <Stack spacing={9}>
             <Stack spacing={0} alignItems={"center"}>
               <Typography variant={"body1"}>
                 A verification link was just sent to your
@@ -44,31 +44,31 @@ const VerifyYourEmailForm = ({
             <Typography variant={"h5"}>{email}</Typography>
           </Stack>
           <Stack width={"100%"} alignItems={"center"} spacing={3}>
-            <SecondaryButton fullWidth={true} onClick={onClickSignIn}>
-              Let me sign in!
-            </SecondaryButton>
-            <Stack alignItems={"center"}>
-              <Typography variant={"caption"}>
-                If you have not received the email,
-              </Typography>
-              <Typography variant={"caption"}>
-                please check your spam inbox or
-              </Typography>
-              <LinkTypography
-                variant={"caption"}
-                sx={{
-                  fontWeight: "bold",
-                  color: theme.palette.error.main,
-                  "&:hover": {
-                    color: theme.palette.error.light,
-                    textDecoration: "underline",
-                  },
-                }}
-                onClick={onClickResendVerification}
-              >
-                resend verification email
-              </LinkTypography>
-            </Stack>
+            {/*<SecondaryButton fullWidth={true} onClick={onClickSignIn}>*/}
+            {/*  Let me sign in!*/}
+            {/*</SecondaryButton>*/}
+            {/*<Stack alignItems={"center"}>*/}
+            {/*  <Typography variant={"caption"}>*/}
+            {/*    If you have not received the email,*/}
+            {/*  </Typography>*/}
+            {/*  <Typography variant={"caption"}>*/}
+            {/*    please check your spam inbox or*/}
+            {/*  </Typography>*/}
+            {/*  <LinkTypography*/}
+            {/*    variant={"caption"}*/}
+            {/*    sx={{*/}
+            {/*      fontWeight: "bold",*/}
+            {/*      color: theme.palette.error.main,*/}
+            {/*      "&:hover": {*/}
+            {/*        color: theme.palette.error.light,*/}
+            {/*        textDecoration: "underline",*/}
+            {/*      },*/}
+            {/*    }}*/}
+            {/*    onClick={onClickResendVerification}*/}
+            {/*  >*/}
+            {/*    resend verification email*/}
+            {/*  </LinkTypography>*/}
+            {/*</Stack>*/}
           </Stack>
         </Stack>
       </Stack>

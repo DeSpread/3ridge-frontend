@@ -23,10 +23,7 @@ const LoginContext = createContext<{
   walletLoggedInInfo: WalletLoggedInInfo;
   emailVerify: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
   emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
-  resendEmailVerify: SuccessErrorCallbackWithParam<
-    EmailSignUpEventParams,
-    void
-  >;
+  updateAuthMail: SuccessErrorCallbackWithParam<EmailLoggedInInfo, void>;
   isMailLoggedIn: boolean;
   emailLoggedInInfo: EmailLoggedInInfo;
 }>({
@@ -40,7 +37,7 @@ const LoginContext = createContext<{
   walletLoggedInInfo: {},
   emailVerify: () => {},
   emailSignIn: () => {},
-  resendEmailVerify: () => {},
+  updateAuthMail: () => {},
   isMailLoggedIn: false,
   emailLoggedInInfo: {},
 });
@@ -54,9 +51,9 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     emailVerify,
     emailSignIn,
     emailLogout,
-    resendEmailVerify,
     isMailLoggedIn,
     emailLoginInfo,
+    updateAuthMail,
   } = useEmailLogin();
 
   const logout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
@@ -92,8 +89,8 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
         isWalletLoggedIn,
         emailVerify,
         emailSignIn,
-        resendEmailVerify,
         isMailLoggedIn,
+        updateAuthMail,
         emailLoggedInInfo: emailLoginInfo,
       }}
     >
