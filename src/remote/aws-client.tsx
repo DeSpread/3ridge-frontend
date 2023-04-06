@@ -29,4 +29,26 @@ export default class AwsClient {
     });
     return res;
   };
+
+  asyncAuthMail = async (mail: string) => {
+    const headersList = {
+      Accept: "*/*",
+      "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+      "Content-Type": "application/json",
+    };
+
+    const bodyContent = JSON.stringify({
+      mail,
+    });
+
+    const response = await fetch(
+      "https://bqkigu1jwg.execute-api.ap-northeast-2.amazonaws.com/Prod/auth",
+      {
+        method: "PUT",
+        body: bodyContent,
+        headers: headersList,
+      }
+    );
+    return response;
+  };
 }

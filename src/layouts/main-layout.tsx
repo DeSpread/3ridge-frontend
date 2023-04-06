@@ -269,6 +269,11 @@ const MainLayout = (props: MainLayoutProps) => {
                         >
                           Please Install PetraWallet
                         </Typography>
+                        <Typography
+                          style={{ color: theme.palette.neutral[100] }}
+                        >
+                          After Install, Create Account and Refresh page
+                        </Typography>
                         <Link
                           href={"https://petra.app/"}
                           rel={"noopener noreferrer"}

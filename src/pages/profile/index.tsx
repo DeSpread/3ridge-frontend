@@ -257,6 +257,7 @@ const Profile = (props: AppProps) => {
     } catch (e) {
       closeLoading();
       const message = getErrorMessage(e);
+      console.log(message);
       if (message.includes(APP_ERROR_MESSAGE.FIREBASE_TOO_MANY_REQUESTS)) {
         showErrorAlert({
           content: "Resend email exceed limit please 1hour later",
