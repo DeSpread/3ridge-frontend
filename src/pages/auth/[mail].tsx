@@ -141,13 +141,7 @@ const Auth = () => {
         try {
           console.log(`mail: ${mail}`);
           const res = await AwsClient.getInstance().asyncAuthMail(mail);
-          if (res.status === 200 || res.status === 204) {
-            const data = await res.text();
-            const message = JSON.parse(data).message;
-            console.log(message);
-            if (message === "mail auth is already done") {
-            }
-          } else {
+          if (!(res.status === 200 || res.status === 204)) {
             const data = await res.text();
             const message = JSON.parse(data).message;
             const capitalizedStr = message.replace(/^\w/, (c: string) =>

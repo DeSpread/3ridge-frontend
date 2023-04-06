@@ -232,7 +232,7 @@ const MainLayout = (props: MainLayoutProps) => {
 
       {/*--- Dialog ---*/}
       <SignInDialog
-        title={"Good to see you again!"}
+        title={"We are happy to see you again!"}
         open={isSignDialogOpen}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
