@@ -24,6 +24,7 @@ import {
 import VerifyYourEmailForm from "../../components/organisms/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
+import AwsClient from "../../remote/aws-client";
 
 const FORM_TYPE = {
   SELECT: "SELECT",
@@ -169,60 +170,33 @@ const Signup = () => {
           {formType === FORM_TYPE.VERIFY_EMAIL && (
             <VerifyYourEmailForm
               email={signupParams.email}
-              onClickResendVerification={(e) => {
+              onClickResendVerification={async (e) => {
                 const { email, password } = signupParams;
-                emailVerify(
-                  { email, password },
-                  {
-                    onSuccess: () => {
-                      showAlert({
-                        title: "Info",
-                        content: (
-                          <div>
-                            <p style={{ marginBottom: -2 }}>Email is resend</p>
-                            <p>Please check your email</p>
-                          </div>
-                        ),
-                      });
-                    },
-                    onError: (error: Error) => {
-                      if (error.message === "auth already requested") {
-                        showAlert({
-                          title: "Info",
-                          content: (
-                            <div>
-                              <p style={{ marginBottom: -2 }}>
-                                Email is resend
-                              </p>
-                              <p>Please check your email</p>
-                            </div>
-                          ),
-                        });
-                        // showAlert({
-                        //   title: "Info",
-                        //   content: (
-                        //     <div>
-                        //       <p style={{ marginBottom: -2 }}>
-                        //         Already verified
-                        //       </p>
-                        //       <p>Please Sign in</p>
-                        //     </div>
-                        //   ),
-                        // });
-                        return;
-                      } else if (error.message === "auth already requested") {
-                        return;
-                      }
-                      showErrorAlert({ content: "Unknown error occurred" });
-                    },
+                showLoading();
+                try {
+                  const res = await AwsClient.getInstance().asyncResendAuthMail(
+                    email
+                  );
+                  if (res.status === 500 || res.status === 400) {
+                    const data = await res.text();
+                    const message = JSON.parse(data).message;
+                    showErrorAlert({ content: message });
+                  } else {
+                    showAlert({
+                      title: "Info",
+                      content: (
+                        <div>
+                          <p style={{ marginBottom: -2 }}>Email is resend</p>
+                          <p>Please check your email</p>
+                        </div>
+                      ),
+                    });
                   }
-                );
-                // resendEmailVerify(
-                //   { email, password },
-                //   {
-
-                //   }
-                // );
+                } catch (e) {
+                  showErrorAlert({ content: "Unknown error occurred" });
+                } finally {
+                  closeLoading();
+                }
               }}
               onClickSignIn={(e) => {
                 const { email, password } = signupParams;
