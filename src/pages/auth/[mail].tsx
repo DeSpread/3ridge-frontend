@@ -91,7 +91,7 @@ const AuthComplete = () => {
           sx={{ width: "100%", marginBottom: 4, borderBottomWidth: 2 }}
         ></Divider>
         <Typography variant={"h4"} textAlign={"center"}>
-          Mail Authorization Complete
+          Mail Verification Complete
         </Typography>
         <Typography variant={"h6"} color={theme.palette.neutral[400]}>
           Thank you for using our service
