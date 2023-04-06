@@ -78,6 +78,7 @@ const SomethingError = (props: { errorMessage: string }) => {
 
 const AuthComplete = () => {
   const theme = useTheme();
+  const router = useRouter();
   return (
     <>
       <Stack
@@ -99,6 +100,9 @@ const AuthComplete = () => {
           sx={{
             width: 186,
             marginTop: 4,
+          }}
+          onClick={() => {
+            router.push(`/explore`).then((res) => {});
           }}
         >
           <Box>
