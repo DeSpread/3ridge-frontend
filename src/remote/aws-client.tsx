@@ -30,7 +30,51 @@ export default class AwsClient {
     return res;
   };
 
-  asyncAuthMail = async (mail: string) => {
+  asyncLoginWithMail = async (mail: string, password: string) => {
+    const headersList = {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+    };
+
+    const bodyContent = JSON.stringify({
+      mail,
+      password,
+    });
+
+    const response = await fetch(
+      "https://bqkigu1jwg.execute-api.ap-northeast-2.amazonaws.com/Prod/login",
+      {
+        method: "POST",
+        body: bodyContent,
+        headers: headersList,
+      }
+    );
+    return response;
+  };
+
+  asyncRequestAuthMail = async (mail: string, password: string) => {
+    const headersList = {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+    };
+
+    const bodyContent = JSON.stringify({
+      mail,
+      password,
+    });
+
+    const response = await fetch(
+      "https://bqkigu1jwg.execute-api.ap-northeast-2.amazonaws.com/Prod/auth",
+      {
+        method: "POST",
+        body: bodyContent,
+        headers: headersList,
+      }
+    );
+    return response;
+  };
+
+  asyncUpdateAuthMail = async (mail: string) => {
     const headersList = {
       Accept: "*/*",
       "Content-Type": "application/json",

@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CREATE_USER_BY_EMAIL, GET_USER_BY_EMAIL } from "../../../apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
+import AwsClient from "../../../remote/aws-client";
 
 export function useEmailLogin() {
   const preference = PreferenceHelper.getInstance();
@@ -75,47 +76,31 @@ export function useEmailLogin() {
     (async () => {
       const { email, password } = params;
       try {
-        const res = await asyncSignInEmailWithVerify(email, password);
-        if (res === MAIL_VERIFY.VERIFIED) {
-          const { data } = await client.query({
-            query: GET_USER_BY_EMAIL,
-            variables: {
-              email,
-            },
-          });
-          setEmailLoginInfo((prevState) => {
-            return { ...prevState, mail: email };
-          });
-          preference.updateEmailSignIn(email);
-          onSuccess?.();
+        const res = await AwsClient.getInstance().asyncLoginWithMail(
+          email,
+          password
+        );
+        if (res.status === 400) {
+          const data = await res.text();
+          const message = JSON.parse(data).message;
+          onError?.(new AppError(message));
           return;
         }
-        onError?.(new AppError(res));
+        // const res = await asyncSignInEmailWithVerify(email, password);
+        // if (res === MAIL_VERIFY.VERIFIED) {
+        //   const { data } = await client.query({
+        //     query: GET_USER_BY_EMAIL,
+        //     variables: {
+        //       email,
+        //     },
+        //   });
+        setEmailLoginInfo((prevState) => {
+          return { ...prevState, mail: email };
+        });
+        preference.updateEmailSignIn(email);
+        onSuccess?.();
+        return;
       } catch (e) {
-        if (getErrorMessage(e) === "Does not exist user") {
-          createUserByEmail({
-            variables: {
-              email,
-            },
-          })
-            .then((res) => {
-              setEmailLoginInfo((prevState) => {
-                return { ...prevState, mail: email };
-              });
-              localStorage.setItem(
-                "emailSignInCache",
-                JSON.stringify({
-                  email,
-                  timestamp: new Date().toISOString(),
-                })
-              );
-              onSuccess?.();
-            })
-            .catch((e) => {
-              throw new AppError(getErrorMessage(e));
-            });
-          return;
-        }
         onError?.(new AppError(getErrorMessage(e)));
       }
     })();

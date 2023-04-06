@@ -268,20 +268,20 @@ const Event = (props: AppProps) => {
         .catch((err) => {
           console.log(err);
         });
-      asyncUpdateClaimCompleted().then(() => {});
+      // asyncUpdateClaimCompleted().then(() => {});
     }
   }, [ticketData?.quests, userData?._id]);
 
-  const asyncUpdateClaimCompleted = async () => {
-    if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
-      setUpdatingClaimCompleted(true);
-      const res1 = await asyncCheckTokenExist();
-      const res2 = await asyncPendingTokenExist();
-      const res = res1 || res2;
-      setClaimCompleted(res);
-      setUpdatingClaimCompleted(false);
-    }
-  };
+  // const asyncUpdateClaimCompleted = async () => {
+  //   if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
+  //     setUpdatingClaimCompleted(true);
+  //     const res1 = await asyncCheckTokenExist();
+  //     const res2 = await asyncPendingTokenExist();
+  //     const res = res1 || res2;
+  //     setClaimCompleted(res);
+  //     setUpdatingClaimCompleted(false);
+  //   }
+  // };
 
   const asyncCheckTokenExist = async () => {
     try {
@@ -359,7 +359,7 @@ const Event = (props: AppProps) => {
   };
 
   useEffect(() => {
-    asyncUpdateClaimCompleted().then(() => {});
+    // asyncUpdateClaimCompleted().then(() => {});
   }, [updateIndex]);
 
   const claimRewardDisabled = useMemo(() => {
