@@ -135,6 +135,7 @@ const Auth = () => {
       }
       (async () => {
         try {
+          console.log(`mail: ${mail}`);
           const res = await AwsClient.getInstance().asyncAuthMail(mail);
           if (res.status === 200 || res.status === 204) {
             const data = await res.text();

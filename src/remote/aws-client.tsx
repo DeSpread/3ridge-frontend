@@ -33,7 +33,6 @@ export default class AwsClient {
   asyncAuthMail = async (mail: string) => {
     const headersList = {
       Accept: "*/*",
-      "User-Agent": "Thunder Client (https://www.thunderclient.com)",
       "Content-Type": "application/json",
     };
 
