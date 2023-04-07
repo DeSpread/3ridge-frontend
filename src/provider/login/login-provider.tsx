@@ -24,6 +24,10 @@ const LoginContext = createContext<{
   emailVerify: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
   emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
   updateAuthMail: SuccessErrorCallbackWithParam<EmailLoggedInInfo, void>;
+  emailSignInWithoutPassword: SuccessErrorCallbackWithParam<
+    EmailLoggedInInfo,
+    void
+  >;
   isMailLoggedIn: boolean;
   emailLoggedInInfo: EmailLoggedInInfo;
 }>({
@@ -38,6 +42,7 @@ const LoginContext = createContext<{
   emailVerify: () => {},
   emailSignIn: () => {},
   updateAuthMail: () => {},
+  emailSignInWithoutPassword: () => {},
   isMailLoggedIn: false,
   emailLoggedInInfo: {},
 });
@@ -54,6 +59,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     isMailLoggedIn,
     emailLoginInfo,
     updateAuthMail,
+    emailSignInWithoutPassword,
   } = useEmailLogin();
 
   const logout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
@@ -92,6 +98,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
         isMailLoggedIn,
         updateAuthMail,
         emailLoggedInInfo: emailLoginInfo,
+        emailSignInWithoutPassword,
       }}
     >
       {children}

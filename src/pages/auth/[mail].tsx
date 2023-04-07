@@ -9,6 +9,7 @@ import { useTheme } from "@mui/material/styles";
 import AwsClient from "../../remote/aws-client";
 import { getErrorMessage } from "../../error/my-error";
 import { useLogin } from "../../provider/login/login-provider";
+import { useAlert } from "../../provider/alert/alert-provider";
 
 const Skelton = () => {
   return (
@@ -77,9 +78,11 @@ const SomethingError = (props: { errorMessage: string }) => {
   );
 };
 
-const AuthComplete = () => {
+const AuthComplete = (props: { mail: string }) => {
   const theme = useTheme();
   const router = useRouter();
+  const { emailSignInWithoutPassword } = useLogin();
+  const { showAlert, showErrorAlert, closeAlert } = useAlert();
   return (
     <>
       <Stack
@@ -102,8 +105,18 @@ const AuthComplete = () => {
             width: 186,
             marginTop: 4,
           }}
-          onClick={() => {
-            router.push(`/explore`).then((res) => {});
+          onClick={async () => {
+            await emailSignInWithoutPassword(
+              { mail: props.mail },
+              {
+                onSuccess: () => {
+                  router.push(`/explore`).then((res) => {});
+                },
+                onError: (error) => {
+                  showErrorAlert({ content: error.message });
+                },
+              }
+            );
           }}
         >
           <Box>
@@ -130,6 +143,7 @@ const Auth = () => {
   const { updateAuthMail } = useLogin();
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+  const [mail, setMail] = useState("");
 
   useEffect(() => {
     if (router.isReady) {
@@ -139,6 +153,7 @@ const Auth = () => {
         setLoading(false);
         return;
       }
+      setMail(mail);
       (async () => {
         try {
           console.log(`mail: ${mail}`);
@@ -181,7 +196,7 @@ const Auth = () => {
           (errorMsg ? (
             <SomethingError errorMessage={errorMsg}></SomethingError>
           ) : (
-            <AuthComplete></AuthComplete>
+            <AuthComplete mail={mail}></AuthComplete>
           ))}
         {loading && <Skelton></Skelton>}
       </Stack>
