@@ -1021,9 +1021,9 @@ const Event = (props: AppProps) => {
               </PrimaryCard>
               <LoadingButton
                 disabled={
-                  claimRewardDisabled ||
-                  claimCompleted ||
-                  updatingClaimCompleted ||
+                  // claimRewardDisabled ||
+                  // claimCompleted ||
+                  // updatingClaimCompleted ||
                   isExpired()
                 }
                 onClick={async (e) => {

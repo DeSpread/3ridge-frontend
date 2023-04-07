@@ -57,14 +57,16 @@ const Profile = (props: AppProps) => {
     asyncUpdateEmail,
     asyncUpdateSocialTwitter,
   } = useSignedUserQuery();
+
+  const { asyncTwitterSignInPopUp } = useFirebaseAuth();
   const {
-    asyncVerifyUserWithEmailAndPassword,
-    asyncResendEmailVerify,
-    asyncSignInEmailWithVerify,
-    asyncTwitterSignInPopUp,
-  } = useFirebaseAuth();
-  const { isWalletLoggedIn, isMailLoggedIn, isGoogleLoggedIn, emailSignIn } =
-    useLogin();
+    isWalletLoggedIn,
+    isMailLoggedIn,
+    isGoogleLoggedIn,
+    emailSignIn,
+    emailVerify,
+    updateAuthMail,
+  } = useLogin();
   const { showLoading, closeLoading } = useLoading();
   const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
   const [openConnectEmailDialog, setOpenConnectEmailDialog] = useState(false);
@@ -232,40 +234,41 @@ const Profile = (props: AppProps) => {
     }
   };
 
-  const asyncMailSignInWithVerify = async (
-    email: string,
-    verified: boolean = false
-  ) => {
-    try {
-      showLoading();
-      if (!verified) {
-        const res = await asyncSignInEmailWithVerify(
-          verificationMail,
-          "123456"
-        );
-        if (res === MAIL_VERIFY.NOT_VERIFIED) {
-          showAlert({
-            title: "Info",
-            content: "Check your verification mail",
-          });
-          return;
-        }
-      }
-      await asyncUpdateEmail(email);
-      setOpenConnectEmailDialog(false);
-      closeLoading();
-    } catch (e) {
-      closeLoading();
-      const message = getErrorMessage(e);
-      console.log(message);
-      if (message.includes(APP_ERROR_MESSAGE.FIREBASE_TOO_MANY_REQUESTS)) {
-        showErrorAlert({
-          content: "Resend email exceed limit please 1hour later",
-        });
-      }
-      showErrorAlert({ content: message });
-    }
-  };
+  // const asyncMailSignInWithVerify = async (
+  //   email: string,
+  //   verified: boolean = false
+  // ) => {
+  //   try {
+  //     showLoading();
+  //     if (!verified) {
+  //       emailVerify({email, p})
+  //       // const res = await asyncSignInEmailWithVerify(
+  //       //   verificationMail,
+  //       //   "123456"
+  //       // );
+  //       // if (res === MAIL_VERIFY.NOT_VERIFIED) {
+  //       //   showAlert({
+  //       //     title: "Info",
+  //       //     content: "Check your verification mail",
+  //       //   });
+  //       //   return;
+  //       // }
+  //     }
+  //     await asyncUpdateEmail(email);
+  //     setOpenConnectEmailDialog(false);
+  //     closeLoading();
+  //   } catch (e) {
+  //     closeLoading();
+  //     const message = getErrorMessage(e);
+  //     console.log(message);
+  //     if (message.includes(APP_ERROR_MESSAGE.FIREBASE_TOO_MANY_REQUESTS)) {
+  //       showErrorAlert({
+  //         content: "Resend email exceed limit please 1hour later",
+  //       });
+  //     }
+  //     showErrorAlert({ content: message });
+  //   }
+  // };
 
   const levelProgressValue = useMemo(() => {
     if (userData?.rewardPoint === undefined) {
@@ -594,31 +597,32 @@ const Profile = (props: AppProps) => {
           const { email } = myEvent.params;
           try {
             showLoading();
-            const res = await asyncVerifyUserWithEmailAndPassword(
-              email,
-              "123456"
-            );
-            console.log(res);
-            if (res === MAIL_VERIFY.PASSWORD_WRONG) {
-              showAlert({ title: "Info", content: "This is mail in use" });
-              return;
-            }
-            if (res === MAIL_VERIFY.VERIFIED) {
-              await asyncMailSignInWithVerify(email, true);
-              showAlert({
-                title: "Info",
-                content: (
-                  <Stack direction={"column"} sx={{ flex: 1, background: "" }}>
-                    <div>Your mail already is verified</div>
-                    <div>Update completed</div>
-                  </Stack>
-                ),
-              });
-              return;
-            }
-            if (res === MAIL_VERIFY.NOT_VERIFIED) {
-              await asyncResendEmailVerify(verificationMail, "123456");
-            }
+
+            // const res = await asyncVerifyUserWithEmailAndPassword(
+            //   email,
+            //   "123456"
+            // );
+            // console.log(res);
+            // if (res === MAIL_VERIFY.PASSWORD_WRONG) {
+            //   showAlert({ title: "Info", content: "This is mail in use" });
+            //   return;
+            // }
+            // if (res === MAIL_VERIFY.VERIFIED) {
+            //   await asyncMailSignInWithVerify(email, true);
+            //   showAlert({
+            //     title: "Info",
+            //     content: (
+            //       <Stack direction={"column"} sx={{ flex: 1, background: "" }}>
+            //         <div>Your mail already is verified</div>
+            //         <div>Update completed</div>
+            //       </Stack>
+            //     ),
+            //   });
+            //   return;
+            // }
+            // if (res === MAIL_VERIFY.NOT_VERIFIED) {
+            //   await asyncResendEmailVerify(verificationMail, "123456");
+            // }
             closeLoading();
             setVerificationMail(email);
             setDialogFormType(CONNECT_MAIL_DIALOG_FORM_TYPE.VERIFY_EMAIL);
@@ -643,17 +647,32 @@ const Profile = (props: AppProps) => {
           try {
             showLoading();
             if (!verificationMail) return;
-            await asyncResendEmailVerify(verificationMail, "123456");
-            showAlert({ title: "Info", content: "Verify mail sended" });
-            closeLoading();
+            const res = await AwsClient.getInstance().asyncResendAuthMail(
+              verificationMail
+            );
+            if (res.status === 500 || res.status === 400) {
+              const data = await res.text();
+              const message = JSON.parse(data).message;
+              showErrorAlert({ content: message });
+            } else {
+              showAlert({
+                title: "Info",
+                content: (
+                  <div>
+                    <p style={{ marginBottom: -2 }}>Email is resend</p>
+                    <p>Please check your email</p>
+                  </div>
+                ),
+              });
+            }
           } catch (e) {
+            showErrorAlert({ content: "Unknown error occurred" });
+          } finally {
             closeLoading();
-            const message = getErrorMessage(e);
-            showErrorAlert({ content: message });
           }
         }}
         onClickSignIn={async (e) => {
-          await asyncMailSignInWithVerify(verificationMail);
+          // await asyncMailSignInWithVerify(verificationMail);
         }}
         onClose={() => {
           setDialogFormType(CONNECT_MAIL_DIALOG_FORM_TYPE.SEND_EMAIL);

@@ -140,6 +140,35 @@ export function useEmailLogin() {
     })();
   };
 
+  const emailSignInWithoutPassword: SuccessErrorCallbackWithParam<
+    EmailLoggedInInfo,
+    void
+  > = (params, { onSuccess, onError }) => {
+    (async () => {
+      try {
+        const mail = params.mail;
+        if (!mail) {
+          onError?.(new AppError("mail is empty"));
+          return;
+        }
+        const res = await AwsClient.getInstance().asyncIsAuthMail(mail);
+        if (res.status === 400 || res.status === 500) {
+          const data = await res.text();
+          const message = JSON.parse(data).message;
+          onError?.(new AppError(message));
+          return;
+        }
+        setEmailLoginInfo((prevState) => {
+          return { ...prevState, mail };
+        });
+        preference.updateEmailSignIn(mail);
+        onSuccess?.();
+      } catch (e) {
+        onError?.(new AppError(getErrorMessage(e)));
+      }
+    })();
+  };
+
   const isMailLoggedIn = useMemo(() => {
     return emailLoginInfo?.mail !== undefined ? true : false;
   }, [emailLoginInfo]);
@@ -163,5 +192,6 @@ export function useEmailLogin() {
     isMailLoggedIn,
     emailLoginInfo,
     emailLogout,
+    emailSignInWithoutPassword,
   };
 }
