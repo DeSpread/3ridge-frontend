@@ -15,7 +15,7 @@ class StringHelper {
     return (
       src.substring(0, preLen) +
       "..." +
-      src.substring(src.length - 1 - postLen, src.length - 1)
+      src.substring(src.length - postLen, src.length)
     );
   };
 }
