@@ -57,10 +57,6 @@ export default class AwsClient {
       "Content-Type": "application/json",
     };
 
-    const bodyContent = JSON.stringify({
-      mail,
-    });
-
     const response = await fetch(
       `https://bqkigu1jwg.execute-api.ap-northeast-2.amazonaws.com/Prod/auth?mail=${encodeURIComponent(
         mail

@@ -66,6 +66,11 @@ export const QUEST_POLICY_TYPE = {
   VERIFY_APTOS_HAS_ANS: "VERIFY_APTOS_HAS_ANS",
 };
 
+export type Wallet = {
+  walletAddress?: string;
+  chain?: string;
+};
+
 export type User = {
   _id?: string;
   walletAddress?: string;
@@ -74,6 +79,7 @@ export type User = {
   profileImageUrl?: string;
   rewardPoint?: number;
   userSocial?: { twitterId: string };
+  participatingTickets?: PartialTicket[];
 };
 
 export type GoogleLoggedInInfo = {
@@ -129,8 +135,12 @@ export type Ticket = {
   winners?: {
     name?: string;
   }[];
-  project?: Project;
+  project?: PartialProject;
 };
+
+export type PartialProject = Partial<Project>;
+
+export type PartialTicket = Partial<Ticket>;
 
 export type Quest = {
   _id?: string;

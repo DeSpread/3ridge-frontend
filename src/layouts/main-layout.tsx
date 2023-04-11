@@ -25,7 +25,7 @@ import {
   getErrorMessage,
 } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
-import { useSignedUserQuery } from "../page-hook/user-query-hook";
+import { useSignedUserQuery } from "../page-hook/signed-user-query-hook";
 import { useLoading } from "../provider/loading/loading-provider";
 import {
   EmailSignUpEventParams,
@@ -173,7 +173,7 @@ const MainLayout = (props: MainLayoutProps) => {
                       onProfileItemClicked={async (e) => {
                         e.preventDefault();
                         showLoading();
-                        await router.push(`/profile`);
+                        await router.push(`/profile/${userData.name}`);
                         closeLoading();
                       }}
                       onLogoutBtnClicked={(e) => {

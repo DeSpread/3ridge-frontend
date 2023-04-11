@@ -25,6 +25,42 @@ export const FIND_RANK_BY_USER_ID = gql(/* GraphQL */ `
   }
 `);
 
+export const GET_USER_BY_NAME = gql(/* GraphQL */ `
+  query GetUserByName($name: String!) {
+    userByName(name: $name) {
+      _id
+      email
+      gmail
+      name
+      participatingTickets {
+        _id
+        imageUrl
+        description
+        project {
+          _id
+          categories
+          description
+          imageUrl
+          name
+        }
+        rewardPolicy {
+          context
+          rewardPolicyType
+        }
+      }
+      profileImageUrl
+      rewardPoint
+      userSocial {
+        twitterId
+      }
+      wallets {
+        address
+        chain
+      }
+    }
+  }
+`);
+
 export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
   query GetUserByEmail($email: String!) {
     userByEmail(email: $email) {
