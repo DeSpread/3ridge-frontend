@@ -21,7 +21,7 @@ const LoginContext = createContext<{
   walletSignUp: SuccessErrorCallback<void>;
   isWalletLoggedIn: boolean;
   walletLoggedInInfo: WalletLoggedInInfo;
-  emailVerify: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
+  emailVerify: SuccessErrorCallbackWithParam<EmailSignUpEventParams, string>;
   emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
   updateAuthMail: SuccessErrorCallbackWithParam<EmailLoggedInInfo, void>;
   emailSignInWithoutPassword: SuccessErrorCallbackWithParam<

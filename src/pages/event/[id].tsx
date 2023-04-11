@@ -42,7 +42,7 @@ import {
   TwitterRetweetQuestContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
-import { useSignedUserQuery } from "../../page-hook/user-query-hook";
+import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
 import { getErrorMessage } from "../../error/my-error";
@@ -114,6 +114,7 @@ const TimerBoard = (props: MyTimerSettings) => {
         direction={"row"}
         alignItems={"center"}
         justifyContent={"space-evenly"}
+        sx={{ background: "" }}
       >
         <Stack
           direction={"column"}
@@ -843,10 +844,10 @@ const Event = (props: AppProps) => {
                 ></StyledChip>
               </Stack>
               <PrimaryCard hoverEffect={false}>
-                <Box sx={{ width: smUp ? 300 : 260 }}>
-                  <Stack>
+                <Box>
+                  <Stack alignItems={"center"}>
                     <Typography variant={"body1"}>
-                      First Come First Serve In :
+                      First Come First Serve In
                     </Typography>
                     {ticketData?.rewardPolicy?.context?.untilTime ? (
                       isExpired() ? (
@@ -872,6 +873,7 @@ const Event = (props: AppProps) => {
                           sx={{
                             marginTop: 4,
                             background: "",
+                            width: "100%",
                           }}
                           expiryTimestamp={
                             new Date(
@@ -896,43 +898,19 @@ const Event = (props: AppProps) => {
                   <Stack direction={"column"} spacing={2}>
                     <Stack
                       direction={"column"}
-                      alignItems={"flex-start"}
+                      alignItems={"center"}
                       justifyContent={"center"}
                     >
-                      <Typography variant={"body1"}>Reward</Typography>
                       <Box
                         sx={{
-                          marginTop: 1,
-                          // transform: "translateY(0%)",
-                          // transition: "all 0.2s ease-out 0s",
-                          // transitionDuration: "0.2s",
-                          // transitionDelay: "0s",
-                          // "&:hover": {
-                          //   transform: "translate(0,-1px)",
-                          // boxShadow:
-                          //   "12px 12px 2px 1px rgba(128, 128, 128, .2)",
-                          // },
                           width: smUp ? 300 : 260,
                           height: smUp ? 300 : 260,
                           borderRadius: 2,
+                          marginBottom: 2,
                         }}
                       >
                         {ticketData?.rewardPolicy?.context?.nftImageUrl && (
-                          <Box
-                          // sx={{
-                          //   "&:hover": {
-                          //     "& .lazyLoadImage": {
-                          //       color: theme.palette.neutral["400"],
-                          //       transition: "all 0.1s ease-out 0s",
-                          //       borderColor: theme.palette.secondary.main,
-                          //       transitionDuration: "0.2s",
-                          //       transitionDelay: "0s",
-                          //       transitionTimingFunction: "ease-out",
-                          //       transitionProperty: "all",
-                          //     },
-                          //   },
-                          // }}
-                          >
+                          <Box>
                             <LazyLoadImage
                               className={"lazyLoadImage"}
                               width={smUp ? 300 : 260}
@@ -974,15 +952,6 @@ const Event = (props: AppProps) => {
                         alignItems={"center"}
                         spacing={1}
                       >
-                        {/*<StarsIcon*/}
-                        {/*  color={"warning"}*/}
-                        {/*  style={{*/}
-                        {/*    width: 24,*/}
-                        {/*    height: 24,*/}
-                        {/*    background: "yellow",*/}
-                        {/*    borderRadius: 24,*/}
-                        {/*  }}*/}
-                        {/*></StarsIcon>*/}
                         <Image
                           src={
                             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.png"

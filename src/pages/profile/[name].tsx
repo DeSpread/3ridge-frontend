@@ -14,7 +14,7 @@ import {
 import LinearProgress from "@mui/material/LinearProgress";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
-import { useSignedUserQuery } from "../../page-hook/user-query-hook";
+import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import PrimaryButton from "../../components/atoms/primary-button";
 import ProfileEditDialog from "./dialog/profile-edit-dialog";
@@ -22,7 +22,6 @@ import { useLoading } from "../../provider/loading/loading-provider";
 import { useLogin } from "../../provider/login/login-provider";
 import {
   EmailSignUpEventParams,
-  MAIL_VERIFY,
   MouseEventWithParam,
   MouseEventWithStateParam,
 } from "../../type";
@@ -38,7 +37,6 @@ import {
   getErrorMessage,
 } from "../../error/my-error";
 import PictureEditDialog from "./dialog/picture-edit-dialog";
-import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-button";
 import AwsClient from "../../remote/aws-client";
 import StyledChip from "../../components/atoms/styled/styled-chip";
@@ -47,10 +45,20 @@ import { gql, request } from "graphql-request";
 import CircularProgress from "@mui/material/CircularProgress";
 import Link from "next/link";
 import BlockIcon from "../../components/molecules/block-icon";
+import { useUserQuery } from "../../page-hook/user-query-hook";
+import { useRouter } from "next/router";
 
 const Profile = (props: AppProps) => {
+  const router = useRouter();
+  const { userData } = useUserQuery({
+    name: router.isReady
+      ? typeof router.query.name === "string"
+        ? router.query.name
+        : undefined
+      : undefined,
+  });
   const {
-    userData,
+    userData: signedUserData,
     asyncUpdateWalletAddress,
     asyncUpdateWalletAddressByWallet,
     asyncUpdateProfileImageUrl,
@@ -66,6 +74,7 @@ const Profile = (props: AppProps) => {
     emailSignIn,
     emailVerify,
     updateAuthMail,
+    isLoggedIn,
   } = useLogin();
   const { showLoading, closeLoading } = useLoading();
   const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
@@ -86,6 +95,12 @@ const Profile = (props: AppProps) => {
   const [achievementsLoading, setAchievementsLoading] = useState(false);
 
   const theme = useTheme();
+  const isSingedUserProfile = useMemo(() => {
+    return signedUserData._id === userData?._id;
+  }, [signedUserData, userData]);
+  // const isSingedUserProfile = () => {
+  //   signedUserData._id ===
+  // };
 
   const pictureEditDialogOpen = useMemo(() => {
     return imageFile ? true : false;
@@ -303,15 +318,15 @@ const Profile = (props: AppProps) => {
             sx={{ background: "" }}
             spacing={4}
           >
-            {userData.profileImageUrl && (
+            {userData?.profileImageUrl && (
               <Avatar
                 sx={{ width: 100, height: 100 }}
-                src={userData.profileImageUrl}
+                src={userData?.profileImageUrl}
               ></Avatar>
             )}
-            {!userData.profileImageUrl && userData._id && (
+            {!userData?.profileImageUrl && userData?._id && (
               <div style={{ zIndex: 2 }}>
-                <BlockIcon seed={userData._id} scale={12}></BlockIcon>
+                <BlockIcon seed={userData?._id} scale={12}></BlockIcon>
               </div>
             )}
             {/*--- profile description ---*/}
@@ -339,9 +354,9 @@ const Profile = (props: AppProps) => {
                     </GradientTypography>
                   </Box>
                 ) : (
-                  <Box sx={{ maxWidth: 320 }}>
+                  <Box sx={{ maxWidth: 330 }}>
                     <GradientTypography variant={"h4"}>
-                      Connect your wallet
+                      Wallet not connected
                     </GradientTypography>
                   </Box>
                 )}
@@ -414,14 +429,16 @@ const Profile = (props: AppProps) => {
                   </Stack>
                 </Grid>
                 <Grid item>
-                  <PrimaryButton
-                    onClick={() => {
-                      setOpenProfileEditDialog(true);
-                    }}
-                    disabled={!userData?.name}
-                  >
-                    Edit Profile
-                  </PrimaryButton>
+                  {isSingedUserProfile && (
+                    <PrimaryButton
+                      onClick={() => {
+                        setOpenProfileEditDialog(true);
+                      }}
+                      disabled={!isSingedUserProfile}
+                    >
+                      Edit Profile
+                    </PrimaryButton>
+                  )}
                 </Grid>
               </Grid>
             </Stack>
@@ -496,7 +513,7 @@ const Profile = (props: AppProps) => {
       </Grid>
       {/*--- Dialogs ---*/}
       <ProfileEditDialog
-        userData={userData}
+        userData={signedUserData}
         title={"Edit profile"}
         onClose={() => {
           setOpenProfileEditDialog(false);
@@ -694,13 +711,14 @@ const Profile = (props: AppProps) => {
           showLoading();
           try {
             (async () => {
-              const includeQuestion = userData.profileImageUrl?.includes("?");
+              const includeQuestion =
+                signedUserData?.profileImageUrl?.includes("?");
               await AwsClient.getInstance().asyncUploadProfileImage({
                 base64Data,
-                imageName: `${userData.name}.${ext}`,
+                imageName: `${signedUserData?.name}.${ext}`,
               });
 
-              let profileImageUrl = `https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/profile/${userData.name}.${ext}`;
+              let profileImageUrl = `https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/profile/${signedUserData?.name}.${ext}`;
               if (!includeQuestion) {
                 profileImageUrl += "?";
               }

@@ -42,7 +42,7 @@ export function useEmailLogin() {
 
   const emailVerify: SuccessErrorCallbackWithParam<
     EmailSignUpEventParams,
-    void
+    string
   > = (params, { onSuccess, onError }) => {
     (async () => {
       const { email, password } = params;
@@ -57,6 +57,10 @@ export function useEmailLogin() {
           const message = JSON.parse(data).message;
           console.log(message, JSON.parse(data));
           onError?.(new AppError(message, { email, password }));
+          return;
+        }
+        if (res.status === 200) {
+          onSuccess?.("mail auth is already done");
           return;
         }
         onSuccess?.();
