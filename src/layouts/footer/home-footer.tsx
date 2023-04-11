@@ -1,16 +1,14 @@
 import {
   Box,
   Stack,
-  Typography,
   Link,
-  Grid,
-  useMediaQuery,
+  useMediaQuery, Divider,
 } from "@mui/material";
-import NextLink from "next/link";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
+import React from "react";
 
 const footerData = [
   {
@@ -79,115 +77,39 @@ const HomeFooter = () => {
         background: theme.palette.background.default,
         width: "100%",
         zIndex: 1,
+        paddingLeft: theme.spacing(5),
+        paddingRight: theme.spacing(5),
+        marginBottom: theme.spacing(5)
       }}
     >
-      <Stack direction={"column"}>
-        <Grid
-          container
-          direction={"row"}
-          justifyContent={"space-between"}
-          sx={{ padding: 3 }}
-          rowSpacing={4}
-        >
-          <Grid
-            item
-            sx={{
-              width: "100%",
-            }}
+      <Divider sx={{ width: "100%", borderBottomWidth: 2 }}/>
+      <Box display="flex" justifyContent="space-between" alignItems="center" py={2}>
+        <Stack direction={"row"} alignItems={"center"} spacing={2}>
+          <SecondaryButton
+              size={"small"}
+              sx={{
+                width: 150,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
+              }}
           >
-            <Stack
-              direction={"column"}
-              // justifyContent={"center"}
-              spacing={2}
-              alignItems={mdUp ? "flex-start" : "center"}
-            >
-              <Typography variant={"h5"} textAlign={smUp ? "left" : "center"}>
-                Bridge your projects
-              </Typography>
-              <Box>
-                <Typography
-                  variant={"body1"}
-                  textAlign={smUp ? "left" : "center"}
-                >
-                  Bridge helps you reach, acquire, and retain users
-                </Typography>
-                <Typography
-                  variant={"body1"}
-                  textAlign={smUp ? "left" : "center"}
-                >
-                  with powerful, interactive experiences.
-                </Typography>
-              </Box>
-              <SecondaryButton
-                size={"large"}
-                style={{ width: 180 }}
-                onClick={async () => {
-                  showLoading();
-                  await router.push("/explore");
-                  closeLoading();
-                }}
-              >
-                Let`s Explore
-              </SecondaryButton>
-            </Stack>
-          </Grid>
-          <Grid
-            item
-            sx={{
-              background: "",
-              width: mdUp ? "" : "100%",
-            }}
-          >
-            <Stack
-              direction={"row-reverse"}
-              spacing={smUp ? 12 : 4}
-              justifyContent={mdUp ? "flex-start" : "center"}
-            >
-              {footerData.slice(0, smUp ? 3 : 2).map((x, xIdx) => {
-                return (
-                  <Stack key={xIdx} direction={"column"} spacing={3}>
-                    <Typography variant={smUp ? "h5" : "h6"}>
-                      {x.title}
-                    </Typography>
-                    <Stack direction={"column"} spacing={2}>
-                      {x.subMenus.map((y, yIdx) => {
-                        return (
-                          <NextLink
-                            key={yIdx}
-                            href={y.url}
-                            rel={"noopener noreferrer"}
-                            target={"_blank"}
-                          >
-                            <Typography
-                              variant={mdUp ? "body1" : "body2"}
-                              sx={{
-                                color: theme.palette.neutral["400"],
-                                "&:hover": {
-                                  color: theme.palette.action.hover,
-                                },
-                              }}
-                            >
-                              {y.title}
-                            </Typography>
-                          </NextLink>
-                        );
-                      })}
-                    </Stack>
-                  </Stack>
-                );
-              })}
-            </Stack>
-          </Grid>
-        </Grid>
-        <Box sx={{ padding: 3 }}>
-          <Typography
-            variant={"body2"}
-            sx={{ color: theme.palette.neutral["600"] }}
-          >
-            © Copyright 2023 DeSpread, Inc.
-          </Typography>
+            Join Newsletter
+          </SecondaryButton>
+        </Stack>
+        <Box>
+          <Link href="https://twitter.com/3ridge_xyz" color="inherit" underline="hover">
+            Twitter
+          </Link>
+          <Link href="https://discord.gg/3ridge" color="inherit" underline="hover" style={{ marginLeft: 16 }}>
+            Discord
+          </Link>
+          <Link href="mailto:support@3ridge.xyz?Subject=Hello!%203ridge" color="inherit" underline="hover" style={{ marginLeft: 16 }}>
+            Email
+          </Link>
         </Box>
-      </Stack>
+      </Box>
     </div>
   );
 };
