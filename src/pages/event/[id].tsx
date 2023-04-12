@@ -992,7 +992,6 @@ const Event = (props: AppProps) => {
               </Stack>
               <Stack
                 direction={"row"}
-                // spacing={-2}
                 sx={{ marginTop: 4 }}
                 alignItems={"center"}
                 justifyContent={smUp ? "flex-start" : "center"}

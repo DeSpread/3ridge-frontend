@@ -5,6 +5,7 @@ import Head from "next/head";
 import {
   Avatar,
   Box,
+  Divider,
   Grid,
   Link as MuiLink,
   Skeleton,
@@ -51,6 +52,7 @@ import { useUserQuery } from "../../page-hook/user-query-hook";
 import { useRouter } from "next/router";
 import TicketCard from "../../components/molecules/ticket-card";
 import LinkTypography from "../../components/atoms/link-typography";
+import Image from "next/image";
 
 const Profile = (props: AppProps) => {
   const router = useRouter();
@@ -330,9 +332,20 @@ const Profile = (props: AppProps) => {
             )}
             {/*--- profile description ---*/}
             <Stack spacing={1}>
-              <Typography variant={"h5"} sx={{ zIndex: 1 }}>
-                {`Point ${userData?.rewardPoint ?? 0}`}
-              </Typography>
+              <Stack direction={"row"} spacing={0} alignItems={"center"}>
+                <Image
+                  src={
+                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
+                  }
+                  alt={"StarIcon"}
+                  width={48}
+                  height={48}
+                  style={{ marginLeft: -12, marginRight: -4 }}
+                ></Image>
+                <Typography variant={"h5"} sx={{ zIndex: 1 }}>
+                  {`Point ${userData?.rewardPoint ?? 0}`}
+                </Typography>
+              </Stack>
               <LinearProgress
                 variant="determinate"
                 value={levelProgressValue}
@@ -446,6 +459,7 @@ const Profile = (props: AppProps) => {
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
                 Achievements
               </Typography>
+              <Divider sx={{ borderBottomWidth: 2, paddingTop: 2 }}></Divider>
               {achievementsLoading && (
                 <Stack
                   direction={"column"}
@@ -512,7 +526,8 @@ const Profile = (props: AppProps) => {
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
                 Participating event
               </Typography>
-              <Box sx={{ height: 16 }}></Box>
+              <Divider sx={{ borderBottomWidth: 2, paddingTop: 2 }}></Divider>
+              <Box sx={{ height: 24 }}></Box>
               <Grid container rowSpacing={1} columnSpacing={1}>
                 {userDataLoading &&
                   [1, 2, 3, 4].map((e) => {
