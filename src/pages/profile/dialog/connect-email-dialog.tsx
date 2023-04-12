@@ -71,6 +71,7 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
               email={props.email}
               onClickResendVerification={props.onClickResendVerification}
               onClickSignIn={props.onClickSignIn}
+              signInTitle={"Verify email"}
             ></VerifyYourEmailForm>
           )}
         </Box>
