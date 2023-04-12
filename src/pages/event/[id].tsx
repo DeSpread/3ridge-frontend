@@ -950,15 +950,14 @@ const Event = (props: AppProps) => {
                       <Stack
                         direction={"row"}
                         alignItems={"center"}
-                        spacing={1}
                       >
                         <Image
                           src={
-                            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.png"
+                            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
                           }
                           alt={"StarIcon"}
-                          width={24}
-                          height={24}
+                          width={48}
+                          height={48}
                         ></Image>
                         <Typography variant={"h6"}>
                           {ticketData?.rewardPolicy?.context?.point ?? 0}

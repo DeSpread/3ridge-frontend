@@ -174,19 +174,18 @@ const TicketCard = (props: EventCardProps) => {
                 <Stack
                   direction={"row"}
                   alignItems={"center"}
-                  spacing={1}
                   justifyContent={"center"}
                 >
                   <Image
                     src={
-                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.png"
+                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
                     }
                     alt={"StarIcon"}
-                    width={24}
-                    height={24}
+                    width={48}
+                    height={48}
                   ></Image>
                   <Typography variant={"body1"}>
-                    {`${ticket?.rewardPolicy?.context?.point ?? 0} point`}
+                    {`${ticket?.rewardPolicy?.context?.point ?? 0} Point`}
                   </Typography>
                 </Stack>
                 {/*}*/}
