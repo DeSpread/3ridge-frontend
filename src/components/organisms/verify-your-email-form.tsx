@@ -8,12 +8,14 @@ type VerifyYourEmailFormProps = PropsWithChildren & {
   email: string;
   onClickSignIn?: MouseEventHandler;
   onClickResendVerification?: MouseEventHandler;
+  signInTitle?: string;
 };
 
 const VerifyYourEmailForm = ({
   email,
   onClickSignIn,
   onClickResendVerification,
+  signInTitle = "Let me sign in!",
 }: VerifyYourEmailFormProps) => {
   const theme = useTheme();
   return (
@@ -32,7 +34,7 @@ const VerifyYourEmailForm = ({
           Verify your email
         </Typography>
         <Stack spacing={5} alignItems={"center"}>
-          <Stack spacing={9}>
+          <Stack spacing={4}>
             <Stack spacing={0} alignItems={"center"}>
               <Typography variant={"body1"}>
                 A verification link was just sent to your
@@ -45,7 +47,7 @@ const VerifyYourEmailForm = ({
           </Stack>
           <Stack width={"100%"} alignItems={"center"} spacing={3}>
             <SecondaryButton fullWidth={true} onClick={onClickSignIn}>
-              Let me sign in!
+              {signInTitle}
             </SecondaryButton>
             <Stack alignItems={"center"}>
               <Typography variant={"caption"}>
