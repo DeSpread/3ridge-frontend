@@ -10,6 +10,7 @@ import AwsClient from "../../remote/aws-client";
 import { getErrorMessage } from "../../error/my-error";
 import { useLogin } from "../../provider/login/login-provider";
 import { useAlert } from "../../provider/alert/alert-provider";
+import { useLoading } from "../../provider/loading/loading-provider";
 
 const Skelton = () => {
   return (
@@ -81,8 +82,9 @@ const SomethingError = (props: { errorMessage: string }) => {
 const AuthComplete = (props: { mail: string }) => {
   const theme = useTheme();
   const router = useRouter();
-  const { emailSignInWithoutPassword } = useLogin();
+  const { emailSignInWithoutPassword, isLoggedIn } = useLogin();
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
+  const { showLoading, closeLoading } = useLoading();
   return (
     <>
       <Stack
@@ -106,13 +108,20 @@ const AuthComplete = (props: { mail: string }) => {
             marginTop: 4,
           }}
           onClick={async () => {
-            await emailSignInWithoutPassword(
+            if (isLoggedIn) {
+              router.push(`/explore`).then((res) => {});
+              return;
+            }
+            showLoading();
+            emailSignInWithoutPassword(
               { mail: props.mail },
               {
                 onSuccess: () => {
+                  closeLoading();
                   router.push(`/explore`).then((res) => {});
                 },
                 onError: (error) => {
+                  closeLoading();
                   showErrorAlert({ content: error.message });
                 },
               }
