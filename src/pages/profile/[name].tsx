@@ -7,6 +7,7 @@ import {
   Box,
   Grid,
   Link as MuiLink,
+  Skeleton,
   Stack,
   Theme,
   Typography,
@@ -24,6 +25,7 @@ import {
   EmailSignUpEventParams,
   MouseEventWithParam,
   MouseEventWithStateParam,
+  TicketEventParam,
 } from "../../type";
 import ConnectEmailDialog, {
   CONNECT_MAIL_DIALOG_FORM_TYPE,
@@ -47,10 +49,11 @@ import Link from "next/link";
 import BlockIcon from "../../components/molecules/block-icon";
 import { useUserQuery } from "../../page-hook/user-query-hook";
 import { useRouter } from "next/router";
+import TicketCard from "../../components/molecules/ticket-card";
 
 const Profile = (props: AppProps) => {
   const router = useRouter();
-  const { userData } = useUserQuery({
+  const { userData, loading: userDataLoading } = useUserQuery({
     name: router.isReady
       ? typeof router.query.name === "string"
         ? router.query.name
@@ -98,9 +101,6 @@ const Profile = (props: AppProps) => {
   const isSingedUserProfile = useMemo(() => {
     return signedUserData._id === userData?._id;
   }, [signedUserData, userData]);
-  // const isSingedUserProfile = () => {
-  //   signedUserData._id ===
-  // };
 
   const pictureEditDialogOpen = useMemo(() => {
     return imageFile ? true : false;
@@ -332,7 +332,7 @@ const Profile = (props: AppProps) => {
             {/*--- profile description ---*/}
             <Stack spacing={1}>
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
-                {`Level ${Math.floor((userData?.rewardPoint ?? 0) / 100)}`}
+                {`Point ${userData?.rewardPoint ?? 0}`}
               </Typography>
               <LinearProgress
                 variant="determinate"
@@ -499,7 +499,7 @@ const Profile = (props: AppProps) => {
                   <Stack
                     direction={"column"}
                     alignItems={"center"}
-                    sx={{ marginTop: 4 }}
+                    sx={{ marginTop: 8, marginBottom: 4 }}
                   >
                     <Typography variant={"h6"} color={"neutral.500"}>
                       ⛔ EMPTY
@@ -507,7 +507,61 @@ const Profile = (props: AppProps) => {
                   </Stack>
                 ))}
             </Stack>
-            {/*--- additional area ---*/}
+            <Box sx={{ height: 4 }}></Box>
+            {/*--- Participating event ---*/}
+            <Stack>
+              <Typography variant={"h5"} sx={{ zIndex: 1 }}>
+                Participating event
+              </Typography>
+              <Box sx={{ height: 16 }}></Box>
+              <Grid container rowSpacing={1} columnSpacing={1}>
+                {userDataLoading &&
+                  [1, 2, 3, 4].map((e) => {
+                    return (
+                      <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
+                        <Skeleton
+                          height={380}
+                          variant={"rounded"}
+                          animation={"wave"}
+                        />
+                      </Grid>
+                    );
+                  })}
+                {!userDataLoading &&
+                  ((userData?.participatingTickets?.length ?? 0) > 0 ? (
+                    userData?.participatingTickets?.map((ticket, index) => {
+                      return (
+                        <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
+                          <TicketCard
+                            ticket={ticket}
+                            onClick={async (e) => {
+                              showLoading();
+                              await router.push(`/event/${ticket._id}`);
+                              closeLoading();
+                            }}
+                          ></TicketCard>
+                        </Grid>
+                      );
+                    })
+                  ) : (
+                    <Grid item sx={{ width: "100%" }}>
+                      <Stack
+                        direction={"row"}
+                        justifyContent={"center"}
+                        sx={{
+                          marginTop: 8,
+                          marginBottom: 4,
+                          width: "100%",
+                        }}
+                      >
+                        <Typography variant={"h6"} color={"neutral.500"}>
+                          ⛔ EMPTY
+                        </Typography>
+                      </Stack>
+                    </Grid>
+                  ))}
+              </Grid>
+            </Stack>
           </Stack>
         </Grid>
       </Grid>
@@ -614,7 +668,40 @@ const Profile = (props: AppProps) => {
           const { email } = myEvent.params;
           try {
             showLoading();
-
+            emailVerify(
+              { password: "12345678", email: email },
+              {
+                onSuccess: (msg) => {
+                  if (msg === "mail auth is already done") {
+                    showAlert({
+                      title: "Info",
+                      content: "This is mail already auth",
+                    });
+                    return;
+                  }
+                  closeLoading();
+                  setVerificationMail(email);
+                  setDialogFormType(CONNECT_MAIL_DIALOG_FORM_TYPE.VERIFY_EMAIL);
+                },
+                onError: (error) => {
+                  if (error.message === "Password is not correct") {
+                    showAlert({
+                      title: "Info",
+                      content: "This is mail already auth",
+                    });
+                    return;
+                  } else if (error.message === "Not yet authorized") {
+                    showAlert({
+                      title: "Info",
+                      content: "This is mail already auth",
+                    });
+                    return;
+                  }
+                  closeLoading();
+                  showErrorAlert({ content: error.message });
+                },
+              }
+            );
             // const res = await asyncVerifyUserWithEmailAndPassword(
             //   email,
             //   "123456"
@@ -640,9 +727,6 @@ const Profile = (props: AppProps) => {
             // if (res === MAIL_VERIFY.NOT_VERIFIED) {
             //   await asyncResendEmailVerify(verificationMail, "123456");
             // }
-            closeLoading();
-            setVerificationMail(email);
-            setDialogFormType(CONNECT_MAIL_DIALOG_FORM_TYPE.VERIFY_EMAIL);
           } catch (e) {
             console.log(e);
             closeLoading();
@@ -747,16 +831,15 @@ Profile.getLayout = (page: ReactElement | ReactElement[]) => (
     backgroundComponent={
       <div
         style={{
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           position: "absolute",
           width: "100%",
           height: "180px",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
           background:
-            "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://galxe.com/_nuxt/img/space-detail-bg.569713b.jpg')",
+            "linear-gradient(to bottom, rgb(15, 14, 20, 0), rgba(15, 14, 20, 1)), url('https://3ridge.s3.ap-northeast-2.amazonaws.com/space-detail-bg.569713b.jpg')",
           zIndex: 0,
-          left: 0,
-          top: 56,
         }}
       />
     }
