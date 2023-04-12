@@ -136,6 +136,7 @@ export type Ticket = {
     name?: string;
   }[];
   project?: PartialProject;
+  rewardClaimedUserIds?: string[];
 };
 
 export type PartialProject = Partial<Project>;

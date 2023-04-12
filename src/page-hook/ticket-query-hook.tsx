@@ -56,6 +56,7 @@ export function useTicketQuery({
         rewardPolicy,
         winners,
         imageUrl,
+        rewardClaimedUsers,
       } = data.ticketById;
       const _rewardPolicy = typeParseHelper.parseRewardPolicy(
         rewardPolicy?.context ?? undefined,
@@ -102,6 +103,10 @@ export function useTicketQuery({
               name: e.name ?? undefined,
             };
           }),
+          rewardClaimedUserIds:
+            rewardClaimedUsers?.map((e) => {
+              return e._id ?? "";
+            }) ?? undefined,
         };
       });
     })();

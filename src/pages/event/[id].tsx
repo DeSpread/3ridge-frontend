@@ -21,7 +21,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import VerifyCard from "../../components/molecules/verify-card";
-import { GetStaticPaths } from "next";
 import { useTicketQuery } from "../../page-hook/ticket-query-hook";
 import { format } from "date-fns";
 import StyledChip from "../../components/atoms/styled/styled-chip";
@@ -51,7 +50,6 @@ import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
-import { gql, request } from "graphql-request";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
 import BlockIcon from "../../components/molecules/block-icon";
@@ -269,98 +267,12 @@ const Event = (props: AppProps) => {
         .catch((err) => {
           console.log(err);
         });
-      // asyncUpdateClaimCompleted().then(() => {});
+      asyncUpdateClaimCompleted().then(() => {});
     }
   }, [ticketData?.quests, userData?._id]);
 
-  // const asyncUpdateClaimCompleted = async () => {
-  //   if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
-  //     setUpdatingClaimCompleted(true);
-  //     const res1 = await asyncCheckTokenExist();
-  //     const res2 = await asyncPendingTokenExist();
-  //     const res = res1 || res2;
-  //     setClaimCompleted(res);
-  //     setUpdatingClaimCompleted(false);
-  //   }
-  // };
-
-  const asyncCheckTokenExist = async () => {
-    try {
-      if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
-        const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
-        const query = gql`
-            {
-                token_ownerships(
-                    where: {
-                        name: { _eq: "${tokenName}" }
-                        collection_name: { _eq: "${collectionName}" }
-                        owner_address: {
-                            _eq: "${userData?.walletAddress}"
-                        }
-                    }
-                ) {
-                    name
-                    owner_address
-                    collection_name
-                }
-            }
-        `;
-        const res = await request(
-          "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-          query
-        );
-        if (res?.token_ownerships && res?.token_ownerships.length > 0) {
-          return true;
-        }
-      }
-      return false;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  };
-
-  const asyncPendingTokenExist = async () => {
-    try {
-      if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
-        const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
-        const query = gql`
-          {
-            current_token_pending_claims(
-              where: {
-                to_address: {_eq: "${userData?.walletAddress}"}
-                name: { _eq: "${tokenName}" }
-                collection_name: { _eq: "${collectionName}" }
-              }
-            ) {
-                amount
-                collection_name
-                name
-                from_address
-                to_address
-            }
-          }
-        `;
-        const res = await request(
-          "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-          query
-        );
-        if (
-          res?.current_token_pending_claims &&
-          res?.current_token_pending_claims.length > 0
-        ) {
-          return true;
-        }
-      }
-      return false;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  };
-
   useEffect(() => {
-    // asyncUpdateClaimCompleted().then(() => {});
+    asyncUpdateClaimCompleted().then(() => {});
   }, [updateIndex]);
 
   const claimRewardDisabled = useMemo(() => {
@@ -391,6 +303,15 @@ const Event = (props: AppProps) => {
     setUpdateIndex((prevState) => {
       return prevState + 1;
     });
+  };
+
+  const asyncUpdateClaimCompleted = async () => {
+    if (ticketData?.rewardPolicy?.context && userData?._id) {
+      if (ticketData?.rewardClaimedUserIds?.includes(userData?._id)) {
+        setClaimCompleted(true);
+      }
+      setUpdatingClaimCompleted(false);
+    }
   };
 
   return (
@@ -947,10 +868,7 @@ const Event = (props: AppProps) => {
                       justifyContent={"space-between"}
                     >
                       <Typography variant={"body1"}>POINT</Typography>
-                      <Stack
-                        direction={"row"}
-                        alignItems={"center"}
-                      >
+                      <Stack direction={"row"} alignItems={"center"}>
                         <Image
                           src={
                             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
@@ -989,8 +907,8 @@ const Event = (props: AppProps) => {
               </PrimaryCard>
               <LoadingButton
                 disabled={
-                  // claimRewardDisabled ||
-                  // claimCompleted ||
+                  claimRewardDisabled ||
+                  claimCompleted ||
                   // updatingClaimCompleted ||
                   isExpired()
                 }
@@ -1104,11 +1022,7 @@ const Event = (props: AppProps) => {
                             </Tooltip>
                           )}
                           {!e.profileImageUrl && e?._id && (
-                            <Tooltip
-                              title={e.name}
-                              key={index}
-                              // sx={{ zIndex: 1 + index }}
-                            >
+                            <Tooltip title={e.name} key={index}>
                               <div style={{ width: 42, height: 42 }}>
                                 <BlockIcon seed={e?._id} scale={5}></BlockIcon>
                               </div>
@@ -1134,7 +1048,7 @@ const Event = (props: AppProps) => {
                         >
                           <Typography variant={"caption"} color={"neutral.100"}>
                             {`+${nFormatter(
-                              10 - ticketData?.participants?.length,
+                              12 - ticketData?.participants?.length,
                               4
                             )}`}
                           </Typography>

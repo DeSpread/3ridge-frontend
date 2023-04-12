@@ -285,6 +285,9 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       winners {
         name
       }
+      rewardClaimedUsers {
+        _id
+      }
     }
   }
 `);
