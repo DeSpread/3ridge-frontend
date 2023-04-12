@@ -1042,6 +1042,9 @@ const Event = (props: AppProps) => {
                             display: "flex",
                             borderRadius: 42,
                             zIndex: 1,
+                            borderWidth: 2,
+                            borderColor: theme.palette.neutral[100],
+                            borderStyle: "solid",
                           }}
                           onClick={() => {}}
                         >
