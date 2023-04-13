@@ -60,6 +60,7 @@ export function useUserQuery(props: { name?: string }) {
                 ),
                 rewardPolicyType: e.rewardPolicy?.rewardPolicyType,
               },
+              title: e.title ?? undefined,
             };
           }),
         });

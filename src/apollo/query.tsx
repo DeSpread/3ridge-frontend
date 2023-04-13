@@ -47,6 +47,7 @@ export const GET_USER_BY_NAME = gql(/* GraphQL */ `
           context
           rewardPolicyType
         }
+        title
       }
       profileImageUrl
       rewardPoint
