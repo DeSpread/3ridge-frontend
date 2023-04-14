@@ -109,28 +109,33 @@ const TicketCard = (props: EventCardProps) => {
                 )}
                 {}
                 {ticket?.project?.name && (
-                  <Typography variant={mdUp ? "body2" : "h6"}>
+                  <Typography variant={mdUp ? "body1" : "h6"}>
                     {ticket?.project?.name}
                   </Typography>
                 )}
                 {!ticket?.project?.name && (
-                  <Typography variant={mdUp ? "body2" : "h6"}>
+                  <Typography variant={mdUp ? "body1" : "h6"}>
                     3ridge
                   </Typography>
                 )}
               </Stack>
-              <StyledChip
-                label={
-                  <Typography variant={mdUp ? "caption" : "body2"}>
-                    {ticket?.quests?.length ?? 0} Quests
-                  </Typography>
-                }
-                sx={{
-                  padding: "8px",
-                  paddingTop: "16px",
-                  paddingBottom: "16px",
-                }}
-              ></StyledChip>
+              <Box>
+                <Typography variant={mdUp ? "body2" : "body1"}>
+                  {ticket?.quests?.length ?? 0} Quests
+                </Typography>
+              </Box>
+              {/*<StyledChip*/}
+              {/*  label={*/}
+              {/*    <Typography variant={mdUp ? "caption" : "body2"}>*/}
+              {/*      {ticket?.quests?.length ?? 0} Quests*/}
+              {/*    </Typography>*/}
+              {/*  }*/}
+              {/*  sx={{*/}
+              {/*    padding: "8px",*/}
+              {/*    paddingTop: "16px",*/}
+              {/*    paddingBottom: "16px",*/}
+              {/*  }}*/}
+              {/*></StyledChip>*/}
             </Stack>
             <Box
               ref={ref}
