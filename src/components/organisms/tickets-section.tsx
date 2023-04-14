@@ -219,11 +219,11 @@ const TicketsSection = (props: TicketSectionProps) => {
         </Grid>
       </Grid>
       <Box sx={{ marginTop: 6 }}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} columns={30}>
           {loading &&
             [1, 2, 3, 4].map((e) => {
               return (
-                <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
+                <Grid key={e} item xs={30} sm={15} md={10} lg={6}>
                   <Skeleton
                     height={500}
                     variant={"rounded"}
@@ -235,7 +235,7 @@ const TicketsSection = (props: TicketSectionProps) => {
           {!loading &&
             tickets?.map((ticket, index) => {
               return (
-                <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
+                <Grid key={index} item xs={30} sm={15} md={10} lg={6}>
                   <TicketCard
                     ticket={ticket}
                     onClick={(e) => {

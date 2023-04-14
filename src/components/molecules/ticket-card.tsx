@@ -8,6 +8,7 @@ import {
   Skeleton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useLayoutEffect } from "react";
 import StyledChip from "../atoms/styled/styled-chip";
@@ -26,15 +27,17 @@ const TicketCard = (props: EventCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [height, setHeight] = React.useState(0);
   const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   useLayoutEffect(() => {
-    setHeight(ref.current?.offsetWidth ?? 0);
+    setHeight((ref.current?.offsetWidth ?? 0) * 0.9);
   }, []);
 
   useEffect(() => {
     if (!ref.current) return;
     const resizeObserver = new ResizeObserver(() => {
-      setHeight(ref.current?.offsetWidth ?? 0);
+      setHeight((ref.current?.offsetWidth ?? 0) * 0.9);
     });
     resizeObserver.observe(ref.current);
     return () => resizeObserver.disconnect(); // clean up
@@ -66,17 +69,19 @@ const TicketCard = (props: EventCardProps) => {
           <Stack direction={"column"} sx={{ marginTop: 0 }}>
             <Stack
               direction={"row"}
-              // spacing={1}
               alignItems={"center"}
               justifyContent={"space-between"}
-              sx={{ paddingBottom: 2, paddingLeft: 1 }}
+              sx={{
+                paddingBottom: 3,
+                paddingLeft: "4px",
+              }}
             >
               <Stack direction={"row"} spacing={1} alignItems={"center"}>
                 {ticket?.project?.imageUrl && (
                   <Image
                     alt={""}
-                    width={32}
-                    height={32}
+                    width={28}
+                    height={28}
                     src={ticket?.project?.imageUrl}
                     style={{
                       borderWidth: 2,
@@ -89,8 +94,8 @@ const TicketCard = (props: EventCardProps) => {
                 {!ticket?.project?.imageUrl && (
                   <Image
                     alt={""}
-                    width={32}
-                    height={32}
+                    width={28}
+                    height={28}
                     src={
                       "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/favicon.ico"
                     }
@@ -104,12 +109,27 @@ const TicketCard = (props: EventCardProps) => {
                 )}
                 {}
                 {ticket?.project?.name && (
-                  <Typography>{ticket?.project?.name}</Typography>
+                  <Typography variant={mdUp ? "body2" : "h6"}>
+                    {ticket?.project?.name}
+                  </Typography>
                 )}
-                {!ticket?.project?.name && <Typography>3ridge</Typography>}
+                {!ticket?.project?.name && (
+                  <Typography variant={mdUp ? "body2" : "h6"}>
+                    3ridge
+                  </Typography>
+                )}
               </Stack>
               <StyledChip
-                label={`${ticket?.quests?.length ?? 0} Quests`}
+                label={
+                  <Typography variant={mdUp ? "caption" : "body2"}>
+                    {ticket?.quests?.length ?? 0} Quests
+                  </Typography>
+                }
+                sx={{
+                  padding: "8px",
+                  paddingTop: "16px",
+                  paddingBottom: "16px",
+                }}
               ></StyledChip>
             </Stack>
             <Box
@@ -163,13 +183,10 @@ const TicketCard = (props: EventCardProps) => {
               </Typography>
             </Box>
             <Grid
-              sx={{ marginTop: 4, marginBottom: -1 }}
+              sx={{ marginTop: 4, marginBottom: -2 }}
               container
               columnSpacing={1}
             >
-              {/*<Grid item>*/}
-
-              {/*</Grid>*/}
               <Grid item>
                 <Stack
                   direction={"row"}
@@ -183,13 +200,12 @@ const TicketCard = (props: EventCardProps) => {
                     alt={"StarIcon"}
                     width={48}
                     height={48}
+                    style={{ marginLeft: -12 }}
                   ></Image>
                   <Typography variant={"body1"}>
                     {`${ticket?.rewardPolicy?.context?.point ?? 0} Point`}
                   </Typography>
                 </Stack>
-                {/*}*/}
-                {/*></StyledChip>*/}
               </Grid>
             </Grid>
           </Stack>
