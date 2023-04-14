@@ -1,19 +1,17 @@
 import {
   AppBar,
   Box,
+  Link as MuiLink,
   Stack,
   Toolbar,
   Typography,
-  Link as MuiLink,
   useMediaQuery,
-  IconButton,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
 import { MouseEventHandler, ReactNode, useState } from "react";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
-import PrimaryButton from "../components/atoms/primary-button";
 import SecondaryButton from "../components/atoms/secondary-button";
 import SignInDialog from "./dialog/sign/sign-in-dialog";
 import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
@@ -36,10 +34,9 @@ import {
 import { useSignDialog } from "../page-hook/sign-dialog-hook";
 import NavbarButton from "../components/atoms/navbar-button";
 import Link from "next/link";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SubMenuButton from "../components/molecules/sub-menu-button";
 import Image from "next/image";
-import BlockIcon from "../components/molecules/block-icon";
+// import ContentsRendererDialog from "../components/dialogs/contents-renderer-dialog";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -378,6 +375,7 @@ const MainLayout = (props: MainLayoutProps) => {
           );
         }}
       ></SignInWithEmailDialog>
+      {/*<ContentsRendererDialog open={true}></ContentsRendererDialog>*/}
     </Box>
   );
 };

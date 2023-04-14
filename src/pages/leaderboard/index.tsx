@@ -75,6 +75,7 @@ const RankCard = ({
   return (
     <Card
       sx={{
+        cursor: "pointer",
         background: theme.palette.neutral[800],
         transform: "translateY(0%)",
         transition: "all 0.2s ease-out 0s",

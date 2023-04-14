@@ -283,7 +283,7 @@ const Profile = (props: AppProps) => {
     } catch (e) {
       closeLoading();
       const message = getErrorMessage(e);
-      console.log(message);
+      // console.log(message);
       if (message.includes(APP_ERROR_MESSAGE.FIREBASE_TOO_MANY_REQUESTS)) {
         showErrorAlert({
           content: "Resend email exceed limit please 1hour later",
@@ -497,11 +497,11 @@ const Profile = (props: AppProps) => {
                             src={e?.metaDataUri}
                             style={{
                               objectFit: "cover",
-                              width: 128,
-                              borderRadius: 128,
+                              width: 96,
+                              borderRadius: 96,
                               borderColor: theme.palette.neutral[100],
                               borderStyle: "solid",
-                              borderWidth: 2,
+                              borderWidth: 3,
                             }}
                           />
                         </Grid>
@@ -564,7 +564,7 @@ const Profile = (props: AppProps) => {
                         justifyContent={"center"}
                         sx={{
                           marginTop: 8,
-                          marginBottom: 4,
+                          marginBottom: 16,
                           width: "100%",
                         }}
                       >
@@ -575,6 +575,7 @@ const Profile = (props: AppProps) => {
                     </Grid>
                   ))}
               </Grid>
+              <Box sx={{ height: 48 }}></Box>
             </Stack>
           </Stack>
         </Grid>
