@@ -18,6 +18,13 @@ import Image from "next/image";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import PrimaryButton from "../../components/atoms/primary-button";
+import { Swiper, SwiperSlide } from "swiper/react"; // basic
+import SwiperCore, { Navigation, Pagination } from "swiper";
+import "swiper/css"; //basic
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+SwiperCore.use([Navigation, Pagination]);
 
 export async function getStaticProps() {
   return { props: {} };
@@ -420,6 +427,23 @@ const Home = (props: AppProps) => {
             width: "100%",
           }}
         >
+          {/*<Swiper*/}
+          {/*  spaceBetween={50}*/}
+          {/*  slidesPerView={3}*/}
+          {/*  scrollbar={{ draggable: true }}*/}
+          {/*  navigation*/}
+          {/*  pagination={{ clickable: true }}*/}
+          {/*  breakpoints={{*/}
+          {/*    768: {*/}
+          {/*      slidesPerView: 7,*/}
+          {/*    },*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  <SwiperSlide>Slide 1</SwiperSlide>*/}
+          {/*  <SwiperSlide>Slide 2</SwiperSlide>*/}
+          {/*  <SwiperSlide>Slide 3</SwiperSlide>*/}
+          {/*  <SwiperSlide>Slide 4</SwiperSlide>*/}
+          {/*</Swiper>*/}
           <Stack
             direction={"column"}
             alignItems={"center"}

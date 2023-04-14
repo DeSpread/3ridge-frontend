@@ -15,7 +15,7 @@ Next plan is supporting multi chain
 
 
 ## Contact
-- Demo: [https://beta.3ridge.xyz](https://beta.3ridge.xyz/)
+- Demo: [https://dev.3ridge.xyz](https://dev.3ridge.xyz/)
 - Twitter: https://twitter.com/3ridge_xyz
 - Email: support@3ridge.xyz
 - Discord : https://discord.gg/3ridge

@@ -1,8 +1,8 @@
 import { gql } from "../__generated__";
 
 export const GET_USERS_ORDER_BY_REWARD_POINT_DESC = gql(/* GraphQL */ `
-  query GetUsersOrderByRewardPointDesc($skip: Int = 0, $take: Int = 25) {
-    usersOrderByRewardPointDesc(skip: $skip, take: $take) {
+  query GetUsersOrderByRewardPointDesc($skip: Int = 0, $limit: Int = 25) {
+    usersOrderByRewardPointDesc(skip: $skip, limit: $limit) {
       _id
       name
       profileImageUrl
@@ -276,6 +276,11 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
         questPolicy {
           context
           questPolicy
+        }
+        questGuides {
+          contentFormatType
+          content
+          contentEncodingType
         }
       }
       rewardPolicy {
