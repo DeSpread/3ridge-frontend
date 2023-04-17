@@ -18,6 +18,7 @@ import { PetraWallet } from "petra-plugin-wallet-adapter";
 import * as gtag from "../lib/gtag";
 import Head from "next/head";
 import Script from "next/script";
+import { appWithTranslation } from "next-i18next";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 import { useRouter } from "next/router";
@@ -37,7 +38,7 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-export default function App({ Component, pageProps }: AppPropsWithLayout) {
+const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>);
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
   const wallets = [new PetraWallet()];
@@ -97,4 +98,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       </ThemeProvider>
     </>
   );
-}
+};
+
+export default appWithTranslation(App);

@@ -23,12 +23,14 @@ import SwiperCore, { Navigation, Pagination } from "swiper";
 import "swiper/css"; //basic
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { useTranslation, Trans } from "next-i18next";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
+import { makeStaticProps, getStaticPaths } from "../../lib/getStatic";
 
 SwiperCore.use([Navigation, Pagination]);
 
-export async function getStaticProps() {
-  return { props: {} };
-}
+const getStaticProps = makeStaticProps(["common"]);
+export { getStaticPaths, getStaticProps };
 
 const DescContent = (props: {
   title: string;
@@ -138,12 +140,13 @@ const DescContent = (props: {
   );
 };
 
-const Home = (props: AppProps) => {
+const Home = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
+  const { t } = useTranslation("common");
 
   return (
     <>
@@ -197,7 +200,8 @@ const Home = (props: AppProps) => {
                     lineHeight: 1.3,
                   }}
                 >
-                  We Bridge You and Web3
+                  {t("welcome")}
+                  {/*We Bridge You and Web3*/}
                 </GradientTypography>
               ) : (
                 <Stack direction={"column"}>
