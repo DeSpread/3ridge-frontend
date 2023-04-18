@@ -61,7 +61,7 @@ const NavbarButtonSet = ({
     <Stack direction={"row"}>
       <NavbarButton onClick={bountiesBtnOnClick}>이벤트</NavbarButton>
       <NavbarButton onClick={communitiesBtnOnClick}>프로젝트</NavbarButton>
-      <NavbarButton onClick={leaderBoardBtnOnClick}>리더보드</NavbarButton>
+      <NavbarButton onClick={leaderBoardBtnOnClick}>유저랭킹</NavbarButton>
     </Stack>
   );
 };

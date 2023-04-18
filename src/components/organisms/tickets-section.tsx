@@ -266,7 +266,7 @@ const TicketsSection = (props: TicketSectionProps) => {
                 height={256}
                 style={{}}
               ></Image>
-              <Typography variant={"h5"}>Empty Contents</Typography>
+              <Typography variant={"h5"}>앗! 컨텐츠가 없어요 :(</Typography>
             </Stack>
           )}
         </Grid>

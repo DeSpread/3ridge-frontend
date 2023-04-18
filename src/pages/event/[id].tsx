@@ -122,7 +122,7 @@ const TimerBoard = (props: MyTimerSettings) => {
           <Typography variant={"h5"}>
             {days.toString().padStart(2, "0")}
           </Typography>
-          <Typography variant={"body2"}>Days</Typography>
+          <Typography variant={"body2"}>일</Typography>
         </Stack>
         <Stack
           direction={"column"}
@@ -132,7 +132,7 @@ const TimerBoard = (props: MyTimerSettings) => {
           <Typography variant={"h5"}>
             {hours.toString().padStart(2, "0")}
           </Typography>
-          <Typography variant={"body2"}>Hours</Typography>
+          <Typography variant={"body2"}>시</Typography>
         </Stack>
         <Stack
           direction={"column"}
@@ -142,7 +142,7 @@ const TimerBoard = (props: MyTimerSettings) => {
           <Typography variant={"h5"}>
             {minutes.toString().padStart(2, "0")}
           </Typography>
-          <Typography variant={"body2"}>Minutes</Typography>
+          <Typography variant={"body2"}>분</Typography>
         </Stack>
         <Stack
           direction={"column"}
@@ -152,7 +152,7 @@ const TimerBoard = (props: MyTimerSettings) => {
           <Typography variant={"h5"}>
             {seconds.toString().padStart(2, "0")}
           </Typography>
-          <Typography variant={"body2"}>Seconds</Typography>
+          <Typography variant={"body2"}>초</Typography>
         </Stack>
       </Stack>
     </Box>
@@ -484,7 +484,7 @@ const Event = (props: AppProps) => {
 
             <Stack direction={"column"} spacing={2}>
               <Typography textAlign={smUp ? "left" : "center"} variant={"h5"}>
-                Description
+                이벤트 설명
               </Typography>
               <Box sx={{ maxWidth: 800 }}>
                 <Typography
@@ -511,7 +511,7 @@ const Event = (props: AppProps) => {
               sx={{ background: "" }}
             >
               <Typography variant="h5" textAlign={smUp ? "left" : "center"}>
-                Quest
+                퀘스트
               </Typography>
               <Stack
                 direction={"column"}
@@ -758,9 +758,9 @@ const Event = (props: AppProps) => {
                 justifyContent={"space-between"}
                 sx={{ background: "" }}
               >
-                <Typography variant="h5">Reward</Typography>
+                <Typography variant="h5">리워드</Typography>
                 <StyledChip
-                  label={"FCFS"}
+                  label={"선착순"}
                   icon={<DirectionsRunIcon></DirectionsRunIcon>}
                 ></StyledChip>
               </Stack>
@@ -768,7 +768,7 @@ const Event = (props: AppProps) => {
                 <Box>
                   <Stack alignItems={"center"}>
                     <Typography variant={"body1"}>
-                      First Come First Serve In
+                      이벤트가 끝나기까지 남은 시간
                     </Typography>
                     {ticketData?.rewardPolicy?.context?.untilTime ? (
                       isExpired() ? (
@@ -786,7 +786,7 @@ const Event = (props: AppProps) => {
                             variant={"h6"}
                             sx={{ color: theme.palette.secondary.main }}
                           >
-                            This project is expired
+                            본 이벤트가 끝났습니다
                           </Typography>
                         </Stack>
                       ) : (
@@ -867,7 +867,7 @@ const Event = (props: AppProps) => {
                       alignItems={"center"}
                       justifyContent={"space-between"}
                     >
-                      <Typography variant={"body1"}>POINT</Typography>
+                      <Typography variant={"body1"}>보상 포인트</Typography>
                       <Stack direction={"row"} alignItems={"center"}>
                         <Image
                           src={
@@ -901,7 +901,7 @@ const Event = (props: AppProps) => {
                         padding: 1,
                       }}
                     />
-                    <Typography variant={"body2"}>Aptos Chain</Typography>
+                    <Typography variant={"body2"}>Aptos 체인 지원</Typography>
                   </Stack>
                 </Stack>
               </PrimaryCard>
@@ -957,11 +957,10 @@ const Event = (props: AppProps) => {
                           <>
                             <Stack direction={"column"} spacing={1}>
                               <Typography>
-                                Reward NFT has been sent to your wallet !
+                                방금 지갑에 리워드를 보냈어요! 지갑을 확인해주세요
                               </Typography>
                               <Typography>
-                                Please accept the NFT transmitted from the NFT
-                                tab on Petra Wallet
+                                전송된 리워드를 받기 위해서는 Petra 지갑에서 Accept 해주어야 합니다. 지갑을 확인해주세요!
                               </Typography>
                             </Stack>
                           </>
@@ -974,10 +973,10 @@ const Event = (props: AppProps) => {
                 }}
               >
                 {isExpired()
-                  ? "Project ended"
+                  ? "이벤트가 종료되었어요"
                   : claimCompleted
-                  ? "Claim completed"
-                  : "Claim reward"}
+                  ? "이미 리워드를 클레임 하였습니다"
+                  : "리워드 클레임"}
               </LoadingButton>
             </Stack>
 
@@ -988,7 +987,7 @@ const Event = (props: AppProps) => {
                 spacing={1}
                 justifyContent={smUp ? "flex-start" : "center"}
               >
-                <Typography variant="h5">Participants</Typography>
+                <Typography variant="h5">아래의 사람들이 참여하고 있어요</Typography>
               </Stack>
               <Stack
                 direction={"row"}
