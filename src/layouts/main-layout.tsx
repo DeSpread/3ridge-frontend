@@ -59,9 +59,9 @@ const NavbarButtonSet = ({
 }: NavbarButtonSetProps) => {
   return (
     <Stack direction={"row"}>
-      <NavbarButton onClick={bountiesBtnOnClick}>Explore</NavbarButton>
-      <NavbarButton onClick={communitiesBtnOnClick}>Projects</NavbarButton>
-      <NavbarButton onClick={leaderBoardBtnOnClick}>LeaderBoard</NavbarButton>
+      <NavbarButton onClick={bountiesBtnOnClick}>이벤트</NavbarButton>
+      <NavbarButton onClick={communitiesBtnOnClick}>프로젝트</NavbarButton>
+      <NavbarButton onClick={leaderBoardBtnOnClick}>리더보드</NavbarButton>
     </Stack>
   );
 };
@@ -203,7 +203,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           setShowSignInDialog(true);
                         }}
                       >
-                        Connect
+                        지갑 연결
                       </SecondaryButton>
                     </Stack>
                   )}
@@ -229,7 +229,7 @@ const MainLayout = (props: MainLayoutProps) => {
 
       {/*--- Dialog ---*/}
       <SignInDialog
-        title={"We are happy to see you again!"}
+        title={"안녕하세요 다시 만나서 반가워요!"}
         open={isSignDialogOpen}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
@@ -301,7 +301,7 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
       ></SignInDialog>
       <SignInWithDialog
-        title={"Sign In with others"}
+        title={"가입하기"}
         open={signUpWithVisible}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
@@ -335,7 +335,7 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
       ></SignInWithDialog>
       <SignInWithEmailDialog
-        title={"Sign In with email"}
+        title={"이메일로 로그인하기"}
         open={signUpWithEmailVisible}
         onCloseBtnClicked={(e) => {
           e.preventDefault();

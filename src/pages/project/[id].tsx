@@ -64,7 +64,7 @@ const Project = () => {
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <Stack direction={"column"} alignItems={"center"}>
         <Stack

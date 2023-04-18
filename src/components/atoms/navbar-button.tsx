@@ -13,7 +13,7 @@ const NavbarButton = ({
   height = 56,
   icon = null,
   children,
-  onClick,
+  onClick
 }: NavBarButtonProps) => {
   const theme = useTheme();
 

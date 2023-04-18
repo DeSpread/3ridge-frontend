@@ -151,7 +151,7 @@ const Home = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <Stack
         direction={"column"}
@@ -200,7 +200,7 @@ const Home = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     lineHeight: 1.3,
                   }}
                 >
-                  {t("welcome")}
+                  {/*{t("welcome")}*/}
                   {/*We Bridge You and Web3*/}
                 </GradientTypography>
               ) : (
@@ -248,7 +248,7 @@ const Home = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   variant={mdUp ? "h2" : smUp ? "h3" : "h5"}
                   textAlign={smUp ? "left" : "center"}
                 >
-                  Start your journey to web3 here
+                  국내 Web3 컨텐츠 플랫폼, 3ridge에서 시작하세요
                 </Typography>
               </Stack>
               <Stack
@@ -256,18 +256,10 @@ const Home = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 sx={{ marginTop: 2 }}
                 alignItems={smUp ? "flex-start" : "center"}
               >
-                <Box sx={{ marginLeft: 1 }}>
-                  <Typography variant={mdUp ? "body1" : "body2"}>
-                    Support now
+                <Box>
+                  <Typography variant={mdUp ? "h5" : "body2"}>
+                      웹3의 다양한 경험에 함께 참여하세요!
                   </Typography>
-                </Box>
-                <Box sx={{ marginLeft: mdUp ? 2 : smUp ? 1 : 0 }}>
-                  <img
-                    style={{ width: mdUp ? 90 : smUp ? 68 : 42 }}
-                    src={
-                      "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/logo/aptos-full.svg"
-                    }
-                  />
                 </Box>
               </Stack>
               <Stack
@@ -298,7 +290,7 @@ const Home = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                       color={theme.palette.neutral[900]}
                       fontFamily={"LINESeedKR-Bd"}
                     >
-                      Start Now
+                      시작하기
                     </Typography>
                   </Box>
                 </PrimaryButton>
