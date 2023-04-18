@@ -21,9 +21,10 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
         fullWidth={true}
         onClick={props.onContinueWithWalletClicked}
       >
-        Continue with wallet
+        지갑 연결하기
       </SecondaryButton>
-      <Typography variant={"body2"}>Or</Typography>
+      {/*<Typography variant={"body2"}>Or</Typography>*/}
+      <br/>
       <Stack sx={{ width: "100%" }}>
         <Stack direction={"column"} spacing={2}>
           <PrimaryButton fullWidth={true} onClick={props.onSignInWithClicked}>
@@ -33,7 +34,7 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
                 color={"neutral.900"}
                 variant={"body2"}
               >
-                Sign In with
+                구글 또는 이메일 로그인
               </Typography>
               <Avatar
                 src={"https://nftbank.ai/static/images/google-28.svg"}
@@ -52,13 +53,13 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
             </Stack>
           </PrimaryButton>
           <Stack direction={"row"} justifyContent={"center"}>
-            <Typography variant={"body2"}>Don`t have an account?</Typography>
+            <Typography variant={"body2"}>아직 계정이 없으신가요?&nbsp;</Typography>
             <LinkTypography
               variant={"body2"}
               href={"/signup"}
               onClick={props.onSignUpClicked}
             >
-              &nbsp;SignUp
+              가입하기
             </LinkTypography>
           </Stack>
         </Stack>

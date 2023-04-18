@@ -15,7 +15,7 @@ const SignInWithDialogContent = (props: SignInWithDialogProps) => {
 
   return (
     <>
-      <Stack sx={{ width: "100%" }} spacing={2}>
+      <Stack sx={{ width: "100%" }} spacing={3}>
         <PrimaryButton
           startIcon={
             <Avatar
@@ -29,7 +29,7 @@ const SignInWithDialogContent = (props: SignInWithDialogProps) => {
           }
           onClick={props.onSignInWithGoogleClicked}
         >
-          Sign In with Google
+          구글로 로그인하기
         </PrimaryButton>
         <PrimaryButton
           startIcon={
@@ -47,7 +47,7 @@ const SignInWithDialogContent = (props: SignInWithDialogProps) => {
           }
           onClick={props.onSignInWithEmailClicked}
         >
-          Sign In with email
+          이메일로 로그인하기
         </PrimaryButton>
       </Stack>
     </>

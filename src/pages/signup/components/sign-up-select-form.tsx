@@ -28,14 +28,15 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
         spacing={4}
       >
         <Typography textAlign={"left"} variant={"h5"}>
-          Sign Up
+          가입하기
         </Typography>
         <SecondaryButton fullWidth={true} onClick={props.onClickConnectWallet}>
-          Connect wallet
+          지갑 연결하기
         </SecondaryButton>
-        <Typography textAlign={"center"} variant={"h6"}>
-          Or
-        </Typography>
+        {/*<Typography textAlign={"center"} variant={"h6"}>*/}
+        {/*  Or*/}
+        {/*</Typography>*/}
+        <br/>
         <Stack spacing={2}>
           <PrimaryButton fullWidth={true} onClick={props.onClickSignUpWith}>
             <Stack direction={"row"} spacing={1}>
@@ -44,7 +45,7 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
                 color={"neutral.900"}
                 variant={"body2"}
               >
-                Sign Up with
+                구글 또는 이메일 가입하기
               </Typography>
               <Avatar
                 src={"https://nftbank.ai/static/images/google-28.svg"}
@@ -62,9 +63,9 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
             </Stack>
           </PrimaryButton>
           <Stack direction={"row"} justifyContent={"center"} spacing={1}>
-            <Typography variant={"body2"}>Already have an account?</Typography>
+            <Typography variant={"body2"}>이미 계정이 있으신가요? &nbsp;</Typography>
             <LinkTypography variant={"body2"} onClick={props.onShowSignClicked}>
-              Sign in
+              로그인 하러 가기
             </LinkTypography>
           </Stack>
         </Stack>

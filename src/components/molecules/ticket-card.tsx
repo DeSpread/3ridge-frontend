@@ -121,7 +121,7 @@ const TicketCard = (props: EventCardProps) => {
               </Stack>
               <Box>
                 <Typography variant={mdUp ? "body2" : "body1"}>
-                  {ticket?.quests?.length ?? 0} Quests
+                  {ticket?.quests?.length ?? 0} 퀘스트
                 </Typography>
               </Box>
               {/*<StyledChip*/}
@@ -207,8 +207,8 @@ const TicketCard = (props: EventCardProps) => {
                     height={48}
                     style={{ marginLeft: -12 }}
                   ></Image>
-                  <Typography variant={"body1"}>
-                    {`${ticket?.rewardPolicy?.context?.point ?? 0} Point`}
+                  <Typography variant={"body2"}>
+                    {`${ticket?.rewardPolicy?.context?.point ?? 0} 포인트`}
                   </Typography>
                 </Stack>
               </Grid>

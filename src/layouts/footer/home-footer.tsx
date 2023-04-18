@@ -95,18 +95,18 @@ const HomeFooter = () => {
                 window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
               }}
           >
-            Join Newsletter
+            뉴스레터 구독하기
           </SecondaryButton>
         </Stack>
         <Box>
           <Link href="https://twitter.com/3ridge_xyz" color="inherit" underline="hover">
-            Twitter
+            트위터
           </Link>
           <Link href="https://discord.gg/3ridge" color="inherit" underline="hover" style={{ marginLeft: 16 }}>
-            Discord
+            디스코드
           </Link>
           <Link href="mailto:support@3ridge.xyz?Subject=Hello!%203ridge" color="inherit" underline="hover" style={{ marginLeft: 16 }}>
-            Email
+            이메일
           </Link>
         </Box>
       </Box>

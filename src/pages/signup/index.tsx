@@ -56,7 +56,7 @@ const Signup = () => {
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <div style={{ flex: 1, background: "" }}>
         <Stack
@@ -224,14 +224,14 @@ const Signup = () => {
               justifyContent={"center"}
             >
               <Typography variant={"body2"} textAlign={"center"}>
-                By signing up, you agree to our
+                가입시 다음에 동의합니다.
               </Typography>
               <LinkTypography variant={"body2"}>
-                &nbsp;Terms of use&nbsp;
+                &nbsp;이용약관&nbsp;
               </LinkTypography>
-              <Typography variant={"body2"}>and</Typography>
+              <Typography variant={"body2"}>및</Typography>
               <LinkTypography variant={"body2"}>
-                &nbsp;Privacy Policy
+                &nbsp;개인 정보 보호 방침
               </LinkTypography>
             </Stack>
           </Stack>

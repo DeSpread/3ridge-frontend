@@ -29,7 +29,7 @@ const Projects = () => {
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <Box
         style={{

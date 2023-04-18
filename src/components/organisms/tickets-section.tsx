@@ -92,7 +92,7 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const TITLES = [
     {
-      title: "Trending",
+      title: "인기순",
       icon: (
         <LocalFireDepartmentIcon
           sx={{ color: "red" }}
@@ -100,8 +100,8 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
       ),
     },
     {
-      title: "Newest",
-      icon: <QueryBuilderIcon sx={{ color: "#62cbff" }}></QueryBuilderIcon>,
+      title: "최신순",
+      icon: <QueryBuilderIcon sx={{ color: "white" }}></QueryBuilderIcon>,
     },
   ];
 
@@ -144,7 +144,7 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
 
 const TabButtonGroup = (props: TabButtonGroupProps) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
-  const TITLES = ["Available", "Complete", "Missed"];
+  const TITLES = ["진행 중인 이벤트", "종료된 이벤트", "놓친 이벤트"];
 
   const a11yProps = (index: number) => {
     return {
@@ -266,7 +266,7 @@ const TicketsSection = (props: TicketSectionProps) => {
                 height={256}
                 style={{}}
               ></Image>
-              <Typography variant={"h5"}>Empty Contents</Typography>
+              <Typography variant={"h5"}>앗! 컨텐츠가 없어요 :(</Typography>
             </Stack>
           )}
         </Grid>

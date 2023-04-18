@@ -296,7 +296,7 @@ const Profile = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <Grid
         flex={1}
@@ -343,7 +343,7 @@ const Profile = (props: AppProps) => {
                   style={{ marginLeft: -12, marginRight: -4 }}
                 ></Image>
                 <Typography variant={"h5"} sx={{ zIndex: 1 }}>
-                  {`Point ${userData?.rewardPoint ?? 0}`}
+                  {`${userData?.rewardPoint ?? 0} 포인트`}
                 </Typography>
               </Stack>
               <LinearProgress
@@ -368,7 +368,7 @@ const Profile = (props: AppProps) => {
                 ) : (
                   <Box sx={{ maxWidth: 330 }}>
                     <GradientTypography variant={"h4"}>
-                      Wallet not connected
+                      지갑이 연결되지 않았어요
                     </GradientTypography>
                   </Box>
                 )}
@@ -448,7 +448,7 @@ const Profile = (props: AppProps) => {
                       }}
                       disabled={!isSingedUserProfile}
                     >
-                      Edit Profile
+                      프로필 수정하기
                     </PrimaryButton>
                   )}
                 </Grid>
@@ -457,7 +457,7 @@ const Profile = (props: AppProps) => {
             {/*--- Achievements ---*/}
             <Stack>
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
-                Achievements
+                내 활동 내역
               </Typography>
               <Divider sx={{ borderBottomWidth: 2, paddingTop: 2 }}></Divider>
               {achievementsLoading && (
@@ -515,7 +515,7 @@ const Profile = (props: AppProps) => {
                     sx={{ marginTop: 8, marginBottom: 4 }}
                   >
                     <Typography variant={"h6"} color={"neutral.500"}>
-                      ⛔ EMPTY
+                      앗 활동 내역이 없어요
                     </Typography>
                   </Stack>
                 ))}
@@ -524,7 +524,7 @@ const Profile = (props: AppProps) => {
             {/*--- Participating event ---*/}
             <Stack>
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
-                Participating event
+                참여한 이벤트
               </Typography>
               <Divider sx={{ borderBottomWidth: 2, paddingTop: 2 }}></Divider>
               <Box sx={{ height: 24 }}></Box>
@@ -561,7 +561,7 @@ const Profile = (props: AppProps) => {
                     <Grid item sx={{ width: "100%" }}>
                       <Stack
                         direction={"row"}
-                        justifyContent={"center"}
+                        justifyContent={"left"}
                         sx={{
                           marginTop: 8,
                           marginBottom: 16,
@@ -569,7 +569,7 @@ const Profile = (props: AppProps) => {
                         }}
                       >
                         <Typography variant={"h6"} color={"neutral.500"}>
-                          ⛔ EMPTY
+                          참여한 이벤트가 없어요
                         </Typography>
                       </Stack>
                     </Grid>
@@ -583,7 +583,7 @@ const Profile = (props: AppProps) => {
       {/*--- Dialogs ---*/}
       <ProfileEditDialog
         userData={signedUserData}
-        title={"Edit profile"}
+        title={"프로필 수정하기"}
         onClose={() => {
           setOpenProfileEditDialog(false);
         }}

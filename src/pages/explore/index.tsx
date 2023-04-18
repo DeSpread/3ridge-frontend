@@ -32,7 +32,7 @@ const Explore = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <Box
         style={{
@@ -50,7 +50,7 @@ const Explore = (props: AppProps) => {
             spacing={1}
             sx={{ marginTop: "32px" }}
           >
-            <Typography variant={"h4"}>Explore</Typography>
+            <Typography variant={"h4"}>전체 리스트</Typography>
           </Stack>
           {ticketsData && (
             <TicketsSection

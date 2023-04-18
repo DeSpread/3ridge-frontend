@@ -181,7 +181,7 @@ const RankCard = ({
             <Typography
               variant={smUp ? "h6" : "caption"}
               sx={{ color: (theme) => theme.palette.info.main }}
-            >{`${rewardPoint ?? 0} Point`}</Typography>
+            >{`${rewardPoint ?? 0} 포인트`}</Typography>
             {/*<Typography*/}
             {/*  variant={smUp ? "h6" : "caption"}*/}
             {/*  sx={{ color: (theme) => theme.palette.info.main }}*/}
@@ -229,7 +229,7 @@ const Leaderboard = () => {
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <Grid
         container
@@ -241,12 +241,12 @@ const Leaderboard = () => {
         <Grid item sx={{ background: "" }}>
           <Box sx={{ minWidth: smUp ? 800 : 200, background: "" }}>
             <Stack direction={"column"}>
-              <Typography variant={"h4"}>Leaderboard</Typography>
+              <Typography variant={"h4"}>유저 랭킹</Typography>
               {userData._id && (
                 <Box sx={{ marginTop: 5 }}>
                   <Stack direction={"column"} spacing={2}>
                     <Box>
-                      <Typography variant={"h6"}>Your ranking</Typography>
+                      <Typography variant={"h6"}>내 랭킹</Typography>
                     </Box>
                     {(userRankLoading || !userRank) && (
                       <Box>
@@ -274,7 +274,7 @@ const Leaderboard = () => {
                 <Stack direction={"column"} spacing={2}>
                   <Box>
                     <Typography variant={"h6"}>
-                      Top users in the last 30 days
+                      최근 30일 동안의 유저 활동 기준
                     </Typography>
                   </Box>
                   {leaderUsersData?.map((e, index) => {
