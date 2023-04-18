@@ -1,2 +1,2 @@
-import { Redirect } from "../lib/redirect";
-export default Redirect;
+import Home from "./home";
+export default Home;
