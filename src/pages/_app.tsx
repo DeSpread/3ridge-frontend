@@ -18,7 +18,6 @@ import { PetraWallet } from "petra-plugin-wallet-adapter";
 import * as gtag from "../lib/gtag";
 import Head from "next/head";
 import Script from "next/script";
-import { appWithTranslation } from "next-i18next";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 import { useRouter } from "next/router";
@@ -100,4 +99,4 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   );
 };
 
-export default appWithTranslation(App);
+export default App;
