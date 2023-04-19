@@ -58,12 +58,16 @@ const NavbarButtonSet = ({
   leaderBoardBtnOnClick,
 }: NavbarButtonSetProps) => {
   return (
-    <Stack direction={"row"}>
-      <NavbarButton onClick={bountiesBtnOnClick}>
-        &nbsp;&nbsp;이벤트&nbsp;&nbsp;
-      </NavbarButton>
-      <NavbarButton onClick={communitiesBtnOnClick}>프로젝트</NavbarButton>
-      <NavbarButton onClick={leaderBoardBtnOnClick}>유저랭킹</NavbarButton>
+    <Stack direction={"row"} sx={{ background: "" }}>
+      <Box>
+        <NavbarButton onClick={bountiesBtnOnClick}>이벤트</NavbarButton>
+      </Box>
+      <Box>
+        <NavbarButton onClick={communitiesBtnOnClick}>프로젝트</NavbarButton>
+      </Box>
+      <Box>
+        <NavbarButton onClick={leaderBoardBtnOnClick}>유저랭킹</NavbarButton>
+      </Box>
     </Stack>
   );
 };
