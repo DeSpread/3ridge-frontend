@@ -13,7 +13,7 @@ const NavbarButton = ({
   height = 56,
   icon = null,
   children,
-  onClick
+  onClick,
 }: NavBarButtonProps) => {
   const theme = useTheme();
 
@@ -32,6 +32,7 @@ const NavbarButton = ({
           },
         },
         height: { height },
+        // width: 100,
         flex: 1,
         justifyContent: "center",
         flexDirection: "row",
