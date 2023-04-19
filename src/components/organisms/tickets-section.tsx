@@ -144,7 +144,7 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
 
 const TabButtonGroup = (props: TabButtonGroupProps) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
-  const TITLES = ["진행 중인 이벤트", "종료된 이벤트", "놓친 이벤트"];
+  const TITLES = ["진행 중", "종료됨", "놓친 이벤트"];
 
   const a11yProps = (index: number) => {
     return {

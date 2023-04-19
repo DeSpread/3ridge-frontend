@@ -259,20 +259,32 @@ const MainLayout = (props: MainLayoutProps) => {
             onError: (error: AppError) => {
               if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
                 showAlert({
-                  title: "Info",
+                  title: "지갑이 설치되지 않았습니다 😂",
                   content: (
                     <>
                       <Stack spacing={1}>
                         <Typography
                           style={{ color: theme.palette.neutral[100] }}
                         >
-                          Please Install PetraWallet
+                          Petra 지갑을 설치해주세요
                         </Typography>
-                        <Typography
-                          style={{ color: theme.palette.neutral[100] }}
+                        <Link
+                            href={"https://medium.com/despread-creative/앱토스-생태계를-위한-관문-페트라-월렛-c2bddb076f7d"}
+                            rel={"noopener noreferrer"}
+                            target={"_blank"}
                         >
-                          After Install, Create Account and Refresh page
-                        </Typography>
+                          <MuiLink
+                              sx={{
+                                "&:hover": {
+                                  color: "#bdbdbd",
+                                },
+                              }}
+                              color={"warning.main"}
+                              underline="hover"
+                          >
+                            Petra 지갑을 설치하는 방법
+                          </MuiLink>
+                        </Link>
                         <Link
                           href={"https://petra.app/"}
                           rel={"noopener noreferrer"}
@@ -287,7 +299,7 @@ const MainLayout = (props: MainLayoutProps) => {
                             color={"warning.main"}
                             underline="hover"
                           >
-                            Install Link
+                            Petra 지갑 설치 링크
                           </MuiLink>
                         </Link>
                       </Stack>
