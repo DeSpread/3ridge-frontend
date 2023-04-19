@@ -1,9 +1,7 @@
-import React, { ReactElement, useEffect, useLayoutEffect, useRef } from "react";
+import React, { ReactElement, useRef } from "react";
 import {
   Box,
-  Button,
   CardContent,
-  Grid,
   IconButton,
   Stack,
   Typography,
@@ -11,28 +9,23 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
-import type { AppProps } from "next/app";
 import HomeFooter from "../../layouts/footer/home-footer";
-import GradientTypography from "../../components/atoms/gradient-typography";
 import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import { useLoading } from "../../provider/loading/loading-provider";
-import { useRouter } from "next/router";
 
 import { Swiper, SwiperSlide } from "swiper/react"; // basic
 import SwiperCore, { Navigation } from "swiper";
 import "swiper/css"; //basic
+
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
-import { FILTER_TYPE, FilterType } from "../../type";
+import { FILTER_TYPE } from "../../type";
 import { TicketSortType } from "../../__generated__/graphql";
-import TicketCard from "../../components/molecules/ticket-card";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import TutorialDescCard from "../../components/molecules/tutorial-desc-card";
 import useWindowDimensions from "../../page-hook/window-dimensions";
 import TicketOverlayStyleCard from "../../components/molecules/ticket-overlay-style-card";
-import PrimaryButton from "../../components/atoms/primary-button";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 SwiperCore.use([Navigation]);
 
@@ -47,6 +40,7 @@ const Home = () => {
   });
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const swiperContainerRef = useRef<HTMLDivElement>(null);
   const [width] = useWindowDimensions();
 
   return (
@@ -73,13 +67,11 @@ const Home = () => {
         >
           <Stack
             sx={{
-              paddingLeft: 12,
-              paddingRight: 12,
               background: "",
               flex: 1,
               zIndex: 3,
             }}
-            spacing={6}
+            spacing={16}
             alignItems={"center"}
             justifyContent={"center"}
           >
@@ -113,30 +105,41 @@ const Home = () => {
                 </Box>
               </Stack>
             </Stack>
-            <Stack direction={"row"} alignItems={"center"}>
-              <div
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  background: "red",
-                  left: 0,
-                  top: 0,
-                }}
-              ></div>
-              {/*<Box>*/}
-              {/*  <IconButton*/}
-              {/*    ref={prevRef}*/}
-              {/*    sx={{*/}
-              {/*      borderRadius: 32,*/}
-              {/*      width: 48,*/}
-              {/*      height: 48,*/}
-              {/*      borderWidth: 2,*/}
-              {/*      borderStyle: "solid",*/}
-              {/*    }}*/}
-              {/*  >*/}
-              {/*    <ArrowBackIosNewIcon />*/}
-              {/*  </IconButton>*/}
-              {/*</Box>*/}
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              ref={swiperContainerRef}
+              sx={{
+                position: "relative",
+                width: "100%",
+              }}
+              spacing={3}
+            >
+              {/*<div*/}
+              {/*  style={{*/}
+              {/*    position: "absolute",*/}
+              {/*    width: "100%",*/}
+              {/*    height: swiperContainerRef?.current?.offsetHeight,*/}
+              {/*    background: "red",*/}
+              {/*    left: 0,*/}
+              {/*    top: 0,*/}
+              {/*  }}*/}
+              {/*></div>*/}
+              <Box>
+                <IconButton
+                  ref={prevRef}
+                  sx={{
+                    borderRadius: 32,
+                    width: 48,
+                    height: 48,
+                    borderWidth: 2,
+                    borderStyle: "solid",
+                  }}
+                >
+                  <ArrowBackIosNewIcon />
+                </IconButton>
+              </Box>
               <Box
                 width={width * (lgUp ? 0.75 : mdUp ? 0.6 : smUp ? 0.5 : 0.5)}
               >
@@ -172,20 +175,20 @@ const Home = () => {
                   })}
                 </Swiper>
               </Box>
-              {/*<Box>*/}
-              {/*  <IconButton*/}
-              {/*    ref={nextRef}*/}
-              {/*    sx={{*/}
-              {/*      borderRadius: 32,*/}
-              {/*      width: 48,*/}
-              {/*      height: 48,*/}
-              {/*      borderWidth: 2,*/}
-              {/*      borderStyle: "solid",*/}
-              {/*    }}*/}
-              {/*  >*/}
-              {/*    <ArrowForwardIosIcon />*/}
-              {/*  </IconButton>*/}
-              {/*</Box>*/}
+              <Box>
+                <IconButton
+                  ref={nextRef}
+                  sx={{
+                    borderRadius: 32,
+                    width: 48,
+                    height: 48,
+                    borderWidth: 2,
+                    borderStyle: "solid",
+                  }}
+                >
+                  <ArrowForwardIosIcon />
+                </IconButton>
+              </Box>
             </Stack>
             <Box sx={{ height: 4 }}></Box>
           </Stack>
@@ -360,5 +363,5 @@ const Home = () => {
 Home.getLayout = (page: ReactElement | ReactElement[]) => (
   <MainLayout footerComponent={<HomeFooter />}>{page}</MainLayout>
 );
-//
+
 export default Home;
