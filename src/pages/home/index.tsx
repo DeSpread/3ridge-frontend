@@ -1,9 +1,7 @@
-import React, { ReactElement, useEffect, useLayoutEffect, useRef } from "react";
+import React, { ReactElement, useRef } from "react";
 import {
   Box,
-  Button,
   CardContent,
-  Grid,
   IconButton,
   Stack,
   Typography,
@@ -11,43 +9,38 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
-import type { AppProps } from "next/app";
 import HomeFooter from "../../layouts/footer/home-footer";
-import GradientTypography from "../../components/atoms/gradient-typography";
 import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import { useLoading } from "../../provider/loading/loading-provider";
-import { useRouter } from "next/router";
 
 import { Swiper, SwiperSlide } from "swiper/react"; // basic
 import SwiperCore, { Navigation } from "swiper";
 import "swiper/css"; //basic
+
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
-import { FILTER_TYPE, FilterType } from "../../type";
+import { FILTER_TYPE } from "../../type";
 import { TicketSortType } from "../../__generated__/graphql";
-import TicketCard from "../../components/molecules/ticket-card";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import TutorialDescCard from "../../components/molecules/tutorial-desc-card";
 import useWindowDimensions from "../../page-hook/window-dimensions";
 import TicketOverlayStyleCard from "../../components/molecules/ticket-overlay-style-card";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 SwiperCore.use([Navigation]);
 
 const Home = () => {
   const theme = useTheme();
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
-  const { showLoading, closeLoading } = useLoading();
-  const router = useRouter();
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType: FILTER_TYPE.AVAILABLE,
     sort: TicketSortType.Newest,
   });
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  // const [swiperWidth, setSwiperWidth] = React.useState(0);
+  const swiperContainerRef = useRef<HTMLDivElement>(null);
   const [width] = useWindowDimensions();
 
   return (
@@ -66,7 +59,6 @@ const Home = () => {
         <Stack
           direction={"column"}
           justifyContent={"center"}
-          // alignItems={"center"}
           sx={{
             width: "100%",
             height: `calc(100vh - 56px)`,
@@ -75,17 +67,65 @@ const Home = () => {
         >
           <Stack
             sx={{
-              paddingLeft: 12,
-              paddingRight: 12,
               background: "",
               flex: 1,
               zIndex: 3,
             }}
-            spacing={3}
+            spacing={16}
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Stack direction={"row"} alignItems={"center"} spacing={3}>
+            <Stack
+              sx={{
+                background: "",
+                width: "100%",
+              }}
+            >
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                sx={{ marginTop: 4 }}
+              >
+                <Typography
+                  variant={mdUp ? "h2" : smUp ? "h3" : "h5"}
+                  textAlign={"center"}
+                >
+                  국내 Web3 컨텐츠 플랫폼, 3ridge에서 시작하세요
+                </Typography>
+              </Stack>
+              <Stack sx={{ marginTop: 2 }} alignItems={"center"}>
+                <Box>
+                  <Typography
+                    variant={mdUp ? "h5" : "body2"}
+                    textAlign={"center"}
+                  >
+                    웹3의 다양한 경험에 함께 참여하세요!
+                  </Typography>
+                </Box>
+              </Stack>
+            </Stack>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              ref={swiperContainerRef}
+              sx={{
+                position: "relative",
+                width: "100%",
+              }}
+              spacing={3}
+            >
+              {/*<div*/}
+              {/*  style={{*/}
+              {/*    position: "absolute",*/}
+              {/*    width: "100%",*/}
+              {/*    height: swiperContainerRef?.current?.offsetHeight,*/}
+              {/*    background: "red",*/}
+              {/*    left: 0,*/}
+              {/*    top: 0,*/}
+              {/*  }}*/}
+              {/*></div>*/}
               <Box>
                 <IconButton
                   ref={prevRef}
@@ -100,10 +140,12 @@ const Home = () => {
                   <ArrowBackIosNewIcon />
                 </IconButton>
               </Box>
-              <Box width={width * 0.8}>
+              <Box
+                width={width * (lgUp ? 0.75 : mdUp ? 0.6 : smUp ? 0.5 : 0.5)}
+              >
                 <Swiper
-                  spaceBetween={4}
-                  slidesPerView={4}
+                  spaceBetween={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
+                  slidesPerView={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
                   scrollbar={{ draggable: true }}
                   navigation={{
                     prevEl: prevRef.current,
@@ -148,120 +190,8 @@ const Home = () => {
                 </IconButton>
               </Box>
             </Stack>
-            {/*<Stack*/}
-            {/*  sx={{*/}
-            {/*    padding: smUp ? 0 : 4,*/}
-            {/*    paddingBottom: 0,*/}
-            {/*    background: "",*/}
-            {/*    width: "100%",*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  {smUp ? (*/}
-            {/*    <GradientTypography*/}
-            {/*      sx={{*/}
-            {/*        textAlign: smUp ? "left" : "center",*/}
-            {/*        fontFamily: "LINESeedKR-Bd",*/}
-            {/*        fontSize: mdUp ? "6.7rem" : smUp ? "5.7rem" : "2.7rem",*/}
-            {/*        lineHeight: 1.3,*/}
-            {/*      }}*/}
-            {/*    >*/}
-            {/*      /!*{t("welcome")}*!/*/}
-            {/*      /!*We Bridge You and Web3*!/*/}
-            {/*    </GradientTypography>*/}
-            {/*  ) : (*/}
-            {/*    <Stack direction={"column"}>*/}
-            {/*      <GradientTypography*/}
-            {/*        sx={{*/}
-            {/*          textAlign: "center",*/}
-            {/*          fontFamily: "LINESeedKR-Bd",*/}
-            {/*          fontSize: "2.3rem",*/}
-            {/*          lineHeight: 1.3,*/}
-            {/*        }}*/}
-            {/*      >*/}
-            {/*        We*/}
-            {/*      </GradientTypography>*/}
-            {/*      <GradientTypography*/}
-            {/*        sx={{*/}
-            {/*          textAlign: "center",*/}
-            {/*          fontFamily: "LINESeedKR-Bd",*/}
-            {/*          fontSize: "2.3rem",*/}
-            {/*          lineHeight: 1.3,*/}
-            {/*        }}*/}
-            {/*      >*/}
-            {/*        Bridge*/}
-            {/*      </GradientTypography>*/}
-            {/*      <GradientTypography*/}
-            {/*        sx={{*/}
-            {/*          textAlign: "center",*/}
-            {/*          fontFamily: "LINESeedKR-Bd",*/}
-            {/*          fontSize: "2.3rem",*/}
-            {/*          lineHeight: 1.3,*/}
-            {/*        }}*/}
-            {/*      >*/}
-            {/*        You and Web3*/}
-            {/*      </GradientTypography>*/}
-            {/*    </Stack>*/}
-            {/*  )}*/}
-            {/*  <Stack*/}
-            {/*    direction={"row"}*/}
-            {/*    alignItems={"center"}*/}
-            {/*    justifyContent={smUp ? "flex-start" : "center"}*/}
-            {/*    sx={{ marginTop: 4 }}*/}
-            {/*  >*/}
-            {/*    <Typography*/}
-            {/*      variant={mdUp ? "h2" : smUp ? "h3" : "h5"}*/}
-            {/*      textAlign={smUp ? "left" : "center"}*/}
-            {/*    >*/}
-            {/*      국내 Web3 컨텐츠 플랫폼, 3ridge에서 시작하세요*/}
-            {/*    </Typography>*/}
-            {/*  </Stack>*/}
-            {/*  <Stack*/}
-            {/*    direction={smUp ? "row" : "column"}*/}
-            {/*    sx={{ marginTop: 2 }}*/}
-            {/*    alignItems={smUp ? "flex-start" : "center"}*/}
-            {/*  >*/}
-            {/*    <Box>*/}
-            {/*      <Typography variant={mdUp ? "h5" : "body2"}>*/}
-            {/*        웹3의 다양한 경험에 함께 참여하세요!*/}
-            {/*      </Typography>*/}
-            {/*    </Box>*/}
-            {/*  </Stack>*/}
-            {/*  <Stack*/}
-            {/*    direction={"row"}*/}
-            {/*    justifyContent={smUp ? "flex-start" : "center"}*/}
-            {/*    sx={{*/}
-            {/*      background: "",*/}
-            {/*      width: "100%",*/}
-            {/*      marginTop: smUp ? 4 : 2,*/}
-            {/*    }}*/}
-            {/*  >*/}
-            {/*    <PrimaryButton*/}
-            {/*      sx={{*/}
-            {/*        marginRight: mdUp ? 10 : 0,*/}
-            {/*        width: smUp ? 186 : 100,*/}
-            {/*        marginTop: 4,*/}
-            {/*      }}*/}
-            {/*      onClick={async () => {*/}
-            {/*        showLoading();*/}
-            {/*        await router.push("/explore");*/}
-            {/*        closeLoading();*/}
-            {/*      }}*/}
-            {/*    >*/}
-            {/*      <Box sx={{ padding: smUp ? 0 : 0 }}>*/}
-            {/*        <Typography*/}
-            {/*          className={"MuiTypography"}*/}
-            {/*          variant={smUp ? "h6" : "caption"}*/}
-            {/*          color={theme.palette.neutral[900]}*/}
-            {/*          fontFamily={"LINESeedKR-Bd"}*/}
-            {/*        >*/}
-            {/*          시작하기*/}
-            {/*        </Typography>*/}
-            {/*      </Box>*/}
-            {/*    </PrimaryButton>*/}
-            {/*  </Stack>*/}
-            {/*</Stack>*/}
+            <Box sx={{ height: 4 }}></Box>
           </Stack>
-
           <div
             style={{
               width: "100%",
@@ -279,28 +209,7 @@ const Home = () => {
                 zIndex: 2,
                 flex: 1,
               }}
-            >
-              {/*<video*/}
-              {/*  style={{*/}
-              {/*    display: "block",*/}
-              {/*    margin: "auto",*/}
-              {/*    height: "100%",*/}
-              {/*    zIndex: 2,*/}
-              {/*    transform: mdUp ? "translateX(22%)" : "translateX(-22%)",*/}
-              {/*  }}*/}
-              {/*  className="videoTag"*/}
-              {/*  autoPlay*/}
-              {/*  loop*/}
-              {/*  muted*/}
-              {/*>*/}
-              {/*  <source*/}
-              {/*    src={*/}
-              {/*      "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/background/background.mp4"*/}
-              {/*    }*/}
-              {/*    type="video/mp4"*/}
-              {/*  />*/}
-              {/*</video>*/}
-            </div>
+            ></div>
             <div
               style={{
                 zIndex: 3,
@@ -336,7 +245,6 @@ const Home = () => {
               </UpDownAnimatedComponent>
             </div>
           </div>
-
           {smUp && (
             <UpDownAnimatedComponent
               yDist={"6px"}
@@ -455,5 +363,5 @@ const Home = () => {
 Home.getLayout = (page: ReactElement | ReactElement[]) => (
   <MainLayout footerComponent={<HomeFooter />}>{page}</MainLayout>
 );
-//
+
 export default Home;
