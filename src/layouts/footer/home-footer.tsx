@@ -2,7 +2,9 @@ import {
   Box,
   Stack,
   Link,
-  useMediaQuery, Divider,
+  useMediaQuery,
+  Divider,
+  Typography,
 } from "@mui/material";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
@@ -79,36 +81,59 @@ const HomeFooter = () => {
         zIndex: 1,
         paddingLeft: theme.spacing(5),
         paddingRight: theme.spacing(5),
-        marginBottom: theme.spacing(5)
+        marginBottom: theme.spacing(5),
       }}
     >
-      <Divider sx={{ width: "100%", borderBottomWidth: 2 }}/>
-      <Box display="flex" justifyContent="space-between" alignItems="center" py={2}>
+      <Divider sx={{ width: "100%", borderBottomWidth: 2 }} />
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        py={2}
+      >
         <Stack direction={"row"} alignItems={"center"} spacing={2}>
           <SecondaryButton
-              size={"small"}
-              sx={{
-                width: 150,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
-              }}
+            size={"small"}
+            // sx={{
+            //   width: smUp ? 150 : 100,
+            // }}
+            onClick={(e) => {
+              e.preventDefault();
+              window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
+            }}
           >
-            뉴스레터 구독하기
+            <Typography variant={smUp ? "body1" : "caption"}>
+              뉴스레터 구독하기
+            </Typography>
           </SecondaryButton>
         </Stack>
-        <Box>
-          <Link href="https://twitter.com/3ridge_xyz" color="inherit" underline="hover">
-            트위터
+        <Stack direction={"row"}>
+          <Link
+            href="https://twitter.com/3ridge_xyz"
+            color="inherit"
+            underline="hover"
+          >
+            <Typography variant={smUp ? "body1" : "caption"}>트위터</Typography>
           </Link>
-          <Link href="https://discord.gg/3ridge" color="inherit" underline="hover" style={{ marginLeft: 16 }}>
-            디스코드
+          <Link
+            href="https://discord.gg/3ridge"
+            color="inherit"
+            underline="hover"
+            style={{ marginLeft: 16 }}
+          >
+            <Typography variant={smUp ? "body1" : "caption"}>
+              디스코드
+            </Typography>
           </Link>
-          <Link href="mailto:support@3ridge.xyz?Subject=Hello!%203ridge" color="inherit" underline="hover" style={{ marginLeft: 16 }}>
-            이메일
+          <Link
+            href="mailto:support@3ridge.xyz?Subject=Hello!%203ridge"
+            color="inherit"
+            underline="hover"
+            style={{ marginLeft: 16 }}
+          >
+            <Typography variant={smUp ? "body1" : "caption"}>이메일</Typography>
           </Link>
-        </Box>
+        </Stack>
       </Box>
     </div>
   );

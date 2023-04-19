@@ -26,6 +26,7 @@ import useWindowDimensions from "../../page-hook/window-dimensions";
 import TicketOverlayStyleCard from "../../components/molecules/ticket-overlay-style-card";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
 SwiperCore.use([Navigation]);
 
@@ -85,14 +86,24 @@ const Home = () => {
                 direction={"row"}
                 alignItems={"center"}
                 justifyContent={"center"}
-                sx={{ marginTop: 4 }}
+                sx={{ marginTop: 4, paddingLeft: 2, paddingRight: 2 }}
               >
+                {/*<Box sx={{ display: "flex", alignItems: "center" }}>*/}
                 <Typography
-                  variant={mdUp ? "h2" : smUp ? "h3" : "h5"}
+                  variant={mdUp ? "h2" : smUp ? "h3" : "h6"}
                   textAlign={"center"}
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "-webkit-box",
+                    WebkitLineClamp: "2",
+                    WebkitBoxOrient: "vertical",
+                    // paddingTop: 4,
+                  }}
                 >
                   국내 Web3 컨텐츠 플랫폼, 3ridge에서 시작하세요
                 </Typography>
+                {/*</Box>*/}
               </Stack>
               <Stack sx={{ marginTop: 2 }} alignItems={"center"}>
                 <Box>
@@ -116,28 +127,18 @@ const Home = () => {
               }}
               spacing={3}
             >
-              {/*<div*/}
-              {/*  style={{*/}
-              {/*    position: "absolute",*/}
-              {/*    width: "100%",*/}
-              {/*    height: swiperContainerRef?.current?.offsetHeight,*/}
-              {/*    background: "red",*/}
-              {/*    left: 0,*/}
-              {/*    top: 0,*/}
-              {/*  }}*/}
-              {/*></div>*/}
               <Box>
                 <IconButton
                   ref={prevRef}
                   sx={{
                     borderRadius: 32,
-                    width: 48,
-                    height: 48,
+                    width: smUp ? 48 : 32,
+                    height: smUp ? 48 : 32,
                     borderWidth: 2,
                     borderStyle: "solid",
                   }}
                 >
-                  <ArrowBackIosNewIcon />
+                  <ArrowBackIosNewIcon fontSize={smUp ? "medium" : "small"} />
                 </IconButton>
               </Box>
               <Box
@@ -150,15 +151,6 @@ const Home = () => {
                   navigation={{
                     prevEl: prevRef.current,
                     nextEl: nextRef.current,
-                  }}
-                  onBeforeInit={(swiper: SwiperCore) => {
-                    if (typeof swiper.params.navigation !== "boolean") {
-                      if (swiper.params.navigation) {
-                        swiper.params.navigation.prevEl = prevRef.current;
-                        swiper.params.navigation.nextEl = nextRef.current;
-                      }
-                    }
-                    swiper.navigation.update();
                   }}
                 >
                   {ticketsData?.map((ticket, index) => {
@@ -180,13 +172,13 @@ const Home = () => {
                   ref={nextRef}
                   sx={{
                     borderRadius: 32,
-                    width: 48,
-                    height: 48,
+                    width: smUp ? 48 : 32,
+                    height: smUp ? 48 : 32,
                     borderWidth: 2,
                     borderStyle: "solid",
                   }}
                 >
-                  <ArrowForwardIosIcon />
+                  <ArrowForwardIosIcon fontSize={smUp ? "medium" : "small"} />
                 </IconButton>
               </Box>
             </Stack>
@@ -251,41 +243,14 @@ const Home = () => {
               duration={1}
               sx={{
                 position: "absolute",
-                bottom: "8px",
+                bottom: "32px",
                 right: "50%",
                 left: "50%",
               }}
             >
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "16px",
-                }}
-              >
-                <Image
-                  src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
-                  }
-                  width={smUp ? 48 : 28}
-                  height={smUp ? 48 : 28}
-                  alt={""}
-                ></Image>
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: smUp ? "32px" : "28px",
-                }}
-              >
-                <Image
-                  src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/down_arrow.svg"
-                  }
-                  width={smUp ? 48 : 28}
-                  height={smUp ? 48 : 28}
-                  alt={""}
-                ></Image>
-              </div>
+              <KeyboardDoubleArrowDownIcon
+                fontSize={"large"}
+              ></KeyboardDoubleArrowDownIcon>
             </UpDownAnimatedComponent>
           )}
         </Stack>

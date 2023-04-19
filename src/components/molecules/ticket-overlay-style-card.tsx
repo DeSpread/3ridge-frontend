@@ -2,17 +2,12 @@ import React, { useEffect, useLayoutEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 import {
   Box,
-  Card,
-  CardContent,
   CardProps,
-  Grid,
-  Skeleton,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Ticket } from "../../type";
 
 type EventCardProps = CardProps & {
@@ -125,19 +120,23 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                 </Box>
                 <Box>
                   {ticket?.project?.name && (
-                    <Typography variant={mdUp ? "body1" : "h6"}>
+                    <Typography
+                      variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
+                    >
                       {ticket?.project?.name}
                     </Typography>
                   )}
                   {!ticket?.project?.name && (
-                    <Typography variant={mdUp ? "body1" : "h6"}>
+                    <Typography
+                      variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
+                    >
                       3ridge
                     </Typography>
                   )}
                 </Box>
               </Stack>
               <Box>
-                <Typography variant={mdUp ? "body2" : "body1"}>
+                <Typography variant={mdUp ? "body2" : smUp ? "body1" : "body2"}>
                   {ticket?.quests?.length ?? 0} 퀘스트
                 </Typography>
               </Box>

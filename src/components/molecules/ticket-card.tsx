@@ -124,18 +124,6 @@ const TicketCard = (props: EventCardProps) => {
                   {ticket?.quests?.length ?? 0} 퀘스트
                 </Typography>
               </Box>
-              {/*<StyledChip*/}
-              {/*  label={*/}
-              {/*    <Typography variant={mdUp ? "caption" : "body2"}>*/}
-              {/*      {ticket?.quests?.length ?? 0} Quests*/}
-              {/*    </Typography>*/}
-              {/*  }*/}
-              {/*  sx={{*/}
-              {/*    padding: "8px",*/}
-              {/*    paddingTop: "16px",*/}
-              {/*    paddingBottom: "16px",*/}
-              {/*  }}*/}
-              {/*></StyledChip>*/}
             </Stack>
             <Box
               ref={ref}
