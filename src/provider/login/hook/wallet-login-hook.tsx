@@ -15,11 +15,11 @@ import {
 import { CREATE_USER_BY_WALLET } from "../../../apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
-import { useTotalWallet } from "./total-wallet-hook";
 import {
   convertToSuppoertedNetwork,
   convertToChainType,
 } from "../../../util/type-convert";
+import { useTotalWallet } from "./total-wallet-hook";
 
 export function useWalletLogin() {
   const preference = PreferenceHelper.getInstance();
