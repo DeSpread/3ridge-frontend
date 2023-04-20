@@ -91,7 +91,7 @@ export function useWalletLogin() {
     }
   }, [connected]);
 
-  const isWalletConnected = useMemo(() => {
+  const isWalletLoggedIn = useMemo(() => {
     return walletInfo?.address ? true : false;
   }, [walletInfo]);
 
@@ -104,7 +104,7 @@ export function useWalletLogin() {
           return;
         }
         if (!connected) {
-          await connect(wallets[0].name);
+          connect(wallets[0].name);
           tryWalletSignUpSuccess.current = onSuccess;
           tryWalletSignUpOnError.current = onError;
           return;
@@ -166,7 +166,7 @@ export function useWalletLogin() {
   return {
     walletSignUp,
     walletInfo,
-    isWalletLoggedIn: isWalletConnected,
+    isWalletLoggedIn,
     walletLogout,
   };
 }

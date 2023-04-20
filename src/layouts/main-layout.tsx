@@ -73,6 +73,33 @@ const NavbarButtonSet = ({
   );
 };
 
+// import { useWallet } from "@suiet/wallet-kit";
+//
+// function WalletSelector() {
+//   const {
+//     select, // select
+//     configuredWallets, // default wallets
+//     detectedWallets, // Sui-standard wallets detected from browser env
+//     allAvailableWallets, // all the installed Sui-standard wallets
+//   } = useWallet();
+//
+//   return [...configuredWallets, ...detectedWallets].map((wallet) => (
+//     <button
+//       key={wallet.name}
+//       onClick={() => {
+//         // check if user installed the wallet
+//         if (!wallet.installed) {
+//           // do something like guiding users to install
+//           return;
+//         }
+//         select(wallet.name);
+//       }}
+//     >
+//       Connect to {wallet.name}
+//     </button>
+//   ));
+// }
+
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -200,6 +227,7 @@ const MainLayout = (props: MainLayoutProps) => {
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
+                      {/*<WalletSelector></WalletSelector>*/}
                       <SecondaryButton
                         size={"small"}
                         sx={{
@@ -274,18 +302,20 @@ const MainLayout = (props: MainLayoutProps) => {
                           Petra 지갑을 설치해주세요
                         </Typography>
                         <Link
-                            href={"https://medium.com/despread-creative/앱토스-생태계를-위한-관문-페트라-월렛-c2bddb076f7d"}
-                            rel={"noopener noreferrer"}
-                            target={"_blank"}
+                          href={
+                            "https://medium.com/despread-creative/앱토스-생태계를-위한-관문-페트라-월렛-c2bddb076f7d"
+                          }
+                          rel={"noopener noreferrer"}
+                          target={"_blank"}
                         >
                           <MuiLink
-                              sx={{
-                                "&:hover": {
-                                  color: "#bdbdbd",
-                                },
-                              }}
-                              color={"warning.main"}
-                              underline="hover"
+                            sx={{
+                              "&:hover": {
+                                color: "#bdbdbd",
+                              },
+                            }}
+                            color={"warning.main"}
+                            underline="hover"
                           >
                             Petra 지갑을 설치하는 방법
                           </MuiLink>
