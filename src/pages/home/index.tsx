@@ -71,6 +71,8 @@ const Home = () => {
               background: "",
               flex: 1,
               zIndex: 3,
+              marginLeft: mdUp ? 15 : 5,
+              marginRight: mdUp ? 15 : 5
             }}
             spacing={16}
             alignItems={"center"}
@@ -84,105 +86,128 @@ const Home = () => {
             >
               <Stack
                 direction={"row"}
-                alignItems={"center"}
-                justifyContent={"center"}
-                sx={{ marginTop: 4, paddingLeft: 2, paddingRight: 2 }}
+                alignItems={"left"}
+                justifyContent={"left"}
               >
                 {/*<Box sx={{ display: "flex", alignItems: "center" }}>*/}
                 <Typography
-                  variant={mdUp ? "h2" : smUp ? "h3" : "h6"}
-                  textAlign={"center"}
+                  variant={mdUp ? "h2" : smUp ? "h3" : "h3"}
+                  textAlign={"left"}
                   sx={{
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     display: "-webkit-box",
                     WebkitLineClamp: "2",
                     WebkitBoxOrient: "vertical",
-                    // paddingTop: 4,
                   }}
                 >
                   국내 Web3 컨텐츠 플랫폼, 3ridge에서 시작하세요
                 </Typography>
                 {/*</Box>*/}
               </Stack>
-              <Stack sx={{ marginTop: 2 }} alignItems={"center"}>
+              <Stack sx={{ marginTop: 3 }} alignItems={"left"}>
                 <Box>
                   <Typography
                     variant={mdUp ? "h5" : "body2"}
-                    textAlign={"center"}
+                    textAlign={"left"}
                   >
-                    웹3의 다양한 경험에 함께 참여하세요!
+                    웹3, 다양한 경험에 함께 참여하세요!
                   </Typography>
                 </Box>
               </Stack>
             </Stack>
             <Stack
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"center"}
+              direction={"column"}
               ref={swiperContainerRef}
               sx={{
                 position: "relative",
                 width: "100%",
               }}
-              spacing={3}
             >
-              <Box>
-                <IconButton
-                  ref={prevRef}
-                  sx={{
-                    borderRadius: 32,
-                    width: smUp ? 48 : 32,
-                    height: smUp ? 48 : 32,
-                    borderWidth: 2,
-                    borderStyle: "solid",
-                  }}
+                <Stack
+                    direction={"column"}
+                    sx={{
+                        width: "100%",
+                    }}
                 >
-                  <ArrowBackIosNewIcon fontSize={smUp ? "medium" : "small"} />
-                </IconButton>
-              </Box>
-              <Box
-                width={width * (lgUp ? 0.75 : mdUp ? 0.6 : smUp ? 0.5 : 0.5)}
-              >
-                <Swiper
-                  spaceBetween={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
-                  slidesPerView={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
-                  scrollbar={{ draggable: true }}
-                  navigation={{
-                    prevEl: prevRef.current,
-                    nextEl: nextRef.current,
-                  }}
-                >
-                  {ticketsData?.map((ticket, index) => {
-                    return (
-                      <SwiperSlide key={index}>
-                        <TicketOverlayStyleCard
-                          ticket={ticket}
-                          onClick={(e) => {
-                            // onTicketCardClick(ticket);
+                    <Stack
+                        direction={"row"}
+                        alignItems={"flex-start"}
+                        justifyContent={"space-between"}
+                        marginBottom={3}
+                    >
+                        <Box>
+                            <Typography
+                                variant={"h5"}
+                            >
+                                추천 이벤트
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <IconButton
+                                ref={prevRef}
+                                sx={{
+                                    borderRadius: 32,
+                                    width: smUp ? 38 : 32,
+                                    height: smUp ? 38 : 32,
+                                    borderWidth: 2,
+                                    borderStyle: "solid",
+                                    marginRight: 1
+                                }}
+                            >
+                                <ArrowBackIosNewIcon fontSize={smUp ? "medium" : "small"} />
+                            </IconButton>
+                            <IconButton
+                                ref={nextRef}
+                                sx={{
+                                    borderRadius: 32,
+                                    width: smUp ? 38 : 32,
+                                    height: smUp ? 38 : 32,
+                                    borderWidth: 2,
+                                    borderStyle: "solid",
+                                }}
+                            >
+                                <ArrowForwardIosIcon fontSize={smUp ? "medium" : "small"} />
+                            </IconButton>
+                        </Box>
+                    </Stack>
+                    <Stack
+                        direction={"column"}
+                        sx={{
+                            width: "100%",
+                        }}
+                    >
+                      <Box
+                        width={width * (lgUp ? 0.85 : mdUp ? 0.75 : smUp ? 0.85 : 0.85)}
+                      >
+                        <Swiper
+                          spaceBetween={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
+                          slidesPerView={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
+                          scrollbar={{ draggable: true }}
+                          navigation={{
+                            prevEl: prevRef.current,
+                            nextEl: nextRef.current,
                           }}
-                        ></TicketOverlayStyleCard>
-                      </SwiperSlide>
-                    );
-                  })}
-                </Swiper>
-              </Box>
-              <Box>
-                <IconButton
-                  ref={nextRef}
-                  sx={{
-                    borderRadius: 32,
-                    width: smUp ? 48 : 32,
-                    height: smUp ? 48 : 32,
-                    borderWidth: 2,
-                    borderStyle: "solid",
-                  }}
-                >
-                  <ArrowForwardIosIcon fontSize={smUp ? "medium" : "small"} />
-                </IconButton>
-              </Box>
-            </Stack>
-            <Box sx={{ height: 4 }}></Box>
+                        >
+                          {ticketsData?.map((ticket, index) => {
+                            return (
+                              <SwiperSlide key={index}>
+                                <TicketOverlayStyleCard
+                                  ticket={ticket}
+                                  onClick={(e) => {
+                                    // onTicketCardClick(ticket);
+                                  }}
+                                ></TicketOverlayStyleCard>
+                              </SwiperSlide>
+                            );
+                          })}
+                        </Swiper>
+                      </Box>
+                    </Stack>
+                    <Box sx={{ height: 4 }}></Box>
+                    </Stack>
+                </Stack>
+
           </Stack>
           <div
             style={{
