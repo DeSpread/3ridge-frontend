@@ -296,7 +296,7 @@ const Home = () => {
                 fontFamily: "LINESeedKR-Bd",
               }}
             >
-              How it works
+              3ridge 어떻게 활용할까요?
             </Typography>
             <Box sx={{ marginTop: 4 }}>
               <Box
@@ -309,32 +309,32 @@ const Home = () => {
                   <Stack alignItems={"center"} spacing={14}>
                     <TutorialDescCard
                       index={1}
-                      title={"Connect your account/wallet"}
-                      contents={["Sign up or Sign in your account/wallet"]}
+                      title={"로그인 해주세요!"}
+                      contents={["지갑 또는 이메일로 가입할 수 있어요"]}
                       imageUrl={
                         "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_connect.gif"
                       }
                     />
                     <TutorialDescCard
                       index={2}
-                      title={"Join the community"}
-                      contents={["Join your favorite project or community!"]}
+                      title={"이벤트에 참여해주세요"}
+                      contents={["이벤트에 따라 온체인 검증을 할 수 있어요"]}
                       imageUrl={
                         "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_community.gif"
                       }
                     />
                     <TutorialDescCard
                       index={3}
-                      title={"Complete Quests"}
-                      contents={["Complete your quest and try to get verified"]}
+                      title={"이벤트의 퀘스트를 완료해주세요"}
+                      contents={[""]}
                       imageUrl={
                         "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_quest.gif"
                       }
                     />
                     <TutorialDescCard
                       index={4}
-                      title={"Claim your reward"}
-                      contents={["Get reward from completed quests"]}
+                      title={"리워드를 받으세요"}
+                      contents={["퀘스트를 완료하면 리워드를 받을 수 있습니다"]}
                       imageUrl={
                         "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_claim.gif"
                       }
