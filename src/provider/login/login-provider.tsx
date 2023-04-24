@@ -8,7 +8,7 @@ import {
   EmailLoggedInInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
-  WalletLoggedInInfo,
+  PartialWalletInfo,
 } from "../../type";
 import { useEmailLogin } from "./hook/email-login-hook";
 
@@ -18,9 +18,9 @@ const LoginContext = createContext<{
   googleLoggedInInfo: GoogleLoggedInInfo;
   logout: SuccessErrorCallback<void>;
   googleSignUp: SuccessErrorCallback<void>;
-  walletSignUp: SuccessErrorCallback<void>;
+  walletSignUp: SuccessErrorCallbackWithParam<PartialWalletInfo, void>;
   isWalletLoggedIn: boolean;
-  walletLoggedInInfo: WalletLoggedInInfo;
+  walletLoggedInInfo: PartialWalletInfo;
   emailVerify: SuccessErrorCallbackWithParam<EmailSignUpEventParams, string>;
   emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
   updateAuthMail: SuccessErrorCallbackWithParam<EmailLoggedInInfo, void>;

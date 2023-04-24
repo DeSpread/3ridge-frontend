@@ -1,9 +1,12 @@
 // import moment from "moment/moment";
 
+import { SupportedNetworks } from "../type";
+
 class PreferenceHelper {
   private static instance: PreferenceHelper;
-  private static KEY_EMAIL_SIGN_IN_CACHE = "emailSignInCache";
-  private static KEY_WALLET_SIGN_IN_CACHE = "walletSignInCache";
+  private static KEY_EMAIL_SIGN_IN_CACHE = "KEY_EMAIL_SIGN_IN_CACHE";
+  private static KEY_WALLET_ADDRESS_SIGN_IN_CACHE =
+    "KEY_WALLET_ADDRESS_SIGN_IN_CACHE";
 
   private constructor() {}
 
@@ -49,25 +52,33 @@ class PreferenceHelper {
     localStorage.removeItem(PreferenceHelper.KEY_EMAIL_SIGN_IN_CACHE);
   };
 
-  updateWalletSignIn = (walletAddress: string) => {
+  updateWalletSignIn = (
+    walletAddress: string,
+    walletNetwork: SupportedNetworks
+  ) => {
     this.updateCacheByKey(
-      PreferenceHelper.KEY_WALLET_SIGN_IN_CACHE,
-      walletAddress
+      PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE,
+      JSON.stringify({ walletAddress, walletNetwork })
     );
   };
 
   getWalletSignIn = () => {
     const { value, timestamp } = this.getCacheByKey(
-      PreferenceHelper.KEY_WALLET_SIGN_IN_CACHE
+      PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE
     );
     if (!value || !timestamp) {
-      return { walletAddress: undefined, timestamp: undefined };
+      return {
+        walletAddress: undefined,
+        walletNetwork: undefined,
+        timestamp: undefined,
+      };
     }
-    return { walletAddress: value, timestamp };
+    const { walletAddress, walletNetwork } = JSON.parse(value);
+    return { walletAddress, walletNetwork, timestamp };
   };
 
   clearWalletSignIn = () => {
-    localStorage.removeItem(PreferenceHelper.KEY_WALLET_SIGN_IN_CACHE);
+    localStorage.removeItem(PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE);
   };
 }
 

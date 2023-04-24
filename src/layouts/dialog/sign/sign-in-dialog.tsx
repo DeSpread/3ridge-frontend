@@ -24,9 +24,9 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
         지갑 연결하기
       </SecondaryButton>
       {/*<Typography variant={"body2"}>Or</Typography>*/}
-      <br/>
+      <br />
       <Stack sx={{ width: "100%" }}>
-        <Stack direction={"column"} spacing={2}>
+        <Stack direction={"column"} spacing={4}>
           <PrimaryButton fullWidth={true} onClick={props.onSignInWithClicked}>
             <Stack direction={"row"} spacing={1}>
               <Typography
@@ -53,7 +53,9 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
             </Stack>
           </PrimaryButton>
           <Stack direction={"row"} justifyContent={"center"}>
-            <Typography variant={"body2"}>아직 계정이 없으신가요?&nbsp;</Typography>
+            <Typography variant={"body2"}>
+              아직 계정이 없으신가요?&nbsp;
+            </Typography>
             <LinkTypography
               variant={"body2"}
               href={"/signup"}

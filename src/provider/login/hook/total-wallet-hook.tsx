@@ -5,16 +5,27 @@ import {
   SUPPORTED_NETWORKS,
   SupportedNetworks,
 } from "../../../type";
+import { useState } from "react";
 
 export function useTotalWallet() {
-  const { connect: aptosConnect, wallets: aptosWallets } = useAptosWallet();
+  const [connectedNetwork, setConnectedNetwork] = useState("");
+
+  const {
+    connect: aptosConnect,
+    wallets: aptosWallets,
+    account: aptosAccount,
+  } = useAptosWallet();
+
   const {
     select: suiSelect,
     configuredWallets: suiConfiguredWallets,
     detectedWallets: suiDetectedWallets,
+    status: suiStatus,
+    name: suiName,
+    account: suiAccount,
   } = useSuiWallet();
 
-  const connectWallet = async (network: SupportedNetworks) => {
+  const connectWallet = (network: SupportedNetworks) => {
     if (network === SUPPORTED_NETWORKS.APTOS) {
       if (aptosWallets[0].readyState === "NotDetected") {
         return {
@@ -23,13 +34,45 @@ export function useTotalWallet() {
         };
       }
       aptosConnect(aptosWallets[0].name);
+      setConnectedNetwork(network);
     } else if (network === SUPPORTED_NETWORKS.SUI) {
-      [...suiConfiguredWallets, ...suiDetectedWallets].filter(
+      const item = [...suiConfiguredWallets, ...suiDetectedWallets].filter(
         (e) => e.name === "Sui Wallet"
-      ); //.map((e) => {e.name });
-      return;
+      );
+      if (item.length === 0) {
+        return {
+          connected: false,
+          msg: "WalletNotDetected",
+        };
+      }
+      suiSelect(item[0].name);
+      setConnectedNetwork(network);
+    }
+    return {
+      connected: true,
+      msg: "success",
+    };
+  };
+
+  const connectedAccount = () => {
+    if (!connectedNetwork)
+      return {
+        network: undefined,
+        address: undefined,
+      };
+    if (connectedNetwork === SUPPORTED_NETWORKS.APTOS) {
+      return {
+        network: SUPPORTED_NETWORKS.APTOS,
+        address: aptosAccount?.address,
+      };
+    }
+    if (connectedNetwork === SUPPORTED_NETWORKS.SUI) {
+      return {
+        network: SUPPORTED_NETWORKS.SUI,
+        address: suiAccount?.address,
+      };
     }
   };
 
-  return { connectWallet };
+  return { connectWallet, connectedAccount };
 }

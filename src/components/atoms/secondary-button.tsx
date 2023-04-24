@@ -24,6 +24,14 @@ const SecondaryButton = (props: ButtonProps) => {
           transitionTimingFunction: "ease-out",
           transitionProperty: "all",
           color: theme.palette.neutral[900],
+          "& .MuiTypography": {
+            color: theme.palette.neutral[900],
+            transition: "all 0.1s ease-out 0s",
+            transitionDuration: "0.1s",
+            transitionDelay: "0s",
+            transitionTimingFunction: "ease-out",
+            transitionProperty: "all",
+          },
         },
         ...props.sx,
       }}
