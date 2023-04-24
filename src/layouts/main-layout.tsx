@@ -81,33 +81,6 @@ const NavbarButtonSet = ({
   );
 };
 
-// import { useWallet } from "@suiet/wallet-kit";
-//
-// function WalletSelector() {
-//   const {
-//     select, // select
-//     configuredWallets, // default wallets
-//     detectedWallets, // Sui-standard wallets detected from browser env
-//     allAvailableWallets, // all the installed Sui-standard wallets
-//   } = useWallet();
-//
-//   return [...configuredWallets, ...detectedWallets].map((wallet) => (
-//     <button
-//       key={wallet.name}
-//       onClick={() => {
-//         // check if user installed the wallet
-//         if (!wallet.installed) {
-//           // do something like guiding users to install
-//           return;
-//         }
-//         select(wallet.name);
-//       }}
-//     >
-//       Connect to {wallet.name}
-//     </button>
-//   ));
-// }
-
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));

@@ -25,6 +25,7 @@ export function useWalletLogin() {
   const preference = PreferenceHelper.getInstance();
 
   const [createUserByWallet] = useMutation(CREATE_USER_BY_WALLET);
+
   const {
     asyncConnectWallet,
     isWalletInstalled,
@@ -33,6 +34,7 @@ export function useWalletLogin() {
     getConnectedAccount,
     isAnyWalletConnected,
   } = useTotalWallet();
+
   const [walletInfo, setWalletInfo] = useState<PartialWalletInfo>({});
   const tryWalletSignUpSuccess = useRef<(msg?: void) => void>();
   const tryWalletSignUpOnError = useRef<(error: AppError) => void>();
