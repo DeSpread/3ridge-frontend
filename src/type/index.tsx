@@ -59,6 +59,7 @@ export const QUEST_POLICY_TYPE = {
   VERIFY_TWITTER_FOLLOW: "VERIFY_TWITTER_FOLLOW",
   VERIFY_TWITTER_LIKING: "VERIFY_TWITTER_LIKING",
   VERIFY_DISCORD: "VERIFY_DISCORD",
+  VERIFY_TELEGRAM: "VERIFY_TELEGRAM",
   VERIFY_3RIDGE_POINT: "VERIFY_3RIDGE_POINT",
   VERIFY_APTOS_BRIDGE_TO_APTOS: "VERIFY_APTOS_BRIDGE_TO_APTOS",
   VERIFY_APTOS_HAS_NFT: "VERIFY_APTOS_HAS_NFT",
@@ -154,6 +155,7 @@ export type Quest = {
       | TwitterRetweetQuestContext
       | TwitterFollowQuestContext
       | DiscordQuestContext
+      | TelegramQuestContext
       | Verify3ridgePointContext
       | undefined;
     questPolicy?: string;
@@ -180,6 +182,10 @@ export type TwitterFollowQuestContext = {
 };
 
 export type DiscordQuestContext = {
+  channelId: string;
+};
+
+export type TelegramQuestContext = {
   channelId: string;
 };
 

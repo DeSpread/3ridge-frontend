@@ -8,6 +8,7 @@ import {
   TwitterLikingQuestContext,
   DiscordQuestContext,
   Verify3ridgePointContext,
+  TelegramQuestContext,
 } from "../type";
 
 class TypeParseHelper {
@@ -49,6 +50,8 @@ class TypeParseHelper {
         return contextJson as TwitterLikingQuestContext;
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
         return contextJson as DiscordQuestContext;
+      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TELEGRAM) {
+        return contextJson as TelegramQuestContext;
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT) {
         return contextJson as Verify3ridgePointContext;
       }

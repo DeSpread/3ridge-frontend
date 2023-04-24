@@ -35,7 +35,7 @@ import {
   DiscordQuestContext,
   MouseEventWithParam,
   QUEST_POLICY_TYPE,
-  QuizQuestContext,
+  QuizQuestContext, TelegramQuestContext,
   TwitterFollowQuestContext,
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
@@ -699,16 +699,30 @@ const Event = (props: AppProps) => {
                             showErrorAlert({ content: getErrorMessage(e) });
                           }
                         } else if (
-                          quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_DISCORD
+                          quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD || quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
                         ) {
-                          const discordQuestContext = quest.questPolicy
-                            ?.context as DiscordQuestContext;
-                          window.open(
-                            `https://discord.gg/${discordQuestContext.channelId}`,
-                            "discord",
-                            "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-                          );
+                          let questContext;
+                          switch (quest.questPolicy?.questPolicy) {
+                            case QUEST_POLICY_TYPE.VERIFY_DISCORD:
+                              questContext = quest.questPolicy
+                                  ?.context as DiscordQuestContext;
+                              window.open(
+                                `https://discord.gg/${questContext.channelId}`,
+                                "discord",
+                                "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                              );
+                              break;
+                            case QUEST_POLICY_TYPE.VERIFY_TELEGRAM:
+                              questContext = quest.questPolicy
+                                  ?.context as TelegramQuestContext;
+                              window.open(
+                                  `https://t.me/${questContext.channelId}`,
+                                  "telegram",
+                                  "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                              );
+                              break;
+                          }
+
                           try {
                             const res = await asyncCompleteQuestOfUser(
                               ticketData._id,
