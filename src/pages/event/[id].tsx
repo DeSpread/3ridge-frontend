@@ -11,7 +11,7 @@ import Head from "next/head";
 import {
   Avatar,
   Box,
-  ButtonProps,
+  ButtonProps, Card, CardActions, CardContent,
   Divider,
   Grid,
   Skeleton,
@@ -468,8 +468,20 @@ const Event = (props: AppProps) => {
                   }}
                 >
                   {smUp
-                    ? "--- Please Sign In First ---\n"
-                    : "--- Mobile is not supported --- "}
+                    ? <>
+                        <Card>
+                          <CardContent>
+                            <Typography
+                                variant={"h6"}
+                                sx={{ color: theme.palette.warning.main }}
+                            >
+                              로그인 후, 이벤트에 참여하실 수 있어요 😅
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </>
+                    : <>
+                      </>}
                 </Typography>
               </Box>
             )}
