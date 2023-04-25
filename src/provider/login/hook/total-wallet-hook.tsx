@@ -9,9 +9,11 @@ import { useEffect, useMemo, useState } from "react";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
 import { getErrorMessage } from "../../../error/my-error";
+import { convertToSuppoertedNetwork } from "../../../util/type-convert";
 
 export function useTotalWallet() {
   const [connectedNetwork, setConnectedNetwork] = useState("");
+  const [changedCounter, setChangedCounter] = useState(0);
   const preference = PreferenceHelper.getInstance();
 
   const {
@@ -44,8 +46,10 @@ export function useTotalWallet() {
     setConnectedNetwork(network);
   }, []);
 
-  const isAnyWalletConnected = useMemo(() => {
-    return aptosConnected || suiConnected;
+  useEffect(() => {
+    setChangedCounter((prevState) => {
+      return prevState + 1;
+    });
   }, [aptosConnected, suiConnected]);
 
   const asyncConnectWallet = async (network: SupportedNetworks) => {
@@ -64,12 +68,6 @@ export function useTotalWallet() {
         (e) => e.name === "Sui Wallet"
       );
       await suiSelect(item[0].name);
-      // suiSelect(item[0].name)
-      //   .then((e) => {})
-      //   .catch((e) => {
-      //     console.log("eerorr", e);
-      //   });
-      // console.log("suiStatus", suiStatus);
       setConnectedNetwork(network);
       preference.updateConnectedNetwork(network);
     }
@@ -138,6 +136,6 @@ export function useTotalWallet() {
     isWalletInstalled,
     getConnectedAccount,
     disconnectWallet,
-    isAnyWalletConnected,
+    changedCounter,
   };
 }

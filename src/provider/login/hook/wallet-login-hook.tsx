@@ -32,13 +32,14 @@ export function useWalletLogin() {
     getAccountAddress,
     disconnectWallet,
     getConnectedAccount,
-    isAnyWalletConnected,
+    changedCounter,
   } = useTotalWallet();
 
   const [walletInfo, setWalletInfo] = useState<PartialWalletInfo>({});
   const tryWalletSignUpSuccess = useRef<(msg?: void) => void>();
   const tryWalletSignUpOnError = useRef<(error: AppError) => void>();
   const tryWalletSignUpNetwork = useRef<string>();
+  // const { connected } = useAptosWallet();
 
   useEffect(() => {
     if (getConnectedAccount().address && !walletInfo?.walletAddress) {
@@ -60,9 +61,11 @@ export function useWalletLogin() {
     }
   }, [getConnectedAccount().address]);
 
+  // console.log("isAnyWalletConnected - 1", isAnyWalletConnected);
   // if connected status changed -> update login status lazy
   useEffect(() => {
-    if (tryWalletSignUpSuccess.current && isAnyWalletConnected) {
+    if (tryWalletSignUpSuccess.current) {
+      // console.log("isAnyWalletConnected - 2", isAnyWalletConnected);
       const cache = {
         address: "",
         network: "",
@@ -75,8 +78,8 @@ export function useWalletLogin() {
           );
           const network = tryWalletSignUpNetwork.current;
           if (!address || !network) {
-            tryWalletSignUpOnError.current?.(
-              new AppError(APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL)
+            runCachedTryWalletSignUpOnError(
+              APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL
             );
             return;
           }
@@ -99,17 +102,14 @@ export function useWalletLogin() {
             address,
             convertToSuppoertedNetwork(cache.network)
           );
-          tryWalletSignUpSuccess.current?.();
-          tryWalletSignUpSuccess.current = undefined;
-          tryWalletSignUpOnError.current = undefined;
-          tryWalletSignUpNetwork.current = undefined;
+          runCachedTryWalletSignUpSuccess();
         } catch (e) {
           const message = getErrorMessage(e);
           handleWalletSignUpError(message, cache);
         }
       })();
     }
-  }, [isAnyWalletConnected]);
+  }, [changedCounter]);
 
   const handleWalletSignUpError = (
     errorMsg: string,
@@ -136,11 +136,22 @@ export function useWalletLogin() {
           convertToSuppoertedNetwork(cache.network)
         );
       }
-      tryWalletSignUpSuccess.current?.();
+      runCachedTryWalletSignUpSuccess();
       return;
     }
     setWalletInfo({});
-    tryWalletSignUpOnError.current?.(new AppError(errorMsg));
+    runCachedTryWalletSignUpOnError(errorMsg);
+  };
+
+  const runCachedTryWalletSignUpOnError = (msg: string) => {
+    tryWalletSignUpOnError.current?.(new AppError(msg));
+    tryWalletSignUpSuccess.current = undefined;
+    tryWalletSignUpOnError.current = undefined;
+    tryWalletSignUpNetwork.current = undefined;
+  };
+
+  const runCachedTryWalletSignUpSuccess = () => {
+    tryWalletSignUpSuccess.current?.();
     tryWalletSignUpSuccess.current = undefined;
     tryWalletSignUpOnError.current = undefined;
     tryWalletSignUpNetwork.current = undefined;
@@ -191,10 +202,7 @@ export function useWalletLogin() {
         await createUserByWallet({
           variables: {
             address: cache.address,
-            chain:
-              walletInfo.network === SUPPORTED_NETWORKS.APTOS
-                ? ChainType.Aptos
-                : ChainType.Evm,
+            chain: convertToChainType(walletInfo.network),
           },
         });
         setWalletInfo((prevState) => {
