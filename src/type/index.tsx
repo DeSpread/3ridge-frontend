@@ -51,6 +51,7 @@ export const Z_INDEX_OFFSET = {
 
 export const REWARD_POLICY_TYPE = {
   FCFS: "FCFS",
+  LUCKY_DRAW: "LUCKY_DRAW",
 };
 
 export const QUEST_POLICY_TYPE = {

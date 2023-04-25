@@ -80,11 +80,10 @@ const HomeFooter = () => {
         width: "100%",
         zIndex: 1,
         paddingLeft: theme.spacing(5),
-        paddingRight: theme.spacing(5),
-        marginBottom: theme.spacing(5),
+        paddingRight: theme.spacing(5)
       }}
     >
-      <Divider sx={{ width: "100%", borderBottomWidth: 2 }} />
+      <Divider sx={{ width: "100%", borderBottomWidth: 1 }} />
       <Box
         display="flex"
         justifyContent="space-between"
@@ -94,17 +93,15 @@ const HomeFooter = () => {
         <Stack direction={"row"} alignItems={"center"} spacing={2}>
           <SecondaryButton
             size={"small"}
-            // sx={{
-            //   width: smUp ? 150 : 100,
-            // }}
+            sx={{
+              width: smUp ? 150 : 100,
+            }}
             onClick={(e) => {
               e.preventDefault();
               window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
             }}
           >
-            <Typography variant={smUp ? "body1" : "caption"}>
               뉴스레터 구독하기
-            </Typography>
           </SecondaryButton>
         </Stack>
         <Stack direction={"row"}>

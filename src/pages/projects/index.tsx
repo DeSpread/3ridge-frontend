@@ -38,6 +38,7 @@ const Projects = () => {
           paddingLeft: 24,
           paddingRight: 24,
           paddingTop: smUp ? 0 : 16,
+          height: "85vh"
         }}
       >
         <Grid

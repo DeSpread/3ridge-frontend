@@ -23,7 +23,7 @@ class TypeParseHelper {
   parseRewardPolicy = (context?: string, rewardPolicyType?: string) => {
     if (!context) return undefined;
     try {
-      if (rewardPolicyType === REWARD_POLICY_TYPE.FCFS) {
+      if (rewardPolicyType === REWARD_POLICY_TYPE.FCFS || rewardPolicyType === REWARD_POLICY_TYPE.LUCKY_DRAW) {
         const _context = context.trim();
         const contextJson = JSON.parse(_context);
         const res = contextJson as FCFSRewardContext;

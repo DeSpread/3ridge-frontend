@@ -35,7 +35,7 @@ import {
   DiscordQuestContext,
   MouseEventWithParam,
   QUEST_POLICY_TYPE,
-  QuizQuestContext, TelegramQuestContext,
+  QuizQuestContext, REWARD_POLICY_TYPE, TelegramQuestContext,
   TwitterFollowQuestContext,
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
@@ -399,12 +399,12 @@ const Event = (props: AppProps) => {
                   >
                     {!ticketData?.completed && (
                       <Grid item>
-                        <StyledChip label={"Ongoing"}></StyledChip>
+                        <StyledChip label={"진행중"} color="success"></StyledChip>
                       </Grid>
                     )}
                     {ticketData?.completed && (
                       <Grid item>
-                        <StyledChip label={"completed"}></StyledChip>
+                        <StyledChip label={"이벤트 종료"}></StyledChip>
                       </Grid>
                     )}
                     {ticketData?.beginTime && (
@@ -786,7 +786,7 @@ const Event = (props: AppProps) => {
               >
                 <Typography variant="h5">리워드</Typography>
                 <StyledChip
-                  label={"선착순"}
+                    label={ticketData?.rewardPolicy?.rewardPolicyType == REWARD_POLICY_TYPE.FCFS ? "선착순" : "추첨"}
                   icon={<DirectionsRunIcon></DirectionsRunIcon>}
                 ></StyledChip>
               </Stack>
@@ -796,7 +796,7 @@ const Event = (props: AppProps) => {
                     <Typography variant={"body1"}>
                       이벤트가 끝나기까지 남은 시간
                     </Typography>
-                    {ticketData?.rewardPolicy?.context?.untilTime ? (
+                    {ticketData?.untilTime ? (
                       isExpired() ? (
                         <Stack
                           sx={{
@@ -893,7 +893,7 @@ const Event = (props: AppProps) => {
                       alignItems={"center"}
                       justifyContent={"space-between"}
                     >
-                      <Typography variant={"body1"}>보상 포인트</Typography>
+                      <Typography variant={"body1"}>포인트</Typography>
                       <Stack direction={"row"} alignItems={"center"}>
                         <Image
                           src={
@@ -917,17 +917,17 @@ const Event = (props: AppProps) => {
                   >
                     <img
                       src={
-                        "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/aptos_icon.svg"
+                        `https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`
                       }
-                      width={16}
-                      height={16}
+                      width={32}
+                      height={32}
                       style={{
                         background: theme.palette.neutral[100],
                         borderRadius: 16,
-                        padding: 1,
+                        padding: 5,
                       }}
                     />
-                    <Typography variant={"body2"}>Aptos 체인 지원</Typography>
+                    <Typography variant={"body2"}>{ticketData.rewardPolicy?.context?.rewardChain} 체인 지원</Typography>
                   </Stack>
                 </Stack>
               </PrimaryCard>

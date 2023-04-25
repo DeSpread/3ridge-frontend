@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
-import { MouseEventHandler, ReactNode, useState } from "react";
+import React, { MouseEventHandler, ReactNode, useState } from "react";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
 import SecondaryButton from "../components/atoms/secondary-button";
@@ -36,6 +36,7 @@ import NavbarButton from "../components/atoms/navbar-button";
 import Link from "next/link";
 import SubMenuButton from "../components/molecules/sub-menu-button";
 import Image from "next/image";
+import HomeFooter from "./footer/home-footer";
 // import ContentsRendererDialog from "../components/dialogs/contents-renderer-dialog";
 
 type MainLayoutProps = PropsWithChildren & {
@@ -230,7 +231,7 @@ const MainLayout = (props: MainLayoutProps) => {
         {props.backgroundComponent}
         <Toolbar></Toolbar>
         <main>{props.children}</main>
-        <footer>{props.footerComponent}</footer>
+        <footer>{props?.footerComponent? props.footerComponent:<HomeFooter/>}</footer>
       </Box>
 
       {/*--- Dialog ---*/}
