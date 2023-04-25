@@ -94,7 +94,7 @@ const HomeFooter = () => {
           <SecondaryButton
             size={"small"}
             sx={{
-              width: smUp ? 150 : 100,
+              width: 150,
             }}
             onClick={(e) => {
               e.preventDefault();

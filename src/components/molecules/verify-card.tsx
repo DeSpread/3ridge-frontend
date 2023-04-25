@@ -130,7 +130,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                 <div style={{ position: "relative" }}>
                   <PrimaryButton
                     size={"medium"}
-                    sx={{ width: 100 }}
+                    sx={{ width: 120 }}
                     endIcon={<CheckIcon/>}
                     onClick={(e) => {
                       setCardState("VERIFYING");
@@ -175,8 +175,8 @@ const VerifyCard = (props: VerifyCardProps) => {
                       : props.verified
                       ? "완료"
                       : props.autoVerified
-                      ? "확인"
-                      : "확인"}
+                      ? "확인하기"
+                      : "확인하기"}
                   </PrimaryButton>
                   <div
                     style={{

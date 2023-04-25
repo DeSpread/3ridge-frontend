@@ -71,6 +71,7 @@ const Home = () => {
               background: "",
               flex: 1,
               zIndex: 3,
+
               marginLeft: mdUp ? 15 : 5,
               marginRight: mdUp ? 15 : 5
             }}
@@ -105,10 +106,10 @@ const Home = () => {
                 </Typography>
                 {/*</Box>*/}
               </Stack>
-              <Stack sx={{ marginTop: 3 }} alignItems={"left"}>
+              <Stack sx={{ marginTop: 4 }} alignItems={"left"}>
                 <Box>
                   <Typography
-                    variant={mdUp ? "h5" : "body2"}
+                    variant={mdUp ? "h5" : "h6"}
                     textAlign={"left"}
                   >
                     웹3, 다양한 경험에 함께 참여하세요!

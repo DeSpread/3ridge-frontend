@@ -31,6 +31,8 @@ import SecondaryButton from "../../components/atoms/secondary-button";
 import { nFormatter } from "../../util/validate-string";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+
 import {
   DiscordQuestContext,
   MouseEventWithParam,
@@ -386,7 +388,7 @@ const Event = (props: AppProps) => {
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
                   <Typography
-                    variant={smUp ? "h3" : "h3"}
+                    variant={smUp ? "h3" : "h4"}
                     textAlign={smUp ? "left" : "center"}
                   >
                     {ticketData?.title}
@@ -495,7 +497,7 @@ const Event = (props: AppProps) => {
             )}
 
             <Stack direction={"column"} spacing={2}>
-              <Typography textAlign={smUp ? "left" : "center"} variant={"h5"}>
+              <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
                 이벤트 설명
               </Typography>
               <Box sx={{ maxWidth: 800 }}>
@@ -522,7 +524,7 @@ const Event = (props: AppProps) => {
               // maxWidth={800}
               sx={{ background: "" }}
             >
-              <Typography variant="h5" textAlign={smUp ? "left" : "center"}>
+              <Typography variant="h5" textAlign={smUp ? "left" : "left"}>
                 퀘스트
               </Typography>
               <Stack
@@ -540,7 +542,7 @@ const Event = (props: AppProps) => {
                   return (
                     <VerifyCard
                       key={index + 1}
-                      sx={{ width: mdUp ? 800 : smUp ? 600 : 320 }}
+                      sx={{ width: mdUp ? 800 : smUp ? 600 : 500 }}
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
@@ -782,14 +784,28 @@ const Event = (props: AppProps) => {
               <Stack
                 direction={"row"}
                 justifyContent={"space-between"}
-                sx={{ background: "" }}
+                sx={{ background: ""}}
               >
                 <Typography variant="h5">리워드</Typography>
                 <StyledChip
                     label={ticketData?.rewardPolicy?.rewardPolicyType == REWARD_POLICY_TYPE.FCFS ? "선착순" : "추첨"}
-                  icon={<DirectionsRunIcon></DirectionsRunIcon>}
+                  icon={ticketData?.rewardPolicy?.rewardPolicyType == REWARD_POLICY_TYPE.FCFS ? <DirectionsRunIcon/> : <AccessAlarmIcon/>}
                 ></StyledChip>
               </Stack>
+              {(ticketData?.winners?.filter((winner) => String(winner.name).toUpperCase().trim() === userData?.name?.toUpperCase().trim())?.length > 0) &&
+                  (<Box>
+                    <Card>
+                    <CardContent>
+                    <Typography
+                    variant={"h6"}
+                    sx={{color: theme.palette.success.main}}
+                    >
+                    본 이벤트의 위너가 되었습니다 🎉
+                    </Typography>
+                    </CardContent>
+                    </Card>
+                    </Box>)
+              }
               <PrimaryCard hoverEffect={false}>
                 <Box>
                   <Stack alignItems={"center"}>
