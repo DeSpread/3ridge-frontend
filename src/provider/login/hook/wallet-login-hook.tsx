@@ -39,7 +39,6 @@ export function useWalletLogin() {
   const tryWalletSignUpSuccess = useRef<(msg?: void) => void>();
   const tryWalletSignUpOnError = useRef<(error: AppError) => void>();
   const tryWalletSignUpNetwork = useRef<string>();
-  // const { connected } = useAptosWallet();
 
   useEffect(() => {
     if (getConnectedAccount().address && !walletInfo?.walletAddress) {
