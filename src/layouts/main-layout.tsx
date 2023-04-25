@@ -216,7 +216,6 @@ const MainLayout = (props: MainLayoutProps) => {
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
-                      {/*<WalletSelector></WalletSelector>*/}
                       <SecondaryButton
                         size={"small"}
                         sx={{
