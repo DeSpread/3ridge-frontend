@@ -19,6 +19,7 @@ import PrimaryButton from "../atoms/primary-button";
 import addSeconds from "date-fns/addSeconds";
 import { MouseEventWithParam } from "../../type";
 import { useTheme } from "@mui/material/styles";
+import CheckIcon from '@mui/icons-material/Check';
 
 type VerifyCardProps = PropsWithChildren & {
   sx?: CSSProperties;
@@ -116,10 +117,21 @@ const VerifyCard = (props: VerifyCardProps) => {
             {/*</Grid>*/}
             <Grid item sx={{ background: "" }}>
               <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
+              {!props.hideStartButton && (
+                  <SecondaryButton
+                      sx={{ width: 86 }}
+                      disabled={props.disabled || props.verified}
+                      size={"medium"}
+                      onClick={props.onStartBtnClicked}
+                  >
+                      시작
+                  </SecondaryButton>
+              )}
                 <div style={{ position: "relative" }}>
                   <PrimaryButton
                     size={"medium"}
-                    sx={{ width: 86 }}
+                    sx={{ width: 100 }}
+                    endIcon={<CheckIcon/>}
                     onClick={(e) => {
                       setCardState("VERIFYING");
                       let timer: NodeJS.Timer;
@@ -159,12 +171,12 @@ const VerifyCard = (props: VerifyCardProps) => {
                     }
                   >
                     {cardState === "VERIFYING"
-                      ? "Verifying"
+                      ? "확인중"
                       : props.verified
-                      ? "Verified"
+                      ? "완료"
                       : props.autoVerified
-                      ? "Verify"
-                      : "Verify"}
+                      ? "확인"
+                      : "확인"}
                   </PrimaryButton>
                   <div
                     style={{
@@ -191,16 +203,6 @@ const VerifyCard = (props: VerifyCardProps) => {
                     )}
                   </div>
                 </div>
-                {!props.hideStartButton && (
-                  <SecondaryButton
-                    sx={{ width: 86 }}
-                    disabled={props.disabled || props.verified}
-                    size={"medium"}
-                    onClick={props.onStartBtnClicked}
-                  >
-                    Start
-                  </SecondaryButton>
-                )}
               </Stack>
             </Grid>
           </Grid>

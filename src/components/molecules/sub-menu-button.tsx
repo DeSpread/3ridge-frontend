@@ -121,7 +121,7 @@ const SubMenuButton = (
           onClick={props.onExploreClick}
         >
           <Stack>
-            <NavbarButton>Explore</NavbarButton>
+            <NavbarButton>이벤트</NavbarButton>
           </Stack>
         </StyledMenuItem>
         <StyledMenuItem
@@ -131,7 +131,7 @@ const SubMenuButton = (
           onClick={props.onProjectsClick}
         >
           <Stack>
-            <NavbarButton>Projects</NavbarButton>
+            <NavbarButton>프로젝트</NavbarButton>
           </Stack>
         </StyledMenuItem>
         <StyledMenuItem
@@ -141,7 +141,7 @@ const SubMenuButton = (
           onClick={props.onLeaderBoardClick}
         >
           <Stack>
-            <NavbarButton>LeaderBoard</NavbarButton>
+            <NavbarButton>유저랭킹</NavbarButton>
           </Stack>
         </StyledMenuItem>
       </StyledMenu>
