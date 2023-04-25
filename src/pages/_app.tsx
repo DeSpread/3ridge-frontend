@@ -18,8 +18,10 @@ import { PetraWallet } from "petra-plugin-wallet-adapter";
 import * as gtag from "../lib/gtag";
 import Head from "next/head";
 import Script from "next/script";
+import { WalletProvider } from "@suiet/wallet-kit";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
+
 import { useRouter } from "next/router";
 
 const providers = combineProviders();
@@ -82,14 +84,16 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
           <GoogleOAuthProvider clientId={clientId ?? ""}>
             <RecoilRoot>
               <ApolloProvider client={apolloClient}>
-                <AptosWalletAdapterProvider
-                  plugins={wallets}
-                  autoConnect={true}
-                >
-                  <MasterProvider>
-                    {getLayout(<Component {...pageProps} />)}
-                  </MasterProvider>
-                </AptosWalletAdapterProvider>
+                <WalletProvider>
+                  <AptosWalletAdapterProvider
+                    plugins={wallets}
+                    autoConnect={true}
+                  >
+                    <MasterProvider>
+                      {getLayout(<Component {...pageProps} />)}
+                    </MasterProvider>
+                  </AptosWalletAdapterProvider>
+                </WalletProvider>
               </ApolloProvider>
             </RecoilRoot>
           </GoogleOAuthProvider>

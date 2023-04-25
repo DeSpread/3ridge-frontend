@@ -31,6 +31,15 @@ export interface MouseEventWithParam<T> extends React.MouseEvent<HTMLElement> {
   params: T;
 }
 
+export const SUPPORTED_NETWORKS = {
+  APTOS: "aptos",
+  SUI: "sui",
+  EVM: "evm",
+  UNKNOWN: "unknown",
+} as const;
+
+export type SupportedNetworks = ObjectValues<typeof SUPPORTED_NETWORKS>;
+
 export const MAIL_VERIFY = {
   USER_NOT_FOUND: "USER_NOT_FOUND",
   NOT_VERIFIED: "NOT_VERIFIED",
@@ -68,10 +77,13 @@ export const QUEST_POLICY_TYPE = {
   VERIFY_APTOS_HAS_ANS: "VERIFY_APTOS_HAS_ANS",
 };
 
-export type Wallet = {
-  walletAddress?: string;
-  chain?: string;
+export type WalletInfo = {
+  walletAddress: string;
+  network: SupportedNetworks;
+  name: string;
 };
+
+export type PartialWalletInfo = Partial<WalletInfo>;
 
 export type User = {
   _id?: string;
@@ -97,9 +109,9 @@ export type EmailSignUpEventParams = {
   password: string;
 };
 
-export type WalletLoggedInInfo = {
-  address?: string;
-};
+// export type WalletLoggedInInfo = {
+//   address?: string;
+// };
 
 export type ReversibleSvgIconProps = SvgIconProps & {
   reverse?: boolean;

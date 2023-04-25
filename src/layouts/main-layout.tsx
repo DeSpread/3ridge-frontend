@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
-import React, { MouseEventHandler, ReactNode, useState } from "react";
+import React, { MouseEventHandler, ReactNode, useMemo, useState } from "react";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
 import SecondaryButton from "../components/atoms/secondary-button";
@@ -29,6 +29,8 @@ import {
   EmailSignUpEventParams,
   MAIL_VERIFY,
   MouseEventWithParam,
+  SUPPORTED_NETWORKS,
+  SupportedNetworks,
   Z_INDEX_OFFSET,
 } from "../type";
 import { useSignDialog } from "../page-hook/sign-dialog-hook";
@@ -37,7 +39,13 @@ import Link from "next/link";
 import SubMenuButton from "../components/molecules/sub-menu-button";
 import Image from "next/image";
 import HomeFooter from "./footer/home-footer";
-// import ContentsRendererDialog from "../components/dialogs/contents-renderer-dialog";
+import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
+import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
+import TelegramLoginButton, {
+  TLoginButtonProps,
+  TLoginButtonSize,
+} from "../components/molecules/telegram-login-button";
+// import { TLoginButton, TLoginButtonSize } from "react-telegram-auth";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -83,9 +91,17 @@ const MainLayout = (props: MainLayoutProps) => {
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
+  const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
+    useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState("");
+
   const { showErrorAlert, showAlert } = useAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
+
+  const signInWithSupportedWalletVisible = useMemo(() => {
+    return selectedNetwork ? true : false;
+  }, [selectedNetwork]);
 
   const asyncGoToExplore = async () => {
     showLoading();
@@ -231,13 +247,16 @@ const MainLayout = (props: MainLayoutProps) => {
         {props.backgroundComponent}
         <Toolbar></Toolbar>
         <main>{props.children}</main>
-        <footer>{props?.footerComponent? props.footerComponent:<HomeFooter/>}</footer>
+        <footer>
+          {props?.footerComponent ? props.footerComponent : <HomeFooter />}
+        </footer>
       </Box>
 
       {/*--- Dialog ---*/}
       <SignInDialog
         title={"안녕하세요 다시 만나서 반가워요!"}
         open={isSignDialogOpen}
+        // open={true}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
           setShowSignInDialog(false);
@@ -254,69 +273,8 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         onContinueWithWalletClicked={(e) => {
           e.preventDefault();
-          walletSignUp({
-            onSuccess: () => {
-              if (router.pathname === "/") {
-                router.push("/explore").then();
-              }
-              setShowSignInDialog(false);
-            },
-            onError: (error: AppError) => {
-              if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
-                showAlert({
-                  title: "지갑이 설치되지 않았습니다 😂",
-                  content: (
-                    <>
-                      <Stack spacing={1}>
-                        <Typography
-                          style={{ color: theme.palette.neutral[100] }}
-                        >
-                          Petra 지갑을 설치해주세요
-                        </Typography>
-                        <Link
-                            href={"https://medium.com/despread-creative/앱토스-생태계를-위한-관문-페트라-월렛-c2bddb076f7d"}
-                            rel={"noopener noreferrer"}
-                            target={"_blank"}
-                        >
-                          <MuiLink
-                              sx={{
-                                "&:hover": {
-                                  color: "#bdbdbd",
-                                },
-                              }}
-                              color={"warning.main"}
-                              underline="hover"
-                          >
-                            Petra 지갑을 설치하는 방법
-                          </MuiLink>
-                        </Link>
-                        <Link
-                          href={"https://petra.app/"}
-                          rel={"noopener noreferrer"}
-                          target={"_blank"}
-                        >
-                          <MuiLink
-                            sx={{
-                              "&:hover": {
-                                color: "#bdbdbd",
-                              },
-                            }}
-                            color={"warning.main"}
-                            underline="hover"
-                          >
-                            Petra 지갑 설치 링크
-                          </MuiLink>
-                        </Link>
-                      </Stack>
-                    </>
-                  ),
-                });
-                return;
-              }
-              setShowSignInDialog(false);
-              showErrorAlert({ content: error.message });
-            },
-          });
+          setShowSignInDialog(false);
+          setSignInWithNetworkSelectVisible(true);
         }}
       ></SignInDialog>
       <SignInWithDialog
@@ -394,6 +352,124 @@ const MainLayout = (props: MainLayoutProps) => {
           );
         }}
       ></SignInWithEmailDialog>
+      <SignInWithNetworkSelectDialog
+        title={"연결하려는 네트워트를 선택하세요"}
+        open={signInWithNetworkSelectVisible}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setSignInWithNetworkSelectVisible(false);
+        }}
+        onClose={() => {
+          setSignInWithNetworkSelectVisible(false);
+        }}
+        onNetworkButtonClicked={(network) => {
+          setSignInWithNetworkSelectVisible(false);
+          setSelectedNetwork(network); // console.log(network);
+        }}
+      ></SignInWithNetworkSelectDialog>
+      <SignInWithSupportedWalletDialog
+        title={"연결하려는 지갑을 선택하세요"}
+        open={signInWithSupportedWalletVisible}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setSelectedNetwork("");
+        }}
+        onClose={() => {
+          setSelectedNetwork("");
+        }}
+        walletInfos={(() => {
+          if (selectedNetwork === SUPPORTED_NETWORKS.APTOS) {
+            return [
+              {
+                imageUrl:
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/petra-wallet.png",
+                name: "Petra",
+                value: "petra",
+              },
+            ];
+          } else if (selectedNetwork === SUPPORTED_NETWORKS.SUI) {
+            return [
+              {
+                imageUrl:
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-wallet-icon.jpg",
+                name: "Sui wallet",
+                value: "sui",
+              },
+            ];
+          }
+          return [];
+        })()}
+        onWalletSelected={(name) => {
+          walletSignUp(
+            { network: selectedNetwork as SupportedNetworks, name },
+            {
+              onSuccess: () => {
+                if (router.pathname === "/") {
+                  router.push("/explore").then();
+                }
+                setSelectedNetwork("");
+              },
+              onError: (error: AppError) => {
+                if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
+                  showAlert({
+                    title: "지갑이 설치되지 않았습니다 😂",
+                    content: (
+                      <>
+                        <Stack spacing={1}>
+                          <Typography
+                            style={{ color: theme.palette.neutral[100] }}
+                          >
+                            Petra 지갑을 설치해주세요
+                          </Typography>
+                          <Link
+                            href={
+                              "https://medium.com/despread-creative/앱토스-생태계를-위한-관문-페트라-월렛-c2bddb076f7d"
+                            }
+                            rel={"noopener noreferrer"}
+                            target={"_blank"}
+                          >
+                            <MuiLink
+                              sx={{
+                                "&:hover": {
+                                  color: "#bdbdbd",
+                                },
+                              }}
+                              color={"warning.main"}
+                              underline="hover"
+                            >
+                              Petra 지갑을 설치하는 방법
+                            </MuiLink>
+                          </Link>
+                          <Link
+                            href={"https://petra.app/"}
+                            rel={"noopener noreferrer"}
+                            target={"_blank"}
+                          >
+                            <MuiLink
+                              sx={{
+                                "&:hover": {
+                                  color: "#bdbdbd",
+                                },
+                              }}
+                              color={"warning.main"}
+                              underline="hover"
+                            >
+                              Petra 지갑 설치 링크
+                            </MuiLink>
+                          </Link>
+                        </Stack>
+                      </>
+                    ),
+                  });
+                  return;
+                }
+                setSelectedNetwork("");
+                showErrorAlert({ content: error.message });
+              },
+            }
+          );
+        }}
+      ></SignInWithSupportedWalletDialog>
       {/*<ContentsRendererDialog open={true}></ContentsRendererDialog>*/}
     </Box>
   );

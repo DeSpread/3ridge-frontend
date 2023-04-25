@@ -43,7 +43,6 @@ export function useTicketsQuery(props: {
             status,
           },
         });
-        console.log(data.tickets);
         updateSetTicketsData(data.tickets);
       } else {
         const status =

@@ -152,14 +152,14 @@ const useSignedUserQuery = () => {
       (async () => {
         try {
           setLoading(true);
-          if (!walletLoggedInInfo.address) {
+          if (!walletLoggedInInfo.walletAddress) {
             setLoading(false);
             return;
           }
           const res = await client.query({
             query: GET_USER_BY_WALLET_ADDRESS,
             variables: {
-              walletAddress: walletLoggedInInfo.address ?? "",
+              walletAddress: walletLoggedInInfo.walletAddress ?? "",
             },
             fetchPolicy: "no-cache",
           });
