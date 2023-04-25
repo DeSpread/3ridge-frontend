@@ -7,6 +7,7 @@ class PreferenceHelper {
   private static KEY_EMAIL_SIGN_IN_CACHE = "KEY_EMAIL_SIGN_IN_CACHE";
   private static KEY_WALLET_ADDRESS_SIGN_IN_CACHE =
     "KEY_WALLET_ADDRESS_SIGN_IN_CACHE";
+  private static KEY_CONNECTED_NETWORK_CACHE = "KEY_CONNECTED_NETWORK_CACHE";
 
   private constructor() {}
 
@@ -36,6 +37,27 @@ class PreferenceHelper {
 
   updateEmailSignIn = (email: string) => {
     this.updateCacheByKey(PreferenceHelper.KEY_EMAIL_SIGN_IN_CACHE, email);
+  };
+
+  updateConnectedNetwork = (network: string) => {
+    this.updateCacheByKey(
+      PreferenceHelper.KEY_CONNECTED_NETWORK_CACHE,
+      network
+    );
+  };
+
+  getConnectedNetwork = () => {
+    const { value, timestamp } = this.getCacheByKey(
+      PreferenceHelper.KEY_CONNECTED_NETWORK_CACHE
+    );
+    if (!value || !timestamp) {
+      return { network: undefined, timestamp: undefined };
+    }
+    return { network: value, timestamp };
+  };
+
+  clearConnectedNetwork = () => {
+    localStorage.removeItem(PreferenceHelper.KEY_CONNECTED_NETWORK_CACHE);
   };
 
   getEmailSignIn = () => {

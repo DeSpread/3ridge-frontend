@@ -60,8 +60,8 @@ const VerifyCard = (props: VerifyCardProps) => {
                   <Box
                     sx={{
                       background: (theme) => theme.palette.neutral[800],
-                      width: 28,
-                      height: 28,
+                      width: smUp ? 28 : 14,
+                      height: smUp ? 28 : 14,
                       display: "flex",
                       flex: 1,
                       alignItems: "center",
@@ -70,7 +70,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                     }}
                   >
                     <Typography
-                      variant={"caption"}
+                      variant={smUp ? "body2" : "caption"}
                       sx={{
                         color: (theme) => theme.palette.neutral[100],
                         width: 28,
@@ -111,10 +111,6 @@ const VerifyCard = (props: VerifyCardProps) => {
                 </Stack>
               </Stack>
             </Grid>
-
-            {/*<Grid item sx={{ background: "" }}>*/}
-            {/*  */}
-            {/*</Grid>*/}
             <Grid item sx={{ background: "" }}>
               <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
               {!props.hideStartButton && (

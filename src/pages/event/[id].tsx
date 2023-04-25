@@ -11,7 +11,10 @@ import Head from "next/head";
 import {
   Avatar,
   Box,
-  ButtonProps, Card, CardActions, CardContent,
+  ButtonProps,
+  Card,
+  CardActions,
+  CardContent,
   Divider,
   Grid,
   Skeleton,
@@ -31,13 +34,15 @@ import SecondaryButton from "../../components/atoms/secondary-button";
 import { nFormatter } from "../../util/validate-string";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
-import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 
 import {
   DiscordQuestContext,
   MouseEventWithParam,
   QUEST_POLICY_TYPE,
-  QuizQuestContext, REWARD_POLICY_TYPE, TelegramQuestContext,
+  QuizQuestContext,
+  REWARD_POLICY_TYPE,
+  TelegramQuestContext,
   TwitterFollowQuestContext,
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
@@ -55,10 +60,9 @@ import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
 import BlockIcon from "../../components/molecules/block-icon";
-
-interface MyTimerSettings extends TimerSettings {
-  sx?: CSSProperties;
-}
+import TimerBoard, {
+  DummyTimerBoard,
+} from "../../components/molecules/timer-board";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -105,109 +109,6 @@ const LoadingButton = (props: ButtonProps) => {
   );
 };
 
-const TimerBoard = (props: MyTimerSettings) => {
-  const { seconds, minutes, hours, days } = useTimer(props);
-  const CELL_WIDTH = 40;
-  return (
-    <Box sx={props.sx}>
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-evenly"}
-        sx={{ background: "" }}
-      >
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>
-            {days.toString().padStart(2, "0")}
-          </Typography>
-          <Typography variant={"body2"}>일</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>
-            {hours.toString().padStart(2, "0")}
-          </Typography>
-          <Typography variant={"body2"}>시</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>
-            {minutes.toString().padStart(2, "0")}
-          </Typography>
-          <Typography variant={"body2"}>분</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>
-            {seconds.toString().padStart(2, "0")}
-          </Typography>
-          <Typography variant={"body2"}>초</Typography>
-        </Stack>
-      </Stack>
-    </Box>
-  );
-};
-
-const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
-  const CELL_WIDTH = 40;
-
-  return (
-    <Box sx={props.sx}>
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-evenly"}
-      >
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Days</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Hours</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Minutes</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Seconds</Typography>
-        </Stack>
-      </Stack>
-    </Box>
-  );
-};
-
 const Event = (props: AppProps) => {
   const { userData, asyncUpdateSocialTwitter, asyncUpdateRewardPoint } =
     useSignedUserQuery();
@@ -245,6 +146,8 @@ const Event = (props: AppProps) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [claimCompleted, setClaimCompleted] = useState(false);
   const [updatingClaimCompleted, setUpdatingClaimCompleted] = useState(true);
+
+  console.log(ticketData);
 
   useEffect(() => {
     if (!userData?._id) return;
@@ -393,68 +296,100 @@ const Event = (props: AppProps) => {
                   >
                     {ticketData?.title}
                   </Typography>
-                  <Grid
-                    container
-                    alignItems={"left"}
-                    justifyContent={smUp ? "flex-start" : "center"}
-                    rowSpacing={1}
-                  >
-                    {!ticketData?.completed && (
-                      <Grid item>
-                        <StyledChip label={"진행중"} color="success"></StyledChip>
-                      </Grid>
-                    )}
-                    {ticketData?.completed && (
-                      <Grid item>
-                        <StyledChip label={"이벤트 종료"}></StyledChip>
-                      </Grid>
-                    )}
-                    {ticketData?.beginTime && (
-                      <Grid item sx={{ marginLeft: 1 }}>
-                        {smUp ? (
-                          <StyledChip
-                            label={`${format(
-                              new Date(
-                                ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                              ),
-                              "yyyy/MM/dd hh:mm:ss"
-                            )} ~ ${format(
+                  {smUp ? (
+                    <Grid
+                      container
+                      alignItems={"left"}
+                      justifyContent={smUp ? "flex-start" : "center"}
+                      rowSpacing={1}
+                    >
+                      {!ticketData?.completed && (
+                        <Grid item>
+                          <StyledChip label={"Ongoing"}></StyledChip>
+                        </Grid>
+                      )}
+                      {ticketData?.completed && (
+                        <Grid item>
+                          <StyledChip label={"completed"}></StyledChip>
+                        </Grid>
+                      )}
+                      {ticketData?.beginTime && (
+                        <Grid item sx={{ marginLeft: 1 }}>
+                          {smUp ? (
+                            <StyledChip
+                              label={`${format(
+                                new Date(
+                                  ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
+                                ),
+                                "yyyy/MM/dd hh:mm:ss"
+                              )} ~ ${format(
+                                new Date(
+                                  ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+                                ),
+                                "yyyy/MM/dd hh:mm:ss"
+                              )} (UTC+09:00)`}
+                            ></StyledChip>
+                          ) : (
+                            <StyledChip
+                              sx={{ paddingTop: 4, paddingBottom: 4 }}
+                              label={
+                                <Stack sx={{}}>
+                                  <Typography variant={"body2"}>
+                                    {`${format(
+                                      new Date(
+                                        ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
+                                      ),
+                                      "yyyy/MM/dd hh:mm:ss"
+                                    )}
+                                  ~`}
+                                  </Typography>
+                                  <Typography variant={"body2"}>
+                                    {`${format(
+                                      new Date(
+                                        ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+                                      ),
+                                      "yyyy/MM/dd hh:mm:ss"
+                                    )} (UTC+09:00)
+                                  `}
+                                  </Typography>
+                                </Stack>
+                              }
+                            ></StyledChip>
+                          )}
+                        </Grid>
+                      )}
+                    </Grid>
+                  ) : (
+                    <Stack
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      sx={{ background: "" }}
+                    >
+                      {ticketData?.beginTime && ticketData?.untilTime && (
+                        <>
+                          <Typography>{`${format(
+                            new Date(
+                              ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
+                            ),
+                            "yyyy/MM/dd hh:mm:ss"
+                          )}`}</Typography>
+                          <Typography>
+                            {`~ ${format(
                               new Date(
                                 ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                               ),
                               "yyyy/MM/dd hh:mm:ss"
                             )} (UTC+09:00)`}
-                          ></StyledChip>
-                        ) : (
-                          <StyledChip
-                            sx={{ paddingTop: 4, paddingBottom: 4 }}
-                            label={
-                              <Stack sx={{}}>
-                                <Typography variant={"body2"}>
-                                  {`${format(
-                                    new Date(
-                                      ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                                    ),
-                                    "yyyy/MM/dd hh:mm:ss"
-                                  )}
-                                  ~`}
-                                </Typography>
-                                <Typography variant={"body2"}>
-                                  {`${format(
-                                    new Date(
-                                      ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                                    ),
-                                    "yyyy/MM/dd hh:mm:ss"
-                                  )} (UTC+09:00)
-                                  `}
-                                </Typography>
-                              </Stack>
-                            }
-                          ></StyledChip>
-                        )}
-                      </Grid>
-                    )}
-                  </Grid>
+                          </Typography>
+                        </>
+                      )}
+                      {!ticketData?.completed && (
+                        <Box sx={{ marginTop: 1 }}>
+                          <Typography>Ongoing</Typography>
+                        </Box>
+                      )}
+                    </Stack>
+                  )}
                 </Stack>
               </Grid>
             </Grid>
@@ -469,21 +404,22 @@ const Event = (props: AppProps) => {
                     textAlign: smUp ? "left" : "center",
                   }}
                 >
-                  {smUp
-                    ? <>
-                        <Card>
-                          <CardContent>
-                            <Typography
-                                variant={"h6"}
-                                sx={{ color: theme.palette.warning.main }}
-                            >
-                              로그인 후, 이벤트에 참여하실 수 있어요 😅
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </>
-                    : <>
-                      </>}
+                  {smUp ? (
+                    <>
+                      <Card>
+                        <CardContent>
+                          <Typography
+                            variant={"h6"}
+                            sx={{ color: theme.palette.warning.main }}
+                          >
+                            로그인 후, 이벤트에 참여하실 수 있어요 😅
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </Typography>
               </Box>
             )}
@@ -542,7 +478,7 @@ const Event = (props: AppProps) => {
                   return (
                     <VerifyCard
                       key={index + 1}
-                      sx={{ width: mdUp ? 800 : smUp ? 600 : 500 }}
+                      sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
@@ -713,13 +649,16 @@ const Event = (props: AppProps) => {
                             showErrorAlert({ content: getErrorMessage(e) });
                           }
                         } else if (
-                          quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD || quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
+                          quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_DISCORD ||
+                          quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_TELEGRAM
                         ) {
                           let questContext;
                           switch (quest.questPolicy?.questPolicy) {
                             case QUEST_POLICY_TYPE.VERIFY_DISCORD:
                               questContext = quest.questPolicy
-                                  ?.context as DiscordQuestContext;
+                                ?.context as DiscordQuestContext;
                               window.open(
                                 `https://discord.gg/${questContext.channelId}`,
                                 "discord",
@@ -728,11 +667,11 @@ const Event = (props: AppProps) => {
                               break;
                             case QUEST_POLICY_TYPE.VERIFY_TELEGRAM:
                               questContext = quest.questPolicy
-                                  ?.context as TelegramQuestContext;
+                                ?.context as TelegramQuestContext;
                               window.open(
-                                  `https://t.me/${questContext.channelId}`,
-                                  "telegram",
-                                  "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                                `https://t.me/${questContext.channelId}`,
+                                "telegram",
+                                "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
                               );
                               break;
                           }
@@ -784,28 +723,44 @@ const Event = (props: AppProps) => {
               <Stack
                 direction={"row"}
                 justifyContent={"space-between"}
-                sx={{ background: ""}}
+                sx={{ background: "" }}
               >
                 <Typography variant="h5">리워드</Typography>
                 <StyledChip
-                    label={ticketData?.rewardPolicy?.rewardPolicyType == REWARD_POLICY_TYPE.FCFS ? "선착순" : "추첨"}
-                  icon={ticketData?.rewardPolicy?.rewardPolicyType == REWARD_POLICY_TYPE.FCFS ? <DirectionsRunIcon/> : <AccessAlarmIcon/>}
+                  label={
+                    ticketData?.rewardPolicy?.rewardPolicyType ==
+                    REWARD_POLICY_TYPE.FCFS
+                      ? "선착순"
+                      : "추첨"
+                  }
+                  icon={
+                    ticketData?.rewardPolicy?.rewardPolicyType ==
+                    REWARD_POLICY_TYPE.FCFS ? (
+                      <DirectionsRunIcon />
+                    ) : (
+                      <AccessAlarmIcon />
+                    )
+                  }
                 ></StyledChip>
               </Stack>
-              {(ticketData?.winners?.filter((winner) => String(winner.name).toUpperCase().trim() === userData?.name?.toUpperCase().trim())?.length > 0) &&
-                  (<Box>
-                    <Card>
+              {(ticketData?.winners?.filter(
+                (winner) =>
+                  String(winner.name).toUpperCase().trim() ===
+                  userData?.name?.toUpperCase().trim()
+              )?.length ?? 0) > 0 && (
+                <Box>
+                  <Card>
                     <CardContent>
-                    <Typography
-                    variant={"h6"}
-                    sx={{color: theme.palette.success.main}}
-                    >
-                    본 이벤트의 위너가 되었습니다 🎉
-                    </Typography>
+                      <Typography
+                        variant={"h6"}
+                        sx={{ color: theme.palette.success.main }}
+                      >
+                        본 이벤트의 위너가 되었습니다 🎉
+                      </Typography>
                     </CardContent>
-                    </Card>
-                    </Box>)
-              }
+                  </Card>
+                </Box>
+              )}
               <PrimaryCard hoverEffect={false}>
                 <Box>
                   <Stack alignItems={"center"}>
@@ -850,6 +805,7 @@ const Event = (props: AppProps) => {
                         sx={{
                           marginTop: 4,
                           background: "",
+                          width: "100%",
                         }}
                       />
                     )}
@@ -932,9 +888,7 @@ const Event = (props: AppProps) => {
                     spacing={1}
                   >
                     <img
-                      src={
-                        `https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`
-                      }
+                      src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
                       width={32}
                       height={32}
                       style={{
@@ -943,7 +897,9 @@ const Event = (props: AppProps) => {
                         padding: 5,
                       }}
                     />
-                    <Typography variant={"body2"}>{ticketData.rewardPolicy?.context?.rewardChain} 체인 지원</Typography>
+                    <Typography variant={"body2"}>
+                      {ticketData.rewardPolicy?.context?.rewardChain} 체인 지원
+                    </Typography>
                   </Stack>
                 </Stack>
               </PrimaryCard>
@@ -999,10 +955,12 @@ const Event = (props: AppProps) => {
                           <>
                             <Stack direction={"column"} spacing={1}>
                               <Typography>
-                                방금 지갑에 리워드를 보냈어요! 지갑을 확인해주세요
+                                방금 지갑에 리워드를 보냈어요! 지갑을
+                                확인해주세요
                               </Typography>
                               <Typography>
-                                전송된 리워드를 받기 위해서는 Petra 지갑에서 Accept 해주어야 합니다. 지갑을 확인해주세요!
+                                전송된 리워드를 받기 위해서는 Petra 지갑에서
+                                Accept 해주어야 합니다. 지갑을 확인해주세요!
                               </Typography>
                             </Stack>
                           </>
@@ -1029,19 +987,22 @@ const Event = (props: AppProps) => {
                 spacing={1}
                 justifyContent={smUp ? "flex-start" : "center"}
               >
-                <Typography variant="h5">아래의 사람들이 참여하고 있어요</Typography>
+                <Typography variant="h5">
+                  아래의 사람들이 참여하고 있어요
+                </Typography>
               </Stack>
-              <Stack
-                direction={"row"}
+              <Grid
+                container
+                // direction={"row"}
                 sx={{ marginTop: 4 }}
-                alignItems={"center"}
+                // alignItems={"center"}
                 justifyContent={smUp ? "flex-start" : "center"}
               >
                 {(ticketData?.participants?.length ?? 0) > 0 ? (
                   <>
                     {ticketData?.participants?.slice(0, 10).map((e, index) => {
                       return (
-                        <>
+                        <Grid item key={index}>
                           {e.profileImageUrl && (
                             <Tooltip
                               title={e.name}
@@ -1068,34 +1029,40 @@ const Event = (props: AppProps) => {
                               </div>
                             </Tooltip>
                           )}
-                        </>
+                        </Grid>
                       );
                     })}
                     {ticketData?.participants?.length &&
                       ticketData?.participants?.length > 10 && (
-                        <Box
-                          sx={{
-                            width: 42,
-                            height: 42,
-                            background: (theme) => theme.palette.neutral["800"],
-                            alignItems: "center",
-                            justifyContent: "center",
-                            display: "flex",
-                            borderRadius: 42,
-                            zIndex: 1,
-                            borderWidth: 2,
-                            borderColor: theme.palette.neutral[100],
-                            borderStyle: "solid",
-                          }}
-                          onClick={() => {}}
-                        >
-                          <Typography variant={"caption"} color={"neutral.100"}>
-                            {`+${nFormatter(
-                              12 - ticketData?.participants?.length,
-                              4
-                            )}`}
-                          </Typography>
-                        </Box>
+                        <Grid item>
+                          <Box
+                            sx={{
+                              width: 42,
+                              height: 42,
+                              background: (theme) =>
+                                theme.palette.neutral["800"],
+                              alignItems: "center",
+                              justifyContent: "center",
+                              display: "flex",
+                              borderRadius: 42,
+                              zIndex: 1,
+                              borderWidth: 2,
+                              borderColor: theme.palette.neutral[100],
+                              borderStyle: "solid",
+                            }}
+                            onClick={() => {}}
+                          >
+                            <Typography
+                              variant={"caption"}
+                              color={"neutral.100"}
+                            >
+                              {`+${nFormatter(
+                                ticketData?.participants?.length - 10,
+                                4
+                              )}`}
+                            </Typography>
+                          </Box>
+                        </Grid>
                       )}
                   </>
                 ) : (
@@ -1112,7 +1079,7 @@ const Event = (props: AppProps) => {
                     </Box>
                   </>
                 )}
-              </Stack>
+              </Grid>
             </Stack>
           </Stack>
         </Grid>

@@ -35,7 +35,8 @@ export enum CategoryType {
 
 export enum ChainType {
   Aptos = 'APTOS',
-  Evm = 'EVM'
+  Evm = 'EVM',
+  Sui = 'SUI'
 }
 
 export enum ContentEncodingType {
@@ -464,6 +465,7 @@ export enum QuestPolicyType {
   VerifyAptosHasAns = 'VERIFY_APTOS_HAS_ANS',
   VerifyAptosHasNft = 'VERIFY_APTOS_HAS_NFT',
   VerifyDiscord = 'VERIFY_DISCORD',
+  VerifyTelegram = 'VERIFY_TELEGRAM',
   VerifyTwitterFollow = 'VERIFY_TWITTER_FOLLOW',
   VerifyTwitterLiking = 'VERIFY_TWITTER_LIKING',
   VerifyTwitterRetweet = 'VERIFY_TWITTER_RETWEET'
@@ -486,6 +488,25 @@ export enum RewardPolicyType {
   Fcfs = 'FCFS',
   LuckyDraw = 'LUCKY_DRAW'
 }
+
+export type TelegramUser = {
+  __typename?: 'TelegramUser';
+  authDate?: Maybe<Scalars['Float']>;
+  firstName?: Maybe<Scalars['String']>;
+  hash?: Maybe<Scalars['String']>;
+  id: Scalars['Float'];
+  photoUrl?: Maybe<Scalars['String']>;
+  username: Scalars['String'];
+};
+
+export type TelegramUserInputType = {
+  authDate?: InputMaybe<Scalars['Float']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  hash?: InputMaybe<Scalars['String']>;
+  id: Scalars['Float'];
+  photoUrl?: InputMaybe<Scalars['String']>;
+  username: Scalars['String'];
+};
 
 export type Ticket = {
   __typename?: 'Ticket';
@@ -563,10 +584,12 @@ export type UserInputType = {
 
 export type UserSocial = {
   __typename?: 'UserSocial';
+  telegramUser?: Maybe<TelegramUser>;
   twitterId?: Maybe<Scalars['String']>;
 };
 
 export type UserSocialInputType = {
+  telegramUser?: InputMaybe<TelegramUserInputType>;
   twitterId?: InputMaybe<Scalars['String']>;
 };
 

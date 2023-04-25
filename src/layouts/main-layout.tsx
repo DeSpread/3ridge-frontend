@@ -41,6 +41,11 @@ import Image from "next/image";
 import HomeFooter from "./footer/home-footer";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
+import TelegramLoginButton, {
+  TLoginButtonProps,
+  TLoginButtonSize,
+} from "../components/molecules/telegram-login-button";
+// import { TLoginButton, TLoginButtonSize } from "react-telegram-auth";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -211,7 +216,6 @@ const MainLayout = (props: MainLayoutProps) => {
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
-                      {/*<WalletSelector></WalletSelector>*/}
                       <SecondaryButton
                         size={"small"}
                         sx={{
