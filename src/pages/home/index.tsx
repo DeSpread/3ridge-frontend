@@ -116,8 +116,6 @@ const SwipeSection = (props: {
                       showLoading();
                       await router.push(`/event/${ticket._id}`);
                       closeLoading();
-
-                      // onTicketCardClick(ticket);
                     }}
                   ></TicketOverlayStyleCard>
                 </SwiperSlide>
@@ -158,7 +156,6 @@ const Home = () => {
             width: "100%",
             backgroundImage: `url("https://3ridge.s3.ap-northeast-2.amazonaws.com/top-section-bg.png")`,
             backgroundSize: "cover",
-            // height: `calc(100vh - 56px)`,
           }}
           justifyContent={"center"}
           alignItems={"center"}
@@ -226,6 +223,7 @@ const Home = () => {
                 ticketsData={ticketsData}
               ></SwipeSection>
             </Stack>
+            <Box sx={{ marginTop: 12 }}></Box>
           </Stack>
         </Stack>
       </>
@@ -371,22 +369,6 @@ const Home = () => {
               </UpDownAnimatedComponent>
             </div>
           </div>
-          {smUp && (
-            <UpDownAnimatedComponent
-              yDist={"6px"}
-              duration={1}
-              sx={{
-                position: "absolute",
-                bottom: "32px",
-                right: "50%",
-                left: "50%",
-              }}
-            >
-              <KeyboardDoubleArrowDownIcon
-                fontSize={"large"}
-              ></KeyboardDoubleArrowDownIcon>
-            </UpDownAnimatedComponent>
-          )}
         </Stack>
       </Stack>
     );
@@ -398,138 +380,6 @@ const Home = () => {
         <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       {smUp ? renderDesktop() : renderMobile()}
-      <Stack
-        direction={"column"}
-        sx={{
-          width: "100%",
-        }}
-      >
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ marginTop: 8, marginBottom: 8 }}
-        >
-          <Typography
-            variant={smUp ? "h2" : "h5"}
-            sx={{
-              fontFamily: "LINESeedKR-Bd",
-            }}
-          >
-            3ridge 어떻게 활용할까요?
-          </Typography>
-          <Box sx={{ marginTop: 4 }}>
-            <Box
-              sx={{
-                background: "transparent",
-                width: mdUp ? 1000 : smUp ? 600 : 360,
-              }}
-            >
-              <CardContent>
-                <Stack alignItems={"center"} spacing={14}>
-                  <TutorialDescCard
-                    index={1}
-                    title={"로그인 해주세요!"}
-                    contents={["지갑 또는 이메일로 가입할 수 있어요"]}
-                    imageUrl={
-                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_connect.gif"
-                    }
-                  />
-                  <TutorialDescCard
-                    index={2}
-                    title={"이벤트에 참여해주세요"}
-                    contents={["이벤트에 따라 온체인 검증을 할 수 있어요"]}
-                    imageUrl={
-                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_community.gif"
-                    }
-                  />
-                  <TutorialDescCard
-                    index={3}
-                    title={"이벤트의 퀘스트를 완료해주세요"}
-                    contents={[""]}
-                    imageUrl={
-                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_quest.gif"
-                    }
-                  />
-                  <TutorialDescCard
-                    index={4}
-                    title={"리워드를 받으세요"}
-                    contents={["퀘스트를 완료하면 리워드를 받을 수 있습니다"]}
-                    imageUrl={
-                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_claim.gif"
-                    }
-                  />
-                </Stack>
-              </CardContent>
-            </Box>
-          </Box>
-        </Stack>
-        {/*<Stack*/}
-        {/*  direction={"column"}*/}
-        {/*  sx={{*/}
-        {/*    width: "100%",*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <Stack*/}
-        {/*    direction={"column"}*/}
-        {/*    alignItems={"center"}*/}
-        {/*    sx={{ marginTop: 8, marginBottom: 8 }}*/}
-        {/*  >*/}
-        {/*    <Typography*/}
-        {/*      variant={smUp ? "h2" : "h4"}*/}
-        {/*      sx={{*/}
-        {/*        fontFamily: "LINESeedKR-Bd",*/}
-        {/*      }}*/}
-        {/*    >*/}
-        {/*      3ridge 어떻게 활용할까요?*/}
-        {/*    </Typography>*/}
-        {/*    <Box sx={{ marginTop: 4 }}>*/}
-        {/*      <Box*/}
-        {/*        sx={{*/}
-        {/*          background: "transparent",*/}
-        {/*          width: mdUp ? 1000 : smUp ? 600 : 360,*/}
-        {/*        }}*/}
-        {/*      >*/}
-        {/*        <CardContent>*/}
-        {/*          <Stack alignItems={"center"} spacing={14}>*/}
-        {/*            <TutorialDescCard*/}
-        {/*              index={1}*/}
-        {/*              title={"로그인 해주세요!"}*/}
-        {/*              contents={["지갑 또는 이메일로 가입할 수 있어요"]}*/}
-        {/*              imageUrl={*/}
-        {/*                "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_connect.gif"*/}
-        {/*              }*/}
-        {/*            />*/}
-        {/*            <TutorialDescCard*/}
-        {/*              index={2}*/}
-        {/*              title={"이벤트에 참여해주세요"}*/}
-        {/*              contents={["이벤트에 따라 온체인 검증을 할 수 있어요"]}*/}
-        {/*              imageUrl={*/}
-        {/*                "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_community.gif"*/}
-        {/*              }*/}
-        {/*            />*/}
-        {/*            <TutorialDescCard*/}
-        {/*              index={3}*/}
-        {/*              title={"이벤트의 퀘스트를 완료해주세요"}*/}
-        {/*              contents={[""]}*/}
-        {/*              imageUrl={*/}
-        {/*                "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_quest.gif"*/}
-        {/*              }*/}
-        {/*            />*/}
-        {/*            <TutorialDescCard*/}
-        {/*              index={4}*/}
-        {/*              title={"리워드를 받으세요"}*/}
-        {/*              contents={["퀘스트를 완료하면 리워드를 받을 수 있습니다"]}*/}
-        {/*              imageUrl={*/}
-        {/*                "https://3ridge.s3.ap-northeast-2.amazonaws.com/main/how_it_works_complete_claim.gif"*/}
-        {/*              }*/}
-        {/*            />*/}
-        {/*          </Stack>*/}
-        {/*        </CardContent>*/}
-        {/*      </Box>*/}
-        {/*    </Box>*/}
-        {/*  </Stack>*/}
-        {/*</Stack>*/}
-      </Stack>
     </>
   );
 };

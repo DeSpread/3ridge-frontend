@@ -19,7 +19,7 @@ import PrimaryButton from "../atoms/primary-button";
 import addSeconds from "date-fns/addSeconds";
 import { MouseEventWithParam } from "../../type";
 import { useTheme } from "@mui/material/styles";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
 
 type VerifyCardProps = PropsWithChildren & {
   sx?: CSSProperties;
@@ -48,7 +48,6 @@ const VerifyCard = (props: VerifyCardProps) => {
         <CardContent sx={{ background: theme.palette.neutral[800] }}>
           <Grid
             container
-            // direction={"row"}
             alignItems={"center"}
             justifyContent={smUp ? "space-between" : "center"}
             columns={16}
@@ -56,7 +55,7 @@ const VerifyCard = (props: VerifyCardProps) => {
           >
             <Grid item>
               <Stack direction={"row"} alignItems={"center"}>
-                {props.index && (
+                {props.index && smUp && (
                   <Box
                     sx={{
                       background: (theme) => theme.palette.neutral[800],
@@ -84,7 +83,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                 <Stack
                   direction={"column"}
                   justifyContent={"center"}
-                  sx={{ marginLeft: 3 }}
+                  sx={{ marginLeft: smUp ? 3 : 0 }}
                 >
                   <Box>
                     <Typography
@@ -92,6 +91,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                       sx={{
                         wordBreak: "break-word",
                       }}
+                      textAlign={smUp ? "left" : "center"}
                     >
                       {props.title}
                     </Typography>
@@ -103,6 +103,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                         sx={{
                           wordBreak: "break-word",
                         }}
+                        textAlign={smUp ? "left" : "center"}
                       >
                         {props.description}
                       </Typography>
@@ -113,21 +114,21 @@ const VerifyCard = (props: VerifyCardProps) => {
             </Grid>
             <Grid item sx={{ background: "" }}>
               <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
-              {!props.hideStartButton && (
+                {!props.hideStartButton && (
                   <SecondaryButton
-                      sx={{ width: 86 }}
-                      disabled={props.disabled || props.verified}
-                      size={"medium"}
-                      onClick={props.onStartBtnClicked}
+                    sx={{ width: 86 }}
+                    disabled={props.disabled || props.verified}
+                    size={"medium"}
+                    onClick={props.onStartBtnClicked}
                   >
-                      시작
+                    시작
                   </SecondaryButton>
-              )}
+                )}
                 <div style={{ position: "relative" }}>
                   <PrimaryButton
                     size={"medium"}
-                    sx={{ width: 120 }}
-                    endIcon={<CheckIcon/>}
+                    sx={{ width: 100 }}
+                    endIcon={<CheckIcon />}
                     onClick={(e) => {
                       setCardState("VERIFYING");
                       let timer: NodeJS.Timer;

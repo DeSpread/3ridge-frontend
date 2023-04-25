@@ -80,7 +80,8 @@ const HomeFooter = () => {
         width: "100%",
         zIndex: 1,
         paddingLeft: theme.spacing(5),
-        paddingRight: theme.spacing(5)
+        paddingRight: theme.spacing(5),
+        marginTop: 4,
       }}
     >
       <Divider sx={{ width: "100%", borderBottomWidth: 1 }} />
@@ -101,7 +102,7 @@ const HomeFooter = () => {
               window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
             }}
           >
-              뉴스레터 구독하기
+            {smUp ? "뉴스레터 구독하기" : "뉴스레터"}
           </SecondaryButton>
         </Stack>
         <Stack direction={"row"}>
