@@ -10,7 +10,6 @@ import {
   PartialWalletInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
-  SUPPORTED_NETWORKS,
 } from "../../../type";
 import { CREATE_USER_BY_WALLET } from "../../../apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
@@ -60,11 +59,8 @@ export function useWalletLogin() {
     }
   }, [getConnectedAccount().address]);
 
-  // console.log("isAnyWalletConnected - 1", isAnyWalletConnected);
-  // if connected status changed -> update login status lazy
   useEffect(() => {
     if (tryWalletSignUpSuccess.current) {
-      // console.log("isAnyWalletConnected - 2", isAnyWalletConnected);
       const cache = {
         address: "",
         network: "",
@@ -114,6 +110,9 @@ export function useWalletLogin() {
     errorMsg: string,
     cache: { address: string; network: string }
   ) => {
+    if (errorMsg.includes(APP_ERROR_MESSAGE.SUI_WALLET_PERMISSION_REJECTED)) {
+      return;
+    }
     if (errorMsg.includes(APP_ERROR_MESSAGE.SUI_WALLET_PENDING_REQUEST)) {
       return;
     }

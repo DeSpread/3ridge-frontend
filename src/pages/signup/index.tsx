@@ -72,12 +72,12 @@ const Signup = () => {
               }}
               onClickConnectWallet={(e: MouseEvent) => {
                 e.preventDefault();
-                walletSignUp({
-                  onSuccess: () => {
-                    router.push("/").then();
-                  },
-                  onError: (error: AppError) => {},
-                });
+                // walletSignUp({
+                //   onSuccess: () => {
+                //     router.push("/").then();
+                //   },
+                //   onError: (error: AppError) => {},
+                // });
               }}
               onShowSignClicked={(e) => {
                 e.preventDefault();

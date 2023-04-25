@@ -8,6 +8,7 @@ export const APP_ERROR_MESSAGE = {
   WALLET_USER_REJECTED_REQUEST: "User rejected request",
   WALLET_ADDRESS_ALREADY_REGISTERED: "Already registered by wallet address",
   SUI_WALLET_PENDING_REQUEST: "Another permission request is pending",
+  SUI_WALLET_PERMISSION_REJECTED: "Permission rejected",
   WALLET_USER_ACCOUNT_FETCH_FAIL: "Fail to get account of wallet",
   FIREBASE_USER_NOT_FOUND: "auth/user-not-found",
   FIREBASE_WRONG_PASSWORD: "auth/wrong-password",
