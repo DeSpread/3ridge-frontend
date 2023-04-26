@@ -11,6 +11,7 @@ import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
 import React from "react";
+import PrimaryButton from "../../components/atoms/primary-button";
 
 const footerData = [
   {
@@ -107,9 +108,19 @@ const HomeFooter = () => {
         </Stack>
         <Stack direction={"row"}>
           <Link
+              href="https://6qivmn1o4eb.typeform.com/to/p5D5em7T"
+              color="inherit"
+              underline="hover"
+          >
+            <Typography variant={smUp ? "body1" : "caption"}>
+              이벤트/프로젝트 등록 요청
+            </Typography>
+          </Link>
+          <Link
             href="https://twitter.com/3ridge_xyz"
             color="inherit"
             underline="hover"
+            style={{ marginLeft: 16 }}
           >
             <Typography variant={smUp ? "body1" : "caption"}>트위터</Typography>
           </Link>
