@@ -10,11 +10,27 @@ import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
 import { getErrorMessage } from "../../../error/my-error";
 import { convertToSuppoertedNetwork } from "../../../util/type-convert";
+import {
+  useAccount as useEvmAccount,
+  useConnect as useEvmConnect,
+  useDisconnect as useEvmDisconnect,
+} from "wagmi";
+import { InjectedConnector as EvmInjectedConnector } from "wagmi/connectors/injected";
 
 export function useTotalWallet() {
   const [connectedNetwork, setConnectedNetwork] = useState("");
   const [changedCounter, setChangedCounter] = useState(0);
   const preference = PreferenceHelper.getInstance();
+
+  const {
+    address: evmAddress,
+    isConnected: evmConnected,
+    status: evmStatus,
+  } = useEvmAccount();
+  const { connect: evmConnect, connectors: evmConnectors } = useEvmConnect({
+    connector: new EvmInjectedConnector(),
+  });
+  const { disconnect: evmDisconnect } = useEvmDisconnect();
 
   const {
     connect: aptosConnect,
@@ -50,7 +66,7 @@ export function useTotalWallet() {
     setChangedCounter((prevState) => {
       return prevState + 1;
     });
-  }, [aptosConnected, suiConnected]);
+  }, [aptosConnected, suiConnected, evmConnected]);
 
   const asyncConnectWallet = async (network: SupportedNetworks) => {
     if (!isWalletInstalled(network)) {
@@ -70,6 +86,8 @@ export function useTotalWallet() {
       await suiSelect(item[0].name);
       setConnectedNetwork(network);
       preference.updateConnectedNetwork(network);
+    } else if (network === SUPPORTED_NETWORKS.EVM) {
+      evmConnect();
     }
     return {
       connected: true,
@@ -91,6 +109,9 @@ export function useTotalWallet() {
         return false;
       }
       return true;
+    } else if (network === SUPPORTED_NETWORKS.EVM) {
+      const item = evmConnectors.filter((e) => e.name === "MetaMask");
+      return item[0].ready;
     }
     return false;
   };
@@ -100,6 +121,8 @@ export function useTotalWallet() {
       return aptosAccount?.address;
     } else if (network === SUPPORTED_NETWORKS.SUI) {
       return suiAccount?.address;
+    } else if (network === SUPPORTED_NETWORKS.EVM) {
+      return evmAddress;
     }
     return undefined;
   };
@@ -107,7 +130,8 @@ export function useTotalWallet() {
   const getConnectedAccount = () => {
     if (
       connectedNetwork === SUPPORTED_NETWORKS.APTOS ||
-      connectedNetwork === SUPPORTED_NETWORKS.SUI
+      connectedNetwork === SUPPORTED_NETWORKS.SUI ||
+      connectedNetwork === SUPPORTED_NETWORKS.EVM
     ) {
       return {
         network: connectedNetwork,
@@ -125,6 +149,8 @@ export function useTotalWallet() {
       aptosDisconnect();
     } else if (connectedNetwork === SUPPORTED_NETWORKS.SUI) {
       suiDisconnect();
+    } else if (connectedNetwork === SUPPORTED_NETWORKS.EVM) {
+      evmDisconnect();
     }
     setConnectedNetwork("");
     preference.clearConnectedNetwork();

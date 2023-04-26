@@ -6,6 +6,8 @@ const convertToSuppoertedNetwork = (network?: string) => {
     return SUPPORTED_NETWORKS.SUI;
   } else if (network === SUPPORTED_NETWORKS.APTOS) {
     return SUPPORTED_NETWORKS.APTOS;
+  } else if (network === SUPPORTED_NETWORKS.EVM) {
+    return SUPPORTED_NETWORKS.EVM;
   }
   return SUPPORTED_NETWORKS.UNKNOWN;
 };

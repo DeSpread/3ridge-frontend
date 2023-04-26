@@ -80,10 +80,10 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
       />
       <ThemeProvider theme={createTheme()}>
-        <WagmiConfig client={wagmiClient}>
-          <GoogleOAuthProvider clientId={clientId ?? ""}>
-            <RecoilRoot>
-              <ApolloProvider client={apolloClient}>
+        <GoogleOAuthProvider clientId={clientId ?? ""}>
+          <RecoilRoot>
+            <ApolloProvider client={apolloClient}>
+              <WagmiConfig client={wagmiClient}>
                 <WalletProvider>
                   <AptosWalletAdapterProvider
                     plugins={wallets}
@@ -94,10 +94,10 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
                     </MasterProvider>
                   </AptosWalletAdapterProvider>
                 </WalletProvider>
-              </ApolloProvider>
-            </RecoilRoot>
-          </GoogleOAuthProvider>
-        </WagmiConfig>
+              </WagmiConfig>
+            </ApolloProvider>
+          </RecoilRoot>
+        </GoogleOAuthProvider>
       </ThemeProvider>
     </>
   );
