@@ -116,7 +116,7 @@ const VerifyCard = (props: VerifyCardProps) => {
               <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
                 {!props.hideStartButton && (
                   <SecondaryButton
-                    sx={{ width: 86 }}
+                    sx={{ width: 110 }}
                     disabled={props.disabled || props.verified}
                     size={"medium"}
                     onClick={props.onStartBtnClicked}
@@ -127,7 +127,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                 <div style={{ position: "relative" }}>
                   <PrimaryButton
                     size={"medium"}
-                    sx={{ width: 100 }}
+                    sx={{ width: 110 }}
                     endIcon={<CheckIcon />}
                     onClick={(e) => {
                       setCardState("VERIFYING");
