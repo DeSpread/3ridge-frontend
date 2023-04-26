@@ -61,6 +61,12 @@ export function useUserQuery(props: { name?: string }) {
                 rewardPolicyType: e.rewardPolicy?.rewardPolicyType,
               },
               title: e.title ?? undefined,
+              winners: e.winners?.map((e) => {
+                return {
+                  _id: e._id ?? undefined,
+                  name: e.name ?? undefined
+                }
+              })
             };
           }),
         });

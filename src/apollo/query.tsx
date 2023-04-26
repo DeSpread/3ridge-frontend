@@ -48,6 +48,10 @@ export const GET_USER_BY_NAME = gql(/* GraphQL */ `
           rewardPolicyType
         }
         title
+        winners {
+          _id
+          name
+        }
       }
       profileImageUrl
       rewardPoint

@@ -515,7 +515,7 @@ const Profile = (props: AppProps) => {
                     sx={{ marginTop: 8, marginBottom: 4 }}
                   >
                     <Typography variant={"h6"} color={"neutral.500"}>
-                      앗 활동 내역이 없어요
+                      앗 활동 내역이 없어요 :(
                     </Typography>
                   </Stack>
                 ))}
@@ -544,10 +544,12 @@ const Profile = (props: AppProps) => {
                 {!userDataLoading &&
                   ((userData?.participatingTickets?.length ?? 0) > 0 ? (
                     userData?.participatingTickets?.map((ticket, index) => {
+                      console.log(ticket);
                       return (
                         <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
                           <TicketCard
                             ticket={ticket}
+                            username={userData?.name}
                             onClick={async (e) => {
                               showLoading();
                               await router.push(`/event/${ticket._id}`);

@@ -147,6 +147,7 @@ export type Ticket = {
     rewardPolicyType?: string;
   };
   winners?: {
+    _id?: string;
     name?: string;
   }[];
   project?: PartialProject;

@@ -1,29 +1,29 @@
 import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CardProps,
-  Grid,
-  Skeleton,
-  Stack,
-  Typography,
-  useMediaQuery,
+    Avatar,
+    Box,
+    Card,
+    CardContent,
+    CardProps,
+    Grid,
+    Skeleton,
+    Stack, Theme,
+    Typography,
+    useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useLayoutEffect } from "react";
-import StyledChip from "../atoms/styled/styled-chip";
-import { Ticket } from "../../type";
+import {Ticket, User} from "../../type";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
-import StarsIcon from "@mui/icons-material/Stars";
+import StyledChip from "../atoms/styled/styled-chip";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;
+  username?: String;
 };
 
 const TicketCard = (props: EventCardProps) => {
-  const { ticket } = props;
+  const { ticket, username } = props;
   const ref = React.useRef<HTMLDivElement>(null);
   const [height, setHeight] = React.useState(0);
   const theme = useTheme();
@@ -107,7 +107,6 @@ const TicketCard = (props: EventCardProps) => {
                     }}
                   />
                 )}
-                {}
                 {ticket?.project?.name && (
                   <Typography variant={mdUp ? "body1" : "h6"}>
                     {ticket?.project?.name}
@@ -119,11 +118,30 @@ const TicketCard = (props: EventCardProps) => {
                   </Typography>
                 )}
               </Stack>
-              <Box>
-                <Typography variant={mdUp ? "body2" : "body1"}>
-                  {ticket?.quests?.length ?? 0} 퀘스트
-                </Typography>
-              </Box>
+                {(ticket?.winners?.filter(
+                    (winner) =>
+                        String(winner.name).toUpperCase().trim() ===
+                        String(username).toUpperCase().trim()
+                )?.length ?? 0) > 0 && (
+                    <Box>
+                        <Typography variant={mdUp ? "body2" : "body1"}>
+                            <StyledChip label={"위너"} color="success"></StyledChip>
+                        </Typography>
+                    </Box>
+                )
+                }
+                {(ticket?.winners?.filter(
+                    (winner) =>
+                        String(winner.name).toUpperCase().trim() ===
+                        String(username).toUpperCase().trim()
+                )?.length ?? 0) <= 0 && (
+                    <Box>
+                        <Typography variant={mdUp ? "body2" : "body1"}>
+                            {ticket?.quests?.length ?? 0} 퀘스트
+                        </Typography>
+                    </Box>
+                )
+                }
             </Stack>
             <Box
               ref={ref}
