@@ -45,6 +45,26 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
             </Typography>
           </Stack>
         </SecondaryButton>
+        <SecondaryButton
+          onClick={(e) => {
+            props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.EVM);
+          }}
+        >
+          <Stack direction={"row"} alignItems={"center"} spacing={1}>
+            <Image
+              src={
+                "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/Ethereum-Icon-Purple-Logo.wine.svg"
+              }
+              alt={"ethereum"}
+              width={24}
+              height={24}
+              style={{ background: "white", borderRadius: 24 }}
+            ></Image>
+            <Typography variant={"body2"} className={"MuiTypography"}>
+              Ethereum
+            </Typography>
+          </Stack>
+        </SecondaryButton>
       </Stack>
     </Stack>
   );

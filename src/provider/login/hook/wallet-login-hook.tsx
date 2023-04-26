@@ -67,15 +67,19 @@ export function useWalletLogin() {
       };
       (async () => {
         try {
-          console.log("tryWalletSignUpSuccess");
           const address = getAccountAddress(
+            convertToSuppoertedNetwork(tryWalletSignUpNetwork.current)
+          );
+          console.log(
+            "tryWalletSignUpSuccess",
+            address,
             convertToSuppoertedNetwork(tryWalletSignUpNetwork.current)
           );
           const network = tryWalletSignUpNetwork.current;
           if (!address || !network) {
-            runCachedTryWalletSignUpOnError(
-              APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL
-            );
+            // runCachedTryWalletSignUpOnError(
+            //   APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL
+            // );
             return;
           }
           cache.address = address;

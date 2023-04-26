@@ -41,11 +41,6 @@ import Image from "next/image";
 import HomeFooter from "./footer/home-footer";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
-import TelegramLoginButton, {
-  TLoginButtonProps,
-  TLoginButtonSize,
-} from "../components/molecules/telegram-login-button";
-// import { TLoginButton, TLoginButtonSize } from "react-telegram-auth";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -256,7 +251,6 @@ const MainLayout = (props: MainLayoutProps) => {
       <SignInDialog
         title={"안녕하세요 다시 만나서 반가워요!"}
         open={isSignDialogOpen}
-        // open={true}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
           setShowSignInDialog(false);
@@ -394,6 +388,15 @@ const MainLayout = (props: MainLayoutProps) => {
                   "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-wallet-icon.jpg",
                 name: "Sui wallet",
                 value: "sui",
+              },
+            ];
+          } else if (selectedNetwork === SUPPORTED_NETWORKS.EVM) {
+            return [
+              {
+                imageUrl:
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/metamask-fox.svg",
+                name: "MetaMask",
+                value: "evm",
               },
             ];
           }
