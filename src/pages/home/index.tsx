@@ -1,34 +1,25 @@
-import React, { ReactElement, useMemo, useRef } from "react";
-import {
-  Box,
-  CardContent,
-  IconButton,
-  Stack,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import React, {ReactElement, useMemo, useRef} from "react";
+import {Box, IconButton, Stack, Typography, useMediaQuery,} from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
 import HomeFooter from "../../layouts/footer/home-footer";
 import UpDownAnimatedComponent from "../../components/atoms/animation/up-down-animated-component";
-import { useTheme } from "@mui/material/styles";
+import {useTheme} from "@mui/material/styles";
 import Image from "next/image";
 
-import { Swiper, SwiperSlide } from "swiper/react"; // basic
-import SwiperCore, { Navigation } from "swiper";
+import {Swiper, SwiperSlide} from "swiper/react"; // basic
+import SwiperCore, {Navigation} from "swiper";
 import "swiper/css"; //basic
-
-import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
-import { FILTER_TYPE, Ticket } from "../../type";
-import { TicketSortType } from "../../__generated__/graphql";
-import TutorialDescCard from "../../components/molecules/tutorial-desc-card";
+import {useTicketsQuery} from "../../page-hook/tickets-query-hook";
+import {FILTER_TYPE, Ticket} from "../../type";
+import {TicketSortType} from "../../__generated__/graphql";
 import useWindowDimensions from "../../page-hook/window-dimensions";
 import TicketOverlayStyleCard from "../../components/molecules/ticket-overlay-style-card";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
-import { useLoading } from "../../provider/loading/loading-provider";
-import { useRouter } from "next/router";
+import {useLoading} from "../../provider/loading/loading-provider";
+import {useRouter} from "next/router";
+import BannerOverlayStyleCard from "../../components/molecules/banner-overlay-style-card";
 
 SwiperCore.use([Navigation]);
 
@@ -91,6 +82,13 @@ const SwipeSection = (props: {
           </IconButton>
         </Box>
       </Stack>
+    <Stack
+        direction={"column"}
+        sx={{
+            width: "100%",
+        }}
+    >
+    </Stack>
       <Stack
         direction={"column"}
         sx={{
@@ -256,51 +254,32 @@ const Home = () => {
               background: "",
               flex: 1,
               zIndex: 3,
-
               marginLeft: mdUp ? 15 : 5,
               marginRight: mdUp ? 15 : 5,
             }}
-            spacing={16}
+            spacing={10}
             alignItems={"center"}
             justifyContent={"center"}
           >
             <Stack
+              direction={"column"}
               sx={{
-                background: "",
-                width: "100%",
+                  width: "100%",
               }}
             >
-              <Stack
-                direction={"row"}
-                alignItems={"left"}
-                justifyContent={"left"}
-              >
-                {/*<Box sx={{ display: "flex", alignItems: "center" }}>*/}
-                <Typography
-                  variant={mdUp ? "h2" : smUp ? "h3" : "h3"}
-                  textAlign={"left"}
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: "3",
-                    WebkitBoxOrient: "vertical",
-                  }}
-                >
-                  국내 Web3 컨텐츠 플랫폼, 3ridge에서 시작하세요
-                </Typography>
-                {/*</Box>*/}
-              </Stack>
-              <Stack sx={{ marginTop: 4 }} alignItems={"left"}>
                 <Box>
-                  <Typography
-                    variant={mdUp ? "h5" : "h6"}
-                    textAlign={"left"}
-                  >
-                    웹3, 다양한 경험에 함께 참여하세요!
-                  </Typography>
+                    <Swiper
+                        className="banner"
+                        slidesPerView={1}
+                        navigation
+                        pagination={{ clickable: true }}
+                        autoplay={{ delay: 1000 }}	// 추가
+                    >
+                        <SwiperSlide>
+                            <BannerOverlayStyleCard/>
+                        </SwiperSlide>
+                    </Swiper>
                 </Box>
-              </Stack>
             </Stack>
             <Stack
               direction={"column"}
