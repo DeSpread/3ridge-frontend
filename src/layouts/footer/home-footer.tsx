@@ -108,12 +108,14 @@ const HomeFooter = () => {
         </Stack>
         <Stack direction={"row"}>
           <Link
-              href="https://6qivmn1o4eb.typeform.com/to/p5D5em7T"
+              href="https://airtable.com/shr406tfeuXcHz1o0"
               color="inherit"
               underline="hover"
+              target="_blank"
+              rel="noreferrer"
           >
             <Typography variant={smUp ? "body1" : "caption"}>
-              이벤트/프로젝트 등록 요청
+              프로젝트 등록
             </Typography>
           </Link>
           <Link
@@ -121,6 +123,8 @@ const HomeFooter = () => {
             color="inherit"
             underline="hover"
             style={{ marginLeft: 16 }}
+            target="_blank"
+            rel="noreferrer"
           >
             <Typography variant={smUp ? "body1" : "caption"}>트위터</Typography>
           </Link>
@@ -129,6 +133,8 @@ const HomeFooter = () => {
             color="inherit"
             underline="hover"
             style={{ marginLeft: 16 }}
+            target="_blank"
+            rel="noreferrer"
           >
             <Typography variant={smUp ? "body1" : "caption"}>
               디스코드
@@ -139,6 +145,8 @@ const HomeFooter = () => {
             color="inherit"
             underline="hover"
             style={{ marginLeft: 16 }}
+            target="_blank"
+            rel="noreferrer"
           >
             <Typography variant={smUp ? "body1" : "caption"}>이메일</Typography>
           </Link>

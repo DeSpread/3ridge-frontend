@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { Box, Stack, Typography } from "@mui/material";
+import {Box, Link, Stack, Typography, useMediaQuery} from "@mui/material";
 import { useRouter } from "next/router";
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import { useLoading } from "../../provider/loading/loading-provider";
@@ -14,6 +14,9 @@ import {
   TicketEventParam,
 } from "../../type";
 import { TicketSortType } from "../../__generated__/graphql";
+import {useTheme} from "@mui/material/styles";
+import SecondaryButton from "../../components/atoms/secondary-button";
+import PrimaryButton from "../../components/atoms/primary-button";
 
 const Explore = (props: AppProps) => {
   const [filterType, setFilterType] = useState<FilterType>(
@@ -28,6 +31,9 @@ const Explore = (props: AppProps) => {
   });
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <>
@@ -44,13 +50,35 @@ const Explore = (props: AppProps) => {
         }}
       >
         <Stack direction={"column"} alignItems={""} sx={{ background: "" }}>
-          <Stack
-            direction={"row"}
-            alignItems={"center"}
-            spacing={1}
-            sx={{ marginTop: "32px" }}
-          >
-            <Typography variant={"h4"}>전체 이벤트</Typography>
+            <Stack
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                sx={{ marginTop: "32px" }}
+            >
+                <Stack
+                    direction={"row"}
+                    spacing={1}
+                >
+                    <Typography variant={"h4"}>전체 이벤트</Typography>
+                </Stack>
+                <Stack
+                    direction={"row"}
+                    spacing={1}
+                >
+                    <Link
+                        href="https://airtable.com/shrOt7v8B4WntvR1h"
+                        color="inherit"
+                        underline="hover"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+
+                        <PrimaryButton fullWidth={true}>
+                            이벤트 등록
+                        </PrimaryButton>
+                    </Link>
+                </Stack>
           </Stack>
           {ticketsData && (
             <TicketsSection
