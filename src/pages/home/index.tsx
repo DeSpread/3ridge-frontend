@@ -140,7 +140,7 @@ const Home = () => {
   const [width] = useWindowDimensions();
 
   const swiperWidth = useMemo(() => {
-    return width * (lgUp ? 0.85 : mdUp ? 0.75 : smUp ? 0.85 : 0.65);
+    return width * (lgUp ? 0.85 : mdUp ? 0.75 : 0.85);
   }, [width, lgUp, mdUp, smUp]);
 
   const renderMobile = () => {
@@ -168,60 +168,55 @@ const Home = () => {
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Stack
-              sx={{
-                background: "",
-                width: "100%",
-                marginTop: 8,
-              }}
-            >
               <Stack
-                direction={"row"}
-                alignItems={"left"}
-                justifyContent={"left"}
-              >
-                {/*<Box sx={{ display: "flex", alignItems: "center" }}>*/}
-                <Typography
-                  variant={mdUp ? "h2" : smUp ? "h3" : "h3"}
-                  textAlign={"left"}
                   sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    // WebkitLineClamp: "3",
-                    WebkitBoxOrient: "vertical",
+                      width: swiperWidth,
+                      background: "",
+                      flex: 1,
+                      zIndex: 3,
+                      marginLeft: mdUp ? 15 : 5,
+                      marginRight: mdUp ? 15 : 5,
+                      marginTop: mdUp ? 0 : 5
                   }}
-                >
-                  국내 Web3 컨텐츠 플랫폼, 3ridge에서 시작하세요
-                </Typography>
-              </Stack>
-              <Stack sx={{ marginTop: 4 }} alignItems={"left"}>
-                <Box>
-                  <Typography
-                    variant={mdUp ? "h5" : "body2"}
-                    textAlign={"left"}
+                  spacing={10}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+              >
+                  <Stack
+                      direction={"column"}
+                      sx={{
+                          width: "100%",
+                      }}
                   >
-                    웹3, 다양한 경험에 함께 참여하세요!
-                  </Typography>
-                </Box>
+                      <Box>
+                          <Swiper
+                              className="banner"
+                              slidesPerView={1}
+                              navigation
+                              pagination={{ clickable: true }}
+                              autoplay={{ delay: 1000 }}	// 추가
+                          >
+                              <SwiperSlide>
+                                  <BannerOverlayStyleCard/>
+                              </SwiperSlide>
+                          </Swiper>
+                      </Box>
+                  </Stack>
+                  <Stack
+                      direction={"column"}
+                      ref={swiperContainerRef}
+                      sx={{
+                          position: "relative",
+                          width: "100%",
+                      }}
+                  >
+                      <SwipeSection
+                          width={swiperWidth}
+                          ticketsData={ticketsData}
+                      ></SwipeSection>
+                  </Stack>
               </Stack>
-            </Stack>
             <Box sx={{ marginTop: 6 }}></Box>
-            <Stack
-              direction={"column"}
-              ref={swiperContainerRef}
-              sx={{
-                position: "relative",
-                width: "100%",
-                background: "",
-              }}
-            >
-              <SwipeSection
-                width={swiperWidth}
-                ticketsData={ticketsData}
-              ></SwipeSection>
-            </Stack>
-            <Box sx={{ marginTop: 12 }}></Box>
           </Stack>
         </Stack>
       </>
@@ -256,6 +251,7 @@ const Home = () => {
               zIndex: 3,
               marginLeft: mdUp ? 15 : 5,
               marginRight: mdUp ? 15 : 5,
+              marginTop: mdUp ? 0 : 10
             }}
             spacing={10}
             alignItems={"center"}

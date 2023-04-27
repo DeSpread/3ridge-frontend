@@ -106,7 +106,7 @@ const HomeFooter = () => {
             {smUp ? "뉴스레터 구독하기" : "뉴스레터"}
           </SecondaryButton>
         </Stack>
-        <Stack direction={"row"}>
+        <Stack direction={smUp ? "row" : "column"}>
           <Link
               href="https://airtable.com/shr406tfeuXcHz1o0"
               color="inherit"
