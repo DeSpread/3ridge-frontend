@@ -37,7 +37,7 @@ class ChainResourceHelper {
     if (network === SUPPORTED_NETWORKS.EVM) {
       return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/Ethereum-Icon-Purple-Logo.wine.svg";
     } else if (network === SUPPORTED_NETWORKS.SUI) {
-      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-wallet-icon.jpg";
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg";
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
       return "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/aptos_icon.svg";
     }

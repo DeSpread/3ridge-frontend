@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { client } from "../apollo/client";
-import { GET_USER_BY_EMAIL, GET_USER_BY_NAME } from "../apollo/query";
-import { PartialTicket, REWARD_POLICY_TYPE, User } from "../type";
+import { GET_USER_BY_NAME } from "../apollo/query";
+import { User } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { convertToSuppoertedNetwork } from "../util/type-convert";
 

@@ -109,6 +109,13 @@ const Profile = (props: AppProps) => {
     return signedUserData._id === userData?._id;
   }, [signedUserData, userData]);
 
+  const targetUserData = useMemo(() => {
+    if (signedUserData) {
+      return signedUserData;
+    }
+    return userData;
+  }, [signedUserData, userData]);
+
   const pictureEditDialogOpen = useMemo(() => {
     return imageFile ? true : false;
   }, [imageFile]);
@@ -330,15 +337,15 @@ const Profile = (props: AppProps) => {
             sx={{ background: "" }}
             spacing={4}
           >
-            {userData?.profileImageUrl && (
+            {targetUserData?.profileImageUrl && (
               <Avatar
                 sx={{ width: 100, height: 100 }}
-                src={userData?.profileImageUrl}
+                src={targetUserData?.profileImageUrl}
               ></Avatar>
             )}
-            {!userData?.profileImageUrl && userData?._id && (
+            {!targetUserData?.profileImageUrl && targetUserData?._id && (
               <div style={{ zIndex: 2 }}>
-                <BlockIcon seed={userData?._id} scale={12}></BlockIcon>
+                <BlockIcon seed={targetUserData?._id} scale={12}></BlockIcon>
               </div>
             )}
             {/*--- profile description ---*/}
@@ -392,77 +399,105 @@ const Profile = (props: AppProps) => {
                 sx={{ background: "" }}
                 spacing={1}
               >
-                <Grid item>
-                  <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                    {userData?.walletAddressInfos?.map((addressInfo, index) => {
-                      if (!addressInfo.address) {
-                        return <></>;
-                      }
-                      return (
-                        <StyledChip
-                          key={index}
-                          sx={{
-                            "&:hover": {
-                              background: (theme: Theme) =>
-                                theme.palette.action.hover,
-                            },
-                          }}
-                          onClick={(e: MouseEvent) => {
-                            e.preventDefault();
-                            const newWindow = window.open(
-                              chainResourceHelper.getExplorerUri(
-                                addressInfo.network,
-                                addressInfo.address
-                              ),
-                              "_blank",
-                              "noopener,noreferrer"
-                            );
-                            if (newWindow) newWindow.opener = null;
-                          }}
-                          icon={
-                            <img
-                              src={chainResourceHelper.getExplorerIconUri(
-                                addressInfo.network
-                              )}
-                              width={16}
-                              height={16}
-                              style={{
-                                background: theme.palette.neutral[100],
-                                borderRadius: 16,
-                                padding: 1,
-                                marginRight: "2px",
+                <Stack
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  sx={{ background: "" }}
+                >
+                  <Grid
+                    item
+                    container={true}
+                    sx={{ marginLeft: -1 }}
+                    columnSpacing={1}
+                    // rowSpacing={1}
+                    // alignItems={"center"}
+                    // justifyContent={"center"}
+                  >
+                    {targetUserData?.walletAddressInfos?.map(
+                      (addressInfo, index) => {
+                        if (!addressInfo.address) {
+                          return <></>;
+                        }
+                        return (
+                          <Grid item key={index}>
+                            <StyledChip
+                              key={index}
+                              sx={{
+                                "&:hover": {
+                                  background: (theme: Theme) =>
+                                    theme.palette.action.hover,
+                                },
                               }}
-                            />
-                          }
+                              onClick={(e: MouseEvent) => {
+                                e.preventDefault();
+                                const newWindow = window.open(
+                                  chainResourceHelper.getExplorerUri(
+                                    addressInfo.network,
+                                    addressInfo.address
+                                  ),
+                                  "_blank",
+                                  "noopener,noreferrer"
+                                );
+                                if (newWindow) newWindow.opener = null;
+                              }}
+                              icon={
+                                <img
+                                  src={chainResourceHelper.getExplorerIconUri(
+                                    addressInfo.network
+                                  )}
+                                  width={16}
+                                  height={16}
+                                  style={{
+                                    background: theme.palette.neutral[100],
+                                    borderRadius: 16,
+                                    padding: 1,
+                                    marginRight: "2px",
+                                  }}
+                                />
+                              }
+                              label={
+                                <Typography
+                                  variant={"body2"}
+                                  color={"neutral.100"}
+                                >
+                                  {StringHelper.getInstance().getMidEllipsisString(
+                                    addressInfo?.address
+                                  )}
+                                </Typography>
+                              }
+                            ></StyledChip>
+                          </Grid>
+                        );
+                      }
+                    )}
+                    {targetUserData?.email && (
+                      <Grid item>
+                        <StyledChip
+                          icon={<MarkEmailReadIcon></MarkEmailReadIcon>}
                           label={
-                            <Typography variant={"body2"} color={"neutral.100"}>
-                              {StringHelper.getInstance().getMidEllipsisString(
-                                addressInfo?.address
-                              )}
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              {targetUserData?.email}
                             </Typography>
                           }
                         ></StyledChip>
-                      );
-                    })}
-                    {userData?.email && (
-                      <StyledChip
-                        icon={<MarkEmailReadIcon></MarkEmailReadIcon>}
-                        label={
-                          <Typography
-                            sx={{ marginLeft: 1 }}
-                            variant={"body2"}
-                            color={"neutral.100"}
-                          >
-                            {userData?.email}
-                          </Typography>
-                        }
-                      ></StyledChip>
+                      </Grid>
                     )}
-                  </Stack>
-                </Grid>
-                <Grid item>
+                    {/*</Stack>*/}
+                  </Grid>
+                </Stack>
+                <Grid
+                  item
+                  sx={{ background: "" }}
+                  // alignItems={"center"}
+                  // justifyContent={"center"}
+                >
                   {isSingedUserProfile && (
                     <PrimaryButton
+                      sx={{ marginBottom: 1, marginLeft: -1 }}
                       onClick={() => {
                         setOpenProfileEditDialog(true);
                       }}
