@@ -33,7 +33,7 @@ export function useUserQuery(props: { name?: string }) {
           participatingTickets,
         } = res.data.userByName;
 
-        console.log(wallets);
+        // console.log(wallets);
 
         setUserData({
           _id: _id ?? undefined,

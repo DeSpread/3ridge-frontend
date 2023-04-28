@@ -11,22 +11,19 @@ import {
   UPDATE_USER_REWARD_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
 } from "../apollo/query";
-import { ChainType } from "../__generated__/graphql";
 import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
 } from "../error/my-error";
-import { useAccount, useConnect } from "wagmi";
 import { useMutation } from "@apollo/client";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userDataState } from "../recoil";
-import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import {
   convertToChainType,
   convertToSuppoertedNetwork,
 } from "../util/type-convert";
-import { SupportedNetworks, WalletAddressInfo } from "../type";
+import { SupportedNetworks } from "../type";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 
 const useSignedUserQuery = () => {
@@ -171,7 +168,6 @@ const useSignedUserQuery = () => {
   }, [isGoogleLoggedIn]);
 
   useEffect(() => {
-    console.log("isWalletLoggedIn", isWalletLoggedIn);
     if (isWalletLoggedIn) {
       (async () => {
         try {
