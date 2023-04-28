@@ -18,6 +18,7 @@ import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import PrimaryButton from "../../components/atoms/primary-button";
 import ProfileEditDialog from "./dialog/profile-edit-dialog";
 import { useLoading } from "../../provider/loading/loading-provider";
@@ -310,7 +311,6 @@ const Profile = (props: AppProps) => {
     }
   };
 
-  // @ts-ignore
   return (
     <>
       <Head>
@@ -361,7 +361,7 @@ const Profile = (props: AppProps) => {
                   style={{ marginLeft: -12, marginRight: -4 }}
                 ></Image>
                 <Typography variant={"h5"} sx={{ zIndex: 1 }}>
-                  {`${userData?.rewardPoint ?? 0} 포인트`}
+                  {`${targetUserData?.rewardPoint ?? 0} 포인트`}
                 </Typography>
               </Stack>
               <LinearProgress
@@ -375,16 +375,16 @@ const Profile = (props: AppProps) => {
                 }}
               ></LinearProgress>
               <Stack direction={"row"} alignItems={"center"}>
-                {userData?.walletAddressInfos?.[0].address ? (
+                {targetUserData?.walletAddressInfos?.[0].address ? (
                   <Box sx={{ maxWidth: 260 }}>
                     <GradientTypography variant={"h4"}>
                       {StringHelper.getInstance().getMidEllipsisString(
-                        userData?.walletAddressInfos?.[0].address
+                        targetUserData?.walletAddressInfos?.[0].address
                       )}
                     </GradientTypography>
                   </Box>
                 ) : (
-                  <Box sx={{ maxWidth: 330 }}>
+                  <Box sx={{ maxWidth: 330, marginBottom: 1 }}>
                     <GradientTypography variant={"h4"}>
                       지갑이 연결되지 않았어요
                     </GradientTypography>
@@ -409,9 +409,6 @@ const Profile = (props: AppProps) => {
                     container={true}
                     sx={{ marginLeft: -1 }}
                     columnSpacing={1}
-                    // rowSpacing={1}
-                    // alignItems={"center"}
-                    // justifyContent={"center"}
                   >
                     {targetUserData?.walletAddressInfos?.map(
                       (addressInfo, index) => {
@@ -486,7 +483,22 @@ const Profile = (props: AppProps) => {
                         ></StyledChip>
                       </Grid>
                     )}
-                    {/*</Stack>*/}
+                    {targetUserData?.userSocial?.twitterId && (
+                      <Grid item>
+                        <StyledChip
+                          icon={<TwitterIcon></TwitterIcon>}
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              {targetUserData?.userSocial?.twitterId}
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
                   </Grid>
                 </Stack>
                 <Grid
@@ -599,7 +611,6 @@ const Profile = (props: AppProps) => {
                 {!userDataLoading &&
                   ((userData?.participatingTickets?.length ?? 0) > 0 ? (
                     userData?.participatingTickets?.map((ticket, index) => {
-                      console.log(ticket);
                       return (
                         <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
                           <TicketCard
@@ -652,7 +663,7 @@ const Profile = (props: AppProps) => {
           }>;
           const { params } = myEvent;
           const { state, payload } = params;
-          console.log(state, payload);
+          // console.log(state, payload);
           const network = convertToSuppoertedNetwork(payload);
           showLoading();
           try {
@@ -729,6 +740,7 @@ const Profile = (props: AppProps) => {
               await asyncUpdateSocialTwitter(res);
             }
           } catch (e) {
+            console.log(e);
           } finally {
             closeLoading();
           }
