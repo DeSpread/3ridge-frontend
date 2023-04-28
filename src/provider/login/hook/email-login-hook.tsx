@@ -1,16 +1,13 @@
 import {
-  EmailSignUpEventParams,
-  MAIL_VERIFY,
   EmailLoggedInInfo,
+  EmailSignUpEventParams,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
 } from "../../../type";
 import { AppError, getErrorMessage } from "../../../error/my-error";
-import { useFirebaseAuth } from "../../../firebase/hook/firebase-hook";
 import { useMutation } from "@apollo/client";
-import { client } from "../../../apollo/client";
 import { useEffect, useMemo, useState } from "react";
-import { CREATE_USER_BY_EMAIL, GET_USER_BY_EMAIL } from "../../../apollo/query";
+import { CREATE_USER_BY_EMAIL } from "../../../apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
 import AwsClient from "../../../remote/aws-client";

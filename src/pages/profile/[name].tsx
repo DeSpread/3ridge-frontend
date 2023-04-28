@@ -26,6 +26,7 @@ import {
   EmailSignUpEventParams,
   MouseEventWithParam,
   MouseEventWithStateParam,
+  SUPPORTED_NETWORKS,
   TicketEventParam,
 } from "../../type";
 import ConnectEmailDialog, {
@@ -53,6 +54,8 @@ import { useRouter } from "next/router";
 import TicketCard from "../../components/molecules/ticket-card";
 import LinkTypography from "../../components/atoms/link-typography";
 import Image from "next/image";
+import ChainResourceHelper from "../../helper/chain-resource-helper";
+import { convertToSuppoertedNetwork } from "../../util/type-convert";
 
 const Profile = (props: AppProps) => {
   const router = useRouter();
@@ -65,8 +68,8 @@ const Profile = (props: AppProps) => {
   });
   const {
     userData: signedUserData,
-    asyncUpdateWalletAddress,
-    asyncUpdateWalletAddressByWallet,
+    asyncUpsertWalletAddress,
+    asyncDeleteWalletAddress,
     asyncUpdateProfileImageUrl,
     asyncUpdateEmail,
     asyncUpdateSocialTwitter,
@@ -99,10 +102,18 @@ const Profile = (props: AppProps) => {
     }[]
   >([]);
   const [achievementsLoading, setAchievementsLoading] = useState(false);
+  const chainResourceHelper = ChainResourceHelper.getInstance();
 
   const theme = useTheme();
   const isSingedUserProfile = useMemo(() => {
     return signedUserData._id === userData?._id;
+  }, [signedUserData, userData]);
+
+  const targetUserData = useMemo(() => {
+    if (signedUserData) {
+      return signedUserData;
+    }
+    return userData;
   }, [signedUserData, userData]);
 
   const pictureEditDialogOpen = useMemo(() => {
@@ -127,7 +138,10 @@ const Profile = (props: AppProps) => {
   }, [userData]);
 
   const asyncQueryPendingTokenByUserName = async () => {
-    if (userData?.walletAddress === undefined) {
+    if (
+      userData?.walletAddressInfos === undefined ||
+      userData?.walletAddressInfos.length === 0
+    ) {
       return [];
     }
     try {
@@ -135,7 +149,7 @@ const Profile = (props: AppProps) => {
         {
           current_token_pending_claims(
             where: {
-              to_address: {_eq: "${userData?.walletAddress}"}
+              to_address: {_eq: "${userData?.walletAddressInfos[0].address}"}
               amount: {_gt: "0"}
             }
           ) {
@@ -215,7 +229,10 @@ const Profile = (props: AppProps) => {
   };
 
   const asyncQueryTokenByUserName = async () => {
-    if (userData?.walletAddress === undefined) {
+    if (
+      userData?.walletAddressInfos === undefined ||
+      userData?.walletAddressInfos.length === 0
+    ) {
       return [];
     }
     try {
@@ -224,7 +241,7 @@ const Profile = (props: AppProps) => {
           token_ownerships(
             where: {
                 owner_address: {
-                    _eq: "${userData?.walletAddress}"
+                    _eq: "${userData?.walletAddressInfos[0].address}"
                 }
             }
             ) {
@@ -293,6 +310,7 @@ const Profile = (props: AppProps) => {
     }
   };
 
+  // @ts-ignore
   return (
     <>
       <Head>
@@ -319,15 +337,15 @@ const Profile = (props: AppProps) => {
             sx={{ background: "" }}
             spacing={4}
           >
-            {userData?.profileImageUrl && (
+            {targetUserData?.profileImageUrl && (
               <Avatar
                 sx={{ width: 100, height: 100 }}
-                src={userData?.profileImageUrl}
+                src={targetUserData?.profileImageUrl}
               ></Avatar>
             )}
-            {!userData?.profileImageUrl && userData?._id && (
+            {!targetUserData?.profileImageUrl && targetUserData?._id && (
               <div style={{ zIndex: 2 }}>
-                <BlockIcon seed={userData?._id} scale={12}></BlockIcon>
+                <BlockIcon seed={targetUserData?._id} scale={12}></BlockIcon>
               </div>
             )}
             {/*--- profile description ---*/}
@@ -357,11 +375,11 @@ const Profile = (props: AppProps) => {
                 }}
               ></LinearProgress>
               <Stack direction={"row"} alignItems={"center"}>
-                {userData?.walletAddress ? (
+                {userData?.walletAddressInfos?.[0].address ? (
                   <Box sx={{ maxWidth: 260 }}>
                     <GradientTypography variant={"h4"}>
                       {StringHelper.getInstance().getMidEllipsisString(
-                        userData?.walletAddress
+                        userData?.walletAddressInfos?.[0].address
                       )}
                     </GradientTypography>
                   </Box>
@@ -381,68 +399,105 @@ const Profile = (props: AppProps) => {
                 sx={{ background: "" }}
                 spacing={1}
               >
-                <Grid item>
-                  <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                    {userData?.walletAddress && (
-                      <StyledChip
-                        sx={{
-                          "&:hover": {
-                            background: (theme: Theme) =>
-                              theme.palette.action.hover,
-                          },
-                        }}
-                        onClick={(e: MouseEvent) => {
-                          e.preventDefault();
-                          const newWindow = window.open(
-                            `https://explorer.aptoslabs.com/account/${userData?.walletAddress}`,
-                            "_blank",
-                            "noopener,noreferrer"
-                          );
-                          if (newWindow) newWindow.opener = null;
-                        }}
-                        icon={
-                          <img
-                            src={
-                              "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/aptos_icon.svg"
-                            }
-                            width={16}
-                            height={16}
-                            style={{
-                              background: theme.palette.neutral[100],
-                              borderRadius: 16,
-                              padding: 1,
-                              marginRight: "2px",
-                            }}
-                          />
+                <Stack
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  sx={{ background: "" }}
+                >
+                  <Grid
+                    item
+                    container={true}
+                    sx={{ marginLeft: -1 }}
+                    columnSpacing={1}
+                    // rowSpacing={1}
+                    // alignItems={"center"}
+                    // justifyContent={"center"}
+                  >
+                    {targetUserData?.walletAddressInfos?.map(
+                      (addressInfo, index) => {
+                        if (!addressInfo.address) {
+                          return <></>;
                         }
-                        label={
-                          <Typography variant={"body2"} color={"neutral.100"}>
-                            {StringHelper.getInstance().getMidEllipsisString(
-                              userData?.walletAddress
-                            )}
-                          </Typography>
-                        }
-                      ></StyledChip>
+                        return (
+                          <Grid item key={index}>
+                            <StyledChip
+                              key={index}
+                              sx={{
+                                "&:hover": {
+                                  background: (theme: Theme) =>
+                                    theme.palette.action.hover,
+                                },
+                              }}
+                              onClick={(e: MouseEvent) => {
+                                e.preventDefault();
+                                const newWindow = window.open(
+                                  chainResourceHelper.getExplorerUri(
+                                    addressInfo.network,
+                                    addressInfo.address
+                                  ),
+                                  "_blank",
+                                  "noopener,noreferrer"
+                                );
+                                if (newWindow) newWindow.opener = null;
+                              }}
+                              icon={
+                                <img
+                                  src={chainResourceHelper.getExplorerIconUri(
+                                    addressInfo.network
+                                  )}
+                                  width={16}
+                                  height={16}
+                                  style={{
+                                    background: theme.palette.neutral[100],
+                                    borderRadius: 16,
+                                    padding: 1,
+                                    marginRight: "2px",
+                                  }}
+                                />
+                              }
+                              label={
+                                <Typography
+                                  variant={"body2"}
+                                  color={"neutral.100"}
+                                >
+                                  {StringHelper.getInstance().getMidEllipsisString(
+                                    addressInfo?.address
+                                  )}
+                                </Typography>
+                              }
+                            ></StyledChip>
+                          </Grid>
+                        );
+                      }
                     )}
-                    {userData?.email && (
-                      <StyledChip
-                        icon={<MarkEmailReadIcon></MarkEmailReadIcon>}
-                        label={
-                          <Typography
-                            sx={{ marginLeft: 1 }}
-                            variant={"body2"}
-                            color={"neutral.100"}
-                          >
-                            {userData?.email}
-                          </Typography>
-                        }
-                      ></StyledChip>
+                    {targetUserData?.email && (
+                      <Grid item>
+                        <StyledChip
+                          icon={<MarkEmailReadIcon></MarkEmailReadIcon>}
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              {targetUserData?.email}
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
                     )}
-                  </Stack>
-                </Grid>
-                <Grid item>
+                    {/*</Stack>*/}
+                  </Grid>
+                </Stack>
+                <Grid
+                  item
+                  sx={{ background: "" }}
+                  // alignItems={"center"}
+                  // justifyContent={"center"}
+                >
                   {isSingedUserProfile && (
                     <PrimaryButton
+                      sx={{ marginBottom: 1, marginLeft: -1 }}
                       onClick={() => {
                         setOpenProfileEditDialog(true);
                       }}
@@ -591,15 +646,24 @@ const Profile = (props: AppProps) => {
         }}
         open={openProfileEditDialog}
         walletValidatorButtonOnClick={async (e) => {
-          const myEvent = e as MouseEventWithStateParam;
+          const myEvent = e as MouseEventWithParam<{
+            state?: string;
+            payload: string | undefined;
+          }>;
+          const { params } = myEvent;
+          const { state, payload } = params;
+          console.log(state, payload);
+          const network = convertToSuppoertedNetwork(payload);
           showLoading();
           try {
             if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
-              await asyncUpdateWalletAddress("");
+              // reset wallet
+              await asyncDeleteWalletAddress(network);
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
             ) {
-              await asyncUpdateWalletAddressByWallet();
+              // update wallet
+              await asyncUpsertWalletAddress(network);
             }
           } catch (e) {
             if (

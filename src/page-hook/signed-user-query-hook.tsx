@@ -22,11 +22,20 @@ import { useMutation } from "@apollo/client";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userDataState } from "../recoil";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import {
+  convertToChainType,
+  convertToSuppoertedNetwork,
+} from "../util/type-convert";
+import { SupportedNetworks, WalletAddressInfo } from "../type";
+import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 
 const useSignedUserQuery = () => {
-  const { connect, account, network, connected, disconnect, wallet, wallets } =
-    useWallet();
-  const triedConnectWallet = useRef<boolean>(false);
+  const {
+    asyncConnectWallet,
+    changedCounter,
+    getAccountAddress,
+    isWalletInstalled,
+  } = useTotalWallet();
 
   const [UpdateUserWalletByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
   const [UpdateUserProfileImageByName] = useMutation(
@@ -39,6 +48,8 @@ const useSignedUserQuery = () => {
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
   const [loading, setLoading] = useState(false);
+
+  const tryConnectWalletNetwork = useRef<string>("");
 
   const {
     isGoogleLoggedIn,
@@ -81,7 +92,13 @@ const useSignedUserQuery = () => {
               email: email ?? undefined,
               name: name ?? undefined,
               profileImageUrl: profileImageUrl ?? undefined,
-              walletAddress: wallets?.at(0)?.address,
+              wallets: wallets?.map((e) => {
+                return {
+                  walletAddress: e.address,
+                  network: convertToSuppoertedNetwork(e.chain),
+                  name: "",
+                };
+              }),
               rewardPoint: rewardPoint ?? undefined,
               userSocial: {
                 twitterId: userSocial?.twitterId ?? "",
@@ -130,7 +147,13 @@ const useSignedUserQuery = () => {
               email: gmail ?? undefined,
               name: name ?? undefined,
               profileImageUrl: profileImageUrl ?? undefined,
-              walletAddress: wallets?.at(0)?.address,
+              wallets: wallets?.map((e) => {
+                return {
+                  walletAddress: e.address,
+                  network: convertToSuppoertedNetwork(e.chain),
+                  name: "",
+                };
+              }),
               rewardPoint: rewardPoint ?? undefined,
               userSocial: {
                 twitterId: userSocial?.twitterId ?? "",
@@ -148,18 +171,19 @@ const useSignedUserQuery = () => {
   }, [isGoogleLoggedIn]);
 
   useEffect(() => {
+    console.log("isWalletLoggedIn", isWalletLoggedIn);
     if (isWalletLoggedIn) {
       (async () => {
         try {
           setLoading(true);
-          if (!walletLoggedInInfo.walletAddress) {
+          if (!walletLoggedInInfo.address) {
             setLoading(false);
             return;
           }
           const res = await client.query({
             query: GET_USER_BY_WALLET_ADDRESS,
             variables: {
-              walletAddress: walletLoggedInInfo.walletAddress ?? "",
+              walletAddress: walletLoggedInInfo.address ?? "",
             },
             fetchPolicy: "no-cache",
           });
@@ -179,7 +203,12 @@ const useSignedUserQuery = () => {
               email: email ?? undefined,
               name: name ?? undefined,
               profileImageUrl: profileImageUrl ?? undefined,
-              walletAddress: wallets?.at(0)?.address,
+              walletAddressInfos: wallets?.map((e) => {
+                return {
+                  address: e.address,
+                  network: convertToSuppoertedNetwork(e.chain),
+                };
+              }),
               rewardPoint: rewardPoint ?? undefined,
               userSocial: {
                 twitterId: userSocial?.twitterId ?? "",
@@ -196,86 +225,109 @@ const useSignedUserQuery = () => {
   }, [isWalletLoggedIn]);
 
   useEffect(() => {
-    if (triedConnectWallet.current) {
-      console.log("triedConnectWallet");
-      if (!account) {
-        triedConnectWallet.current = false;
-        return;
+    if (tryConnectWalletNetwork.current) {
+      const network = convertToSuppoertedNetwork(
+        tryConnectWalletNetwork.current
+      );
+      const accountAddress = getAccountAddress(network);
+      if (accountAddress) {
+        _asyncUpsertWalletAddress(network, accountAddress).then((res) => {});
       }
-      const newAccount = account.address;
-      (async () => {
-        if (!userData.name) {
-          triedConnectWallet.current = false;
-          return;
-        }
-        await UpdateUserWalletByName({
-          variables: {
-            name: userData.name,
-            chain: ChainType.Evm,
-            walletAddress: newAccount,
-          },
-        });
-        setUserData((prevState) => {
-          return {
-            ...prevState,
-            walletAddress: newAccount,
-          };
-        });
-      })();
-      triedConnectWallet.current = false;
+      tryConnectWalletNetwork.current = "";
     }
-  }, [connected]);
+  }, [changedCounter]);
 
-  const asyncUpdateWalletAddressByWallet = async () => {
+  const asyncUpsertWalletAddress = async (network: SupportedNetworks) => {
     try {
-      if (!userData.name) return;
-      let newAccount: string | undefined = undefined;
-      if (wallets[0].readyState === "NotDetected") {
+      console.log("asyncUpsertWalletAddress - network", network);
+      if (!isWalletInstalled(network)) {
         throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED);
         return;
       }
-      if (!connected || !account) {
-        await connect(wallets[0].name);
-        triedConnectWallet.current = true;
+      const accountAddress = getAccountAddress(network);
+      console.log("asyncUpsertWalletAddress - accountAddress", accountAddress);
+      if (!accountAddress) {
+        await asyncConnectWallet(network);
+        tryConnectWalletNetwork.current = network;
         return;
       }
-      newAccount = account.address;
-      await UpdateUserWalletByName({
-        variables: {
-          name: userData.name,
-          chain: ChainType.Evm,
-          walletAddress: newAccount,
-        },
-      });
-      setUserData((prevState) => {
-        return {
-          ...prevState,
-          walletAddress: newAccount,
-        };
-      });
+      await _asyncUpsertWalletAddress(network, accountAddress);
     } catch (e) {
-      const message = getErrorMessage(e);
-      if (message === APP_ERROR_MESSAGE.WALLET_USER_REJECTED_REQUEST) {
-        return;
-      }
-      throw e;
+      throw new AppError(getErrorMessage(e));
     }
   };
 
-  const asyncUpdateWalletAddress = async (walletAddress: string) => {
+  const asyncDeleteWalletAddress = async (network: SupportedNetworks) => {
     try {
+      await _asyncUpsertWalletAddress(network, "");
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
+  const _asyncUpsertWalletAddress = async (
+    network: SupportedNetworks,
+    walletAddress: string
+  ) => {
+    try {
+      console.log("_asyncUpsertWalletAddress - userData.name", userData.name);
       if (!userData.name) return;
+      const doInsert =
+        userData?.walletAddressInfos?.filter((e) => e.network === network)
+          .length ?? 0 > 0
+          ? false
+          : true;
+      console.log("_asyncUpsertWalletAddress - doInsert", doInsert);
+      let newWalletAddressInfos = userData?.walletAddressInfos;
+      if (doInsert) {
+        newWalletAddressInfos = userData?.walletAddressInfos
+          ? [
+              ...userData?.walletAddressInfos,
+              {
+                address: walletAddress,
+                network: network,
+              },
+            ]
+          : [
+              {
+                address: walletAddress,
+                network: network,
+              },
+            ];
+      }
+      console.log(
+        "_asyncUpsertWalletAddress - newWalletAddressInfos",
+        newWalletAddressInfos
+      );
       await UpdateUserWalletByName({
         variables: {
           name: userData.name,
-          chain: ChainType.Aptos,
-          walletAddress: walletAddress,
+          wallets: newWalletAddressInfos?.map((e) => {
+            if (e.network === network) {
+              return {
+                chain: convertToChainType(e.network),
+                address: walletAddress,
+              };
+            }
+            return {
+              chain: convertToChainType(e.network),
+              address: e.address,
+            };
+          }),
         },
       });
       setUserData((prevState) => {
         return {
           ...prevState,
-          walletAddress: walletAddress,
+          walletAddressInfos: newWalletAddressInfos?.map((e) => {
+            if (e.network === network) {
+              return {
+                network: e.network,
+                address: walletAddress,
+              };
+            }
+            return e;
+          }),
         };
       });
     } catch (e) {
@@ -369,12 +421,12 @@ const useSignedUserQuery = () => {
   return {
     userData,
     loading,
-    asyncUpdateWalletAddressByWallet,
-    asyncUpdateWalletAddress,
+    asyncUpsertWalletAddress,
     asyncUpdateProfileImageUrl,
     asyncUpdateEmail,
     asyncUpdateSocialTwitter,
     asyncUpdateRewardPoint,
+    asyncDeleteWalletAddress,
   };
 };
 

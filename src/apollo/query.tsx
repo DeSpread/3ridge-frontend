@@ -150,13 +150,9 @@ export const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
 export const UPDATE_USER_WALLET_BY_NAME = gql(/* GraphQL */ `
   mutation UpdateUserWalletByName(
     $name: String!
-    $chain: ChainType!
-    $walletAddress: String!
+    $wallets: [UserWalletInputType!]
   ) {
-    updateUserByName(
-      name: $name
-      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }
-    ) {
+    updateUserByName(name: $name, userUpdateInput: { wallets: $wallets }) {
       wallets {
         address
         chain

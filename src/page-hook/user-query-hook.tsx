@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { client } from "../apollo/client";
-import { GET_USER_BY_EMAIL, GET_USER_BY_NAME } from "../apollo/query";
-import { PartialTicket, REWARD_POLICY_TYPE, User } from "../type";
+import { GET_USER_BY_NAME } from "../apollo/query";
+import { User } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
+import { convertToSuppoertedNetwork } from "../util/type-convert";
 
 export function useUserQuery(props: { name?: string }) {
   const [userData, setUserData] = useState<User>();
@@ -32,9 +33,16 @@ export function useUserQuery(props: { name?: string }) {
           participatingTickets,
         } = res.data.userByName;
 
+        console.log(wallets);
+
         setUserData({
           _id: _id ?? undefined,
-          walletAddress: wallets?.at(0)?.address,
+          walletAddressInfos: wallets?.map((e) => {
+            return {
+              address: e.address,
+              network: convertToSuppoertedNetwork(e.chain),
+            };
+          }),
           name: name ?? undefined,
           email: email ?? undefined,
           profileImageUrl: profileImageUrl ?? undefined,
@@ -64,9 +72,9 @@ export function useUserQuery(props: { name?: string }) {
               winners: e.winners?.map((e) => {
                 return {
                   _id: e._id ?? undefined,
-                  name: e.name ?? undefined
-                }
-              })
+                  name: e.name ?? undefined,
+                };
+              }),
             };
           }),
         });

@@ -207,7 +207,7 @@ const MainLayout = (props: MainLayoutProps) => {
                       }}
                       userId={userData?._id}
                       src={userData?.profileImageUrl}
-                      walletAddress={userData?.walletAddress}
+                      walletAddress={userData?.walletAddressInfos?.[0].address}
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>

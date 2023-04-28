@@ -1,5 +1,5 @@
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import { Stack, Typography } from "@mui/material";
 import SecondaryButton from "../../../components/atoms/secondary-button";
 import Image from "next/image";

@@ -1,15 +1,9 @@
 import { useWallet as useAptosWallet } from "@aptos-labs/wallet-adapter-react";
 import { useWallet as useSuiWallet } from "@suiet/wallet-kit";
-import {
-  ObjectValues,
-  SUPPORTED_NETWORKS,
-  SupportedNetworks,
-} from "../../../type";
+import { SUPPORTED_NETWORKS, SupportedNetworks } from "../../../type";
 import { useEffect, useMemo, useState } from "react";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
-import { getErrorMessage } from "../../../error/my-error";
-import { convertToSuppoertedNetwork } from "../../../util/type-convert";
 import {
   useAccount as useEvmAccount,
   useConnect as useEvmConnect,
@@ -59,7 +53,7 @@ export function useTotalWallet() {
     if (curDate > limitDate) {
       return;
     }
-    setConnectedNetwork(network);
+    commitConnectedNetwork(network);
   }, []);
 
   useEffect(() => {
@@ -69,6 +63,7 @@ export function useTotalWallet() {
   }, [aptosConnected, suiConnected, evmConnected]);
 
   const asyncConnectWallet = async (network: SupportedNetworks) => {
+    console.log("asyncConnectWallet - 1", network);
     if (!isWalletInstalled(network)) {
       return {
         connected: false,
@@ -77,18 +72,16 @@ export function useTotalWallet() {
     }
     if (network === SUPPORTED_NETWORKS.APTOS) {
       aptosConnect(aptosWallets[0].name);
-      setConnectedNetwork(network);
-      preference.updateConnectedNetwork(network);
     } else if (network === SUPPORTED_NETWORKS.SUI) {
       const item = [...suiConfiguredWallets, ...suiDetectedWallets].filter(
         (e) => e.name === "Sui Wallet"
       );
       await suiSelect(item[0].name);
-      setConnectedNetwork(network);
-      preference.updateConnectedNetwork(network);
     } else if (network === SUPPORTED_NETWORKS.EVM) {
       evmConnect();
     }
+    console.log("asyncConnectWallet - 2", network);
+    // commitConnectedNetwork(network);
     return {
       connected: true,
       msg: "success",
@@ -128,6 +121,7 @@ export function useTotalWallet() {
   };
 
   const getConnectedAccount = () => {
+    // console.log("connectedNetwork", connectedNetwork);
     if (
       connectedNetwork === SUPPORTED_NETWORKS.APTOS ||
       connectedNetwork === SUPPORTED_NETWORKS.SUI ||
@@ -152,6 +146,15 @@ export function useTotalWallet() {
     } else if (connectedNetwork === SUPPORTED_NETWORKS.EVM) {
       evmDisconnect();
     }
+    commitConnectedNetwork(undefined);
+  };
+
+  const commitConnectedNetwork = (network: SupportedNetworks | undefined) => {
+    if (network) {
+      setConnectedNetwork(network);
+      preference.updateConnectedNetwork(network);
+      return;
+    }
     setConnectedNetwork("");
     preference.clearConnectedNetwork();
   };
@@ -163,5 +166,6 @@ export function useTotalWallet() {
     getConnectedAccount,
     disconnectWallet,
     changedCounter,
+    commitConnectedNetwork,
   };
 }

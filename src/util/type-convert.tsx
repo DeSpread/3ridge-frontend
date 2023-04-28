@@ -1,12 +1,15 @@
 import { SUPPORTED_NETWORKS, SupportedNetworks } from "../type";
 import { ChainType } from "../__generated__/graphql";
 
-const convertToSuppoertedNetwork = (network?: string) => {
-  if (network === SUPPORTED_NETWORKS.SUI) {
+const convertToSuppoertedNetwork = (network?: string | ChainType) => {
+  if (network === SUPPORTED_NETWORKS.SUI || network === ChainType.Sui) {
     return SUPPORTED_NETWORKS.SUI;
-  } else if (network === SUPPORTED_NETWORKS.APTOS) {
+  } else if (
+    network === SUPPORTED_NETWORKS.APTOS ||
+    network === ChainType.Aptos
+  ) {
     return SUPPORTED_NETWORKS.APTOS;
-  } else if (network === SUPPORTED_NETWORKS.EVM) {
+  } else if (network === SUPPORTED_NETWORKS.EVM || network === ChainType.Evm) {
     return SUPPORTED_NETWORKS.EVM;
   }
   return SUPPORTED_NETWORKS.UNKNOWN;

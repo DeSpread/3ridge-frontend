@@ -423,14 +423,15 @@ const Event = (props: AppProps) => {
                 </Typography>
               </Box>
             )}
-            {userData?._id && userData?.walletAddress === undefined && (
-              <Typography
-                variant={"h5"}
-                sx={{ color: theme.palette.warning.main }}
-              >
-                --- Please Wallet Connect In Profile ---
-              </Typography>
-            )}
+            {userData?._id &&
+              userData?.walletAddressInfos?.[0].address === undefined && (
+                <Typography
+                  variant={"h5"}
+                  sx={{ color: theme.palette.warning.main }}
+                >
+                  --- Please Wallet Connect In Profile ---
+                </Typography>
+              )}
 
             <Stack direction={"column"} spacing={2}>
               <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
@@ -923,13 +924,13 @@ const Event = (props: AppProps) => {
                   const { collectionName, tokenName, point } =
                     ticketData?.rewardPolicy?.context;
                   if (
-                    userData?.walletAddress &&
+                    userData?.walletAddressInfos?.[0].address &&
                     collectionName &&
                     tokenName &&
                     ticketData?._id
                   ) {
                     console.log(
-                      userData?.walletAddress,
+                      userData?.walletAddressInfos[0].address,
                       collectionName,
                       tokenName
                     );
@@ -937,7 +938,7 @@ const Event = (props: AppProps) => {
                       await asyncRequestClaimNtf(
                         collectionName,
                         tokenName,
-                        userData?.walletAddress,
+                        userData?.walletAddressInfos[0].address,
                         ticketData?._id
                       );
                       const newRewardAmount =
