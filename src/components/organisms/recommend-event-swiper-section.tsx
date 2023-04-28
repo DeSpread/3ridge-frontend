@@ -91,7 +91,7 @@ const RecommendEventSwiperSection = (props: {
       >
         <Box width={props.width}>
           <Swiper
-            spaceBetween={smUp ? 20 : 1}
+            spaceBetween={smUp ? 18 : 1}
             slidesPerView={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
             scrollbar={{ draggable: true }}
             navigation={{

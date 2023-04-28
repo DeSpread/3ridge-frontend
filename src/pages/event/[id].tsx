@@ -305,7 +305,7 @@ const Event = (props: AppProps) => {
                     >
                       {!ticketData?.completed && (
                         <Grid item>
-                          <StyledChip label={"진행중"} color={"success"} variant="outlined" ></StyledChip>
+                          <StyledChip label={"진행중"} sx={{ color: theme.palette.secondary.main}} ></StyledChip>
                         </Grid>
                       )}
                       {ticketData?.completed && (
