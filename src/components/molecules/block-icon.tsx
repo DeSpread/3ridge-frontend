@@ -14,7 +14,7 @@ const BlockIcon = (props: {
     if (canvasRef.current) {
       generateBlockIcon(canvasRef.current);
     }
-  }, [canvasRef, props.scale]);
+  }, [canvasRef, props.scale, props.seed]);
 
   const generateBlockIcon = (canvas: HTMLCanvasElement) => {
     const randseed: number[] = [0, 0, 0, 0];

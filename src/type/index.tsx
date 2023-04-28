@@ -77,17 +77,22 @@ export const QUEST_POLICY_TYPE = {
   VERIFY_APTOS_HAS_ANS: "VERIFY_APTOS_HAS_ANS",
 };
 
-export type WalletInfo = {
-  walletAddress: string;
+export type WalletAddressInfo = {
+  address: string;
   network: SupportedNetworks;
+};
+
+export type WalletInfo = WalletAddressInfo & {
   name: string;
 };
 
 export type PartialWalletInfo = Partial<WalletInfo>;
 
+export type PartialWalletAddressInfo = Partial<WalletAddressInfo>;
+
 export type User = {
   _id?: string;
-  walletAddress?: string;
+  walletAddressInfos?: WalletAddressInfo[];
   name?: string;
   email?: string;
   profileImageUrl?: string;

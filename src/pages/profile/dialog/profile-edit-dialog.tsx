@@ -5,13 +5,19 @@ import {
   DialogProps,
   DialogTitle,
   Divider,
+  Grid,
   IconButton,
   Stack,
   SvgIcon,
   Typography,
 } from "@mui/material";
 import React, { MouseEventHandler } from "react";
-import { ReversibleSvgIconProps, User, Z_INDEX_OFFSET } from "../../../type";
+import {
+  ReversibleSvgIconProps,
+  SUPPORTED_NETWORKS,
+  User,
+  Z_INDEX_OFFSET,
+} from "../../../type";
 import { useTheme } from "@mui/material/styles";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
@@ -20,8 +26,11 @@ import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
 import { ValidatorButton } from "../../../components/molecules/validator-button";
-import AptosIcon from "../../../components/atoms/svg/aptos-icon";
+import AptosIcon, {
+  WalletConnectedAptosIcon,
+} from "../../../components/atoms/svg/aptos-icon";
 import BlockIcon from "../../../components/molecules/block-icon";
+import ChainResourceHelper from "../../../helper/chain-resource-helper";
 
 const ReversibleMarkEmailReadIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -35,28 +44,6 @@ const ReversibleTwitterReadIcon = (props: ReversibleSvgIconProps) => {
     return <TwitterIcon {...props} color={"disabled"}></TwitterIcon>;
   }
   return <TwitterIcon {...props} sx={{ color: "#1d9aef" }}></TwitterIcon>;
-};
-
-const NotWalletConnectedAptosIcon = (props: ReversibleSvgIconProps) => {
-  return (
-    <SvgIcon {...props}>
-      <svg
-        width="100%"
-        height="100%"
-        version="1.2"
-        baseProfile="tiny"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 112 112"
-        overflow="visible"
-      >
-        <path d="M86.6 37.4h-9.9c-1.1 0-2.2-.5-3-1.3l-4-4.5c-1.2-1.3-3.1-1.4-4.5-.3l-.3.3-3.4 3.9c-1.1 1.3-2.8 2-4.5 2H2.9C1.4 41.9.4 46.6 0 51.3h51.2c.9 0 1.8-.4 2.4-1l4.8-5c.6-.6 1.4-1 2.3-1h.2c.9 0 1.8.4 2.4 1.1l4 4.5c.8.9 1.9 1.4 3 1.4H112c-.4-4.7-1.4-9.4-2.9-13.8H86.6zM53.8 65l-4-4.5c-1.2-1.3-3.1-1.4-4.5-.3l-.3.3-3.5 3.9c-1.1 1.3-2.7 2-4.4 2H.8c.9 4.8 2.5 9.5 4.6 14h25.5c.9 0 1.7-.4 2.4-1l4.8-5c.6-.6 1.4-1 2.3-1h.2c.9 0 1.8.4 2.4 1.1l4 4.5c.8.9 1.9 1.4 3 1.4h56.6c2.1-4.4 3.7-9.1 4.6-14H56.8c-1.2 0-2.3-.5-3-1.4zm19.6-43.6 4.8-5c.6-.6 1.4-1 2.3-1h.2c.9 0 1.8.4 2.4 1l4 4.5c.8.9 1.9 1.3 3 1.3h10.8c-18.8-24.8-54.1-29.7-79-11-4.1 3.1-7.8 6.8-11 11H71c1 .2 1.8-.2 2.4-.8zM34.7 94.2c-1.2 0-2.3-.5-3-1.3l-4-4.5c-1.2-1.3-3.2-1.4-4.5-.2l-.2.2-3.5 3.9c-1.1 1.3-2.7 2-4.4 2h-.2C36 116.9 71.7 118 94.4 96.7c.9-.8 1.7-1.7 2.6-2.6H34.7z"></path>
-      </svg>
-    </SvgIcon>
-  );
-};
-
-const WalletConnectedAptosIcon = (props: ReversibleSvgIconProps) => {
-  return <AptosIcon {...props} width={18} height={18}></AptosIcon>;
 };
 
 type ProfileEditDialogProps = DialogProps & {
@@ -74,6 +61,7 @@ type ProfileEditDialogProps = DialogProps & {
 const ProfileEditDialog = (props: ProfileEditDialogProps) => {
   const theme = useTheme();
   const { ...rest } = props;
+  const chainResourceHelper = ChainResourceHelper.getInstance();
 
   return (
     <Dialog
@@ -113,7 +101,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
         </Stack>
       </DialogTitle>
       <DialogContent>
-        <Stack spacing={4} sx={{ padding: 4 }}>
+        <Stack spacing={4} sx={{ padding: 4 }} direction={"row"}>
           <div style={{ position: "relative" }}>
             {props.userData?.profileImageUrl && (
               <Avatar
@@ -126,18 +114,6 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                 <BlockIcon seed={props.userData?._id} scale={12}></BlockIcon>
               </div>
             )}
-            {/*<Avatar*/}
-            {/*  alt=""*/}
-            {/*  src={*/}
-            {/*    props.userData?.profileImageUrl*/}
-            {/*      ? props.userData?.profileImageUrl*/}
-            {/*      : DEFAULT_PROFILE_IMAGE_DATA_SRC*/}
-            {/*  }*/}
-            {/*  sx={{*/}
-            {/*    width: 100,*/}
-            {/*    height: 100,*/}
-            {/*  }}*/}
-            {/*/>*/}
             <div
               style={{
                 position: "absolute",
@@ -185,51 +161,85 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
               </IconButton>
             </div>
           </div>
-          <Stack spacing={2}>
-            <Typography variant={"h6"}>Social profiles</Typography>
-            <Divider></Divider>
-            <Stack direction={"row"} spacing={1}>
-              {!props.isWalletLoggedIn && (
-                <ValidatorButton
-                  label={"Wallet"}
-                  svgIcon={
-                    props.userData?.walletAddress
-                      ? WalletConnectedAptosIcon
-                      : NotWalletConnectedAptosIcon
-                  }
-                  onClick={props.walletValidatorButtonOnClick}
-                  size={"small"}
-                  value={
-                    props.userData?.walletAddress
-                      ? StringHelper.getInstance().getMidEllipsisString(
-                          props.userData?.walletAddress
-                        )
-                      : undefined
-                  }
-                />
-              )}
-              {!props.isMailLoggedIn && (
-                <ValidatorButton
-                  svgIcon={ReversibleMarkEmailReadIcon}
-                  label={"Email"}
-                  onClick={props.emailValidatorButtonOnClick}
-                  size={"small"}
-                  value={
-                    props.userData?.email ? props.userData?.email : undefined
-                  }
-                ></ValidatorButton>
-              )}
-              <ValidatorButton
-                svgIcon={ReversibleTwitterReadIcon}
-                label={"Twitter"}
-                onClick={props.twitterValidatorButtonOnClick}
-                size={"small"}
-                value={
-                  props.userData?.userSocial?.twitterId
-                    ? props.userData?.userSocial?.twitterId
-                    : undefined
-                }
-              ></ValidatorButton>
+          <Stack spacing={4}>
+            <Stack spacing={1}>
+              <Typography variant={"h6"}>Socials</Typography>
+              <Divider></Divider>
+              <Grid container rowSpacing={1}>
+                {!props.isMailLoggedIn && (
+                  <Grid item>
+                    <ValidatorButton
+                      svgIcon={ReversibleMarkEmailReadIcon}
+                      label={"Email"}
+                      onClick={props.emailValidatorButtonOnClick}
+                      size={"small"}
+                      value={
+                        props.userData?.email
+                          ? props.userData?.email
+                          : undefined
+                      }
+                      fullWidth={true}
+                      payload={""}
+                    ></ValidatorButton>
+                  </Grid>
+                )}
+                <Grid item>
+                  <ValidatorButton
+                    svgIcon={ReversibleTwitterReadIcon}
+                    label={"Twitter"}
+                    onClick={props.twitterValidatorButtonOnClick}
+                    size={"small"}
+                    value={
+                      props.userData?.userSocial?.twitterId
+                        ? props.userData?.userSocial?.twitterId
+                        : undefined
+                    }
+                    payload={""}
+                  ></ValidatorButton>
+                </Grid>
+              </Grid>
+            </Stack>
+            <Stack spacing={1}>
+              <Typography variant={"h6"}>Wallets</Typography>
+              <Divider></Divider>
+              <Grid container rowSpacing={1}>
+                {Object.values(SUPPORTED_NETWORKS)
+                  .filter(
+                    (_, index) =>
+                      index !== Object.values(SUPPORTED_NETWORKS).length - 1
+                  )
+                  .filter(
+                    (e) =>
+                      !(
+                        props.isWalletLoggedIn &&
+                        props.userData?.walletAddressInfos?.[0].network === e
+                      )
+                  )
+                  .map((e, i) => {
+                    const addressInfo =
+                      props.userData?.walletAddressInfos?.filter(
+                        (addrInfo) => addrInfo.network === e
+                      )?.[0];
+
+                    return (
+                      <Grid item key={i}>
+                        <ValidatorButton
+                          label={"Wallet"}
+                          svgIcon={chainResourceHelper.getValidatorButtonSvg(
+                            e,
+                            addressInfo?.address ? false : true
+                          )}
+                          onClick={props.walletValidatorButtonOnClick}
+                          size={"small"}
+                          value={StringHelper.getInstance().getMidEllipsisString(
+                            addressInfo?.address
+                          )}
+                          payload={e}
+                        />
+                      </Grid>
+                    );
+                  })}
+              </Grid>
             </Stack>
           </Stack>
         </Stack>
