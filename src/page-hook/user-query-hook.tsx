@@ -72,9 +72,9 @@ export function useUserQuery(props: { name?: string }) {
               winners: e.winners?.map((e) => {
                 return {
                   _id: e._id ?? undefined,
-                  name: e.name ?? undefined
-                }
-              })
+                  name: e.name ?? undefined,
+                };
+              }),
             };
           }),
         });
