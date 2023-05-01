@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import { ReactElement, ReactNode, useEffect } from "react";
+import React, { ReactElement, ReactNode, useEffect } from "react";
 import type { AppProps } from "next/app";
 import type { NextPage } from "next";
 import { createTheme } from "../theme";
@@ -79,6 +79,7 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
       />
+      <Script src="https://telegram.org/js/telegram-widget.js" async />
       <ThemeProvider theme={createTheme()}>
         <GoogleOAuthProvider clientId={clientId ?? ""}>
           <RecoilRoot>

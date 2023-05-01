@@ -57,6 +57,14 @@ export const GET_USER_BY_NAME = gql(/* GraphQL */ `
       rewardPoint
       userSocial {
         twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
       }
       wallets {
         address
@@ -80,6 +88,14 @@ export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
       rewardPoint
       userSocial {
         twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
       }
     }
   }
@@ -99,6 +115,14 @@ export const GET_USER_BY_GMAIL = gql(/* GraphQL */ `
       rewardPoint
       userSocial {
         twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
       }
     }
   }
@@ -118,6 +142,14 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
       rewardPoint
       userSocial {
         twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
       }
     }
   }
@@ -194,6 +226,30 @@ export const UPDATE_USER_REWARD_BY_NAME = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_USER_SOCIAL_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateUserSocialByName(
+    $name: String!
+    $userSocial: UserSocialInputType!
+  ) {
+    updateUserByName(
+      name: $name
+      userUpdateInput: { userSocial: $userSocial }
+    ) {
+      userSocial {
+        twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
+      }
+    }
+  }
+`);
+
 export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
   mutation UpdateUserTwitterByName($name: String!, $twitterId: String!) {
     updateUserByName(
@@ -202,6 +258,29 @@ export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
     ) {
       userSocial {
         twitterId
+      }
+    }
+  }
+`);
+
+export const UPDATE_USER_TELEGRAM_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateUserTelegramByName(
+    $name: String!
+    $telegramUser: TelegramUserInputType!
+  ) {
+    updateUserByName(
+      name: $name
+      userUpdateInput: { userSocial: { telegramUser: $telegramUser } }
+    ) {
+      userSocial {
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
       }
     }
   }

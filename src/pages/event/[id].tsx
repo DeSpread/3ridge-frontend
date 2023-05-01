@@ -31,7 +31,7 @@ import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import PrimaryCard from "../../components/atoms/primary-card";
 import { TimerSettings, useTimer } from "react-timer-hook";
 import SecondaryButton from "../../components/atoms/secondary-button";
-import { nFormatter } from "../../util/validate-string";
+import { nFormatter } from "../../util/validate-string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
@@ -305,7 +305,11 @@ const Event = (props: AppProps) => {
                     >
                       {!ticketData?.completed && (
                         <Grid item>
-                          <StyledChip label={"진행중"} sx={{ color: theme.palette.secondary.main}} ></StyledChip>
+                          <StyledChip
+                            label={"진행중"}
+                            color={"success"}
+                            variant="outlined"
+                          ></StyledChip>
                         </Grid>
                       )}
                       {ticketData?.completed && (
@@ -424,13 +428,21 @@ const Event = (props: AppProps) => {
               </Box>
             )}
             {userData?._id &&
-              userData?.walletAddressInfos?.[0].address === undefined && (
-                <Typography
-                  variant={"h5"}
-                  sx={{ color: theme.palette.warning.main }}
-                >
-                  --- Please Wallet Connect In Profile ---
-                </Typography>
+              (userData?.walletAddressInfos?.filter(
+                (e) =>
+                  e.network === ticketData.rewardPolicy?.context?.rewardChain
+              )?.length ?? 0) === 0 && (
+                <Card>
+                  <CardContent>
+                    <Typography
+                      variant={"h6"}
+                      sx={{ color: theme.palette.warning.main }}
+                    >
+                      {`리워드 클레임을 위해 ${ticketData.rewardPolicy?.context?.rewardChain} 체인의 지갑연결이 필요합니다`}{" "}
+                      😅
+                    </Typography>
+                  </CardContent>
+                </Card>
               )}
 
             <Stack direction={"column"} spacing={2}>

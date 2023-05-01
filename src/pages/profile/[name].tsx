@@ -19,6 +19,7 @@ import GradientTypography from "../../components/atoms/gradient-typography";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import TelegramIcon from "@mui/icons-material/Telegram";
 import PrimaryButton from "../../components/atoms/primary-button";
 import ProfileEditDialog from "./dialog/profile-edit-dialog";
 import { useLoading } from "../../provider/loading/loading-provider";
@@ -56,7 +57,7 @@ import TicketCard from "../../components/molecules/ticket-card";
 import LinkTypography from "../../components/atoms/link-typography";
 import Image from "next/image";
 import ChainResourceHelper from "../../helper/chain-resource-helper";
-import { convertToSuppoertedNetwork } from "../../util/type-convert";
+import { convertToSuppoertedNetwork } from "../../util/type-converter-util";
 
 const Profile = (props: AppProps) => {
   const router = useRouter();
@@ -74,6 +75,8 @@ const Profile = (props: AppProps) => {
     asyncUpdateProfileImageUrl,
     asyncUpdateEmail,
     asyncUpdateSocialTwitter,
+    asyncUpdateSocialTelegram,
+    asyncRemoveSocialTelegram,
   } = useSignedUserQuery();
 
   const { asyncTwitterSignInPopUp } = useFirebaseAuth();
@@ -111,7 +114,7 @@ const Profile = (props: AppProps) => {
   }, [signedUserData, userData]);
 
   const targetUserData = useMemo(() => {
-    if (signedUserData) {
+    if (userData?._id === signedUserData._id) {
       return signedUserData;
     }
     return userData;
@@ -499,6 +502,25 @@ const Profile = (props: AppProps) => {
                         ></StyledChip>
                       </Grid>
                     )}
+                    {targetUserData?.userSocial?.telegramUser?.username && (
+                      <Grid item>
+                        <StyledChip
+                          icon={<TelegramIcon></TelegramIcon>}
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              {
+                                targetUserData?.userSocial?.telegramUser
+                                  ?.username
+                              }
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
                   </Grid>
                 </Stack>
                 <Grid
@@ -738,6 +760,23 @@ const Profile = (props: AppProps) => {
             ) {
               const res = await asyncTwitterSignInPopUp();
               await asyncUpdateSocialTwitter(res);
+            }
+          } catch (e) {
+            console.log(e);
+          } finally {
+            closeLoading();
+          }
+        }}
+        telegramValidatorButtonOnClick={async (e) => {
+          try {
+            const myEvent = e as MouseEventWithStateParam;
+            showLoading();
+            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
+              await asyncRemoveSocialTelegram();
+            } else if (
+              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
+            ) {
+              await asyncUpdateSocialTelegram();
             }
           } catch (e) {
             console.log(e);

@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import MailTextField from "../molecules/mail-text-field";
-import { validateMail } from "../../util/validate-string";
+import { validateMail } from "../../util/validate-string-util";
 import SecondaryButton from "../atoms/secondary-button";
 import { EmailSignUpEventParams, MouseEventWithParam } from "../../type";
 import LinkTypography from "../atoms/link-typography";

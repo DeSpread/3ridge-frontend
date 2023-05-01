@@ -90,6 +90,15 @@ export type PartialWalletInfo = Partial<WalletInfo>;
 
 export type PartialWalletAddressInfo = Partial<WalletAddressInfo>;
 
+export type TelegramUserInfo = {
+  authDate: number;
+  firstName: string;
+  hash: string;
+  id: number;
+  photoUrl: string;
+  username: string;
+};
+
 export type User = {
   _id?: string;
   walletAddressInfos?: WalletAddressInfo[];
@@ -97,7 +106,7 @@ export type User = {
   email?: string;
   profileImageUrl?: string;
   rewardPoint?: number;
-  userSocial?: { twitterId: string };
+  userSocial?: { twitterId?: string; telegramUser?: TelegramUserInfo };
   participatingTickets?: PartialTicket[];
 };
 
@@ -130,7 +139,7 @@ export type FCFSRewardContext = {
   untilTime: string;
   rewardUnit: string;
   rewardAmount: number;
-  rewardChain: number;
+  rewardChain: string;
   nftImageUrl: string;
   collectionName: string;
   tokenName: string;

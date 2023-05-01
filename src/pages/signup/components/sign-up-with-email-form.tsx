@@ -4,7 +4,10 @@ import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
 import SecondaryButton from "../../../components/atoms/secondary-button";
 import LinkTypography from "../../../components/atoms/link-typography";
 import { EmailSignUpEventParams, MouseEventWithParam } from "../../../type";
-import { validateMail, validatePassword } from "../../../util/validate-string";
+import {
+  validateMail,
+  validatePassword,
+} from "../../../util/validate-string-util";
 import MailTextField from "../../../components/molecules/mail-text-field";
 import {
   ConfirmPasswordTextField,
