@@ -114,7 +114,7 @@ const Profile = (props: AppProps) => {
   }, [signedUserData, userData]);
 
   const targetUserData = useMemo(() => {
-    if (signedUserData._id) {
+    if (userData?._id === signedUserData._id) {
       return signedUserData;
     }
     return userData;
