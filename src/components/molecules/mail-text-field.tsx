@@ -1,7 +1,7 @@
 import { OutlinedInputProps } from "@mui/material";
 import React, { useMemo } from "react";
 import ValidatedTextInput from "./validated-text-input";
-import { validateMail } from "../../util/validate-string";
+import { validateMail } from "../../util/validate-string-util";
 
 const MailTextField = (props: OutlinedInputProps) => {
   const invalid = useMemo(() => {

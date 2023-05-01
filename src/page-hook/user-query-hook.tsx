@@ -3,11 +3,11 @@ import { client } from "../apollo/client";
 import { GET_USER_BY_NAME } from "../apollo/query";
 import { User } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
-import { convertToSuppoertedNetwork } from "../util/type-convert";
+import { convertToSuppoertedNetwork } from "../util/type-converter-util";
+import { ChainType } from "../__generated__/graphql";
 
 export function useUserQuery(props: { name?: string }) {
   const [userData, setUserData] = useState<User>();
-  const typeParseHelper = TypeParseHelper.getInstance();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     (async () => {
@@ -22,62 +22,7 @@ export function useUserQuery(props: { name?: string }) {
             name: props.name,
           },
         });
-        const {
-          _id,
-          wallets,
-          name,
-          email,
-          profileImageUrl,
-          rewardPoint,
-          userSocial,
-          participatingTickets,
-        } = res.data.userByName;
-
-        // console.log(wallets);
-
-        setUserData({
-          _id: _id ?? undefined,
-          walletAddressInfos: wallets?.map((e) => {
-            return {
-              address: e.address,
-              network: convertToSuppoertedNetwork(e.chain),
-            };
-          }),
-          name: name ?? undefined,
-          email: email ?? undefined,
-          profileImageUrl: profileImageUrl ?? undefined,
-          rewardPoint: rewardPoint ?? undefined,
-          userSocial: {
-            twitterId: userSocial?.twitterId ?? "",
-          },
-          participatingTickets: participatingTickets?.map((e) => {
-            return {
-              _id: e._id ?? undefined,
-              imageUrl: e.imageUrl ?? undefined,
-              description: e.description ?? undefined,
-              project: {
-                _id: e.project?._id ?? undefined,
-                description: e.project?.description ?? undefined,
-                imageUrl: e.project?.imageUrl ?? undefined,
-                name: e.project?.name ?? undefined,
-              },
-              rewardPolicy: {
-                context: typeParseHelper.parseRewardPolicy(
-                  e.rewardPolicy?.context ?? undefined,
-                  e.rewardPolicy?.rewardPolicyType ?? undefined
-                ),
-                rewardPolicyType: e.rewardPolicy?.rewardPolicyType,
-              },
-              title: e.title ?? undefined,
-              winners: e.winners?.map((e) => {
-                return {
-                  _id: e._id ?? undefined,
-                  name: e.name ?? undefined,
-                };
-              }),
-            };
-          }),
-        });
+        updateUserData(res.data.userByName);
       } catch (e) {
         console.log(e);
       } finally {
@@ -85,6 +30,72 @@ export function useUserQuery(props: { name?: string }) {
       }
     })();
   }, [props.name]);
+
+  const updateUserData = (data: {
+    __typename?: "User";
+    _id?: string | null;
+    name?: string | null;
+    profileImageUrl?: string | null;
+    email?: string | null;
+    rewardPoint?: number | null;
+    wallets?: Array<{
+      __typename?: "UserWallet";
+      address: string;
+      chain: ChainType;
+    }> | null;
+    userSocial?: {
+      __typename?: "UserSocial";
+      twitterId?: string | null;
+      telegramUser?: {
+        __typename?: "TelegramUser";
+        authDate?: number | null;
+        firstName?: string | null;
+        hash?: string | null;
+        id: number;
+        photoUrl?: string | null;
+        username: string;
+      } | null;
+    } | null;
+  }) => {
+    const {
+      email,
+      name,
+      profileImageUrl,
+      wallets,
+      _id,
+      rewardPoint,
+      userSocial,
+    } = data;
+    setUserData((prevState) => {
+      return {
+        ...prevState,
+        _id: _id ?? undefined,
+        email: email ?? undefined,
+        name: name ?? undefined,
+        profileImageUrl: profileImageUrl ?? undefined,
+        walletAddressInfos: wallets?.map((e) => {
+          return {
+            address: e.address,
+            network: convertToSuppoertedNetwork(e.chain),
+          };
+        }),
+        rewardPoint: rewardPoint ?? undefined,
+        userSocial: {
+          twitterId: userSocial?.twitterId ?? "",
+          telegramUser: userSocial?.telegramUser
+            ? {
+                authDate: userSocial?.telegramUser.authDate ?? 0,
+                firstName: userSocial?.telegramUser.firstName ?? "",
+                hash: userSocial?.telegramUser.hash ?? "",
+                id: userSocial?.telegramUser.id ?? 0,
+                photoUrl: userSocial?.telegramUser.photoUrl ?? "",
+                username: userSocial?.telegramUser.username ?? "",
+              }
+            : undefined,
+        },
+      };
+    });
+  };
 
   return {
     userData,

@@ -40,3 +40,7 @@ a {
   font-weight: 700;
   font-style: normal;
 }
+
+.tlogin-button {
+  background: red;
+}

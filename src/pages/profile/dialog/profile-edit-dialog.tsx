@@ -8,7 +8,6 @@ import {
   Grid,
   IconButton,
   Stack,
-  SvgIcon,
   Typography,
 } from "@mui/material";
 import React, { MouseEventHandler } from "react";
@@ -24,26 +23,30 @@ import CloseIcon from "@mui/icons-material/Close";
 import StringHelper from "../../../helper/string-helper";
 import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
+import TelegramIcon from "@mui/icons-material/Telegram";
 import { ValidatorButton } from "../../../components/molecules/validator-button";
-import AptosIcon, {
-  WalletConnectedAptosIcon,
-} from "../../../components/atoms/svg/aptos-icon";
 import BlockIcon from "../../../components/molecules/block-icon";
 import ChainResourceHelper from "../../../helper/chain-resource-helper";
 
-const ReversibleMarkEmailReadIcon = (props: ReversibleSvgIconProps) => {
+const ReversibleMarkEmailIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
     return <EmailIcon {...props} color={"disabled"}></EmailIcon>;
   }
   return <EmailIcon {...props}></EmailIcon>;
 };
 
-const ReversibleTwitterReadIcon = (props: ReversibleSvgIconProps) => {
+const ReversibleTwitterIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
     return <TwitterIcon {...props} color={"disabled"}></TwitterIcon>;
   }
   return <TwitterIcon {...props} sx={{ color: "#1d9aef" }}></TwitterIcon>;
+};
+
+const ReversibleTelegramIcon = (props: ReversibleSvgIconProps) => {
+  if (props.reverse) {
+    return <TelegramIcon {...props} color={"disabled"}></TelegramIcon>;
+  }
+  return <TelegramIcon {...props} sx={{ color: "#1d9aef" }}></TelegramIcon>;
 };
 
 type ProfileEditDialogProps = DialogProps & {
@@ -54,6 +57,7 @@ type ProfileEditDialogProps = DialogProps & {
   walletValidatorButtonOnClick?: MouseEventHandler;
   emailValidatorButtonOnClick?: MouseEventHandler;
   twitterValidatorButtonOnClick?: MouseEventHandler;
+  telegramValidatorButtonOnClick?: MouseEventHandler;
   onCloseBtnClicked?: MouseEventHandler;
   onFileImageAdded?: (f: File) => void;
 };
@@ -169,7 +173,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                 {!props.isMailLoggedIn && (
                   <Grid item>
                     <ValidatorButton
-                      svgIcon={ReversibleMarkEmailReadIcon}
+                      svgIcon={ReversibleMarkEmailIcon}
                       label={"Email"}
                       onClick={props.emailValidatorButtonOnClick}
                       size={"small"}
@@ -185,7 +189,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                 )}
                 <Grid item>
                   <ValidatorButton
-                    svgIcon={ReversibleTwitterReadIcon}
+                    svgIcon={ReversibleTwitterIcon}
                     label={"Twitter"}
                     onClick={props.twitterValidatorButtonOnClick}
                     size={"small"}
@@ -193,6 +197,19 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                       props.userData?.userSocial?.twitterId
                         ? props.userData?.userSocial?.twitterId
                         : undefined
+                    }
+                    payload={""}
+                  ></ValidatorButton>
+                </Grid>
+                <Grid item>
+                  <ValidatorButton
+                    svgIcon={ReversibleTelegramIcon}
+                    label={"Telegram"}
+                    onClick={props.telegramValidatorButtonOnClick}
+                    size={"small"}
+                    value={
+                      props.userData?.userSocial?.telegramUser?.username ??
+                      undefined
                     }
                     payload={""}
                   ></ValidatorButton>

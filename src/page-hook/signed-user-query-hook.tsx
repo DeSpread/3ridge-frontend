@@ -9,6 +9,8 @@ import {
   UPDATE_USER_BY_TWITTER,
   UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
   UPDATE_USER_REWARD_BY_NAME,
+  UPDATE_USER_SOCIAL_BY_NAME,
+  UPDATE_USER_TELEGRAM_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
 } from "../apollo/query";
 import {
@@ -22,9 +24,11 @@ import { userDataState } from "../recoil";
 import {
   convertToChainType,
   convertToSuppoertedNetwork,
-} from "../util/type-convert";
-import { SupportedNetworks } from "../type";
+} from "../util/type-converter-util";
+import { SupportedNetworks, TelegramUserInfo } from "../type";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
+import { ChainType } from "../__generated__/graphql";
+import { promiseTelegramLoginAuth } from "../util/telegram-util";
 
 const useSignedUserQuery = () => {
   const {
@@ -40,7 +44,9 @@ const useSignedUserQuery = () => {
   );
   const [UpdateUserEmailByName] = useMutation(UPDATE_USER_BY_EMAIL);
   const [UpdateUserTwitterByName] = useMutation(UPDATE_USER_BY_TWITTER);
+  const [UpdateUserTelegramByName] = useMutation(UPDATE_USER_TELEGRAM_BY_NAME);
   const [UpdateUserRewardByName] = useMutation(UPDATE_USER_REWARD_BY_NAME);
+  const [UpdateUserSocialByName] = useMutation(UPDATE_USER_SOCIAL_BY_NAME);
 
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
@@ -73,37 +79,10 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          const {
-            email,
-            name,
-            profileImageUrl,
-            wallets,
-            _id,
-            rewardPoint,
-            userSocial,
-          } = res.data.userByEmail;
-          setUserData((prevState) => {
-            return {
-              ...prevState,
-              _id: _id ?? undefined,
-              email: email ?? undefined,
-              name: name ?? undefined,
-              profileImageUrl: profileImageUrl ?? undefined,
-              wallets: wallets?.map((e) => {
-                return {
-                  walletAddress: e.address,
-                  network: convertToSuppoertedNetwork(e.chain),
-                  name: "",
-                };
-              }),
-              rewardPoint: rewardPoint ?? undefined,
-              userSocial: {
-                twitterId: userSocial?.twitterId ?? "",
-              },
-            };
-          });
-          setLoading(false);
+          updateUserData(res.data.userByEmail);
         } catch (e) {
+          throw new AppError(getErrorMessage(e));
+        } finally {
           setLoading(false);
         }
       })();
@@ -128,37 +107,10 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          const {
-            gmail,
-            name,
-            profileImageUrl,
-            wallets,
-            _id,
-            rewardPoint,
-            userSocial,
-          } = res.data.userByGmail;
-          setUserData((prevState) => {
-            return {
-              ...prevState,
-              _id: _id ?? undefined,
-              email: gmail ?? undefined,
-              name: name ?? undefined,
-              profileImageUrl: profileImageUrl ?? undefined,
-              wallets: wallets?.map((e) => {
-                return {
-                  walletAddress: e.address,
-                  network: convertToSuppoertedNetwork(e.chain),
-                  name: "",
-                };
-              }),
-              rewardPoint: rewardPoint ?? undefined,
-              userSocial: {
-                twitterId: userSocial?.twitterId ?? "",
-              },
-            };
-          });
-          setLoading(false);
+          updateUserData(res.data.userByGmail);
         } catch (e) {
+          throw new AppError(getErrorMessage(e));
+        } finally {
           setLoading(false);
         }
       })();
@@ -183,35 +135,10 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          const {
-            email,
-            name,
-            profileImageUrl,
-            wallets,
-            _id,
-            rewardPoint,
-            userSocial,
-          } = res.data.userByWalletAddress;
-          setUserData((prevState) => {
-            return {
-              ...prevState,
-              _id: _id ?? undefined,
-              email: email ?? undefined,
-              name: name ?? undefined,
-              profileImageUrl: profileImageUrl ?? undefined,
-              walletAddressInfos: wallets?.map((e) => {
-                return {
-                  address: e.address,
-                  network: convertToSuppoertedNetwork(e.chain),
-                };
-              }),
-              rewardPoint: rewardPoint ?? undefined,
-              userSocial: {
-                twitterId: userSocial?.twitterId ?? "",
-              },
-            };
-          });
+          updateUserData(res.data.userByWalletAddress);
         } catch (e) {
+          throw new AppError(getErrorMessage(e));
+        } finally {
           setLoading(false);
         }
       })();
@@ -232,6 +159,72 @@ const useSignedUserQuery = () => {
       tryConnectWalletNetwork.current = "";
     }
   }, [changedCounter]);
+
+  const updateUserData = (data: {
+    __typename?: "User";
+    _id?: string | null;
+    name?: string | null;
+    profileImageUrl?: string | null;
+    email?: string | null;
+    rewardPoint?: number | null;
+    wallets?: Array<{
+      __typename?: "UserWallet";
+      address: string;
+      chain: ChainType;
+    }> | null;
+    userSocial?: {
+      __typename?: "UserSocial";
+      twitterId?: string | null;
+      telegramUser?: {
+        __typename?: "TelegramUser";
+        authDate?: number | null;
+        firstName?: string | null;
+        hash?: string | null;
+        id: number;
+        photoUrl?: string | null;
+        username: string;
+      } | null;
+    } | null;
+  }) => {
+    const {
+      email,
+      name,
+      profileImageUrl,
+      wallets,
+      _id,
+      rewardPoint,
+      userSocial,
+    } = data;
+    setUserData((prevState) => {
+      return {
+        ...prevState,
+        _id: _id ?? undefined,
+        email: email ?? undefined,
+        name: name ?? undefined,
+        profileImageUrl: profileImageUrl ?? undefined,
+        walletAddressInfos: wallets?.map((e) => {
+          return {
+            address: e.address,
+            network: convertToSuppoertedNetwork(e.chain),
+          };
+        }),
+        rewardPoint: rewardPoint ?? undefined,
+        userSocial: {
+          twitterId: userSocial?.twitterId ?? "",
+          telegramUser: userSocial?.telegramUser
+            ? {
+                authDate: userSocial?.telegramUser.authDate ?? 0,
+                firstName: userSocial?.telegramUser.firstName ?? "",
+                hash: userSocial?.telegramUser.hash ?? "",
+                id: userSocial?.telegramUser.id ?? 0,
+                photoUrl: userSocial?.telegramUser.photoUrl ?? "",
+                username: userSocial?.telegramUser.username ?? "",
+              }
+            : undefined,
+        },
+      };
+    });
+  };
 
   const asyncUpsertWalletAddress = async (network: SupportedNetworks) => {
     try {
@@ -351,29 +344,6 @@ const useSignedUserQuery = () => {
     }
   };
 
-  const asyncUpdateSocialTwitter = async (twitterId: string) => {
-    console.log(twitterId);
-    try {
-      if (!userData.name) return;
-      await UpdateUserTwitterByName({
-        variables: {
-          name: userData.name,
-          twitterId: twitterId,
-        },
-      });
-      setUserData((prevState) => {
-        return {
-          ...prevState,
-          userSocial: {
-            twitterId,
-          },
-        };
-      });
-    } catch (e) {
-      throw new AppError(getErrorMessage(e));
-    }
-  };
-
   const asyncUpdateEmail = async (email: string) => {
     try {
       if (!userData.name) return;
@@ -414,6 +384,118 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateSocialTwitter = async (twitterId: string) => {
+    console.log(twitterId, userData.userSocial?.telegramUser);
+    try {
+      if (!userData.name) return;
+      await UpdateUserSocialByName({
+        variables: {
+          name: userData.name,
+          userSocial: {
+            twitterId,
+            telegramUser: userData.userSocial?.telegramUser
+              ? {
+                  authDate: userData.userSocial?.telegramUser?.authDate,
+                  firstName: userData.userSocial?.telegramUser?.firstName,
+                  hash: userData.userSocial?.telegramUser?.hash,
+                  id: userData.userSocial?.telegramUser?.id ?? 0,
+                  photoUrl: userData.userSocial?.telegramUser?.photoUrl,
+                  username: userData.userSocial?.telegramUser?.username ?? "",
+                }
+              : undefined,
+          },
+        },
+      });
+      setUserData((prevState) => {
+        return {
+          ...prevState,
+          userSocial: {
+            twitterId,
+            telegramUser: userData.userSocial?.telegramUser
+              ? {
+                  authDate: userData.userSocial?.telegramUser.authDate ?? 0,
+                  firstName: userData.userSocial?.telegramUser.firstName ?? "",
+                  hash: userData.userSocial?.telegramUser.hash ?? "",
+                  id: userData.userSocial?.telegramUser.id ?? 0,
+                  photoUrl: userData.userSocial?.telegramUser.photoUrl ?? "",
+                  username: userData.userSocial?.telegramUser.username ?? "",
+                }
+              : undefined,
+          },
+        };
+      });
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
+  const asyncRemoveSocialTelegram = async () => {
+    await UpdateUserSocialByName({
+      variables: {
+        //@ts-ignore
+        name: userData.name,
+        userSocial: {
+          twitterId: userData.userSocial?.twitterId,
+          telegramUser: undefined,
+        },
+      },
+    });
+    setUserData((prevState) => {
+      return {
+        ...prevState,
+        userSocial: {
+          twitterId: userData?.userSocial?.twitterId,
+          telegramUser: undefined,
+        },
+      };
+    });
+  };
+
+  const asyncUpdateSocialTelegram = async () => {
+    try {
+      if (!userData.name) return;
+
+      const data = await promiseTelegramLoginAuth();
+      const newTelegramUserInfo: TelegramUserInfo = {
+        authDate: data["auth_date"],
+        firstName: data["first_name"],
+        hash: data["hash"],
+        id: data["id"],
+        photoUrl: data["photo_url"],
+        username: data["username"],
+      };
+      await UpdateUserSocialByName({
+        variables: {
+          //@ts-ignore
+          name: userData.name,
+          userSocial: {
+            twitterId: userData.userSocial?.twitterId,
+            telegramUser: {
+              authDate: newTelegramUserInfo.authDate,
+              firstName: newTelegramUserInfo.firstName,
+              hash: newTelegramUserInfo.hash,
+              id: newTelegramUserInfo.id,
+              photoUrl: newTelegramUserInfo.photoUrl,
+              username: newTelegramUserInfo.username,
+            },
+          },
+        },
+      });
+      setUserData((prevState) => {
+        return {
+          ...prevState,
+          userSocial: {
+            twitterId: userData?.userSocial?.twitterId,
+            telegramUser: newTelegramUserInfo,
+          },
+        };
+      });
+    } catch (e) {
+      console.log(e);
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
   return {
     userData,
     loading,
@@ -423,6 +505,8 @@ const useSignedUserQuery = () => {
     asyncUpdateSocialTwitter,
     asyncUpdateRewardPoint,
     asyncDeleteWalletAddress,
+    asyncUpdateSocialTelegram,
+    asyncRemoveSocialTelegram,
   };
 };
 
