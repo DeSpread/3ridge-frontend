@@ -412,6 +412,7 @@ const Profile = (props: AppProps) => {
                     container={true}
                     sx={{ marginLeft: -1 }}
                     columnSpacing={1}
+                    rowSpacing={1}
                   >
                     {targetUserData?.walletAddressInfos?.map(
                       (addressInfo, index) => {

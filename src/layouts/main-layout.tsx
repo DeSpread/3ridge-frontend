@@ -242,9 +242,7 @@ const MainLayout = (props: MainLayoutProps) => {
         {props.backgroundComponent}
         <Toolbar></Toolbar>
         <main>{props.children}</main>
-        <footer>
-          {props?.footerComponent ? props.footerComponent : <HomeFooter />}
-        </footer>
+        <footer>{props?.footerComponent}</footer>
       </Box>
 
       {/*--- Dialog ---*/}

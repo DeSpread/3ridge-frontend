@@ -1,12 +1,14 @@
 import {
-    Box,
-    Card,
-    CardContent, Divider,
-    Grid, Link,
-    Skeleton,
-    Stack,
-    Typography,
-    useMediaQuery,
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Link,
+  Skeleton,
+  Stack,
+  Typography,
+  useMediaQuery,
 } from "@mui/material";
 import Head from "next/head";
 import React, { ReactElement } from "react";
@@ -18,6 +20,7 @@ import { useLoading } from "../../provider/loading/loading-provider";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useProjectsQuery } from "../../page-hook/projects-query-hook";
 import PrimaryButton from "../../components/atoms/primary-button";
+import HomeFooter from "../../layouts/footer/home-footer";
 
 const Projects = () => {
   const { projectsData, projectsDataLoading } = useProjectsQuery();
@@ -39,39 +42,36 @@ const Projects = () => {
           paddingLeft: 24,
           paddingRight: 24,
           paddingTop: smUp ? 0 : 16,
-          height: "85vh"
+          minHeight: "100vh",
+          paddingBottom: 1,
         }}
       >
-          <Stack
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"space-between"}
-              sx={{ marginTop: "32px", marginBottom: 3}}
-          >
-              <Stack
-                  direction={"row"}
-                  spacing={1}
-              >
-                  <Typography variant={"h4"}>전체 프로젝트</Typography>
-              </Stack>
-              <Stack
-                  direction={"row"}
-                  spacing={1}
-              >
-                  <Link
-                      href="https://airtable.com/shr406tfeuXcHz1o0"
-                      color="inherit"
-                      underline="hover"
-                      target="_blank"
-                      rel="noreferrer"
-                  >
-
-                      <PrimaryButton fullWidth={true}>
-                          프로젝트 등록
-                      </PrimaryButton>
-                  </Link>
-              </Stack>
+        <Stack
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          sx={{
+            marginTop: "32px",
+            marginBottom: 3,
+            paddingLeft: 1,
+            paddingRight: 1,
+          }}
+        >
+          <Stack direction={"row"} spacing={1}>
+            <Typography variant={"h4"}>전체 프로젝트</Typography>
           </Stack>
+          <Stack direction={"row"} spacing={1}>
+            <Link
+              href="https://airtable.com/shr406tfeuXcHz1o0"
+              color="inherit"
+              underline="hover"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <PrimaryButton fullWidth={true}>프로젝트 등록</PrimaryButton>
+            </Link>
+          </Stack>
+        </Stack>
         <Grid
           container
           direction={"row"}
@@ -175,7 +175,7 @@ const Projects = () => {
 };
 
 Projects.getLayout = (page: ReactElement | ReactElement[]) => (
-  <MainLayout>{page}</MainLayout>
+  <MainLayout footerComponent={<HomeFooter />}>{page}</MainLayout>
 );
 
 export default Projects;
