@@ -1,4 +1,4 @@
-import { ButtonProps, Stack, Typography } from "@mui/material";
+import { Box, ButtonProps, Stack, Typography } from "@mui/material";
 import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
 import {
   MouseEventWithParam,
@@ -19,58 +19,24 @@ type ValidatorButton<T> = ButtonProps & {
 };
 
 export const VALIDATOR_BUTTON_STATES = {
-  VALID_HOVER: "VALID_HOVER",
-  NOT_VALID_HOVER: "NOT_VALID_HOVER",
-  VALID_NOT_HOVER: "VALID_NOT_HOVER",
-  NOT_VALID_NOT_HOVER: "NOT_VALID_NOT_HOVER",
+  VALID: "VALID",
+  NOT_VALID: "NOT_VALID",
 };
 
 export function ValidatorButton<T>(props: ValidatorButton<T>) {
   const theme = useTheme();
-  const [mouseOver, setMouseOver] = useState(false);
-
-  const [buttonState, setButtonState] = useState(
-    VALIDATOR_BUTTON_STATES.VALID_HOVER
-  );
-
-  const updateButtonState = () => {
-    if (props.value && mouseOver) {
-      setButtonState(VALIDATOR_BUTTON_STATES.VALID_HOVER);
-    }
-    if (!props.value && mouseOver) {
-      setButtonState(VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER);
-    }
-    if (props.value && !mouseOver) {
-      setButtonState(VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER);
-    }
-    if (!props.value && !mouseOver) {
-      setButtonState(VALIDATOR_BUTTON_STATES.NOT_VALID_NOT_HOVER);
-    }
-  };
-
-  useEffect(() => {
-    updateButtonState();
-  }, [mouseOver]);
-
-  useEffect(() => {
-    updateButtonState();
-  });
 
   return (
     <PrimaryButton
-      onMouseEnter={() => {
-        setMouseOver(true);
-      }}
-      onMouseLeave={() => {
-        setMouseOver(false);
-      }}
       onClick={() => {
         const myEvent = {} as MouseEventWithParam<{
           state?: string;
           payload: T | undefined;
         }>;
         myEvent.params = {
-          state: buttonState,
+          state: props.value
+            ? VALIDATOR_BUTTON_STATES.VALID
+            : VALIDATOR_BUTTON_STATES.NOT_VALID,
           payload: props.payload,
         };
         props.onClick?.(myEvent);
@@ -83,42 +49,27 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
         spacing={1}
         sx={{ paddingLeft: 1, paddingRight: 1 }}
       >
-        {props.svgIcon && (
-          <props.svgIcon
-            reverse={buttonState === VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER}
-          ></props.svgIcon>
-        )}
+        {props.svgIcon && <props.svgIcon></props.svgIcon>}
         {props.value && (
           <Typography
+            className={"MuiTypography"}
             variant={"body2"}
             sx={{
-              color:
-                buttonState === VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER
-                  ? theme.palette.neutral["600"]
-                  : theme.palette.neutral["100"],
+              color: theme.palette.neutral["600"],
             }}
-          >{`${props.label} 연결되었습니다`}</Typography>
+          >{`${props.label}에 연결되었습니다`}</Typography>
         )}
-        {buttonState === VALIDATOR_BUTTON_STATES.VALID_NOT_HOVER && (
-          <DoneIcon sx={{ color: theme.palette.neutral["600"] }}></DoneIcon>
+        {props.value && <CloseIcon></CloseIcon>}
+        {!props.value && (
+          <Typography
+            className={"MuiTypography"}
+            variant={"body2"}
+            sx={{
+              color: theme.palette.neutral["600"],
+              paddingRight: 1,
+            }}
+          >{`${props.label}에 연결해주세요`}</Typography>
         )}
-        {buttonState === VALIDATOR_BUTTON_STATES.VALID_HOVER && (
-          <CloseIcon></CloseIcon>
-        )}
-        {!props.value &&
-          buttonState === VALIDATOR_BUTTON_STATES.NOT_VALID_NOT_HOVER && (
-            <Typography
-              variant={"body2"}
-              color={"neutral.900"}
-            >{`${props.label}를 연결해주세요`}</Typography>
-          )}
-        {!props.value &&
-          buttonState === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER && (
-            <Typography
-              variant={"body2"}
-              color={"neutral.100"}
-            >{`${props.label}를 연결해주세요`}</Typography>
-          )}
       </Stack>
     </PrimaryButton>
   );

@@ -692,10 +692,10 @@ const Profile = (props: AppProps) => {
           const network = convertToSuppoertedNetwork(payload);
           showLoading();
           try {
-            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
+            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
               await asyncDeleteWalletAddress(network);
             } else if (
-              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
+              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
               await asyncUpsertWalletAddress(network);
             }
@@ -714,10 +714,10 @@ const Profile = (props: AppProps) => {
         emailValidatorButtonOnClick={async (e) => {
           const myEvent = e as MouseEventWithStateParam;
           showLoading();
-          if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
+          if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
             await asyncUpdateEmail("");
           } else if (
-            myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
+            myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
           ) {
             setOpenConnectEmailDialog(true);
           }
@@ -727,10 +727,10 @@ const Profile = (props: AppProps) => {
           try {
             const myEvent = e as MouseEventWithStateParam;
             showLoading();
-            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
+            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
               await asyncUpdateSocialTwitter("");
             } else if (
-              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
+              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
               const res = await asyncTwitterSignInPopUp();
               await asyncUpdateSocialTwitter(res);
@@ -745,10 +745,10 @@ const Profile = (props: AppProps) => {
           try {
             const myEvent = e as MouseEventWithStateParam;
             showLoading();
-            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
+            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
               await asyncRemoveSocialTelegram();
             } else if (
-              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
+              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
               await asyncUpdateSocialTelegram();
             }

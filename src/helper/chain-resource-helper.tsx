@@ -1,16 +1,7 @@
 import { SUPPORTED_NETWORKS, SupportedNetworks } from "../type";
-import AptosIcon, {
-  WalletConnectedAptosIcon,
-  NotWalletConnectedAptosIcon,
-} from "../components/atoms/svg/aptos-icon";
-import EthIcon, {
-  NotWalletConnectedEthIcon,
-  WalletConnectedEthIcon,
-} from "../components/atoms/svg/eth-icon";
-import SuiIcon, {
-  WalletConnectedSuiIcon,
-  NotWalletConnectedSuiIcon,
-} from "../components/atoms/svg/sui-icon";
+import AptosIcon from "../components/atoms/svg/aptos-icon";
+import EthIcon from "../components/atoms/svg/eth-icon";
+import SuiIcon from "../components/atoms/svg/sui-icon";
 
 class ChainResourceHelper {
   private static instance: ChainResourceHelper;
@@ -35,7 +26,7 @@ class ChainResourceHelper {
 
   getExplorerIconUri = (network: SupportedNetworks) => {
     if (network === SUPPORTED_NETWORKS.EVM) {
-      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/Ethereum-Icon-Purple-Logo.wine.svg";
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/ethereum-eth-logo-diamond-purple.svg";
     } else if (network === SUPPORTED_NETWORKS.SUI) {
       return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg";
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
@@ -44,13 +35,13 @@ class ChainResourceHelper {
     return undefined;
   };
 
-  getValidatorButtonSvg = (network: SupportedNetworks, inactive: boolean) => {
+  getValidatorButtonSvg = (network: SupportedNetworks) => {
     if (network === SUPPORTED_NETWORKS.EVM) {
-      return inactive ? NotWalletConnectedEthIcon : EthIcon;
+      return EthIcon;
     } else if (network === SUPPORTED_NETWORKS.SUI) {
-      return inactive ? NotWalletConnectedSuiIcon : WalletConnectedSuiIcon;
+      return SuiIcon;
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
-      return inactive ? NotWalletConnectedAptosIcon : WalletConnectedAptosIcon;
+      return AptosIcon;
     }
     return undefined;
   };

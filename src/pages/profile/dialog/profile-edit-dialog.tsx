@@ -241,11 +241,8 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                     return (
                       <Grid item key={i}>
                         <ValidatorButton
-                          label={"Wallet"}
-                          svgIcon={chainResourceHelper.getValidatorButtonSvg(
-                            e,
-                            addressInfo?.address ? false : true
-                          )}
+                          label={e.toUpperCase()}
+                          svgIcon={chainResourceHelper.getValidatorButtonSvg(e)}
                           onClick={props.walletValidatorButtonOnClick}
                           size={"small"}
                           value={StringHelper.getInstance().getMidEllipsisString(
