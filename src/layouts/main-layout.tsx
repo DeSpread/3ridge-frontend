@@ -41,6 +41,8 @@ import Image from "next/image";
 import HomeFooter from "./footer/home-footer";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
+import { useWalletAlert } from "../page-hook/wallet-alert-hook";
+import { convertToSuppoertedNetwork } from "../util/type-converter-util";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -91,6 +93,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const [selectedNetwork, setSelectedNetwork] = useState("");
 
   const { showErrorAlert, showAlert } = useAlert();
+  const { showWalletAlert } = useWalletAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
 
@@ -412,60 +415,12 @@ const MainLayout = (props: MainLayoutProps) => {
               },
               onError: (error: AppError) => {
                 if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
-                  showAlert({
-                    title: "지갑이 설치되지 않았습니다 😂",
-                    content: (
-                      <>
-                        <Stack spacing={1}>
-                          <Typography
-                            style={{ color: theme.palette.neutral[100] }}
-                          >
-                            Petra 지갑을 설치해주세요
-                          </Typography>
-                          <Link
-                            href={
-                              "https://medium.com/despread-creative/앱토스-생태계를-위한-관문-페트라-월렛-c2bddb076f7d"
-                            }
-                            rel={"noopener noreferrer"}
-                            target={"_blank"}
-                          >
-                            <MuiLink
-                              sx={{
-                                "&:hover": {
-                                  color: "#bdbdbd",
-                                },
-                              }}
-                              color={"warning.main"}
-                              underline="hover"
-                            >
-                              Petra 지갑을 설치하는 방법
-                            </MuiLink>
-                          </Link>
-                          <Link
-                            href={"https://petra.app/"}
-                            rel={"noopener noreferrer"}
-                            target={"_blank"}
-                          >
-                            <MuiLink
-                              sx={{
-                                "&:hover": {
-                                  color: "#bdbdbd",
-                                },
-                              }}
-                              color={"warning.main"}
-                              underline="hover"
-                            >
-                              Petra 지갑 설치 링크
-                            </MuiLink>
-                          </Link>
-                        </Stack>
-                      </>
-                    ),
-                  });
-                  return;
+                  //@ts-ignore
+                  showWalletAlert(convertToSuppoertedNetwork(error.payload));
+                } else {
+                  showErrorAlert({ content: error.message });
                 }
                 setSelectedNetwork("");
-                showErrorAlert({ content: error.message });
               },
             }
           );

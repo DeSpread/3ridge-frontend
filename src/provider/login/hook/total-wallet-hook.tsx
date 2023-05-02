@@ -10,6 +10,7 @@ import {
   useDisconnect as useEvmDisconnect,
 } from "wagmi";
 import { InjectedConnector as EvmInjectedConnector } from "wagmi/connectors/injected";
+import { APP_ERROR_MESSAGE } from "../../../error/my-error";
 
 export function useTotalWallet() {
   const [connectedNetwork, setConnectedNetwork] = useState("");
@@ -67,7 +68,7 @@ export function useTotalWallet() {
     if (!isWalletInstalled(network)) {
       return {
         connected: false,
-        msg: "WalletNotDetected",
+        msg: APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED,
       };
     }
     if (network === SUPPORTED_NETWORKS.APTOS) {
@@ -101,7 +102,7 @@ export function useTotalWallet() {
       if (item.length === 0) {
         return false;
       }
-      return true;
+      return item[0].installed;
     } else if (network === SUPPORTED_NETWORKS.EVM) {
       const item = evmConnectors.filter((e) => e.name === "MetaMask");
       return item[0].ready;
