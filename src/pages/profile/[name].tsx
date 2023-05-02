@@ -58,6 +58,7 @@ import LinkTypography from "../../components/atoms/link-typography";
 import Image from "next/image";
 import ChainResourceHelper from "../../helper/chain-resource-helper";
 import { convertToSuppoertedNetwork } from "../../util/type-converter-util";
+import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 
 const Profile = (props: AppProps) => {
   const router = useRouter();
@@ -98,6 +99,7 @@ const Profile = (props: AppProps) => {
       CONNECT_MAIL_DIALOG_FORM_TYPE.SEND_EMAIL
     );
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
+  const { showWalletAlert } = useWalletAlert();
   const [imageFile, setImageFile] = useState<File>();
   const [tokensData, setTokensData] = useState<
     {
@@ -691,12 +693,10 @@ const Profile = (props: AppProps) => {
           showLoading();
           try {
             if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID_HOVER) {
-              // reset wallet
               await asyncDeleteWalletAddress(network);
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID_HOVER
             ) {
-              // update wallet
               await asyncUpsertWalletAddress(network);
             }
           } catch (e) {
@@ -704,35 +704,8 @@ const Profile = (props: AppProps) => {
               e instanceof AppError &&
               e.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED
             ) {
-              showAlert({
-                title: "Info",
-                content: (
-                  <>
-                    <Stack spacing={1}>
-                      <Typography style={{ color: theme.palette.neutral[100] }}>
-                        Please Install PetraWallet
-                      </Typography>
-                      <Link
-                        href={"https://petra.app/"}
-                        rel={"noopener noreferrer"}
-                        target={"_blank"}
-                      >
-                        <MuiLink
-                          sx={{
-                            "&:hover": {
-                              color: "#bdbdbd",
-                            },
-                          }}
-                          color={"warning.main"}
-                          underline="hover"
-                        >
-                          Install Link
-                        </MuiLink>
-                      </Link>
-                    </Stack>
-                  </>
-                ),
-              });
+              //@ts-ignore
+              showWalletAlert(convertToSuppoertedNetwork(e.payload));
             }
           } finally {
             closeLoading();

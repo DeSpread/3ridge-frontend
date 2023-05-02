@@ -185,7 +185,12 @@ export function useWalletLogin() {
         }
         console.log("2. check install wallet");
         if (!isWalletInstalled(_walletInfo?.network)) {
-          onError?.(new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED));
+          onError?.(
+            new AppError(
+              APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED,
+              _walletInfo.network
+            )
+          );
           return;
         }
         console.log(" 3. check wallet address");

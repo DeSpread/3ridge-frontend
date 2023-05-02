@@ -230,7 +230,7 @@ const useSignedUserQuery = () => {
     try {
       console.log("asyncUpsertWalletAddress - network", network);
       if (!isWalletInstalled(network)) {
-        throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED);
+        throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED, network);
         return;
       }
       const accountAddress = getAccountAddress(network);
