@@ -210,7 +210,7 @@ const MainLayout = (props: MainLayoutProps) => {
                       }}
                       userId={userData?._id}
                       src={userData?.profileImageUrl}
-                      walletAddress={userData?.walletAddressInfos?.[0].address}
+                      walletAddress={userData?.walletAddressInfos?.[0]?.address}
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
@@ -268,8 +268,32 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         onContinueWithWalletClicked={(e) => {
           e.preventDefault();
-          setShowSignInDialog(false);
-          setSignInWithNetworkSelectVisible(true);
+          showLoading();
+          walletSignUp(
+            { network: SUPPORTED_NETWORKS.EVM, name: "MetaMask" },
+            {
+              onSuccess: () => {
+                if (router.pathname === "/") {
+                  router.push("/explore").then();
+                }
+                setSelectedNetwork("");
+                setShowSignInDialog(false);
+                closeLoading();
+              },
+              onError: (error: AppError) => {
+                if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
+                  //@ts-ignore
+                  showWalletAlert(convertToSuppoertedNetwork(error.payload));
+                } else {
+                  showErrorAlert({ content: error.message });
+                }
+                setSelectedNetwork("");
+                setShowSignInDialog(false);
+                closeLoading();
+              },
+            }
+          );
+          // setSignInWithNetworkSelectVisible(true);
         }}
       ></SignInDialog>
       <SignInWithDialog

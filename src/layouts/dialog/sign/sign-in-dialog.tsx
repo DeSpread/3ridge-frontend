@@ -6,6 +6,7 @@ import EmailIcon from "../../../components/atoms/svg/email-icon";
 import { useTheme } from "@mui/material/styles";
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 import SecondaryButton from "../../../components/atoms/secondary-button";
+import Image from "next/image";
 
 type SignInSelectDialogProps = SignDialogProps & {
   onContinueWithWalletClicked: MouseEventHandler;
@@ -21,7 +22,31 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
         fullWidth={true}
         onClick={props.onContinueWithWalletClicked}
       >
-        지갑 연결하기
+        <Stack direction={"row"} spacing={1}>
+          <Typography
+            className={"MuiTypography"}
+            color={"neutral.100"}
+            variant={"body2"}
+          >
+            메타마스크 지갑 연결하기
+          </Typography>
+          {/* eslint-disable-next-line react/jsx-no-undef */}
+          <Image
+            src={
+              "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/metamask-fox.svg"
+            }
+            width={24}
+            height={24}
+            alt={""}
+          ></Image>
+          {/*<Avatar*/}
+          {/*  src={*/}
+          {/*    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/metamask-fox.svg"*/}
+          {/*  }*/}
+          {/*  sx={{ width: 24, height: 24 }}*/}
+          {/*></Avatar>*/}
+        </Stack>
+        {/*메타마스크 지갑 연결하기*/}
       </SecondaryButton>
       {/*<Typography variant={"body2"}>Or</Typography>*/}
       <br />
