@@ -64,7 +64,7 @@ const Home = () => {
                 zIndex: 3,
                 marginLeft: mdUp ? 15 : 5,
                 marginRight: mdUp ? 15 : 5,
-                marginTop: mdUp ? 0 : 5,
+                marginTop: mdUp ? 0 : 8,
               }}
               spacing={10}
               alignItems={"center"}
@@ -104,7 +104,7 @@ const Home = () => {
                 ></RecommendEventSwiperSection>
               </Stack>
             </Stack>
-            <Box sx={{ marginTop: 6 }}></Box>
+            <Box sx={{ marginTop: 12 }}></Box>
           </Stack>
         </Stack>
       </>
