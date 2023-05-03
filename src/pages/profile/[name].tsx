@@ -57,7 +57,7 @@ import TicketCard from "../../components/molecules/ticket-card";
 import LinkTypography from "../../components/atoms/link-typography";
 import Image from "next/image";
 import ChainResourceHelper from "../../helper/chain-resource-helper";
-import { convertToSuppoertedNetwork } from "../../util/type-converter-util";
+import { convertToSuppoertedNetwork } from "../../util/type-util";
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 
 const Profile = (props: AppProps) => {
@@ -706,6 +706,13 @@ const Profile = (props: AppProps) => {
             ) {
               //@ts-ignore
               showWalletAlert(convertToSuppoertedNetwork(e.payload));
+            } else if (
+              e instanceof AppError &&
+              e.message === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED
+            ) {
+              showErrorAlert({ content: "이미 등록된 주소입니다" });
+            } else {
+              showErrorAlert({ content: getErrorMessage(e) });
             }
           } finally {
             closeLoading();

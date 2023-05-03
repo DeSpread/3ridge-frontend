@@ -10,7 +10,11 @@ import {
   useDisconnect as useEvmDisconnect,
 } from "wagmi";
 import { InjectedConnector as EvmInjectedConnector } from "wagmi/connectors/injected";
-import { APP_ERROR_MESSAGE } from "../../../error/my-error";
+import {
+  APP_ERROR_MESSAGE,
+  AppError,
+  getErrorMessage,
+} from "../../../error/my-error";
 
 export function useTotalWallet() {
   const [connectedNetwork, setConnectedNetwork] = useState("");
@@ -64,29 +68,33 @@ export function useTotalWallet() {
   }, [aptosConnected, suiConnected, evmConnected]);
 
   const asyncConnectWallet = async (network: SupportedNetworks) => {
-    console.log("asyncConnectWallet - 1", network);
-    if (!isWalletInstalled(network)) {
+    try {
+      console.log("asyncConnectWallet - 1", network);
+      if (!isWalletInstalled(network)) {
+        return {
+          connected: false,
+          msg: APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED,
+        };
+      }
+      if (network === SUPPORTED_NETWORKS.APTOS) {
+        aptosConnect(aptosWallets[0].name);
+      } else if (network === SUPPORTED_NETWORKS.SUI) {
+        const item = [...suiConfiguredWallets, ...suiDetectedWallets].filter(
+          (e) => e.name === "Sui Wallet"
+        );
+        await suiSelect(item[0].name);
+      } else if (network === SUPPORTED_NETWORKS.EVM) {
+        evmConnect();
+      }
+      console.log("asyncConnectWallet - 2", network);
+      // commitConnectedNetwork(network);
       return {
-        connected: false,
-        msg: APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED,
+        connected: true,
+        msg: "success",
       };
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
     }
-    if (network === SUPPORTED_NETWORKS.APTOS) {
-      aptosConnect(aptosWallets[0].name);
-    } else if (network === SUPPORTED_NETWORKS.SUI) {
-      const item = [...suiConfiguredWallets, ...suiDetectedWallets].filter(
-        (e) => e.name === "Sui Wallet"
-      );
-      await suiSelect(item[0].name);
-    } else if (network === SUPPORTED_NETWORKS.EVM) {
-      evmConnect();
-    }
-    console.log("asyncConnectWallet - 2", network);
-    // commitConnectedNetwork(network);
-    return {
-      connected: true,
-      msg: "success",
-    };
   };
 
   const isWalletInstalled = (network: SupportedNetworks) => {

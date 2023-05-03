@@ -20,7 +20,7 @@ import addHours from "date-fns/addHours";
 import {
   convertToChainType,
   convertToSuppoertedNetwork,
-} from "../../../util/type-converter-util";
+} from "../../../util/type-util";
 import { useTotalWallet } from "./total-wallet-hook";
 
 export function useWalletLogin() {
@@ -229,6 +229,7 @@ export function useWalletLogin() {
         preference.updateWalletSignIn(cache.address, _walletInfo.network);
         onSuccess?.();
       } catch (e) {
+        console.log(e);
         const message = getErrorMessage(e);
         handleWalletSignUpError(message, cache);
       }

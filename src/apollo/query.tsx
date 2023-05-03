@@ -582,17 +582,7 @@ export const VERIFY_APTOS_QUEST = gql(/* GraphQL */ `
 `);
 
 export const IS_REGISTER_WALLET = gql(/* GraphQL */ `
-  query IsRegisteredWallet(
-    $questId: String!
-    $ticketId: String!
-    $userId: String!
-  ) {
-    isRegisteredWallet(
-      questId: $questId
-      ticketId: $ticketId
-      userId: $userId
-    ) {
-      _id
-    }
+  query IsRegisteredWallet($address: String!, $chain: ChainType!) {
+    isRegisteredWallet(address: $address, chain: $chain)
   }
 `);

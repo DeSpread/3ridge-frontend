@@ -42,7 +42,7 @@ import HomeFooter from "./footer/home-footer";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useWalletAlert } from "../page-hook/wallet-alert-hook";
-import { convertToSuppoertedNetwork } from "../util/type-converter-util";
+import { convertToSuppoertedNetwork } from "../util/type-util";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -281,6 +281,7 @@ const MainLayout = (props: MainLayoutProps) => {
                 closeLoading();
               },
               onError: (error: AppError) => {
+                console.log(error);
                 if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
                   //@ts-ignore
                   showWalletAlert(convertToSuppoertedNetwork(error.payload));

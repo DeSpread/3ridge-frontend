@@ -5,6 +5,7 @@ import {
   GET_USER_BY_EMAIL,
   GET_USER_BY_GMAIL,
   GET_USER_BY_WALLET_ADDRESS,
+  IS_REGISTER_WALLET,
   UPDATE_USER_BY_EMAIL,
   UPDATE_USER_BY_TWITTER,
   UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
@@ -24,7 +25,7 @@ import { userDataState } from "../recoil";
 import {
   convertToChainType,
   convertToSuppoertedNetwork,
-} from "../util/type-converter-util";
+} from "../util/type-util";
 import { SupportedNetworks, TelegramUserInfo } from "../type";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 import { ChainType } from "../__generated__/graphql";
@@ -259,6 +260,21 @@ const useSignedUserQuery = () => {
     walletAddress: string
   ) => {
     try {
+      if (walletAddress) {
+        const exist = await client.query({
+          query: IS_REGISTER_WALLET,
+          variables: {
+            address: walletAddress,
+            chain: convertToChainType(network),
+          },
+          fetchPolicy: "no-cache",
+        });
+        if (exist) {
+          throw new AppError(
+            APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED
+          );
+        }
+      }
       console.log("_asyncUpsertWalletAddress - userData.name", userData.name);
       if (!userData.name) return;
       const doInsert =
@@ -454,7 +470,6 @@ const useSignedUserQuery = () => {
   const asyncUpdateSocialTelegram = async () => {
     try {
       if (!userData.name) return;
-
       const data = await promiseTelegramLoginAuth();
       const newTelegramUserInfo: TelegramUserInfo = {
         authDate: data["auth_date"],

@@ -3,7 +3,7 @@ import { client } from "../apollo/client";
 import { GET_USER_BY_NAME } from "../apollo/query";
 import { User } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
-import { convertToSuppoertedNetwork } from "../util/type-converter-util";
+import { convertToSuppoertedNetwork } from "../util/type-util";
 import { ChainType } from "../__generated__/graphql";
 
 export function useUserQuery(props: { name?: string }) {

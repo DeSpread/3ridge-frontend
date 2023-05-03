@@ -29,4 +29,23 @@ const convertToChainType = (network: SupportedNetworks | string) => {
   return ChainType.Evm;
 };
 
+const isSupportedNetwork = (chainName: string) => {
+  const _chainName = chainName.toLowerCase();
+  if (
+    Object.values(SUPPORTED_NETWORKS)
+      .map((e) => e.toString())
+      .includes(_chainName)
+  )
+    return true;
+  if (
+    _chainName === "polygon" ||
+    _chainName === "bnb" ||
+    _chainName === "optimism" ||
+    _chainName === "avax"
+  ) {
+    return true;
+  }
+  return false;
+};
+
 export { convertToSuppoertedNetwork, convertToChainType };
