@@ -147,9 +147,8 @@ const Event = (props: AppProps) => {
   const [claimCompleted, setClaimCompleted] = useState(false);
   const [updatingClaimCompleted, setUpdatingClaimCompleted] = useState(true);
 
-  console.log(ticketData);
-
   useEffect(() => {
+    console.log(userData);
     if (!userData?._id) return;
     const ids = ticketData?.quests?.map((e) => {
       return e._id;
@@ -434,13 +433,24 @@ const Event = (props: AppProps) => {
               )?.length ?? 0) === 0 && (
                 <Card>
                   <CardContent>
-                    <Typography
-                      variant={"h6"}
-                      sx={{ color: theme.palette.warning.main }}
-                    >
-                      {`리워드 클레임을 위해 ${ticketData.rewardPolicy?.context?.rewardChain} 체인의 지갑연결이 필요합니다`}{" "}
-                      😅
-                    </Typography>
+                    <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
+                      <Stack direction={"column"}>
+                        <Typography
+                          variant={"h6"}
+                          sx={{ color: theme.palette.warning.main }}
+                        >
+                          {`리워드 클레임을 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
+                        </Typography>
+                      </Stack>
+                      <Stack direction={"column"}>
+                        <SecondaryButton onClick={async(e) => {
+                          e.preventDefault();
+                          showLoading();
+                          await router.push(`/profile/${userData?.name}`);
+                          closeLoading();
+                        }}>지갑 연결하러 가기</SecondaryButton>
+                      </Stack>
+                    </Stack>
                   </CardContent>
                 </Card>
               )}
@@ -921,7 +931,8 @@ const Event = (props: AppProps) => {
                   claimRewardDisabled ||
                   claimCompleted ||
                   // updatingClaimCompleted ||
-                  isExpired()
+                  isExpired() ||
+                    !ticketData?.rewardPolicy?.context?.rewardClaimable
                 }
                 onClick={async (e) => {
                   if (
@@ -989,7 +1000,10 @@ const Event = (props: AppProps) => {
                   ? "이벤트가 종료되었어요"
                   : claimCompleted
                   ? "이미 리워드를 클레임 하였습니다"
-                  : "리워드 클레임"}
+                  : ticketData?.rewardPolicy?.context?.rewardClaimable
+                  ? "리워드 클레임"
+                  : "리워드 예정"
+                }
               </LoadingButton>
             </Stack>
 

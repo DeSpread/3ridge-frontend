@@ -140,6 +140,8 @@ export type FCFSRewardContext = {
   rewardUnit: string;
   rewardAmount: number;
   rewardChain: string;
+  rewardNetwork: string;
+  rewardClaimable: boolean,
   nftImageUrl: string;
   collectionName: string;
   tokenName: string;
