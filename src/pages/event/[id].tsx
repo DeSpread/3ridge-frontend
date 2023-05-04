@@ -429,7 +429,7 @@ const Event = (props: AppProps) => {
             {userData?._id &&
               (userData?.walletAddressInfos?.filter(
                 (e) =>
-                  e.network === ticketData.rewardPolicy?.context?.rewardChain
+                  e.network === ticketData.rewardPolicy?.context?.rewardNetwork
               )?.length ?? 0) === 0 && (
                 <Card>
                   <CardContent>
