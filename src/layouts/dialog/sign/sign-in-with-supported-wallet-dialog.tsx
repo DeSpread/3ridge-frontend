@@ -1,7 +1,7 @@
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 import {
   SUPPORTED_NETWORKS,
-  SupportedNetworks,
+  SupportedNetwork,
   ObjectValues,
 } from "../../../type";
 import { Grid, IconButton, Stack, Typography } from "@mui/material";
@@ -10,7 +10,7 @@ import { useTheme } from "@mui/material/styles";
 
 type SignInWithSupportedWalletDialogProps = SignDialogProps & {
   walletInfos: { imageUrl: string; name: string; value: string }[];
-  onWalletSelected: (name: string) => void;
+  onWalletSelected: ({ name, value }: { name: string; value: string }) => void;
 };
 
 const SignInWithSupportedWalletDialog = (
@@ -20,7 +20,7 @@ const SignInWithSupportedWalletDialog = (
 
   return (
     <>
-      <Grid container justifyContent={"center"}>
+      <Grid container justifyContent={"center"} spacing={1}>
         {props.walletInfos?.map((item, index) => {
           return (
             <Grid key={index} item>
@@ -40,7 +40,10 @@ const SignInWithSupportedWalletDialog = (
                   },
                 }}
                 onClick={(e) => {
-                  props?.onWalletSelected(item.name);
+                  props?.onWalletSelected({
+                    name: item.name,
+                    value: item.value,
+                  });
                 }}
               >
                 <Stack alignItems={"center"} spacing={1}>

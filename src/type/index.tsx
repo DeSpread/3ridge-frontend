@@ -38,7 +38,16 @@ export const SUPPORTED_NETWORKS = {
   UNKNOWN: "unknown",
 } as const;
 
-export type SupportedNetworks = ObjectValues<typeof SUPPORTED_NETWORKS>;
+export type SupportedNetwork = ObjectValues<typeof SUPPORTED_NETWORKS>;
+
+export const WALLET_NAMES = {
+  META_MASK: "MetaMask",
+  COINBASE_WALLET: "Coinbase Wallet",
+  PETRA: "petra",
+  SUI_WALLET: "Sui Wallet",
+} as const;
+
+export type WalletName = ObjectValues<typeof WALLET_NAMES>;
 
 export const MAIL_VERIFY = {
   USER_NOT_FOUND: "USER_NOT_FOUND",
@@ -79,11 +88,11 @@ export const QUEST_POLICY_TYPE = {
 
 export type WalletAddressInfo = {
   address: string;
-  network: SupportedNetworks;
+  network: SupportedNetwork;
 };
 
 export type WalletInfo = WalletAddressInfo & {
-  name: string;
+  name: WalletName;
 };
 
 export type PartialWalletInfo = Partial<WalletInfo>;
@@ -122,10 +131,6 @@ export type EmailSignUpEventParams = {
   email: string;
   password: string;
 };
-
-// export type WalletLoggedInInfo = {
-//   address?: string;
-// };
 
 export type ReversibleSvgIconProps = SvgIconProps & {
   reverse?: boolean;

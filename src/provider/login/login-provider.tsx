@@ -9,6 +9,7 @@ import {
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
   PartialWalletInfo,
+  WalletInfo,
 } from "../../type";
 import { useEmailLogin } from "./hook/email-login-hook";
 

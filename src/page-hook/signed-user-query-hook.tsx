@@ -26,10 +26,11 @@ import {
   convertToChainType,
   convertToSuppoertedNetwork,
 } from "../util/type-util";
-import { SupportedNetworks, TelegramUserInfo } from "../type";
+import { SupportedNetwork, TelegramUserInfo, WALLET_NAMES } from "../type";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 import { ChainType } from "../__generated__/graphql";
 import { promiseTelegramLoginAuth } from "../util/telegram-util";
+import { delay } from "../util/timer";
 
 const useSignedUserQuery = () => {
   const {
@@ -121,7 +122,7 @@ const useSignedUserQuery = () => {
   }, [isGoogleLoggedIn]);
 
   useEffect(() => {
-    if (isWalletLoggedIn) {
+    if (walletLoggedInInfo.address) {
       (async () => {
         try {
           setLoading(true);
@@ -129,6 +130,7 @@ const useSignedUserQuery = () => {
             setLoading(false);
             return;
           }
+          await delay(100);
           const res = await client.query({
             query: GET_USER_BY_WALLET_ADDRESS,
             variables: {
@@ -138,7 +140,7 @@ const useSignedUserQuery = () => {
           });
           updateUserData(res.data.userByWalletAddress);
         } catch (e) {
-          throw new AppError(getErrorMessage(e));
+          console.log(e);
         } finally {
           setLoading(false);
         }
@@ -146,7 +148,7 @@ const useSignedUserQuery = () => {
     } else {
       setUserData({});
     }
-  }, [isWalletLoggedIn]);
+  }, [isWalletLoggedIn, changedCounter, walletLoggedInInfo]);
 
   useEffect(() => {
     if (tryConnectWalletNetwork.current) {
@@ -227,7 +229,7 @@ const useSignedUserQuery = () => {
     });
   };
 
-  const asyncUpsertWalletAddress = async (network: SupportedNetworks) => {
+  const asyncUpsertWalletAddress = async (network: SupportedNetwork) => {
     try {
       console.log("asyncUpsertWalletAddress - network", network);
       if (!isWalletInstalled(network)) {
@@ -237,7 +239,7 @@ const useSignedUserQuery = () => {
       const accountAddress = getAccountAddress(network);
       console.log("asyncUpsertWalletAddress - accountAddress", accountAddress);
       if (!accountAddress) {
-        await asyncConnectWallet(network);
+        await asyncConnectWallet(network, WALLET_NAMES.META_MASK);
         tryConnectWalletNetwork.current = network;
         return;
       }
@@ -247,7 +249,7 @@ const useSignedUserQuery = () => {
     }
   };
 
-  const asyncDeleteWalletAddress = async (network: SupportedNetworks) => {
+  const asyncDeleteWalletAddress = async (network: SupportedNetwork) => {
     try {
       await _asyncUpsertWalletAddress(network, "");
     } catch (e) {
@@ -256,7 +258,7 @@ const useSignedUserQuery = () => {
   };
 
   const _asyncUpsertWalletAddress = async (
-    network: SupportedNetworks,
+    network: SupportedNetwork,
     walletAddress: string
   ) => {
     try {

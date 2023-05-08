@@ -39,11 +39,20 @@ export function useWalletLogin() {
   } = useTotalWallet();
 
   const [walletInfo, setWalletInfo] = useState<PartialWalletAddressInfo>({});
+  const [isWalletLoggedIn, setIsWalletLoggedIn] = useState(false);
   const tryWalletSignUpSuccess = useRef<(msg?: void) => void>();
   const tryWalletSignUpOnError = useRef<(error: AppError) => void>();
   const tryWalletSignUpNetwork = useRef<string>();
 
   useEffect(() => {
+    refreshWalletInfo();
+  }, [getConnectedAccount().address]);
+
+  useEffect(() => {
+    refreshWalletInfo();
+  }, []);
+
+  const refreshWalletInfo = () => {
     if (getConnectedAccount().address && !walletInfo?.address) {
       const { address, network } = getConnectedAccount();
       const { walletAddress, timestamp } = preference.getWalletSignIn();
@@ -59,12 +68,15 @@ export function useWalletLogin() {
       setWalletInfo((prevState) => {
         return { ...prevState, address, network };
       });
+      setIsWalletLoggedIn(true);
+      commitConnectedNetwork(convertToSuppoertedNetwork(network));
       preference.updateWalletSignIn(address, network);
     }
-  }, [getConnectedAccount().address]);
+  };
 
   useEffect(() => {
     if (tryWalletSignUpSuccess.current) {
+      console.log("tryWalletSignUpSuccess - 1");
       const cache = {
         address: "",
         network: "",
@@ -75,15 +87,16 @@ export function useWalletLogin() {
             convertToSuppoertedNetwork(tryWalletSignUpNetwork.current)
           );
           console.log(
-            "tryWalletSignUpSuccess",
+            "tryWalletSignUpSuccess - 2",
             address,
             convertToSuppoertedNetwork(tryWalletSignUpNetwork.current)
           );
           const network = tryWalletSignUpNetwork.current;
-          if (!address || !network) {
-            // runCachedTryWalletSignUpOnError(
-            //   APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL
-            // );
+          if (!address) return;
+          if (!network) {
+            runCachedTryWalletSignUpOnError(
+              APP_ERROR_MESSAGE.WALLET_USER_ACCOUNT_FETCH_FAIL
+            );
             return;
           }
           cache.address = address;
@@ -94,15 +107,22 @@ export function useWalletLogin() {
               chain: convertToChainType(network),
             },
           });
+          console.log(
+            "tryWalletSignUpSuccess - 3",
+            cache.address,
+            cache.network
+          );
           setWalletInfo((prevState) => {
             return {
               ...prevState,
-              walletAddress: cache.address,
+              address: cache.address,
               network: convertToSuppoertedNetwork(cache.network),
             };
           });
+          setIsWalletLoggedIn(true);
+          commitConnectedNetwork(convertToSuppoertedNetwork(cache.network));
           preference.updateWalletSignIn(
-            address,
+            cache.address,
             convertToSuppoertedNetwork(cache.network)
           );
           runCachedTryWalletSignUpSuccess();
@@ -129,7 +149,6 @@ export function useWalletLogin() {
     }
     if (errorMsg === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED) {
       if (cache.address && cache.network) {
-        console.log(cache.address);
         setWalletInfo((prevState) => {
           return {
             ...prevState,
@@ -137,6 +156,7 @@ export function useWalletLogin() {
             network: convertToSuppoertedNetwork(cache.network),
           };
         });
+        setIsWalletLoggedIn(true);
         commitConnectedNetwork(convertToSuppoertedNetwork(cache.network));
         preference.updateWalletSignIn(
           cache.address,
@@ -146,7 +166,11 @@ export function useWalletLogin() {
       runCachedTryWalletSignUpSuccess();
       return;
     }
+    if (errorMsg.includes("duplicate key error collection:")) {
+      return;
+    }
     setWalletInfo({});
+    setIsWalletLoggedIn(false);
     runCachedTryWalletSignUpOnError(errorMsg);
   };
 
@@ -164,10 +188,6 @@ export function useWalletLogin() {
     tryWalletSignUpNetwork.current = undefined;
   };
 
-  const isWalletLoggedIn = useMemo(() => {
-    return walletInfo?.address ? true : false;
-  }, [walletInfo]);
-
   const walletSignUp: SuccessErrorCallbackWithParam<PartialWalletInfo, void> = (
     _walletInfo,
     { onSuccess, onError }
@@ -181,6 +201,10 @@ export function useWalletLogin() {
         console.log("1. check correct network");
         if (!_walletInfo.network) {
           onError?.(new AppError(`network is not supported`));
+          return;
+        }
+        if (!_walletInfo.name) {
+          onError?.(new AppError(`wallet is not supported`));
           return;
         }
         console.log("2. check install wallet");
@@ -200,12 +224,9 @@ export function useWalletLogin() {
         tryWalletSignUpOnError.current = onError;
         if (!accountAddress) {
           // after wallet is connected -> update remained
-          const res = await asyncConnectWallet(_walletInfo.network);
+          await asyncConnectWallet(_walletInfo.network, _walletInfo.name);
           commitConnectedNetwork(_walletInfo.network);
           tryWalletSignUpNetwork.current = _walletInfo.network;
-          if (!res.connected) {
-            onError?.(new AppError(res.msg));
-          }
           return;
         }
         console.log("3-2. if wallet address exist -> update login status");
@@ -218,6 +239,7 @@ export function useWalletLogin() {
             chain: convertToChainType(_walletInfo.network),
           },
         });
+        console.log("5. Set Wallet Info addr - ", cache.address);
         setWalletInfo((prevState) => {
           return {
             ...prevState,
@@ -225,6 +247,7 @@ export function useWalletLogin() {
             network: convertToSuppoertedNetwork(cache.network),
           };
         });
+        setIsWalletLoggedIn(true);
         commitConnectedNetwork(convertToSuppoertedNetwork(cache.network));
         preference.updateWalletSignIn(cache.address, _walletInfo.network);
         onSuccess?.();
@@ -239,8 +262,10 @@ export function useWalletLogin() {
   const walletLogout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     (async () => {
       try {
+        console.log("wallet logout");
         disconnectWallet();
         setWalletInfo({});
+        setIsWalletLoggedIn(false);
         preference.clearWalletSignIn();
         onSuccess?.();
       } catch (e) {
