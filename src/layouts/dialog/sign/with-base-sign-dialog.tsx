@@ -70,7 +70,7 @@ const WithBaseSignInDialog = <P extends SignDialogProps>(
               direction={"column"}
               alignItems={"center"}
               spacing={2}
-              sx={{ marginTop: 2, marginBottom: 4, background: "" }}
+              sx={{ marginTop: 4, marginBottom: 4, background: "" }}
             >
               <Stack
                 direction={"column"}

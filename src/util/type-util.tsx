@@ -1,4 +1,9 @@
-import { SUPPORTED_NETWORKS, SupportedNetworks } from "../type";
+import {
+  SUPPORTED_NETWORKS,
+  SupportedNetwork,
+  WALLET_NAMES,
+  WalletName,
+} from "../type";
 import { ChainType } from "../__generated__/graphql";
 
 const convertToSuppoertedNetwork = (network?: string | ChainType) => {
@@ -15,7 +20,15 @@ const convertToSuppoertedNetwork = (network?: string | ChainType) => {
   return SUPPORTED_NETWORKS.UNKNOWN;
 };
 
-const convertToChainType = (network: SupportedNetworks | string) => {
+const convertToWalletName = (value: string) => {
+  const idx = Object.values(WALLET_NAMES)
+    .map((e) => e.toString())
+    .indexOf(value);
+  if (idx < 0) return undefined;
+  return Object.values(WALLET_NAMES)[idx];
+};
+
+const convertToChainType = (network: SupportedNetwork | string) => {
   if (typeof network === "string") {
     network = convertToSuppoertedNetwork(network);
   }
@@ -48,4 +61,4 @@ const isSupportedNetwork = (chainName: string) => {
   return false;
 };
 
-export { convertToSuppoertedNetwork, convertToChainType };
+export { convertToSuppoertedNetwork, convertToChainType, convertToWalletName };

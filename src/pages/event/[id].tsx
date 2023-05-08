@@ -17,6 +17,7 @@ import {
   CardContent,
   Divider,
   Grid,
+  Link as MuiLink,
   Skeleton,
   Stack,
   Tooltip,
@@ -63,6 +64,7 @@ import BlockIcon from "../../components/molecules/block-icon";
 import TimerBoard, {
   DummyTimerBoard,
 } from "../../components/molecules/timer-board";
+import Link from "next/link";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -188,6 +190,16 @@ const Event = (props: AppProps) => {
     );
     return !res;
   }, [verifiedList, updateIndex]);
+
+  const walletConnectedForClaim = useMemo(() => {
+    return (
+      ([
+        ...(userData?.walletAddressInfos?.map((e) => e.network) ?? []),
+        ["polygon"],
+      ].filter((e) => e === ticketData.rewardPolicy?.context?.rewardChain)
+        ?.length ?? 0) === 0
+    );
+  }, [userData?.walletAddressInfos]);
 
   const isExpired = () => {
     return ticketData?.untilTime //rewardPolicy?.context?.untilTime
@@ -433,7 +445,11 @@ const Event = (props: AppProps) => {
               )?.length ?? 0) === 0 && (
                 <Card>
                   <CardContent>
-                    <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
+                    <Stack
+                      direction={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                    >
                       <Stack direction={"column"}>
                         <Typography
                           variant={"h6"}
@@ -443,18 +459,21 @@ const Event = (props: AppProps) => {
                         </Typography>
                       </Stack>
                       <Stack direction={"column"}>
-                        <SecondaryButton onClick={async(e) => {
-                          e.preventDefault();
-                          showLoading();
-                          await router.push(`/profile/${userData?.name}`);
-                          closeLoading();
-                        }}>지갑 연결하러 가기</SecondaryButton>
+                        <SecondaryButton
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            showLoading();
+                            await router.push(`/profile/${userData?.name}`);
+                            closeLoading();
+                          }}
+                        >
+                          지갑 연결하러 가기
+                        </SecondaryButton>
                       </Stack>
                     </Stack>
                   </CardContent>
                 </Card>
               )}
-
             <Stack direction={"column"} spacing={2}>
               <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
                 이벤트 설명
@@ -932,7 +951,7 @@ const Event = (props: AppProps) => {
                   claimCompleted ||
                   // updatingClaimCompleted ||
                   isExpired() ||
-                    !ticketData?.rewardPolicy?.context?.rewardClaimable
+                  !ticketData?.rewardPolicy?.context?.rewardClaimable
                 }
                 onClick={async (e) => {
                   if (
@@ -1002,8 +1021,7 @@ const Event = (props: AppProps) => {
                   ? "이미 리워드를 클레임 하였습니다"
                   : ticketData?.rewardPolicy?.context?.rewardClaimable
                   ? "리워드 클레임"
-                  : "리워드 예정"
-                }
+                  : "리워드 예정"}
               </LoadingButton>
             </Stack>
 

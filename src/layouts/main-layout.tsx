@@ -30,7 +30,8 @@ import {
   MAIL_VERIFY,
   MouseEventWithParam,
   SUPPORTED_NETWORKS,
-  SupportedNetworks,
+  SupportedNetwork,
+  WALLET_NAMES,
   Z_INDEX_OFFSET,
 } from "../type";
 import { useSignDialog } from "../page-hook/sign-dialog-hook";
@@ -42,7 +43,10 @@ import HomeFooter from "./footer/home-footer";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useWalletAlert } from "../page-hook/wallet-alert-hook";
-import { convertToSuppoertedNetwork } from "../util/type-util";
+import {
+  convertToSuppoertedNetwork,
+  convertToWalletName,
+} from "../util/type-util";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -83,7 +87,15 @@ const MainLayout = (props: MainLayoutProps) => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
-  const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
+  const {
+    isLoggedIn,
+    isWalletLoggedIn,
+    isGoogleLoggedIn,
+    isMailLoggedIn,
+    logout,
+    googleSignUp,
+    walletSignUp,
+  } = useLogin();
   const { userData } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
@@ -268,33 +280,8 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         onContinueWithWalletClicked={(e) => {
           e.preventDefault();
-          showLoading();
-          walletSignUp(
-            { network: SUPPORTED_NETWORKS.EVM, name: "MetaMask" },
-            {
-              onSuccess: () => {
-                if (router.pathname === "/") {
-                  router.push("/explore").then();
-                }
-                setSelectedNetwork("");
-                setShowSignInDialog(false);
-                closeLoading();
-              },
-              onError: (error: AppError) => {
-                console.log(error);
-                if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
-                  //@ts-ignore
-                  showWalletAlert(convertToSuppoertedNetwork(error.payload));
-                } else {
-                  showErrorAlert({ content: error.message });
-                }
-                setSelectedNetwork("");
-                setShowSignInDialog(false);
-                closeLoading();
-              },
-            }
-          );
-          // setSignInWithNetworkSelectVisible(true);
+          setShowSignInDialog(false);
+          setSignInWithNetworkSelectVisible(true);
         }}
       ></SignInDialog>
       <SignInWithDialog
@@ -404,7 +391,7 @@ const MainLayout = (props: MainLayoutProps) => {
                 imageUrl:
                   "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/petra-wallet.png",
                 name: "Petra",
-                value: "petra",
+                value: WALLET_NAMES.PETRA,
               },
             ];
           } else if (selectedNetwork === SUPPORTED_NETWORKS.SUI) {
@@ -413,7 +400,7 @@ const MainLayout = (props: MainLayoutProps) => {
                 imageUrl:
                   "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-wallet-icon.jpg",
                 name: "Sui wallet",
-                value: "sui",
+                value: WALLET_NAMES.SUI_WALLET,
               },
             ];
           } else if (selectedNetwork === SUPPORTED_NETWORKS.EVM) {
@@ -422,15 +409,22 @@ const MainLayout = (props: MainLayoutProps) => {
                 imageUrl:
                   "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/metamask-fox.svg",
                 name: "MetaMask",
-                value: "evm",
+                value: WALLET_NAMES.META_MASK,
+              },
+              {
+                imageUrl:
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/coinbase.svg",
+                name: "Coinbase",
+                value: WALLET_NAMES.COINBASE_WALLET,
               },
             ];
           }
           return [];
         })()}
-        onWalletSelected={(name) => {
+        onWalletSelected={({ name, value }) => {
+          const walletName = convertToWalletName(value);
           walletSignUp(
-            { network: selectedNetwork as SupportedNetworks, name },
+            { network: selectedNetwork as SupportedNetwork, name: walletName },
             {
               onSuccess: () => {
                 if (router.pathname === "/") {

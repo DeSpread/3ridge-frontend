@@ -1,6 +1,6 @@
 // import moment from "moment/moment";
 
-import { SupportedNetworks } from "../type";
+import { SupportedNetwork } from "../type";
 
 class PreferenceHelper {
   private static instance: PreferenceHelper;
@@ -76,7 +76,7 @@ class PreferenceHelper {
 
   updateWalletSignIn = (
     walletAddress: string,
-    walletNetwork: SupportedNetworks
+    walletNetwork: SupportedNetwork
   ) => {
     this.updateCacheByKey(
       PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE,
