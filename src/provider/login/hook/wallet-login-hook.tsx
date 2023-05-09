@@ -4,17 +4,17 @@ import {
   getErrorMessage,
 } from "../../../error/my-error";
 import { useMutation } from "@apollo/client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   PartialWalletAddressInfo,
   PartialWalletInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
-  SUPPORTED_NETWORKS,
-  WalletAddressInfo,
-  WalletInfo,
 } from "../../../type";
-import { CREATE_USER_BY_WALLET } from "../../../apollo/query";
+import {
+  CREATE_USER_BY_WALLET,
+  IS_REGISTER_WALLET,
+} from "../../../apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
 import {
@@ -22,6 +22,7 @@ import {
   convertToSuppoertedNetwork,
 } from "../../../util/type-util";
 import { useTotalWallet } from "./total-wallet-hook";
+import { client } from "../../../apollo/client";
 
 export function useWalletLogin() {
   const preference = PreferenceHelper.getInstance();

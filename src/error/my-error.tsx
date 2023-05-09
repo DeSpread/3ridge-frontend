@@ -33,3 +33,11 @@ export const getErrorMessage = (e: any) => {
   }
   return "unknown";
 };
+
+export const getLocaleErrorMessage = (e: any) => {
+  const message = getErrorMessage(e);
+  if (message === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED) {
+    return "이미 등록된 주소 입니다. 다른 월렛 주소로 연결해 주세요.";
+  }
+  return message;
+};

@@ -43,6 +43,7 @@ import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
+  getLocaleErrorMessage,
 } from "../../error/my-error";
 import PictureEditDialog from "./dialog/picture-edit-dialog";
 import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-button";
@@ -982,7 +983,7 @@ const Profile = (props: AppProps) => {
               );
               setSelectedNetwork("");
             } catch (e) {
-              showErrorAlert({ content: getErrorMessage(e) });
+              showErrorAlert({ content: getLocaleErrorMessage(e) });
             } finally {
               closeLoading();
             }
