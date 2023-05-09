@@ -26,7 +26,12 @@ import {
   convertToChainType,
   convertToSuppoertedNetwork,
 } from "../util/type-util";
-import { SupportedNetwork, TelegramUserInfo, WALLET_NAMES } from "../type";
+import {
+  SupportedNetwork,
+  TelegramUserInfo,
+  WALLET_NAMES,
+  WalletName,
+} from "../type";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 import { ChainType } from "../__generated__/graphql";
 import { promiseTelegramLoginAuth } from "../util/telegram-util";
@@ -229,7 +234,10 @@ const useSignedUserQuery = () => {
     });
   };
 
-  const asyncUpsertWalletAddress = async (network: SupportedNetwork) => {
+  const asyncUpsertWalletAddress = async (
+    network: SupportedNetwork,
+    walletName: WalletName
+  ) => {
     try {
       console.log("asyncUpsertWalletAddress - network", network);
       if (!isWalletInstalled(network)) {
@@ -239,7 +247,7 @@ const useSignedUserQuery = () => {
       const accountAddress = getAccountAddress(network);
       console.log("asyncUpsertWalletAddress - accountAddress", accountAddress);
       if (!accountAddress) {
-        await asyncConnectWallet(network, WALLET_NAMES.META_MASK);
+        await asyncConnectWallet(network, walletName);
         tryConnectWalletNetwork.current = network;
         return;
       }
@@ -271,7 +279,7 @@ const useSignedUserQuery = () => {
           },
           fetchPolicy: "no-cache",
         });
-        if (exist) {
+        if (exist.data.isRegisteredWallet) {
           throw new AppError(
             APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED
           );

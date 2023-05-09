@@ -29,7 +29,9 @@ import {
   MouseEventWithParam,
   MouseEventWithStateParam,
   SUPPORTED_NETWORKS,
+  SupportedNetwork,
   TicketEventParam,
+  WALLET_NAMES,
 } from "../../type";
 import ConnectEmailDialog, {
   CONNECT_MAIL_DIALOG_FORM_TYPE,
@@ -56,9 +58,13 @@ import { useRouter } from "next/router";
 import TicketCard from "../../components/molecules/ticket-card";
 import LinkTypography from "../../components/atoms/link-typography";
 import Image from "next/image";
-import ChainResourceHelper from "../../helper/chain-resource-helper";
-import { convertToSuppoertedNetwork } from "../../util/type-util";
+import ResourceFactory from "../../helper/resource-factory";
+import {
+  convertToSuppoertedNetwork,
+  convertToWalletName,
+} from "../../util/type-util";
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
+import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 
 const Profile = (props: AppProps) => {
   const router = useRouter();
@@ -108,7 +114,8 @@ const Profile = (props: AppProps) => {
     }[]
   >([]);
   const [achievementsLoading, setAchievementsLoading] = useState(false);
-  const chainResourceHelper = ChainResourceHelper.getInstance();
+  const resourceFactory = ResourceFactory.getInstance();
+  const [selectedNetwork, setSelectedNetwork] = useState("");
 
   const theme = useTheme();
   const isSingedUserProfile = useMemo(() => {
@@ -316,6 +323,10 @@ const Profile = (props: AppProps) => {
     }
   };
 
+  const signInWithSupportedWalletVisible = useMemo(() => {
+    return selectedNetwork ? true : false;
+  }, [selectedNetwork]);
+
   return (
     <>
       <Head>
@@ -434,7 +445,7 @@ const Profile = (props: AppProps) => {
                               onClick={(e: MouseEvent) => {
                                 e.preventDefault();
                                 const newWindow = window.open(
-                                  chainResourceHelper.getExplorerUri(
+                                  resourceFactory.getExplorerUri(
                                     addressInfo.network,
                                     addressInfo.address
                                   ),
@@ -445,7 +456,7 @@ const Profile = (props: AppProps) => {
                               }}
                               icon={
                                 <img
-                                  src={chainResourceHelper.getExplorerIconUri(
+                                  src={resourceFactory.getExplorerIconUri(
                                     addressInfo.network
                                   )}
                                   width={16}
@@ -697,7 +708,7 @@ const Profile = (props: AppProps) => {
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
-              await asyncUpsertWalletAddress(network);
+              setSelectedNetwork(network);
             }
           } catch (e) {
             if (
@@ -944,6 +955,40 @@ const Profile = (props: AppProps) => {
           setImageFile(undefined);
         }}
       ></PictureEditDialog>
+      <SignInWithSupportedWalletDialog
+        title={"연결하려는 지갑을 선택하세요"}
+        open={signInWithSupportedWalletVisible}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          // setSelectedNetwork("");
+        }}
+        onClose={() => {
+          setSelectedNetwork("");
+        }}
+        walletInfos={(() => {
+          return resourceFactory.getWalletInfos(
+            convertToSuppoertedNetwork(selectedNetwork)
+          );
+        })()}
+        onWalletSelected={({ name, value }) => {
+          const walletName = convertToWalletName(value);
+          if (!walletName) return;
+          (async () => {
+            try {
+              showLoading();
+              await asyncUpsertWalletAddress(
+                selectedNetwork as SupportedNetwork,
+                walletName
+              );
+              setSelectedNetwork("");
+            } catch (e) {
+              showErrorAlert({ content: getErrorMessage(e) });
+            } finally {
+              closeLoading();
+            }
+          })();
+        }}
+      ></SignInWithSupportedWalletDialog>
     </>
   );
 };

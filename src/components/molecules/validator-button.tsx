@@ -1,4 +1,4 @@
-import { ButtonProps, Stack, Typography } from "@mui/material";
+import { Box, ButtonProps, Stack, Typography } from "@mui/material";
 import React, { MouseEventHandler } from "react";
 import { MouseEventWithParam, ReversibleSvgIconProps } from "../../type";
 import { useTheme } from "@mui/material/styles";
@@ -44,26 +44,50 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
         spacing={1}
         sx={{ paddingLeft: 1, paddingRight: 1 }}
       >
-        {props.svgIcon && <props.svgIcon></props.svgIcon>}
+        <Stack
+          sx={{ paddingLeft: 2, paddingRight: 2 }}
+          direction={"row"}
+          spacing={1}
+        >
+          {props.svgIcon && <props.svgIcon></props.svgIcon>}
+          {props.value && (
+            <Typography
+              className={"MuiTypography"}
+              variant={"body2"}
+              sx={{
+                color: theme.palette.neutral["600"],
+              }}
+            >{`${props.label}에 연결되었습니다`}</Typography>
+          )}
+          {!props.value && (
+            <Typography
+              className={"MuiTypography"}
+              variant={"body2"}
+              sx={{
+                color: theme.palette.neutral["600"],
+                paddingRight: 1,
+              }}
+            >{`${props.label}에 연결해주세요`}</Typography>
+          )}
+        </Stack>
         {props.value && (
-          <Typography
-            className={"MuiTypography"}
-            variant={"body2"}
-            sx={{
-              color: theme.palette.neutral["600"],
+          <div
+            style={{
+              position: "absolute",
+              background: "",
+              width: "92%",
+              height: "100%",
+              left: 0,
+              top: 0,
+              padding: 0,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-end",
             }}
-          >{`${props.label}에 연결되었습니다`}</Typography>
-        )}
-        {props.value && <CloseIcon></CloseIcon>}
-        {!props.value && (
-          <Typography
-            className={"MuiTypography"}
-            variant={"body2"}
-            sx={{
-              color: theme.palette.neutral["600"],
-              paddingRight: 1,
-            }}
-          >{`${props.label}에 연결해주세요`}</Typography>
+          >
+            <CloseIcon></CloseIcon>
+          </div>
         )}
       </Stack>
     </PrimaryButton>

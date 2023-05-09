@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Dialog,
   DialogContent,
   DialogProps,
@@ -9,6 +10,7 @@ import {
   IconButton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, { MouseEventHandler } from "react";
 import {
@@ -26,7 +28,8 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import { ValidatorButton } from "../../../components/molecules/validator-button";
 import BlockIcon from "../../../components/molecules/block-icon";
-import ChainResourceHelper from "../../../helper/chain-resource-helper";
+import ResourceFactory from "../../../helper/resource-factory";
+import PrimaryButton from "../../../components/atoms/primary-button";
 
 const ReversibleMarkEmailIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -65,7 +68,10 @@ type ProfileEditDialogProps = DialogProps & {
 const ProfileEditDialog = (props: ProfileEditDialogProps) => {
   const theme = useTheme();
   const { ...rest } = props;
-  const chainResourceHelper = ChainResourceHelper.getInstance();
+  const resourceFactory = ResourceFactory.getInstance();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const BUTTON_WIDTH = smUp ? 340 : "100%";
 
   return (
     <Dialog
@@ -105,7 +111,12 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
         </Stack>
       </DialogTitle>
       <DialogContent>
-        <Stack spacing={4} sx={{ padding: 4 }} direction={"row"}>
+        <Stack
+          spacing={4}
+          sx={{ padding: 4 }}
+          direction={smUp ? "row" : "column"}
+          alignItems={smUp ? "flex-start" : "center"}
+        >
           <div style={{ position: "relative" }}>
             {props.userData?.profileImageUrl && (
               <Avatar
@@ -166,60 +177,52 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
             </div>
           </div>
           <Stack spacing={4}>
-            <Stack spacing={1}>
+            <Stack spacing={2}>
               <Typography variant={"h6"}>Socials</Typography>
               <Divider></Divider>
-              <Grid container rowSpacing={1}>
+              <Stack spacing={1}>
                 {!props.isMailLoggedIn && (
-                  <Grid item>
-                    <ValidatorButton
-                      svgIcon={ReversibleMarkEmailIcon}
-                      label={"Email"}
-                      onClick={props.emailValidatorButtonOnClick}
-                      size={"small"}
-                      value={
-                        props.userData?.email
-                          ? props.userData?.email
-                          : undefined
-                      }
-                      fullWidth={true}
-                      payload={""}
-                    ></ValidatorButton>
-                  </Grid>
+                  <ValidatorButton
+                    svgIcon={ReversibleMarkEmailIcon}
+                    label={"Email"}
+                    onClick={props.emailValidatorButtonOnClick}
+                    size={"small"}
+                    value={
+                      props.userData?.email ? props.userData?.email : undefined
+                    }
+                    fullWidth={true}
+                    payload={""}
+                  ></ValidatorButton>
                 )}
-                <Grid item>
-                  <ValidatorButton
-                    svgIcon={ReversibleTwitterIcon}
-                    label={"Twitter"}
-                    onClick={props.twitterValidatorButtonOnClick}
-                    size={"small"}
-                    value={
-                      props.userData?.userSocial?.twitterId
-                        ? props.userData?.userSocial?.twitterId
-                        : undefined
-                    }
-                    payload={""}
-                  ></ValidatorButton>
-                </Grid>
-                <Grid item>
-                  <ValidatorButton
-                    svgIcon={ReversibleTelegramIcon}
-                    label={"Telegram"}
-                    onClick={props.telegramValidatorButtonOnClick}
-                    size={"small"}
-                    value={
-                      props.userData?.userSocial?.telegramUser?.username ??
-                      undefined
-                    }
-                    payload={""}
-                  ></ValidatorButton>
-                </Grid>
-              </Grid>
+                <ValidatorButton
+                  svgIcon={ReversibleTwitterIcon}
+                  label={"Twitter"}
+                  onClick={props.twitterValidatorButtonOnClick}
+                  size={"small"}
+                  value={
+                    props.userData?.userSocial?.twitterId
+                      ? props.userData?.userSocial?.twitterId
+                      : undefined
+                  }
+                  payload={""}
+                ></ValidatorButton>
+                <ValidatorButton
+                  svgIcon={ReversibleTelegramIcon}
+                  label={"Telegram"}
+                  onClick={props.telegramValidatorButtonOnClick}
+                  size={"small"}
+                  value={
+                    props.userData?.userSocial?.telegramUser?.username ??
+                    undefined
+                  }
+                  payload={""}
+                ></ValidatorButton>
+              </Stack>
             </Stack>
-            <Stack spacing={1}>
+            <Stack spacing={2}>
               <Typography variant={"h6"}>Wallets</Typography>
               <Divider></Divider>
-              <Grid container rowSpacing={1}>
+              <Stack spacing={1}>
                 {Object.values(SUPPORTED_NETWORKS)
                   .filter(
                     (_, index) =>
@@ -239,21 +242,24 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                       )?.[0];
 
                     return (
-                      <Grid item key={i}>
+                      <Box sx={{ width: "100%" }} key={i}>
                         <ValidatorButton
                           label={e.toUpperCase()}
-                          svgIcon={chainResourceHelper.getValidatorButtonSvg(e)}
+                          svgIcon={resourceFactory.getValidatorButtonSvg(e)}
                           onClick={props.walletValidatorButtonOnClick}
                           size={"small"}
                           value={StringHelper.getInstance().getMidEllipsisString(
                             addressInfo?.address
                           )}
                           payload={e}
+                          sx={{
+                            width: BUTTON_WIDTH,
+                          }}
                         />
-                      </Grid>
+                      </Box>
                     );
                   })}
-              </Grid>
+              </Stack>
             </Stack>
           </Stack>
         </Stack>

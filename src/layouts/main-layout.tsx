@@ -47,6 +47,7 @@ import {
   convertToSuppoertedNetwork,
   convertToWalletName,
 } from "../util/type-util";
+import ResourceFactory from "../helper/resource-factory";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -108,6 +109,8 @@ const MainLayout = (props: MainLayoutProps) => {
   const { showWalletAlert } = useWalletAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
+
+  const resourceFactory = ResourceFactory.getInstance();
 
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
@@ -385,41 +388,9 @@ const MainLayout = (props: MainLayoutProps) => {
           setSelectedNetwork("");
         }}
         walletInfos={(() => {
-          if (selectedNetwork === SUPPORTED_NETWORKS.APTOS) {
-            return [
-              {
-                imageUrl:
-                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/petra-wallet.png",
-                name: "Petra",
-                value: WALLET_NAMES.PETRA,
-              },
-            ];
-          } else if (selectedNetwork === SUPPORTED_NETWORKS.SUI) {
-            return [
-              {
-                imageUrl:
-                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-wallet-icon.jpg",
-                name: "Sui wallet",
-                value: WALLET_NAMES.SUI_WALLET,
-              },
-            ];
-          } else if (selectedNetwork === SUPPORTED_NETWORKS.EVM) {
-            return [
-              {
-                imageUrl:
-                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/metamask-fox.svg",
-                name: "MetaMask",
-                value: WALLET_NAMES.META_MASK,
-              },
-              {
-                imageUrl:
-                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/coinbase.svg",
-                name: "Coinbase",
-                value: WALLET_NAMES.COINBASE_WALLET,
-              },
-            ];
-          }
-          return [];
+          return resourceFactory.getWalletInfos(
+            convertToSuppoertedNetwork(selectedNetwork)
+          );
         })()}
         onWalletSelected={({ name, value }) => {
           const walletName = convertToWalletName(value);
