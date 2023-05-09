@@ -87,6 +87,7 @@ const useSignedUserQuery = () => {
             fetchPolicy: "no-cache",
           });
           updateUserData(res.data.userByEmail);
+          console.log(res.data.userByEmail);
         } catch (e) {
           throw new AppError(getErrorMessage(e));
         } finally {
@@ -94,7 +95,10 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      setUserData({});
+      if (!isGoogleLoggedIn && !isWalletLoggedIn) {
+        setUserData({});
+        // console.log("isMailLoggedIn {}");
+      }
     }
   }, [isMailLoggedIn]);
 
@@ -122,12 +126,16 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      setUserData({});
+      if (!isMailLoggedIn && !isWalletLoggedIn) {
+        // console.log("isGoogleLoggedIn {}");
+        setUserData({});
+      }
     }
   }, [isGoogleLoggedIn]);
 
   useEffect(() => {
     if (walletLoggedInInfo.address) {
+      console.log("walletLoggedInInfo.address", walletLoggedInInfo.address);
       (async () => {
         try {
           setLoading(true);
@@ -151,7 +159,10 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      setUserData({});
+      if (!isMailLoggedIn && !isGoogleLoggedIn) {
+        // console.log("isWalletLoggedIn {}");
+        setUserData({});
+      }
     }
   }, [isWalletLoggedIn, changedCounter, walletLoggedInInfo]);
 

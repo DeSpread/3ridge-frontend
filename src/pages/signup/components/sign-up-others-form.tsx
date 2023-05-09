@@ -26,7 +26,7 @@ const SignUpOthersForm = (props: SignUpOtherFormProps) => {
         spacing={4}
       >
         <Typography textAlign={"left"} variant={"h5"}>
-          Sign Up with others
+          가입 하기
         </Typography>
         <Stack spacing={4}>
           <PrimaryButton
@@ -42,7 +42,7 @@ const SignUpOthersForm = (props: SignUpOtherFormProps) => {
             }
             onClick={props.onSignUpWithGoogleClicked}
           >
-            Sign Up with Google
+            구글로 가입하기
           </PrimaryButton>
           <Typography textAlign={"center"} variant={"h6"}>
             &nbsp;
@@ -63,14 +63,14 @@ const SignUpOthersForm = (props: SignUpOtherFormProps) => {
               }
               onClick={props.onSignUpWithEmailClicked}
             >
-              Sign Up with email
+              이메일로 가입하기
             </PrimaryButton>
             <Stack direction={"row"} justifyContent={"center"}>
               <Typography textAlign={"left"} variant={"body2"}>
-                Already have an account?
+                이미 가입했나요?
               </Typography>
               <LinkTypography variant={"body2"} href={"/"}>
-                &nbsp;Sign in
+                &nbsp;로그인 하기
               </LinkTypography>
             </Stack>
           </Stack>

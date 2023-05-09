@@ -51,7 +51,7 @@ const SignInWithDialogContent = (props: SignInWithEmailProps) => {
             }}
             disabled={buttonDisabled}
           >
-            Sign In
+            로그인 하기
           </SecondaryButton>
         </Stack>
       </Stack>

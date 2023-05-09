@@ -45,7 +45,7 @@ const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
         spacing={4}
       >
         <Typography textAlign={"left"} variant={"h5"}>
-          Sign Up with email
+          이메일로 가입하기
         </Typography>
         <Stack spacing={4}>
           <MailTextField
@@ -68,7 +68,7 @@ const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
                 variant={"body2"}
                 sx={{ color: theme.palette.error.main }}
               >
-                Six or more characters
+                6글자 이상을 입력해 주세요
               </Typography>
             )}
           </Stack>
@@ -93,13 +93,11 @@ const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
                 props.onClickSendVerification?.(myEvent);
               }}
             >
-              Send verification email
+              인증 메일 보내기
             </SecondaryButton>
             <Stack direction={"row"} justifyContent={"center"} spacing={1}>
-              <Typography variant={"body2"}>
-                Already have an account?
-              </Typography>
-              <LinkTypography variant={"body2"}>Sign in</LinkTypography>
+              <Typography variant={"body2"}>이미 가입했나요?</Typography>
+              <LinkTypography variant={"body2"}>로그인 하기</LinkTypography>
             </Stack>
           </Stack>
         </Stack>

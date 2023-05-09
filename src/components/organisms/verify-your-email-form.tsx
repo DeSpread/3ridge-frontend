@@ -31,17 +31,15 @@ const VerifyYourEmailForm = ({
         spacing={4}
       >
         <Typography textAlign={"left"} variant={"h5"}>
-          Verify your email
+          메일을 인증해주세요
         </Typography>
         <Stack spacing={5} alignItems={"center"}>
           <Stack spacing={4}>
             <Stack spacing={0} alignItems={"center"}>
               <Typography variant={"body1"}>
-                A verification link was just sent to your
+                인증메일 링크가 메일로 보내졌습니다.
               </Typography>
-              <Typography variant={"body1"}>
-                email address. Please check your inbox
-              </Typography>
+              <Typography variant={"body1"}>메일함을 확인해주세요.</Typography>
             </Stack>
             <Typography variant={"h5"}>{email}</Typography>
           </Stack>
@@ -51,10 +49,10 @@ const VerifyYourEmailForm = ({
             </SecondaryButton>
             <Stack alignItems={"center"}>
               <Typography variant={"caption"}>
-                If you have not received the email,
+                만약 메일을 받지 못했다면
               </Typography>
               <Typography variant={"caption"}>
-                please check your spam inbox or
+                스팸메일 함을 확인해주시거나
               </Typography>
               <LinkTypography
                 variant={"caption"}
@@ -68,7 +66,7 @@ const VerifyYourEmailForm = ({
                 }}
                 onClick={onClickResendVerification}
               >
-                resend verification email
+                인증메일을 재전송 해주세요
               </LinkTypography>
             </Stack>
           </Stack>

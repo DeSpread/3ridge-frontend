@@ -392,11 +392,11 @@ const Profile = (props: AppProps) => {
                 }}
               ></LinearProgress>
               <Stack direction={"row"} alignItems={"center"}>
-                {targetUserData?.walletAddressInfos?.[0].address ? (
+                {targetUserData?.walletAddressInfos?.[0]?.address ? (
                   <Box sx={{ maxWidth: 260 }}>
                     <GradientTypography variant={"h4"}>
                       {StringHelper.getInstance().getMidEllipsisString(
-                        targetUserData?.walletAddressInfos?.[0].address
+                        targetUserData?.walletAddressInfos?.[0]?.address
                       )}
                     </GradientTypography>
                   </Box>

@@ -1,4 +1,4 @@
-import { MouseEvent, ReactElement, useState } from "react";
+import React, { MouseEvent, ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { Divider, Stack, Typography } from "@mui/material";
 import HomeFooter from "../../layouts/footer/home-footer";
@@ -20,11 +20,19 @@ import {
   MAIL_VERIFY,
   MouseEventWithParam,
   ObjectValues,
+  SupportedNetwork,
 } from "../../type";
 import VerifyYourEmailForm from "../../components/organisms/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 import AwsClient from "../../remote/aws-client";
+import SignInWithNetworkSelectDialog from "../../layouts/dialog/sign/sign-in-with-network-select-dialog";
+import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
+import {
+  convertToSuppoertedNetwork,
+  convertToWalletName,
+} from "../../util/type-util";
+import ResourceFactory from "../../helper/resource-factory";
 
 const FORM_TYPE = {
   SELECT: "SELECT",
@@ -52,13 +60,23 @@ const Signup = () => {
     password: "",
   });
   const [formType, setFormType] = useState<FormType>(FORM_TYPE.SELECT);
+  const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
+    useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState("");
+  const resourceFactory = ResourceFactory.getInstance();
+
+  const signInWithSupportedWalletVisible = useMemo(() => {
+    return selectedNetwork ? true : false;
+  }, [selectedNetwork]);
 
   return (
     <>
       <Head>
         <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
-      <div style={{ flex: 1, background: "" }}>
+      <div
+        style={{ flex: 1, background: "", minHeight: `calc(100vh - 140px)` }}
+      >
         <Stack
           direction={"column"}
           alignItems={"center"}
@@ -72,12 +90,7 @@ const Signup = () => {
               }}
               onClickConnectWallet={(e: MouseEvent) => {
                 e.preventDefault();
-                // walletSignUp({
-                //   onSuccess: () => {
-                //     router.push("/").then();
-                //   },
-                //   onError: (error: AppError) => {},
-                // });
+                setSignInWithNetworkSelectVisible(true);
               }}
               onShowSignClicked={(e) => {
                 e.preventDefault();
@@ -132,36 +145,6 @@ const Signup = () => {
                     }
                     showErrorAlert({ content: getErrorMessage(e) });
                     closeLoading();
-                    // let message = "Unknown error occurred";
-                    // if (error.message === MAIL_VERIFY.NOT_VERIFIED) {
-                    // closeLoading();
-                    //   setSignUpParams({ ...myEvent.params });
-                    //   setFormType(FORM_TYPE.VERIFY_EMAIL);
-                    // } else if (error.message === MAIL_VERIFY.USER_NOT_FOUND) {
-                    //   closeLoading();
-                    //   message = "Something auth progress problem occurred";
-                    //   showErrorAlert({ content: message });
-                    // } else if (error.message === MAIL_VERIFY.PASSWORD_WRONG) {
-                    //   closeLoading();
-                    //   message = "Check your password";
-                    //   showErrorAlert({ content: message });
-                    // } else if (error.message === MAIL_VERIFY.VERIFIED) {
-                    //   const { email, password } =
-                    //     error.payload as EmailSignUpEventParams;
-                    //   emailSignIn(
-                    //     { email, password },
-                    //     {
-                    //       onSuccess: () => {
-                    //         closeLoading();
-                    //         router.push("/profile").then();
-                    //       },
-                    //       onError: (e: Error) => {
-                    //         closeLoading();
-                    //         showErrorAlert({ content: getErrorMessage(e) });
-                    //       },
-                    //     }
-                    //   );
-                    // }
                   },
                 });
               }}
@@ -170,6 +153,7 @@ const Signup = () => {
           {formType === FORM_TYPE.VERIFY_EMAIL && (
             <VerifyYourEmailForm
               email={signupParams.email}
+              signInTitle={"인증하였다면, 메일로 로그인 시도하기"}
               onClickResendVerification={async (e) => {
                 const { email, password } = signupParams;
                 showLoading();
@@ -236,6 +220,66 @@ const Signup = () => {
             </Stack>
           </Stack>
         </Stack>
+        <SignInWithNetworkSelectDialog
+          title={"연결하려는 네트워트를 선택하세요"}
+          open={signInWithNetworkSelectVisible}
+          onCloseBtnClicked={(e) => {
+            e.preventDefault();
+            setSignInWithNetworkSelectVisible(false);
+          }}
+          onClose={() => {
+            setSignInWithNetworkSelectVisible(false);
+          }}
+          onNetworkButtonClicked={(network) => {
+            setSignInWithNetworkSelectVisible(false);
+            setSelectedNetwork(network);
+          }}
+        ></SignInWithNetworkSelectDialog>
+        <SignInWithSupportedWalletDialog
+          title={"연결하려는 지갑을 선택하세요"}
+          open={signInWithSupportedWalletVisible}
+          onCloseBtnClicked={(e) => {
+            e.preventDefault();
+            setSelectedNetwork("");
+          }}
+          onClose={() => {
+            setSelectedNetwork("");
+          }}
+          walletInfos={(() => {
+            return resourceFactory.getWalletInfos(
+              convertToSuppoertedNetwork(selectedNetwork)
+            );
+          })()}
+          onWalletSelected={({ name, value }) => {
+            const walletName = convertToWalletName(value);
+            walletSignUp(
+              {
+                network: selectedNetwork as SupportedNetwork,
+                name: walletName,
+              },
+              {
+                onSuccess: () => {
+                  showLoading();
+                  router.push("/explore").then((res) => {
+                    closeLoading();
+                    setSelectedNetwork("");
+                  });
+                },
+                onError: (error: AppError) => {
+                  if (
+                    error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED
+                  ) {
+                    //@ts-ignore
+                    showWalletAlert(convertToSuppoertedNetwork(error.payload));
+                  } else {
+                    showErrorAlert({ content: error.message });
+                  }
+                  setSelectedNetwork("");
+                },
+              }
+            );
+          }}
+        ></SignInWithSupportedWalletDialog>
       </div>
     </>
   );

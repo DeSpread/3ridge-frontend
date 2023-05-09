@@ -119,10 +119,12 @@ export function useEmailLogin() {
     (async () => {
       const { email, password } = params;
       try {
+        console.log("email", "password");
         const res = await AwsClient.getInstance().asyncLoginWithMail(
           email,
           password
         );
+        console.log(res);
         if (res.status === 400 || res.status === 500) {
           const data = await res.text();
           const message = JSON.parse(data).message;

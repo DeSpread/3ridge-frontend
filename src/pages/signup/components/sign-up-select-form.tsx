@@ -31,12 +31,9 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
           가입하기
         </Typography>
         <SecondaryButton fullWidth={true} onClick={props.onClickConnectWallet}>
-          지갑 연결하기
+          지갑통해 가입하기
         </SecondaryButton>
-        {/*<Typography textAlign={"center"} variant={"h6"}>*/}
-        {/*  Or*/}
-        {/*</Typography>*/}
-        <br/>
+        <br />
         <Stack spacing={2}>
           <PrimaryButton fullWidth={true} onClick={props.onClickSignUpWith}>
             <Stack direction={"row"} spacing={1}>
@@ -63,7 +60,9 @@ const SignUpSelectForm = (props: SignUpSelectFormProps) => {
             </Stack>
           </PrimaryButton>
           <Stack direction={"row"} justifyContent={"center"} spacing={1}>
-            <Typography variant={"body2"}>이미 계정이 있으신가요? &nbsp;</Typography>
+            <Typography variant={"body2"}>
+              이미 계정이 있으신가요? &nbsp;
+            </Typography>
             <LinkTypography variant={"body2"} onClick={props.onShowSignClicked}>
               로그인 하러 가기
             </LinkTypography>
