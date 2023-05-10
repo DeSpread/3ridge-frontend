@@ -1,7 +1,10 @@
 export default class AwsClient {
   private static instance: AwsClient;
+  private readonly emailAuthApiUrl: string;
 
-  private constructor() {}
+  private constructor() {
+    this.emailAuthApiUrl = process.env["NEXT_PUBLIC_EMAIL_AUTH_URL"] ?? "";
+  }
 
   public static getInstance() {
     return this.instance || (this.instance = new this());
@@ -40,14 +43,11 @@ export default class AwsClient {
       mail,
     });
 
-    const response = await fetch(
-      "https://bqkigu1jwg.execute-api.ap-northeast-2.amazonaws.com/Prod/resend",
-      {
-        method: "POST",
-        body: bodyContent,
-        headers: headersList,
-      }
-    );
+    const response = await fetch(`${this.emailAuthApiUrl}/resend`, {
+      method: "POST",
+      body: bodyContent,
+      headers: headersList,
+    });
     return response;
   };
 
@@ -58,9 +58,7 @@ export default class AwsClient {
     };
 
     const response = await fetch(
-      `https://bqkigu1jwg.execute-api.ap-northeast-2.amazonaws.com/Prod/auth?mail=${encodeURIComponent(
-        mail
-      )}`,
+      `${this.emailAuthApiUrl}/auth?mail=${encodeURIComponent(mail)}`,
       {
         method: "GET",
         headers: headersList,
@@ -80,14 +78,11 @@ export default class AwsClient {
       password,
     });
 
-    const response = await fetch(
-      "https://bqkigu1jwg.execute-api.ap-northeast-2.amazonaws.com/Prod/login",
-      {
-        method: "POST",
-        body: bodyContent,
-        headers: headersList,
-      }
-    );
+    const response = await fetch(`${this.emailAuthApiUrl}/login`, {
+      method: "POST",
+      body: bodyContent,
+      headers: headersList,
+    });
     return response;
   };
 
@@ -102,14 +97,12 @@ export default class AwsClient {
       password,
     });
 
-    const response = await fetch(
-      "https://bqkigu1jwg.execute-api.ap-northeast-2.amazonaws.com/Prod/auth",
-      {
-        method: "POST",
-        body: bodyContent,
-        headers: headersList,
-      }
-    );
+    console.log(this.emailAuthApiUrl);
+    const response = await fetch(`${this.emailAuthApiUrl}/auth`, {
+      method: "POST",
+      body: bodyContent,
+      headers: headersList,
+    });
     return response;
   };
 
@@ -123,14 +116,11 @@ export default class AwsClient {
       mail,
     });
 
-    const response = await fetch(
-      "https://bqkigu1jwg.execute-api.ap-northeast-2.amazonaws.com/Prod/auth",
-      {
-        method: "PUT",
-        body: bodyContent,
-        headers: headersList,
-      }
-    );
+    const response = await fetch(`${this.emailAuthApiUrl}/auth`, {
+      method: "PUT",
+      body: bodyContent,
+      headers: headersList,
+    });
     return response;
   };
 }

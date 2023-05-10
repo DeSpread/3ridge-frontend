@@ -14,6 +14,7 @@ export const APP_ERROR_MESSAGE = {
   FIREBASE_WRONG_PASSWORD: "auth/wrong-password",
   FIREBASE_TOO_MANY_REQUESTS: "auth/too-many-requests",
   PARAMETER_ERROR: "parameter error",
+  EMAIL_NOT_AUTHORIZED: "Not yet authorized",
 } as const;
 
 export class AppError extends Error {
@@ -38,6 +39,9 @@ export const getLocaleErrorMessage = (e: any) => {
   const message = getErrorMessage(e);
   if (message === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED) {
     return "이미 등록된 주소 입니다. 다른 월렛 주소로 연결해 주세요.";
+  } else if (message === APP_ERROR_MESSAGE.EMAIL_NOT_AUTHORIZED) {
+    return "아직 인증되지 않았습니다. 인증 링크를 확인해주세요.";
   }
+  console.log(message);
   return message;
 };

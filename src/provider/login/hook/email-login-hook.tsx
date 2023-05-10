@@ -119,7 +119,7 @@ export function useEmailLogin() {
     (async () => {
       const { email, password } = params;
       try {
-        console.log("email", "password");
+        console.log("email", email, "password", password);
         const res = await AwsClient.getInstance().asyncLoginWithMail(
           email,
           password
