@@ -126,25 +126,36 @@ const Signup = () => {
           )}
           {formType === FORM_TYPE.WITH_EMAIL && (
             <SignUpWithEmailForm
+              onClickSignIn={(e) => {
+                e.preventDefault();
+                setShowSignInDialog(true);
+              }}
               onClickSendVerification={(e) => {
                 const myEvent =
                   e as MouseEventWithParam<EmailSignUpEventParams>;
                 showLoading();
                 emailVerify(myEvent.params, {
-                  onSuccess: () => {
+                  onSuccess: (msg) => {
+                    if (msg === "mail auth is already done") {
+                      showErrorAlert({
+                        content: "이미 인증으로 사용된 메일입니다.",
+                      });
+                      closeLoading();
+                      return;
+                    }
                     setSignUpParams({ ...myEvent.params });
                     setFormType(FORM_TYPE.VERIFY_EMAIL);
                     closeLoading();
                   },
                   onError: (error: AppError) => {
-                    console.log(error);
+                    // console.log(error);
                     if (error.message === "auth already requested") {
                       setSignUpParams({ ...myEvent.params });
                       setFormType(FORM_TYPE.VERIFY_EMAIL);
                       closeLoading();
                       return;
                     }
-                    showErrorAlert({ content: getErrorMessage(e) });
+                    showErrorAlert({ content: getLocaleErrorMessage(error) });
                     closeLoading();
                   },
                 });

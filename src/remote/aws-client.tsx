@@ -97,7 +97,6 @@ export default class AwsClient {
       password,
     });
 
-    console.log(this.emailAuthApiUrl);
     const response = await fetch(`${this.emailAuthApiUrl}/auth`, {
       method: "POST",
       body: bodyContent,
