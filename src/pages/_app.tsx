@@ -19,6 +19,7 @@ import * as gtag from "../lib/gtag";
 import Head from "next/head";
 import Script from "next/script";
 import { WalletProvider } from "@suiet/wallet-kit";
+import { v1 } from "uuid";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 
@@ -79,7 +80,10 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
       />
-      <Script src="https://telegram.org/js/telegram-widget.js" async />
+      <Script
+        src={`https://telegram.org/js/telegram-widget.js?${v1()}`}
+        async
+      />
       <ThemeProvider theme={createTheme()}>
         <GoogleOAuthProvider clientId={clientId ?? ""}>
           <RecoilRoot>

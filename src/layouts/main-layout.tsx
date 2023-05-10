@@ -21,6 +21,7 @@ import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
+  getLocaleErrorMessage,
 } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
 import { useSignedUserQuery } from "../page-hook/signed-user-query-hook";
@@ -344,19 +345,9 @@ const MainLayout = (props: MainLayoutProps) => {
                 router.push("/").then();
               },
               onError: (e) => {
-                const message = getErrorMessage(e);
-                if (message === MAIL_VERIFY.PASSWORD_WRONG) {
-                  closeLoading();
-                  showAlert({ title: "Info", content: "Check your password" });
-                  return;
-                } else if (message === MAIL_VERIFY.USER_NOT_FOUND) {
-                  closeLoading();
-                  showAlert({ title: "Info", content: "User not exist" });
-                  return;
-                }
                 closeLoading();
                 setSignUpWithEmailVisible(false);
-                showErrorAlert({ content: getErrorMessage(e) });
+                showErrorAlert({ content: getLocaleErrorMessage(e) });
               },
             }
           );

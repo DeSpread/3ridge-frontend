@@ -1,3 +1,5 @@
+import { MAIL_VERIFY } from "../type";
+
 export const APP_ERROR_MESSAGE = {
   UNKNOWN: "UNKNOWN",
   EMAIL_ALREADY_USE: "EMAIL_ALREADY_USE",
@@ -45,6 +47,5 @@ export const getLocaleErrorMessage = (e: any) => {
   } else if (message === APP_ERROR_MESSAGE.EMAIL_PASSWORD_NOT_CORRECT) {
     return "패스워드가 맞지 않습니다. 패스워드를 확인해주세요.";
   }
-  console.log(message);
   return message;
 };
