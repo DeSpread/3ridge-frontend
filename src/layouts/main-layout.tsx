@@ -48,6 +48,7 @@ import {
   convertToWalletName,
 } from "../util/type-util";
 import ResourceFactory from "../helper/resource-factory";
+import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -131,6 +132,28 @@ const MainLayout = (props: MainLayoutProps) => {
     await router.push(`/leaderboard`);
     closeLoading();
   };
+  const asyncShowSignDialog = async () => {
+    setShowSignInDialog(true);
+  };
+  const asyncSignedProfileBtnOnClick = async () => {
+    showLoading();
+    await router.push(`/profile/${userData.name}`);
+    closeLoading();
+  };
+
+  const asyncLogoutBtnOnClick = async () => {
+    logout({
+      onSuccess: () => {
+        // showLoading();
+        // router.push("/").then((res) => {
+        //   closeLoading();
+        // });
+      },
+      onError: (error) => {
+        showErrorAlert({ content: error.message });
+      },
+    });
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -203,29 +226,11 @@ const MainLayout = (props: MainLayoutProps) => {
                   {isLoggedIn ? (
                     <NavbarAvatar
                       rewardPoint={userData?.rewardPoint}
-                      onProfileItemClicked={async (e) => {
-                        e.preventDefault();
-                        showLoading();
-                        await router.push(`/profile/${userData.name}`);
-                        closeLoading();
-                      }}
-                      onLogoutBtnClicked={(e) => {
-                        e.preventDefault();
-                        logout({
-                          onSuccess: () => {
-                            // showLoading();
-                            // router.push("/").then((res) => {
-                            //   closeLoading();
-                            // });
-                          },
-                          onError: (error) => {
-                            showErrorAlert({ content: error.message });
-                          },
-                        });
-                      }}
                       userId={userData?._id}
                       src={userData?.profileImageUrl}
                       walletAddress={userData?.walletAddressInfos?.[0]?.address}
+                      onProfileItemClicked={asyncSignedProfileBtnOnClick}
+                      onLogoutBtnClicked={asyncLogoutBtnOnClick}
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
@@ -244,11 +249,33 @@ const MainLayout = (props: MainLayoutProps) => {
                     </Stack>
                   )}
                 </Stack>
+              ) : isLoggedIn ? (
+                <Stack
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  spacing={2}
+                >
+                  <MobileNavigatorBar
+                    isLoggedIn={isLoggedIn}
+                    rewardPoint={userData?.rewardPoint}
+                    userId={userData?._id}
+                    profileImageUrl={userData?.profileImageUrl}
+                    walletAddress={userData?.walletAddressInfos?.[0]?.address}
+                    onSignInClick={asyncSignedProfileBtnOnClick}
+                    onLogoutInClick={asyncLogoutBtnOnClick}
+                    onExploreClick={asyncGoToExplore}
+                    onProjectsClick={asyncGoToProjects}
+                    onLeaderBoardClick={asyncGoToLeaderBoard}
+                  />
+                </Stack>
               ) : (
                 <SubMenuButton
+                  isLoggedIn={isLoggedIn}
                   onExploreClick={asyncGoToExplore}
                   onProjectsClick={asyncGoToProjects}
                   onLeaderBoardClick={asyncGoToLeaderBoard}
+                  onSignInClick={asyncShowSignDialog}
                 ></SubMenuButton>
               ))}
           </Stack>

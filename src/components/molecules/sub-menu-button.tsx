@@ -65,9 +65,11 @@ const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
 
 const SubMenuButton = (
   props: PropsWithChildren & {
+    isLoggedIn?: boolean;
     onExploreClick?: MouseEventHandler;
     onProjectsClick?: MouseEventHandler;
     onLeaderBoardClick?: MouseEventHandler;
+    onSignInClick?: MouseEventHandler;
   }
 ) => {
   const theme = useTheme();
@@ -114,6 +116,18 @@ const SubMenuButton = (
         ></MoreHorizIcon>
       </IconButton>
       <StyledMenu open={open} anchorEl={anchorEl}>
+        {!props.isLoggedIn && (
+          <StyledMenuItem
+            sx={{
+              borderRadius: 1,
+            }}
+            onClick={props.onSignInClick}
+          >
+            <Stack>
+              <NavbarButton>지갑연결</NavbarButton>
+            </Stack>
+          </StyledMenuItem>
+        )}
         <StyledMenuItem
           sx={{
             borderRadius: 1,
