@@ -16,6 +16,7 @@ import {
 
 type SignUpWithEmailFormProps = PropsWithChildren & {
   onClickSendVerification?: MouseEventHandler;
+  onClickSignIn?: MouseEventHandler;
 };
 
 const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
@@ -97,7 +98,9 @@ const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
             </SecondaryButton>
             <Stack direction={"row"} justifyContent={"center"} spacing={1}>
               <Typography variant={"body2"}>이미 가입했나요?</Typography>
-              <LinkTypography variant={"body2"}>로그인 하기</LinkTypography>
+              <LinkTypography variant={"body2"} onClick={props.onClickSignIn}>
+                로그인 하기
+              </LinkTypography>
             </Stack>
           </Stack>
         </Stack>

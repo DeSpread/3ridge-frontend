@@ -49,10 +49,6 @@ export function useWalletLogin() {
     refreshWalletInfo();
   }, [getConnectedAccount().address]);
 
-  useEffect(() => {
-    refreshWalletInfo();
-  }, []);
-
   const refreshWalletInfo = () => {
     if (getConnectedAccount().address && !walletInfo?.address) {
       const { address, network } = getConnectedAccount();

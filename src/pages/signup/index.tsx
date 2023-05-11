@@ -12,6 +12,7 @@ import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
+  getLocaleErrorMessage,
 } from "../../error/my-error";
 import { useAlert } from "../../provider/alert/alert-provider";
 import SignUpWithEmailForm from "./components/sign-up-with-email-form";
@@ -125,25 +126,36 @@ const Signup = () => {
           )}
           {formType === FORM_TYPE.WITH_EMAIL && (
             <SignUpWithEmailForm
+              onClickSignIn={(e) => {
+                e.preventDefault();
+                setShowSignInDialog(true);
+              }}
               onClickSendVerification={(e) => {
                 const myEvent =
                   e as MouseEventWithParam<EmailSignUpEventParams>;
                 showLoading();
                 emailVerify(myEvent.params, {
-                  onSuccess: () => {
+                  onSuccess: (msg) => {
+                    if (msg === "mail auth is already done") {
+                      showErrorAlert({
+                        content: "이미 인증으로 사용된 메일입니다.",
+                      });
+                      closeLoading();
+                      return;
+                    }
                     setSignUpParams({ ...myEvent.params });
                     setFormType(FORM_TYPE.VERIFY_EMAIL);
                     closeLoading();
                   },
                   onError: (error: AppError) => {
-                    console.log(error);
+                    // console.log(error);
                     if (error.message === "auth already requested") {
                       setSignUpParams({ ...myEvent.params });
                       setFormType(FORM_TYPE.VERIFY_EMAIL);
                       closeLoading();
                       return;
                     }
-                    showErrorAlert({ content: getErrorMessage(e) });
+                    showErrorAlert({ content: getLocaleErrorMessage(error) });
                     closeLoading();
                   },
                 });
@@ -170,8 +182,10 @@ const Signup = () => {
                       title: "Info",
                       content: (
                         <div>
-                          <p style={{ marginBottom: -2 }}>Email is resend</p>
-                          <p>Please check your email</p>
+                          <p style={{ marginBottom: -2 }}>
+                            이메일이 재전송 되었습니다
+                          </p>
+                          <p>메일함에 메일을 확인해주세요</p>
                         </div>
                       ),
                     });
@@ -184,13 +198,18 @@ const Signup = () => {
               }}
               onClickSignIn={(e) => {
                 const { email, password } = signupParams;
+                showLoading();
                 emailSignIn(
                   { email, password },
                   {
                     onSuccess: () => {
+                      closeLoading();
                       router.push("/profile").then();
                     },
-                    onError: (e: Error) => {},
+                    onError: (e: Error) => {
+                      closeLoading();
+                      showErrorAlert({ content: getLocaleErrorMessage(e) });
+                    },
                   }
                 );
               }}

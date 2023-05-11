@@ -26,7 +26,7 @@ const SendVerificationEmailForm = (props: SendVerificationEmailFormProps) => {
         spacing={4}
       >
         <Typography textAlign={"left"} variant={"h5"}>
-          Send Verification Email
+          인증 메일 보내기
         </Typography>
         <Stack spacing={4}>
           <MailTextField
@@ -49,7 +49,7 @@ const SendVerificationEmailForm = (props: SendVerificationEmailFormProps) => {
                 props.onClickSendVerification?.(myEvent);
               }}
             >
-              Send verification email
+              인증 메일 보내기
             </SecondaryButton>
           </Stack>
         </Stack>

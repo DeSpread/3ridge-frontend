@@ -97,10 +97,10 @@ const AuthComplete = (props: { mail: string }) => {
           sx={{ width: "100%", marginBottom: 4, borderBottomWidth: 2 }}
         ></Divider>
         <Typography variant={"h4"} textAlign={"center"}>
-          Mail Verification Complete
+          메일이 인증되었습니다.
         </Typography>
         <Typography variant={"h6"} color={theme.palette.neutral[400]}>
-          Thank you for using our service
+          회원 가입해주셔서 감사합니다.
         </Typography>
         <PrimaryButton
           sx={{
@@ -135,7 +135,7 @@ const AuthComplete = (props: { mail: string }) => {
               color={theme.palette.neutral[900]}
               fontFamily={"LINESeedKR-Bd"}
             >
-              Start Now
+              로그인해서 시작하기
             </Typography>
           </Box>
         </PrimaryButton>

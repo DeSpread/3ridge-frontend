@@ -69,7 +69,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
   };
 
   const showErrorAlert = ({ content }: { content: string | ReactElement }) => {
-    alertDescRef.current.title = "SOMETHING WRONG";
+    alertDescRef.current.title = "오류가 발생했습니다";
     alertDescRef.current.content = (
       <Stack direction={"column"} sx={{ flex: 1, background: "" }}>
         <div>{content}</div>

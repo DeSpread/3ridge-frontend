@@ -44,9 +44,9 @@ const VerifyYourEmailForm = ({
             <Typography variant={"h5"}>{email}</Typography>
           </Stack>
           <Stack width={"100%"} alignItems={"center"} spacing={3}>
-            <SecondaryButton fullWidth={true} onClick={onClickSignIn}>
-              {signInTitle}
-            </SecondaryButton>
+            {/*<SecondaryButton fullWidth={true} onClick={onClickSignIn}>*/}
+            {/*  {signInTitle}*/}
+            {/*</SecondaryButton>*/}
             <Stack alignItems={"center"}>
               <Typography variant={"caption"}>
                 만약 메일을 받지 못했다면
