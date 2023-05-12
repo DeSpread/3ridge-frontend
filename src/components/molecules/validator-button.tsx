@@ -42,12 +42,20 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
       <Stack
         direction={"row"}
         spacing={1}
-        sx={{ paddingLeft: 1, paddingRight: 1 }}
+        sx={{
+          paddingLeft: 1,
+          paddingRight: 1,
+          background: "",
+          width: "100%",
+        }}
+        alignItems={"center"}
+        // justifyContent={"center"}
       >
         <Stack
-          sx={{ paddingLeft: 2, paddingRight: 2 }}
+          sx={{ background: "", paddingRight: 2 }}
           direction={"row"}
           spacing={1}
+          alignItems={"center"}
         >
           {props.svgIcon && <props.svgIcon></props.svgIcon>}
           {props.value && (
