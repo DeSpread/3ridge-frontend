@@ -219,12 +219,12 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                   }
                   payload={""}
                 ></ValidatorButton>
-                <TelegramLoginButton
-                  dataOnauth={(res: any) => {
-                    console.log(res);
-                  }}
-                  botName="despread_user_auth_bot"
-                />
+                {/*<TelegramLoginButton*/}
+                {/*  dataOnauth={(res: any) => {*/}
+                {/*    console.log(res);*/}
+                {/*  }}*/}
+                {/*  botName="despread_user_auth_bot"*/}
+                {/*/>*/}
               </Stack>
             </Stack>
             <Stack spacing={2}>
