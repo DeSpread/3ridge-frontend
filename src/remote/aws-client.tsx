@@ -122,4 +122,38 @@ export default class AwsClient {
     });
     return response;
   };
+
+  asyncRequestAuthCodeMail = async (mail: string) => {
+    const headersList = {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+    };
+
+    const bodyContent = JSON.stringify({
+      mail,
+    });
+
+    const response = await fetch(`${this.emailAuthApiUrl}/authcode`, {
+      method: "POST",
+      body: bodyContent,
+      headers: headersList,
+    });
+    return response;
+  };
+
+  asyncGetAuthCodeOfMail = async (mail: string) => {
+    const headersList = {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+    };
+
+    const response = await fetch(
+      `${this.emailAuthApiUrl}/authcode?mail=${encodeURIComponent(mail)}`,
+      {
+        method: "GET",
+        headers: headersList,
+      }
+    );
+    return response;
+  };
 }

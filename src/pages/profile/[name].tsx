@@ -100,11 +100,6 @@ const Profile = (props: AppProps) => {
   const { showLoading, closeLoading } = useLoading();
   const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
   const [openConnectEmailDialog, setOpenConnectEmailDialog] = useState(false);
-  const [verificationMail, setVerificationMail] = useState("");
-  const [dialogFormType, setDialogFormType] =
-    useState<ConnectMailDialogFormType>(
-      CONNECT_MAIL_DIALOG_FORM_TYPE.SEND_EMAIL
-    );
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
   const [imageFile, setImageFile] = useState<File>();
@@ -289,40 +284,6 @@ const Profile = (props: AppProps) => {
     }
     return (userData?.rewardPoint ?? 0) % 100;
   }, [userData?.rewardPoint]);
-
-  const asyncMailSignInWithVerify = async (email: string) => {
-    try {
-      showLoading();
-      const res = await AwsClient.getInstance().asyncIsAuthMail(email);
-      if (res.status === 400 || res.status === 500) {
-        closeLoading();
-        const data = await res.text();
-        const message = JSON.parse(data).message;
-        if (
-          message === "Mail is not registered" ||
-          message === "Not yet authorized"
-        ) {
-          showAlert({ title: "Info", content: message });
-        } else {
-          showErrorAlert({ content: message });
-        }
-        return;
-      }
-      await asyncUpdateEmail(email);
-      setOpenConnectEmailDialog(false);
-      closeLoading();
-    } catch (e) {
-      closeLoading();
-      const message = getErrorMessage(e);
-      // console.log(message);
-      if (message.includes(APP_ERROR_MESSAGE.FIREBASE_TOO_MANY_REQUESTS)) {
-        showErrorAlert({
-          content: "Resend email exceed limit please 1hour later",
-        });
-      }
-      showErrorAlert({ content: message });
-    }
-  };
 
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
@@ -788,137 +749,22 @@ const Profile = (props: AppProps) => {
       ></ProfileEditDialog>
       <ConnectEmailDialog
         open={openConnectEmailDialog}
-        onClickSendVerification={async (e) => {
-          const myEvent = e as MouseEventWithParam<EmailSignUpEventParams>;
-          const { email } = myEvent.params;
-          try {
-            showLoading();
-            emailVerify(
-              { password: "12345678", email: email },
-              {
-                onSuccess: (msg) => {
-                  closeLoading();
-                  if (msg === "mail auth is already done") {
-                    asyncMailSignInWithVerify(email);
-                    return;
-                  }
-                  setVerificationMail(email);
-                  setDialogFormType(CONNECT_MAIL_DIALOG_FORM_TYPE.VERIFY_EMAIL);
-                },
-                onError: (error) => {
-                  closeLoading();
-                  if (error.message === "Password is not correct") {
-                    showAlert({
-                      title: "Info",
-                      content: "This mail is already auth",
-                    });
-                    return;
-                  } else if (
-                    error.message === "Not yet authorized" ||
-                    error.message === "auth already requested"
-                  ) {
-                    showAlert({
-                      title: "Info",
-                      content: (
-                        <div>
-                          <Stack sx={{ width: "100%" }} spacing={1}>
-                            <Typography variant={"body1"}>
-                              Validation email Already is sent
-                            </Typography>
-                            <LinkTypography
-                              variant={"body2"}
-                              sx={{
-                                fontWeight: "bold",
-                                color: theme.palette.error.main,
-                                "&:hover": {
-                                  color: theme.palette.error.light,
-                                  textDecoration: "underline",
-                                },
-                              }}
-                              onClick={async (e) => {
-                                closeAlert();
-                                showLoading();
-                                await AwsClient.getInstance().asyncResendAuthMail(
-                                  email
-                                );
-                                closeLoading();
-                                showAlert({
-                                  title: "Info",
-                                  content: "Validation mail is sent",
-                                });
-                              }}
-                            >
-                              Resend verification email
-                            </LinkTypography>
-                          </Stack>
-                        </div>
-                      ),
-                    });
-                    return;
-                  }
-                  closeLoading();
-                  showErrorAlert({ content: error.message });
-                },
-              }
-            );
-          } catch (e) {
-            console.log(e);
-            closeLoading();
-            const message = getErrorMessage(e);
-            if (
-              message.includes(APP_ERROR_MESSAGE.FIREBASE_TOO_MANY_REQUESTS)
-            ) {
-              showErrorAlert({
-                content: "Resend email exceed limit please 1hour later",
-              });
-            } else {
-              showErrorAlert({ content: message });
-            }
-          }
-        }}
-        email={verificationMail}
-        formType={dialogFormType}
-        onClickResendVerification={async (e) => {
-          try {
-            showLoading();
-            if (!verificationMail) return;
-            const res = await AwsClient.getInstance().asyncResendAuthMail(
-              verificationMail
-            );
-            if (res.status === 500 || res.status === 400) {
-              const data = await res.text();
-              const message = JSON.parse(data).message;
-              showErrorAlert({ content: message });
-            } else {
-              showAlert({
-                title: "Info",
-                content: (
-                  <div>
-                    <p style={{ marginBottom: -2 }}>Email is resend</p>
-                    <p>Please check your email</p>
-                  </div>
-                ),
-              });
-            }
-          } catch (e) {
-            showErrorAlert({ content: "Unknown error occurred" });
-          } finally {
-            closeLoading();
-          }
-        }}
-        onClickSignIn={async (e) => {
-          await asyncMailSignInWithVerify(verificationMail);
-        }}
-        onClose={() => {
-          setDialogFormType(CONNECT_MAIL_DIALOG_FORM_TYPE.SEND_EMAIL);
-          setVerificationMail("");
-          setOpenConnectEmailDialog(false);
-        }}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
-          setDialogFormType(CONNECT_MAIL_DIALOG_FORM_TYPE.SEND_EMAIL);
-          setVerificationMail("");
           setOpenConnectEmailDialog(false);
+        }}
+        onClose={() => {
+          setOpenConnectEmailDialog(false);
+        }}
+        onOauthComplete={async (mail) => {
+          showLoading();
+          await asyncUpdateEmail(mail);
+          showAlert({
+            title: "알림",
+            content: "인증되었습니다",
+          });
+          setOpenConnectEmailDialog(false);
+          closeLoading();
         }}
       ></ConnectEmailDialog>
       <PictureEditDialog

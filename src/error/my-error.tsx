@@ -18,6 +18,7 @@ export const APP_ERROR_MESSAGE = {
   PARAMETER_ERROR: "parameter error",
   EMAIL_NOT_AUTHORIZED: "Not yet authorized",
   EMAIL_PASSWORD_NOT_CORRECT: "Password is not correct",
+  EMAIL_AUTH_CODE_TIMEOUT: "auth code is timeout",
 } as const;
 
 export class AppError extends Error {
@@ -46,6 +47,8 @@ export const getLocaleErrorMessage = (e: any) => {
     return "아직 인증되지 않았습니다. 인증 링크를 확인해주세요.";
   } else if (message === APP_ERROR_MESSAGE.EMAIL_PASSWORD_NOT_CORRECT) {
     return "패스워드가 맞지 않습니다. 패스워드를 확인해주세요.";
+  } else if (message === APP_ERROR_MESSAGE.EMAIL_AUTH_CODE_TIMEOUT) {
+    return "코드가 만료되었습니다.";
   }
   return message;
 };
