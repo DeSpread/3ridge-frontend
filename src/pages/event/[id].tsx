@@ -1137,8 +1137,8 @@ const Event = (props: AppProps) => {
         }}
       >
         <Typography>
-          We will periodically check the participation status for the Discord
-          invitation link.
+          Discord 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
+          참여 상태로 유지해주세요.
         </Typography>
       </SimpleDialog>
       <QuestQuizDialog
