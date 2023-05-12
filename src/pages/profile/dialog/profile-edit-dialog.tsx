@@ -30,6 +30,8 @@ import { ValidatorButton } from "../../../components/molecules/validator-button"
 import BlockIcon from "../../../components/molecules/block-icon";
 import ResourceFactory from "../../../helper/resource-factory";
 import PrimaryButton from "../../../components/atoms/primary-button";
+// @ts-ignore
+import TelegramLoginButton from "react-telegram-login";
 
 const ReversibleMarkEmailIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -217,6 +219,12 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                   }
                   payload={""}
                 ></ValidatorButton>
+                <TelegramLoginButton
+                  dataOnauth={(res: any) => {
+                    console.log(res);
+                  }}
+                  botName="despread_user_auth_bot"
+                />
               </Stack>
             </Stack>
             <Stack spacing={2}>
