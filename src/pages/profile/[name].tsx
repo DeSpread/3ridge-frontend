@@ -7,7 +7,6 @@ import {
   Box,
   Divider,
   Grid,
-  Link as MuiLink,
   Skeleton,
   Stack,
   Theme,
@@ -25,18 +24,11 @@ import ProfileEditDialog from "./dialog/profile-edit-dialog";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useLogin } from "../../provider/login/login-provider";
 import {
-  EmailSignUpEventParams,
   MouseEventWithParam,
   MouseEventWithStateParam,
-  SUPPORTED_NETWORKS,
   SupportedNetwork,
-  TicketEventParam,
-  WALLET_NAMES,
 } from "../../type";
-import ConnectEmailDialog, {
-  CONNECT_MAIL_DIALOG_FORM_TYPE,
-  ConnectMailDialogFormType,
-} from "./dialog/connect-email-dialog";
+import ConnectEmailDialog from "./dialog/connect-email-dialog";
 import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import {
@@ -52,12 +44,10 @@ import StyledChip from "../../components/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
 import { gql, request } from "graphql-request";
 import CircularProgress from "@mui/material/CircularProgress";
-import Link from "next/link";
 import BlockIcon from "../../components/molecules/block-icon";
 import { useUserQuery } from "../../page-hook/user-query-hook";
 import { useRouter } from "next/router";
 import TicketCard from "../../components/molecules/ticket-card";
-import LinkTypography from "../../components/atoms/link-typography";
 import Image from "next/image";
 import ResourceFactory from "../../helper/resource-factory";
 import {
@@ -627,7 +617,7 @@ const Profile = (props: AppProps) => {
                     <Grid item sx={{ width: "100%" }}>
                       <Stack
                         direction={"row"}
-                        justifyContent={"left"}
+                        justifyContent={"center"}
                         sx={{
                           marginTop: 8,
                           marginBottom: 16,
@@ -807,7 +797,6 @@ const Profile = (props: AppProps) => {
         open={signInWithSupportedWalletVisible}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
-          // setSelectedNetwork("");
         }}
         onClose={() => {
           setSelectedNetwork("");
