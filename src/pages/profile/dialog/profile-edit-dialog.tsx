@@ -223,7 +223,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                   dataOnauth={(res: any) => {
                     console.log(res);
                   }}
-                  botName="despread_dev_user_auth_b"
+                  botName="despread_dev_user_auth_bot"
                 />
               </Stack>
             </Stack>
