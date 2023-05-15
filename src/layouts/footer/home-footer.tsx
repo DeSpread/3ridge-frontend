@@ -5,13 +5,20 @@ import {
   useMediaQuery,
   Divider,
   Typography,
+  IconButton,
 } from "@mui/material";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
 import React from "react";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import EmailIcon from "@mui/icons-material/Email";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+
 import PrimaryButton from "../../components/atoms/primary-button";
+import Image from "next/image";
 
 const footerData = [
   {
@@ -106,50 +113,87 @@ const HomeFooter = () => {
             {smUp ? "뉴스레터 구독하기" : "뉴스레터"}
           </SecondaryButton>
         </Stack>
-        <Stack direction={smUp ? "row" : "column"}>
-          <Link
+        <Stack direction={"row"}>
+          {smUp ? (
+            <Link
               href="https://airtable.com/shr406tfeuXcHz1o0"
               color="inherit"
               underline="hover"
               target="_blank"
               rel="noreferrer"
-          >
-            <Typography variant={smUp ? "body1" : "caption"}>
-              프로젝트 등록
-            </Typography>
-          </Link>
-          <Link
-            href="https://twitter.com/3ridge_xyz"
-            color="inherit"
-            underline="hover"
-            style={{ marginLeft: 16 }}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Typography variant={smUp ? "body1" : "caption"}>트위터</Typography>
-          </Link>
-          <Link
-            href="https://discord.gg/3ridge"
-            color="inherit"
-            underline="hover"
-            style={{ marginLeft: 16 }}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Typography variant={smUp ? "body1" : "caption"}>
-              디스코드
-            </Typography>
-          </Link>
-          <Link
-            href="mailto:support@3ridge.xyz?Subject=Hello!%203ridge"
-            color="inherit"
-            underline="hover"
-            style={{ marginLeft: 16 }}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Typography variant={smUp ? "body1" : "caption"}>이메일</Typography>
-          </Link>
+            >
+              <Typography variant={smUp ? "body1" : "caption"}>
+                프로젝트 등록
+              </Typography>
+            </Link>
+          ) : (
+            <IconButton href={"https://airtable.com/shr406tfeuXcHz1o0"}>
+              <AppRegistrationIcon></AppRegistrationIcon>
+            </IconButton>
+          )}
+          {smUp ? (
+            <Link
+              href="https://twitter.com/3ridge_xyz"
+              color="inherit"
+              underline="hover"
+              style={{ marginLeft: 16 }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Typography variant={smUp ? "body1" : "caption"}>
+                트위터
+              </Typography>
+            </Link>
+          ) : (
+            <IconButton href={"https://twitter.com/3ridge_xyz"}>
+              <TwitterIcon></TwitterIcon>
+            </IconButton>
+          )}
+          {smUp ? (
+            <Link
+              href="https://discord.gg/3ridge"
+              color="inherit"
+              underline="hover"
+              style={{ marginLeft: 16 }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Typography variant={smUp ? "body1" : "caption"}>
+                디스코드
+              </Typography>
+            </Link>
+          ) : (
+            <IconButton href={"https://discord.gg/3ridge"}>
+              <Image
+                src={
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/discord.svg"
+                }
+                alt={""}
+                width={24}
+                height={24}
+              ></Image>
+            </IconButton>
+          )}
+          {smUp ? (
+            <Link
+              href="mailto:support@3ridge.xyz?Subject=Hello!%203ridge"
+              color="inherit"
+              underline="hover"
+              style={{ marginLeft: 16 }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Typography variant={smUp ? "body1" : "caption"}>
+                이메일
+              </Typography>
+            </Link>
+          ) : (
+            <IconButton
+              href={"mailto:support@3ridge.xyz?Subject=Hello!%203ridge"}
+            >
+              <EmailIcon></EmailIcon>
+            </IconButton>
+          )}
         </Stack>
       </Box>
     </div>

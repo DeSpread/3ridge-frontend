@@ -122,6 +122,10 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                   {ticket?.project?.name && (
                     <Typography
                       variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
+                      sx={{
+                        textShadow:
+                          "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
+                      }}
                     >
                       {ticket?.project?.name}
                     </Typography>
@@ -129,6 +133,10 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                   {!ticket?.project?.name && (
                     <Typography
                       variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
+                      sx={{
+                        textShadow:
+                          "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
+                      }}
                     >
                       3ridge
                     </Typography>
@@ -136,7 +144,13 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                 </Box>
               </Stack>
               <Box>
-                <Typography variant={mdUp ? "body2" : smUp ? "body1" : "body2"}>
+                <Typography
+                  variant={mdUp ? "body2" : smUp ? "body1" : "body2"}
+                  sx={{
+                    textShadow:
+                      "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
+                  }}
+                >
                   {ticket?.quests?.length ?? 0} 퀘스트
                 </Typography>
               </Box>
@@ -160,6 +174,8 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                     WebkitLineClamp: "2",
                     WebkitBoxOrient: "vertical",
                     textAlign: "center",
+                    textShadow:
+                      "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
                   }}
                   fontFamily={"LINESeedKR-Bd"}
                 >
@@ -176,7 +192,13 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                   height={32}
                   style={{ marginLeft: -6 }}
                 ></Image>
-                <Typography variant={"body2"}>
+                <Typography
+                  variant={"body2"}
+                  sx={{
+                    textShadow:
+                      "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
+                  }}
+                >
                   {`${ticket?.rewardPolicy?.context?.point ?? 0} 포인트`}
                 </Typography>
               </Stack>
