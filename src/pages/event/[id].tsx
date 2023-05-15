@@ -52,7 +52,11 @@ import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
-import { getErrorMessage } from "../../error/my-error";
+import {
+  APP_ERROR_MESSAGE,
+  getErrorMessage,
+  getLocaleErrorMessage,
+} from "../../error/my-error";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
@@ -602,12 +606,25 @@ const Event = (props: AppProps) => {
                             updateVerifyState(index);
                           }
                         } catch (e) {
+                          const errorMessage = getErrorMessage(e);
                           if (
-                            getErrorMessage(e) ===
-                            "user already participated ticket"
+                            errorMessage ===
+                            APP_ERROR_MESSAGE.ALREADY_PARTICIPATED_USER
                           ) {
                             myEvent.params.callback("success");
                             updateVerifyState(index);
+                          } else if (
+                            errorMessage ===
+                              APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW ||
+                            errorMessage ===
+                              APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET ||
+                            errorMessage ===
+                              APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING
+                          ) {
+                            showAlert({
+                              title: "알림",
+                              content: getLocaleErrorMessage(e),
+                            });
                           }
                         }
                       }}

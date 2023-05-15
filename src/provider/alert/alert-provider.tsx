@@ -85,6 +85,12 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
     setOpen(false);
   };
 
+  const multiLineContentText = (content: string) => {
+    return content.split("\n").map((e, index) => {
+      return <Typography key={index}>{e}</Typography>;
+    });
+  };
+
   return (
     <AlertContext.Provider value={{ showAlert, closeAlert, showErrorAlert }}>
       {children}
@@ -138,7 +144,10 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
           justifyContent={"center"}
         >
           <DialogContentText sx={{ background: "" }}>
-            {alertDescRef.current.content}
+            {typeof alertDescRef.current.content === "string" &&
+              multiLineContentText(alertDescRef.current.content)}
+            {typeof alertDescRef.current.content !== "string" &&
+              alertDescRef.current.content}
           </DialogContentText>
         </Stack>
       </Dialog>

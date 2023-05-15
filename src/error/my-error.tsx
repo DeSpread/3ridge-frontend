@@ -19,6 +19,10 @@ export const APP_ERROR_MESSAGE = {
   EMAIL_NOT_AUTHORIZED: "Not yet authorized",
   EMAIL_PASSWORD_NOT_CORRECT: "Password is not correct",
   EMAIL_AUTH_CODE_TIMEOUT: "auth code is timeout",
+  ALREADY_PARTICIPATED_USER: "user already participated ticket",
+  DOES_NOT_TWITTER_FOLLOW: "user does not follow twitter",
+  DOES_NOT_TWITTER_RETWEET: "user does not retweet twitter",
+  DOES_NOT_TWITTER_LIKING: "user does not like twitter",
 } as const;
 
 export class AppError extends Error {
@@ -49,6 +53,12 @@ export const getLocaleErrorMessage = (e: any) => {
     return "패스워드가 맞지 않습니다. 패스워드를 확인해주세요.";
   } else if (message === APP_ERROR_MESSAGE.EMAIL_AUTH_CODE_TIMEOUT) {
     return "코드가 만료되었습니다.";
+  } else if (message === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW) {
+    return "트위터 팔로우를 하지 않았어요.\r\n 팔로우 하였는지 확인 부탁드립니다. 🙂";
+  } else if (message === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET) {
+    return "트위터 리트윗을 하지 않았어요.\r\n 리트윗 하였는지 확인 부탁드립니다. 🙂";
+  } else if (message === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING) {
+    return "트위터 좋아요를 하지 않았어요.\r\n 좋아요 하였는지 확인 부탁드립니다. 🙂";
   }
   return message;
 };

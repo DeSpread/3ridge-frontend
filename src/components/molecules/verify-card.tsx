@@ -132,13 +132,13 @@ const VerifyCard = (props: VerifyCardProps) => {
                     onClick={(e) => {
                       setCardState("VERIFYING");
                       let timer: NodeJS.Timer;
-                      let _vDate = addSeconds(new Date(), 10);
+                      let _vDate = addSeconds(new Date(), 5);
                       function checkRemain() {
                         const now = new Date();
                         //@ts-ignore
                         const distDt = _vDate - now;
                         setVerifyingProgress((prevState) => {
-                          return prevState + 1;
+                          return prevState + 2;
                         });
                         if (distDt < 0) {
                           clearInterval(timer);
