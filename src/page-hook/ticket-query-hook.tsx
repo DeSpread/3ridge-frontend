@@ -118,6 +118,7 @@ export function useTicketQuery({
     questId: string
   ) => {
     if (ticketId && questId && userId) {
+      console.log(ticketId, questId, userId);
       const res = await verifyTwitterFollowQuest({
         variables: {
           ticketId,

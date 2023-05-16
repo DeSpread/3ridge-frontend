@@ -56,6 +56,7 @@ import {
 } from "../../util/type-util";
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
+import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 
 const Profile = (props: AppProps) => {
   const router = useRouter();
@@ -88,7 +89,9 @@ const Profile = (props: AppProps) => {
     isLoggedIn,
   } = useLogin();
   const { showLoading, closeLoading } = useLoading();
-  const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
+  const { isProfileEditDialogOpen, setShowProfileEditDialog } =
+    useProfileEditDialog();
+  // const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
   const [openConnectEmailDialog, setOpenConnectEmailDialog] = useState(false);
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
@@ -107,6 +110,11 @@ const Profile = (props: AppProps) => {
   const isSingedUserProfile = useMemo(() => {
     return signedUserData._id === userData?._id;
   }, [signedUserData, userData]);
+
+  router?.events?.on("routeChangeComplete", (url, { shallow }) => {
+    if (url && typeof url === "string" && !url.includes("/profile/"))
+      setShowProfileEditDialog(false);
+  });
 
   const targetUserData = useMemo(() => {
     if (userData?._id === signedUserData._id) {
@@ -499,7 +507,8 @@ const Profile = (props: AppProps) => {
                     <PrimaryButton
                       sx={{ marginBottom: 1, marginLeft: -1 }}
                       onClick={() => {
-                        setOpenProfileEditDialog(true);
+                        setShowProfileEditDialog(true);
+                        // setOpenProfileEditDialog(true);
                       }}
                       disabled={!isSingedUserProfile}
                     >
@@ -641,9 +650,10 @@ const Profile = (props: AppProps) => {
         userData={signedUserData}
         title={"프로필 수정하기"}
         onClose={() => {
-          setOpenProfileEditDialog(false);
+          setShowProfileEditDialog(false);
+          // setOpenProfileEditDialog(false);
         }}
-        open={openProfileEditDialog}
+        open={isProfileEditDialogOpen}
         walletValidatorButtonOnClick={async (e) => {
           const myEvent = e as MouseEventWithParam<{
             state?: string;
@@ -731,7 +741,8 @@ const Profile = (props: AppProps) => {
         isWalletLoggedIn={isWalletLoggedIn}
         isMailLoggedIn={isMailLoggedIn || isGoogleLoggedIn}
         onCloseBtnClicked={(e) => {
-          setOpenProfileEditDialog(false);
+          setShowProfileEditDialog(false);
+          // setOpenProfileEditDialog(false);
         }}
         onFileImageAdded={(f) => {
           setImageFile(f);

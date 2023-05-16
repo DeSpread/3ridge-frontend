@@ -21,6 +21,7 @@ import {
 import { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 import Draggable from "react-draggable";
+import ComponentHelper from "../../helper/component-helper";
 
 const AlertContext = createContext<{
   showAlert: ({
@@ -85,11 +86,11 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
     setOpen(false);
   };
 
-  const multiLineContentText = (content: string) => {
-    return content.split("\n").map((e, index) => {
-      return <Typography key={index}>{e}</Typography>;
-    });
-  };
+  // const multiLineContentText = (content: string) => {
+  //   return content.split("\n").map((e, index) => {
+  //     return <Typography key={index}>{e}</Typography>;
+  //   });
+  // };
 
   return (
     <AlertContext.Provider value={{ showAlert, closeAlert, showErrorAlert }}>
@@ -145,7 +146,9 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
         >
           <DialogContentText sx={{ background: "" }}>
             {typeof alertDescRef.current.content === "string" &&
-              multiLineContentText(alertDescRef.current.content)}
+              ComponentHelper.getInstance().multiLineContentText(
+                alertDescRef.current.content
+              )}
             {typeof alertDescRef.current.content !== "string" &&
               alertDescRef.current.content}
           </DialogContentText>

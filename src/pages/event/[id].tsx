@@ -1,10 +1,4 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -13,11 +7,9 @@ import {
   Box,
   ButtonProps,
   Card,
-  CardActions,
   CardContent,
   Divider,
   Grid,
-  Link as MuiLink,
   Skeleton,
   Stack,
   Tooltip,
@@ -30,7 +22,6 @@ import { format } from "date-fns";
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import PrimaryCard from "../../components/atoms/primary-card";
-import { TimerSettings, useTimer } from "react-timer-hook";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { decodeBase64, nFormatter } from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
@@ -68,10 +59,10 @@ import BlockIcon from "../../components/molecules/block-icon";
 import TimerBoard, {
   DummyTimerBoard,
 } from "../../components/molecules/timer-board";
-import Link from "next/link";
 import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
-import { atob } from "buffer";
-import quizStrategy from "./quizStrategy";
+import ComponentHelper from "../../helper/component-helper";
+import { useLogin } from "../../provider/login/login-provider";
+import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -121,6 +112,7 @@ const LoadingButton = (props: ButtonProps) => {
 const Event = (props: AppProps) => {
   const { userData, asyncUpdateSocialTwitter, asyncUpdateRewardPoint } =
     useSignedUserQuery();
+  const { isLoggedIn } = useLogin();
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -158,6 +150,8 @@ const Event = (props: AppProps) => {
   const [claimCompleted, setClaimCompleted] = useState(false);
   const [updatingClaimCompleted, setUpdatingClaimCompleted] = useState(true);
   const [htmlContent, setHtmlContent] = useState("");
+  const { isProfileEditDialogOpen, setShowProfileEditDialog } =
+    useProfileEditDialog();
 
   useEffect(() => {
     if (!userData?._id) return;
@@ -417,8 +411,12 @@ const Event = (props: AppProps) => {
                         </>
                       )}
                       {!ticketData?.completed && (
-                        <Box sx={{ marginTop: 1 }}>
-                          <Typography>Ongoing</Typography>
+                        <Box sx={{ marginTop: 2 }}>
+                          <StyledChip
+                            label={"진행중"}
+                            color={"success"}
+                            variant="outlined"
+                          ></StyledChip>
                         </Box>
                       )}
                     </Stack>
@@ -437,22 +435,18 @@ const Event = (props: AppProps) => {
                     textAlign: smUp ? "left" : "center",
                   }}
                 >
-                  {smUp ? (
-                    <>
-                      <Card>
-                        <CardContent>
-                          <Typography
-                            variant={"h6"}
-                            sx={{ color: theme.palette.warning.main }}
-                          >
-                            로그인 후, 이벤트에 참여하실 수 있어요 😅
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </>
-                  ) : (
-                    <></>
-                  )}
+                  <>
+                    <Card>
+                      <CardContent>
+                        <Typography
+                          variant={"h6"}
+                          sx={{ color: theme.palette.warning.main }}
+                        >
+                          로그인 후, 이벤트에 참여하실 수 있어요 😅
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </>
                 </Typography>
               </Box>
             )}
@@ -460,14 +454,17 @@ const Event = (props: AppProps) => {
               <Card>
                 <CardContent>
                   <Stack
-                    direction={"row"}
+                    direction={smUp ? "row" : "column"}
                     alignItems={"center"}
                     justifyContent={"space-between"}
+                    spacing={smUp ? 0 : 2}
                   >
                     <Stack direction={"column"}>
                       <Typography
                         variant={"h6"}
                         sx={{ color: theme.palette.warning.main }}
+                        // alignContent={"center"}
+                        textAlign={"center"}
                       >
                         {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
                       </Typography>
@@ -477,6 +474,7 @@ const Event = (props: AppProps) => {
                         onClick={async (e) => {
                           e.preventDefault();
                           showLoading();
+                          setShowProfileEditDialog(true);
                           await router.push(`/profile/${userData?.name}`);
                           closeLoading();
                         }}
@@ -488,30 +486,29 @@ const Event = (props: AppProps) => {
                 </CardContent>
               </Card>
             )}
-            <Stack direction={"column"} spacing={2}>
+            <Stack
+              direction={"column"}
+              spacing={2}
+              alignItems={smUp ? "flex-start" : "center"}
+            >
               <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
                 이벤트 설명
               </Typography>
               <Box sx={{ maxWidth: 800 }}>
-                <Typography
-                  variant={"body1"}
-                  textAlign={smUp ? "left" : "center"}
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: "5",
-                    WebkitBoxOrient: "vertical",
-                  }}
-                >
-                  {ticketData?.description}
-                </Typography>
+                <Stack>
+                  {ComponentHelper.getInstance().multiLineContentText(
+                    ticketData?.description,
+                    {
+                      textAlign: smUp ? "left" : "center",
+                    }
+                  )}
+                </Stack>
               </Box>
             </Stack>
 
             <Stack
               direction={"column"}
-              alignItems={"left"}
+              alignItems={smUp ? "left" : "center"}
               spacing={2}
               // maxWidth={800}
               sx={{ background: "" }}
@@ -615,6 +612,7 @@ const Event = (props: AppProps) => {
                           }
                         } catch (e) {
                           const errorMessage = getErrorMessage(e);
+                          console.log(errorMessage);
                           if (
                             errorMessage ===
                             APP_ERROR_MESSAGE.ALREADY_PARTICIPATED_USER

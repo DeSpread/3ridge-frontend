@@ -208,9 +208,6 @@ const MainLayout = (props: MainLayoutProps) => {
                   width={smUp ? 132 : 120}
                   alt={""}
                 />
-                {/*<Typography sx={{ marginLeft: -1 }} variant={"caption"}>*/}
-                {/*  testnet*/}
-                {/*</Typography>*/}
               </Stack>
             </Box>
             {!props.disableNavButtonSet &&
