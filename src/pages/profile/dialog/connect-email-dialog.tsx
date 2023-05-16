@@ -21,7 +21,7 @@ import {
 } from "../../../type";
 import MailTextField from "../../../components/molecules/mail-text-field";
 import SecondaryButton from "../../../components/atoms/secondary-button";
-import { validateMail } from "../../../util/validate-string-util";
+import { validateMail } from "../../../util/string-util";
 import AwsClient from "../../../remote/aws-client";
 import { useAlert } from "../../../provider/alert/alert-provider";
 import { getLocaleErrorMessage } from "../../../error/my-error";

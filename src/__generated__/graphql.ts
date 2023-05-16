@@ -520,6 +520,7 @@ export type Ticket = {
   _id?: Maybe<Scalars['String']>;
   beginTime?: Maybe<Scalars['DateTime']>;
   completed?: Maybe<Scalars['Boolean']>;
+  completedUsers?: Maybe<Array<User>>;
   description?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   participantCount?: Maybe<Scalars['Float']>;
@@ -537,6 +538,7 @@ export type TicketInputType = {
   _id?: InputMaybe<Scalars['String']>;
   beginTime?: InputMaybe<Scalars['DateTime']>;
   completed?: InputMaybe<Scalars['Boolean']>;
+  completedUsers?: InputMaybe<Array<UserInputType>>;
   description?: InputMaybe<Scalars['String']>;
   imageUrl?: InputMaybe<Scalars['String']>;
   participantCount?: InputMaybe<Scalars['Float']>;

@@ -1,6 +1,6 @@
 import { IconButton, InputAdornment, OutlinedInputProps } from "@mui/material";
 import React, { useMemo, useState } from "react";
-import { validatePassword } from "../../util/validate-string-util";
+import { validatePassword } from "../../util/string-util";
 import ValidatedTextInput, {
   ValidatedTextInputProps,
 } from "./validated-text-input";

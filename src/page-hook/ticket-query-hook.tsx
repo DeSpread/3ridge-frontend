@@ -92,6 +92,7 @@ export function useTicketQuery({
                 questPolicy: e.questPolicy?.questPolicy ?? undefined,
               },
               isComplete: false,
+              questGuides: e.questGuides ?? [],
             };
           }),
           rewardPolicy: {

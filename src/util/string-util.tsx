@@ -36,4 +36,9 @@ const nFormatter = (num: number, digits: number) => {
     : "0";
 };
 
-export { validateMail, validatePassword, nFormatter };
+const decodeBase64 = (base64String: string) => {
+  const decodedString = Buffer.from(base64String, "base64").toString("utf-8");
+  return decodedString;
+};
+
+export { validateMail, validatePassword, nFormatter, decodeBase64 };

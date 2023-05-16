@@ -5,7 +5,7 @@ import React, { MouseEventHandler, useMemo, useState } from "react";
 import MailTextField from "../../../components/molecules/mail-text-field";
 import SecondaryButton from "../../../components/atoms/secondary-button";
 import { EmailSignUpEventParams, MouseEventWithParam } from "../../../type";
-import { validateMail } from "../../../util/validate-string-util";
+import { validateMail } from "../../../util/string-util";
 
 type SignInWithEmailProps = SignDialogProps & {
   onSignInWithEmailClicked: MouseEventHandler;

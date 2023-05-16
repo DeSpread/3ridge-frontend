@@ -1,7 +1,7 @@
 import { AppError } from "../error/my-error";
 import React from "react";
 import { SvgIconProps } from "@mui/material";
-import { CategoryType } from "../__generated__/graphql";
+import { CategoryType, QuestGuide } from "../__generated__/graphql";
 
 /*
  * Per QUEST_POLICY_TYPE, It is required to implement context parsing
@@ -146,7 +146,7 @@ export type FCFSRewardContext = {
   rewardAmount: number;
   rewardChain: string;
   rewardNetwork: string;
-  rewardClaimable: boolean,
+  rewardClaimable: boolean;
   nftImageUrl: string;
   collectionName: string;
   tokenName: string;
@@ -196,6 +196,7 @@ export type Quest = {
     questPolicy?: string;
   };
   completedUsers?: User[];
+  questGuides?: QuestGuide[];
   isComplete?: boolean;
 };
 

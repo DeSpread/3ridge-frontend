@@ -32,7 +32,7 @@ import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import PrimaryCard from "../../components/atoms/primary-card";
 import { TimerSettings, useTimer } from "react-timer-hook";
 import SecondaryButton from "../../components/atoms/secondary-button";
-import { nFormatter } from "../../util/validate-string-util";
+import { decodeBase64, nFormatter } from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
@@ -69,6 +69,9 @@ import TimerBoard, {
   DummyTimerBoard,
 } from "../../components/molecules/timer-board";
 import Link from "next/link";
+import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
+import { atob } from "buffer";
+import quizStrategy from "./quizStrategy";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -141,6 +144,8 @@ const Event = (props: AppProps) => {
       : undefined,
   });
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
+  const [openContentsRendererDialog, setOpenContentsRendererDialog] =
+    useState(false);
   const [openDiscordQuestDialog, setDiscordQuestDialog] = useState(false);
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
@@ -152,9 +157,9 @@ const Event = (props: AppProps) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [claimCompleted, setClaimCompleted] = useState(false);
   const [updatingClaimCompleted, setUpdatingClaimCompleted] = useState(true);
+  const [htmlContent, setHtmlContent] = useState("");
 
   useEffect(() => {
-    console.log(userData);
     if (!userData?._id) return;
     const ids = ticketData?.quests?.map((e) => {
       return e._id;
@@ -195,13 +200,18 @@ const Event = (props: AppProps) => {
     return !res;
   }, [verifiedList, updateIndex]);
 
-  const walletConnectedForClaim = useMemo(() => {
+  const walletConnectedForTicket = useMemo(() => {
     return (
-      ([
-        ...(userData?.walletAddressInfos?.map((e) => e.network) ?? []),
-        ["polygon"],
-      ].filter((e) => e === ticketData.rewardPolicy?.context?.rewardChain)
-        ?.length ?? 0) === 0
+      (userData?.walletAddressInfos
+        ?.filter((e) => e.address)
+        .map((e) => e.network)
+        .filter(
+          (e) =>
+            e ===
+            (ticketData.rewardPolicy?.context?.rewardChain === "polygon"
+              ? "evm"
+              : ticketData.rewardPolicy?.context?.rewardChain)
+        )?.length ?? 0) !== 0
     );
   }, [userData?.walletAddressInfos]);
 
@@ -232,6 +242,10 @@ const Event = (props: AppProps) => {
       }
       setUpdatingClaimCompleted(false);
     }
+  };
+
+  const verifyCardDisabled = () => {
+    return (userData?._id ? false : true) || !walletConnectedForTicket;
   };
 
   return (
@@ -442,42 +456,38 @@ const Event = (props: AppProps) => {
                 </Typography>
               </Box>
             )}
-            {userData?._id &&
-              (userData?.walletAddressInfos?.filter(
-                (e) =>
-                  e.network === ticketData.rewardPolicy?.context?.rewardNetwork
-              )?.length ?? 0) === 0 && (
-                <Card>
-                  <CardContent>
-                    <Stack
-                      direction={"row"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                    >
-                      <Stack direction={"column"}>
-                        <Typography
-                          variant={"h6"}
-                          sx={{ color: theme.palette.warning.main }}
-                        >
-                          {`리워드 클레임을 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
-                        </Typography>
-                      </Stack>
-                      <Stack direction={"column"}>
-                        <SecondaryButton
-                          onClick={async (e) => {
-                            e.preventDefault();
-                            showLoading();
-                            await router.push(`/profile/${userData?.name}`);
-                            closeLoading();
-                          }}
-                        >
-                          지갑 연결하러 가기
-                        </SecondaryButton>
-                      </Stack>
+            {userData?._id && !walletConnectedForTicket && (
+              <Card>
+                <CardContent>
+                  <Stack
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                  >
+                    <Stack direction={"column"}>
+                      <Typography
+                        variant={"h6"}
+                        sx={{ color: theme.palette.warning.main }}
+                      >
+                        {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
+                      </Typography>
                     </Stack>
-                  </CardContent>
-                </Card>
-              )}
+                    <Stack direction={"column"}>
+                      <SecondaryButton
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          showLoading();
+                          await router.push(`/profile/${userData?.name}`);
+                          closeLoading();
+                        }}
+                      >
+                        지갑 연결하러 가기
+                      </SecondaryButton>
+                    </Stack>
+                  </Stack>
+                </CardContent>
+              </Card>
+            )}
             <Stack direction={"column"} spacing={2}>
               <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
                 이벤트 설명
@@ -538,9 +548,7 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||
                         quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
-                        quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX
                       }
                       onVerifyBtnClicked={async (e) => {
                         const myEvent = e as MouseEventWithParam<{
@@ -762,6 +770,16 @@ const Event = (props: AppProps) => {
                             }
                           }
                           setDiscordQuestDialog(true);
+                        } else if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
+                        ) {
+                          setOpenContentsRendererDialog(true);
+                          if (quest.questGuides?.[0]?.content) {
+                            setHtmlContent(
+                              decodeBase64(quest.questGuides[0].content)
+                            );
+                          }
                         }
                       }}
                       autoVerified={autoVerified}
@@ -1191,6 +1209,17 @@ const Event = (props: AppProps) => {
           }
         }}
       ></QuestQuizDialog>
+      <ContentsRendererDialog
+        open={openContentsRendererDialog}
+        onClose={() => {
+          setOpenContentsRendererDialog(false);
+        }}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setOpenContentsRendererDialog(false);
+        }}
+        htmlContent={htmlContent}
+      ></ContentsRendererDialog>
     </>
   );
 };

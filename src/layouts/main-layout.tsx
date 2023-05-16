@@ -50,6 +50,7 @@ import {
 } from "../util/type-util";
 import ResourceFactory from "../helper/resource-factory";
 import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
+import ContentsRendererDialog from "../components/dialogs/contents-renderer-dialog";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -434,7 +435,6 @@ const MainLayout = (props: MainLayoutProps) => {
           );
         }}
       ></SignInWithSupportedWalletDialog>
-      {/*<ContentsRendererDialog open={true}></ContentsRendererDialog>*/}
     </Box>
   );
 };
