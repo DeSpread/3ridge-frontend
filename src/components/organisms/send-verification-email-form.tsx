@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import MailTextField from "../molecules/mail-text-field";
-import { validateMail } from "../../util/validate-string";
+import { validateMail } from "../../util/string-util";
 import SecondaryButton from "../atoms/secondary-button";
 import { EmailSignUpEventParams, MouseEventWithParam } from "../../type";
 import LinkTypography from "../atoms/link-typography";
@@ -26,7 +26,7 @@ const SendVerificationEmailForm = (props: SendVerificationEmailFormProps) => {
         spacing={4}
       >
         <Typography textAlign={"left"} variant={"h5"}>
-          Send Verification Email
+          인증 메일 보내기
         </Typography>
         <Stack spacing={4}>
           <MailTextField
@@ -49,7 +49,7 @@ const SendVerificationEmailForm = (props: SendVerificationEmailFormProps) => {
                 props.onClickSendVerification?.(myEvent);
               }}
             >
-              Send verification email
+              인증 메일 보내기
             </SecondaryButton>
           </Stack>
         </Stack>

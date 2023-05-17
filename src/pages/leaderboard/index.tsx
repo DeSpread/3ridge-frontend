@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { ReactElement, useMemo } from "react";
+import React, { MouseEventHandler, ReactElement, useMemo } from "react";
 import {
   Avatar,
   Box,
@@ -15,7 +15,7 @@ import { useLeaderUsersQuery } from "../../page-hook/leader-users-query-hook";
 import XpChip from "../../components/atoms/styled/xp-chip";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { User } from "../../type";
-import { useSignedUserQuery } from "../../page-hook/user-query-hook";
+import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
@@ -23,8 +23,18 @@ import { useTheme } from "@mui/material/styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useLeaderUserRankQuery } from "../../page-hook/leader-user-rank-query-hook";
 import BlockIcon from "../../components/molecules/block-icon";
+import { useRouter } from "next/router";
+import { useLoading } from "../../provider/loading/loading-provider";
 
-const RankCard = ({ user, rank }: { user: User; rank: number }) => {
+const RankCard = ({
+  user,
+  rank,
+  onClick,
+}: {
+  user: User;
+  rank: number;
+  onClick?: MouseEventHandler;
+}) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -65,6 +75,7 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
   return (
     <Card
       sx={{
+        cursor: "pointer",
         background: theme.palette.neutral[800],
         transform: "translateY(0%)",
         transition: "all 0.2s ease-out 0s",
@@ -81,6 +92,7 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
         borderStyle: "solid",
         borderRadius: 2,
       }}
+      onClick={onClick}
     >
       <Stack
         direction={"row"}
@@ -169,22 +181,26 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
             <Typography
               variant={smUp ? "h6" : "caption"}
               sx={{ color: (theme) => theme.palette.info.main }}
-            >{`Level ${Math.floor((rewardPoint ?? 0) / 100)}`}</Typography>
-            <Stack direction={"row"} alignItems={"center"}>
-              <Typography variant={smUp ? "body2" : "caption"}>
-                Total&nbsp;:&nbsp;
-              </Typography>
-              <Typography
-                variant={smUp ? "body2" : "caption"}
-                color={"white"}
-                sx={{ fontWeight: "bold" }}
-              >
-                {rewardPoint ?? 0}
-              </Typography>
-              <Typography variant={smUp ? "body2" : "caption"}>
-                &nbsp;{`Point`}
-              </Typography>
-            </Stack>
+            >{`${rewardPoint ?? 0} 포인트`}</Typography>
+            {/*<Typography*/}
+            {/*  variant={smUp ? "h6" : "caption"}*/}
+            {/*  sx={{ color: (theme) => theme.palette.info.main }}*/}
+            {/*>{`Level ${Math.floor((rewardPoint ?? 0) / 100)}`}</Typography>*/}
+            {/*<Stack direction={"row"} alignItems={"center"}>*/}
+            {/*  <Typography variant={smUp ? "body2" : "caption"}>*/}
+            {/*    Total&nbsp;:&nbsp;*/}
+            {/*  </Typography>*/}
+            {/*  <Typography*/}
+            {/*    variant={smUp ? "body2" : "caption"}*/}
+            {/*    color={"white"}*/}
+            {/*    sx={{ fontWeight: "bold" }}*/}
+            {/*  >*/}
+            {/*    {rewardPoint ?? 0}*/}
+            {/*  </Typography>*/}
+            {/*  <Typography variant={smUp ? "body2" : "caption"}>*/}
+            {/*    &nbsp;{`Point`}*/}
+            {/*  </Typography>*/}
+            {/*</Stack>*/}
           </Stack>
         </Box>
       </Stack>
@@ -193,6 +209,7 @@ const RankCard = ({ user, rank }: { user: User; rank: number }) => {
 };
 
 const Leaderboard = () => {
+  const router = useRouter();
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -201,15 +218,18 @@ const Leaderboard = () => {
   const { userRank, loading: userRankLoading } = useLeaderUserRankQuery(
     userData._id
   );
+  const { showLoading, closeLoading } = useLoading();
 
-  // const userRank = useMemo(() => {
-  //   return findUserRank(userData._id);
-  // }, [userData]);
+  const routeToUserProfile = async (user: User) => {
+    showLoading();
+    await router.push(`/profile/${user.name}`);
+    closeLoading();
+  };
 
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <Grid
         container
@@ -221,12 +241,12 @@ const Leaderboard = () => {
         <Grid item sx={{ background: "" }}>
           <Box sx={{ minWidth: smUp ? 800 : 200, background: "" }}>
             <Stack direction={"column"}>
-              <Typography variant={"h4"}>Leaderboard</Typography>
+              <Typography variant={"h4"}>유저 랭킹</Typography>
               {userData._id && (
                 <Box sx={{ marginTop: 5 }}>
                   <Stack direction={"column"} spacing={2}>
                     <Box>
-                      <Typography variant={"h6"}>Your ranking</Typography>
+                      <Typography variant={"h6"}>내 랭킹</Typography>
                     </Box>
                     {(userRankLoading || !userRank) && (
                       <Box>
@@ -239,7 +259,13 @@ const Leaderboard = () => {
                       </Box>
                     )}
                     {!userRankLoading && userRank && (
-                      <RankCard user={userData} rank={userRank}></RankCard>
+                      <RankCard
+                        onClick={async () => {
+                          await routeToUserProfile(userData);
+                        }}
+                        user={userData}
+                        rank={userRank}
+                      ></RankCard>
                     )}
                   </Stack>
                 </Box>
@@ -248,11 +274,20 @@ const Leaderboard = () => {
                 <Stack direction={"column"} spacing={2}>
                   <Box>
                     <Typography variant={"h6"}>
-                      Top users in the last 30 days
+                      최근 30일 동안의 유저 활동 기준
                     </Typography>
                   </Box>
                   {leaderUsersData?.map((e, index) => {
-                    return <RankCard user={e} rank={index + 1} key={index} />;
+                    return (
+                      <RankCard
+                        onClick={async (event) => {
+                          await routeToUserProfile(e);
+                        }}
+                        user={e}
+                        rank={index + 1}
+                        key={index}
+                      />
+                    );
                   })}
                 </Stack>
               </Box>

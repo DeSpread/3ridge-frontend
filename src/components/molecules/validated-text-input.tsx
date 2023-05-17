@@ -30,6 +30,7 @@ const ValidatedTextInput = (props: ValidatedTextInputProps) => {
         "&:hover .MuiOutlinedInput-notchedOutline": {
           boxShadow: `0 0 0 2px ${hoverBorderColor}`,
         },
+        ...props.sx,
       }}
     />
   );

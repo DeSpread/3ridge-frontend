@@ -1,16 +1,24 @@
 import {
   Box,
   Stack,
-  Typography,
   Link,
-  Grid,
   useMediaQuery,
+  Divider,
+  Typography,
+  IconButton,
 } from "@mui/material";
-import NextLink from "next/link";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
+import React from "react";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import EmailIcon from "@mui/icons-material/Email";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+
+import PrimaryButton from "../../components/atoms/primary-button";
+import Image from "next/image";
 
 const footerData = [
   {
@@ -79,87 +87,115 @@ const HomeFooter = () => {
         background: theme.palette.background.default,
         width: "100%",
         zIndex: 1,
+        paddingLeft: theme.spacing(5),
+        paddingRight: theme.spacing(5),
+        marginTop: 4,
       }}
     >
-      <Stack direction={"column"}>
-        <Grid
-          container
-          direction={"row"}
-          justifyContent={"space-between"}
-          sx={{ padding: 3 }}
-          rowSpacing={4}
-        >
-          <Grid item>
-            <Stack direction={"column"} spacing={2}>
-              <Typography variant={"h5"}>Bridge your projects</Typography>
-              <Box>
-                <Typography variant={"body1"}>
-                  Bridge helps you reach, acquire, and retain users
-                </Typography>
-                <Typography variant={"body1"}>
-                  with powerful, interactive experiences.
-                </Typography>
-              </Box>
-              <SecondaryButton
-                size={"large"}
-                style={{ width: 180 }}
-                onClick={async () => {
-                  showLoading();
-                  await router.push("/explore");
-                  closeLoading();
-                }}
-              >
-                Let`s Explore
-              </SecondaryButton>
-            </Stack>
-          </Grid>
-          <Grid item>
-            <Stack direction={"row-reverse"} spacing={smUp ? 12 : 4}>
-              {footerData.map((x, xIdx) => {
-                return (
-                  <Stack key={xIdx} direction={"column"} spacing={3}>
-                    <Typography variant={smUp ? "h5" : "h6"}>
-                      {x.title}
-                    </Typography>
-                    <Stack direction={"column"} spacing={2}>
-                      {x.subMenus.map((y, yIdx) => {
-                        return (
-                          <NextLink
-                            key={yIdx}
-                            href={y.url}
-                            rel={"noopener noreferrer"}
-                            target={"_blank"}
-                          >
-                            <Typography
-                              variant={mdUp ? "body1" : "body2"}
-                              sx={{
-                                color: theme.palette.neutral["400"],
-                                "&:hover": {
-                                  color: theme.palette.action.hover,
-                                },
-                              }}
-                            >
-                              {y.title}
-                            </Typography>
-                          </NextLink>
-                        );
-                      })}
-                    </Stack>
-                  </Stack>
-                );
-              })}
-            </Stack>
-          </Grid>
-        </Grid>
-        <Box sx={{ padding: 3 }}>
-          <Typography
-            variant={"body2"}
-            sx={{ color: theme.palette.neutral["600"] }}
+      <Divider sx={{ width: "100%", borderBottomWidth: 1 }} />
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        py={2}
+      >
+        <Stack direction={"row"} alignItems={"center"} spacing={2}>
+          <SecondaryButton
+            size={"small"}
+            sx={{
+              width: smUp ? 150 : 124,
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
+            }}
           >
-            © Copyright 2023 DeSpread, Inc.
-          </Typography>
-        </Box>
-      </Stack>
+            {smUp ? "뉴스레터 구독하기" : "뉴스레터"}
+          </SecondaryButton>
+        </Stack>
+        <Stack direction={"row"}>
+          {smUp ? (
+            <Link
+              href="https://airtable.com/shr406tfeuXcHz1o0"
+              color="inherit"
+              underline="hover"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Typography variant={smUp ? "body1" : "caption"}>
+                프로젝트 등록
+              </Typography>
+            </Link>
+          ) : (
+            <IconButton href={"https://airtable.com/shr406tfeuXcHz1o0"}>
+              <AppRegistrationIcon></AppRegistrationIcon>
+            </IconButton>
+          )}
+          {smUp ? (
+            <Link
+              href="https://twitter.com/3ridge_xyz"
+              color="inherit"
+              underline="hover"
+              style={{ marginLeft: 16 }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Typography variant={smUp ? "body1" : "caption"}>
+                트위터
+              </Typography>
+            </Link>
+          ) : (
+            <IconButton href={"https://twitter.com/3ridge_xyz"}>
+              <TwitterIcon></TwitterIcon>
+            </IconButton>
+          )}
+          {smUp ? (
+            <Link
+              href="https://discord.gg/3ridge"
+              color="inherit"
+              underline="hover"
+              style={{ marginLeft: 16 }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Typography variant={smUp ? "body1" : "caption"}>
+                디스코드
+              </Typography>
+            </Link>
+          ) : (
+            <IconButton href={"https://discord.gg/3ridge"}>
+              <Image
+                src={
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/discord.svg"
+                }
+                alt={""}
+                width={24}
+                height={24}
+              ></Image>
+            </IconButton>
+          )}
+          {smUp ? (
+            <Link
+              href="mailto:support@3ridge.xyz?Subject=Hello!%203ridge"
+              color="inherit"
+              underline="hover"
+              style={{ marginLeft: 16 }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Typography variant={smUp ? "body1" : "caption"}>
+                이메일
+              </Typography>
+            </Link>
+          ) : (
+            <IconButton
+              href={"mailto:support@3ridge.xyz?Subject=Hello!%203ridge"}
+            >
+              <EmailIcon></EmailIcon>
+            </IconButton>
+          )}
+        </Stack>
+      </Box>
     </div>
   );
 };

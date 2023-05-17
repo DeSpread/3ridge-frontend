@@ -1,6 +1,6 @@
 import "../styles/globals.css";
-import type { ReactElement, ReactNode } from "react";
-import type { AppProps, NextWebVitalsMetric } from "next/app";
+import React, { ReactElement, ReactNode, useEffect } from "react";
+import type { AppProps } from "next/app";
 import type { NextPage } from "next";
 import { createTheme } from "../theme";
 import { ThemeProvider } from "@mui/material/styles";
@@ -15,8 +15,15 @@ import { AlertProvider } from "../provider/alert/alert-provider";
 import { LoadingProvider } from "../provider/loading/loading-provider";
 import { combineProviders } from "react-combine-providers";
 import { PetraWallet } from "petra-plugin-wallet-adapter";
+import * as gtag from "../lib/gtag";
+import Head from "next/head";
+import Script from "next/script";
+import { WalletProvider } from "@suiet/wallet-kit";
+import { v1 } from "uuid";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
+
+import { useRouter } from "next/router";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
@@ -33,29 +40,72 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-export function reportWebVitals(metric: NextWebVitalsMetric) {
-  console.log(metric);
-}
-
-export default function App({ Component, pageProps }: AppPropsWithLayout) {
+const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>);
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
   const wallets = [new PetraWallet()];
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url: any) => {
+      gtag.pageview(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    router.events.on("hashChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+      router.events.off("hashChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
+
   return (
-    <ThemeProvider theme={createTheme()}>
-      <WagmiConfig client={wagmiClient}>
+    <>
+      <Head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', '${gtag.GA_TRACKING_ID}', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
+      </Head>
+      {/* Global Site Tag (gtag.js) - Google Analytics */}
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+      />
+      <Script
+        src={`https://telegram.org/js/telegram-widget.js?${v1()}`}
+        async
+      />
+      <ThemeProvider theme={createTheme()}>
         <GoogleOAuthProvider clientId={clientId ?? ""}>
           <RecoilRoot>
             <ApolloProvider client={apolloClient}>
-              <AptosWalletAdapterProvider plugins={wallets} autoConnect={true}>
-                <MasterProvider>
-                  {getLayout(<Component {...pageProps} />)}
-                </MasterProvider>
-              </AptosWalletAdapterProvider>
+              <WagmiConfig client={wagmiClient}>
+                <WalletProvider>
+                  <AptosWalletAdapterProvider
+                    plugins={wallets}
+                    autoConnect={true}
+                  >
+                    <MasterProvider>
+                      {getLayout(<Component {...pageProps} />)}
+                    </MasterProvider>
+                  </AptosWalletAdapterProvider>
+                </WalletProvider>
+              </WagmiConfig>
             </ApolloProvider>
           </RecoilRoot>
         </GoogleOAuthProvider>
-      </WagmiConfig>
-    </ThemeProvider>
+      </ThemeProvider>
+    </>
   );
-}
+};
+
+export default App;

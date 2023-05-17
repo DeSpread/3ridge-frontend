@@ -13,8 +13,8 @@ import {
 
 export function useTicketsQuery(props: {
   projectId?: string;
-  filterType: FilterType;
-  sort: TicketSortType;
+  filterType?: FilterType;
+  sort?: TicketSortType;
 }) {
   const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
   const [ticketsDataLoading, setTicketsDataLoading] = useState(false);
@@ -22,6 +22,10 @@ export function useTicketsQuery(props: {
 
   useEffect(() => {
     (async () => {
+      if (!props.filterType || !props.sort) {
+        return;
+      }
+
       setTicketsDataLoading(true);
       if (!props.projectId) {
         const status =
@@ -72,6 +76,7 @@ export function useTicketsQuery(props: {
       title?: string | null;
       participants?: Array<{
         __typename?: "User";
+        _id?: string | null;
         name?: string | null;
         profileImageUrl?: string | null;
       }> | null;
@@ -120,6 +125,7 @@ export function useTicketsQuery(props: {
           completed: e.completed ?? undefined,
           participants: e.participants?.map((_e) => {
             return {
+              _id: _e._id ?? undefined,
               name: _e.name ?? undefined,
               profileImageUrl: _e.profileImageUrl ?? undefined,
             };

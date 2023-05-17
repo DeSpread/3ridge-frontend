@@ -1,16 +1,28 @@
+import { MAIL_VERIFY } from "../type";
+
 export const APP_ERROR_MESSAGE = {
   UNKNOWN: "UNKNOWN",
   EMAIL_ALREADY_USE: "EMAIL_ALREADY_USE",
   EMAIL_PENDING_VERIFY: "EMAIL_PENDING_VERIFY",
   EMAIL_ALREADY_VERIFIED: "EMAIL_ALREADY_VERIFIED",
   GOOGLE_LOGIN_POPUP_CLOSED: "popup_closed",
-  WALLET_NOT_INSTALLED: "First install APTOS wallet",
+  WALLET_NOT_INSTALLED: "WALLET_NOT_INSTALLED",
   WALLET_USER_REJECTED_REQUEST: "User rejected request",
   WALLET_ADDRESS_ALREADY_REGISTERED: "Already registered by wallet address",
+  SUI_WALLET_PENDING_REQUEST: "Another permission request is pending",
+  SUI_WALLET_PERMISSION_REJECTED: "Permission rejected",
   WALLET_USER_ACCOUNT_FETCH_FAIL: "Fail to get account of wallet",
   FIREBASE_USER_NOT_FOUND: "auth/user-not-found",
   FIREBASE_WRONG_PASSWORD: "auth/wrong-password",
   FIREBASE_TOO_MANY_REQUESTS: "auth/too-many-requests",
+  PARAMETER_ERROR: "parameter error",
+  EMAIL_NOT_AUTHORIZED: "Not yet authorized",
+  EMAIL_PASSWORD_NOT_CORRECT: "Password is not correct",
+  EMAIL_AUTH_CODE_TIMEOUT: "auth code is timeout",
+  ALREADY_PARTICIPATED_USER: "user already participated ticket",
+  DOES_NOT_TWITTER_FOLLOW: "user does not follow twitter",
+  DOES_NOT_TWITTER_RETWEET: "user does not retweet twitter",
+  DOES_NOT_TWITTER_LIKING: "user does not like twitter",
 } as const;
 
 export class AppError extends Error {
@@ -18,7 +30,7 @@ export class AppError extends Error {
 
   constructor(message: string, payload?: any) {
     super(message);
-    this.name = "Sakura";
+    this.name = "bridge";
     this.payload = payload;
     Error.captureStackTrace(this, this.constructor);
   }
@@ -29,4 +41,24 @@ export const getErrorMessage = (e: any) => {
     return e.message;
   }
   return "unknown";
+};
+
+export const getLocaleErrorMessage = (e: any) => {
+  const message = getErrorMessage(e);
+  if (message === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED) {
+    return "이미 등록된 주소 입니다. 다른 월렛 주소로 연결해 주세요.";
+  } else if (message === APP_ERROR_MESSAGE.EMAIL_NOT_AUTHORIZED) {
+    return "아직 인증되지 않았습니다. 인증 링크를 확인해주세요.";
+  } else if (message === APP_ERROR_MESSAGE.EMAIL_PASSWORD_NOT_CORRECT) {
+    return "패스워드가 맞지 않습니다. 패스워드를 확인해주세요.";
+  } else if (message === APP_ERROR_MESSAGE.EMAIL_AUTH_CODE_TIMEOUT) {
+    return "코드가 만료되었습니다.";
+  } else if (message === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW) {
+    return "트위터 팔로우를 하지 않았어요.\r\n 팔로우 하였는지 확인 부탁드립니다. 🙂";
+  } else if (message === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET) {
+    return "트위터 리트윗을 하지 않았어요.\r\n 리트윗 하였는지 확인 부탁드립니다. 🙂";
+  } else if (message === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING) {
+    return "트위터 좋아요를 하지 않았어요.\r\n 좋아요 하였는지 확인 부탁드립니다. 🙂";
+  }
+  return message;
 };

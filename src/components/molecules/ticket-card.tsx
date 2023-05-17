@@ -1,40 +1,43 @@
 import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CardProps,
-  Grid,
-  Skeleton,
-  Stack,
-  Typography,
+    Avatar,
+    Box,
+    Card,
+    CardContent,
+    CardProps,
+    Grid,
+    Skeleton,
+    Stack, Theme,
+    Typography,
+    useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useLayoutEffect } from "react";
-import StyledChip from "../atoms/styled/styled-chip";
-import { Ticket } from "../../type";
+import {Ticket, User} from "../../type";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
-import StarsIcon from "@mui/icons-material/Stars";
+import StyledChip from "../atoms/styled/styled-chip";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;
+  username?: String;
 };
 
 const TicketCard = (props: EventCardProps) => {
-  const { ticket } = props;
+  const { ticket, username } = props;
   const ref = React.useRef<HTMLDivElement>(null);
   const [height, setHeight] = React.useState(0);
   const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   useLayoutEffect(() => {
-    setHeight(ref.current?.offsetWidth ?? 0);
+    setHeight((ref.current?.offsetWidth ?? 0) * 0.9);
   }, []);
 
   useEffect(() => {
     if (!ref.current) return;
     const resizeObserver = new ResizeObserver(() => {
-      setHeight(ref.current?.offsetWidth ?? 0);
+      setHeight((ref.current?.offsetWidth ?? 0) * 0.9);
     });
     resizeObserver.observe(ref.current);
     return () => resizeObserver.disconnect(); // clean up
@@ -66,17 +69,19 @@ const TicketCard = (props: EventCardProps) => {
           <Stack direction={"column"} sx={{ marginTop: 0 }}>
             <Stack
               direction={"row"}
-              // spacing={1}
               alignItems={"center"}
               justifyContent={"space-between"}
-              sx={{ paddingBottom: 2, paddingLeft: 1 }}
+              sx={{
+                paddingBottom: 3,
+                paddingLeft: "4px",
+              }}
             >
               <Stack direction={"row"} spacing={1} alignItems={"center"}>
                 {ticket?.project?.imageUrl && (
                   <Image
                     alt={""}
-                    width={32}
-                    height={32}
+                    width={28}
+                    height={28}
                     src={ticket?.project?.imageUrl}
                     style={{
                       borderWidth: 2,
@@ -89,8 +94,8 @@ const TicketCard = (props: EventCardProps) => {
                 {!ticket?.project?.imageUrl && (
                   <Image
                     alt={""}
-                    width={32}
-                    height={32}
+                    width={28}
+                    height={28}
                     src={
                       "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/favicon.ico"
                     }
@@ -102,15 +107,41 @@ const TicketCard = (props: EventCardProps) => {
                     }}
                   />
                 )}
-                {}
                 {ticket?.project?.name && (
-                  <Typography>{ticket?.project?.name}</Typography>
+                  <Typography variant={mdUp ? "body1" : "h6"}>
+                    {ticket?.project?.name}
+                  </Typography>
                 )}
-                {!ticket?.project?.name && <Typography>3ridge</Typography>}
+                {!ticket?.project?.name && (
+                  <Typography variant={mdUp ? "body1" : "h6"}>
+                    3ridge
+                  </Typography>
+                )}
               </Stack>
-              <StyledChip
-                label={`${ticket?.quests?.length ?? 0} Quests`}
-              ></StyledChip>
+                {(ticket?.winners?.filter(
+                    (winner) =>
+                        String(winner.name).toUpperCase().trim() ===
+                        String(username).toUpperCase().trim()
+                )?.length ?? 0) > 0 && (
+                    <Box>
+                        <Typography variant={mdUp ? "body2" : "body1"}>
+                            <StyledChip label={"위너"} color="success"></StyledChip>
+                        </Typography>
+                    </Box>
+                )
+                }
+                {(ticket?.winners?.filter(
+                    (winner) =>
+                        String(winner.name).toUpperCase().trim() ===
+                        String(username).toUpperCase().trim()
+                )?.length ?? 0) <= 0 && (
+                    <Box>
+                        <Typography variant={mdUp ? "body2" : "body1"}>
+                            {ticket?.quests?.length ?? 0} 퀘스트
+                        </Typography>
+                    </Box>
+                )
+                }
             </Stack>
             <Box
               ref={ref}
@@ -163,34 +194,29 @@ const TicketCard = (props: EventCardProps) => {
               </Typography>
             </Box>
             <Grid
-              sx={{ marginTop: 4, marginBottom: -1 }}
+              sx={{ marginTop: 4, marginBottom: -2 }}
               container
               columnSpacing={1}
             >
-              {/*<Grid item>*/}
-
-              {/*</Grid>*/}
               <Grid item>
                 <Stack
                   direction={"row"}
                   alignItems={"center"}
-                  spacing={1}
                   justifyContent={"center"}
                 >
                   <Image
                     src={
-                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.png"
+                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
                     }
                     alt={"StarIcon"}
-                    width={24}
-                    height={24}
+                    width={48}
+                    height={48}
+                    style={{ marginLeft: -12 }}
                   ></Image>
-                  <Typography variant={"body1"}>
-                    {`${ticket?.rewardPolicy?.context?.point ?? 0} point`}
+                  <Typography variant={"body2"}>
+                    {`${ticket?.rewardPolicy?.context?.point ?? 0} 포인트`}
                   </Typography>
                 </Stack>
-                {/*}*/}
-                {/*></StyledChip>*/}
               </Grid>
             </Grid>
           </Stack>

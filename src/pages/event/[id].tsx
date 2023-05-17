@@ -1,10 +1,4 @@
-import React, {
-  CSSProperties,
-  ReactElement,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -12,6 +6,8 @@ import {
   Avatar,
   Box,
   ButtonProps,
+  Card,
+  CardContent,
   Divider,
   Grid,
   Skeleton,
@@ -21,54 +17,52 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import VerifyCard from "../../components/molecules/verify-card";
-import { GetStaticPaths } from "next";
 import { useTicketQuery } from "../../page-hook/ticket-query-hook";
 import { format } from "date-fns";
 import StyledChip from "../../components/atoms/styled/styled-chip";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import PrimaryCard from "../../components/atoms/primary-card";
-import { TimerSettings, useTimer } from "react-timer-hook";
 import SecondaryButton from "../../components/atoms/secondary-button";
-import { nFormatter } from "../../util/validate-string";
+import { decodeBase64, nFormatter } from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
+import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
+
 import {
   DiscordQuestContext,
   MouseEventWithParam,
   QUEST_POLICY_TYPE,
   QuizQuestContext,
+  REWARD_POLICY_TYPE,
+  TelegramQuestContext,
   TwitterFollowQuestContext,
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
-import { useSignedUserQuery } from "../../page-hook/user-query-hook";
+import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
-import { getErrorMessage } from "../../error/my-error";
+import {
+  APP_ERROR_MESSAGE,
+  getErrorMessage,
+  getLocaleErrorMessage,
+} from "../../error/my-error";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
-import { gql, request } from "graphql-request";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
-
-// export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
-//   return {
-//     paths: [], //indicates that no page needs be created at build time
-//     fallback: "blocking", //indicates the type of fallback
-//   };
-// };
-//
-// export async function getStaticProps() {
-//   return { props: {} };
-// }
-
-interface MyTimerSettings extends TimerSettings {
-  sx?: CSSProperties;
-}
+import BlockIcon from "../../components/molecules/block-icon";
+import TimerBoard, {
+  DummyTimerBoard,
+} from "../../components/molecules/timer-board";
+import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
+import ComponentHelper from "../../helper/component-helper";
+import { useLogin } from "../../provider/login/login-provider";
+import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -115,111 +109,10 @@ const LoadingButton = (props: ButtonProps) => {
   );
 };
 
-const TimerBoard = (props: MyTimerSettings) => {
-  const { seconds, minutes, hours, days } = useTimer(props);
-  const CELL_WIDTH = 40;
-  return (
-    <Box sx={props.sx}>
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-evenly"}
-      >
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>
-            {days.toString().padStart(2, "0")}
-          </Typography>
-          <Typography variant={"body2"}>Days</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>
-            {hours.toString().padStart(2, "0")}
-          </Typography>
-          <Typography variant={"body2"}>Hours</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>
-            {minutes.toString().padStart(2, "0")}
-          </Typography>
-          <Typography variant={"body2"}>Minutes</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>
-            {seconds.toString().padStart(2, "0")}
-          </Typography>
-          <Typography variant={"body2"}>Seconds</Typography>
-        </Stack>
-      </Stack>
-    </Box>
-  );
-};
-
-const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
-  const CELL_WIDTH = 40;
-
-  return (
-    <Box sx={props.sx}>
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-evenly"}
-      >
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Days</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Hours</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Minutes</Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          alignItems={"center"}
-          sx={{ width: CELL_WIDTH }}
-        >
-          <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Seconds</Typography>
-        </Stack>
-      </Stack>
-    </Box>
-  );
-};
-
 const Event = (props: AppProps) => {
   const { userData, asyncUpdateSocialTwitter, asyncUpdateRewardPoint } =
     useSignedUserQuery();
+  const { isLoggedIn } = useLogin();
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -232,12 +125,19 @@ const Event = (props: AppProps) => {
     asyncVerifyTwitterLikingQuest,
     asyncCompleteQuestOfUser,
     asyncRequestClaimNtf,
+    asyncVerify3ridgePoint,
+    asyncVerifyAptosQuest,
   } = useTicketQuery({
     userId: userData._id,
-    //@ts-ignore
-    id: router.query.id ?? undefined,
+    id: router.isReady
+      ? typeof router.query.id === "string"
+        ? router.query.id
+        : undefined
+      : undefined,
   });
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
+  const [openContentsRendererDialog, setOpenContentsRendererDialog] =
+    useState(false);
   const [openDiscordQuestDialog, setDiscordQuestDialog] = useState(false);
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
@@ -249,6 +149,9 @@ const Event = (props: AppProps) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [claimCompleted, setClaimCompleted] = useState(false);
   const [updatingClaimCompleted, setUpdatingClaimCompleted] = useState(true);
+  const [htmlContent, setHtmlContent] = useState("");
+  const { isProfileEditDialogOpen, setShowProfileEditDialog } =
+    useProfileEditDialog();
 
   useEffect(() => {
     if (!userData?._id) return;
@@ -277,92 +180,6 @@ const Event = (props: AppProps) => {
     }
   }, [ticketData?.quests, userData?._id]);
 
-  const asyncUpdateClaimCompleted = async () => {
-    if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
-      setUpdatingClaimCompleted(true);
-      const res1 = await asyncCheckTokenExist();
-      const res2 = await asyncPendingTokenExist();
-      const res = res1 || res2;
-      setClaimCompleted(res);
-      setUpdatingClaimCompleted(false);
-    }
-  };
-
-  const asyncCheckTokenExist = async () => {
-    try {
-      if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
-        const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
-        const query = gql`
-            {
-                token_ownerships(
-                    where: {
-                        name: { _eq: "${tokenName}" }
-                        collection_name: { _eq: "${collectionName}" }
-                        owner_address: {
-                            _eq: "${userData?.walletAddress}"
-                        }
-                    }
-                ) {
-                    name
-                    owner_address
-                    collection_name
-                }
-            }
-        `;
-        const res = await request(
-          "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-          query
-        );
-        if (res?.token_ownerships && res?.token_ownerships.length > 0) {
-          return true;
-        }
-      }
-      return false;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  };
-
-  const asyncPendingTokenExist = async () => {
-    try {
-      if (ticketData?.rewardPolicy?.context && userData?.walletAddress) {
-        const { collectionName, tokenName } = ticketData?.rewardPolicy?.context;
-        const query = gql`
-          {
-            current_token_pending_claims(
-              where: {
-                to_address: {_eq: "${userData?.walletAddress}"}
-                name: { _eq: "${tokenName}" }
-                collection_name: { _eq: "${collectionName}" }
-              }
-            ) {
-                amount
-                collection_name
-                name
-                from_address
-                to_address
-            }
-          }
-        `;
-        const res = await request(
-          "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-          query
-        );
-        if (
-          res?.current_token_pending_claims &&
-          res?.current_token_pending_claims.length > 0
-        ) {
-          return true;
-        }
-      }
-      return false;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  };
-
   useEffect(() => {
     asyncUpdateClaimCompleted().then(() => {});
   }, [updateIndex]);
@@ -376,6 +193,21 @@ const Event = (props: AppProps) => {
     );
     return !res;
   }, [verifiedList, updateIndex]);
+
+  const walletConnectedForTicket = useMemo(() => {
+    return (
+      (userData?.walletAddressInfos
+        ?.filter((e) => e.address)
+        .map((e) => e.network)
+        .filter(
+          (e) =>
+            e ===
+            (ticketData.rewardPolicy?.context?.rewardChain === "polygon"
+              ? "evm"
+              : ticketData.rewardPolicy?.context?.rewardChain)
+        )?.length ?? 0) !== 0
+    );
+  }, [userData?.walletAddressInfos]);
 
   const isExpired = () => {
     return ticketData?.untilTime //rewardPolicy?.context?.untilTime
@@ -397,10 +229,23 @@ const Event = (props: AppProps) => {
     });
   };
 
+  const asyncUpdateClaimCompleted = async () => {
+    if (ticketData?.rewardPolicy?.context && userData?._id) {
+      if (ticketData?.rewardClaimedUserIds?.includes(userData?._id)) {
+        setClaimCompleted(true);
+      }
+      setUpdatingClaimCompleted(false);
+    }
+  };
+
+  const verifyCardDisabled = () => {
+    return (userData?._id ? false : true) || !walletConnectedForTicket;
+  };
+
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <Grid
         container
@@ -409,7 +254,7 @@ const Event = (props: AppProps) => {
         // spacing={6}
         columnSpacing={6}
         rowSpacing={6}
-        sx={{ marginTop: 12, marginBottom: 12 }}
+        sx={{ marginTop: smUp ? 8 : 0, marginBottom: 12 }}
       >
         <Grid item>
           <Stack
@@ -469,75 +314,113 @@ const Event = (props: AppProps) => {
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
                   <Typography
-                    variant={smUp ? "h3" : "h3"}
+                    variant={smUp ? "h3" : "h4"}
                     textAlign={smUp ? "left" : "center"}
                   >
                     {ticketData?.title}
                   </Typography>
-                  <Grid
-                    container
-                    alignItems={"left"}
-                    // direction={smUp ? "row" : "column"}
-                    // spacing={1}
-                    // rowSpacing={1}
-                    // sx={{ marginLeft: -10 }}
-                  >
-                    {!ticketData?.completed && (
-                      <Grid item>
-                        <StyledChip label={"Ongoing"}></StyledChip>
-                      </Grid>
-                    )}
-                    {ticketData?.completed && (
-                      <Grid item>
-                        <StyledChip label={"completed"}></StyledChip>
-                      </Grid>
-                    )}
-                    {ticketData?.beginTime && (
-                      <Grid item sx={{ marginLeft: 1 }}>
-                        {smUp ? (
+                  {smUp ? (
+                    <Grid
+                      container
+                      alignItems={"left"}
+                      justifyContent={smUp ? "flex-start" : "center"}
+                      rowSpacing={1}
+                    >
+                      {!ticketData?.completed && (
+                        <Grid item>
                           <StyledChip
-                            label={`${format(
-                              new Date(
-                                ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                              ),
-                              "yyyy/MM/dd hh:mm:ss"
-                            )} ~ ${format(
+                            label={"진행중"}
+                            color={"success"}
+                            variant="outlined"
+                          ></StyledChip>
+                        </Grid>
+                      )}
+                      {ticketData?.completed && (
+                        <Grid item>
+                          <StyledChip label={"이벤트 종료"}></StyledChip>
+                        </Grid>
+                      )}
+                      {ticketData?.beginTime && (
+                        <Grid item sx={{ marginLeft: 1 }}>
+                          {smUp ? (
+                            <StyledChip
+                              label={`${format(
+                                new Date(
+                                  ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
+                                ),
+                                "yyyy/MM/dd hh:mm:ss"
+                              )} ~ ${format(
+                                new Date(
+                                  ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+                                ),
+                                "yyyy/MM/dd hh:mm:ss"
+                              )} (UTC+09:00)`}
+                            ></StyledChip>
+                          ) : (
+                            <StyledChip
+                              sx={{ paddingTop: 4, paddingBottom: 4 }}
+                              label={
+                                <Stack sx={{}}>
+                                  <Typography variant={"body2"}>
+                                    {`${format(
+                                      new Date(
+                                        ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
+                                      ),
+                                      "yyyy/MM/dd hh:mm:ss"
+                                    )}
+                                  ~`}
+                                  </Typography>
+                                  <Typography variant={"body2"}>
+                                    {`${format(
+                                      new Date(
+                                        ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+                                      ),
+                                      "yyyy/MM/dd hh:mm:ss"
+                                    )} (UTC+09:00)
+                                  `}
+                                  </Typography>
+                                </Stack>
+                              }
+                            ></StyledChip>
+                          )}
+                        </Grid>
+                      )}
+                    </Grid>
+                  ) : (
+                    <Stack
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      sx={{ background: "" }}
+                    >
+                      {ticketData?.beginTime && ticketData?.untilTime && (
+                        <>
+                          <Typography>{`${format(
+                            new Date(
+                              ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
+                            ),
+                            "yyyy/MM/dd hh:mm:ss"
+                          )}`}</Typography>
+                          <Typography>
+                            {`~ ${format(
                               new Date(
                                 ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                               ),
                               "yyyy/MM/dd hh:mm:ss"
                             )} (UTC+09:00)`}
-                          ></StyledChip>
-                        ) : (
+                          </Typography>
+                        </>
+                      )}
+                      {!ticketData?.completed && (
+                        <Box sx={{ marginTop: 2 }}>
                           <StyledChip
-                            sx={{ paddingTop: 4, paddingBottom: 4 }}
-                            label={
-                              <Stack sx={{}}>
-                                <Typography variant={"body2"}>
-                                  {`${format(
-                                    new Date(
-                                      ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                                    ),
-                                    "yyyy/MM/dd hh:mm:ss"
-                                  )}
-                                  ~`}
-                                </Typography>
-                                <Typography variant={"body2"}>
-                                  {`${format(
-                                    new Date(
-                                      ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                                    ),
-                                    "yyyy/MM/dd hh:mm:ss"
-                                  )} (UTC+09:00)
-                                  `}
-                                </Typography>
-                              </Stack>
-                            }
+                            label={"진행중"}
+                            color={"success"}
+                            variant="outlined"
                           ></StyledChip>
-                        )}
-                      </Grid>
-                    )}
-                  </Grid>
+                        </Box>
+                      )}
+                    </Stack>
+                  )}
                 </Stack>
               </Grid>
             </Grid>
@@ -552,51 +435,86 @@ const Event = (props: AppProps) => {
                     textAlign: smUp ? "left" : "center",
                   }}
                 >
-                  {smUp
-                    ? "--- Please Sign In First ---\n"
-                    : "--- Mobile is not supported --- "}
+                  <>
+                    <Card>
+                      <CardContent>
+                        <Typography
+                          variant={"h6"}
+                          sx={{ color: theme.palette.warning.main }}
+                        >
+                          로그인 후, 이벤트에 참여하실 수 있어요 😅
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </>
                 </Typography>
               </Box>
             )}
-            {userData?._id && userData?.walletAddress === undefined && (
-              <Typography
-                variant={"h5"}
-                sx={{ color: theme.palette.warning.main }}
-              >
-                --- Please Wallet Connect In Profile ---
-              </Typography>
+            {userData?._id && !walletConnectedForTicket && (
+              <Card>
+                <CardContent>
+                  <Stack
+                    direction={smUp ? "row" : "column"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    spacing={smUp ? 0 : 2}
+                  >
+                    <Stack direction={"column"}>
+                      <Typography
+                        variant={"h6"}
+                        sx={{ color: theme.palette.warning.main }}
+                        // alignContent={"center"}
+                        textAlign={"center"}
+                      >
+                        {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
+                      </Typography>
+                    </Stack>
+                    <Stack direction={"column"}>
+                      <SecondaryButton
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          showLoading();
+                          setShowProfileEditDialog(true);
+                          await router.push(`/profile/${userData?.name}`);
+                          closeLoading();
+                        }}
+                      >
+                        지갑 연결하러 가기
+                      </SecondaryButton>
+                    </Stack>
+                  </Stack>
+                </CardContent>
+              </Card>
             )}
-
-            <Stack direction={"column"} spacing={2}>
-              <Typography textAlign={smUp ? "left" : "center"} variant={"h5"}>
-                Description
+            <Stack
+              direction={"column"}
+              spacing={2}
+              alignItems={smUp ? "flex-start" : "center"}
+            >
+              <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
+                이벤트 설명
               </Typography>
               <Box sx={{ maxWidth: 800 }}>
-                <Typography
-                  variant={"body1"}
-                  textAlign={smUp ? "left" : "center"}
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: "5",
-                    WebkitBoxOrient: "vertical",
-                  }}
-                >
-                  {ticketData?.description}
-                </Typography>
+                <Stack>
+                  {ComponentHelper.getInstance().multiLineContentText(
+                    ticketData?.description,
+                    {
+                      textAlign: smUp ? "left" : "center",
+                    }
+                  )}
+                </Stack>
               </Box>
             </Stack>
 
             <Stack
               direction={"column"}
-              alignItems={"left"}
+              alignItems={smUp ? "left" : "center"}
               spacing={2}
               // maxWidth={800}
               sx={{ background: "" }}
             >
-              <Typography variant="h5" textAlign={smUp ? "left" : "center"}>
-                Quest
+              <Typography variant="h5" textAlign={smUp ? "left" : "left"}>
+                퀘스트
               </Typography>
               <Stack
                 direction={"column"}
@@ -605,15 +523,30 @@ const Event = (props: AppProps) => {
                 sx={{}}
               >
                 {ticketData?.quests?.map((quest, index) => {
+                  const autoVerified =
+                    quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyDiscord;
+
                   return (
                     <VerifyCard
                       key={index + 1}
-                      sx={{ width: mdUp ? 800 : smUp ? 600 : 320 }}
+                      sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
                       disabled={userData?._id ? false : true}
                       verified={verifiedList[index]}
+                      hideStartButton={
+                        quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT ||
+                        quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||
+                        quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||
+                        quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX
+                      }
                       onVerifyBtnClicked={async (e) => {
                         const myEvent = e as MouseEventWithParam<{
                           callback: (msg: string) => void;
@@ -650,14 +583,54 @@ const Event = (props: AppProps) => {
                             );
                             myEvent.params.callback("success");
                             updateVerifyState(index);
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT
+                          ) {
+                            await asyncVerify3ridgePoint(
+                              ticketData._id,
+                              quest._id ?? ""
+                            );
+                            myEvent.params.callback("success");
+                            updateVerifyState(index);
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                              QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||
+                            quest.questPolicy?.questPolicy ===
+                              QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
+                            quest.questPolicy?.questPolicy ===
+                              QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS ||
+                            quest.questPolicy?.questPolicy ===
+                              QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT
+                          ) {
+                            await asyncVerifyAptosQuest(
+                              ticketData._id,
+                              quest._id ?? ""
+                            );
+                            myEvent.params.callback("success");
+                            updateVerifyState(index);
                           }
                         } catch (e) {
+                          const errorMessage = getErrorMessage(e);
+                          console.log(errorMessage);
                           if (
-                            getErrorMessage(e) ===
-                            "user already participated ticket"
+                            errorMessage ===
+                            APP_ERROR_MESSAGE.ALREADY_PARTICIPATED_USER
                           ) {
                             myEvent.params.callback("success");
                             updateVerifyState(index);
+                          } else if (
+                            errorMessage ===
+                              APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW ||
+                            errorMessage ===
+                              APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET ||
+                            errorMessage ===
+                              APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING
+                          ) {
+                            showAlert({
+                              title: "알림",
+                              content: getLocaleErrorMessage(e),
+                            });
                           }
                         }
                       }}
@@ -742,19 +715,37 @@ const Event = (props: AppProps) => {
                           }
                         } else if (
                           quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_DISCORD
+                            QUEST_POLICY_TYPE.VERIFY_DISCORD ||
+                          quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_TELEGRAM
                         ) {
-                          const discordQuestContext = quest.questPolicy
-                            ?.context as DiscordQuestContext;
-                          window.open(
-                            `https://discord.gg/${discordQuestContext.channelId}`,
-                            "discord",
-                            "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-                          );
-                          await asyncCompleteQuestOfUser(
-                            ticketData._id,
-                            quest?._id
-                          ).then((res) => {
+                          let questContext;
+                          switch (quest.questPolicy?.questPolicy) {
+                            case QUEST_POLICY_TYPE.VERIFY_DISCORD:
+                              questContext = quest.questPolicy
+                                ?.context as DiscordQuestContext;
+                              window.open(
+                                `https://discord.gg/${questContext.channelId}`,
+                                "discord",
+                                "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                              );
+                              break;
+                            case QUEST_POLICY_TYPE.VERIFY_TELEGRAM:
+                              questContext = quest.questPolicy
+                                ?.context as TelegramQuestContext;
+                              window.open(
+                                `https://t.me/${questContext.channelId}`,
+                                "telegram",
+                                "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                              );
+                              break;
+                          }
+
+                          try {
+                            const res = await asyncCompleteQuestOfUser(
+                              ticketData._id,
+                              quest?._id
+                            );
                             setVerifiedList((prevState) => {
                               prevState[index] = true;
                               return prevState;
@@ -762,16 +753,34 @@ const Event = (props: AppProps) => {
                             setUpdateIndex((prevState) => {
                               return prevState + 1;
                             });
-                          });
+                          } catch (e) {
+                            if (
+                              getErrorMessage(e) ===
+                              "user already participated ticket"
+                            ) {
+                              setVerifiedList((prevState) => {
+                                prevState[index] = true;
+                                return prevState;
+                              });
+                              setUpdateIndex((prevState) => {
+                                return prevState + 1;
+                              });
+                            }
+                          }
                           setDiscordQuestDialog(true);
+                        } else if (
+                          quest.questPolicy?.questPolicy ===
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
+                        ) {
+                          setOpenContentsRendererDialog(true);
+                          if (quest.questGuides?.[0]?.content) {
+                            setHtmlContent(
+                              decodeBase64(quest.questGuides[0].content)
+                            );
+                          }
                         }
                       }}
-                      autoVerified={
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.Quiz ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyDiscord
-                      }
+                      autoVerified={autoVerified}
                     ></VerifyCard>
                   );
                 })}
@@ -791,19 +800,49 @@ const Event = (props: AppProps) => {
                 justifyContent={"space-between"}
                 sx={{ background: "" }}
               >
-                <Typography variant="h5">Reward</Typography>
+                <Typography variant="h5">리워드</Typography>
                 <StyledChip
-                  label={"FCFS"}
-                  icon={<DirectionsRunIcon></DirectionsRunIcon>}
+                  label={
+                    ticketData?.rewardPolicy?.rewardPolicyType ==
+                    REWARD_POLICY_TYPE.FCFS
+                      ? "선착순"
+                      : "추첨"
+                  }
+                  icon={
+                    ticketData?.rewardPolicy?.rewardPolicyType ==
+                    REWARD_POLICY_TYPE.FCFS ? (
+                      <DirectionsRunIcon />
+                    ) : (
+                      <AccessAlarmIcon />
+                    )
+                  }
                 ></StyledChip>
               </Stack>
+              {(ticketData?.winners?.filter(
+                (winner) =>
+                  String(winner.name).toUpperCase().trim() ===
+                  userData?.name?.toUpperCase().trim()
+              )?.length ?? 0) > 0 && (
+                <Box>
+                  <Card>
+                    <CardContent>
+                      <Typography
+                        variant={"h6"}
+                        sx={{ color: theme.palette.success.main }}
+                      >
+                        본 이벤트의 위너가 되었습니다 🎉
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Box>
+              )}
               <PrimaryCard hoverEffect={false}>
-                <Box sx={{ width: smUp ? 300 : 260 }}>
-                  <Stack>
+                <Box>
+                  <Stack alignItems={"center"}>
                     <Typography variant={"body1"}>
-                      First Come First Serve In :
+                      이벤트가 끝나기까지 남은 시간
                     </Typography>
-                    {ticketData?.rewardPolicy?.context?.untilTime ? (
+                    {ticketData?.untilTime ? (
                       isExpired() ? (
                         <Stack
                           sx={{
@@ -819,7 +858,7 @@ const Event = (props: AppProps) => {
                             variant={"h6"}
                             sx={{ color: theme.palette.secondary.main }}
                           >
-                            This project is expired
+                            본 이벤트가 끝났습니다
                           </Typography>
                         </Stack>
                       ) : (
@@ -827,6 +866,7 @@ const Event = (props: AppProps) => {
                           sx={{
                             marginTop: 4,
                             background: "",
+                            width: "100%",
                           }}
                           expiryTimestamp={
                             new Date(
@@ -840,6 +880,7 @@ const Event = (props: AppProps) => {
                         sx={{
                           marginTop: 4,
                           background: "",
+                          width: "100%",
                         }}
                       />
                     )}
@@ -851,43 +892,19 @@ const Event = (props: AppProps) => {
                   <Stack direction={"column"} spacing={2}>
                     <Stack
                       direction={"column"}
-                      alignItems={"flex-start"}
+                      alignItems={"center"}
                       justifyContent={"center"}
                     >
-                      <Typography variant={"body1"}>Reward</Typography>
                       <Box
                         sx={{
-                          marginTop: 1,
-                          // transform: "translateY(0%)",
-                          // transition: "all 0.2s ease-out 0s",
-                          // transitionDuration: "0.2s",
-                          // transitionDelay: "0s",
-                          // "&:hover": {
-                          //   transform: "translate(0,-1px)",
-                          // boxShadow:
-                          //   "12px 12px 2px 1px rgba(128, 128, 128, .2)",
-                          // },
                           width: smUp ? 300 : 260,
                           height: smUp ? 300 : 260,
                           borderRadius: 2,
+                          marginBottom: 2,
                         }}
                       >
                         {ticketData?.rewardPolicy?.context?.nftImageUrl && (
-                          <Box
-                          // sx={{
-                          //   "&:hover": {
-                          //     "& .lazyLoadImage": {
-                          //       color: theme.palette.neutral["400"],
-                          //       transition: "all 0.1s ease-out 0s",
-                          //       borderColor: theme.palette.secondary.main,
-                          //       transitionDuration: "0.2s",
-                          //       transitionDelay: "0s",
-                          //       transitionTimingFunction: "ease-out",
-                          //       transitionProperty: "all",
-                          //     },
-                          //   },
-                          // }}
-                          >
+                          <Box>
                             <LazyLoadImage
                               className={"lazyLoadImage"}
                               width={smUp ? 300 : 260}
@@ -923,28 +940,15 @@ const Event = (props: AppProps) => {
                       alignItems={"center"}
                       justifyContent={"space-between"}
                     >
-                      <Typography variant={"body1"}>POINT</Typography>
-                      <Stack
-                        direction={"row"}
-                        alignItems={"center"}
-                        spacing={1}
-                      >
-                        {/*<StarsIcon*/}
-                        {/*  color={"warning"}*/}
-                        {/*  style={{*/}
-                        {/*    width: 24,*/}
-                        {/*    height: 24,*/}
-                        {/*    background: "yellow",*/}
-                        {/*    borderRadius: 24,*/}
-                        {/*  }}*/}
-                        {/*></StarsIcon>*/}
+                      <Typography variant={"body1"}>포인트</Typography>
+                      <Stack direction={"row"} alignItems={"center"}>
                         <Image
                           src={
-                            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.png"
+                            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
                           }
                           alt={"StarIcon"}
-                          width={24}
-                          height={24}
+                          width={48}
+                          height={48}
                         ></Image>
                         <Typography variant={"h6"}>
                           {ticketData?.rewardPolicy?.context?.point ?? 0}
@@ -959,18 +963,18 @@ const Event = (props: AppProps) => {
                     spacing={1}
                   >
                     <img
-                      src={
-                        "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/aptos_icon.svg"
-                      }
-                      width={16}
-                      height={16}
+                      src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
+                      width={32}
+                      height={32}
                       style={{
                         background: theme.palette.neutral[100],
                         borderRadius: 16,
-                        padding: 1,
+                        padding: 5,
                       }}
                     />
-                    <Typography variant={"body2"}>Aptos Chain</Typography>
+                    <Typography variant={"body2"}>
+                      {ticketData.rewardPolicy?.context?.rewardChain} 체인 지원
+                    </Typography>
                   </Stack>
                 </Stack>
               </PrimaryCard>
@@ -978,8 +982,9 @@ const Event = (props: AppProps) => {
                 disabled={
                   claimRewardDisabled ||
                   claimCompleted ||
-                  updatingClaimCompleted ||
-                  isExpired()
+                  // updatingClaimCompleted ||
+                  isExpired() ||
+                  !ticketData?.rewardPolicy?.context?.rewardClaimable
                 }
                 onClick={async (e) => {
                   if (
@@ -994,13 +999,13 @@ const Event = (props: AppProps) => {
                   const { collectionName, tokenName, point } =
                     ticketData?.rewardPolicy?.context;
                   if (
-                    userData?.walletAddress &&
+                    userData?.walletAddressInfos?.[0].address &&
                     collectionName &&
                     tokenName &&
                     ticketData?._id
                   ) {
                     console.log(
-                      userData?.walletAddress,
+                      userData?.walletAddressInfos[0].address,
                       collectionName,
                       tokenName
                     );
@@ -1008,7 +1013,7 @@ const Event = (props: AppProps) => {
                       await asyncRequestClaimNtf(
                         collectionName,
                         tokenName,
-                        userData?.walletAddress,
+                        userData?.walletAddressInfos[0].address,
                         ticketData?._id
                       );
                       const newRewardAmount =
@@ -1026,11 +1031,12 @@ const Event = (props: AppProps) => {
                           <>
                             <Stack direction={"column"} spacing={1}>
                               <Typography>
-                                Reward NFT has been sent to your wallet !
+                                방금 지갑에 리워드를 보냈어요! 지갑을
+                                확인해주세요
                               </Typography>
                               <Typography>
-                                Please accept the NFT transmitted from the NFT
-                                tab on Petra Wallet
+                                전송된 리워드를 받기 위해서는 Petra 지갑에서
+                                Accept 해주어야 합니다. 지갑을 확인해주세요!
                               </Typography>
                             </Stack>
                           </>
@@ -1043,64 +1049,98 @@ const Event = (props: AppProps) => {
                 }}
               >
                 {isExpired()
-                  ? "Project ended"
+                  ? "이벤트가 종료되었어요"
                   : claimCompleted
-                  ? "Claim completed"
-                  : "Claim reward"}
+                  ? "이미 리워드를 클레임 하였습니다"
+                  : ticketData?.rewardPolicy?.context?.rewardClaimable
+                  ? "리워드 클레임"
+                  : "리워드 예정"}
               </LoadingButton>
             </Stack>
 
             <Stack direction={"column"}>
-              <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                <Typography variant="h5">Participants</Typography>
-              </Stack>
               <Stack
                 direction={"row"}
-                spacing={-2}
-                sx={{ marginTop: 4 }}
                 alignItems={"center"}
+                spacing={1}
+                justifyContent={smUp ? "flex-start" : "center"}
+              >
+                <Typography variant="h5">
+                  아래의 사람들이 참여하고 있어요
+                </Typography>
+              </Stack>
+              <Grid
+                container
+                // direction={"row"}
+                sx={{ marginTop: 4 }}
+                // alignItems={"center"}
+                justifyContent={smUp ? "flex-start" : "center"}
               >
                 {(ticketData?.participants?.length ?? 0) > 0 ? (
                   <>
                     {ticketData?.participants?.slice(0, 10).map((e, index) => {
                       return (
-                        <Tooltip title={e.name} key={index}>
-                          <Avatar
-                            alt=""
-                            src={
-                              e.profileImageUrl ??
-                              DEFAULT_PROFILE_IMAGE_DATA_SRC
-                            }
-                            sx={{
-                              width: 42,
-                              height: 42,
-                            }}
-                          />
-                        </Tooltip>
+                        <Grid item key={index}>
+                          {e.profileImageUrl && (
+                            <Tooltip
+                              title={e.name}
+                              key={index}
+                              // sx={{ zIndex: 1 + index }}
+                            >
+                              <Avatar
+                                alt=""
+                                src={
+                                  e.profileImageUrl ??
+                                  DEFAULT_PROFILE_IMAGE_DATA_SRC
+                                }
+                                sx={{
+                                  width: 42,
+                                  height: 42,
+                                }}
+                              />
+                            </Tooltip>
+                          )}
+                          {!e.profileImageUrl && e?._id && (
+                            <Tooltip title={e.name} key={index}>
+                              <div style={{ width: 42, height: 42 }}>
+                                <BlockIcon seed={e?._id} scale={5}></BlockIcon>
+                              </div>
+                            </Tooltip>
+                          )}
+                        </Grid>
                       );
                     })}
                     {ticketData?.participants?.length &&
                       ticketData?.participants?.length > 10 && (
-                        <Box
-                          sx={{
-                            width: 42,
-                            height: 42,
-                            background: (theme) => theme.palette.neutral["800"],
-                            alignItems: "center",
-                            justifyContent: "center",
-                            display: "flex",
-                            borderRadius: 42,
-                            zIndex: 1,
-                          }}
-                          onClick={() => {}}
-                        >
-                          <Typography variant={"caption"} color={"neutral.100"}>
-                            {`+${nFormatter(
-                              10 - ticketData?.participants?.length,
-                              4
-                            )}`}
-                          </Typography>
-                        </Box>
+                        <Grid item>
+                          <Box
+                            sx={{
+                              width: 42,
+                              height: 42,
+                              background: (theme) =>
+                                theme.palette.neutral["800"],
+                              alignItems: "center",
+                              justifyContent: "center",
+                              display: "flex",
+                              borderRadius: 42,
+                              zIndex: 1,
+                              borderWidth: 2,
+                              borderColor: theme.palette.neutral[100],
+                              borderStyle: "solid",
+                            }}
+                            onClick={() => {}}
+                          >
+                            <Typography
+                              variant={"caption"}
+                              color={"neutral.100"}
+                            >
+                              {`+${nFormatter(
+                                ticketData?.participants?.length - 10,
+                                4
+                              )}`}
+                            </Typography>
+                          </Box>
+                        </Grid>
                       )}
                   </>
                 ) : (
@@ -1117,7 +1157,7 @@ const Event = (props: AppProps) => {
                     </Box>
                   </>
                 )}
-              </Stack>
+              </Grid>
             </Stack>
           </Stack>
         </Grid>
@@ -1130,8 +1170,8 @@ const Event = (props: AppProps) => {
         }}
       >
         <Typography>
-          We will periodically check the participation status for the Discord
-          invitation link.
+          Discord 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
+          참여 상태로 유지해주세요.
         </Typography>
       </SimpleDialog>
       <QuestQuizDialog
@@ -1167,6 +1207,17 @@ const Event = (props: AppProps) => {
           }
         }}
       ></QuestQuizDialog>
+      <ContentsRendererDialog
+        open={openContentsRendererDialog}
+        onClose={() => {
+          setOpenContentsRendererDialog(false);
+        }}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setOpenContentsRendererDialog(false);
+        }}
+        htmlContent={htmlContent}
+      ></ContentsRendererDialog>
     </>
   );
 };

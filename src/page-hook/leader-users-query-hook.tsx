@@ -16,10 +16,9 @@ export function useLeaderUsersQuery() {
           query: GET_USERS_ORDER_BY_REWARD_POINT_DESC,
           variables: {
             skip: 0,
-            take: 100,
+            limit: 100,
           },
         });
-
         setLeaderUsersData((prevState) => {
           return (
             leaderUsersData.usersOrderByRewardPointDesc.map((e) => {

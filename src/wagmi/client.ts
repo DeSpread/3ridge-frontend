@@ -1,4 +1,5 @@
 import { configureChains, createClient, defaultChains } from "wagmi";
+import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 
@@ -10,10 +11,11 @@ const { chains, provider } = configureChains(
 const client = createClient({
   autoConnect: true,
   connectors: [
-    new MetaMaskConnector({
+    new MetaMaskConnector({ chains }),
+    new CoinbaseWalletConnector({
       chains,
       options: {
-        UNSTABLE_shimOnConnectSelectAccount: true,
+        appName: "wagmi",
       },
     }),
   ],

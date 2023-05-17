@@ -1,4 +1,4 @@
-import { Avatar, Stack } from "@mui/material";
+import { Avatar, Box, Stack, Typography } from "@mui/material";
 import PrimaryButton from "../../../components/atoms/primary-button";
 import React, { MouseEventHandler } from "react";
 import EmailIcon from "../../../components/atoms/svg/email-icon";
@@ -15,7 +15,7 @@ const SignInWithDialogContent = (props: SignInWithDialogProps) => {
 
   return (
     <>
-      <Stack sx={{ width: "100%" }} spacing={2}>
+      <Stack sx={{ width: "100%" }} spacing={3}>
         <PrimaryButton
           startIcon={
             <Avatar
@@ -29,7 +29,17 @@ const SignInWithDialogContent = (props: SignInWithDialogProps) => {
           }
           onClick={props.onSignInWithGoogleClicked}
         >
-          Sign In with Google
+          <Stack sx={{ width: 120 }} alignItems={"center"} direction={"row"}>
+            <Typography
+              className={"MuiTypography"}
+              variant={"body2"}
+              sx={{
+                color: theme.palette.neutral["600"],
+              }}
+            >
+              구글로 로그인하기
+            </Typography>
+          </Stack>
         </PrimaryButton>
         <PrimaryButton
           startIcon={
@@ -47,7 +57,17 @@ const SignInWithDialogContent = (props: SignInWithDialogProps) => {
           }
           onClick={props.onSignInWithEmailClicked}
         >
-          Sign In with email
+          <Stack sx={{ width: 120 }} alignItems={"center"} direction={"row"}>
+            <Typography
+              className={"MuiTypography"}
+              variant={"body2"}
+              sx={{
+                color: theme.palette.neutral["600"],
+              }}
+            >
+              이메일로 로그인하기
+            </Typography>
+          </Stack>
         </PrimaryButton>
       </Stack>
     </>
