@@ -123,8 +123,7 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                     <Typography
                       variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
                       sx={{
-                        textShadow:
-                          "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
+                        textShadow: "black 1px 0 10px;",
                       }}
                     >
                       {ticket?.project?.name}
@@ -134,8 +133,7 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                     <Typography
                       variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
                       sx={{
-                        textShadow:
-                          "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
+                        textShadow: "black 1px 0 10px;",
                       }}
                     >
                       3ridge
@@ -147,8 +145,7 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                 <Typography
                   variant={mdUp ? "body2" : smUp ? "body1" : "body2"}
                   sx={{
-                    textShadow:
-                      "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
+                    textShadow: "black 1px 0 10px;",
                   }}
                 >
                   {ticket?.quests?.length ?? 0} 퀘스트
@@ -174,8 +171,7 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                     WebkitLineClamp: "2",
                     WebkitBoxOrient: "vertical",
                     textAlign: "center",
-                    textShadow:
-                      "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
+                    textShadow: "black 1px 0 10px;",
                   }}
                   fontFamily={"LINESeedKR-Bd"}
                 >
@@ -195,8 +191,9 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                 <Typography
                   variant={"body2"}
                   sx={{
-                    textShadow:
-                      "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
+                    textShadow: "black 1px 0 10px;",
+                    // textShadow:
+                    //   "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
                   }}
                 >
                   {`${ticket?.rewardPolicy?.context?.point ?? 0} 포인트`}
