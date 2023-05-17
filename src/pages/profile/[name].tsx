@@ -17,6 +17,7 @@ import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atoms/gradient-typography";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import PrimaryButton from "../../components/atoms/primary-button";
@@ -26,6 +27,7 @@ import { useLogin } from "../../provider/login/login-provider";
 import {
   MouseEventWithParam,
   MouseEventWithStateParam,
+  SUPPORTED_NETWORKS,
   SupportedNetwork,
 } from "../../type";
 import ConnectEmailDialog from "./dialog/connect-email-dialog";
@@ -138,6 +140,12 @@ const Profile = (props: AppProps) => {
   const pictureEditDialogOpen = useMemo(() => {
     return imageFile ? true : false;
   }, [imageFile]);
+
+  const connectedWalletNetworks = useMemo(() => {
+    return targetUserData?.walletAddressInfos
+      ?.filter((e) => e.address)
+      .map((e) => e.network);
+  }, targetUserData?.walletAddressInfos);
 
   useEffect(() => {
     (async () => {
@@ -399,63 +407,102 @@ const Profile = (props: AppProps) => {
                     columnSpacing={1}
                     rowSpacing={1}
                   >
-                    {targetUserData?.walletAddressInfos?.map(
-                      (addressInfo, index) => {
-                        if (!addressInfo.address) {
-                          return <></>;
+                    {Object.values(SUPPORTED_NETWORKS)
+                      .filter(
+                        (_, index) =>
+                          index !== Object.values(SUPPORTED_NETWORKS).length - 1
+                      )
+                      .map((network, index) => {
+                        if (connectedWalletNetworks?.includes(network)) {
+                          const addressInfo =
+                            targetUserData?.walletAddressInfos?.filter(
+                              (w) => w.network === network
+                            )?.[0];
+                          if (!addressInfo) return <></>;
+                          return (
+                            <Grid item key={index}>
+                              <StyledChip
+                                key={index}
+                                sx={{
+                                  "&:hover": {
+                                    background: (theme: Theme) =>
+                                      theme.palette.action.hover,
+                                  },
+                                }}
+                                onClick={(e: MouseEvent) => {
+                                  e.preventDefault();
+                                  const newWindow = window.open(
+                                    resourceFactory.getExplorerUri(
+                                      addressInfo.network,
+                                      addressInfo.address
+                                    ),
+                                    "_blank",
+                                    "noopener,noreferrer"
+                                  );
+                                  if (newWindow) newWindow.opener = null;
+                                }}
+                                icon={
+                                  <img
+                                    src={resourceFactory.getExplorerIconUri(
+                                      addressInfo.network
+                                    )}
+                                    width={16}
+                                    height={16}
+                                    style={{
+                                      background: theme.palette.neutral[100],
+                                      borderRadius: 16,
+                                      padding: 1,
+                                      marginRight: "2px",
+                                    }}
+                                  />
+                                }
+                                label={
+                                  <Typography
+                                    variant={"body2"}
+                                    color={"neutral.100"}
+                                  >
+                                    {StringHelper.getInstance().getMidEllipsisString(
+                                      addressInfo?.address
+                                    )}
+                                  </Typography>
+                                }
+                              ></StyledChip>
+                            </Grid>
+                          );
+                        } else {
+                          return (
+                            <Grid item key={index}>
+                              <StyledChip
+                                key={index}
+                                icon={
+                                  <img
+                                    src={resourceFactory.getExplorerIconUri(
+                                      network
+                                    )}
+                                    width={16}
+                                    height={16}
+                                    style={{
+                                      background: theme.palette.neutral[100],
+                                      borderRadius: 16,
+                                      padding: 1,
+                                      marginRight: "2px",
+                                    }}
+                                  />
+                                }
+                                label={
+                                  <Typography
+                                    variant={"body2"}
+                                    color={"neutral.100"}
+                                  >
+                                    {`${network?.toUpperCase()}를 연동해주세요`}
+                                  </Typography>
+                                }
+                              ></StyledChip>
+                            </Grid>
+                          );
                         }
-                        return (
-                          <Grid item key={index}>
-                            <StyledChip
-                              key={index}
-                              sx={{
-                                "&:hover": {
-                                  background: (theme: Theme) =>
-                                    theme.palette.action.hover,
-                                },
-                              }}
-                              onClick={(e: MouseEvent) => {
-                                e.preventDefault();
-                                const newWindow = window.open(
-                                  resourceFactory.getExplorerUri(
-                                    addressInfo.network,
-                                    addressInfo.address
-                                  ),
-                                  "_blank",
-                                  "noopener,noreferrer"
-                                );
-                                if (newWindow) newWindow.opener = null;
-                              }}
-                              icon={
-                                <img
-                                  src={resourceFactory.getExplorerIconUri(
-                                    addressInfo.network
-                                  )}
-                                  width={16}
-                                  height={16}
-                                  style={{
-                                    background: theme.palette.neutral[100],
-                                    borderRadius: 16,
-                                    padding: 1,
-                                    marginRight: "2px",
-                                  }}
-                                />
-                              }
-                              label={
-                                <Typography
-                                  variant={"body2"}
-                                  color={"neutral.100"}
-                                >
-                                  {StringHelper.getInstance().getMidEllipsisString(
-                                    addressInfo?.address
-                                  )}
-                                </Typography>
-                              }
-                            ></StyledChip>
-                          </Grid>
-                        );
-                      }
-                    )}
+                        // return <></>;
+                      })}
                     {targetUserData?.email && (
                       <Grid item>
                         <StyledChip
@@ -467,6 +514,22 @@ const Profile = (props: AppProps) => {
                               color={"neutral.100"}
                             >
                               {targetUserData?.email}
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
+                    {!targetUserData?.email && (
+                      <Grid item>
+                        <StyledChip
+                          icon={<EmailIcon></EmailIcon>}
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              이메일을 연동해주세요
                             </Typography>
                           }
                         ></StyledChip>
@@ -488,6 +551,22 @@ const Profile = (props: AppProps) => {
                         ></StyledChip>
                       </Grid>
                     )}
+                    {!targetUserData?.userSocial?.twitterId && (
+                      <Grid item>
+                        <StyledChip
+                          icon={<TwitterIcon></TwitterIcon>}
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              트위터를 연동해주세요
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
                     {targetUserData?.userSocial?.telegramUser?.username && (
                       <Grid item>
                         <StyledChip
@@ -502,6 +581,22 @@ const Profile = (props: AppProps) => {
                                 targetUserData?.userSocial?.telegramUser
                                   ?.username
                               }
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
+                    {!targetUserData?.userSocial?.telegramUser?.username && (
+                      <Grid item>
+                        <StyledChip
+                          icon={<TelegramIcon></TelegramIcon>}
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              텔레그램을 연동해주세요
                             </Typography>
                           }
                         ></StyledChip>
