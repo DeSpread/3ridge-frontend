@@ -92,7 +92,7 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const TITLES = [
     {
-      title: "Trending",
+      title: "인기순",
       icon: (
         <LocalFireDepartmentIcon
           sx={{ color: "red" }}
@@ -100,8 +100,8 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
       ),
     },
     {
-      title: "Newest",
-      icon: <QueryBuilderIcon sx={{ color: "#62cbff" }}></QueryBuilderIcon>,
+      title: "최신순",
+      icon: <QueryBuilderIcon sx={{ color: "white" }}></QueryBuilderIcon>,
     },
   ];
 
@@ -144,7 +144,7 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
 
 const TabButtonGroup = (props: TabButtonGroupProps) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
-  const TITLES = ["Available", "Complete", "Missed"];
+  const TITLES = ["진행 중", "종료됨", "놓친 이벤트"];
 
   const a11yProps = (index: number) => {
     return {
@@ -219,11 +219,11 @@ const TicketsSection = (props: TicketSectionProps) => {
         </Grid>
       </Grid>
       <Box sx={{ marginTop: 6 }}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} columns={30}>
           {loading &&
             [1, 2, 3, 4].map((e) => {
               return (
-                <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
+                <Grid key={e} item xs={30} sm={15} md={10} lg={6}>
                   <Skeleton
                     height={500}
                     variant={"rounded"}
@@ -235,7 +235,7 @@ const TicketsSection = (props: TicketSectionProps) => {
           {!loading &&
             tickets?.map((ticket, index) => {
               return (
-                <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
+                <Grid key={index} item xs={30} sm={15} md={10} lg={6}>
                   <TicketCard
                     ticket={ticket}
                     onClick={(e) => {
@@ -266,7 +266,7 @@ const TicketsSection = (props: TicketSectionProps) => {
                 height={256}
                 style={{}}
               ></Image>
-              <Typography variant={"h5"}>Empty Contents</Typography>
+              <Typography variant={"h5"}>앗! 컨텐츠가 없어요 :(</Typography>
             </Stack>
           )}
         </Grid>

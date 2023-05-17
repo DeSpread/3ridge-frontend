@@ -1,7 +1,7 @@
 import { AppError } from "../error/my-error";
 import React from "react";
 import { SvgIconProps } from "@mui/material";
-import { CategoryType } from "../__generated__/graphql";
+import { CategoryType, QuestGuide } from "../__generated__/graphql";
 
 /*
  * Per QUEST_POLICY_TYPE, It is required to implement context parsing
@@ -31,6 +31,24 @@ export interface MouseEventWithParam<T> extends React.MouseEvent<HTMLElement> {
   params: T;
 }
 
+export const SUPPORTED_NETWORKS = {
+  APTOS: "aptos",
+  SUI: "sui",
+  EVM: "evm",
+  UNKNOWN: "unknown",
+} as const;
+
+export type SupportedNetwork = ObjectValues<typeof SUPPORTED_NETWORKS>;
+
+export const WALLET_NAMES = {
+  META_MASK: "MetaMask",
+  COINBASE_WALLET: "Coinbase Wallet",
+  PETRA: "petra",
+  SUI_WALLET: "Sui Wallet",
+} as const;
+
+export type WalletName = ObjectValues<typeof WALLET_NAMES>;
+
 export const MAIL_VERIFY = {
   USER_NOT_FOUND: "USER_NOT_FOUND",
   NOT_VERIFIED: "NOT_VERIFIED",
@@ -51,6 +69,7 @@ export const Z_INDEX_OFFSET = {
 
 export const REWARD_POLICY_TYPE = {
   FCFS: "FCFS",
+  LUCKY_DRAW: "LUCKY_DRAW",
 };
 
 export const QUEST_POLICY_TYPE = {
@@ -59,17 +78,45 @@ export const QUEST_POLICY_TYPE = {
   VERIFY_TWITTER_FOLLOW: "VERIFY_TWITTER_FOLLOW",
   VERIFY_TWITTER_LIKING: "VERIFY_TWITTER_LIKING",
   VERIFY_DISCORD: "VERIFY_DISCORD",
-  VERIFY_CONTRACT: "VERIFY_CONTRACT",
+  VERIFY_TELEGRAM: "VERIFY_TELEGRAM",
+  VERIFY_3RIDGE_POINT: "VERIFY_3RIDGE_POINT",
+  VERIFY_APTOS_BRIDGE_TO_APTOS: "VERIFY_APTOS_BRIDGE_TO_APTOS",
+  VERIFY_APTOS_HAS_NFT: "VERIFY_APTOS_HAS_NFT",
+  VERIFY_APTOS_EXIST_TX: "VERIFY_APTOS_EXIST_TX",
+  VERIFY_APTOS_HAS_ANS: "VERIFY_APTOS_HAS_ANS",
+};
+
+export type WalletAddressInfo = {
+  address: string;
+  network: SupportedNetwork;
+};
+
+export type WalletInfo = WalletAddressInfo & {
+  name: WalletName;
+};
+
+export type PartialWalletInfo = Partial<WalletInfo>;
+
+export type PartialWalletAddressInfo = Partial<WalletAddressInfo>;
+
+export type TelegramUserInfo = {
+  authDate: number;
+  firstName: string;
+  hash: string;
+  id: number;
+  photoUrl: string;
+  username: string;
 };
 
 export type User = {
   _id?: string;
-  walletAddress?: string;
+  walletAddressInfos?: WalletAddressInfo[];
   name?: string;
   email?: string;
   profileImageUrl?: string;
   rewardPoint?: number;
-  userSocial?: { twitterId: string };
+  userSocial?: { twitterId?: string; telegramUser?: TelegramUserInfo };
+  participatingTickets?: PartialTicket[];
 };
 
 export type GoogleLoggedInInfo = {
@@ -85,10 +132,6 @@ export type EmailSignUpEventParams = {
   password: string;
 };
 
-export type WalletLoggedInInfo = {
-  address?: string;
-};
-
 export type ReversibleSvgIconProps = SvgIconProps & {
   reverse?: boolean;
 };
@@ -101,7 +144,9 @@ export type FCFSRewardContext = {
   untilTime: string;
   rewardUnit: string;
   rewardAmount: number;
-  rewardChain: number;
+  rewardChain: string;
+  rewardNetwork: string;
+  rewardClaimable: boolean;
   nftImageUrl: string;
   collectionName: string;
   tokenName: string;
@@ -115,7 +160,7 @@ export type Ticket = {
   untilTime?: string;
   description?: string;
   completed?: boolean;
-  participants?: { name?: string; profileImageUrl?: string }[];
+  participants?: { _id?: string; name?: string; profileImageUrl?: string }[];
   quests?: Quest[];
   imageUrl?: string;
   rewardPolicy?: {
@@ -123,10 +168,16 @@ export type Ticket = {
     rewardPolicyType?: string;
   };
   winners?: {
+    _id?: string;
     name?: string;
   }[];
-  project?: Project;
+  project?: PartialProject;
+  rewardClaimedUserIds?: string[];
 };
+
+export type PartialProject = Partial<Project>;
+
+export type PartialTicket = Partial<Ticket>;
 
 export type Quest = {
   _id?: string;
@@ -139,10 +190,13 @@ export type Quest = {
       | TwitterRetweetQuestContext
       | TwitterFollowQuestContext
       | DiscordQuestContext
+      | TelegramQuestContext
+      | Verify3ridgePointContext
       | undefined;
     questPolicy?: string;
   };
   completedUsers?: User[];
+  questGuides?: QuestGuide[];
   isComplete?: boolean;
 };
 
@@ -165,6 +219,14 @@ export type TwitterFollowQuestContext = {
 
 export type DiscordQuestContext = {
   channelId: string;
+};
+
+export type TelegramQuestContext = {
+  channelId: string;
+};
+
+export type Verify3ridgePointContext = {
+  point: number;
 };
 
 export type QuizQuestContext = {

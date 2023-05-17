@@ -19,6 +19,7 @@ import PrimaryButton from "../atoms/primary-button";
 import addSeconds from "date-fns/addSeconds";
 import { MouseEventWithParam } from "../../type";
 import { useTheme } from "@mui/material/styles";
+import CheckIcon from "@mui/icons-material/Check";
 
 type VerifyCardProps = PropsWithChildren & {
   sx?: CSSProperties;
@@ -31,6 +32,7 @@ type VerifyCardProps = PropsWithChildren & {
   verified?: boolean;
   autoVerified?: boolean;
   disabled?: boolean;
+  hideStartButton?: boolean;
 };
 
 const VerifyCard = (props: VerifyCardProps) => {
@@ -46,7 +48,6 @@ const VerifyCard = (props: VerifyCardProps) => {
         <CardContent sx={{ background: theme.palette.neutral[800] }}>
           <Grid
             container
-            // direction={"row"}
             alignItems={"center"}
             justifyContent={smUp ? "space-between" : "center"}
             columns={16}
@@ -54,12 +55,12 @@ const VerifyCard = (props: VerifyCardProps) => {
           >
             <Grid item>
               <Stack direction={"row"} alignItems={"center"}>
-                {props.index && (
+                {props.index && smUp && (
                   <Box
                     sx={{
                       background: (theme) => theme.palette.neutral[800],
-                      width: 28,
-                      height: 28,
+                      width: smUp ? 28 : 14,
+                      height: smUp ? 28 : 14,
                       display: "flex",
                       flex: 1,
                       alignItems: "center",
@@ -68,7 +69,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                     }}
                   >
                     <Typography
-                      variant={"caption"}
+                      variant={smUp ? "body2" : "caption"}
                       sx={{
                         color: (theme) => theme.palette.neutral[100],
                         width: 28,
@@ -82,7 +83,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                 <Stack
                   direction={"column"}
                   justifyContent={"center"}
-                  sx={{ marginLeft: 3 }}
+                  sx={{ marginLeft: smUp ? 3 : 0 }}
                 >
                   <Box>
                     <Typography
@@ -90,6 +91,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                       sx={{
                         wordBreak: "break-word",
                       }}
+                      textAlign={smUp ? "left" : "center"}
                     >
                       {props.title}
                     </Typography>
@@ -101,6 +103,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                         sx={{
                           wordBreak: "break-word",
                         }}
+                        textAlign={smUp ? "left" : "center"}
                       >
                         {props.description}
                       </Typography>
@@ -109,26 +112,33 @@ const VerifyCard = (props: VerifyCardProps) => {
                 </Stack>
               </Stack>
             </Grid>
-
-            {/*<Grid item sx={{ background: "" }}>*/}
-            {/*  */}
-            {/*</Grid>*/}
             <Grid item sx={{ background: "" }}>
               <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
+                {!props.hideStartButton && (
+                  <SecondaryButton
+                    sx={{ width: 110 }}
+                    disabled={props.disabled || props.verified}
+                    size={"medium"}
+                    onClick={props.onStartBtnClicked}
+                  >
+                    시작
+                  </SecondaryButton>
+                )}
                 <div style={{ position: "relative" }}>
                   <PrimaryButton
                     size={"medium"}
-                    sx={{ width: 86 }}
+                    sx={{ width: 110 }}
+                    endIcon={<CheckIcon />}
                     onClick={(e) => {
                       setCardState("VERIFYING");
                       let timer: NodeJS.Timer;
-                      let _vDate = addSeconds(new Date(), 10);
+                      let _vDate = addSeconds(new Date(), 5);
                       function checkRemain() {
                         const now = new Date();
                         //@ts-ignore
                         const distDt = _vDate - now;
                         setVerifyingProgress((prevState) => {
-                          return prevState + 1;
+                          return prevState + 2;
                         });
                         if (distDt < 0) {
                           clearInterval(timer);
@@ -158,10 +168,12 @@ const VerifyCard = (props: VerifyCardProps) => {
                     }
                   >
                     {cardState === "VERIFYING"
-                      ? "Verifying"
+                      ? "확인중"
                       : props.verified
-                      ? "Verified"
-                      : "Verify"}
+                      ? "완료"
+                      : props.autoVerified
+                      ? "확인하기"
+                      : "확인하기"}
                   </PrimaryButton>
                   <div
                     style={{
@@ -188,14 +200,6 @@ const VerifyCard = (props: VerifyCardProps) => {
                     )}
                   </div>
                 </div>
-                <SecondaryButton
-                  sx={{ width: 86 }}
-                  disabled={props.disabled || props.verified}
-                  size={"medium"}
-                  onClick={props.onStartBtnClicked}
-                >
-                  Start
-                </SecondaryButton>
               </Stack>
             </Grid>
           </Grid>

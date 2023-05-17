@@ -31,17 +31,6 @@ import { LinkIconButton } from "../../components/molecules/link-icon-button";
 import Image from "next/image";
 import { TicketSortType } from "../../__generated__/graphql";
 
-// export const getStaticPaths: GetStaticPaths<{ id: string }> = (id) => {
-//   return {
-//     paths: [], //indicates that no page needs be created at build time
-//     fallback: "blocking", //indicates the type of fallback
-//   };
-// };
-//
-// export async function getStaticProps() {
-//   return { props: {} };
-// }
-
 const Project = () => {
   const [filterType, setFilterType] = useState<FilterType>(
     FILTER_TYPE.AVAILABLE
@@ -56,20 +45,26 @@ const Project = () => {
     TicketSortType.Trending
   );
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
-    filterType,
-    projectId:
-      typeof router.query.id === "string" ? router.query.id : undefined,
-    sort: ticketSortType,
+    filterType: router.isReady ? filterType : undefined,
+    projectId: router.isReady
+      ? typeof router.query.id === "string"
+        ? router.query.id
+        : undefined
+      : undefined,
+    sort: router.isReady ? ticketSortType : undefined,
   });
   const { projectData, projectDataLoading } = useProjectQuery({
-    projectId:
-      typeof router.query.id === "string" ? router.query.id : undefined,
+    projectId: router.isReady
+      ? typeof router.query.id === "string"
+        ? router.query.id
+        : undefined
+      : undefined,
   });
 
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
       <Stack direction={"column"} alignItems={"center"}>
         <Stack

@@ -1,4 +1,4 @@
-import { MouseEvent, ReactElement, useState } from "react";
+import React, { MouseEvent, ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { Divider, Stack, Typography } from "@mui/material";
 import HomeFooter from "../../layouts/footer/home-footer";
@@ -12,6 +12,7 @@ import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
+  getLocaleErrorMessage,
 } from "../../error/my-error";
 import { useAlert } from "../../provider/alert/alert-provider";
 import SignUpWithEmailForm from "./components/sign-up-with-email-form";
@@ -20,10 +21,19 @@ import {
   MAIL_VERIFY,
   MouseEventWithParam,
   ObjectValues,
+  SupportedNetwork,
 } from "../../type";
 import VerifyYourEmailForm from "../../components/organisms/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
+import AwsClient from "../../remote/aws-client";
+import SignInWithNetworkSelectDialog from "../../layouts/dialog/sign/sign-in-with-network-select-dialog";
+import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
+import {
+  convertToSuppoertedNetwork,
+  convertToWalletName,
+} from "../../util/type-util";
+import ResourceFactory from "../../helper/resource-factory";
 
 const FORM_TYPE = {
   SELECT: "SELECT",
@@ -42,7 +52,7 @@ const Signup = () => {
     walletSignUp,
     emailVerify,
     emailSignIn,
-    resendEmailVerify,
+    // resendEmailVerify,
   } = useLogin();
   const { showLoading, closeLoading } = useLoading();
   const { setShowSignInDialog } = useSignDialog();
@@ -50,14 +60,24 @@ const Signup = () => {
     email: "",
     password: "",
   });
-  const [formType, setFormType] = useState<FormType>(FORM_TYPE.SELECT);
+  const [formType, setFormType] = useState<FormType>(FORM_TYPE.WITH_EMAIL);
+  const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
+    useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState("");
+  const resourceFactory = ResourceFactory.getInstance();
+
+  const signInWithSupportedWalletVisible = useMemo(() => {
+    return selectedNetwork ? true : false;
+  }, [selectedNetwork]);
 
   return (
     <>
       <Head>
-        <title>3ridge : Bridge to Web3</title>
+        <title>3ridge : 국내 Web3 플랫폼</title>
       </Head>
-      <div style={{ flex: 1, background: "" }}>
+      <div
+        style={{ flex: 1, background: "", minHeight: `calc(100vh - 140px)` }}
+      >
         <Stack
           direction={"column"}
           alignItems={"center"}
@@ -71,12 +91,7 @@ const Signup = () => {
               }}
               onClickConnectWallet={(e: MouseEvent) => {
                 e.preventDefault();
-                walletSignUp({
-                  onSuccess: () => {
-                    router.push("/").then();
-                  },
-                  onError: (error: AppError) => {},
-                });
+                setSignInWithNetworkSelectVisible(true);
               }}
               onShowSignClicked={(e) => {
                 e.preventDefault();
@@ -111,48 +126,37 @@ const Signup = () => {
           )}
           {formType === FORM_TYPE.WITH_EMAIL && (
             <SignUpWithEmailForm
+              onClickSignIn={(e) => {
+                e.preventDefault();
+                setShowSignInDialog(true);
+              }}
               onClickSendVerification={(e) => {
                 const myEvent =
                   e as MouseEventWithParam<EmailSignUpEventParams>;
                 showLoading();
                 emailVerify(myEvent.params, {
-                  onSuccess: () => {
+                  onSuccess: (msg) => {
+                    if (msg === "mail auth is already done") {
+                      showErrorAlert({
+                        content: "이미 인증으로 사용된 메일입니다.",
+                      });
+                      closeLoading();
+                      return;
+                    }
                     setSignUpParams({ ...myEvent.params });
                     setFormType(FORM_TYPE.VERIFY_EMAIL);
                     closeLoading();
                   },
                   onError: (error: AppError) => {
-                    console.error(error);
-                    let message = "Unknown error occurred";
-                    if (error.message === MAIL_VERIFY.NOT_VERIFIED) {
-                      closeLoading();
+                    // console.log(error);
+                    if (error.message === "auth already requested") {
                       setSignUpParams({ ...myEvent.params });
                       setFormType(FORM_TYPE.VERIFY_EMAIL);
-                    } else if (error.message === MAIL_VERIFY.USER_NOT_FOUND) {
                       closeLoading();
-                      message = "Something auth progress problem occurred";
-                      showErrorAlert({ content: message });
-                    } else if (error.message === MAIL_VERIFY.PASSWORD_WRONG) {
-                      closeLoading();
-                      message = "Check your password";
-                      showErrorAlert({ content: message });
-                    } else if (error.message === MAIL_VERIFY.VERIFIED) {
-                      const { email, password } =
-                        error.payload as EmailSignUpEventParams;
-                      emailSignIn(
-                        { email, password },
-                        {
-                          onSuccess: () => {
-                            closeLoading();
-                            router.push("/profile").then();
-                          },
-                          onError: (e: Error) => {
-                            closeLoading();
-                            showErrorAlert({ content: getErrorMessage(e) });
-                          },
-                        }
-                      );
+                      return;
                     }
+                    showErrorAlert({ content: getLocaleErrorMessage(error) });
+                    closeLoading();
                   },
                 });
               }}
@@ -161,51 +165,51 @@ const Signup = () => {
           {formType === FORM_TYPE.VERIFY_EMAIL && (
             <VerifyYourEmailForm
               email={signupParams.email}
-              onClickResendVerification={(e) => {
+              signInTitle={"인증하였다면, 메일로 로그인 시도하기"}
+              onClickResendVerification={async (e) => {
                 const { email, password } = signupParams;
-                resendEmailVerify(
-                  { email, password },
-                  {
-                    onSuccess: () => {
-                      showAlert({
-                        title: "Info",
-                        content: (
-                          <div>
-                            <p style={{ marginBottom: -2 }}>Email is resend</p>
-                            <p>Please check your email</p>
-                          </div>
-                        ),
-                      });
-                    },
-                    onError: (error: Error) => {
-                      if (error.message === MAIL_VERIFY.VERIFIED) {
-                        showAlert({
-                          title: "Info",
-                          content: (
-                            <div>
-                              <p style={{ marginBottom: -2 }}>
-                                Already verified
-                              </p>
-                              <p>Please Sign in</p>
-                            </div>
-                          ),
-                        });
-                        return;
-                      }
-                      showErrorAlert({ content: "Unknown error occurred" });
-                    },
+                showLoading();
+                try {
+                  const res = await AwsClient.getInstance().asyncResendAuthMail(
+                    email
+                  );
+                  if (res.status === 500 || res.status === 400) {
+                    const data = await res.text();
+                    const message = JSON.parse(data).message;
+                    showErrorAlert({ content: message });
+                  } else {
+                    showAlert({
+                      title: "Info",
+                      content: (
+                        <div>
+                          <p style={{ marginBottom: -2 }}>
+                            이메일이 재전송 되었습니다
+                          </p>
+                          <p>메일함에 메일을 확인해주세요</p>
+                        </div>
+                      ),
+                    });
                   }
-                );
+                } catch (e) {
+                  showErrorAlert({ content: "Unknown error occurred" });
+                } finally {
+                  closeLoading();
+                }
               }}
               onClickSignIn={(e) => {
                 const { email, password } = signupParams;
+                showLoading();
                 emailSignIn(
                   { email, password },
                   {
                     onSuccess: () => {
+                      closeLoading();
                       router.push("/profile").then();
                     },
-                    onError: (e: Error) => {},
+                    onError: (e: Error) => {
+                      closeLoading();
+                      showErrorAlert({ content: getLocaleErrorMessage(e) });
+                    },
                   }
                 );
               }}
@@ -217,20 +221,84 @@ const Signup = () => {
             spacing={1}
           >
             <Divider></Divider>
-            <Stack direction={"row"}>
-              <Typography variant={"body2"}>
-                By signing up, you agree to our
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"center"}
+            >
+              <Typography variant={"body2"} textAlign={"center"}>
+                가입시 다음에 동의합니다.
               </Typography>
               <LinkTypography variant={"body2"}>
-                &nbsp;Terms of use&nbsp;
+                &nbsp;이용약관&nbsp;
               </LinkTypography>
-              <Typography variant={"body2"}>and</Typography>
+              <Typography variant={"body2"}>및</Typography>
               <LinkTypography variant={"body2"}>
-                &nbsp;Privacy Policy
+                &nbsp;개인 정보 보호 방침
               </LinkTypography>
             </Stack>
           </Stack>
         </Stack>
+        <SignInWithNetworkSelectDialog
+          title={"연결하려는 네트워트를 선택하세요"}
+          open={signInWithNetworkSelectVisible}
+          onCloseBtnClicked={(e) => {
+            e.preventDefault();
+            setSignInWithNetworkSelectVisible(false);
+          }}
+          onClose={() => {
+            setSignInWithNetworkSelectVisible(false);
+          }}
+          onNetworkButtonClicked={(network) => {
+            setSignInWithNetworkSelectVisible(false);
+            setSelectedNetwork(network);
+          }}
+        ></SignInWithNetworkSelectDialog>
+        <SignInWithSupportedWalletDialog
+          title={"연결하려는 지갑을 선택하세요"}
+          open={signInWithSupportedWalletVisible}
+          onCloseBtnClicked={(e) => {
+            e.preventDefault();
+            setSelectedNetwork("");
+          }}
+          onClose={() => {
+            setSelectedNetwork("");
+          }}
+          walletInfos={(() => {
+            return resourceFactory.getWalletInfos(
+              convertToSuppoertedNetwork(selectedNetwork)
+            );
+          })()}
+          onWalletSelected={({ name, value }) => {
+            const walletName = convertToWalletName(value);
+            walletSignUp(
+              {
+                network: selectedNetwork as SupportedNetwork,
+                name: walletName,
+              },
+              {
+                onSuccess: () => {
+                  showLoading();
+                  router.push("/explore").then((res) => {
+                    closeLoading();
+                    setSelectedNetwork("");
+                  });
+                },
+                onError: (error: AppError) => {
+                  if (
+                    error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED
+                  ) {
+                    //@ts-ignore
+                    showWalletAlert(convertToSuppoertedNetwork(error.payload));
+                  } else {
+                    showErrorAlert({ content: error.message });
+                  }
+                  setSelectedNetwork("");
+                },
+              }
+            );
+          }}
+        ></SignInWithSupportedWalletDialog>
       </div>
     </>
   );

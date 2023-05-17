@@ -8,7 +8,8 @@ import {
   EmailLoggedInInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
-  WalletLoggedInInfo,
+  PartialWalletInfo,
+  WalletInfo,
 } from "../../type";
 import { useEmailLogin } from "./hook/email-login-hook";
 
@@ -18,13 +19,14 @@ const LoginContext = createContext<{
   googleLoggedInInfo: GoogleLoggedInInfo;
   logout: SuccessErrorCallback<void>;
   googleSignUp: SuccessErrorCallback<void>;
-  walletSignUp: SuccessErrorCallback<void>;
+  walletSignUp: SuccessErrorCallbackWithParam<PartialWalletInfo, void>;
   isWalletLoggedIn: boolean;
-  walletLoggedInInfo: WalletLoggedInInfo;
-  emailVerify: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
+  walletLoggedInInfo: PartialWalletInfo;
+  emailVerify: SuccessErrorCallbackWithParam<EmailSignUpEventParams, string>;
   emailSignIn: SuccessErrorCallbackWithParam<EmailSignUpEventParams, void>;
-  resendEmailVerify: SuccessErrorCallbackWithParam<
-    EmailSignUpEventParams,
+  updateAuthMail: SuccessErrorCallbackWithParam<EmailLoggedInInfo, void>;
+  emailSignInWithoutPassword: SuccessErrorCallbackWithParam<
+    EmailLoggedInInfo,
     void
   >;
   isMailLoggedIn: boolean;
@@ -40,7 +42,8 @@ const LoginContext = createContext<{
   walletLoggedInInfo: {},
   emailVerify: () => {},
   emailSignIn: () => {},
-  resendEmailVerify: () => {},
+  updateAuthMail: () => {},
+  emailSignInWithoutPassword: () => {},
   isMailLoggedIn: false,
   emailLoggedInInfo: {},
 });
@@ -54,9 +57,10 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     emailVerify,
     emailSignIn,
     emailLogout,
-    resendEmailVerify,
     isMailLoggedIn,
     emailLoginInfo,
+    updateAuthMail,
+    emailSignInWithoutPassword,
   } = useEmailLogin();
 
   const logout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
@@ -92,9 +96,10 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
         isWalletLoggedIn,
         emailVerify,
         emailSignIn,
-        resendEmailVerify,
         isMailLoggedIn,
+        updateAuthMail,
         emailLoggedInInfo: emailLoginInfo,
+        emailSignInWithoutPassword,
       }}
     >
       {children}

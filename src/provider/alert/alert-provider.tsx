@@ -21,6 +21,7 @@ import {
 import { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 import Draggable from "react-draggable";
+import ComponentHelper from "../../helper/component-helper";
 
 const AlertContext = createContext<{
   showAlert: ({
@@ -69,7 +70,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
   };
 
   const showErrorAlert = ({ content }: { content: string | ReactElement }) => {
-    alertDescRef.current.title = "SOMETHING WRONG";
+    alertDescRef.current.title = "오류가 발생했습니다";
     alertDescRef.current.content = (
       <Stack direction={"column"} sx={{ flex: 1, background: "" }}>
         <div>{content}</div>
@@ -84,6 +85,12 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
     alertDescRef.current.content = undefined;
     setOpen(false);
   };
+
+  // const multiLineContentText = (content: string) => {
+  //   return content.split("\n").map((e, index) => {
+  //     return <Typography key={index}>{e}</Typography>;
+  //   });
+  // };
 
   return (
     <AlertContext.Provider value={{ showAlert, closeAlert, showErrorAlert }}>
@@ -138,7 +145,12 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
           justifyContent={"center"}
         >
           <DialogContentText sx={{ background: "" }}>
-            {alertDescRef.current.content}
+            {typeof alertDescRef.current.content === "string" &&
+              ComponentHelper.getInstance().multiLineContentText(
+                alertDescRef.current.content
+              )}
+            {typeof alertDescRef.current.content !== "string" &&
+              alertDescRef.current.content}
           </DialogContentText>
         </Stack>
       </Dialog>

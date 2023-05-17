@@ -1,26 +1,19 @@
 import {
-  EmailSignUpEventParams,
-  MAIL_VERIFY,
   EmailLoggedInInfo,
+  EmailSignUpEventParams,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
 } from "../../../type";
 import { AppError, getErrorMessage } from "../../../error/my-error";
-import { useFirebaseAuth } from "../../../firebase/hook/firebase-hook";
 import { useMutation } from "@apollo/client";
-import { client } from "../../../apollo/client";
 import { useEffect, useMemo, useState } from "react";
-import { CREATE_USER_BY_EMAIL, GET_USER_BY_EMAIL } from "../../../apollo/query";
+import { CREATE_USER_BY_EMAIL } from "../../../apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
+import AwsClient from "../../../remote/aws-client";
 
 export function useEmailLogin() {
   const preference = PreferenceHelper.getInstance();
-  const {
-    asyncVerifyUserWithEmailAndPassword,
-    asyncSignInEmailWithVerify,
-    asyncResendEmailVerify,
-  } = useFirebaseAuth();
 
   const [emailLoginInfo, setEmailLoginInfo] = useState<EmailLoggedInInfo>({});
   const [createUserByEmail] = useMutation(CREATE_USER_BY_EMAIL);
@@ -46,22 +39,73 @@ export function useEmailLogin() {
 
   const emailVerify: SuccessErrorCallbackWithParam<
     EmailSignUpEventParams,
-    void
+    string
   > = (params, { onSuccess, onError }) => {
     (async () => {
       const { email, password } = params;
       try {
-        const res = await asyncVerifyUserWithEmailAndPassword(email, password);
-        if (res === MAIL_VERIFY.SEND_VERIFICATION) {
-          onSuccess?.();
+        const res = await AwsClient.getInstance().asyncRequestAuthMail(
+          email,
+          password
+        );
+        if (res.status === 400 || res.status === 500) {
+          const data = await res.text();
+          console.log(data);
+          const message = JSON.parse(data).message;
+          console.log(message, JSON.parse(data));
+          onError?.(new AppError(message, { email, password }));
           return;
         }
-        onError?.(new AppError(res, { email, password }));
+        if (res.status === 200) {
+          onSuccess?.("mail auth is already done");
+          return;
+        }
+        onSuccess?.();
       } catch (e) {
+        console.log(e);
         onError?.(
           new AppError(getErrorMessage(e), {
             email,
             password,
+          })
+        );
+      }
+    })();
+  };
+
+  const updateAuthMail: SuccessErrorCallbackWithParam<
+    EmailLoggedInInfo,
+    void
+  > = (params, { onSuccess, onError }) => {
+    (async () => {
+      const { mail } = params;
+      try {
+        if (!mail) {
+          onError?.(
+            new AppError("Empty mail", {
+              mail,
+            })
+          );
+          return;
+        }
+
+        const res = await AwsClient.getInstance().asyncUpdateAuthMail(mail);
+        if (res.status === 400 || res.status === 500) {
+          const data = await res.text();
+          const message = JSON.parse(data).message;
+          onError?.(new AppError(message, { mail }));
+          return;
+        }
+        await createUserByEmail({
+          variables: {
+            email: mail,
+          },
+        });
+        onSuccess?.();
+      } catch (e) {
+        onError?.(
+          new AppError(getErrorMessage(e), {
+            mail,
           })
         );
       }
@@ -75,60 +119,50 @@ export function useEmailLogin() {
     (async () => {
       const { email, password } = params;
       try {
-        const res = await asyncSignInEmailWithVerify(email, password);
-        if (res === MAIL_VERIFY.VERIFIED) {
-          const { data } = await client.query({
-            query: GET_USER_BY_EMAIL,
-            variables: {
-              email,
-            },
-          });
-          setEmailLoginInfo((prevState) => {
-            return { ...prevState, mail: email };
-          });
-          preference.updateEmailSignIn(email);
-          onSuccess?.();
+        const res = await AwsClient.getInstance().asyncLoginWithMail(
+          email,
+          password
+        );
+        if (res.status === 400 || res.status === 500) {
+          const data = await res.text();
+          const message = JSON.parse(data).message;
+          onError?.(new AppError(message));
           return;
         }
-        onError?.(new AppError(res));
+        setEmailLoginInfo((prevState) => {
+          return { ...prevState, mail: email };
+        });
+        preference.updateEmailSignIn(email);
+        onSuccess?.();
+        return;
       } catch (e) {
-        if (getErrorMessage(e) === "Does not exist user") {
-          createUserByEmail({
-            variables: {
-              email,
-            },
-          })
-            .then((res) => {
-              setEmailLoginInfo((prevState) => {
-                return { ...prevState, mail: email };
-              });
-              localStorage.setItem(
-                "emailSignInCache",
-                JSON.stringify({
-                  email,
-                  timestamp: new Date().toISOString(),
-                })
-              );
-              onSuccess?.();
-            })
-            .catch((e) => {
-              throw new AppError(getErrorMessage(e));
-            });
-          return;
-        }
         onError?.(new AppError(getErrorMessage(e)));
       }
     })();
   };
 
-  const resendEmailVerify: SuccessErrorCallbackWithParam<
-    EmailSignUpEventParams,
+  const emailSignInWithoutPassword: SuccessErrorCallbackWithParam<
+    EmailLoggedInInfo,
     void
   > = (params, { onSuccess, onError }) => {
     (async () => {
       try {
-        const { email, password } = params;
-        await asyncResendEmailVerify(email, password);
+        const mail = params.mail;
+        if (!mail) {
+          onError?.(new AppError("mail is empty"));
+          return;
+        }
+        const res = await AwsClient.getInstance().asyncIsAuthMail(mail);
+        if (res.status === 400 || res.status === 500) {
+          const data = await res.text();
+          const message = JSON.parse(data).message;
+          onError?.(new AppError(message));
+          return;
+        }
+        setEmailLoginInfo((prevState) => {
+          return { ...prevState, mail };
+        });
+        preference.updateEmailSignIn(mail);
         onSuccess?.();
       } catch (e) {
         onError?.(new AppError(getErrorMessage(e)));
@@ -155,9 +189,10 @@ export function useEmailLogin() {
   return {
     emailVerify,
     emailSignIn,
-    resendEmailVerify,
+    updateAuthMail,
     isMailLoggedIn,
     emailLoginInfo,
     emailLogout,
+    emailSignInWithoutPassword,
   };
 }

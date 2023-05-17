@@ -1,8 +1,8 @@
 import { gql } from "../__generated__";
 
 export const GET_USERS_ORDER_BY_REWARD_POINT_DESC = gql(/* GraphQL */ `
-  query GetUsersOrderByRewardPointDesc($skip: Int = 0, $take: Int = 25) {
-    usersOrderByRewardPointDesc(skip: $skip, take: $take) {
+  query GetUsersOrderByRewardPointDesc($skip: Int = 0, $limit: Int = 25) {
+    usersOrderByRewardPointDesc(skip: $skip, limit: $limit) {
       _id
       name
       profileImageUrl
@@ -25,6 +25,55 @@ export const FIND_RANK_BY_USER_ID = gql(/* GraphQL */ `
   }
 `);
 
+export const GET_USER_BY_NAME = gql(/* GraphQL */ `
+  query GetUserByName($name: String!) {
+    userByName(name: $name) {
+      _id
+      email
+      gmail
+      name
+      participatingTickets {
+        _id
+        imageUrl
+        description
+        project {
+          _id
+          categories
+          description
+          imageUrl
+          name
+        }
+        rewardPolicy {
+          context
+          rewardPolicyType
+        }
+        title
+        winners {
+          _id
+          name
+        }
+      }
+      profileImageUrl
+      rewardPoint
+      userSocial {
+        twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
+      }
+      wallets {
+        address
+        chain
+      }
+    }
+  }
+`);
+
 export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
   query GetUserByEmail($email: String!) {
     userByEmail(email: $email) {
@@ -39,6 +88,14 @@ export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
       rewardPoint
       userSocial {
         twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
       }
     }
   }
@@ -58,6 +115,14 @@ export const GET_USER_BY_GMAIL = gql(/* GraphQL */ `
       rewardPoint
       userSocial {
         twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
       }
     }
   }
@@ -77,6 +142,14 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
       rewardPoint
       userSocial {
         twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
       }
     }
   }
@@ -109,13 +182,9 @@ export const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
 export const UPDATE_USER_WALLET_BY_NAME = gql(/* GraphQL */ `
   mutation UpdateUserWalletByName(
     $name: String!
-    $chain: ChainType!
-    $walletAddress: String!
+    $wallets: [UserWalletInputType!]
   ) {
-    updateUserByName(
-      name: $name
-      userUpdateInput: { wallets: [{ chain: $chain, address: $walletAddress }] }
-    ) {
+    updateUserByName(name: $name, userUpdateInput: { wallets: $wallets }) {
       wallets {
         address
         chain
@@ -157,6 +226,30 @@ export const UPDATE_USER_REWARD_BY_NAME = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_USER_SOCIAL_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateUserSocialByName(
+    $name: String!
+    $userSocial: UserSocialInputType!
+  ) {
+    updateUserByName(
+      name: $name
+      userUpdateInput: { userSocial: $userSocial }
+    ) {
+      userSocial {
+        twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
+      }
+    }
+  }
+`);
+
 export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
   mutation UpdateUserTwitterByName($name: String!, $twitterId: String!) {
     updateUserByName(
@@ -165,6 +258,29 @@ export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
     ) {
       userSocial {
         twitterId
+      }
+    }
+  }
+`);
+
+export const UPDATE_USER_TELEGRAM_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateUserTelegramByName(
+    $name: String!
+    $telegramUser: TelegramUserInputType!
+  ) {
+    updateUserByName(
+      name: $name
+      userUpdateInput: { userSocial: { telegramUser: $telegramUser } }
+    ) {
+      userSocial {
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
       }
     }
   }
@@ -179,192 +295,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
       completed
       description
       participants {
-        name
-        profileImageUrl
-      }
-      imageUrl
-      quests {
         _id
-        title
-        description
-        questPolicy {
-          context
-          questPolicy
-        }
-      }
-      project {
-        _id
-        categories
-        description
-        imageUrl
-        name
-        projectSocial {
-          discordUrl
-          officialUrl
-          telegramUrl
-          twitterUrl
-        }
-      }
-      rewardPolicy {
-        context
-        rewardPolicyType
-      }
-      title
-      winners {
-        name
-      }
-    }
-  }
-`);
-
-export const GET_AVAILABLE_TICKETS = gql(/* GraphQL */ `
-  query AvailableTickets {
-    availableTickets {
-      _id
-      beginTime
-      untilTime
-      completed
-      description
-      participants {
-        name
-        profileImageUrl
-      }
-      imageUrl
-      quests {
-        _id
-        title
-        description
-        questPolicy {
-          context
-          questPolicy
-        }
-      }
-      project {
-        _id
-        categories
-        description
-        imageUrl
-        name
-        projectSocial {
-          discordUrl
-          officialUrl
-          telegramUrl
-          twitterUrl
-        }
-      }
-      rewardPolicy {
-        context
-        rewardPolicyType
-      }
-      title
-      winners {
-        name
-      }
-    }
-  }
-`);
-
-export const GET_COMPLETED_TICKETS = gql(/* GraphQL */ `
-  query CompletedTickets {
-    completedTickets {
-      _id
-      beginTime
-      untilTime
-      completed
-      description
-      participants {
-        name
-        profileImageUrl
-      }
-      imageUrl
-      quests {
-        _id
-        title
-        description
-        questPolicy {
-          context
-          questPolicy
-        }
-      }
-      project {
-        _id
-        categories
-        description
-        imageUrl
-        name
-        projectSocial {
-          discordUrl
-          officialUrl
-          telegramUrl
-          twitterUrl
-        }
-      }
-      rewardPolicy {
-        context
-        rewardPolicyType
-      }
-      title
-      winners {
-        name
-      }
-    }
-  }
-`);
-
-export const FIND_MISSED_TICKETS = gql(/* GraphQL */ `
-  query FindMissedTickets {
-    findMissedTickets {
-      _id
-      beginTime
-      untilTime
-      completed
-      description
-      participants {
-        name
-        profileImageUrl
-      }
-      imageUrl
-      quests {
-        _id
-        title
-        description
-        questPolicy {
-          context
-          questPolicy
-        }
-      }
-      project {
-        _id
-        categories
-        description
-        imageUrl
-        name
-        projectSocial {
-          discordUrl
-          officialUrl
-          telegramUrl
-          twitterUrl
-        }
-      }
-      rewardPolicy {
-        context
-        rewardPolicyType
-      }
-      title
-      winners {
-        name
-      }
-    }
-  }
-`);
-
-export const GET_ALL_TICKETS = gql(/* GraphQL */ `
-  query AllTickets {
-    tickets {
-      _id
-      completed
-      description
-      participants {
         name
         profileImageUrl
       }
@@ -412,6 +343,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       completed
       description
       participants {
+        _id
         name
         profileImageUrl
       }
@@ -424,16 +356,11 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
           context
           questPolicy
         }
-        # completedUsers {
-        #  _id
-        #  name
-        #  profileImageUrl
-        #  email
-        #  wallets {
-        #  address
-        #  chain
-        #  }
-        # }
+        questGuides {
+          contentFormatType
+          content
+          contentEncodingType
+        }
       }
       rewardPolicy {
         context
@@ -442,6 +369,9 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       title
       winners {
         name
+      }
+      rewardClaimedUsers {
+        _id
       }
     }
   }
@@ -560,6 +490,18 @@ export const VERIFY_TWITTER_FOLLOW_QUEST = gql(/* GraphQL */ `
   }
 `);
 
+export const VERIFY_3RIDGE_POINT_QUEST = gql(/* GraphQL */ `
+  mutation Verify3ridgePoint(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verify3ridgePoint(questId: $questId, ticketId: $ticketId, userId: $userId) {
+      _id
+    }
+  }
+`);
+
 export const VERIFY_TWITTER_RETWEET_QUEST = gql(/* GraphQL */ `
   mutation VerifyTwitterRetweetQuest(
     $questId: String!
@@ -624,5 +566,23 @@ export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
     ) {
       txHash
     }
+  }
+`);
+
+export const VERIFY_APTOS_QUEST = gql(/* GraphQL */ `
+  mutation VerifyAptosQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verifyAptosQuest(questId: $questId, ticketId: $ticketId, userId: $userId) {
+      _id
+    }
+  }
+`);
+
+export const IS_REGISTER_WALLET = gql(/* GraphQL */ `
+  query IsRegisteredWallet($address: String!, $chain: ChainType!) {
+    isRegisteredWallet(address: $address, chain: $chain)
   }
 `);

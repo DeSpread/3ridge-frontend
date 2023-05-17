@@ -1,19 +1,17 @@
 import {
   AppBar,
   Box,
+  Link as MuiLink,
   Stack,
   Toolbar,
   Typography,
-  Link as MuiLink,
   useMediaQuery,
-  IconButton,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
-import { MouseEventHandler, ReactNode, useState } from "react";
+import React, { MouseEventHandler, ReactNode, useMemo, useState } from "react";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
-import PrimaryButton from "../components/atoms/primary-button";
 import SecondaryButton from "../components/atoms/secondary-button";
 import SignInDialog from "./dialog/sign/sign-in-dialog";
 import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
@@ -23,23 +21,36 @@ import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
+  getLocaleErrorMessage,
 } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
-import { useSignedUserQuery } from "../page-hook/user-query-hook";
+import { useSignedUserQuery } from "../page-hook/signed-user-query-hook";
 import { useLoading } from "../provider/loading/loading-provider";
 import {
   EmailSignUpEventParams,
   MAIL_VERIFY,
   MouseEventWithParam,
+  SUPPORTED_NETWORKS,
+  SupportedNetwork,
+  WALLET_NAMES,
   Z_INDEX_OFFSET,
 } from "../type";
 import { useSignDialog } from "../page-hook/sign-dialog-hook";
 import NavbarButton from "../components/atoms/navbar-button";
 import Link from "next/link";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SubMenuButton from "../components/molecules/sub-menu-button";
 import Image from "next/image";
-import BlockIcon from "../components/molecules/block-icon";
+import HomeFooter from "./footer/home-footer";
+import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
+import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
+import { useWalletAlert } from "../page-hook/wallet-alert-hook";
+import {
+  convertToSuppoertedNetwork,
+  convertToWalletName,
+} from "../util/type-util";
+import ResourceFactory from "../helper/resource-factory";
+import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
+import ContentsRendererDialog from "../components/dialogs/contents-renderer-dialog";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -61,10 +72,16 @@ const NavbarButtonSet = ({
   leaderBoardBtnOnClick,
 }: NavbarButtonSetProps) => {
   return (
-    <Stack direction={"row"}>
-      <NavbarButton onClick={bountiesBtnOnClick}>Explore</NavbarButton>
-      <NavbarButton onClick={communitiesBtnOnClick}>Projects</NavbarButton>
-      <NavbarButton onClick={leaderBoardBtnOnClick}>LeaderBoard</NavbarButton>
+    <Stack direction={"row"} sx={{ background: "" }}>
+      <Box>
+        <NavbarButton onClick={bountiesBtnOnClick}>이벤트</NavbarButton>
+      </Box>
+      <Box>
+        <NavbarButton onClick={communitiesBtnOnClick}>프로젝트</NavbarButton>
+      </Box>
+      <Box>
+        <NavbarButton onClick={leaderBoardBtnOnClick}>유저랭킹</NavbarButton>
+      </Box>
     </Stack>
   );
 };
@@ -74,14 +91,33 @@ const MainLayout = (props: MainLayoutProps) => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
-  const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
+  const {
+    isLoggedIn,
+    isWalletLoggedIn,
+    isGoogleLoggedIn,
+    isMailLoggedIn,
+    logout,
+    googleSignUp,
+    walletSignUp,
+  } = useLogin();
   const { userData } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
+  const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
+    useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState("");
+
   const { showErrorAlert, showAlert } = useAlert();
+  const { showWalletAlert } = useWalletAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
+
+  const resourceFactory = ResourceFactory.getInstance();
+
+  const signInWithSupportedWalletVisible = useMemo(() => {
+    return selectedNetwork ? true : false;
+  }, [selectedNetwork]);
 
   const asyncGoToExplore = async () => {
     showLoading();
@@ -97,6 +133,28 @@ const MainLayout = (props: MainLayoutProps) => {
     showLoading();
     await router.push(`/leaderboard`);
     closeLoading();
+  };
+  const asyncShowSignDialog = async () => {
+    setShowSignInDialog(true);
+  };
+  const asyncSignedProfileBtnOnClick = async () => {
+    showLoading();
+    await router.push(`/profile/${userData.name}`);
+    closeLoading();
+  };
+
+  const asyncLogoutBtnOnClick = async () => {
+    logout({
+      onSuccess: () => {
+        // showLoading();
+        // router.push("/").then((res) => {
+        //   closeLoading();
+        // });
+      },
+      onError: (error) => {
+        showErrorAlert({ content: error.message });
+      },
+    });
   };
 
   return (
@@ -150,9 +208,6 @@ const MainLayout = (props: MainLayoutProps) => {
                   width={smUp ? 132 : 120}
                   alt={""}
                 />
-                {/*<Typography sx={{ marginLeft: -1 }} variant={"caption"}>*/}
-                {/*  testnet*/}
-                {/*</Typography>*/}
               </Stack>
             </Box>
             {!props.disableNavButtonSet &&
@@ -170,29 +225,11 @@ const MainLayout = (props: MainLayoutProps) => {
                   {isLoggedIn ? (
                     <NavbarAvatar
                       rewardPoint={userData?.rewardPoint}
-                      onProfileItemClicked={async (e) => {
-                        e.preventDefault();
-                        showLoading();
-                        await router.push(`/profile`);
-                        closeLoading();
-                      }}
-                      onLogoutBtnClicked={(e) => {
-                        e.preventDefault();
-                        logout({
-                          onSuccess: () => {
-                            // showLoading();
-                            // router.push("/").then((res) => {
-                            //   closeLoading();
-                            // });
-                          },
-                          onError: (error) => {
-                            showErrorAlert({ content: error.message });
-                          },
-                        });
-                      }}
                       userId={userData?._id}
                       src={userData?.profileImageUrl}
-                      walletAddress={userData?.walletAddress}
+                      walletAddress={userData?.walletAddressInfos?.[0]?.address}
+                      onProfileItemClicked={asyncSignedProfileBtnOnClick}
+                      onLogoutBtnClicked={asyncLogoutBtnOnClick}
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
@@ -206,16 +243,38 @@ const MainLayout = (props: MainLayoutProps) => {
                           setShowSignInDialog(true);
                         }}
                       >
-                        Connect
+                        지갑 연결
                       </SecondaryButton>
                     </Stack>
                   )}
                 </Stack>
+              ) : isLoggedIn ? (
+                <Stack
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  spacing={2}
+                >
+                  <MobileNavigatorBar
+                    isLoggedIn={isLoggedIn}
+                    rewardPoint={userData?.rewardPoint}
+                    userId={userData?._id}
+                    profileImageUrl={userData?.profileImageUrl}
+                    walletAddress={userData?.walletAddressInfos?.[0]?.address}
+                    onSignInClick={asyncSignedProfileBtnOnClick}
+                    onLogoutInClick={asyncLogoutBtnOnClick}
+                    onExploreClick={asyncGoToExplore}
+                    onProjectsClick={asyncGoToProjects}
+                    onLeaderBoardClick={asyncGoToLeaderBoard}
+                  />
+                </Stack>
               ) : (
                 <SubMenuButton
+                  isLoggedIn={isLoggedIn}
                   onExploreClick={asyncGoToExplore}
                   onProjectsClick={asyncGoToProjects}
                   onLeaderBoardClick={asyncGoToLeaderBoard}
+                  onSignInClick={asyncShowSignDialog}
                 ></SubMenuButton>
               ))}
           </Stack>
@@ -227,12 +286,12 @@ const MainLayout = (props: MainLayoutProps) => {
         {props.backgroundComponent}
         <Toolbar></Toolbar>
         <main>{props.children}</main>
-        <footer>{props.footerComponent}</footer>
+        <footer>{props?.footerComponent}</footer>
       </Box>
 
       {/*--- Dialog ---*/}
       <SignInDialog
-        title={"Good to see you again!"}
+        title={"안녕하세요 다시 만나서 반가워요!"}
         open={isSignDialogOpen}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
@@ -250,56 +309,12 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         onContinueWithWalletClicked={(e) => {
           e.preventDefault();
-          walletSignUp({
-            onSuccess: () => {
-              if (router.pathname === "/") {
-                router.push("/explore").then();
-              }
-              setShowSignInDialog(false);
-            },
-            onError: (error: AppError) => {
-              if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
-                showAlert({
-                  title: "Info",
-                  content: (
-                    <>
-                      <Stack spacing={1}>
-                        <Typography
-                          style={{ color: theme.palette.neutral[100] }}
-                        >
-                          Please Install PetraWallet
-                        </Typography>
-                        <Link
-                          href={"https://petra.app/"}
-                          rel={"noopener noreferrer"}
-                          target={"_blank"}
-                        >
-                          <MuiLink
-                            sx={{
-                              "&:hover": {
-                                color: "#bdbdbd",
-                              },
-                            }}
-                            color={"warning.main"}
-                            underline="hover"
-                          >
-                            Install Link
-                          </MuiLink>
-                        </Link>
-                      </Stack>
-                    </>
-                  ),
-                });
-                return;
-              }
-              setShowSignInDialog(false);
-              showErrorAlert({ content: error.message });
-            },
-          });
+          setShowSignInDialog(false);
+          setSignInWithNetworkSelectVisible(true);
         }}
       ></SignInDialog>
       <SignInWithDialog
-        title={"Sign In with others"}
+        title={"가입하기"}
         open={signUpWithVisible}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
@@ -333,7 +348,7 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
       ></SignInWithDialog>
       <SignInWithEmailDialog
-        title={"Sign In with email"}
+        title={"이메일로 로그인하기"}
         open={signUpWithEmailVisible}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
@@ -355,24 +370,68 @@ const MainLayout = (props: MainLayoutProps) => {
                 router.push("/").then();
               },
               onError: (e) => {
-                const message = getErrorMessage(e);
-                if (message === MAIL_VERIFY.PASSWORD_WRONG) {
-                  closeLoading();
-                  showAlert({ title: "Info", content: "Check your password" });
-                  return;
-                } else if (message === MAIL_VERIFY.USER_NOT_FOUND) {
-                  closeLoading();
-                  showAlert({ title: "Info", content: "User not exist" });
-                  return;
-                }
                 closeLoading();
                 setSignUpWithEmailVisible(false);
-                showErrorAlert({ content: getErrorMessage(e) });
+                showErrorAlert({ content: getLocaleErrorMessage(e) });
               },
             }
           );
         }}
       ></SignInWithEmailDialog>
+      <SignInWithNetworkSelectDialog
+        title={"연결하려는 네트워트를 선택하세요"}
+        open={signInWithNetworkSelectVisible}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setSignInWithNetworkSelectVisible(false);
+        }}
+        onClose={() => {
+          setSignInWithNetworkSelectVisible(false);
+        }}
+        onNetworkButtonClicked={(network) => {
+          setSignInWithNetworkSelectVisible(false);
+          setSelectedNetwork(network); // console.log(network);
+        }}
+      ></SignInWithNetworkSelectDialog>
+      <SignInWithSupportedWalletDialog
+        title={"연결하려는 지갑을 선택하세요"}
+        open={signInWithSupportedWalletVisible}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setSelectedNetwork("");
+        }}
+        onClose={() => {
+          setSelectedNetwork("");
+        }}
+        walletInfos={(() => {
+          return resourceFactory.getWalletInfos(
+            convertToSuppoertedNetwork(selectedNetwork)
+          );
+        })()}
+        onWalletSelected={({ name, value }) => {
+          const walletName = convertToWalletName(value);
+          walletSignUp(
+            { network: selectedNetwork as SupportedNetwork, name: walletName },
+            {
+              onSuccess: () => {
+                if (router.pathname === "/") {
+                  router.push("/explore").then();
+                }
+                setSelectedNetwork("");
+              },
+              onError: (error: AppError) => {
+                if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
+                  //@ts-ignore
+                  showWalletAlert(convertToSuppoertedNetwork(error.payload));
+                } else {
+                  showErrorAlert({ content: error.message });
+                }
+                setSelectedNetwork("");
+              },
+            }
+          );
+        }}
+      ></SignInWithSupportedWalletDialog>
     </Box>
   );
 };

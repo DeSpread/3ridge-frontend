@@ -3,6 +3,8 @@ import {
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
   REQUEST_CLAIM_NFT,
+  VERIFY_3RIDGE_POINT_QUEST,
+  VERIFY_APTOS_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
@@ -12,6 +14,7 @@ import { useEffect, useState } from "react";
 import { Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
+import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
 
 export function useTicketQuery({
   userId,
@@ -24,7 +27,9 @@ export function useTicketQuery({
   const [verifyTwitterLikingQuest] = useMutation(VERIFY_TWITTER_LIKING_QUEST);
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
+  const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
+  const [verifyAptosQuest] = useMutation(VERIFY_APTOS_QUEST);
   const [requestClaimNFT] = useMutation(REQUEST_CLAIM_NFT);
   const typeParseHelper = TypeParseHelper.getInstance();
 
@@ -51,6 +56,7 @@ export function useTicketQuery({
         rewardPolicy,
         winners,
         imageUrl,
+        rewardClaimedUsers,
       } = data.ticketById;
       const _rewardPolicy = typeParseHelper.parseRewardPolicy(
         rewardPolicy?.context ?? undefined,
@@ -67,22 +73,13 @@ export function useTicketQuery({
           completed: completed ?? undefined,
           participants: participants?.map((e) => {
             return {
+              _id: e._id ?? undefined,
               name: e.name ?? undefined,
               profileImageUrl: e.profileImageUrl ?? undefined,
             };
           }),
           imageUrl: imageUrl ?? undefined,
           quests: quests?.map((e) => {
-            // console.log("aaa", userId);
-            // let isComplete = false;
-            // if (userId) {
-            //   isComplete =
-            //     e.completedUsers
-            //       ?.map((_e) => {
-            //         return _e._id;
-            //       })
-            //       .includes(userId) ?? false;
-            // }
             return {
               _id: e._id ?? undefined,
               title: e.title ?? undefined,
@@ -95,20 +92,7 @@ export function useTicketQuery({
                 questPolicy: e.questPolicy?.questPolicy ?? undefined,
               },
               isComplete: false,
-              // completedUsers: e.completedUsers
-              //   ? e.completedUsers.map((_e) => {
-              //       return {
-              //         _id: _e._id ?? undefined,
-              //         walletAddress:
-              //           _e.wallets && _e.wallets.length > 0
-              //             ? _e.wallets[0].address
-              //             : undefined,
-              //         name: _e.name ?? undefined,
-              //         email: _e.email ?? undefined,
-              //         profileImageUrl: _e.profileImageUrl ?? undefined,
-              //       };
-              //     })
-              //   : undefined,
+              questGuides: e.questGuides ?? [],
             };
           }),
           rewardPolicy: {
@@ -120,6 +104,10 @@ export function useTicketQuery({
               name: e.name ?? undefined,
             };
           }),
+          rewardClaimedUserIds:
+            rewardClaimedUsers?.map((e) => {
+              return e._id ?? "";
+            }) ?? undefined,
         };
       });
     })();
@@ -130,6 +118,7 @@ export function useTicketQuery({
     questId: string
   ) => {
     if (ticketId && questId && userId) {
+      console.log(ticketId, questId, userId);
       const res = await verifyTwitterFollowQuest({
         variables: {
           ticketId,
@@ -167,6 +156,8 @@ export function useTicketQuery({
           userId,
         },
       });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
     }
   };
 
@@ -182,6 +173,8 @@ export function useTicketQuery({
           userId,
         },
       });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
     }
   };
 
@@ -201,6 +194,36 @@ export function useTicketQuery({
           userId,
         },
       });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
+    }
+  };
+
+  const asyncVerifyAptosQuest = async (ticketId: string, questId: string) => {
+    if (ticketId && questId && userId) {
+      const res = await verifyAptosQuest({
+        variables: {
+          ticketId,
+          questId,
+          userId,
+        },
+      });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
+    }
+  };
+
+  const asyncVerify3ridgePoint = async (ticketId: string, questId: string) => {
+    if (ticketId && questId && userId) {
+      const res = await verify3ridgePoint({
+        variables: {
+          ticketId,
+          questId,
+          userId,
+        },
+      });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
     }
   };
 
@@ -241,5 +264,7 @@ export function useTicketQuery({
     asyncVerifyTwitterLikingQuest,
     asyncCompleteQuestOfUser,
     asyncRequestClaimNtf,
+    asyncVerify3ridgePoint,
+    asyncVerifyAptosQuest,
   };
 }

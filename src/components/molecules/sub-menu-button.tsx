@@ -65,9 +65,11 @@ const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
 
 const SubMenuButton = (
   props: PropsWithChildren & {
+    isLoggedIn?: boolean;
     onExploreClick?: MouseEventHandler;
     onProjectsClick?: MouseEventHandler;
     onLeaderBoardClick?: MouseEventHandler;
+    onSignInClick?: MouseEventHandler;
   }
 ) => {
   const theme = useTheme();
@@ -114,6 +116,18 @@ const SubMenuButton = (
         ></MoreHorizIcon>
       </IconButton>
       <StyledMenu open={open} anchorEl={anchorEl}>
+        {!props.isLoggedIn && (
+          <StyledMenuItem
+            sx={{
+              borderRadius: 1,
+            }}
+            onClick={props.onSignInClick}
+          >
+            <Stack>
+              <NavbarButton>지갑연결</NavbarButton>
+            </Stack>
+          </StyledMenuItem>
+        )}
         <StyledMenuItem
           sx={{
             borderRadius: 1,
@@ -121,7 +135,7 @@ const SubMenuButton = (
           onClick={props.onExploreClick}
         >
           <Stack>
-            <NavbarButton>Explore</NavbarButton>
+            <NavbarButton>이벤트</NavbarButton>
           </Stack>
         </StyledMenuItem>
         <StyledMenuItem
@@ -131,7 +145,7 @@ const SubMenuButton = (
           onClick={props.onProjectsClick}
         >
           <Stack>
-            <NavbarButton>Projects</NavbarButton>
+            <NavbarButton>프로젝트</NavbarButton>
           </Stack>
         </StyledMenuItem>
         <StyledMenuItem
@@ -141,7 +155,7 @@ const SubMenuButton = (
           onClick={props.onLeaderBoardClick}
         >
           <Stack>
-            <NavbarButton>LeaderBoard</NavbarButton>
+            <NavbarButton>유저랭킹</NavbarButton>
           </Stack>
         </StyledMenuItem>
       </StyledMenu>
