@@ -91,7 +91,7 @@ const Profile = (props: AppProps) => {
   const { showLoading, closeLoading } = useLoading();
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
-  // const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
+  const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
   const [openConnectEmailDialog, setOpenConnectEmailDialog] = useState(false);
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
@@ -111,10 +111,22 @@ const Profile = (props: AppProps) => {
     return signedUserData._id === userData?._id;
   }, [signedUserData, userData]);
 
-  router?.events?.on("routeChangeComplete", (url, { shallow }) => {
-    if (url && typeof url === "string" && !url.includes("/profile/"))
-      setShowProfileEditDialog(false);
-  });
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      if (url && typeof url === "string") {
+        if (isProfileEditDialogOpen) {
+          setOpenProfileEditDialog(true);
+        }
+        setShowProfileEditDialog(false);
+      }
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    router.events.on("hashChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+      router.events.off("hashChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
 
   const targetUserData = useMemo(() => {
     if (userData?._id === signedUserData._id) {
@@ -507,8 +519,7 @@ const Profile = (props: AppProps) => {
                     <PrimaryButton
                       sx={{ marginBottom: 1, marginLeft: -1 }}
                       onClick={() => {
-                        setShowProfileEditDialog(true);
-                        // setOpenProfileEditDialog(true);
+                        setOpenProfileEditDialog(true);
                       }}
                       disabled={!isSingedUserProfile}
                     >
@@ -650,10 +661,9 @@ const Profile = (props: AppProps) => {
         userData={signedUserData}
         title={"프로필 수정하기"}
         onClose={() => {
-          setShowProfileEditDialog(false);
-          // setOpenProfileEditDialog(false);
+          setOpenProfileEditDialog(false);
         }}
-        open={isProfileEditDialogOpen}
+        open={openProfileEditDialog}
         walletValidatorButtonOnClick={async (e) => {
           const myEvent = e as MouseEventWithParam<{
             state?: string;
@@ -741,8 +751,7 @@ const Profile = (props: AppProps) => {
         isWalletLoggedIn={isWalletLoggedIn}
         isMailLoggedIn={isMailLoggedIn || isGoogleLoggedIn}
         onCloseBtnClicked={(e) => {
-          setShowProfileEditDialog(false);
-          // setOpenProfileEditDialog(false);
+          setOpenProfileEditDialog(false);
         }}
         onFileImageAdded={(f) => {
           setImageFile(f);
