@@ -1,6 +1,6 @@
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 import React from "react";
-import { Stack, Typography } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import SecondaryButton from "../../../components/atoms/secondary-button";
 import Image from "next/image";
 import AptosIcon from "../../../components/atoms/svg/aptos-icon";
@@ -18,51 +18,84 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
           props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.APTOS);
         }}
       >
-        <Stack direction={"row"} alignItems={"center"} spacing={1}>
-          <AptosIcon width={24} height={24}></AptosIcon>
-          <Typography variant={"body2"} className={"MuiTypography"}>
-            APTOS
-          </Typography>
-        </Stack>
+        <Grid container={true} sx={{ width: "100%", background: "" }}>
+          <Grid item xs={4} sx={{ background: "" }}></Grid>
+          <Grid item xs={4} sx={{ background: "" }}>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              spacing={1}
+              sx={{ background: "", width: "100%", paddingLeft: 1 }}
+            >
+              <AptosIcon width={24} height={24}></AptosIcon>
+              <Typography variant={"body2"} className={"MuiTypography"}>
+                APTOS
+              </Typography>
+            </Stack>
+          </Grid>
+          <Grid item xs={4} sx={{ background: "" }}></Grid>
+        </Grid>
       </SecondaryButton>
       <SecondaryButton
         onClick={(e) => {
           props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.SUI);
         }}
       >
-        <Stack direction={"row"} alignItems={"center"} spacing={1}>
-          <Image
-            src={
-              "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg"
-            }
-            alt={"sui"}
-            width={24}
-            height={24}
-          ></Image>
-          <Typography variant={"body2"} className={"MuiTypography"}>
-            SUI
-          </Typography>
-        </Stack>
+        <Grid container={true} sx={{ width: "100%", background: "" }}>
+          <Grid item xs={4} sx={{ background: "" }}></Grid>
+          <Grid item xs={4} sx={{ background: "" }}>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              sx={{ background: "", width: "100%", paddingLeft: 1 }}
+              spacing={1}
+            >
+              <Image
+                src={
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg"
+                }
+                alt={"sui"}
+                width={24}
+                height={24}
+              ></Image>
+              <Typography variant={"body2"} className={"MuiTypography"}>
+                SUI
+              </Typography>
+            </Stack>
+          </Grid>
+          <Grid item xs={4} sx={{ background: "" }}></Grid>
+        </Grid>
       </SecondaryButton>
       <SecondaryButton
         onClick={(e) => {
           props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.EVM);
         }}
       >
-        <Stack direction={"row"} alignItems={"center"} spacing={1}>
-          <Image
-            src={
-              "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/Ethereum-Icon-Purple-Logo.wine.svg"
-            }
-            alt={"ethereum"}
-            width={24}
-            height={24}
-            style={{ background: "white", borderRadius: 24 }}
-          ></Image>
-          <Typography variant={"body2"} className={"MuiTypography"}>
-            Ethereum
-          </Typography>
-        </Stack>
+        <Grid container={true} sx={{ width: "100%", background: "" }}>
+          <Grid item xs={4} sx={{ background: "" }}></Grid>
+          <Grid item xs={4} sx={{ background: "" }}>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              spacing={1}
+              sx={{ background: "", width: "100%", paddingLeft: 1 }}
+            >
+              <Image
+                src={
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/Ethereum-Icon-Purple-Logo.wine.svg"
+                }
+                alt={"ethereum"}
+                width={24}
+                height={24}
+                style={{ background: "white", borderRadius: 24 }}
+              ></Image>
+              <Typography variant={"body2"} className={"MuiTypography"}>
+                Ethereum
+              </Typography>
+            </Stack>
+          </Grid>
+          <Grid item xs={4} sx={{ background: "" }}></Grid>
+        </Grid>
       </SecondaryButton>
     </Stack>
   );
