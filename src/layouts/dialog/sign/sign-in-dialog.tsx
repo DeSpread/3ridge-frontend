@@ -61,15 +61,12 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
             </Stack>
           </PrimaryButton>
           <Stack direction={"row"} justifyContent={"center"}>
-            <Typography variant={"body2"}>
-              아직 계정이 없으신가요?&nbsp;
-            </Typography>
             <LinkTypography
               variant={"body2"}
               href={"/signup"}
               onClick={props.onSignUpClicked}
             >
-              가입하기
+              이메일로 가입하기
             </LinkTypography>
           </Stack>
         </Stack>

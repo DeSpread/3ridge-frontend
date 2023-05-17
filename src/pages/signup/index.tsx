@@ -60,7 +60,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
-  const [formType, setFormType] = useState<FormType>(FORM_TYPE.SELECT);
+  const [formType, setFormType] = useState<FormType>(FORM_TYPE.WITH_EMAIL);
   const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
     useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState("");
