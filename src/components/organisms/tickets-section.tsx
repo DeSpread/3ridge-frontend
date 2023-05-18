@@ -221,7 +221,7 @@ const TicketsSection = (props: TicketSectionProps) => {
       <Box sx={{ marginTop: 6 }}>
         <Grid container spacing={2} columns={30}>
           {loading &&
-            [1, 2, 3, 4].map((e) => {
+            [1, 2, 3, 4, 5].map((e) => {
               return (
                 <Grid key={e} item xs={30} sm={15} md={10} lg={6}>
                   <Skeleton
