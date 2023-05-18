@@ -99,6 +99,7 @@ const Home = () => {
                 }}
               >
                 <RecommendEventSwiperSection
+                  isLoading={ticketsDataLoading}
                   width={swiperWidth}
                   ticketsData={ticketsData}
                 ></RecommendEventSwiperSection>
@@ -151,6 +152,7 @@ const Home = () => {
               </Box>
               <Box sx={{ marginTop: 8, marginBottom: 16 }}>
                 <RecommendEventSwiperSection
+                  isLoading={ticketsDataLoading}
                   width={swiperWidth}
                   ticketsData={ticketsData}
                 ></RecommendEventSwiperSection>

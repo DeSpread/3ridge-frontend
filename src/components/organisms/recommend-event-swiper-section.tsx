@@ -5,11 +5,12 @@ import { useRouter } from "next/router";
 import {
   Box,
   IconButton,
+  Skeleton,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,9 +19,35 @@ import SwiperCore, { Navigation } from "swiper";
 
 SwiperCore.use([Navigation]);
 
+const SkeletonCard = () => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [height, setHeight] = React.useState(0);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      setHeight(ref.current?.offsetWidth ?? 0);
+    });
+    resizeObserver.observe(ref.current);
+    return () => resizeObserver.disconnect(); // clean up
+  }, []);
+
+  return (
+    <Box ref={ref}>
+      <Skeleton
+        width={height}
+        height={height}
+        animation={"wave"}
+        variant={"rounded"}
+      ></Skeleton>
+    </Box>
+  );
+};
+
 const RecommendEventSwiperSection = (props: {
   width: number | string;
   ticketsData: Ticket[];
+  isLoading: boolean;
 }) => {
   const theme = useTheme();
   const { showLoading, closeLoading } = useLoading();
@@ -99,20 +126,29 @@ const RecommendEventSwiperSection = (props: {
               nextEl: nextRef.current,
             }}
           >
-            {props.ticketsData?.map((ticket, index) => {
-              return (
-                <SwiperSlide key={index}>
-                  <TicketOverlayStyleCard
-                    ticket={ticket}
-                    onClick={async (e) => {
-                      showLoading();
-                      await router.push(`/event/${ticket._id}`);
-                      closeLoading();
-                    }}
-                  ></TicketOverlayStyleCard>
-                </SwiperSlide>
-              );
-            })}
+            {props.isLoading &&
+              [1, 2, 3, 4].map((e, index) => {
+                return (
+                  <SwiperSlide key={index}>
+                    <SkeletonCard></SkeletonCard>
+                  </SwiperSlide>
+                );
+              })}
+            {!props.isLoading &&
+              props.ticketsData?.map((ticket, index) => {
+                return (
+                  <SwiperSlide key={index}>
+                    <TicketOverlayStyleCard
+                      ticket={ticket}
+                      onClick={async (e) => {
+                        showLoading();
+                        await router.push(`/event/${ticket._id}`);
+                        closeLoading();
+                      }}
+                    ></TicketOverlayStyleCard>
+                  </SwiperSlide>
+                );
+              })}
           </Swiper>
         </Box>
       </Stack>
