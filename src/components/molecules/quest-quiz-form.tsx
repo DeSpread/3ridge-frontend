@@ -158,9 +158,9 @@ const QuestQuizForm = (props: QuestQuizFormProps) => {
             justifyContent={"center"}
           >
             {props.isLast ? (
-              <Typography variant={"body2"}>Congratulation! 🎉</Typography>
+              <Typography variant={"body2"}>축하합니다! 🎉</Typography>
             ) : (
-              <Typography variant={"body2"}>Good Job! 😊</Typography>
+              <Typography variant={"body2"}>잘하셨어요! 😊</Typography>
             )}
           </Stack>
         )}
@@ -173,7 +173,7 @@ const QuestQuizForm = (props: QuestQuizFormProps) => {
               justifyContent={"center"}
             >
               <Typography variant={"body2"}>
-                Incorrect answer. 😅 Try again.
+                틀렸습니다 😅 다시 도전해보세요~
               </Typography>
             </Stack>
           )}
