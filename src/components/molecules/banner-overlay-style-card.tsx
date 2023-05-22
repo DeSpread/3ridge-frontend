@@ -42,29 +42,68 @@ const BanenrOverlayStyleCard = (props: EventCardProps) => {
 
   return (
     <Box
-      ref={ref}
-      onClick={props.onClick}
       sx={{
-        borderRadius: 4,
-        width: height,
-        height: mdUp ? 500 : smUp ? 300 : 220,
-        background: "#6D3EFF",
-        backgroundImage:
-          'url("https://3ridge.s3.ap-northeast-2.amazonaws.com/banner/bg.webp")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        transition: "all 0.2s ease-out 0s",
-        transitionDuration: "0.2s",
-        transitionDelay: "0s",
-        transitionTimingFunction: "ease-out",
         ...props.sx,
       }}
+      ref={ref}
+      onClick={props.onClick}
     >
-      <Grid container={true}>
-        <Grid item xs={4} sx={{ background: "red" }}></Grid>
-        <Grid item xs={4}></Grid>
-        <Grid item xs={4}></Grid>
-      </Grid>
+      <Box
+        sx={{
+          borderRadius: 4,
+          width: "100%",
+          height: height,
+          background: "#6D3EFF",
+          backgroundImage:
+            'url("https://3ridge.s3.ap-northeast-2.amazonaws.com/banner/bg.webp")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          transition: "all 0.2s ease-out 0s",
+          transitionDuration: "0.2s",
+          transitionDelay: "0s",
+          transitionTimingFunction: "ease-out",
+        }}
+      >
+        <Stack
+          direction={"column"}
+          sx={{ height: "100%", background: "", padding: 3 }}
+          justifyContent={"space-between"}
+        >
+          <Stack
+            direction={"column"}
+            sx={{ width: "100%", background: "", height: "50%" }}
+          >
+            <Box sx={{ marginLeft: "-12px", marginTop: "-12px" }}>
+              <Image
+                alt={"3ridge-logo"}
+                width={150}
+                height={58}
+                src={
+                  "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_white.svg"
+                }
+              />
+            </Box>
+            <Box sx={{ marginTop: 3 }}>
+              <Typography variant={"h5"} textAlign={"left"}>
+                웹3, 다양한 경험에
+              </Typography>
+              <Typography variant={"h5"} textAlign={"left"}>
+                함께 참여하세요!
+              </Typography>
+            </Box>
+          </Stack>
+          <Box>
+            <PrimaryButton
+              onClick={async () => {
+                router.push(`/explore`).then((res) => {});
+                return;
+              }}
+            >
+              이벤트 참여하기
+            </PrimaryButton>
+          </Box>
+        </Stack>
+      </Box>
     </Box>
   );
 };
