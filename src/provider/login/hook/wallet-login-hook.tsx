@@ -47,21 +47,21 @@ export function useWalletLogin() {
 
   useEffect(() => {
     refreshWalletInfo();
-  }, [getConnectedAccount().address]);
+  }, []);
 
   const refreshWalletInfo = () => {
-    if (getConnectedAccount().address && !walletInfo?.address) {
-      const { address, network } = getConnectedAccount();
-      const { walletAddress, timestamp } = preference.getWalletSignIn();
-      if (!walletAddress || !timestamp || !address || !network) {
-        return;
-      }
-      const curDate = new Date();
-      const limitDate = addHours(timestamp, 4);
-      if (curDate > limitDate) {
-        walletLogout({});
-        return;
-      }
+    const { walletAddress, timestamp } = preference.getWalletSignIn();
+    if (!walletAddress || !timestamp) {
+      return;
+    }
+    const curDate = new Date();
+    const limitDate = addHours(timestamp, 4);
+    if (curDate > limitDate) {
+      walletLogout({});
+      return;
+    }
+    const { address, network } = getConnectedAccount();
+    if (address && network) {
       setWalletInfo((prevState) => {
         return { ...prevState, address, network };
       });
