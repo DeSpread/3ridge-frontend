@@ -86,6 +86,13 @@ const RecommendEventSwiperSection = (props: {
               borderWidth: 2,
               borderStyle: "solid",
               marginRight: 1,
+              transition: "transform 0.2s ease",
+              "&:active": {
+                transform: "scale(0.9)",
+              },
+              "&:inactive": {
+                transform: "scale(1)",
+              },
             }}
           >
             <ArrowBackIosNewIcon fontSize={smUp ? "medium" : "small"} />
@@ -98,6 +105,13 @@ const RecommendEventSwiperSection = (props: {
               height: smUp ? 38 : 32,
               borderWidth: 2,
               borderStyle: "solid",
+              transition: "transform 0.2s ease",
+              "&:active": {
+                transform: "scale(0.9)",
+              },
+              "&:inactive": {
+                transform: "scale(1)",
+              },
             }}
           >
             <ArrowForwardIosIcon fontSize={smUp ? "medium" : "small"} />
