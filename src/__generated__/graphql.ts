@@ -36,6 +36,7 @@ export enum CategoryType {
 export enum ChainType {
   Aptos = 'APTOS',
   Evm = 'EVM',
+  Stacks = 'STACKS',
   Sui = 'SUI'
 }
 

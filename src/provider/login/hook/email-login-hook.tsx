@@ -7,7 +7,7 @@ import {
 import { AppError, getErrorMessage } from "../../../error/my-error";
 import { useMutation } from "@apollo/client";
 import { useEffect, useMemo, useState } from "react";
-import { CREATE_USER_BY_EMAIL } from "../../../apollo/query";
+import { CREATE_USER_BY_EMAIL } from "../../../lib/apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
 import AwsClient from "../../../remote/aws-client";

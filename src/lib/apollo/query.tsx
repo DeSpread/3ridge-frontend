@@ -1,4 +1,4 @@
-import { gql } from "../__generated__";
+import { gql } from "../../__generated__";
 
 export const GET_USERS_ORDER_BY_REWARD_POINT_DESC = gql(/* GraphQL */ `
   query GetUsersOrderByRewardPointDesc($skip: Int = 0, $limit: Int = 25) {

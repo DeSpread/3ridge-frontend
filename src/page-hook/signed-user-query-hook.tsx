@@ -1,5 +1,5 @@
 import { useLogin } from "../provider/login/login-provider";
-import { client } from "../apollo/client";
+import { client } from "../lib/apollo/client";
 import { useEffect, useRef, useState } from "react";
 import {
   GET_USER_BY_EMAIL,
@@ -13,7 +13,7 @@ import {
   UPDATE_USER_SOCIAL_BY_NAME,
   UPDATE_USER_TELEGRAM_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
-} from "../apollo/query";
+} from "../lib/apollo/query";
 import {
   APP_ERROR_MESSAGE,
   AppError,
@@ -21,7 +21,7 @@ import {
 } from "../error/my-error";
 import { useMutation } from "@apollo/client";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { userDataState } from "../recoil";
+import { userDataState } from "../lib/recoil";
 import {
   convertToChainType,
   convertToSuppoertedNetwork,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { client } from "../apollo/client";
-import { GET_USER_BY_NAME } from "../apollo/query";
+import { client } from "../lib/apollo/client";
+import { GET_USER_BY_NAME } from "../lib/apollo/query";
 import { FCFSRewardContext, User } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { convertToSuppoertedNetwork } from "../util/type-util";

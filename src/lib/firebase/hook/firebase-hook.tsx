@@ -4,8 +4,8 @@ import {
   signInWithEmailAndPassword,
   getAuth,
 } from "firebase/auth";
-import { AppError, getErrorMessage } from "../../error/my-error";
-import { MAIL_VERIFY, MailVerified } from "../../type";
+import { AppError, getErrorMessage } from "../../../error/my-error";
+import { MAIL_VERIFY, MailVerified } from "../../../type";
 import { asyncJSTwitterSignInPopUp } from "./js-firebase";
 import { firebaseApp } from "../firebase-client";
 

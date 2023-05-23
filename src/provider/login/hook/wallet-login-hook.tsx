@@ -10,10 +10,13 @@ import {
   PartialWalletInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
+  SUPPORTED_NETWORKS,
 } from "../../../type";
-import { CREATE_USER_BY_WALLET } from "../../../apollo/query";
+import { CREATE_USER_BY_WALLET } from "../../../lib/apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
+import addMinutes from "date-fns/addMinutes";
+
 import {
   convertToChainType,
   convertToSuppoertedNetwork,
@@ -44,10 +47,6 @@ export function useWalletLogin() {
   useEffect(() => {
     refreshWalletInfo();
   }, []);
-
-  // useEffect(() => {
-  //   refreshWalletInfo(true);
-  // }, [getConnectedAccount().address]);
 
   const refreshWalletInfo = () => {
     const { walletAddress, timestamp, walletNetwork } =
@@ -127,7 +126,94 @@ export function useWalletLogin() {
         }
       })();
     }
-  }, [changedCounter]);
+  }, [getConnectedAccount().address]);
+
+  useEffect(() => {
+    (async () => {
+      let cache = {
+        address: "",
+        network: "",
+      };
+      try {
+        const { network, timestamp } = preference.getRetryNetwork();
+        const address = getAccountAddress(convertToSuppoertedNetwork(network));
+        if (network && timestamp) {
+          const curDate = new Date();
+          const limitDate = addMinutes(timestamp, 1);
+          if (curDate > limitDate) {
+            return;
+          }
+          if (!address) return;
+          cache = {
+            address,
+            network,
+          };
+          await createUserByWallet({
+            variables: {
+              address,
+              chain: convertToChainType(network),
+            },
+          });
+          setWalletInfo((prevState) => {
+            return {
+              ...prevState,
+              address,
+              network: convertToSuppoertedNetwork(network),
+            };
+          });
+          setIsWalletLoggedIn(true);
+          commitConnectedNetwork(convertToSuppoertedNetwork(cache.network));
+          preference.updateWalletSignIn(
+            cache.address,
+            convertToSuppoertedNetwork(cache.network)
+          );
+          preference.clearRetryNetwork();
+        }
+      } catch (e) {
+        const message = getErrorMessage(e);
+        handleWalletSignUpError2(message, cache);
+      }
+    })();
+  }, [getConnectedAccount().address]);
+
+  const handleWalletSignUpError2 = (
+    errorMsg: string,
+    cache: { address: string; network: string }
+  ) => {
+    if (errorMsg.includes(APP_ERROR_MESSAGE.SUI_WALLET_PERMISSION_REJECTED)) {
+      return;
+    }
+    if (errorMsg.includes(APP_ERROR_MESSAGE.SUI_WALLET_PENDING_REQUEST)) {
+      return;
+    }
+    if (errorMsg === APP_ERROR_MESSAGE.WALLET_USER_REJECTED_REQUEST) {
+      return;
+    }
+    if (errorMsg === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED) {
+      if (cache.address && cache.network) {
+        setWalletInfo((prevState) => {
+          return {
+            ...prevState,
+            address: cache.address,
+            network: convertToSuppoertedNetwork(cache.network),
+          };
+        });
+        setIsWalletLoggedIn(true);
+        commitConnectedNetwork(convertToSuppoertedNetwork(cache.network));
+        preference.updateWalletSignIn(
+          cache.address,
+          convertToSuppoertedNetwork(cache.network)
+        );
+        preference.clearRetryNetwork();
+      }
+      return;
+    }
+    if (errorMsg.includes("duplicate key error collection:")) {
+      return;
+    }
+    setWalletInfo({});
+    setIsWalletLoggedIn(false);
+  };
 
   const handleWalletSignUpError = (
     errorMsg: string,
@@ -219,6 +305,9 @@ export function useWalletLogin() {
         tryWalletSignUpOnError.current = onError;
         if (!accountAddress) {
           // after wallet is connected -> update remained
+          if (_walletInfo.network === SUPPORTED_NETWORKS.STACKS) {
+            preference.updateRetryNetwork(_walletInfo.network);
+          }
           await asyncConnectWallet(_walletInfo.network, _walletInfo.name);
           commitConnectedNetwork(_walletInfo.network);
           tryWalletSignUpNetwork.current = _walletInfo.network;
@@ -249,7 +338,11 @@ export function useWalletLogin() {
       } catch (e) {
         console.log(e);
         const message = getErrorMessage(e);
-        handleWalletSignUpError(message, cache);
+        if (cache.network === SUPPORTED_NETWORKS.STACKS) {
+          handleWalletSignUpError2(message, cache);
+        } else {
+          handleWalletSignUpError(message, cache);
+        }
       }
     })();
   };

@@ -19,6 +19,8 @@ class ResourceFactory {
       return `https://explorer.sui.io/address/${address}`;
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
       return `https://explorer.aptoslabs.com/account/${address}`;
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return `https://explorer.hiro.so/address/${address}`;
     }
     return "/";
   };
@@ -30,6 +32,8 @@ class ResourceFactory {
       return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg";
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
       return "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/aptos_icon.svg";
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/stacks-icon.svg";
     }
     return undefined;
   };
@@ -77,6 +81,16 @@ class ResourceFactory {
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/coinbase.svg",
           name: "Coinbase",
           value: WALLET_NAMES.COINBASE_WALLET,
+        },
+      ];
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return [
+        {
+          imageUrl:
+            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/hiro-wallet.jpg",
+          name: "Hiro",
+          value: WALLET_NAMES.HIRO,
+          backgroundColor: "white",
         },
       ];
     }

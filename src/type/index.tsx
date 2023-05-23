@@ -35,8 +35,13 @@ export const SUPPORTED_NETWORKS = {
   APTOS: "aptos",
   SUI: "sui",
   EVM: "evm",
+  STACKS: "stacks",
   UNKNOWN: "unknown",
 } as const;
+
+export const SUPPORTED_NETWORKS_VALUES = Object.values(SUPPORTED_NETWORKS)
+  .filter((_, index) => index !== Object.values(SUPPORTED_NETWORKS).length - 1)
+  .map((e) => e.toString());
 
 export type SupportedNetwork = ObjectValues<typeof SUPPORTED_NETWORKS>;
 
@@ -45,6 +50,7 @@ export const WALLET_NAMES = {
   COINBASE_WALLET: "Coinbase Wallet",
   PETRA: "petra",
   SUI_WALLET: "Sui Wallet",
+  HIRO: "hiro",
 } as const;
 
 export type WalletName = ObjectValues<typeof WALLET_NAMES>;

@@ -2,6 +2,7 @@ import { useWallet as useAptosWallet } from "@aptos-labs/wallet-adapter-react";
 import { useWallet as useSuiWallet } from "@suiet/wallet-kit";
 import {
   SUPPORTED_NETWORKS,
+  SUPPORTED_NETWORKS_VALUES,
   SupportedNetwork,
   WalletName,
 } from "../../../type";
@@ -19,6 +20,8 @@ import {
   AppError,
   getErrorMessage,
 } from "../../../error/my-error";
+import { useStacksWallet } from "../../../lib/stacks/stacks-wallet-hook";
+import { convertToSuppoertedNetwork } from "../../../util/type-util";
 
 export function useTotalWallet() {
   const [connectedNetwork, setConnectedNetwork] = useState("");
@@ -58,6 +61,14 @@ export function useTotalWallet() {
     connected: suiConnected,
   } = useSuiWallet();
 
+  const {
+    connect: stacksConnect,
+    ownerStxAddress,
+    disconnect: stacksDisconnect,
+    isWalletInstalled: isStacksWalletInstalled,
+    userSession,
+  } = useStacksWallet();
+
   useEffect(() => {
     const { timestamp, network } = preference.getConnectedNetwork();
     if (!timestamp || !network) return;
@@ -73,7 +84,13 @@ export function useTotalWallet() {
     setChangedCounter((prevState) => {
       return prevState + 1;
     });
-  }, [aptosConnected, suiConnected, evmConnected, evmConnectStatus]);
+  }, [
+    aptosConnected,
+    suiConnected,
+    evmConnected,
+    evmConnectStatus,
+    ownerStxAddress,
+  ]);
 
   const asyncConnectWallet = async (
     network: SupportedNetwork,
@@ -98,6 +115,8 @@ export function useTotalWallet() {
         const connector = connectors[0];
         console.log("connector", connector);
         evmConnect({ connector });
+      } else if (network === SUPPORTED_NETWORKS.STACKS) {
+        stacksConnect();
       }
       return {
         connected: true,
@@ -125,6 +144,8 @@ export function useTotalWallet() {
     } else if (network === SUPPORTED_NETWORKS.EVM) {
       const item = evmConnectors.filter((e) => e.name === "MetaMask");
       return item[0].ready;
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return isStacksWalletInstalled;
     }
     return false;
   };
@@ -136,19 +157,19 @@ export function useTotalWallet() {
       return suiAccount?.address;
     } else if (network === SUPPORTED_NETWORKS.EVM) {
       return evmAddress;
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return ownerStxAddress;
     }
     return undefined;
   };
 
   const getConnectedAccount = () => {
-    if (
-      connectedNetwork === SUPPORTED_NETWORKS.APTOS ||
-      connectedNetwork === SUPPORTED_NETWORKS.SUI ||
-      connectedNetwork === SUPPORTED_NETWORKS.EVM
-    ) {
+    if (SUPPORTED_NETWORKS_VALUES.includes(connectedNetwork)) {
       return {
         network: connectedNetwork,
-        address: getAccountAddress(connectedNetwork),
+        address: getAccountAddress(
+          convertToSuppoertedNetwork(connectedNetwork)
+        ),
       };
     }
     return {
@@ -164,6 +185,8 @@ export function useTotalWallet() {
       suiDisconnect();
     } else if (connectedNetwork === SUPPORTED_NETWORKS.EVM) {
       evmDisconnect();
+    } else if (connectedNetwork === SUPPORTED_NETWORKS.STACKS) {
+      stacksDisconnect();
     }
     commitConnectedNetwork(undefined);
   };
@@ -178,16 +201,16 @@ export function useTotalWallet() {
     preference.clearConnectedNetwork();
   };
 
-  const networkConnected = (network: SupportedNetwork | undefined) => {
-    if (network === SUPPORTED_NETWORKS.EVM) {
-      return evmConnected;
-    } else if (network === SUPPORTED_NETWORKS.SUI) {
-      return suiConnected;
-    } else if (network === SUPPORTED_NETWORKS.APTOS) {
-      return aptosConnected;
-    }
-    return false;
-  };
+  // const networkConnected = (network: SupportedNetwork | undefined) => {
+  //   if (network === SUPPORTED_NETWORKS.EVM) {
+  //     return evmConnected;
+  //   } else if (network === SUPPORTED_NETWORKS.SUI) {
+  //     return suiConnected;
+  //   } else if (network === SUPPORTED_NETWORKS.APTOS) {
+  //     return aptosConnected;
+  //   }
+  //   return false;
+  // };
 
   return {
     asyncConnectWallet,
@@ -197,6 +220,6 @@ export function useTotalWallet() {
     disconnectWallet,
     changedCounter,
     commitConnectedNetwork,
-    networkConnected,
+    // networkConnected,
   };
 }

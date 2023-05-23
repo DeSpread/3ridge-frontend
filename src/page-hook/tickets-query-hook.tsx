@@ -1,5 +1,5 @@
-import { GET_TICKETS, GET_TICKETS_BY_PROJECT_ID } from "../apollo/query";
-import { client } from "../apollo/client";
+import { GET_TICKETS, GET_TICKETS_BY_PROJECT_ID } from "../lib/apollo/query";
+import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
 import { FILTER_TYPE, FilterType, Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";

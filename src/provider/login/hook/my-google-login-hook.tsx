@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import GoogleLoginHelper from "../../../helper/google-login-helper";
 import { useGoogleLogin } from "@react-oauth/google";
 import { GoogleLoggedInInfo, SuccessErrorCallback } from "../../../type";
-import { CREATE_USER_BY_GMAIL } from "../../../apollo/query";
+import { CREATE_USER_BY_GMAIL } from "../../../lib/apollo/query";
 
 export function useMyGoogleLogin() {
   const onGoogleLoginOnSuccessCallback =

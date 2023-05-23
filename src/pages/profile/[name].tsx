@@ -31,7 +31,7 @@ import {
   SupportedNetwork,
 } from "../../type";
 import ConnectEmailDialog from "./dialog/connect-email-dialog";
-import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
+import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import {
   APP_ERROR_MESSAGE,

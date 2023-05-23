@@ -8,6 +8,7 @@ class PreferenceHelper {
   private static KEY_WALLET_ADDRESS_SIGN_IN_CACHE =
     "KEY_WALLET_ADDRESS_SIGN_IN_CACHE";
   private static KEY_CONNECTED_NETWORK_CACHE = "KEY_CONNECTED_NETWORK_CACHE";
+  private static KEY_RETRY_NETWORK_CACHE = "KEY_RETRY_NETWORK_CACHE";
 
   private constructor() {}
 
@@ -101,6 +102,27 @@ class PreferenceHelper {
 
   clearWalletSignIn = () => {
     localStorage.removeItem(PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE);
+  };
+
+  updateRetryNetwork = (walletNetwork: SupportedNetwork) => {
+    this.updateCacheByKey(
+      PreferenceHelper.KEY_RETRY_NETWORK_CACHE,
+      walletNetwork
+    );
+  };
+
+  getRetryNetwork = () => {
+    const { value, timestamp } = this.getCacheByKey(
+      PreferenceHelper.KEY_RETRY_NETWORK_CACHE
+    );
+    if (!value || !timestamp) {
+      return { network: undefined, timestamp: undefined };
+    }
+    return { network: value, timestamp };
+  };
+
+  clearRetryNetwork = () => {
+    localStorage.removeItem(PreferenceHelper.KEY_RETRY_NETWORK_CACHE);
   };
 }
 
