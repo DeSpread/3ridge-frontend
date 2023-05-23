@@ -161,7 +161,7 @@ export type Ticket = {
   description?: string;
   completed?: boolean;
   participants?: { _id?: string; name?: string; profileImageUrl?: string }[];
-  quests?: Quest[];
+  quests?: PartialQuest[];
   imageUrl?: string;
   rewardPolicy?: {
     context?: FCFSRewardContext | undefined;
@@ -178,6 +178,8 @@ export type Ticket = {
 export type PartialProject = Partial<Project>;
 
 export type PartialTicket = Partial<Ticket>;
+
+export type PartialQuest = Partial<Quest>;
 
 export type Quest = {
   _id?: string;

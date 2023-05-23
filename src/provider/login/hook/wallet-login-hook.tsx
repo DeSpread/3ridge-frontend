@@ -11,10 +11,7 @@ import {
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
 } from "../../../type";
-import {
-  CREATE_USER_BY_WALLET,
-  IS_REGISTER_WALLET,
-} from "../../../apollo/query";
+import { CREATE_USER_BY_WALLET } from "../../../apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";
 import {
@@ -22,7 +19,6 @@ import {
   convertToSuppoertedNetwork,
 } from "../../../util/type-util";
 import { useTotalWallet } from "./total-wallet-hook";
-import { client } from "../../../apollo/client";
 
 export function useWalletLogin() {
   const preference = PreferenceHelper.getInstance();
@@ -49,8 +45,13 @@ export function useWalletLogin() {
     refreshWalletInfo();
   }, []);
 
+  // useEffect(() => {
+  //   refreshWalletInfo(true);
+  // }, [getConnectedAccount().address]);
+
   const refreshWalletInfo = () => {
-    const { walletAddress, timestamp } = preference.getWalletSignIn();
+    const { walletAddress, timestamp, walletNetwork } =
+      preference.getWalletSignIn();
     if (!walletAddress || !timestamp) {
       return;
     }
@@ -60,15 +61,12 @@ export function useWalletLogin() {
       walletLogout({});
       return;
     }
-    const { address, network } = getConnectedAccount();
-    if (address && network) {
-      setWalletInfo((prevState) => {
-        return { ...prevState, address, network };
-      });
-      setIsWalletLoggedIn(true);
-      commitConnectedNetwork(convertToSuppoertedNetwork(network));
-      preference.updateWalletSignIn(address, network);
-    }
+    setWalletInfo((prevState) => {
+      return { ...prevState, address: walletAddress, network: walletNetwork };
+    });
+    setIsWalletLoggedIn(true);
+    commitConnectedNetwork(convertToSuppoertedNetwork(walletNetwork));
+    preference.updateWalletSignIn(walletAddress, walletNetwork);
   };
 
   useEffect(() => {

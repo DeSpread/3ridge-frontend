@@ -178,6 +178,17 @@ export function useTotalWallet() {
     preference.clearConnectedNetwork();
   };
 
+  const networkConnected = (network: SupportedNetwork | undefined) => {
+    if (network === SUPPORTED_NETWORKS.EVM) {
+      return evmConnected;
+    } else if (network === SUPPORTED_NETWORKS.SUI) {
+      return suiConnected;
+    } else if (network === SUPPORTED_NETWORKS.APTOS) {
+      return aptosConnected;
+    }
+    return false;
+  };
+
   return {
     asyncConnectWallet,
     getAccountAddress,
@@ -186,5 +197,6 @@ export function useTotalWallet() {
     disconnectWallet,
     changedCounter,
     commitConnectedNetwork,
+    networkConnected,
   };
 }

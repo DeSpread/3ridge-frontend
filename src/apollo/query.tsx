@@ -52,6 +52,9 @@ export const GET_USER_BY_NAME = gql(/* GraphQL */ `
           _id
           name
         }
+        quests {
+          _id
+        }
       }
       profileImageUrl
       rewardPoint
