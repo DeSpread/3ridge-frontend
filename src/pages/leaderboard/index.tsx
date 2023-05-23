@@ -158,7 +158,7 @@ const RankCard = ({
           </Box>
           <Stack
             direction={"column"}
-            sx={{ marginLeft: 3, maxWidth: smUp ? "100%" : "50%" }}
+            sx={{ marginLeft: smUp ? 3 : 2, maxWidth: smUp ? "100%" : "50%" }}
           >
             {/*<Box sx={{ paddingRight: 2 }}>*/}
             <GradientTypography
@@ -172,7 +172,7 @@ const RankCard = ({
             {/*</Box>*/}
           </Stack>
         </Stack>
-        <Box sx={{ marginRight: smUp ? 2 : 0 }}>
+        <Box sx={{ marginRight: smUp ? 2 : 0, marginLeft: smUp ? 0 : 1 }}>
           <Stack
             direction={"column"}
             alignItems={"flex-end"}
