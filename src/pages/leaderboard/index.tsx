@@ -42,12 +42,12 @@ const RankCard = ({
   const { profileImageUrl, name, rewardPoint, _id } = user;
 
   const convertedName = useMemo(() => {
-    if (name?.substring(0, 2).toLocaleLowerCase() === "0x") {
-      if (smUp)
-        return StringHelper.getInstance().getMidEllipsisString(name, 10, 8);
-      return StringHelper.getInstance().getMidEllipsisString(name);
-    }
-    return name;
+    // if (name?.substring(0, 2).toLocaleLowerCase() === "0x") {
+    if (smUp)
+      return StringHelper.getInstance().getMidEllipsisString(name, 10, 8);
+    return StringHelper.getInstance().getMidEllipsisString(name);
+    // }
+    // return name;
   }, [name]);
 
   const renderRankBadge = (rank: number) => {

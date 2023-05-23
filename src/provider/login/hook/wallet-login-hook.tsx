@@ -189,7 +189,10 @@ export function useWalletLogin() {
     if (errorMsg === APP_ERROR_MESSAGE.WALLET_USER_REJECTED_REQUEST) {
       return;
     }
-    if (errorMsg === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED) {
+    if (
+      errorMsg === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED ||
+      errorMsg.includes("duplicate key error collection:")
+    ) {
       if (cache.address && cache.network) {
         setWalletInfo((prevState) => {
           return {
@@ -208,9 +211,9 @@ export function useWalletLogin() {
       }
       return;
     }
-    if (errorMsg.includes("duplicate key error collection:")) {
-      return;
-    }
+    // if () {
+    //   return;
+    // }
     setWalletInfo({});
     setIsWalletLoggedIn(false);
   };
@@ -228,7 +231,10 @@ export function useWalletLogin() {
     if (errorMsg === APP_ERROR_MESSAGE.WALLET_USER_REJECTED_REQUEST) {
       return;
     }
-    if (errorMsg === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED) {
+    if (
+      errorMsg === APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED ||
+      errorMsg.includes("duplicate key error collection:")
+    ) {
       if (cache.address && cache.network) {
         setWalletInfo((prevState) => {
           return {
@@ -245,9 +251,6 @@ export function useWalletLogin() {
         );
       }
       runCachedTryWalletSignUpSuccess();
-      return;
-    }
-    if (errorMsg.includes("duplicate key error collection:")) {
       return;
     }
     setWalletInfo({});
@@ -338,11 +341,11 @@ export function useWalletLogin() {
       } catch (e) {
         console.log(e);
         const message = getErrorMessage(e);
-        if (cache.network === SUPPORTED_NETWORKS.STACKS) {
-          handleWalletSignUpError2(message, cache);
-        } else {
-          handleWalletSignUpError(message, cache);
-        }
+        // if (cache.network === SUPPORTED_NETWORKS.STACKS) {
+        //   handleWalletSignUpError2(message, cache);
+        // } else {
+        handleWalletSignUpError(message, cache);
+        // }
       }
     })();
   };
