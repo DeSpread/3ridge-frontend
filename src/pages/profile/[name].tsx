@@ -197,7 +197,8 @@ const Profile = (props: NextPage<IProps>) => {
         }
       `;
       const res = await request(
-        "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+        "https://indexer.mainnet.aptoslabs.com/v1/graphql",
+        // "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
         query
       );
       if (res.current_token_pending_claims?.length > 0) {
