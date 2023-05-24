@@ -59,8 +59,15 @@ import {
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
+import { NextPage, NextPageContext } from "next";
+import MobileDetect from "mobile-detect";
+import { isMobile as isMobileInDevice } from "react-device-detect";
 
-const Profile = (props: AppProps) => {
+interface IProps {
+  isMobile: boolean;
+}
+
+const Profile = (props: NextPage<IProps>) => {
   const router = useRouter();
   const { userData, loading: userDataLoading } = useUserQuery({
     name: router.isReady
@@ -944,6 +951,17 @@ const Profile = (props: AppProps) => {
       ></SignInWithSupportedWalletDialog>
     </>
   );
+};
+
+Profile.getInitialProps = async (ctx: NextPageContext) => {
+  let mobile;
+  if (ctx.req) {
+    const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
+    mobile = !!md.mobile();
+  } else {
+    mobile = isMobileInDevice;
+  }
+  return { isMobile: mobile };
 };
 
 Profile.getLayout = (page: ReactElement | ReactElement[]) => (
