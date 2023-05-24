@@ -2,6 +2,7 @@ import { SUPPORTED_NETWORKS, SupportedNetwork, WALLET_NAMES } from "../type";
 import AptosIcon from "../components/atoms/svg/aptos-icon";
 import EthIcon from "../components/atoms/svg/eth-icon";
 import SuiIcon from "../components/atoms/svg/sui-icon";
+import StacksIcon from "../components/atoms/svg/stacks-icon";
 
 class ResourceFactory {
   private static instance: ResourceFactory;
@@ -19,6 +20,8 @@ class ResourceFactory {
       return `https://explorer.sui.io/address/${address}`;
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
       return `https://explorer.aptoslabs.com/account/${address}`;
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return `https://explorer.hiro.so/address/${address}`;
     }
     return "/";
   };
@@ -30,6 +33,8 @@ class ResourceFactory {
       return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg";
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
       return "https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/icon/aptos_icon.svg";
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/stacks-icon.svg";
     }
     return undefined;
   };
@@ -41,6 +46,8 @@ class ResourceFactory {
       return SuiIcon;
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
       return AptosIcon;
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return StacksIcon;
     }
     return undefined;
   };
@@ -77,6 +84,16 @@ class ResourceFactory {
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/coinbase.svg",
           name: "Coinbase",
           value: WALLET_NAMES.COINBASE_WALLET,
+        },
+      ];
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return [
+        {
+          imageUrl:
+            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/hiro-wallet.jpg",
+          name: "Hiro & Xverse",
+          value: WALLET_NAMES.HIRO,
+          backgroundColor: "white",
         },
       ];
     }

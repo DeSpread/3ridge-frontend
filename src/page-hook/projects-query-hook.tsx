@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Project } from "../type";
-import { client } from "../apollo/client";
-import { GET_PROJECTS } from "../apollo/query";
+import { client } from "../lib/apollo/client";
+import { GET_PROJECTS } from "../lib/apollo/query";
 
 export function useProjectsQuery() {
   const [projectsData, setProjectsData] = useState<Project[]>([]);

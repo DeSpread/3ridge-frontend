@@ -28,15 +28,20 @@ export function useWalletAlert() {
         installUrl: "https://metamask.io/download/",
         walletName: "Metamask",
       },
+      stacks: {
+        howToInstallUrl: "",
+        installUrl: "",
+        walletName: "",
+      },
       unknown: {
         howToInstallUrl: "",
         installUrl: "",
         walletName: "",
       },
     };
+
     const { howToInstallUrl, installUrl, walletName } = data[chainName];
 
-    console.log(howToInstallUrl, installUrl);
     showAlert({
       title: "지갑이 설치되지 않았습니다 😂",
       content: (

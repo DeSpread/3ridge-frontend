@@ -9,7 +9,12 @@ import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
 
 type SignInWithSupportedWalletDialogProps = SignDialogProps & {
-  walletInfos: { imageUrl: string; name: string; value: string }[];
+  walletInfos: {
+    imageUrl: string;
+    name: string;
+    value: string;
+    backgroundColor?: string;
+  }[];
   onWalletSelected: ({ name, value }: { name: string; value: string }) => void;
 };
 
@@ -52,6 +57,11 @@ const SignInWithSupportedWalletDialog = (
                     alt={""}
                     width={24}
                     height={24}
+                    style={{
+                      background: item?.backgroundColor ?? "transparent",
+                      padding: item?.backgroundColor ? 1 : 0,
+                      borderRadius: item?.backgroundColor ? 4 : 0,
+                    }}
                   ></Image>
                   <Typography
                     variant={"caption"}

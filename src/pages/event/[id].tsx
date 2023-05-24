@@ -42,7 +42,7 @@ import {
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
-import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
+import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import {
   APP_ERROR_MESSAGE,
   getErrorMessage,
@@ -152,6 +152,9 @@ const Event = (props: AppProps) => {
   const [htmlContent, setHtmlContent] = useState("");
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
+
+  console.log(ticketData);
+  console.log(userData?._id);
 
   useEffect(() => {
     if (!userData?._id) return;

@@ -1,9 +1,4 @@
-import {
-  SUPPORTED_NETWORKS,
-  SupportedNetwork,
-  WALLET_NAMES,
-  WalletName,
-} from "../type";
+import { SUPPORTED_NETWORKS, SupportedNetwork, WALLET_NAMES } from "../type";
 import { ChainType } from "../__generated__/graphql";
 
 const convertToSuppoertedNetwork = (network?: string | ChainType) => {
@@ -16,6 +11,11 @@ const convertToSuppoertedNetwork = (network?: string | ChainType) => {
     return SUPPORTED_NETWORKS.APTOS;
   } else if (network === SUPPORTED_NETWORKS.EVM || network === ChainType.Evm) {
     return SUPPORTED_NETWORKS.EVM;
+  } else if (
+    network === SUPPORTED_NETWORKS.STACKS ||
+    network === ChainType.Stacks
+  ) {
+    return SUPPORTED_NETWORKS.STACKS;
   }
   return SUPPORTED_NETWORKS.UNKNOWN;
 };
@@ -38,6 +38,8 @@ const convertToChainType = (network: SupportedNetwork | string) => {
     return ChainType.Sui;
   } else if (network === SUPPORTED_NETWORKS.EVM) {
     return ChainType.Evm;
+  } else if (network === SUPPORTED_NETWORKS.STACKS) {
+    return ChainType.Stacks;
   }
   return ChainType.Evm;
 };

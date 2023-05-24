@@ -31,7 +31,7 @@ import {
   SupportedNetwork,
 } from "../../type";
 import ConnectEmailDialog from "./dialog/connect-email-dialog";
-import { useFirebaseAuth } from "../../firebase/hook/firebase-hook";
+import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import {
   APP_ERROR_MESSAGE,
@@ -59,8 +59,15 @@ import {
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
+import { NextPage, NextPageContext } from "next";
+import MobileDetect from "mobile-detect";
+import { isMobile as isMobileInDevice } from "react-device-detect";
 
-const Profile = (props: AppProps) => {
+interface IProps {
+  isMobile: boolean;
+}
+
+const Profile = (props: NextPage<IProps>) => {
   const router = useRouter();
   const { userData, loading: userDataLoading } = useUserQuery({
     name: router.isReady
@@ -109,6 +116,7 @@ const Profile = (props: AppProps) => {
   const [selectedNetwork, setSelectedNetwork] = useState("");
 
   const theme = useTheme();
+
   const isSingedUserProfile = useMemo(() => {
     return signedUserData._id === userData?._id;
   }, [signedUserData, userData]);
@@ -189,7 +197,8 @@ const Profile = (props: AppProps) => {
         }
       `;
       const res = await request(
-        "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
+        "https://indexer.mainnet.aptoslabs.com/v1/graphql",
+        // "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
         query
       );
       if (res.current_token_pending_claims?.length > 0) {
@@ -912,6 +921,7 @@ const Profile = (props: AppProps) => {
         open={signInWithSupportedWalletVisible}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
+          setSelectedNetwork("");
         }}
         onClose={() => {
           setSelectedNetwork("");
@@ -942,6 +952,17 @@ const Profile = (props: AppProps) => {
       ></SignInWithSupportedWalletDialog>
     </>
   );
+};
+
+Profile.getInitialProps = async (ctx: NextPageContext) => {
+  let mobile;
+  if (ctx.req) {
+    const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
+    mobile = !!md.mobile();
+  } else {
+    mobile = isMobileInDevice;
+  }
+  return { isMobile: mobile };
 };
 
 Profile.getLayout = (page: ReactElement | ReactElement[]) => (

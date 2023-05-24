@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil";
 import { v1 } from "uuid";
-import { User } from "../type";
+import { User } from "../../type";
 
 export const showSignInDialogState = atom({
   key: `showSignInDialogState/${v1()}`,

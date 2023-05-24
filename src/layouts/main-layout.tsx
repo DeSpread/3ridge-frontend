@@ -9,7 +9,13 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
-import React, { MouseEventHandler, ReactNode, useMemo, useState } from "react";
+import React, {
+  MouseEventHandler,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
 import SecondaryButton from "../components/atoms/secondary-button";
@@ -124,19 +130,23 @@ const MainLayout = (props: MainLayoutProps) => {
     await router.push(`/explore`);
     closeLoading();
   };
+
   const asyncGoToProjects = async () => {
     showLoading();
     await router.push(`/projects`);
     closeLoading();
   };
+
   const asyncGoToLeaderBoard = async () => {
     showLoading();
     await router.push(`/leaderboard`);
     closeLoading();
   };
+
   const asyncShowSignDialog = async () => {
     setShowSignInDialog(true);
   };
+
   const asyncSignedProfileBtnOnClick = async () => {
     showLoading();
     await router.push(`/profile/${userData.name}`);

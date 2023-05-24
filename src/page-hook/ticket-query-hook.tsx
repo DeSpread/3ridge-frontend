@@ -8,8 +8,8 @@ import {
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
-} from "../apollo/query";
-import { client } from "../apollo/client";
+} from "../lib/apollo/query";
+import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
 import { Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";

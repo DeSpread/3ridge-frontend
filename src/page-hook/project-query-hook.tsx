@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Project } from "../type";
-import { client } from "../apollo/client";
-import { GET_PROJECT_BY_ID } from "../apollo/query";
+import { client } from "../lib/apollo/client";
+import { GET_PROJECT_BY_ID } from "../lib/apollo/query";
 
 export function useProjectQuery(props: { projectId?: string }) {
   const [projectData, setProjectData] = useState<Project>();

@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography, useMediaQuery } from "@mui/material";
 import { MouseEventHandler, PropsWithChildren } from "react";
 import SecondaryButton from "../atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
@@ -18,19 +18,22 @@ const VerifyYourEmailForm = ({
   signInTitle = "Let me sign in!",
 }: VerifyYourEmailFormProps) => {
   const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
+
   return (
     <>
       <Stack
         direction={"column"}
         sx={{
           background: "",
-          minWidth: "500px",
+          minWidth: smUp ? "500px" : "80%",
           paddingTop: 12,
           marginBottom: 6,
         }}
         spacing={4}
       >
-        <Typography textAlign={"left"} variant={"h5"}>
+        <Typography textAlign={smUp ? "left" : "center"} variant={"h5"}>
           메일을 인증해주세요
         </Typography>
         <Stack spacing={5} alignItems={"center"}>

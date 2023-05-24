@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material/styles";
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography, useMediaQuery } from "@mui/material";
 import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
 import SecondaryButton from "../../../components/atoms/secondary-button";
 import LinkTypography from "../../../components/atoms/link-typography";
@@ -18,6 +18,8 @@ type SignUpWithEmailFormProps = PropsWithChildren & {
 
 const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
   const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,7 +38,7 @@ const SignUpWithEmailForm = (props: SignUpWithEmailFormProps) => {
         direction={"column"}
         sx={{
           background: "",
-          minWidth: "500px",
+          minWidth: smUp ? "500px" : "80%",
           paddingTop: 12,
           marginBottom: 12,
         }}

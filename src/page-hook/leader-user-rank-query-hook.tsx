@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { User } from "../type";
-import { client } from "../apollo/client";
-import { FIND_RANK_BY_USER_ID } from "../apollo/query";
+import { client } from "../lib/apollo/client";
+import { FIND_RANK_BY_USER_ID } from "../lib/apollo/query";
 
 export function useLeaderUserRankQuery(userId?: string) {
   const [userRank, setUserRank] = useState<number>();

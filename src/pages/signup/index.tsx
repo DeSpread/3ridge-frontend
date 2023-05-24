@@ -1,6 +1,6 @@
 import React, { MouseEvent, ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
-import { Divider, Stack, Typography } from "@mui/material";
+import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import HomeFooter from "../../layouts/footer/home-footer";
 import Head from "next/head";
 import LinkTypography from "../../components/atoms/link-typography";
@@ -34,6 +34,7 @@ import {
   convertToWalletName,
 } from "../../util/type-util";
 import ResourceFactory from "../../helper/resource-factory";
+import { useTheme } from "@mui/material/styles";
 
 const FORM_TYPE = {
   SELECT: "SELECT",
@@ -65,6 +66,9 @@ const Signup = () => {
     useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const resourceFactory = ResourceFactory.getInstance();
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
@@ -217,26 +221,52 @@ const Signup = () => {
           )}
           <Stack
             direction={"column"}
-            sx={{ paddingTop: 0, minWidth: "500px", paddingBottom: 10 }}
+            sx={{
+              paddingTop: 0,
+              minWidth: smUp ? "500px" : "80%",
+              paddingBottom: 10,
+              background: "",
+            }}
             spacing={1}
           >
             <Divider></Divider>
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"center"}
-            >
-              <Typography variant={"body2"} textAlign={"center"}>
-                가입시 다음에 동의합니다.
-              </Typography>
-              <LinkTypography variant={"body2"}>
-                &nbsp;이용약관&nbsp;
-              </LinkTypography>
-              <Typography variant={"body2"}>및</Typography>
-              <LinkTypography variant={"body2"}>
-                &nbsp;개인 정보 보호 방침
-              </LinkTypography>
-            </Stack>
+            {smUp ? (
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"center"}
+              >
+                <Typography variant={"body2"} textAlign={"center"}>
+                  가입시 다음에 동의합니다.
+                </Typography>
+                <LinkTypography variant={"body2"}>
+                  &nbsp;이용약관&nbsp;
+                </LinkTypography>
+                <Typography variant={"body2"}>및</Typography>
+                <LinkTypography variant={"body2"}>
+                  &nbsp;개인 정보 보호 방침
+                </LinkTypography>
+              </Stack>
+            ) : (
+              <Stack
+                direction={"column"}
+                alignItems={"center"}
+                justifyContent={"center"}
+              >
+                <Typography variant={"body2"} textAlign={"center"}>
+                  가입시 다음에 동의합니다.
+                </Typography>
+                <Stack direction={"row"}>
+                  <LinkTypography variant={"body2"}>
+                    &nbsp;이용약관&nbsp;
+                  </LinkTypography>
+                  <Typography variant={"body2"}>및</Typography>
+                  <LinkTypography variant={"body2"}>
+                    &nbsp;개인 정보 보호 방침
+                  </LinkTypography>
+                </Stack>
+              </Stack>
+            )}
           </Stack>
         </Stack>
         <SignInWithNetworkSelectDialog

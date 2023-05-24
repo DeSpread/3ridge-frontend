@@ -42,12 +42,12 @@ const RankCard = ({
   const { profileImageUrl, name, rewardPoint, _id } = user;
 
   const convertedName = useMemo(() => {
-    if (name?.substring(0, 2).toLocaleLowerCase() === "0x") {
-      if (smUp)
-        return StringHelper.getInstance().getMidEllipsisString(name, 10, 8);
-      return StringHelper.getInstance().getMidEllipsisString(name);
-    }
-    return name;
+    // if (name?.substring(0, 2).toLocaleLowerCase() === "0x") {
+    if (smUp)
+      return StringHelper.getInstance().getMidEllipsisString(name, 10, 8);
+    return StringHelper.getInstance().getMidEllipsisString(name);
+    // }
+    // return name;
   }, [name]);
 
   const renderRankBadge = (rank: number) => {
@@ -158,7 +158,7 @@ const RankCard = ({
           </Box>
           <Stack
             direction={"column"}
-            sx={{ marginLeft: 3, maxWidth: smUp ? "100%" : "50%" }}
+            sx={{ marginLeft: smUp ? 3 : 2, maxWidth: smUp ? "100%" : "50%" }}
           >
             {/*<Box sx={{ paddingRight: 2 }}>*/}
             <GradientTypography
@@ -172,7 +172,7 @@ const RankCard = ({
             {/*</Box>*/}
           </Stack>
         </Stack>
-        <Box sx={{ marginRight: smUp ? 2 : 0 }}>
+        <Box sx={{ marginRight: smUp ? 2 : 0, marginLeft: smUp ? 0 : 1 }}>
           <Stack
             direction={"column"}
             alignItems={"flex-end"}
@@ -182,25 +182,6 @@ const RankCard = ({
               variant={smUp ? "h6" : "caption"}
               sx={{ color: (theme) => theme.palette.info.main }}
             >{`${rewardPoint ?? 0} 포인트`}</Typography>
-            {/*<Typography*/}
-            {/*  variant={smUp ? "h6" : "caption"}*/}
-            {/*  sx={{ color: (theme) => theme.palette.info.main }}*/}
-            {/*>{`Level ${Math.floor((rewardPoint ?? 0) / 100)}`}</Typography>*/}
-            {/*<Stack direction={"row"} alignItems={"center"}>*/}
-            {/*  <Typography variant={smUp ? "body2" : "caption"}>*/}
-            {/*    Total&nbsp;:&nbsp;*/}
-            {/*  </Typography>*/}
-            {/*  <Typography*/}
-            {/*    variant={smUp ? "body2" : "caption"}*/}
-            {/*    color={"white"}*/}
-            {/*    sx={{ fontWeight: "bold" }}*/}
-            {/*  >*/}
-            {/*    {rewardPoint ?? 0}*/}
-            {/*  </Typography>*/}
-            {/*  <Typography variant={smUp ? "body2" : "caption"}>*/}
-            {/*    &nbsp;{`Point`}*/}
-            {/*  </Typography>*/}
-            {/*</Stack>*/}
           </Stack>
         </Box>
       </Stack>

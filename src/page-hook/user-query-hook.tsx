@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
-import { client } from "../apollo/client";
-import { GET_USER_BY_NAME } from "../apollo/query";
-import { User } from "../type";
+import { client } from "../lib/apollo/client";
+import { GET_USER_BY_NAME } from "../lib/apollo/query";
+import { FCFSRewardContext, User } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { convertToSuppoertedNetwork } from "../util/type-util";
-import { ChainType } from "../__generated__/graphql";
+import {
+  CategoryType,
+  ChainType,
+  RewardPolicyType,
+} from "../__generated__/graphql";
 
 export function useUserQuery(props: { name?: string }) {
   const [userData, setUserData] = useState<User>();
   const [loading, setLoading] = useState(false);
+  const typeParseHelper = TypeParseHelper.getInstance();
+
   useEffect(() => {
     (async () => {
       if (!props.name) {
@@ -16,6 +22,7 @@ export function useUserQuery(props: { name?: string }) {
       }
       try {
         setLoading(true);
+        console.log("name", props.name);
         const res = await client.query({
           query: GET_USER_BY_NAME,
           variables: {
@@ -38,6 +45,32 @@ export function useUserQuery(props: { name?: string }) {
     profileImageUrl?: string | null;
     email?: string | null;
     rewardPoint?: number | null;
+    participatingTickets?: Array<{
+      __typename?: "Ticket";
+      _id?: string | null;
+      imageUrl?: string | null;
+      description?: string | null;
+      title?: string | null;
+      project?: {
+        __typename?: "Project";
+        _id?: string | null;
+        categories?: Array<CategoryType> | null;
+        description?: string | null;
+        imageUrl?: string | null;
+        name: string;
+      } | null;
+      rewardPolicy?: {
+        __typename?: "RewardPolicy";
+        context: string;
+        rewardPolicyType: RewardPolicyType;
+      } | null;
+      winners?: Array<{
+        __typename?: "User";
+        _id?: string | null;
+        name?: string | null;
+      }> | null;
+      quests?: Array<{ __typename?: "Quest"; _id?: string | null }> | null;
+    }> | null;
     wallets?: Array<{
       __typename?: "UserWallet";
       address: string;
@@ -65,6 +98,7 @@ export function useUserQuery(props: { name?: string }) {
       _id,
       rewardPoint,
       userSocial,
+      participatingTickets,
     } = data;
     setUserData((prevState) => {
       return {
@@ -93,6 +127,35 @@ export function useUserQuery(props: { name?: string }) {
               }
             : undefined,
         },
+        participatingTickets: participatingTickets?.map((e) => {
+          return {
+            _id: e._id ?? undefined,
+            title: e.title ?? undefined,
+            description: e.description ?? undefined,
+            project: e.project
+              ? {
+                  _id: e.project?._id ?? undefined,
+                  categories: e.project?.categories ?? undefined,
+                  description: e.project?.description ?? undefined,
+                  imageUrl: e.project?.imageUrl ?? undefined,
+                  name: e.project.name,
+                }
+              : undefined,
+            imageUrl: e.imageUrl ?? undefined,
+            rewardPolicy: {
+              context: typeParseHelper.parseRewardPolicy(
+                e.rewardPolicy?.context ?? undefined,
+                e.rewardPolicy?.rewardPolicyType ?? undefined
+              ),
+              rewardPolicyType: e.rewardPolicy?.rewardPolicyType ?? undefined,
+            },
+            quests: e.quests
+              ? e.quests?.map((e) => {
+                  return { _id: e._id ?? undefined };
+                })
+              : undefined,
+          };
+        }),
       };
     });
   };
