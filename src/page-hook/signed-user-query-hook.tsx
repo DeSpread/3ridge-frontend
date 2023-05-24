@@ -18,6 +18,7 @@ import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
+  getLocaleErrorMessage,
 } from "../error/my-error";
 import { useMutation } from "@apollo/client";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -27,6 +28,7 @@ import {
   convertToSuppoertedNetwork,
 } from "../util/type-util";
 import {
+  SUPPORTED_NETWORKS,
   SupportedNetwork,
   TelegramUserInfo,
   WALLET_NAMES,
@@ -36,6 +38,10 @@ import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 import { ChainType } from "../__generated__/graphql";
 import { promiseTelegramLoginAuth } from "../util/telegram-util";
 import { delay } from "../util/timer";
+import PreferenceHelper from "../helper/preference-helper";
+import addMinutes from "date-fns/addMinutes";
+import { useAlert } from "../provider/alert/alert-provider";
+import { useProfileEditDialog } from "./profile-edit-dialog-hook";
 
 const useSignedUserQuery = () => {
   const {
@@ -60,6 +66,11 @@ const useSignedUserQuery = () => {
   const [loading, setLoading] = useState(false);
 
   const tryConnectWalletNetwork = useRef<string>("");
+
+  const preference = PreferenceHelper.getInstance();
+  const { showAlert, showErrorAlert } = useAlert();
+  const { isProfileEditDialogOpen, setShowProfileEditDialog } =
+    useProfileEditDialog();
 
   const {
     isGoogleLoggedIn,
@@ -167,17 +178,41 @@ const useSignedUserQuery = () => {
   }, [isWalletLoggedIn, changedCounter, walletLoggedInInfo]);
 
   useEffect(() => {
-    if (tryConnectWalletNetwork.current) {
-      const network = convertToSuppoertedNetwork(
-        tryConnectWalletNetwork.current
-      );
-      const accountAddress = getAccountAddress(network);
-      if (accountAddress) {
-        _asyncUpsertWalletAddress(network, accountAddress).then((res) => {});
+    try {
+      if (tryConnectWalletNetwork.current) {
+        const network = convertToSuppoertedNetwork(
+          tryConnectWalletNetwork.current
+        );
+        const accountAddress = getAccountAddress(network);
+        if (accountAddress) {
+          _asyncUpsertWalletAddress(network, accountAddress).then((res) => {});
+        }
       }
+    } catch (e) {
+      showErrorAlert({ content: getLocaleErrorMessage(e) });
+    } finally {
       tryConnectWalletNetwork.current = "";
     }
   }, [changedCounter]);
+
+  useEffect(() => {
+    try {
+      const { network, timestamp } = preference.getTryConnectWallet();
+      console.log("getTryConnectWallet", network, timestamp);
+      if (network && timestamp) {
+        const accountAddress = getAccountAddress(network);
+        if (accountAddress) {
+          _asyncUpsertWalletAddress(network, accountAddress).then((res) => {});
+        }
+        setShowProfileEditDialog(true);
+        preference.clearTryConnectWallet();
+      }
+    } catch (e) {
+      showErrorAlert({ content: getLocaleErrorMessage(e) });
+      setShowProfileEditDialog(true);
+      preference.clearTryConnectWallet();
+    }
+  }, []);
 
   const updateUserData = (data: {
     __typename?: "User";
@@ -259,7 +294,11 @@ const useSignedUserQuery = () => {
       console.log("asyncUpsertWalletAddress - accountAddress", accountAddress);
       if (!accountAddress) {
         await asyncConnectWallet(network, walletName);
-        tryConnectWalletNetwork.current = network;
+        if (network === SUPPORTED_NETWORKS.SUI) {
+          preference.updateTryConnectWallet(network);
+        } else {
+          tryConnectWalletNetwork.current = network;
+        }
         return;
       }
       await _asyncUpsertWalletAddress(network, accountAddress);
@@ -281,6 +320,7 @@ const useSignedUserQuery = () => {
     walletAddress: string
   ) => {
     try {
+      console.log("_asyncUpsertWalletAddress", network, walletAddress);
       if (walletAddress) {
         const exist = await client.query({
           query: IS_REGISTER_WALLET,
@@ -290,6 +330,10 @@ const useSignedUserQuery = () => {
           },
           fetchPolicy: "no-cache",
         });
+        console.log(
+          "_asyncUpsertWalletAddress, exist.data.isRegisteredWallet",
+          exist.data.isRegisteredWallet
+        );
         if (exist.data.isRegisteredWallet) {
           throw new AppError(
             APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED

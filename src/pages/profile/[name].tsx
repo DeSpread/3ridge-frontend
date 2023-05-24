@@ -109,6 +109,7 @@ const Profile = (props: AppProps) => {
   const [selectedNetwork, setSelectedNetwork] = useState("");
 
   const theme = useTheme();
+
   const isSingedUserProfile = useMemo(() => {
     return signedUserData._id === userData?._id;
   }, [signedUserData, userData]);
@@ -912,6 +913,7 @@ const Profile = (props: AppProps) => {
         open={signInWithSupportedWalletVisible}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
+          setSelectedNetwork("");
         }}
         onClose={() => {
           setSelectedNetwork("");

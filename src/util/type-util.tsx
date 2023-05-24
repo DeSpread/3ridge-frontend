@@ -38,6 +38,8 @@ const convertToChainType = (network: SupportedNetwork | string) => {
     return ChainType.Sui;
   } else if (network === SUPPORTED_NETWORKS.EVM) {
     return ChainType.Evm;
+  } else if (network === SUPPORTED_NETWORKS.STACKS) {
+    return ChainType.Stacks;
   }
   return ChainType.Evm;
 };

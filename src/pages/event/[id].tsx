@@ -153,6 +153,9 @@ const Event = (props: AppProps) => {
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
 
+  console.log(ticketData);
+  console.log(userData?._id);
+
   useEffect(() => {
     if (!userData?._id) return;
     const ids = ticketData?.quests?.map((e) => {
