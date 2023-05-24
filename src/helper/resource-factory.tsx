@@ -2,6 +2,7 @@ import { SUPPORTED_NETWORKS, SupportedNetwork, WALLET_NAMES } from "../type";
 import AptosIcon from "../components/atoms/svg/aptos-icon";
 import EthIcon from "../components/atoms/svg/eth-icon";
 import SuiIcon from "../components/atoms/svg/sui-icon";
+import StacksIcon from "../components/atoms/svg/stacks-icon";
 
 class ResourceFactory {
   private static instance: ResourceFactory;
@@ -45,6 +46,8 @@ class ResourceFactory {
       return SuiIcon;
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
       return AptosIcon;
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      return StacksIcon;
     }
     return undefined;
   };

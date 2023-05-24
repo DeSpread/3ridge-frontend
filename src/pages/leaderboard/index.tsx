@@ -182,25 +182,6 @@ const RankCard = ({
               variant={smUp ? "h6" : "caption"}
               sx={{ color: (theme) => theme.palette.info.main }}
             >{`${rewardPoint ?? 0} 포인트`}</Typography>
-            {/*<Typography*/}
-            {/*  variant={smUp ? "h6" : "caption"}*/}
-            {/*  sx={{ color: (theme) => theme.palette.info.main }}*/}
-            {/*>{`Level ${Math.floor((rewardPoint ?? 0) / 100)}`}</Typography>*/}
-            {/*<Stack direction={"row"} alignItems={"center"}>*/}
-            {/*  <Typography variant={smUp ? "body2" : "caption"}>*/}
-            {/*    Total&nbsp;:&nbsp;*/}
-            {/*  </Typography>*/}
-            {/*  <Typography*/}
-            {/*    variant={smUp ? "body2" : "caption"}*/}
-            {/*    color={"white"}*/}
-            {/*    sx={{ fontWeight: "bold" }}*/}
-            {/*  >*/}
-            {/*    {rewardPoint ?? 0}*/}
-            {/*  </Typography>*/}
-            {/*  <Typography variant={smUp ? "body2" : "caption"}>*/}
-            {/*    &nbsp;{`Point`}*/}
-            {/*  </Typography>*/}
-            {/*</Stack>*/}
           </Stack>
         </Box>
       </Stack>
