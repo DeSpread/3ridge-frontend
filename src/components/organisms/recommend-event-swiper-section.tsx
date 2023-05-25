@@ -75,7 +75,14 @@ const RecommendEventSwiperSection = (props: {
         marginBottom={3}
       >
         <Box>
-          <Typography variant={"h5"}>추천 이벤트</Typography>
+          <Typography
+            variant={"h5"}
+            sx={{
+              visibility: props.isLoading ? "hidden" : "visible",
+            }}
+          >
+            추천 이벤트
+          </Typography>
         </Box>
         <Box>
           <IconButton

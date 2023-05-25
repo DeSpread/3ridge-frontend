@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AllEventsSection from "../../components/organisms/all-events-section";
 import FeaturedEventsSection from "../../components/organisms/featured-events-section";
@@ -10,6 +10,9 @@ import SwiperCore, { Navigation } from "swiper";
 
 const Explore = (props: AppProps) => {
   const theme = useTheme();
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <>
@@ -23,6 +26,7 @@ const Explore = (props: AppProps) => {
           paddingLeft: 24,
           paddingRight: 24,
           paddingBottom: 48,
+          paddingTop: smUp ? 0 : 16,
         }}
       >
         <FeaturedEventsSection></FeaturedEventsSection>

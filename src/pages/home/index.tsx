@@ -31,8 +31,8 @@ interface IProps {
 }
 
 const Home = (props: NextPage<IProps>) => {
-  // @ts-ignore
-  const isMobile = props["isMobile"];
+  // // @ts-ignore
+  // const isMobile = props["isMobile"];
 
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
@@ -194,22 +194,21 @@ const Home = (props: NextPage<IProps>) => {
       <Head>
         <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
-      {!pageLoading && !isMobile ? renderDesktop() : renderMobile()}
+      {!pageLoading && smUp ? renderDesktop() : renderMobile()}
     </>
   );
 };
 
-Home.getInitialProps = async (ctx: NextPageContext) => {
-  let mobile;
-  console.log(ctx);
-  if (ctx.req) {
-    const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
-    mobile = !!md.mobile();
-  } else {
-    mobile = isMobileInDevice;
-  }
-  return { isMobile: mobile };
-};
+// Home.getInitialProps = async (ctx: NextPageContext) => {
+//   let mobile;
+//   if (ctx.req) {
+//     const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
+//     mobile = !!md.mobile();
+//   } else {
+//     mobile = isMobileInDevice;
+//   }
+//   return { isMobile: mobile };
+// };
 
 Home.getLayout = (page: ReactElement | ReactElement[]) => (
   <MainLayout footerComponent={<HomeFooter />}>{page}</MainLayout>

@@ -140,7 +140,7 @@ const Event = (props: AppProps) => {
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
   const [openContentsRendererDialog, setOpenContentsRendererDialog] =
     useState(false);
-  const [openDiscordQuestDialog, setDiscordQuestDialog] = useState(false);
+  const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
@@ -155,9 +155,6 @@ const Event = (props: AppProps) => {
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
   const { setShowSignInDialog } = useSignDialog();
-
-  console.log(ticketData);
-  console.log(userData?._id);
 
   useEffect(() => {
     if (!userData?._id) return;
@@ -784,7 +781,19 @@ const Event = (props: AppProps) => {
                               });
                             }
                           }
-                          setDiscordQuestDialog(true);
+                          let title = "";
+                          if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_DISCORD
+                          ) {
+                            title = "디스코드";
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_TELEGRAM
+                          ) {
+                            title = "텔레그램";
+                          }
+                          setSimpleWarningDialogTitle(title);
                         } else if (
                           quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
@@ -1180,15 +1189,15 @@ const Event = (props: AppProps) => {
         </Grid>
       </Grid>
       <SimpleDialog
-        open={openDiscordQuestDialog}
+        open={simpleWarningDialogTitle ? true : false}
         title={"Notification"}
         onClose={() => {
-          setDiscordQuestDialog(false);
+          setSimpleWarningDialogTitle("");
         }}
       >
         <Typography>
-          Discord 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
-          참여 상태로 유지해주세요.
+          {`${simpleWarningDialogTitle} 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
+          참여 상태로 유지해주세요.`}
         </Typography>
       </SimpleDialog>
       <QuestQuizDialog
