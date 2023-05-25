@@ -63,6 +63,8 @@ import ContentsRendererDialog from "../../components/dialogs/contents-renderer-d
 import ComponentHelper from "../../helper/component-helper";
 import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
+import LinkTypography from "../../components/atoms/link-typography";
+import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -152,6 +154,7 @@ const Event = (props: AppProps) => {
   const [htmlContent, setHtmlContent] = useState("");
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
+  const { setShowSignInDialog } = useSignDialog();
 
   console.log(ticketData);
   console.log(userData?._id);
@@ -441,12 +444,23 @@ const Event = (props: AppProps) => {
                   <>
                     <Card>
                       <CardContent>
-                        <Typography
-                          variant={"h6"}
-                          sx={{ color: theme.palette.warning.main }}
+                        <LinkTypography
+                          variant={"body2"}
+                          href={"#"}
+                          sx={{
+                            fontWeight: "bold",
+                            "&:hover": {
+                              color: "#914e1d",
+                              textDecoration: "underline",
+                            },
+                            color: theme.palette.warning.main,
+                          }}
+                          onClick={async (e) => {
+                            setShowSignInDialog(true);
+                          }}
                         >
                           로그인 후, 이벤트에 참여하실 수 있어요 😅
-                        </Typography>
+                        </LinkTypography>
                       </CardContent>
                     </Card>
                   </>
