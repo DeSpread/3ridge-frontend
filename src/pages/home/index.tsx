@@ -24,13 +24,16 @@ import { filterFeatureEventTickets } from "../../util/type-util";
 import { NextPage, NextPageContext } from "next";
 import MobileDetect from "mobile-detect";
 import { isMobile as isMobileInDevice } from "react-device-detect";
-import Profile from "../profile/[name]";
+import { AppProps } from "next/app";
 
 interface IProps {
   isMobile: boolean;
 }
 
 const Home = (props: NextPage<IProps>) => {
+  // @ts-ignore
+  const isMobile = props["isMobile"];
+
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -191,13 +194,14 @@ const Home = (props: NextPage<IProps>) => {
       <Head>
         <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
-      {!pageLoading && smUp ? renderDesktop() : renderMobile()}
+      {!pageLoading && !isMobile ? renderDesktop() : renderMobile()}
     </>
   );
 };
 
 Home.getInitialProps = async (ctx: NextPageContext) => {
   let mobile;
+  console.log(ctx);
   if (ctx.req) {
     const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
     mobile = !!md.mobile();
