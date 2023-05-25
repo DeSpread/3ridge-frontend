@@ -65,6 +65,7 @@ const RecommendEventSwiperSection = (props: {
       direction={"column"}
       sx={{
         width: "100%",
+        background: "",
       }}
     >
       <Stack
@@ -93,6 +94,7 @@ const RecommendEventSwiperSection = (props: {
               "&:inactive": {
                 transform: "scale(1)",
               },
+              visibility: props.isLoading ? "hidden" : "visible",
             }}
           >
             <ArrowBackIosNewIcon fontSize={smUp ? "medium" : "small"} />
@@ -112,6 +114,7 @@ const RecommendEventSwiperSection = (props: {
               "&:inactive": {
                 transform: "scale(1)",
               },
+              visibility: props.isLoading ? "hidden" : "visible",
             }}
           >
             <ArrowForwardIosIcon fontSize={smUp ? "medium" : "small"} />

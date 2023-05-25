@@ -198,7 +198,6 @@ const useSignedUserQuery = () => {
   useEffect(() => {
     try {
       const { network, timestamp } = preference.getTryConnectWallet();
-      console.log("getTryConnectWallet", network, timestamp);
       if (network && timestamp) {
         const accountAddress = getAccountAddress(network);
         if (accountAddress) {
