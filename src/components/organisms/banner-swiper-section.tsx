@@ -1,9 +1,5 @@
-import { Ticket } from "../../type";
-import { Box, IconButton, Stack, Typography } from "@mui/material";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Box, Stack, Typography } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
-import TicketOverlayStyleCard from "../molecules/ticket-overlay-style-card";
 import React from "react";
 import SwiperCore, { Navigation } from "swiper";
 import Image from "next/image";

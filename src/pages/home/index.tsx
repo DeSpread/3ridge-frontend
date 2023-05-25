@@ -20,9 +20,17 @@ import useWindowDimensions from "../../page-hook/window-dimensions";
 import BannerOverlayStyleCard from "../../components/molecules/banner-overlay-style-card";
 import RecommendEventSwiperSection from "../../components/organisms/recommend-event-swiper-section";
 import BannerSwiperSection from "../../components/organisms/banner-swiper-section";
-import { useRouter } from "next/router";
+import { filterFeatureEventTickets } from "../../util/type-util";
+import { NextPage, NextPageContext } from "next";
+import MobileDetect from "mobile-detect";
+import { isMobile as isMobileInDevice } from "react-device-detect";
+import Profile from "../profile/[name]";
 
-const Home = () => {
+interface IProps {
+  isMobile: boolean;
+}
+
+const Home = (props: NextPage<IProps>) => {
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -115,7 +123,7 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={ticketsData}
+                  ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Stack>
             </Stack>
@@ -168,7 +176,7 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={ticketsData}
+                  ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Box>
             </Stack>
@@ -186,6 +194,17 @@ const Home = () => {
       {!pageLoading && smUp ? renderDesktop() : renderMobile()}
     </>
   );
+};
+
+Home.getInitialProps = async (ctx: NextPageContext) => {
+  let mobile;
+  if (ctx.req) {
+    const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
+    mobile = !!md.mobile();
+  } else {
+    mobile = isMobileInDevice;
+  }
+  return { isMobile: mobile };
 };
 
 Home.getLayout = (page: ReactElement | ReactElement[]) => (
