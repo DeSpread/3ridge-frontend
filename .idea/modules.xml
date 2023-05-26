@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../3ridge-backend/.idea/3ridge-backend.iml" filepath="$PROJECT_DIR$/../3ridge-backend/.idea/3ridge-backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/sakura-frontend.iml" filepath="$PROJECT_DIR$/.idea/sakura-frontend.iml" />
     </modules>
   </component>
