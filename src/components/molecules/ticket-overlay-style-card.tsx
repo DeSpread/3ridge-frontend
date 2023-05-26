@@ -3,12 +3,14 @@ import { useTheme } from "@mui/material/styles";
 import {
   Box,
   CardProps,
+  Grid,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
 import { Ticket } from "../../type";
+import TicketInfoTextSet from "../atoms/ticket-info-text-set";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;
@@ -123,7 +125,8 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                     <Typography
                       variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
                       sx={{
-                        textShadow: "black 1px 0 10px;",
+                        textShadow:
+                          "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
                       }}
                     >
                       {ticket?.project?.name}
@@ -133,7 +136,8 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                     <Typography
                       variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
                       sx={{
-                        textShadow: "black 1px 0 10px;",
+                        textShadow:
+                          "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
                       }}
                     >
                       3ridge
@@ -145,7 +149,8 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                 <Typography
                   variant={mdUp ? "body2" : smUp ? "body1" : "body2"}
                   sx={{
-                    textShadow: "black 1px 0 10px;",
+                    textShadow:
+                      "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
                   }}
                 >
                   {ticket?.quests?.length ?? 0} 퀘스트
@@ -171,34 +176,21 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                     WebkitLineClamp: "2",
                     WebkitBoxOrient: "vertical",
                     textAlign: "center",
-                    textShadow: "black 1px 0 10px;",
+                    textShadow:
+                      "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
                   }}
                   fontFamily={"LINESeedKR-Bd"}
                 >
                   {ticket?.title}
                 </Typography>
               </Box>
-              <Stack direction={"row"} alignItems={"center"}>
-                <Image
-                  src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
-                  }
-                  alt={"StarIcon"}
-                  width={32}
-                  height={32}
-                  style={{ marginLeft: -6 }}
-                ></Image>
-                <Typography
-                  variant={"body2"}
-                  sx={{
-                    textShadow: "black 1px 0 10px;",
-                    // textShadow:
-                    //   "-2px 0 black, 0 2px black, 2px 0 black, 0 -2px black",
-                  }}
-                >
-                  {`${ticket?.rewardPolicy?.context?.point ?? 0} 포인트`}
-                </Typography>
-              </Stack>
+              <TicketInfoTextSet
+                ticket={ticket}
+                sx={{
+                  textShadow:
+                    "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
+                }}
+              ></TicketInfoTextSet>
             </Stack>
           </Stack>
         </div>

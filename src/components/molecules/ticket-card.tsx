@@ -1,25 +1,28 @@
 import {
-    Avatar,
-    Box,
-    Card,
-    CardContent,
-    CardProps,
-    Grid,
-    Skeleton,
-    Stack, Theme,
-    Typography,
-    useMediaQuery,
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  CardProps,
+  Grid,
+  Skeleton,
+  Stack,
+  Theme,
+  Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useLayoutEffect } from "react";
-import {Ticket, User} from "../../type";
+import { Ticket, User } from "../../type";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
 import StyledChip from "../atoms/styled/styled-chip";
+import TicketInfoTextSet from "../atoms/ticket-info-text-set";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;
   username?: String;
+  isWinner?: boolean;
 };
 
 const TicketCard = (props: EventCardProps) => {
@@ -118,30 +121,23 @@ const TicketCard = (props: EventCardProps) => {
                   </Typography>
                 )}
               </Stack>
-                {(ticket?.winners?.filter(
-                    (winner) =>
-                        String(winner.name).toUpperCase().trim() ===
-                        String(username).toUpperCase().trim()
+              {props.isWinner &&
+                (ticket?.winners?.filter(
+                  (winner) =>
+                    String(winner.name).toUpperCase().trim() ===
+                    String(username).toUpperCase().trim()
                 )?.length ?? 0) > 0 && (
-                    <Box>
-                        <Typography variant={mdUp ? "body2" : "body1"}>
-                            <StyledChip label={"위너"} color="success"></StyledChip>
-                        </Typography>
-                    </Box>
-                )
-                }
-                {(ticket?.winners?.filter(
-                    (winner) =>
-                        String(winner.name).toUpperCase().trim() ===
-                        String(username).toUpperCase().trim()
-                )?.length ?? 0) <= 0 && (
-                    <Box>
-                        <Typography variant={mdUp ? "body2" : "body1"}>
-                            {ticket?.quests?.length ?? 0} 퀘스트
-                        </Typography>
-                    </Box>
-                )
-                }
+                  <Box>
+                    <Typography variant={mdUp ? "h6" : "h5"}>👑</Typography>
+                  </Box>
+                )}
+              {!props.isWinner && (
+                <Box>
+                  <Typography variant={mdUp ? "body2" : "body1"}>
+                    {ticket?.quests?.length ?? 0} 퀘스트
+                  </Typography>
+                </Box>
+              )}
             </Stack>
             <Box
               ref={ref}
@@ -199,24 +195,7 @@ const TicketCard = (props: EventCardProps) => {
               columnSpacing={1}
             >
               <Grid item>
-                <Stack
-                  direction={"row"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                >
-                  <Image
-                    src={
-                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
-                    }
-                    alt={"StarIcon"}
-                    width={48}
-                    height={48}
-                    style={{ marginLeft: -12 }}
-                  ></Image>
-                  <Typography variant={"body2"}>
-                    {`${ticket?.rewardPolicy?.context?.point ?? 0} 포인트`}
-                  </Typography>
-                </Stack>
+                <TicketInfoTextSet ticket={ticket}></TicketInfoTextSet>
               </Grid>
             </Grid>
           </Stack>

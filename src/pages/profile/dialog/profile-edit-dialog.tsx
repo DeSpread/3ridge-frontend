@@ -32,6 +32,7 @@ import ResourceFactory from "../../../helper/resource-factory";
 import PrimaryButton from "../../../components/atoms/primary-button";
 // @ts-ignore
 import TelegramLoginButton from "react-telegram-login";
+import { getUserMail } from "../../../util/type-util";
 
 const ReversibleMarkEmailIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -189,9 +190,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                     label={"Email"}
                     onClick={props.emailValidatorButtonOnClick}
                     size={"small"}
-                    value={
-                      props.userData?.email ? props.userData?.email : undefined
-                    }
+                    value={getUserMail(props.userData)}
                     fullWidth={true}
                     payload={""}
                   ></ValidatorButton>

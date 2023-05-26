@@ -20,7 +20,7 @@ import useWindowDimensions from "../../page-hook/window-dimensions";
 import BannerOverlayStyleCard from "../../components/molecules/banner-overlay-style-card";
 import RecommendEventSwiperSection from "../../components/organisms/recommend-event-swiper-section";
 import BannerSwiperSection from "../../components/organisms/banner-swiper-section";
-import { useRouter } from "next/router";
+import { filterFeatureEventTickets } from "../../util/type-util";
 
 const Home = () => {
   const theme = useTheme();
@@ -56,6 +56,7 @@ const Home = () => {
             width: "100%",
             backgroundImage: `url("https://3ridge.s3.ap-northeast-2.amazonaws.com/top-section-bg.png")`,
             backgroundSize: "cover",
+            minHeight: "100vh",
           }}
           justifyContent={"center"}
           alignItems={"center"}
@@ -115,7 +116,7 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={ticketsData}
+                  ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Stack>
             </Stack>
@@ -168,7 +169,7 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={ticketsData}
+                  ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Box>
             </Stack>
@@ -187,6 +188,17 @@ const Home = () => {
     </>
   );
 };
+
+// Home.getInitialProps = async (ctx: NextPageContext) => {
+//   let mobile;
+//   if (ctx.req) {
+//     const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
+//     mobile = !!md.mobile();
+//   } else {
+//     mobile = isMobileInDevice;
+//   }
+//   return { isMobile: mobile };
+// };
 
 Home.getLayout = (page: ReactElement | ReactElement[]) => (
   <MainLayout footerComponent={<HomeFooter />}>{page}</MainLayout>

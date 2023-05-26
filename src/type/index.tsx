@@ -119,6 +119,7 @@ export type User = {
   walletAddressInfos?: WalletAddressInfo[];
   name?: string;
   email?: string;
+  gmail?: string;
   profileImageUrl?: string;
   rewardPoint?: number;
   userSocial?: { twitterId?: string; telegramUser?: TelegramUserInfo };
@@ -157,6 +158,7 @@ export type FCFSRewardContext = {
   collectionName: string;
   tokenName: string;
   point: number;
+  rewardName?: string;
 };
 
 export type Ticket = {

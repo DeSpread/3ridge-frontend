@@ -12,6 +12,7 @@ const LinkTypography = (props: LinkTypographyProps) => {
     <NextLink href={props.href ?? ""}>
       <Typography
         sx={{
+          ...props.sx,
           fontWeight: "bold",
           "&:hover": {
             color: theme.palette.action.hover,
