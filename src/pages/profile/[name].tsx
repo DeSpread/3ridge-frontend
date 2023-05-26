@@ -55,6 +55,7 @@ import ResourceFactory from "../../helper/resource-factory";
 import {
   convertToSuppoertedNetwork,
   convertToWalletName,
+  getUserMail,
 } from "../../util/type-util";
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
@@ -512,7 +513,7 @@ const Profile = (props: NextPage<IProps>) => {
                         }
                         // return <></>;
                       })}
-                    {targetUserData?.email && (
+                    {getUserMail(targetUserData) && (
                       <Grid item>
                         <StyledChip
                           icon={<MarkEmailReadIcon></MarkEmailReadIcon>}
@@ -522,13 +523,13 @@ const Profile = (props: NextPage<IProps>) => {
                               variant={"body2"}
                               color={"neutral.100"}
                             >
-                              {targetUserData?.email}
+                              {getUserMail(targetUserData)}
                             </Typography>
                           }
                         ></StyledChip>
                       </Grid>
                     )}
-                    {!targetUserData?.email && (
+                    {!getUserMail(targetUserData) && (
                       <Grid item>
                         <StyledChip
                           icon={<EmailIcon></EmailIcon>}

@@ -119,6 +119,7 @@ export type User = {
   walletAddressInfos?: WalletAddressInfo[];
   name?: string;
   email?: string;
+  gmail?: string;
   profileImageUrl?: string;
   rewardPoint?: number;
   userSocial?: { twitterId?: string; telegramUser?: TelegramUserInfo };

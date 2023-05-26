@@ -442,7 +442,7 @@ const Event = (props: AppProps) => {
                     <Card>
                       <CardContent>
                         <LinkTypography
-                          variant={"body2"}
+                          variant={"body1"}
                           href={"#"}
                           sx={{
                             fontWeight: "bold",

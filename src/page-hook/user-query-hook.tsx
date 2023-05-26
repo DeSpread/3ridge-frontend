@@ -44,6 +44,7 @@ export function useUserQuery(props: { name?: string }) {
     name?: string | null;
     profileImageUrl?: string | null;
     email?: string | null;
+    gmail?: string | null;
     rewardPoint?: number | null;
     participatingTickets?: Array<{
       __typename?: "Ticket";
@@ -99,12 +100,14 @@ export function useUserQuery(props: { name?: string }) {
       rewardPoint,
       userSocial,
       participatingTickets,
+      gmail,
     } = data;
     setUserData((prevState) => {
       return {
         ...prevState,
         _id: _id ?? undefined,
         email: email ?? undefined,
+        gmail: gmail ?? undefined,
         name: name ?? undefined,
         profileImageUrl: profileImageUrl ?? undefined,
         walletAddressInfos: wallets?.map((e) => {

@@ -67,6 +67,7 @@ const Home = (props: NextPage<IProps>) => {
             width: "100%",
             backgroundImage: `url("https://3ridge.s3.ap-northeast-2.amazonaws.com/top-section-bg.png")`,
             backgroundSize: "cover",
+            minHeight: "100vh",
           }}
           justifyContent={"center"}
           alignItems={"center"}

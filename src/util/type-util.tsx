@@ -2,6 +2,7 @@ import {
   SUPPORTED_NETWORKS,
   SupportedNetwork,
   Ticket,
+  User,
   WALLET_NAMES,
 } from "../type";
 import { ChainType } from "../__generated__/graphql";
@@ -84,9 +85,19 @@ const filterFeatureEventTickets = (ticketsData: Ticket[]) => {
     });
 };
 
+const getUserMail = (user?: User) => {
+  if (user?.email) {
+    return user?.email;
+  } else if (user?.gmail) {
+    return user?.gmail;
+  }
+  return undefined;
+};
+
 export {
   convertToSuppoertedNetwork,
   convertToChainType,
   convertToWalletName,
   filterFeatureEventTickets,
+  getUserMail,
 };
