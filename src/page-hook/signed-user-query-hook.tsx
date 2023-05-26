@@ -198,7 +198,6 @@ const useSignedUserQuery = () => {
   useEffect(() => {
     try {
       const { network, timestamp } = preference.getTryConnectWallet();
-      console.log("getTryConnectWallet", network, timestamp);
       if (network && timestamp) {
         const accountAddress = getAccountAddress(network);
         if (accountAddress) {
@@ -220,6 +219,7 @@ const useSignedUserQuery = () => {
     name?: string | null;
     profileImageUrl?: string | null;
     email?: string | null;
+    gmail?: string | null;
     rewardPoint?: number | null;
     wallets?: Array<{
       __typename?: "UserWallet";
@@ -248,12 +248,14 @@ const useSignedUserQuery = () => {
       _id,
       rewardPoint,
       userSocial,
+      gmail,
     } = data;
     setUserData((prevState) => {
       return {
         ...prevState,
         _id: _id ?? undefined,
         email: email ?? undefined,
+        gmail: gmail ?? undefined,
         name: name ?? undefined,
         profileImageUrl: profileImageUrl ?? undefined,
         walletAddressInfos: wallets?.map((e) => {

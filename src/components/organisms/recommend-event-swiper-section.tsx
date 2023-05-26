@@ -65,6 +65,7 @@ const RecommendEventSwiperSection = (props: {
       direction={"column"}
       sx={{
         width: "100%",
+        background: "",
       }}
     >
       <Stack
@@ -74,7 +75,14 @@ const RecommendEventSwiperSection = (props: {
         marginBottom={3}
       >
         <Box>
-          <Typography variant={"h5"}>추천 이벤트</Typography>
+          <Typography
+            variant={"h5"}
+            sx={{
+              visibility: props.isLoading ? "hidden" : "visible",
+            }}
+          >
+            추천 이벤트
+          </Typography>
         </Box>
         <Box>
           <IconButton
@@ -93,6 +101,7 @@ const RecommendEventSwiperSection = (props: {
               "&:inactive": {
                 transform: "scale(1)",
               },
+              visibility: props.isLoading ? "hidden" : "visible",
             }}
           >
             <ArrowBackIosNewIcon fontSize={smUp ? "medium" : "small"} />
@@ -112,6 +121,7 @@ const RecommendEventSwiperSection = (props: {
               "&:inactive": {
                 transform: "scale(1)",
               },
+              visibility: props.isLoading ? "hidden" : "visible",
             }}
           >
             <ArrowForwardIosIcon fontSize={smUp ? "medium" : "small"} />

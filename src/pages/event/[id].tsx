@@ -63,6 +63,8 @@ import ContentsRendererDialog from "../../components/dialogs/contents-renderer-d
 import ComponentHelper from "../../helper/component-helper";
 import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
+import LinkTypography from "../../components/atoms/link-typography";
+import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -138,7 +140,7 @@ const Event = (props: AppProps) => {
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
   const [openContentsRendererDialog, setOpenContentsRendererDialog] =
     useState(false);
-  const [openDiscordQuestDialog, setDiscordQuestDialog] = useState(false);
+  const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
@@ -152,9 +154,7 @@ const Event = (props: AppProps) => {
   const [htmlContent, setHtmlContent] = useState("");
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
-
-  console.log(ticketData);
-  console.log(userData?._id);
+  const { setShowSignInDialog } = useSignDialog();
 
   useEffect(() => {
     if (!userData?._id) return;
@@ -441,12 +441,23 @@ const Event = (props: AppProps) => {
                   <>
                     <Card>
                       <CardContent>
-                        <Typography
-                          variant={"h6"}
-                          sx={{ color: theme.palette.warning.main }}
+                        <LinkTypography
+                          variant={"body1"}
+                          href={"#"}
+                          sx={{
+                            fontWeight: "bold",
+                            "&:hover": {
+                              color: "#914e1d",
+                              textDecoration: "underline",
+                            },
+                            color: theme.palette.warning.main,
+                          }}
+                          onClick={async (e) => {
+                            setShowSignInDialog(true);
+                          }}
                         >
                           로그인 후, 이벤트에 참여하실 수 있어요 😅
-                        </Typography>
+                        </LinkTypography>
                       </CardContent>
                     </Card>
                   </>
@@ -770,7 +781,19 @@ const Event = (props: AppProps) => {
                               });
                             }
                           }
-                          setDiscordQuestDialog(true);
+                          let title = "";
+                          if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_DISCORD
+                          ) {
+                            title = "디스코드";
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                            QUEST_POLICY_TYPE.VERIFY_TELEGRAM
+                          ) {
+                            title = "텔레그램";
+                          }
+                          setSimpleWarningDialogTitle(title);
                         } else if (
                           quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
@@ -938,26 +961,57 @@ const Event = (props: AppProps) => {
                       </Box>
                     </Stack>
                     <Divider></Divider>
-                    <Stack
-                      direction={"row"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                    >
-                      <Typography variant={"body1"}>포인트</Typography>
-                      <Stack direction={"row"} alignItems={"center"}>
-                        <Image
-                          src={
-                            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
-                          }
-                          alt={"StarIcon"}
-                          width={48}
-                          height={48}
-                        ></Image>
-                        <Typography variant={"h6"}>
-                          {ticketData?.rewardPolicy?.context?.point ?? 0}
-                        </Typography>
+                    <Box>
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <Typography variant={"body1"}>포인트</Typography>
+                        <Stack direction={"row"} alignItems={"center"}>
+                          <Image
+                            src={
+                              "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
+                            }
+                            alt={"StarIcon"}
+                            width={48}
+                            height={48}
+                          ></Image>
+                          <Typography variant={"h6"}>
+                            {ticketData?.rewardPolicy?.context?.point ?? 0}
+                          </Typography>
+                        </Stack>
                       </Stack>
-                    </Stack>
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <Typography variant={"body1"}>대상자 수</Typography>
+                        <Stack direction={"row"} alignItems={"center"}>
+                          <Typography variant={"h6"}>
+                            {ticketData?.rewardPolicy?.context?.rewardAmount ??
+                              ""}
+                          </Typography>
+                        </Stack>
+                      </Stack>
+                      {ticketData?.rewardPolicy?.context?.rewardName && (
+                        <Stack
+                          direction={"row"}
+                          alignItems={"center"}
+                          justifyContent={"space-between"}
+                          sx={{ paddingTop: 1 }}
+                        >
+                          <Typography variant={"body1"}>리워드</Typography>
+                          <Stack direction={"row"} alignItems={"center"}>
+                            <Typography variant={"h6"}>
+                              {ticketData?.rewardPolicy?.context?.rewardName ??
+                                ""}
+                            </Typography>
+                          </Stack>
+                        </Stack>
+                      )}
+                    </Box>
                   </Stack>
                   <Stack
                     direction={"row"}
@@ -1166,15 +1220,15 @@ const Event = (props: AppProps) => {
         </Grid>
       </Grid>
       <SimpleDialog
-        open={openDiscordQuestDialog}
+        open={simpleWarningDialogTitle ? true : false}
         title={"Notification"}
         onClose={() => {
-          setDiscordQuestDialog(false);
+          setSimpleWarningDialogTitle("");
         }}
       >
         <Typography>
-          Discord 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
-          참여 상태로 유지해주세요.
+          {`${simpleWarningDialogTitle} 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
+          참여 상태로 유지해주세요.`}
         </Typography>
       </SimpleDialog>
       <QuestQuizDialog

@@ -295,7 +295,9 @@ const MainLayout = (props: MainLayoutProps) => {
       <Box sx={{ flex: 1, background: "#0f0e15" }}>
         {props.backgroundComponent}
         <Toolbar></Toolbar>
-        <main>{props.children}</main>
+        <div style={{ minHeight: "100vh" }}>
+          <main>{props.children}</main>
+        </div>
         <footer>{props?.footerComponent}</footer>
       </Box>
 

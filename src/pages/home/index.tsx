@@ -1,4 +1,10 @@
-import React, { ReactElement, useMemo, useRef } from "react";
+import React, {
+  ReactElement,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Box, Stack, useMediaQuery } from "@mui/material";
 import Head from "next/head";
 import MainLayout from "../../layouts/main-layout";
@@ -14,6 +20,7 @@ import useWindowDimensions from "../../page-hook/window-dimensions";
 import BannerOverlayStyleCard from "../../components/molecules/banner-overlay-style-card";
 import RecommendEventSwiperSection from "../../components/organisms/recommend-event-swiper-section";
 import BannerSwiperSection from "../../components/organisms/banner-swiper-section";
+import { filterFeatureEventTickets } from "../../util/type-util";
 
 const Home = () => {
   const theme = useTheme();
@@ -26,6 +33,13 @@ const Home = () => {
   });
   const swiperContainerRef = useRef<HTMLDivElement>(null);
   const [width] = useWindowDimensions();
+  const [pageLoading, setPageLoading] = useState(true);
+
+  useEffect(() => {
+    setPageLoading(false);
+  }, []);
+
+  // console.log(pageLoading);
 
   const swiperWidth = useMemo(() => {
     return width * (lgUp ? 0.85 : mdUp ? 0.75 : 0.85);
@@ -42,6 +56,7 @@ const Home = () => {
             width: "100%",
             backgroundImage: `url("https://3ridge.s3.ap-northeast-2.amazonaws.com/top-section-bg.png")`,
             backgroundSize: "cover",
+            minHeight: "100vh",
           }}
           justifyContent={"center"}
           alignItems={"center"}
@@ -101,7 +116,7 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={ticketsData}
+                  ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Stack>
             </Stack>
@@ -154,7 +169,7 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={ticketsData}
+                  ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Box>
             </Stack>
@@ -169,10 +184,21 @@ const Home = () => {
       <Head>
         <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
-      {smUp ? renderDesktop() : renderMobile()}
+      {!pageLoading && smUp ? renderDesktop() : renderMobile()}
     </>
   );
 };
+
+// Home.getInitialProps = async (ctx: NextPageContext) => {
+//   let mobile;
+//   if (ctx.req) {
+//     const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
+//     mobile = !!md.mobile();
+//   } else {
+//     mobile = isMobileInDevice;
+//   }
+//   return { isMobile: mobile };
+// };
 
 Home.getLayout = (page: ReactElement | ReactElement[]) => (
   <MainLayout footerComponent={<HomeFooter />}>{page}</MainLayout>

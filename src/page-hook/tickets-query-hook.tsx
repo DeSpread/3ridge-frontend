@@ -17,7 +17,7 @@ export function useTicketsQuery(props: {
   sort?: TicketSortType;
 }) {
   const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
-  const [ticketsDataLoading, setTicketsDataLoading] = useState(false);
+  const [ticketsDataLoading, setTicketsDataLoading] = useState(true);
   const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
