@@ -158,6 +158,7 @@ export type FCFSRewardContext = {
   collectionName: string;
   tokenName: string;
   point: number;
+  rewardName?: string;
 };
 
 export type Ticket = {

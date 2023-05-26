@@ -21,19 +21,8 @@ import BannerOverlayStyleCard from "../../components/molecules/banner-overlay-st
 import RecommendEventSwiperSection from "../../components/organisms/recommend-event-swiper-section";
 import BannerSwiperSection from "../../components/organisms/banner-swiper-section";
 import { filterFeatureEventTickets } from "../../util/type-util";
-import { NextPage, NextPageContext } from "next";
-import MobileDetect from "mobile-detect";
-import { isMobile as isMobileInDevice } from "react-device-detect";
-import { AppProps } from "next/app";
 
-interface IProps {
-  isMobile: boolean;
-}
-
-const Home = (props: NextPage<IProps>) => {
-  // // @ts-ignore
-  // const isMobile = props["isMobile"];
-
+const Home = () => {
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));

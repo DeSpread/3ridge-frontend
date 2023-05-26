@@ -961,26 +961,57 @@ const Event = (props: AppProps) => {
                       </Box>
                     </Stack>
                     <Divider></Divider>
-                    <Stack
-                      direction={"row"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                    >
-                      <Typography variant={"body1"}>포인트</Typography>
-                      <Stack direction={"row"} alignItems={"center"}>
-                        <Image
-                          src={
-                            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
-                          }
-                          alt={"StarIcon"}
-                          width={48}
-                          height={48}
-                        ></Image>
-                        <Typography variant={"h6"}>
-                          {ticketData?.rewardPolicy?.context?.point ?? 0}
-                        </Typography>
+                    <Box>
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <Typography variant={"body1"}>포인트</Typography>
+                        <Stack direction={"row"} alignItems={"center"}>
+                          <Image
+                            src={
+                              "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
+                            }
+                            alt={"StarIcon"}
+                            width={48}
+                            height={48}
+                          ></Image>
+                          <Typography variant={"h6"}>
+                            {ticketData?.rewardPolicy?.context?.point ?? 0}
+                          </Typography>
+                        </Stack>
                       </Stack>
-                    </Stack>
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <Typography variant={"body1"}>대상자 수</Typography>
+                        <Stack direction={"row"} alignItems={"center"}>
+                          <Typography variant={"h6"}>
+                            {ticketData?.rewardPolicy?.context?.rewardAmount ??
+                              ""}
+                          </Typography>
+                        </Stack>
+                      </Stack>
+                      {ticketData?.rewardPolicy?.context?.rewardName && (
+                        <Stack
+                          direction={"row"}
+                          alignItems={"center"}
+                          justifyContent={"space-between"}
+                          sx={{ paddingTop: 1 }}
+                        >
+                          <Typography variant={"body1"}>리워드</Typography>
+                          <Stack direction={"row"} alignItems={"center"}>
+                            <Typography variant={"h6"}>
+                              {ticketData?.rewardPolicy?.context?.rewardName ??
+                                ""}
+                            </Typography>
+                          </Stack>
+                        </Stack>
+                      )}
+                    </Box>
                   </Stack>
                   <Stack
                     direction={"row"}

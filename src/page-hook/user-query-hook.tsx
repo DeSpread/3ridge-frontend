@@ -157,6 +157,11 @@ export function useUserQuery(props: { name?: string }) {
                   return { _id: e._id ?? undefined };
                 })
               : undefined,
+            winners: e.winners?.map((_e) => {
+              return {
+                name: _e.name ?? undefined,
+              };
+            }),
           };
         }),
       };

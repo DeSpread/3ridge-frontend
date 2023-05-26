@@ -112,7 +112,8 @@ const Profile = (props: NextPage<IProps>) => {
       metaDataUri: string;
     }[]
   >([]);
-  const [achievementsLoading, setAchievementsLoading] = useState(false);
+
+  // const [achievementsLoading, setAchievementsLoading] = useState(false);
   const resourceFactory = ResourceFactory.getInstance();
   const [selectedNetwork, setSelectedNetwork] = useState("");
 
@@ -156,22 +157,22 @@ const Profile = (props: NextPage<IProps>) => {
       .map((e) => e.network);
   }, targetUserData?.walletAddressInfos);
 
-  useEffect(() => {
-    (async () => {
-      setAchievementsLoading(true);
-      const tokenNames1 = await asyncQueryTokenByUserName();
-      const tokenNames2 = await asyncQueryPendingTokenByUserName();
-      let tokenNames = tokenNames1.concat(tokenNames2);
-      tokenNames = tokenNames.filter((item, index) => {
-        return tokenNames.indexOf(item) == index;
-      });
-      const tokensData = await asyncQueryTokenData(tokenNames);
-      if (tokensData.length > 0) {
-        setTokensData(tokensData);
-      }
-      setAchievementsLoading(false);
-    })();
-  }, [userData]);
+  // useEffect(() => {
+  //   (async () => {
+  //     setAchievementsLoading(true);
+  //     const tokenNames1 = await asyncQueryTokenByUserName();
+  //     const tokenNames2 = await asyncQueryPendingTokenByUserName();
+  //     let tokenNames = tokenNames1.concat(tokenNames2);
+  //     tokenNames = tokenNames.filter((item, index) => {
+  //       return tokenNames.indexOf(item) == index;
+  //     });
+  //     const tokensData = await asyncQueryTokenData(tokenNames);
+  //     if (tokensData.length > 0) {
+  //       setTokensData(tokensData);
+  //     }
+  //     setAchievementsLoading(false);
+  //   })();
+  // }, [userData]);
 
   const asyncQueryPendingTokenByUserName = async () => {
     if (
@@ -316,6 +317,13 @@ const Profile = (props: NextPage<IProps>) => {
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
   }, [selectedNetwork]);
+
+  console.log(
+    userData?.participatingTickets?.filter((e) => {
+      console.log(e.winners);
+      return e.winners?.map((_e) => _e.name).includes(userData?.name);
+    })
+  );
 
   return (
     <>
@@ -511,7 +519,6 @@ const Profile = (props: NextPage<IProps>) => {
                             </Grid>
                           );
                         }
-                        // return <></>;
                       })}
                     {getUserMail(targetUserData) && (
                       <Grid item>
@@ -637,68 +644,127 @@ const Profile = (props: NextPage<IProps>) => {
             {/*--- Achievements ---*/}
             <Stack>
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
-                내 활동 내역
+                리워드 받은 이벤트
               </Typography>
-              <Divider sx={{ borderBottomWidth: 2, paddingTop: 2 }}></Divider>
-              {achievementsLoading && (
-                <Stack
-                  direction={"column"}
-                  alignItems={"center"}
-                  sx={{ marginTop: 4 }}
-                >
-                  <Stack
-                    direction={"row"}
-                    spacing={2}
-                    alignItems={"center"}
-                    sx={{ height: 128 }}
-                  >
-                    <CircularProgress
-                      size="1rem"
-                      sx={{
-                        color: theme.palette.warning.main,
-                      }}
-                    />
-                    <Typography
-                      variant={"h6"}
-                      sx={{ color: theme.palette.warning.main }}
-                    >
-                      Loading ...{" "}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              )}
-              {!achievementsLoading &&
-                (tokensData?.length > 0 ? (
-                  <Grid container={true} spacing={2} sx={{ marginTop: 2 }}>
-                    {tokensData.map((e, index) => {
+              <Divider
+                sx={{ borderBottomWidth: 2, paddingTop: 2, marginBottom: 3 }}
+              ></Divider>
+              {userDataLoading &&
+                [1, 2, 3, 4].map((e) => {
+                  return (
+                    <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
+                      <Skeleton
+                        height={380}
+                        variant={"rounded"}
+                        animation={"wave"}
+                      />
+                    </Grid>
+                  );
+                })}
+              {!userDataLoading &&
+                ((userData?.participatingTickets?.filter((e) => {
+                  return e.winners
+                    ?.map((_e) => _e.name)
+                    .includes(userData?.name);
+                }).length ?? 0) > 0 ? (
+                  userData?.participatingTickets
+                    ?.filter((e) => {
+                      return e.winners
+                        ?.map((_e) => _e.name)
+                        .includes(userData?.name);
+                    })
+                    .map((ticket, index) => {
                       return (
-                        <Grid item key={index}>
-                          <img
-                            src={e?.metaDataUri}
-                            style={{
-                              objectFit: "cover",
-                              width: 96,
-                              borderRadius: 96,
-                              borderColor: theme.palette.neutral[100],
-                              borderStyle: "solid",
-                              borderWidth: 3,
+                        <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
+                          <TicketCard
+                            ticket={ticket}
+                            username={userData?.name}
+                            onClick={async (e) => {
+                              showLoading();
+                              await router.push(`/event/${ticket._id}`);
+                              closeLoading();
                             }}
-                          />
+                            isWinner={true}
+                          ></TicketCard>
                         </Grid>
                       );
-                    })}
-                  </Grid>
+                    })
                 ) : (
-                  <Stack
-                    direction={"column"}
-                    alignItems={"center"}
-                    sx={{ marginTop: 8, marginBottom: 4 }}
-                  >
-                    <Typography variant={"h6"} color={"neutral.500"}>
-                      앗 활동 내역이 없어요 :(
-                    </Typography>
-                  </Stack>
+                  <Grid item sx={{ width: "100%" }}>
+                    <Stack
+                      direction={"row"}
+                      justifyContent={"center"}
+                      sx={{
+                        marginTop: 8,
+                        marginBottom: 16,
+                        width: "100%",
+                      }}
+                    >
+                      <Typography variant={"h6"} color={"neutral.500"}>
+                        리워드 받은 이벤트가 없습니다
+                      </Typography>
+                    </Stack>
+                  </Grid>
                 ))}
+              {/*{achievementsLoading && (*/}
+              {/*  <Stack*/}
+              {/*    direction={"column"}*/}
+              {/*    alignItems={"center"}*/}
+              {/*    sx={{ marginTop: 4 }}*/}
+              {/*  >*/}
+              {/*    <Stack*/}
+              {/*      direction={"row"}*/}
+              {/*      spacing={2}*/}
+              {/*      alignItems={"center"}*/}
+              {/*      sx={{ height: 128 }}*/}
+              {/*    >*/}
+              {/*      <CircularProgress*/}
+              {/*        size="1rem"*/}
+              {/*        sx={{*/}
+              {/*          color: theme.palette.warning.main,*/}
+              {/*        }}*/}
+              {/*      />*/}
+              {/*      <Typography*/}
+              {/*        variant={"h6"}*/}
+              {/*        sx={{ color: theme.palette.warning.main }}*/}
+              {/*      >*/}
+              {/*        Loading ...{" "}*/}
+              {/*      </Typography>*/}
+              {/*    </Stack>*/}
+              {/*  </Stack>*/}
+              {/*)}*/}
+              {/*{!achievementsLoading &&*/}
+              {/*  (tokensData?.length > 0 ? (*/}
+              {/*    <Grid container={true} spacing={2} sx={{ marginTop: 2 }}>*/}
+              {/*      {tokensData.map((e, index) => {*/}
+              {/*        return (*/}
+              {/*          <Grid item key={index}>*/}
+              {/*            <img*/}
+              {/*              src={e?.metaDataUri}*/}
+              {/*              style={{*/}
+              {/*                objectFit: "cover",*/}
+              {/*                width: 96,*/}
+              {/*                borderRadius: 96,*/}
+              {/*                borderColor: theme.palette.neutral[100],*/}
+              {/*                borderStyle: "solid",*/}
+              {/*                borderWidth: 3,*/}
+              {/*              }}*/}
+              {/*            />*/}
+              {/*          </Grid>*/}
+              {/*        );*/}
+              {/*      })}*/}
+              {/*    </Grid>*/}
+              {/*  ) : (*/}
+              {/*    <Stack*/}
+              {/*      direction={"column"}*/}
+              {/*      alignItems={"center"}*/}
+              {/*      sx={{ marginTop: 8, marginBottom: 4 }}*/}
+              {/*    >*/}
+              {/*      <Typography variant={"h6"} color={"neutral.500"}>*/}
+              {/*        앗 활동 내역이 없어요 :(*/}
+              {/*      </Typography>*/}
+              {/*    </Stack>*/}
+              {/*  ))}*/}
             </Stack>
             <Box sx={{ height: 4 }}></Box>
             {/*--- Participating event ---*/}
