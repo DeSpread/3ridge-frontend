@@ -17,7 +17,7 @@ const Explore = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>3ridge : 국내 Web3 플랫폼</title>
+        <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
       <Box
         style={{

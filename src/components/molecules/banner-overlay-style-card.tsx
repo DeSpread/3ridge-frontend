@@ -85,10 +85,10 @@ const BanenrOverlayStyleCard = (props: EventCardProps) => {
             </Box>
             <Box sx={{ marginTop: 3 }}>
               <Typography variant={"h5"} textAlign={"left"}>
-                웹3, 다양한 경험에
+                여러분의 웹3를 위한 여정,
               </Typography>
               <Typography variant={"h5"} textAlign={"left"}>
-                함께 참여하세요!
+                웹3 온보딩 플랫폼 3ridge에서 시작하세요
               </Typography>
             </Box>
           </Stack>

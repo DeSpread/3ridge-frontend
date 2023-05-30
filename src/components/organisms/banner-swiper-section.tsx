@@ -73,8 +73,10 @@ const BannerSwiperSection = (props: { width: number | string }) => {
                         >
                           <Stack direction={"column"} alignItems={"flex-start"}>
                             <Typography variant={"h3"} textAlign={"left"}>
-                              여러분의 웹3를 위한 여정! 웹3 온보딩 플랫폼
-                              3ridge에서 시작하세요
+                              여러분의 웹3를 위한 여정,
+                            </Typography>
+                            <Typography variant={"h3"} textAlign={"left"}>
+                              웹3 온보딩 플랫폼 3ridge에서 시작하세요
                             </Typography>
                           </Stack>
                           <Stack direction={"column"} alignItems={"flex-end"}>

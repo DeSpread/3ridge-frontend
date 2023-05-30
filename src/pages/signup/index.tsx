@@ -77,7 +77,7 @@ const Signup = () => {
   return (
     <>
       <Head>
-        <title>3ridge : 국내 Web3 플랫폼</title>
+        <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
       <div
         style={{ flex: 1, background: "", minHeight: `calc(100vh - 140px)` }}

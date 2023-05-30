@@ -33,7 +33,7 @@ const Projects = () => {
   return (
     <>
       <Head>
-        <title>3ridge : 국내 Web3 플랫폼</title>
+        <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
       <Box
         style={{
@@ -60,17 +60,17 @@ const Projects = () => {
           <Stack direction={"row"} spacing={1}>
             <Typography variant={"h4"}>전체 프로젝트</Typography>
           </Stack>
-          <Stack direction={"row"} spacing={1}>
-            <Link
-              href="https://airtable.com/shr406tfeuXcHz1o0"
-              color="inherit"
-              underline="hover"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <PrimaryButton fullWidth={true}>프로젝트 등록</PrimaryButton>
-            </Link>
-          </Stack>
+          {/*<Stack direction={"row"} spacing={1}>*/}
+          {/*  <Link*/}
+          {/*    href="https://airtable.com/shr406tfeuXcHz1o0"*/}
+          {/*    color="inherit"*/}
+          {/*    underline="hover"*/}
+          {/*    target="_blank"*/}
+          {/*    rel="noreferrer"*/}
+          {/*  >*/}
+          {/*    <PrimaryButton fullWidth={true}>프로젝트 등록</PrimaryButton>*/}
+          {/*  </Link>*/}
+          {/*</Stack>*/}
         </Stack>
         <Grid
           container

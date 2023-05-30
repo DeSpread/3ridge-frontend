@@ -114,23 +114,23 @@ const HomeFooter = () => {
           </SecondaryButton>
         </Stack>
         <Stack direction={"row"}>
-          {smUp ? (
-            <Link
-              href="https://airtable.com/shr406tfeuXcHz1o0"
-              color="inherit"
-              underline="hover"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Typography variant={smUp ? "body1" : "caption"}>
-                프로젝트 등록
-              </Typography>
-            </Link>
-          ) : (
-            <IconButton href={"https://airtable.com/shr406tfeuXcHz1o0"}>
-              <AppRegistrationIcon></AppRegistrationIcon>
-            </IconButton>
-          )}
+          {/*{smUp ? (*/}
+          {/*  <Link*/}
+          {/*    href="https://airtable.com/shr406tfeuXcHz1o0"*/}
+          {/*    color="inherit"*/}
+          {/*    underline="hover"*/}
+          {/*    target="_blank"*/}
+          {/*    rel="noreferrer"*/}
+          {/*  >*/}
+          {/*    <Typography variant={smUp ? "body1" : "caption"}>*/}
+          {/*      프로젝트 등록*/}
+          {/*    </Typography>*/}
+          {/*  </Link>*/}
+          {/*) : (*/}
+          {/*  <IconButton href={"https://airtable.com/shr406tfeuXcHz1o0"}>*/}
+          {/*    <AppRegistrationIcon></AppRegistrationIcon>*/}
+          {/*  </IconButton>*/}
+          {/*)}*/}
           {smUp ? (
             <Link
               href="https://twitter.com/3ridge_xyz"

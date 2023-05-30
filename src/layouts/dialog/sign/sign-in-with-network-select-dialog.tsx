@@ -15,61 +15,6 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
     <Stack sx={{ width: "100%" }} spacing={2}>
       <SecondaryButton
         onClick={(e) => {
-          props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.APTOS);
-        }}
-      >
-        <Stack
-          sx={{ width: "100%" }}
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Stack
-            sx={{ width: 120, background: "" }}
-            direction={"row"}
-            alignItems={"center"}
-            spacing={1}
-          >
-            <AptosIcon width={24} height={24}></AptosIcon>
-            <Typography variant={"body2"} className={"MuiTypography"}>
-              APTOS
-            </Typography>
-          </Stack>
-        </Stack>
-      </SecondaryButton>
-      <SecondaryButton
-        onClick={(e) => {
-          props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.SUI);
-        }}
-      >
-        <Stack
-          sx={{ width: "100%" }}
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Stack
-            sx={{ width: 120, background: "" }}
-            direction={"row"}
-            alignItems={"center"}
-            spacing={1}
-          >
-            <Image
-              src={
-                "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg"
-              }
-              alt={"sui"}
-              width={24}
-              height={24}
-            ></Image>
-            <Typography variant={"body2"} className={"MuiTypography"}>
-              SUI
-            </Typography>
-          </Stack>
-        </Stack>
-      </SecondaryButton>
-      <SecondaryButton
-        onClick={(e) => {
           props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.EVM);
         }}
       >
@@ -102,8 +47,66 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
       </SecondaryButton>
       <SecondaryButton
         onClick={(e) => {
+          props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.APTOS);
+        }}
+        disabled={true}
+      >
+        <Stack
+          sx={{ width: "100%" }}
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          <Stack
+            sx={{ width: 120, background: "" }}
+            direction={"row"}
+            alignItems={"center"}
+            spacing={1}
+          >
+            <AptosIcon width={24} height={24}></AptosIcon>
+            <Typography variant={"body2"} className={"MuiTypography"}>
+              APTOS
+            </Typography>
+          </Stack>
+        </Stack>
+      </SecondaryButton>
+      <SecondaryButton
+        onClick={(e) => {
+          props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.SUI);
+        }}
+        disabled={true}
+      >
+        <Stack
+          sx={{ width: "100%" }}
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          <Stack
+            sx={{ width: 120, background: "" }}
+            direction={"row"}
+            alignItems={"center"}
+            spacing={1}
+          >
+            <Image
+              src={
+                "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg"
+              }
+              alt={"sui"}
+              width={24}
+              height={24}
+            ></Image>
+            <Typography variant={"body2"} className={"MuiTypography"}>
+              SUI
+            </Typography>
+          </Stack>
+        </Stack>
+      </SecondaryButton>
+      <SecondaryButton
+        onClick={(e) => {
           props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.STACKS);
         }}
+        disabled={true}
       >
         <Stack
           sx={{ width: "100%" }}
