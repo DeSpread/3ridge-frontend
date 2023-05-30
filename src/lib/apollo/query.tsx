@@ -290,8 +290,12 @@ export const UPDATE_USER_TELEGRAM_BY_NAME = gql(/* GraphQL */ `
 `);
 
 export const GET_TICKETS = gql(/* GraphQL */ `
-  query Tickets($sort: TicketSortType, $status: TicketStatusType) {
-    tickets(sort: $sort, status: $status) {
+  query Tickets(
+    $sort: TicketSortType
+    $status: TicketStatusType
+    $isVisibleOnly: Boolean
+  ) {
+    tickets(sort: $sort, status: $status, isVisibleOnly: $isVisibleOnly) {
       _id
       beginTime
       untilTime

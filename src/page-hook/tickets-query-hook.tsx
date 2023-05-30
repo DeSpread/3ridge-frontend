@@ -11,6 +11,12 @@ import {
   TicketStatusType,
 } from "../__generated__/graphql";
 
+const ticketIsVisibleOnly =
+  (process.env["NEXT_PUBLIC_TICKET_VISIBLE"] ?? "false").toLowerCase() ===
+  "true"
+    ? true
+    : false;
+
 export function useTicketsQuery(props: {
   projectId?: string;
   filterType?: FilterType;
@@ -41,6 +47,7 @@ export function useTicketsQuery(props: {
           variables: {
             sort: props.sort,
             status,
+            isVisibleOnly: ticketIsVisibleOnly,
           },
         });
         updateSetTicketsData(data.tickets);

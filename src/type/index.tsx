@@ -163,6 +163,12 @@ export type FCFSRewardContext = {
   rewardName?: string;
 };
 
+export type ParticipantInfo = {
+  _id?: string;
+  name?: string;
+  profileImageUrl?: string;
+};
+
 export type Ticket = {
   _id?: string;
   title?: string;
@@ -170,7 +176,7 @@ export type Ticket = {
   untilTime?: string;
   description?: string;
   completed?: boolean;
-  participants?: { _id?: string; name?: string; profileImageUrl?: string }[];
+  participants?: ParticipantInfo[];
   quests?: PartialQuest[];
   imageUrl?: string;
   rewardPolicy?: {
