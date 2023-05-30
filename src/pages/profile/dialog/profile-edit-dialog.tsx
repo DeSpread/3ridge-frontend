@@ -243,10 +243,14 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                         (addrInfo) => addrInfo.network === e
                       )?.[0];
 
+                    const isDisAllowed =
+                      ALLOWED_NETWORKS.filter((value) => value !== e).length >=
+                      0; // FIXME: 확인 필요
+
                     return (
                       <Box sx={{ width: "100%" }} key={i}>
                         <ValidatorButton
-                          disabled={!ALLOWED_NETWORKS.includes(e)} // FIXME: type strict 하게 할수 있는지 점검
+                          disabled={isDisAllowed}
                           label={e.toUpperCase()}
                           svgIcon={resourceFactory.getValidatorButtonSvg(e)}
                           onClick={props.walletValidatorButtonOnClick}
