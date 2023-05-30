@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import React, { MouseEventHandler } from "react";
 import {
+  ALLOWED_NETWORKS,
   ReversibleSvgIconProps,
   SUPPORTED_NETWORKS,
   User,
@@ -245,6 +246,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                     return (
                       <Box sx={{ width: "100%" }} key={i}>
                         <ValidatorButton
+                          disabled={!ALLOWED_NETWORKS.includes(e)} // FIXME: type strict 하게 할수 있는지 점검
                           label={e.toUpperCase()}
                           svgIcon={resourceFactory.getValidatorButtonSvg(e)}
                           onClick={props.walletValidatorButtonOnClick}

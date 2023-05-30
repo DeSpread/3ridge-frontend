@@ -38,6 +38,7 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
       }}
       sx={props.sx}
       fullWidth={props.fullWidth}
+      disabled={props.disabled}
     >
       <Stack
         direction={"row"}

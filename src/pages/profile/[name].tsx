@@ -426,6 +426,7 @@ const Profile = (props: NextPage<IProps>) => {
                     rowSpacing={1}
                   >
                     {Object.values(SUPPORTED_NETWORKS)
+                      .filter((network) => network === SUPPORTED_NETWORKS.EVM) // FIXME: 이더리움만 현재는 나오게끔 하지만, 다른 체인을 보여주고 disabled 하는게 더 좋아보임
                       .filter(
                         (_, index) =>
                           index !== Object.values(SUPPORTED_NETWORKS).length - 1

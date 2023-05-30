@@ -39,6 +39,8 @@ export const SUPPORTED_NETWORKS = {
   UNKNOWN: "unknown",
 } as const;
 
+export const ALLOWED_NETWORKS = [SUPPORTED_NETWORKS.EVM];
+
 export const SUPPORTED_NETWORKS_VALUES = Object.values(SUPPORTED_NETWORKS)
   .filter((_, index) => index !== Object.values(SUPPORTED_NETWORKS).length - 1)
   .map((e) => e.toString());
