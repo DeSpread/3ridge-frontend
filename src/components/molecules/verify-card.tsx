@@ -33,6 +33,7 @@ type VerifyCardProps = PropsWithChildren & {
   autoVerified?: boolean;
   disabled?: boolean;
   hideStartButton?: boolean;
+  overrideConfirmBtnLabel?: string;
 };
 
 const VerifyCard = (props: VerifyCardProps) => {
@@ -41,6 +42,10 @@ const VerifyCard = (props: VerifyCardProps) => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
+
+  const getConfirmBtnLabel = () => {
+    return props.overrideConfirmBtnLabel ?? "확인하기";
+  };
 
   return (
     <>
@@ -172,8 +177,8 @@ const VerifyCard = (props: VerifyCardProps) => {
                       : props.verified
                       ? "완료"
                       : props.autoVerified
-                      ? "확인하기"
-                      : "확인하기"}
+                      ? getConfirmBtnLabel()
+                      : getConfirmBtnLabel()}
                   </PrimaryButton>
                   <div
                     style={{
