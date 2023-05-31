@@ -67,6 +67,7 @@ import LinkTypography from "../../components/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 import { gql, request } from "graphql-request";
 import { findEmailQuests } from "../../util/type-util";
+import { useMobile } from "../../provider/mobile/mobile-context";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -161,6 +162,7 @@ const Event = (props: AppProps) => {
   const [initVerifiedList, setInitVerifiedList] = useState(false);
   const [eventDespHtmlContent, setEventDespHtmlContent] = useState("");
   const [lockUpdateVerifyAll, setLockUpdateVerifyAll] = useState(false);
+  const { isMobile } = useMobile();
 
   useEffect(() => {
     updateVerifyAll();
@@ -350,6 +352,39 @@ const Event = (props: AppProps) => {
     setShowProfileEditDialog(true);
     await router.push(`/profile/${userData?.name}`);
     closeLoading();
+  };
+
+  const showTwitterConnectAlert = () => {
+    if (!userData?.userSocial?.twitterId) {
+      showAlert({
+        title: "알림",
+        content: (
+          <>
+            <Typography>먼저 twitter id를 연동해주세요</Typography>
+            <LinkTypography
+              variant={"body1"}
+              onClick={async () => {
+                closeAlert();
+                await asyncGoToProfileAndEditDialogOpen();
+              }}
+              href={"#"}
+              sx={{
+                fontWeight: "bold",
+                "&:hover": {
+                  color: "#914e1d",
+                  textDecoration: "underline",
+                },
+                color: theme.palette.warning.main,
+              }}
+            >
+              프로필 연동하러 가기
+            </LinkTypography>
+          </>
+        ),
+      });
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -710,6 +745,10 @@ const Event = (props: AppProps) => {
                             quest.questPolicy?.questPolicy ===
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
                           ) {
+                            if (showTwitterConnectAlert()) {
+                              myEvent.params.callback("success");
+                              return;
+                            }
                             await asyncVerifyTwitterFollowQuest(
                               ticketData._id,
                               quest._id ?? ""
@@ -720,6 +759,10 @@ const Event = (props: AppProps) => {
                             quest.questPolicy?.questPolicy ===
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
                           ) {
+                            if (showTwitterConnectAlert()) {
+                              myEvent.params.callback("success");
+                              return;
+                            }
                             await asyncVerifyTwitterRetweetQuest(
                               ticketData._id,
                               quest._id ?? ""
@@ -730,6 +773,10 @@ const Event = (props: AppProps) => {
                             quest.questPolicy?.questPolicy ===
                             QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
                           ) {
+                            if (showTwitterConnectAlert()) {
+                              myEvent.params.callback("success");
+                              return;
+                            }
                             await asyncVerifyTwitterLikingQuest(
                               ticketData._id,
                               quest._id ?? ""
@@ -809,12 +856,6 @@ const Event = (props: AppProps) => {
                           QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
                         ) {
                           try {
-                            if (!userData?.userSocial?.twitterId) {
-                              showLoading();
-                              const res = await asyncTwitterSignInPopUp();
-                              await asyncUpdateSocialTwitter(res);
-                              closeLoading();
-                            }
                             const followQuestContext = quest.questPolicy
                               .context as TwitterFollowQuestContext;
                             window.open(
@@ -830,17 +871,6 @@ const Event = (props: AppProps) => {
                           quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
                         ) {
-                          try {
-                            if (!userData?.userSocial?.twitterId) {
-                              showLoading();
-                              const res = await asyncTwitterSignInPopUp();
-                              await asyncUpdateSocialTwitter(res);
-                              closeLoading();
-                            }
-                          } catch (e) {
-                            closeLoading();
-                            showErrorAlert({ content: getErrorMessage(e) });
-                          }
                           const likingQuestContext = quest.questPolicy
                             .context as TwitterLikingQuestContext;
                           console.log(likingQuestContext);
@@ -854,12 +884,6 @@ const Event = (props: AppProps) => {
                           QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
                         ) {
                           try {
-                            if (!userData?.userSocial?.twitterId) {
-                              showLoading();
-                              const res = await asyncTwitterSignInPopUp();
-                              await asyncUpdateSocialTwitter(res);
-                              closeLoading();
-                            }
                             const retweetQuestContext = quest.questPolicy
                               .context as TwitterRetweetQuestContext;
                             console.log(retweetQuestContext);
