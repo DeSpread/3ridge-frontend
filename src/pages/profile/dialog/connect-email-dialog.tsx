@@ -8,6 +8,7 @@ import {
   IconButton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { MouseEventHandler, useState } from "react";
@@ -53,6 +54,8 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
   const [code, setCode] = useState("");
   const [codeErrorMessage, setCodeErrorMessage] = useState("");
   const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <Dialog
@@ -84,7 +87,7 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
             direction={"column"}
             sx={{
               background: "",
-              minWidth: "500px",
+              minWidth: smUp ? "500px" : "",
               paddingTop: 4,
               marginBottom: 12,
             }}
@@ -104,31 +107,97 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                   placeholder={"Email Address"}
                   sx={{ width: "100%" }}
                 ></MailTextField>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    background: "",
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                {smUp && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      background: "",
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SecondaryButton
+                      disabled={!validateMail(mail) || authLoading || count > 0}
+                      color={"secondary"}
+                      variant={"contained"}
+                      sx={{
+                        borderRadius: "11px",
+                        borderTopLeftRadius: 0,
+                        borderBottomLeftRadius: 0,
+                        height: "100%",
+                        width: 120,
+                        borderColor: "transparent",
+                        background: "transparent",
+                      }}
+                      size={"small"}
+                      onClick={async (e) => {
+                        try {
+                          if (count > 0) {
+                            return;
+                          }
+                          setAuthLoading(true);
+                          setCodeErrorMessage("");
+                          const res =
+                            await AwsClient.getInstance().asyncRequestAuthCodeMail(
+                              mail
+                            );
+                          if (res.status === 204) {
+                            setCount(60);
+                            let _vDate = addSeconds(new Date(), 61);
+                            let intervalId = setInterval(() => {
+                              const now = new Date();
+                              //@ts-ignore
+                              const distDt = _vDate - now;
+                              setCount((prevState) => {
+                                return prevState > 0 ? prevState - 1 : 0;
+                              });
+                              if (distDt < 0) {
+                                clearInterval(intervalId);
+                                setCount(0);
+                                return;
+                              }
+                            }, 1000);
+                          } else {
+                            const data = await res.text();
+                            const message = JSON.parse(data).message;
+                            showErrorAlert({ content: message });
+                          }
+                        } catch (e) {
+                          setCount(0);
+                          showErrorAlert({ content: getLocaleErrorMessage(e) });
+                        } finally {
+                          setAuthLoading(false);
+                        }
+                      }}
+                    >
+                      {authLoading && (
+                        <CircularProgress size={16}></CircularProgress>
+                      )}
+                      {!authLoading && count === 0 && "인증 메일 전송"}
+                      {!authLoading && count > 0 && `${count.toString()}초`}
+                    </SecondaryButton>
+                  </div>
+                )}
+                {!smUp && (
                   <SecondaryButton
                     disabled={!validateMail(mail) || authLoading || count > 0}
                     color={"secondary"}
                     variant={"contained"}
                     sx={{
                       borderRadius: "11px",
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
+                      borderWidth: 1,
+                      // borderTopLeftRadius: 0,
+                      // borderBottomLeftRadius: 0,
                       height: "100%",
-                      width: 120,
-                      borderColor: "transparent",
+                      width: "100%",
+                      // borderColor: "transparent",
                       background: "transparent",
+                      marginTop: 1,
                     }}
                     size={"small"}
                     onClick={async (e) => {
@@ -177,7 +246,7 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                     {!authLoading && count === 0 && "인증 메일 전송"}
                     {!authLoading && count > 0 && `${count.toString()}초`}
                   </SecondaryButton>
-                </div>
+                )}
               </Box>
               {/* ---  --- */}
               {count > 0 && (
