@@ -98,7 +98,7 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
               alt={"sui"}
               width={24}
               height={24}
-              // style={{ mixBlendMode: "luminosity" }}
+              style={{ mixBlendMode: "luminosity" }}
             ></Image>
             <Typography variant={"body2"} className={"MuiTypography"}>
               SUI
@@ -137,7 +137,7 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
                 borderWidth: 1,
                 borderStyle: "solid",
                 borderColor: "white",
-                // mixBlendMode: "luminosity",
+                mixBlendMode: "luminosity",
               }}
             ></Image>
             <Typography variant={"body2"} className={"MuiTypography"}>
