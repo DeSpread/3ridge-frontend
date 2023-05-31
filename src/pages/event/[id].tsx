@@ -282,6 +282,7 @@ const Event = (props: AppProps) => {
   }, [verifiedList, updateIndex]);
 
   const walletConnectedForTicket = useMemo(() => {
+    if (!ticketData.rewardPolicy?.context?.rewardChain) return true;
     return (
       (userData?.walletAddressInfos
         ?.filter((e) => e.address)
