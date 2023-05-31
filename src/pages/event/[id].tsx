@@ -270,6 +270,19 @@ const Event = (props: AppProps) => {
     return (userData?._id ? false : true) || !walletConnectedForTicket;
   };
 
+  const isExceededTicketParticipants = () => {
+    if (
+      ticketData?.participantCount &&
+      ticketData?.rewardPolicy?.context?.limitNumber
+    ) {
+      return (
+        ticketData?.participantCount >=
+        ticketData?.rewardPolicy?.context?.limitNumber
+      );
+    }
+    return true;
+  };
+
   return (
     <>
       <Head>
@@ -452,7 +465,31 @@ const Event = (props: AppProps) => {
                 </Stack>
               </Grid>
             </Grid>
-            {userData?._id === undefined && (
+            {isExceededTicketParticipants() && (
+              <Box sx={{}}>
+                <>
+                  <Card>
+                    <CardContent>
+                      <Typography
+                        variant={"body1"}
+                        sx={{
+                          color: theme.palette.warning.main,
+                          marginTop: smUp ? 0 : -5,
+                          background: "",
+                          textAlign: smUp ? "left" : "center",
+                        }}
+                      >
+                        최대 참여자{" "}
+                        {ticketData?.rewardPolicy?.context?.limitNumber}명을
+                        초과하여 이벤트에 참여하실 수 없습니다 😅
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </>
+              </Box>
+            )}
+
+            {!isExceededTicketParticipants && userData?._id === undefined && (
               <Box sx={{}}>
                 <Typography
                   variant={smUp ? "h5" : "h6"}
@@ -574,7 +611,10 @@ const Event = (props: AppProps) => {
                       index={index + 1}
                       title={quest.title}
                       description={quest.description}
-                      disabled={userData?._id ? false : true}
+                      disabled={
+                        (userData?._id ? false : true) ||
+                        isExceededTicketParticipants()
+                      }
                       verified={verifiedList[index]}
                       hideStartButton={
                         quest.questPolicy?.questPolicy ===
