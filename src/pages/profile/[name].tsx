@@ -61,6 +61,7 @@ import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import { useMobile } from "../../provider/mobile/mobile-context";
+import { goToMetaMaskDeppLinkWhenMobile } from "../../util/eth-util";
 
 const Profile = () => {
   const router = useRouter();
@@ -842,6 +843,9 @@ const Profile = () => {
         onWalletSelected={({ name, value }) => {
           const walletName = convertToWalletName(value);
           if (!walletName) return;
+          if (goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
+            return;
+          }
           (async () => {
             try {
               showLoading();
