@@ -1157,26 +1157,31 @@ const Event = (props: AppProps) => {
                       )}
                     </Box>
                   </Stack>
-                  <Stack
-                    direction={"row"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    spacing={1}
-                  >
-                    <img
-                      src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
-                      width={32}
-                      height={32}
-                      style={{
-                        background: theme.palette.neutral[100],
-                        borderRadius: 16,
-                        padding: 5,
-                      }}
-                    />
-                    <Typography variant={"body2"}>
-                      {ticketData.rewardPolicy?.context?.rewardChain} 체인 지원
-                    </Typography>
-                  </Stack>
+                  {ticketData.rewardPolicy?.context?.rewardChain ? (
+                    <Stack
+                      direction={"row"}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      spacing={1}
+                    >
+                      <img
+                        src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
+                        width={32}
+                        height={32}
+                        style={{
+                          background: theme.palette.neutral[100],
+                          borderRadius: 16,
+                          padding: 5,
+                        }}
+                      />
+                      <Typography variant={"body2"}>
+                        {ticketData.rewardPolicy?.context?.rewardChain} 체인
+                        지원
+                      </Typography>
+                    </Stack>
+                  ) : (
+                    <div style={{ marginBottom: -28 }}></div>
+                  )}
                 </Stack>
               </PrimaryCard>
               <LoadingButton
