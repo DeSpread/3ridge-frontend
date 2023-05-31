@@ -26,11 +26,11 @@ const footerData = [
     subMenus: [
       {
         title: "Email Us",
-        url: "mailto:support@3ridge.xyz?subject=%F0%9F%91%8B",
+        url: "mailto:support@3ridge.io?subject=%F0%9F%91%8B",
       },
       {
         title: "Twitter",
-        url: "https://twitter.com/3ridge_xyz",
+        url: "https://twitter.com/3ridge_io",
       },
       {
         title: "Discord",

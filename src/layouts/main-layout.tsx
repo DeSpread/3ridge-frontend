@@ -56,7 +56,7 @@ import {
 } from "../util/type-util";
 import ResourceFactory from "../helper/resource-factory";
 import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
-import ContentsRendererDialog from "../components/dialogs/contents-renderer-dialog";
+import { useMobile } from "../provider/mobile/mobile-context";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -113,6 +113,8 @@ const MainLayout = (props: MainLayoutProps) => {
   const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
     useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState("");
+  const { isMobile } = useMobile();
+  const homeUri = process.env["NEXT_PUBLIC_HOME_URI"];
 
   const { showErrorAlert, showAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
@@ -418,11 +420,21 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         walletInfos={(() => {
           return resourceFactory.getWalletInfos(
-            convertToSuppoertedNetwork(selectedNetwork)
+            convertToSuppoertedNetwork(selectedNetwork),
+            isMobile
           );
         })()}
         onWalletSelected={({ name, value }) => {
           const walletName = convertToWalletName(value);
+          if (
+            isMobile &&
+            (walletName === WALLET_NAMES.META_MASK ||
+              walletName === WALLET_NAMES.COINBASE_WALLET)
+          ) {
+            location.href = `https://metamask.app.link/dapp/${homeUri}/`;
+            return;
+          }
+
           walletSignUp(
             { network: selectedNetwork as SupportedNetwork, name: walletName },
             {

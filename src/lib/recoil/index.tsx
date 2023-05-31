@@ -16,3 +16,8 @@ export const userDataState = atom<User>({
   key: `userDataState/${v1()}`,
   default: {},
 });
+
+export const isMobileState = atom({
+  key: `isMobileState/${v1()}`,
+  default: false,
+});

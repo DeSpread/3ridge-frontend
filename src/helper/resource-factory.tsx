@@ -52,7 +52,7 @@ class ResourceFactory {
     return undefined;
   };
 
-  getWalletInfos = (network: SupportedNetwork) => {
+  getWalletInfos = (network: SupportedNetwork, isMobileBrowser: boolean) => {
     if (network === SUPPORTED_NETWORKS.APTOS) {
       return [
         {
@@ -71,7 +71,7 @@ class ResourceFactory {
           value: WALLET_NAMES.SUI_WALLET,
         },
       ];
-    } else if (network === SUPPORTED_NETWORKS.EVM) {
+    } else if (network === SUPPORTED_NETWORKS.EVM && !isMobileBrowser) {
       return [
         {
           imageUrl:
@@ -84,6 +84,15 @@ class ResourceFactory {
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/coinbase.svg",
           name: "Coinbase",
           value: WALLET_NAMES.COINBASE_WALLET,
+        },
+      ];
+    } else if (network === SUPPORTED_NETWORKS.EVM && isMobileBrowser) {
+      return [
+        {
+          imageUrl:
+            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/metamask-fox.svg",
+          name: "MetaMask",
+          value: WALLET_NAMES.META_MASK,
         },
       ];
     } else if (network === SUPPORTED_NETWORKS.STACKS) {

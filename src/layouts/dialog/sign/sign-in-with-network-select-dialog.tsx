@@ -96,6 +96,9 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
               width={24}
               height={24}
             ></Image>
+            {/*<Box*/}
+            {/*  sx={{ width: "24px", height: "24px", background: "red" }}*/}
+            {/*></Box>*/}
             <Typography variant={"body2"} className={"MuiTypography"}>
               SUI
             </Typography>
