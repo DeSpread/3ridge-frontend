@@ -279,15 +279,15 @@ const Event = (props: AppProps) => {
 
   const isExceededTicketParticipants = () => {
     if (
-      ticketData?.participantCount &&
-      ticketData?.rewardPolicy?.context?.limitNumber
+      ticketData?.participantCount !== undefined &&
+      ticketData?.rewardPolicy?.context?.limitNumber !== undefined
     ) {
       return (
         ticketData?.participantCount >=
         ticketData?.rewardPolicy?.context?.limitNumber
       );
     }
-    return true;
+    return false;
   };
 
   return (
