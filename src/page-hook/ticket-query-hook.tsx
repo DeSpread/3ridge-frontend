@@ -52,6 +52,7 @@ export function useTicketQuery({
         description,
         completed,
         participants,
+        participantCount,
         quests,
         rewardPolicy,
         winners,
@@ -78,6 +79,7 @@ export function useTicketQuery({
               profileImageUrl: e.profileImageUrl ?? undefined,
             };
           }),
+          participantCount: participantCount ?? undefined,
           imageUrl: imageUrl ?? undefined,
           quests: quests?.map((e) => {
             return {

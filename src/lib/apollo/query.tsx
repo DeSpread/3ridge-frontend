@@ -350,6 +350,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
         name
         profileImageUrl
       }
+      participantCount
       imageUrl
       quests {
         _id

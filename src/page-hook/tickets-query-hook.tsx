@@ -80,6 +80,7 @@ export function useTicketsQuery(props: {
         name?: string | null;
         profileImageUrl?: string | null;
       }> | null;
+      participantCount?: number | null;
       quests?: Array<{
         __typename?: "Quest";
         _id?: string | null;
@@ -130,6 +131,7 @@ export function useTicketsQuery(props: {
               profileImageUrl: _e.profileImageUrl ?? undefined,
             };
           }),
+          participantCount: e.participantCount ?? undefined,
           imageUrl: e.imageUrl ?? undefined,
           quests: e.quests?.map((_e) => {
             return {

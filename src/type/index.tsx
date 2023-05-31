@@ -171,6 +171,7 @@ export type Ticket = {
   description?: string;
   completed?: boolean;
   participants?: { _id?: string; name?: string; profileImageUrl?: string }[];
+  participantCount?: number;
   quests?: PartialQuest[];
   imageUrl?: string;
   rewardPolicy?: {
