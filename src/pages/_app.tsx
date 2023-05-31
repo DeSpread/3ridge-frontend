@@ -1,7 +1,9 @@
 import "../styles/globals.css";
+
 import React, { ReactElement, ReactNode, useEffect } from "react";
-import type { AppProps } from "next/app";
-import type { NextPage } from "next";
+import type { AppContext, AppProps } from "next/app";
+import NextApp from "next/app";
+import type { NextPage, NextPageContext } from "next";
 import { createTheme } from "../theme";
 import { ThemeProvider } from "@mui/material/styles";
 import { ApolloProvider } from "@apollo/client";
@@ -20,10 +22,10 @@ import Head from "next/head";
 import Script from "next/script";
 import { WalletProvider } from "@suiet/wallet-kit";
 import { v1 } from "uuid";
+import { useRouter } from "next/router";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
-
-import { useRouter } from "next/router";
+import { MobileContext } from "../provider/mobile/mobile-context";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
@@ -40,7 +42,9 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-const App = ({ Component, pageProps }: AppPropsWithLayout) => {
+const App = (props: AppPropsWithLayout) => {
+  const { Component, pageProps } = props;
+  const isMobile = props.pageProps["isMobile"];
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>);
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
   const wallets = [new PetraWallet()];
@@ -94,9 +98,11 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
                     plugins={wallets}
                     autoConnect={true}
                   >
-                    <MasterProvider>
-                      {getLayout(<Component {...pageProps} />)}
-                    </MasterProvider>
+                    <MobileContext.Provider value={{ isMobile }}>
+                      <MasterProvider>
+                        {getLayout(<Component {...pageProps} />)}
+                      </MasterProvider>
+                    </MobileContext.Provider>
                   </AptosWalletAdapterProvider>
                 </WalletProvider>
               </WagmiConfig>
@@ -106,6 +112,24 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
       </ThemeProvider>
     </>
   );
+};
+
+App.getInitialProps = async (appContext: AppContext) => {
+  // calls page's `getInitialProps` and fills `appProps.pageProps`
+  const appProps = await NextApp.getInitialProps(appContext);
+
+  //userAgent
+  const userAgent = (await appContext.ctx.req)
+    ? appContext.ctx.req?.headers["user-agent"]
+    : navigator.userAgent;
+
+  //Mobile
+  const mobile = await userAgent?.indexOf("Mobi");
+
+  //Mobile in pageProps
+  appProps.pageProps.isMobile = (await (mobile !== -1)) ? true : false;
+
+  return { ...appProps };
 };
 
 export default App;

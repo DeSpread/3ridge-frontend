@@ -60,15 +60,9 @@ import {
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
-import { NextPage, NextPageContext } from "next";
-import MobileDetect from "mobile-detect";
-import { isMobile as isMobileInDevice } from "react-device-detect";
+import { useMobile } from "../../provider/mobile/mobile-context";
 
-interface IProps {
-  isMobile: boolean;
-}
-
-const Profile = (props: NextPage<IProps>) => {
+const Profile = () => {
   const router = useRouter();
   const { userData, loading: userDataLoading } = useUserQuery({
     name: router.isReady
@@ -87,6 +81,7 @@ const Profile = (props: NextPage<IProps>) => {
     asyncUpdateSocialTelegram,
     asyncRemoveSocialTelegram,
   } = useSignedUserQuery();
+  const { isMobile } = useMobile();
 
   const { asyncTwitterSignInPopUp } = useFirebaseAuth();
   const {
@@ -113,7 +108,6 @@ const Profile = (props: NextPage<IProps>) => {
     }[]
   >([]);
 
-  // const [achievementsLoading, setAchievementsLoading] = useState(false);
   const resourceFactory = ResourceFactory.getInstance();
   const [selectedNetwork, setSelectedNetwork] = useState("");
 
@@ -167,13 +161,6 @@ const Profile = (props: NextPage<IProps>) => {
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
   }, [selectedNetwork]);
-
-  console.log(
-    userData?.participatingTickets?.filter((e) => {
-      console.log(e.winners);
-      return e.winners?.map((_e) => _e.name).includes(userData?.name);
-    })
-  );
 
   return (
     <>
@@ -848,7 +835,8 @@ const Profile = (props: NextPage<IProps>) => {
         }}
         walletInfos={(() => {
           return resourceFactory.getWalletInfos(
-            convertToSuppoertedNetwork(selectedNetwork)
+            convertToSuppoertedNetwork(selectedNetwork),
+            isMobile
           );
         })()}
         onWalletSelected={({ name, value }) => {
@@ -872,17 +860,6 @@ const Profile = (props: NextPage<IProps>) => {
       ></SignInWithSupportedWalletDialog>
     </>
   );
-};
-
-Profile.getInitialProps = async (ctx: NextPageContext) => {
-  let mobile;
-  if (ctx.req) {
-    const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
-    mobile = !!md.mobile();
-  } else {
-    mobile = isMobileInDevice;
-  }
-  return { isMobile: mobile };
 };
 
 Profile.getLayout = (page: ReactElement | ReactElement[]) => (

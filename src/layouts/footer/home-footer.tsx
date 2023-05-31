@@ -30,7 +30,7 @@ const footerData = [
       },
       {
         title: "Twitter",
-        url: "https://twitter.com/3ridge_xyz",
+        url: "https://twitter.com/3ridge_io",
       },
       {
         title: "Discord",
