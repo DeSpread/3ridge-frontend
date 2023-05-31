@@ -742,7 +742,18 @@ const Profile = () => {
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
               if (isMobile) {
-                setOpenConnectTwitterDialog(true);
+                showAlert({
+                  title: "알림",
+                  content: (
+                    <Stack>
+                      <Typography>데스크탑에서 연동해주세요.</Typography>
+                      <Typography>
+                        모바일은 추후에 지원될 예정입니다.
+                      </Typography>
+                    </Stack>
+                  ),
+                });
+                // setOpenConnectTwitterDialog(true);
               } else {
                 const res = await asyncTwitterSignInPopUp();
                 await asyncUpdateSocialTwitter(res);
