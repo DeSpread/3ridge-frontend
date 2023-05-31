@@ -36,6 +36,7 @@ import {
 import ResourceFactory from "../../helper/resource-factory";
 import { useTheme } from "@mui/material/styles";
 import { useMobile } from "../../provider/mobile/mobile-context";
+import { goToMetaMaskDeppLinkWhenMobile } from "../../util/eth-util";
 
 const FORM_TYPE = {
   SELECT: "SELECT",
@@ -304,6 +305,11 @@ const Signup = () => {
           })()}
           onWalletSelected={({ name, value }) => {
             const walletName = convertToWalletName(value);
+
+            if (goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
+              return;
+            }
+
             walletSignUp(
               {
                 network: selectedNetwork as SupportedNetwork,

@@ -57,6 +57,7 @@ import {
 import ResourceFactory from "../helper/resource-factory";
 import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
 import { useMobile } from "../provider/mobile/mobile-context";
+import { goToMetaMaskDeppLinkWhenMobile } from "../util/eth-util";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -114,7 +115,6 @@ const MainLayout = (props: MainLayoutProps) => {
     useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const { isMobile } = useMobile();
-  const homeUri = process.env["NEXT_PUBLIC_HOME_URI"];
 
   const { showErrorAlert, showAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
@@ -426,12 +426,8 @@ const MainLayout = (props: MainLayoutProps) => {
         })()}
         onWalletSelected={({ name, value }) => {
           const walletName = convertToWalletName(value);
-          if (
-            isMobile &&
-            (walletName === WALLET_NAMES.META_MASK ||
-              walletName === WALLET_NAMES.COINBASE_WALLET)
-          ) {
-            location.href = `https://metamask.app.link/dapp/${homeUri}/`;
+
+          if (goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
             return;
           }
 
