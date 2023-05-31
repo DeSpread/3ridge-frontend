@@ -25,6 +25,7 @@ import { v1 } from "uuid";
 import { useRouter } from "next/router";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
+import { isMobile } from "react-device-detect";
 import { MobileContext } from "../provider/mobile/mobile-context";
 
 const providers = combineProviders();
@@ -44,7 +45,7 @@ type AppPropsWithLayout = AppProps & {
 
 const App = (props: AppPropsWithLayout) => {
   const { Component, pageProps } = props;
-  const isMobile = props.pageProps["isMobile"];
+  // const isMobile = props.pageProps["isMobile"];
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>);
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
   const wallets = [new PetraWallet()];
@@ -114,22 +115,27 @@ const App = (props: AppPropsWithLayout) => {
   );
 };
 
-App.getInitialProps = async (appContext: AppContext) => {
-  // calls page's `getInitialProps` and fills `appProps.pageProps`
-  const appProps = await NextApp.getInitialProps(appContext);
+// App.getServerSideProps = async ({ req }) => {
+//   const userAgent = req.headers["user-agent"];
+//   return { props: { userAgent } };
+// };
 
-  //userAgent
-  const userAgent = (await appContext.ctx.req)
-    ? appContext.ctx.req?.headers["user-agent"]
-    : navigator.userAgent;
-
-  //Mobile
-  const mobile = await userAgent?.indexOf("Mobi");
-
-  //Mobile in pageProps
-  appProps.pageProps.isMobile = (await (mobile !== -1)) ? true : false;
-
-  return { ...appProps };
-};
+// App.getInitialProps = async (appContext: AppContext) => {
+//   // calls page's `getInitialProps` and fills `appProps.pageProps`
+//   const appProps = await NextApp.getInitialProps(appContext);
+//
+//   //userAgent
+//   const userAgent = (await appContext.ctx.req)
+//     ? appContext.ctx.req?.headers["user-agent"]
+//     : navigator.userAgent;
+//
+//   //Mobile
+//   const mobile = await userAgent?.indexOf("Mobi");
+//
+//   //Mobile in pageProps
+//   appProps.pageProps.isMobile = (await (mobile !== -1)) ? true : false;
+//
+//   return { ...appProps };
+// };
 
 export default App;

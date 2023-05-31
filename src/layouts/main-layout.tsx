@@ -287,7 +287,10 @@ const MainLayout = (props: MainLayoutProps) => {
                   onExploreClick={asyncGoToExplore}
                   onProjectsClick={asyncGoToProjects}
                   onLeaderBoardClick={asyncGoToLeaderBoard}
-                  onSignInClick={asyncShowSignDialog}
+                  onSignInClick={async (e) => {
+                    e.preventDefault();
+                    setSignInWithNetworkSelectVisible(true);
+                  }}
                 ></SubMenuButton>
               ))}
           </Stack>
