@@ -57,6 +57,8 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
+  const COUNT = 120;
+
   return (
     <Dialog
       {...props}
@@ -147,8 +149,8 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                               mail
                             );
                           if (res.status === 204) {
-                            setCount(60);
-                            let _vDate = addSeconds(new Date(), 61);
+                            setCount(COUNT);
+                            let _vDate = addSeconds(new Date(), COUNT + 1);
                             let intervalId = setInterval(() => {
                               const now = new Date();
                               //@ts-ignore
