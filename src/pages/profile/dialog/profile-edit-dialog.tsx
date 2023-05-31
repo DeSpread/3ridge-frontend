@@ -34,6 +34,7 @@ import PrimaryButton from "../../../components/atoms/primary-button";
 // @ts-ignore
 import TelegramLoginButton from "react-telegram-login";
 import { getUserMail } from "../../../util/type-util";
+import { useMobile } from "../../../provider/mobile/mobile-context";
 
 const ReversibleMarkEmailIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -76,6 +77,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const BUTTON_WIDTH = smUp ? 340 : "100%";
+  const { isMobile } = useMobile();
 
   return (
     <Dialog
@@ -243,26 +245,47 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                         (addrInfo) => addrInfo.network === e
                       )?.[0];
 
-                    const isDisAllowed =
-                      ALLOWED_NETWORKS.filter((value) => value !== e).length >=
-                      0; // FIXME: 확인 필요
+                    const disabledBtn = !(
+                      (!isMobile && e === SUPPORTED_NETWORKS.APTOS) ||
+                      e === SUPPORTED_NETWORKS.EVM
+                    );
 
                     return (
                       <Box sx={{ width: "100%" }} key={i}>
-                        <ValidatorButton
-                          disabled={isDisAllowed}
-                          label={e.toUpperCase()}
-                          svgIcon={resourceFactory.getValidatorButtonSvg(e)}
-                          onClick={props.walletValidatorButtonOnClick}
-                          size={"small"}
-                          value={StringHelper.getInstance().getMidEllipsisString(
-                            addressInfo?.address
-                          )}
-                          payload={e}
-                          sx={{
-                            width: BUTTON_WIDTH,
-                          }}
-                        />
+                        {disabledBtn && (
+                          <ValidatorButton
+                            disabled={disabledBtn}
+                            label={e.toUpperCase()}
+                            svgIcon={resourceFactory.getValidatorButtonSvg(e)}
+                            onClick={props.walletValidatorButtonOnClick}
+                            size={"small"}
+                            value={StringHelper.getInstance().getMidEllipsisString(
+                              addressInfo?.address
+                            )}
+                            payload={e}
+                            sx={{
+                              width: BUTTON_WIDTH,
+                              background: theme.palette.neutral[400],
+                              borderColor: "#383742",
+                            }}
+                          />
+                        )}
+                        {!disabledBtn && (
+                          <ValidatorButton
+                            // disabled={disabledBtn}
+                            label={e.toUpperCase()}
+                            svgIcon={resourceFactory.getValidatorButtonSvg(e)}
+                            onClick={props.walletValidatorButtonOnClick}
+                            size={"small"}
+                            value={StringHelper.getInstance().getMidEllipsisString(
+                              addressInfo?.address
+                            )}
+                            payload={e}
+                            sx={{
+                              width: BUTTON_WIDTH,
+                            }}
+                          />
+                        )}
                       </Box>
                     );
                   })}

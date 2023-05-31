@@ -66,6 +66,7 @@ import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 import { gql, request } from "graphql-request";
+import { findEmailQuests } from "../../util/type-util";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -159,15 +160,16 @@ const Event = (props: AppProps) => {
   const { setShowSignInDialog } = useSignDialog();
   const [initVerifiedList, setInitVerifiedList] = useState(false);
   const [eventDespHtmlContent, setEventDespHtmlContent] = useState("");
-  // const [curUserParticipantInfo, setCurUserParticipantInfo] =
-  //   useState<ParticipantInfo>({
-  //     _id: undefined,
-  //     name: undefined,
-  //     profileImageUrl: undefined,
-  //   });
+  const [lockUpdateVerifyAll, setLockUpdateVerifyAll] = useState(false);
 
   useEffect(() => {
+    updateVerifyAll();
+  }, [ticketData, userData?._id]);
+
+  const updateVerifyAll = () => {
     if (!userData?._id || initVerifiedList) return;
+    if (lockUpdateVerifyAll) return;
+    setLockUpdateVerifyAll(true);
     const ids = ticketData?.quests?.map((e) => {
       return e._id;
     });
@@ -187,12 +189,63 @@ const Event = (props: AppProps) => {
           setVerifiedList(newVerifiedList);
           setInitVerifiedList(true);
           asyncUpdateClaimCompleted().then(() => {});
+          // console.log("newVerifiedList", newVerifiedList);
+          const emailQuests = findEmailQuests(ticketData);
+          // console.log("emailQuests", emailQuests);
+          const emailQuestsIds = emailQuests?.map((eq) => eq._id);
+          // console.log("emailQuestsIds", emailQuestsIds);
+          if (ids && (emailQuestsIds?.length ?? 0) > 0) {
+            const hasAllVerifiedEmail = emailQuestsIds?.reduce(
+              (accumulator, currentValue) =>
+                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+              true
+            );
+            // console.log("hasAllVerifiedEmail", hasAllVerifiedEmail);
+            if (!hasAllVerifiedEmail) {
+              if (userData?.email) {
+                const verifiedEmailPromiseList: any[] = [];
+                emailQuestsIds?.forEach((e) => {
+                  if (ticketData?._id && e)
+                    verifiedEmailPromiseList.push(
+                      asyncCompleteQuestOfUser(ticketData?._id, e)
+                    );
+                });
+                // console.log(
+                //   "verifiedEmailPromiseList",
+                //   verifiedEmailPromiseList
+                // );
+                if (
+                  verifiedEmailPromiseList &&
+                  (verifiedEmailPromiseList?.length ?? 0) > 0
+                ) {
+                  Promise.all(verifiedEmailPromiseList)
+                    .then((completeQuestRes) => {
+                      setTimeout(() => {
+                        // console.log("recursive updateVerifyAll");
+                        updateVerifyAll();
+                      }, 0);
+                    })
+                    .catch((e) => {
+                      console.log(e);
+                    })
+                    .finally(() => {
+                      setLockUpdateVerifyAll(false);
+                    });
+                }
+              }
+            }
+          } else {
+            setLockUpdateVerifyAll(false);
+          }
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
+          setLockUpdateVerifyAll(false);
         });
+    } else {
+      setLockUpdateVerifyAll(false);
     }
-  }, [ticketData, userData?._id]);
+  };
 
   useEffect(() => {
     asyncUpdateClaimCompleted().then(() => {});
@@ -229,6 +282,8 @@ const Event = (props: AppProps) => {
   }, [verifiedList, updateIndex]);
 
   const walletConnectedForTicket = useMemo(() => {
+    if (ticketData.rewardPolicy?.context?.rewardChain.includes("offchain"))
+      return true;
     return (
       (userData?.walletAddressInfos
         ?.filter((e) => e.address)
@@ -288,6 +343,13 @@ const Event = (props: AppProps) => {
       );
     }
     return false;
+  };
+
+  const asyncGoToProfileAndEditDialogOpen = async () => {
+    showLoading();
+    setShowProfileEditDialog(true);
+    await router.push(`/profile/${userData?.name}`);
+    closeLoading();
   };
 
   return (
@@ -556,10 +618,7 @@ const Event = (props: AppProps) => {
                       <SecondaryButton
                         onClick={async (e) => {
                           e.preventDefault();
-                          showLoading();
-                          setShowProfileEditDialog(true);
-                          await router.push(`/profile/${userData?.name}`);
-                          closeLoading();
+                          await asyncGoToProfileAndEditDialogOpen();
                         }}
                       >
                         지갑 연결하러 가기
@@ -623,6 +682,12 @@ const Event = (props: AppProps) => {
                         isExceededTicketParticipants()
                       }
                       verified={verifiedList[index]}
+                      overrideConfirmBtnLabel={
+                        quest.questPolicy?.questPolicy ===
+                        QuestPolicyType.VerifyEmail
+                          ? "연동하기"
+                          : undefined
+                      }
                       hideStartButton={
                         quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT ||
@@ -631,7 +696,9 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||
                         quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyEmail
                       }
                       onVerifyBtnClicked={async (e) => {
                         const myEvent = e as MouseEventWithParam<{
@@ -695,6 +762,12 @@ const Event = (props: AppProps) => {
                             );
                             myEvent.params.callback("success");
                             updateVerifyState(index);
+                          } else if (
+                            quest.questPolicy?.questPolicy ===
+                            QuestPolicyType.VerifyEmail
+                          ) {
+                            myEvent.params.callback("success");
+                            asyncGoToProfileAndEditDialogOpen().then();
                           }
                         } catch (e) {
                           const errorMessage = getErrorMessage(e);
@@ -826,7 +899,6 @@ const Event = (props: AppProps) => {
                               );
                               break;
                           }
-
                           try {
                             const res = await asyncCompleteQuestOfUser(
                               ticketData._id,
@@ -1087,26 +1159,42 @@ const Event = (props: AppProps) => {
                       )}
                     </Box>
                   </Stack>
-                  <Stack
-                    direction={"row"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    spacing={1}
-                  >
-                    <img
-                      src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
-                      width={32}
-                      height={32}
-                      style={{
-                        background: theme.palette.neutral[100],
-                        borderRadius: 16,
-                        padding: 5,
-                      }}
-                    />
-                    <Typography variant={"body2"}>
-                      {ticketData.rewardPolicy?.context?.rewardChain} 체인 지원
-                    </Typography>
-                  </Stack>
+                  {ticketData.rewardPolicy?.context?.rewardChain.includes(
+                    "offchain"
+                  ) ? (
+                    <Stack
+                      direction={"row"}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      spacing={1}
+                    >
+                      <Typography variant={"body2"}>
+                        등록된 이메일 통해 보상 지급 예정
+                      </Typography>
+                    </Stack>
+                  ) : (
+                    <Stack
+                      direction={"row"}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      spacing={1}
+                    >
+                      <img
+                        src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
+                        width={32}
+                        height={32}
+                        style={{
+                          background: theme.palette.neutral[100],
+                          borderRadius: 16,
+                          padding: 5,
+                        }}
+                      />
+                      <Typography variant={"body2"}>
+                        {ticketData.rewardPolicy?.context?.rewardChain} 체인
+                        지원
+                      </Typography>
+                    </Stack>
+                  )}
                 </Stack>
               </PrimaryCard>
               <LoadingButton

@@ -317,6 +317,7 @@ export function useTicketQuery({
             questId,
             userId,
           },
+          fetchPolicy: "no-cache",
         });
         const { isCompleted } = data.isCompletedQuestByUserId;
         return {

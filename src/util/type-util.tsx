@@ -5,7 +5,7 @@ import {
   User,
   WALLET_NAMES,
 } from "../type";
-import { ChainType } from "../__generated__/graphql";
+import { ChainType, QuestPolicyType } from "../__generated__/graphql";
 
 const convertToSuppoertedNetwork = (network?: string | ChainType) => {
   if (network === SUPPORTED_NETWORKS.SUI || network === ChainType.Sui) {
@@ -88,10 +88,19 @@ const getUserMail = (user?: User) => {
   return undefined;
 };
 
+const findEmailQuests = (ticket: Ticket) => {
+  if (!ticket) return null;
+  const mailQuests = ticket?.quests?.filter(
+    (e) => e.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail
+  );
+  return mailQuests;
+};
+
 export {
   convertToSuppoertedNetwork,
   convertToChainType,
   convertToWalletName,
   filterFeatureEventTickets,
   getUserMail,
+  findEmailQuests,
 };
