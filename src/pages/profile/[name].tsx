@@ -60,15 +60,10 @@ import {
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
-import { NextPage, NextPageContext } from "next";
-import MobileDetect from "mobile-detect";
-import { isMobile as isMobileInDevice } from "react-device-detect";
+import { useMobile } from "../../provider/mobile/mobile-context";
+import { goToMetaMaskDeppLinkWhenMobile } from "../../util/eth-util";
 
-interface IProps {
-  isMobile: boolean;
-}
-
-const Profile = (props: NextPage<IProps>) => {
+const Profile = () => {
   const router = useRouter();
   const { userData, loading: userDataLoading } = useUserQuery({
     name: router.isReady
@@ -87,6 +82,7 @@ const Profile = (props: NextPage<IProps>) => {
     asyncUpdateSocialTelegram,
     asyncRemoveSocialTelegram,
   } = useSignedUserQuery();
+  const { isMobile } = useMobile();
 
   const { asyncTwitterSignInPopUp } = useFirebaseAuth();
   const {
@@ -113,7 +109,6 @@ const Profile = (props: NextPage<IProps>) => {
     }[]
   >([]);
 
-  // const [achievementsLoading, setAchievementsLoading] = useState(false);
   const resourceFactory = ResourceFactory.getInstance();
   const [selectedNetwork, setSelectedNetwork] = useState("");
 
@@ -157,156 +152,6 @@ const Profile = (props: NextPage<IProps>) => {
       .map((e) => e.network);
   }, targetUserData?.walletAddressInfos);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     setAchievementsLoading(true);
-  //     const tokenNames1 = await asyncQueryTokenByUserName();
-  //     const tokenNames2 = await asyncQueryPendingTokenByUserName();
-  //     let tokenNames = tokenNames1.concat(tokenNames2);
-  //     tokenNames = tokenNames.filter((item, index) => {
-  //       return tokenNames.indexOf(item) == index;
-  //     });
-  //     const tokensData = await asyncQueryTokenData(tokenNames);
-  //     if (tokensData.length > 0) {
-  //       setTokensData(tokensData);
-  //     }
-  //     setAchievementsLoading(false);
-  //   })();
-  // }, [userData]);
-
-  const asyncQueryPendingTokenByUserName = async () => {
-    if (
-      userData?.walletAddressInfos === undefined ||
-      userData?.walletAddressInfos.length === 0
-    ) {
-      return [];
-    }
-    try {
-      const query = gql`
-        {
-          current_token_pending_claims(
-            where: {
-              to_address: {_eq: "${userData?.walletAddressInfos[0].address}"}
-              amount: {_gt: "0"}
-            }
-          ) {
-            amount
-            collection_name
-            name
-            from_address
-            to_address
-          }
-        }
-      `;
-      const res = await request(
-        "https://indexer.mainnet.aptoslabs.com/v1/graphql",
-        // "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-        query
-      );
-      if (res.current_token_pending_claims?.length > 0) {
-        const names: string[] = [];
-        res.current_token_pending_claims?.forEach((e: any) => {
-          if (!names.includes(e.name)) names.push(e.name);
-        });
-        return names;
-      }
-      return [];
-    } catch (e) {
-      console.log(e);
-      return [];
-    }
-  };
-
-  const asyncQueryTokenData = async (tokenNames: string[] | undefined) => {
-    try {
-      if (tokenNames === undefined || tokenNames.length === 0) {
-        return [];
-      }
-      let param = "";
-      tokenNames.forEach((e) => {
-        param += `"${e}", `;
-      });
-      param = param.slice(0, -2);
-      const query = gql`
-        {
-          token_datas(
-            where: { name: { _in: [ ${param} ] } }
-          ) {
-            collection_name
-            metadata_uri
-            name
-          }
-        }
-      `;
-      const res = await request(
-        "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-        query
-      );
-      const metadataUriArray: string[] = [];
-      const tokensData: {
-        name: string;
-        metaDataUri: string;
-      }[] = [];
-      if (res.token_datas?.length > 0) {
-        res.token_datas?.forEach((e: any) => {
-          if (!metadataUriArray.includes(e.metadata_uri)) {
-            metadataUriArray.push(e.metadata_uri);
-            tokensData.push({
-              name: e.name,
-              metaDataUri: e.metadata_uri,
-            });
-          }
-        });
-        return tokensData;
-      }
-      return [];
-    } catch (e) {
-      console.log(e);
-      return [];
-    }
-  };
-
-  const asyncQueryTokenByUserName = async () => {
-    if (
-      userData?.walletAddressInfos === undefined ||
-      userData?.walletAddressInfos.length === 0
-    ) {
-      return [];
-    }
-    try {
-      const query = gql`
-        {
-          token_ownerships(
-            where: {
-                owner_address: {
-                    _eq: "${userData?.walletAddressInfos[0].address}"
-                }
-            }
-            ) {
-              name
-              owner_address
-              collection_name
-            }
-        }
-      `;
-      const res = await request(
-        "https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql/",
-        query
-      );
-      if (res.token_ownerships?.length > 0) {
-        const names: string[] = [];
-        res.token_ownerships?.forEach((e: any) => {
-          if (!names.includes(e.name)) names.push(e.name);
-        });
-        return names;
-      }
-      return [];
-    } catch (e) {
-      console.log(e);
-      return [];
-    }
-  };
-
   const levelProgressValue = useMemo(() => {
     if (userData?.rewardPoint === undefined) {
       return 0;
@@ -317,13 +162,6 @@ const Profile = (props: NextPage<IProps>) => {
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
   }, [selectedNetwork]);
-
-  console.log(
-    userData?.participatingTickets?.filter((e) => {
-      console.log(e.winners);
-      return e.winners?.map((_e) => _e.name).includes(userData?.name);
-    })
-  );
 
   return (
     <>
@@ -643,70 +481,72 @@ const Profile = (props: NextPage<IProps>) => {
               </Grid>
             </Stack>
             {/*--- Achievements ---*/}
-            <Stack>
+            <Stack sx={{ background: "" }}>
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
                 리워드 받은 이벤트
               </Typography>
               <Divider
                 sx={{ borderBottomWidth: 2, paddingTop: 2, marginBottom: 3 }}
               ></Divider>
-              {userDataLoading &&
-                [1, 2, 3, 4].map((e) => {
-                  return (
-                    <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
-                      <Skeleton
-                        height={380}
-                        variant={"rounded"}
-                        animation={"wave"}
-                      />
+              <Grid container rowSpacing={1} columnSpacing={1}>
+                {userDataLoading &&
+                  [1, 2, 3, 4].map((e) => {
+                    return (
+                      <Grid key={e} item xs={12} sm={6} md={4} lg={3}>
+                        <Skeleton
+                          height={380}
+                          variant={"rounded"}
+                          animation={"wave"}
+                        />
+                      </Grid>
+                    );
+                  })}
+                {!userDataLoading &&
+                  ((userData?.participatingTickets?.filter((e) => {
+                    return e.winners
+                      ?.map((_e) => _e.name)
+                      .includes(userData?.name);
+                  }).length ?? 0) > 0 ? (
+                    userData?.participatingTickets
+                      ?.filter((e) => {
+                        return e.winners
+                          ?.map((_e) => _e.name)
+                          .includes(userData?.name);
+                      })
+                      .map((ticket, index) => {
+                        return (
+                          <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
+                            <TicketCard
+                              ticket={ticket}
+                              username={userData?.name}
+                              onClick={async (e) => {
+                                showLoading();
+                                await router.push(`/event/${ticket._id}`);
+                                closeLoading();
+                              }}
+                              isWinner={true}
+                            ></TicketCard>
+                          </Grid>
+                        );
+                      })
+                  ) : (
+                    <Grid item sx={{ width: "100%" }}>
+                      <Stack
+                        direction={"row"}
+                        justifyContent={"center"}
+                        sx={{
+                          marginTop: 8,
+                          marginBottom: 16,
+                          width: "100%",
+                        }}
+                      >
+                        <Typography variant={"h6"} color={"neutral.500"}>
+                          리워드 받은 이벤트가 없습니다
+                        </Typography>
+                      </Stack>
                     </Grid>
-                  );
-                })}
-              {!userDataLoading &&
-                ((userData?.participatingTickets?.filter((e) => {
-                  return e.winners
-                    ?.map((_e) => _e.name)
-                    .includes(userData?.name);
-                }).length ?? 0) > 0 ? (
-                  userData?.participatingTickets
-                    ?.filter((e) => {
-                      return e.winners
-                        ?.map((_e) => _e.name)
-                        .includes(userData?.name);
-                    })
-                    .map((ticket, index) => {
-                      return (
-                        <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
-                          <TicketCard
-                            ticket={ticket}
-                            username={userData?.name}
-                            onClick={async (e) => {
-                              showLoading();
-                              await router.push(`/event/${ticket._id}`);
-                              closeLoading();
-                            }}
-                            isWinner={true}
-                          ></TicketCard>
-                        </Grid>
-                      );
-                    })
-                ) : (
-                  <Grid item sx={{ width: "100%" }}>
-                    <Stack
-                      direction={"row"}
-                      justifyContent={"center"}
-                      sx={{
-                        marginTop: 8,
-                        marginBottom: 16,
-                        width: "100%",
-                      }}
-                    >
-                      <Typography variant={"h6"} color={"neutral.500"}>
-                        리워드 받은 이벤트가 없습니다
-                      </Typography>
-                    </Stack>
-                  </Grid>
-                ))}
+                  ))}
+              </Grid>
               {/*{achievementsLoading && (*/}
               {/*  <Stack*/}
               {/*    direction={"column"}*/}
@@ -996,12 +836,16 @@ const Profile = (props: NextPage<IProps>) => {
         }}
         walletInfos={(() => {
           return resourceFactory.getWalletInfos(
-            convertToSuppoertedNetwork(selectedNetwork)
+            convertToSuppoertedNetwork(selectedNetwork),
+            isMobile
           );
         })()}
         onWalletSelected={({ name, value }) => {
           const walletName = convertToWalletName(value);
           if (!walletName) return;
+          if (goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
+            return;
+          }
           (async () => {
             try {
               showLoading();
@@ -1020,17 +864,6 @@ const Profile = (props: NextPage<IProps>) => {
       ></SignInWithSupportedWalletDialog>
     </>
   );
-};
-
-Profile.getInitialProps = async (ctx: NextPageContext) => {
-  let mobile;
-  if (ctx.req) {
-    const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
-    mobile = !!md.mobile();
-  } else {
-    mobile = isMobileInDevice;
-  }
-  return { isMobile: mobile };
 };
 
 Profile.getLayout = (page: ReactElement | ReactElement[]) => (

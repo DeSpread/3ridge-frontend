@@ -65,6 +65,7 @@ import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
+import { gql, request } from "graphql-request";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -129,6 +130,7 @@ const Event = (props: AppProps) => {
     asyncRequestClaimNtf,
     asyncVerify3ridgePoint,
     asyncVerifyAptosQuest,
+    asyncRefreshTicketData,
   } = useTicketQuery({
     userId: userData._id,
     id: router.isReady
@@ -155,9 +157,17 @@ const Event = (props: AppProps) => {
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
   const { setShowSignInDialog } = useSignDialog();
+  const [initVerifiedList, setInitVerifiedList] = useState(false);
+  const [eventDespHtmlContent, setEventDespHtmlContent] = useState("");
+  // const [curUserParticipantInfo, setCurUserParticipantInfo] =
+  //   useState<ParticipantInfo>({
+  //     _id: undefined,
+  //     name: undefined,
+  //     profileImageUrl: undefined,
+  //   });
 
   useEffect(() => {
-    if (!userData?._id) return;
+    if (!userData?._id || initVerifiedList) return;
     const ids = ticketData?.quests?.map((e) => {
       return e._id;
     });
@@ -175,17 +185,38 @@ const Event = (props: AppProps) => {
             }
           });
           setVerifiedList(newVerifiedList);
+          setInitVerifiedList(true);
+          asyncUpdateClaimCompleted().then(() => {});
         })
         .catch((err) => {
           console.log(err);
         });
-      asyncUpdateClaimCompleted().then(() => {});
     }
-  }, [ticketData?.quests, userData?._id]);
+  }, [ticketData, userData?._id]);
 
   useEffect(() => {
     asyncUpdateClaimCompleted().then(() => {});
   }, [updateIndex]);
+
+  useEffect(() => {
+    const res = verifiedList.reduce(
+      (accumulator, currentValue) => accumulator && currentValue,
+      true
+    );
+    if (!res) {
+      return;
+    }
+    if (!ticketData?._id) {
+      return;
+    }
+    asyncRefreshTicketData();
+  }, [updateIndex]);
+
+  useEffect(() => {
+    if (ticketData?.description != null) {
+      setEventDespHtmlContent(decodeBase64(ticketData?.description));
+    }
+  });
 
   const claimRewardDisabled = useMemo(() => {
     if (userData?._id === undefined) return true;
@@ -230,6 +261,7 @@ const Event = (props: AppProps) => {
     setUpdateIndex((prevState) => {
       return prevState + 1;
     });
+    asyncRefreshTicketData();
   };
 
   const asyncUpdateClaimCompleted = async () => {
@@ -364,12 +396,12 @@ const Event = (props: AppProps) => {
                                 new Date(
                                   ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
                                 ),
-                                "yyyy/MM/dd hh:mm:ss"
+                                "yyyy/MM/dd"
                               )} ~ ${format(
                                 new Date(
                                   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                                 ),
-                                "yyyy/MM/dd hh:mm:ss"
+                                "yyyy/MM/dd"
                               )} (UTC+09:00)`}
                             ></StyledChip>
                           ) : (
@@ -382,7 +414,7 @@ const Event = (props: AppProps) => {
                                       new Date(
                                         ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
                                       ),
-                                      "yyyy/MM/dd hh:mm:ss"
+                                      "yyyy/MM/dd"
                                     )}
                                   ~`}
                                   </Typography>
@@ -391,7 +423,7 @@ const Event = (props: AppProps) => {
                                       new Date(
                                         ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                                       ),
-                                      "yyyy/MM/dd hh:mm:ss"
+                                      "yyyy/MM/dd"
                                     )} (UTC+09:00)
                                   `}
                                   </Typography>
@@ -545,13 +577,13 @@ const Event = (props: AppProps) => {
               <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
                 이벤트 설명
               </Typography>
+
               <Box sx={{ maxWidth: 800 }}>
                 <Stack>
-                  {ComponentHelper.getInstance().multiLineContentText(
-                    ticketData?.description,
-                    {
-                      textAlign: smUp ? "left" : "center",
-                    }
+                  {eventDespHtmlContent && (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: eventDespHtmlContent }}
+                    ></div>
                   )}
                 </Stack>
               </Box>
@@ -1030,8 +1062,10 @@ const Event = (props: AppProps) => {
                         <Typography variant={"body1"}>대상자 수</Typography>
                         <Stack direction={"row"} alignItems={"center"}>
                           <Typography variant={"h6"}>
-                            {ticketData?.rewardPolicy?.context?.rewardAmount ??
-                              ""}
+                            {`${
+                              ticketData?.rewardPolicy?.context?.rewardAmount ??
+                              ""
+                            } 명`}
                           </Typography>
                         </Stack>
                       </Stack>
@@ -1287,13 +1321,7 @@ const Event = (props: AppProps) => {
               try {
                 asyncCompleteQuestOfUser(ticketData._id, openQuizQuestId).then(
                   (res) => {
-                    setVerifiedList((prevState) => {
-                      prevState[index] = true;
-                      return prevState;
-                    });
-                    setUpdateIndex((prevState) => {
-                      return prevState + 1;
-                    });
+                    updateVerifyState(index);
                   }
                 );
               } catch (e) {

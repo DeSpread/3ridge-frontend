@@ -5,12 +5,15 @@ import SecondaryButton from "../../../components/atoms/secondary-button";
 import Image from "next/image";
 import AptosIcon from "../../../components/atoms/svg/aptos-icon";
 import { SUPPORTED_NETWORKS, SupportedNetwork } from "../../../type";
+import { useMobile } from "../../../provider/mobile/mobile-context";
+import SuiIcon from "../../../components/atoms/svg/sui-icon";
 
 type SignInWithWalletDialogProps = SignDialogProps & {
   onNetworkButtonClicked: (network: SupportedNetwork) => void;
 };
 
 const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
+  const { isMobile } = useMobile();
   return (
     <Stack sx={{ width: "100%" }} spacing={2}>
       <SecondaryButton
@@ -49,7 +52,7 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
         onClick={(e) => {
           props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.APTOS);
         }}
-        disabled={true}
+        disabled={isMobile ? true : false}
       >
         <Stack
           sx={{ width: "100%" }}
@@ -95,6 +98,7 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
               alt={"sui"}
               width={24}
               height={24}
+              // style={{ mixBlendMode: "luminosity" }}
             ></Image>
             <Typography variant={"body2"} className={"MuiTypography"}>
               SUI
@@ -133,6 +137,7 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
                 borderWidth: 1,
                 borderStyle: "solid",
                 borderColor: "white",
+                // mixBlendMode: "luminosity",
               }}
             ></Image>
             <Typography variant={"body2"} className={"MuiTypography"}>

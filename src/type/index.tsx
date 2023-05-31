@@ -163,6 +163,12 @@ export type FCFSRewardContext = {
   rewardName?: string;
 };
 
+export type ParticipantInfo = {
+  _id?: string;
+  name?: string;
+  profileImageUrl?: string;
+};
+
 export type Ticket = {
   _id?: string;
   title?: string;
@@ -240,6 +246,12 @@ export type TelegramQuestContext = {
 
 export type Verify3ridgePointContext = {
   point: number;
+};
+
+export type VerifyEmailContext = {};
+
+export type VerifyWalletAddressContext = {
+  chain: string;
 };
 
 export type QuizQuestContext = {

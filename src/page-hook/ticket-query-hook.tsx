@@ -115,6 +115,85 @@ export function useTicketQuery({
     })();
   }, [id]);
 
+  const asyncRefreshTicketData = async () => {
+    if (!id) {
+      return;
+    }
+    const { data } = await client.query({
+      query: GET_TICKET_BY_ID,
+      variables: {
+        id,
+      },
+      fetchPolicy: "no-cache",
+    });
+    const {
+      _id,
+      title,
+      beginTime,
+      untilTime,
+      description,
+      completed,
+      participants,
+      quests,
+      rewardPolicy,
+      winners,
+      imageUrl,
+      rewardClaimedUsers,
+    } = data.ticketById;
+    const _rewardPolicy = typeParseHelper.parseRewardPolicy(
+      rewardPolicy?.context ?? undefined,
+      rewardPolicy?.rewardPolicyType ?? undefined
+    );
+    setTicketData((prevState) => {
+      return {
+        ...prevState,
+        _id: _id ?? undefined,
+        title: title ?? undefined,
+        beginTime: beginTime ?? undefined,
+        untilTime: untilTime ?? undefined,
+        description: description ?? undefined,
+        completed: completed ?? undefined,
+        participants: participants?.map((e) => {
+          return {
+            _id: e._id ?? undefined,
+            name: e.name ?? undefined,
+            profileImageUrl: e.profileImageUrl ?? undefined,
+          };
+        }),
+        imageUrl: imageUrl ?? undefined,
+        quests: quests?.map((e) => {
+          return {
+            _id: e._id ?? undefined,
+            title: e.title ?? undefined,
+            description: e.description ?? undefined,
+            questPolicy: {
+              context: TypeParseHelper.getInstance().parseQuestPolicy(
+                e.questPolicy?.context,
+                e.questPolicy?.questPolicy
+              ),
+              questPolicy: e.questPolicy?.questPolicy ?? undefined,
+            },
+            isComplete: false,
+            questGuides: e.questGuides ?? [],
+          };
+        }),
+        rewardPolicy: {
+          context: _rewardPolicy,
+          rewardPolicyType: rewardPolicy?.rewardPolicyType ?? undefined,
+        },
+        winners: winners?.map((e) => {
+          return {
+            name: e.name ?? undefined,
+          };
+        }),
+        rewardClaimedUserIds:
+          rewardClaimedUsers?.map((e) => {
+            return e._id ?? "";
+          }) ?? undefined,
+      };
+    });
+  };
+
   const asyncVerifyTwitterFollowQuest = async (
     ticketId: string,
     questId: string
@@ -268,5 +347,6 @@ export function useTicketQuery({
     asyncRequestClaimNtf,
     asyncVerify3ridgePoint,
     asyncVerifyAptosQuest,
+    asyncRefreshTicketData,
   };
 }

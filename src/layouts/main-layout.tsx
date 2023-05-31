@@ -56,7 +56,8 @@ import {
 } from "../util/type-util";
 import ResourceFactory from "../helper/resource-factory";
 import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
-import ContentsRendererDialog from "../components/dialogs/contents-renderer-dialog";
+import { useMobile } from "../provider/mobile/mobile-context";
+import { goToMetaMaskDeppLinkWhenMobile } from "../util/eth-util";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -113,6 +114,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
     useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState("");
+  const { isMobile } = useMobile();
 
   const { showErrorAlert, showAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
@@ -418,11 +420,17 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         walletInfos={(() => {
           return resourceFactory.getWalletInfos(
-            convertToSuppoertedNetwork(selectedNetwork)
+            convertToSuppoertedNetwork(selectedNetwork),
+            isMobile
           );
         })()}
         onWalletSelected={({ name, value }) => {
           const walletName = convertToWalletName(value);
+
+          if (goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
+            return;
+          }
+
           walletSignUp(
             { network: selectedNetwork as SupportedNetwork, name: walletName },
             {

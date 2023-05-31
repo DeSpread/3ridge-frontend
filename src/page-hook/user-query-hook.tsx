@@ -102,6 +102,7 @@ export function useUserQuery(props: { name?: string }) {
       participatingTickets,
       gmail,
     } = data;
+    console.log("aaa", participatingTickets);
     setUserData((prevState) => {
       return {
         ...prevState,
