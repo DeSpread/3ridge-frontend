@@ -8,7 +8,7 @@ const goToMetaMaskDeppLinkWhenMobile = (
 ) => {
   const { ethereum } = window;
   //@ts-ignore
-  const isMetaMask = ethereum.isMetaMask;
+  const isMetaMask = ethereum ? ethereum.isMetaMask : false;
   if (
     isMobile &&
     !isMetaMask &&
