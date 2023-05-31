@@ -201,6 +201,14 @@ const MainLayout = (props: MainLayoutProps) => {
                   width={smUp ? 132 : 120}
                   alt={""}
                 />
+                <Image
+                  src={
+                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/beta.svg"
+                  }
+                  height={smUp ? 30 : 30}
+                  width={smUp ? 35 : 35}
+                  alt={""}
+                />
               </Stack>
             </Box>
             {!props.disableNavButtonSet &&
