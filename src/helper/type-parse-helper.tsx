@@ -9,7 +9,10 @@ import {
   DiscordQuestContext,
   Verify3ridgePointContext,
   TelegramQuestContext,
+  VerifyEmailContext,
+  VerifyWalletAddressContext,
 } from "../type";
+import { QuestPolicyType } from "../__generated__/graphql";
 
 class TypeParseHelper {
   private static instance: TypeParseHelper;
@@ -23,7 +26,10 @@ class TypeParseHelper {
   parseRewardPolicy = (context?: string, rewardPolicyType?: string) => {
     if (!context) return undefined;
     try {
-      if (rewardPolicyType === REWARD_POLICY_TYPE.FCFS || rewardPolicyType === REWARD_POLICY_TYPE.LUCKY_DRAW) {
+      if (
+        rewardPolicyType === REWARD_POLICY_TYPE.FCFS ||
+        rewardPolicyType === REWARD_POLICY_TYPE.LUCKY_DRAW
+      ) {
         const _context = context.trim();
         const contextJson = JSON.parse(_context);
         const res = contextJson as FCFSRewardContext;
@@ -54,6 +60,10 @@ class TypeParseHelper {
         return contextJson as TelegramQuestContext;
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT) {
         return contextJson as Verify3ridgePointContext;
+      } else if (questPolicyType === QuestPolicyType.VerifyEmail) {
+        return contextJson as VerifyEmailContext;
+      } else if (questPolicyType === QuestPolicyType.VerifyWalletAddress) {
+        return contextJson as VerifyWalletAddressContext;
       }
     } catch (e) {
       console.log(context, questPolicyType);

@@ -248,6 +248,12 @@ export type Verify3ridgePointContext = {
   point: number;
 };
 
+export type VerifyEmailContext = {};
+
+export type VerifyWalletAddressContext = {
+  chain: string;
+};
+
 export type QuizQuestContext = {
   quizList?: QuizContent[];
 };
