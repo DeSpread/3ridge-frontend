@@ -1,21 +1,7 @@
-import {
-  AppBar,
-  Box,
-  Link as MuiLink,
-  Stack,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { AppBar, Box, Stack, Toolbar, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
-import React, {
-  MouseEventHandler,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { MouseEventHandler, ReactNode, useMemo, useState } from "react";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
 import SecondaryButton from "../components/atoms/secondary-button";
@@ -34,19 +20,14 @@ import { useSignedUserQuery } from "../page-hook/signed-user-query-hook";
 import { useLoading } from "../provider/loading/loading-provider";
 import {
   EmailSignUpEventParams,
-  MAIL_VERIFY,
   MouseEventWithParam,
-  SUPPORTED_NETWORKS,
   SupportedNetwork,
-  WALLET_NAMES,
   Z_INDEX_OFFSET,
 } from "../type";
 import { useSignDialog } from "../page-hook/sign-dialog-hook";
 import NavbarButton from "../components/atoms/navbar-button";
-import Link from "next/link";
 import SubMenuButton from "../components/molecules/sub-menu-button";
 import Image from "next/image";
-import HomeFooter from "./footer/home-footer";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useWalletAlert } from "../page-hook/wallet-alert-hook";
