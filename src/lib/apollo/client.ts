@@ -1,7 +1,7 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 
 const httpLink = createHttpLink({
-  uri: "https://api.3ridge.io/graphql",
+  uri: process.env["NEXT_PUBLIC_APOLLO_CLIENT_URI"],
 });
 
 const client = new ApolloClient({
