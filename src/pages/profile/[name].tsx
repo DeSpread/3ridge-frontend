@@ -615,7 +615,7 @@ const Profile = () => {
             {/*--- Participating event ---*/}
             <Stack>
               <Typography variant={"h5"} sx={{ zIndex: 1 }}>
-                참여한 이벤트
+                참여 중인 이벤트
               </Typography>
               <Divider sx={{ borderBottomWidth: 2, paddingTop: 2 }}></Divider>
               <Box sx={{ height: 24 }}></Box>
