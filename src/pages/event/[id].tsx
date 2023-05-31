@@ -158,12 +158,7 @@ const Event = (props: AppProps) => {
     useProfileEditDialog();
   const { setShowSignInDialog } = useSignDialog();
   const [initVerifiedList, setInitVerifiedList] = useState(false);
-  // const [curUserParticipantInfo, setCurUserParticipantInfo] =
-  //   useState<ParticipantInfo>({
-  //     _id: undefined,
-  //     name: undefined,
-  //     profileImageUrl: undefined,
-  //   });
+  console.log(ticketData);
 
   useEffect(() => {
     if (!userData?._id || initVerifiedList) return;
@@ -389,12 +384,12 @@ const Event = (props: AppProps) => {
                                 new Date(
                                   ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
                                 ),
-                                "yyyy/MM/dd hh:mm:ss"
+                                "yyyy/MM/dd"
                               )} ~ ${format(
                                 new Date(
                                   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                                 ),
-                                "yyyy/MM/dd hh:mm:ss"
+                                "yyyy/MM/dd"
                               )} (UTC+09:00)`}
                             ></StyledChip>
                           ) : (
@@ -407,7 +402,7 @@ const Event = (props: AppProps) => {
                                       new Date(
                                         ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
                                       ),
-                                      "yyyy/MM/dd hh:mm:ss"
+                                      "yyyy/MM/dd"
                                     )}
                                   ~`}
                                   </Typography>
@@ -416,7 +411,7 @@ const Event = (props: AppProps) => {
                                       new Date(
                                         ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                                       ),
-                                      "yyyy/MM/dd hh:mm:ss"
+                                      "yyyy/MM/dd"
                                     )} (UTC+09:00)
                                   `}
                                   </Typography>

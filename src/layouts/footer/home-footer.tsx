@@ -1,11 +1,11 @@
 import {
   Box,
-  Stack,
-  Link,
-  useMediaQuery,
   Divider,
-  Typography,
   IconButton,
+  Link,
+  Stack,
+  Typography,
+  useMediaQuery,
 } from "@mui/material";
 import SecondaryButton from "../../components/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
@@ -14,65 +14,10 @@ import { useLoading } from "../../provider/loading/loading-provider";
 import React from "react";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import EmailIcon from "@mui/icons-material/Email";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
-
-import PrimaryButton from "../../components/atoms/primary-button";
 import Image from "next/image";
 
-const footerData = [
-  {
-    title: "Connect",
-    subMenus: [
-      {
-        title: "Email Us",
-        url: "mailto:support@3ridge.io?subject=%F0%9F%91%8B",
-      },
-      {
-        title: "Twitter",
-        url: "https://twitter.com/3ridge_io",
-      },
-      {
-        title: "Discord",
-        url: "https://discord.gg/7UB6JjjCNV",
-      },
-    ],
-  },
-  {
-    title: "Docs",
-    subMenus: [
-      {
-        title: "Documentation",
-        url: "/",
-      },
-      {
-        title: "Code of Conduct",
-        url: "/",
-      },
-      {
-        title: "Terms of Service",
-        url: "/",
-      },
-      {
-        title: "Privacy Policy",
-        url: "/",
-      },
-    ],
-  },
-  {
-    title: "Company",
-    subMenus: [
-      {
-        title: "Careers",
-        url: "/",
-      },
-      {
-        title: "Blog",
-        url: "/",
-      },
-    ],
-  },
-];
+const TWITTER_LINK = "https://twitter.com/3ridge_io";
+const MAIL_LINK = "mailto:support@3ridge.io?Subject=Hello!%203ridge";
 
 const HomeFooter = () => {
   const theme = useTheme();
@@ -133,7 +78,7 @@ const HomeFooter = () => {
           {/*)}*/}
           {smUp ? (
             <Link
-              href="https://twitter.com/3ridge_xyz"
+              href={TWITTER_LINK}
               color="inherit"
               underline="hover"
               style={{ marginLeft: 16 }}
@@ -145,7 +90,7 @@ const HomeFooter = () => {
               </Typography>
             </Link>
           ) : (
-            <IconButton href={"https://twitter.com/3ridge_xyz"}>
+            <IconButton href={TWITTER_LINK}>
               <TwitterIcon></TwitterIcon>
             </IconButton>
           )}
@@ -176,7 +121,7 @@ const HomeFooter = () => {
           )}
           {smUp ? (
             <Link
-              href="mailto:support@3ridge.xyz?Subject=Hello!%203ridge"
+              href={MAIL_LINK}
               color="inherit"
               underline="hover"
               style={{ marginLeft: 16 }}
@@ -188,9 +133,7 @@ const HomeFooter = () => {
               </Typography>
             </Link>
           ) : (
-            <IconButton
-              href={"mailto:support@3ridge.xyz?Subject=Hello!%203ridge"}
-            >
+            <IconButton href={MAIL_LINK}>
               <EmailIcon></EmailIcon>
             </IconButton>
           )}
