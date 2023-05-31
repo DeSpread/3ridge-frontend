@@ -676,6 +676,9 @@ const Event = (props: AppProps) => {
                 <Stack>
                   {eventDespHtmlContent && (
                     <div
+                      style={{
+                        textAlign: "justify",
+                      }}
                       dangerouslySetInnerHTML={{ __html: eventDespHtmlContent }}
                     ></div>
                   )}
