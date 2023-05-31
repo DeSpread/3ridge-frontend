@@ -158,6 +158,7 @@ const Event = (props: AppProps) => {
     useProfileEditDialog();
   const { setShowSignInDialog } = useSignDialog();
   const [initVerifiedList, setInitVerifiedList] = useState(false);
+  const [eventDespHtmlContent, setEventDespHtmlContent] = useState("");
   // const [curUserParticipantInfo, setCurUserParticipantInfo] =
   //   useState<ParticipantInfo>({
   //     _id: undefined,
@@ -210,6 +211,12 @@ const Event = (props: AppProps) => {
     }
     asyncRefreshTicketData();
   }, [updateIndex]);
+
+  useEffect(() => {
+    if (ticketData?.description != null) {
+      setEventDespHtmlContent(decodeBase64(ticketData?.description));
+    }
+  });
 
   const claimRewardDisabled = useMemo(() => {
     if (userData?._id === undefined) return true;
@@ -570,13 +577,13 @@ const Event = (props: AppProps) => {
               <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
                 이벤트 설명
               </Typography>
+
               <Box sx={{ maxWidth: 800 }}>
                 <Stack>
-                  {ComponentHelper.getInstance().multiLineContentText(
-                    ticketData?.description,
-                    {
-                      textAlign: smUp ? "left" : "center",
-                    }
+                  {eventDespHtmlContent && (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: eventDespHtmlContent }}
+                    ></div>
                   )}
                 </Stack>
               </Box>
