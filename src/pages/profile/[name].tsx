@@ -62,6 +62,7 @@ import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-w
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import { goToMetaMaskDeppLinkWhenMobile } from "../../util/eth-util";
+import ConnectTwitterDialog from "./dialog/connect-twitter-dialog";
 
 const Profile = () => {
   const router = useRouter();
@@ -99,6 +100,8 @@ const Profile = () => {
     useProfileEditDialog();
   const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
   const [openConnectEmailDialog, setOpenConnectEmailDialog] = useState(false);
+  const [openConnectTwitterDialog, setOpenConnectTwitterDialog] =
+    useState(false);
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
   const [imageFile, setImageFile] = useState<File>();
@@ -738,8 +741,12 @@ const Profile = () => {
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
-              const res = await asyncTwitterSignInPopUp();
-              await asyncUpdateSocialTwitter(res);
+              if (isMobile) {
+                setOpenConnectTwitterDialog(true);
+              } else {
+                const res = await asyncTwitterSignInPopUp();
+                await asyncUpdateSocialTwitter(res);
+              }
             }
           } catch (e) {
             console.log(e);
@@ -793,6 +800,16 @@ const Profile = () => {
           closeLoading();
         }}
       ></ConnectEmailDialog>
+      <ConnectTwitterDialog
+        open={openConnectTwitterDialog}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setOpenConnectTwitterDialog(false);
+        }}
+        onClose={() => {
+          setOpenConnectTwitterDialog(false);
+        }}
+      ></ConnectTwitterDialog>
       <PictureEditDialog
         imageFile={imageFile}
         title={"Edit Image"}
