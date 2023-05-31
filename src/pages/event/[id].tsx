@@ -558,7 +558,7 @@ const Event = (props: AppProps) => {
               </Box>
             )}
 
-            {!isExceededTicketParticipants && userData?._id === undefined && (
+            {!isExceededTicketParticipants() && userData?._id === undefined && (
               <Box sx={{}}>
                 <Typography
                   variant={smUp ? "h5" : "h6"}
