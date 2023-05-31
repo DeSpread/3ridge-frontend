@@ -26,6 +26,7 @@ const ConnectTwitterDialog = (props: ConnectTwitterDialogProps) => {
   const invalid = useMemo(() => {
     return true;
   }, []);
+
   return (
     <Dialog
       {...props}
@@ -56,7 +57,7 @@ const ConnectTwitterDialog = (props: ConnectTwitterDialogProps) => {
             direction={"column"}
             sx={{
               background: "",
-              minWidth: "500px",
+              // minWidth: "500px",
               paddingTop: 4,
               marginBottom: 12,
             }}
@@ -69,7 +70,7 @@ const ConnectTwitterDialog = (props: ConnectTwitterDialogProps) => {
               <Box sx={{ width: "100%", background: "", position: "relative" }}>
                 <ValidatedTextInput
                   isValid={invalid}
-                  placeholder={"트위터 핸들 ID"}
+                  placeholder={"트위터 핸들 ID (@없이 이름만)"}
                   sx={{ width: "100%" }}
                   value={twitterId}
                   onChange={(e) => {
@@ -81,41 +82,24 @@ const ConnectTwitterDialog = (props: ConnectTwitterDialogProps) => {
                     },
                   }}
                 ></ValidatedTextInput>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    background: "",
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <SecondaryButton
-                    color={"secondary"}
-                    variant={"contained"}
-                    sx={{
-                      borderRadius: "11px",
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                      height: "100%",
-                      width: 120,
-                      borderColor: "transparent",
-                      background: "transparent",
-                    }}
-                    size={"small"}
-                    onClick={async (e) => {
-                      await asyncUpdateSocialTwitter(twitterId);
-                      props.onCloseBtnClicked(e);
-                    }}
-                  >
-                    입력하기
-                  </SecondaryButton>
-                </div>
               </Box>
+              <SecondaryButton
+                color={"secondary"}
+                variant={"contained"}
+                sx={{
+                  borderRadius: "11px",
+                  height: "100%",
+                  width: "100%",
+                  background: "transparent",
+                }}
+                size={"small"}
+                onClick={async (e) => {
+                  await asyncUpdateSocialTwitter(twitterId);
+                  props.onCloseBtnClicked(e);
+                }}
+              >
+                입력하기
+              </SecondaryButton>
             </Stack>
           </Stack>
         </Box>
