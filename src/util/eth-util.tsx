@@ -1,6 +1,6 @@
 import { WALLET_NAMES } from "../type";
 
-const homeUri = process.env["NEXT_PUBLIC_HOME_URI"];
+const DEEP_LINK = process.env["NEXT_PUBLIC_DEEP_LINK"];
 
 const goToMetaMaskDeppLinkWhenMobile = (
   walletName?: string,
@@ -15,7 +15,7 @@ const goToMetaMaskDeppLinkWhenMobile = (
     (walletName === WALLET_NAMES.META_MASK ||
       walletName === WALLET_NAMES.COINBASE_WALLET)
   ) {
-    location.href = `https://metamask.app.link/dapp/${homeUri}/`;
+    if (DEEP_LINK) location.href = DEEP_LINK;
     return true;
   }
   return false;
