@@ -35,6 +35,7 @@ import {
 } from "../../util/type-util";
 import ResourceFactory from "../../helper/resource-factory";
 import { useTheme } from "@mui/material/styles";
+import { useMobile } from "../../provider/mobile/mobile-context";
 
 const FORM_TYPE = {
   SELECT: "SELECT",
@@ -69,6 +70,7 @@ const Signup = () => {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const { isMobile } = useMobile();
 
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
@@ -296,7 +298,8 @@ const Signup = () => {
           }}
           walletInfos={(() => {
             return resourceFactory.getWalletInfos(
-              convertToSuppoertedNetwork(selectedNetwork)
+              convertToSuppoertedNetwork(selectedNetwork),
+              isMobile
             );
           })()}
           onWalletSelected={({ name, value }) => {
