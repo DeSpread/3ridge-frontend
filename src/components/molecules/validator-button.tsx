@@ -64,7 +64,7 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
               className={"MuiTypography"}
               variant={"body2"}
               sx={{
-                color: theme.palette.neutral["600"],
+                color: props.disabled ? "white" : theme.palette.neutral["600"],
               }}
             >{`${props.label}에 연결되었습니다`}</Typography>
           )}
@@ -73,7 +73,7 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
               className={"MuiTypography"}
               variant={"body2"}
               sx={{
-                color: theme.palette.neutral["600"],
+                color: props.disabled ? "white" : theme.palette.neutral["600"],
                 paddingRight: 1,
               }}
             >{`${props.label}에 연결해주세요`}</Typography>

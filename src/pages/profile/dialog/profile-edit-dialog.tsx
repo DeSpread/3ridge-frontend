@@ -265,8 +265,8 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                             payload={e}
                             sx={{
                               width: BUTTON_WIDTH,
-                              background: theme.palette.neutral[400],
-                              borderColor: "#383742",
+                              background: "#3b383f",
+                              borderColor: "#f3f4f6",
                             }}
                           />
                         )}
