@@ -396,12 +396,12 @@ const Event = (props: AppProps) => {
                                 new Date(
                                   ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
                                 ),
-                                "yyyy/MM/dd hh:mm:ss"
+                                "yyyy/MM/dd"
                               )} ~ ${format(
                                 new Date(
                                   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                                 ),
-                                "yyyy/MM/dd hh:mm:ss"
+                                "yyyy/MM/dd"
                               )} (UTC+09:00)`}
                             ></StyledChip>
                           ) : (
@@ -414,7 +414,7 @@ const Event = (props: AppProps) => {
                                       new Date(
                                         ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
                                       ),
-                                      "yyyy/MM/dd hh:mm:ss"
+                                      "yyyy/MM/dd"
                                     )}
                                   ~`}
                                   </Typography>
@@ -423,7 +423,7 @@ const Event = (props: AppProps) => {
                                       new Date(
                                         ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
                                       ),
-                                      "yyyy/MM/dd hh:mm:ss"
+                                      "yyyy/MM/dd"
                                     )} (UTC+09:00)
                                   `}
                                   </Typography>
