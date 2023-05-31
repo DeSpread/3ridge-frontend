@@ -282,7 +282,8 @@ const Event = (props: AppProps) => {
   }, [verifiedList, updateIndex]);
 
   const walletConnectedForTicket = useMemo(() => {
-    if (!ticketData.rewardPolicy?.context?.rewardChain) return true;
+    if (ticketData.rewardPolicy?.context?.rewardChain.includes("offchain"))
+      return true;
     return (
       (userData?.walletAddressInfos
         ?.filter((e) => e.address)
@@ -1158,7 +1159,20 @@ const Event = (props: AppProps) => {
                       )}
                     </Box>
                   </Stack>
-                  {ticketData.rewardPolicy?.context?.rewardChain ? (
+                  {ticketData.rewardPolicy?.context?.rewardChain.includes(
+                    "offchain"
+                  ) ? (
+                    <Stack
+                      direction={"row"}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      spacing={1}
+                    >
+                      <Typography variant={"body2"}>
+                        등록된 이메일 통해 보상 지급 예정
+                      </Typography>
+                    </Stack>
+                  ) : (
                     <Stack
                       direction={"row"}
                       justifyContent={"center"}
@@ -1180,8 +1194,6 @@ const Event = (props: AppProps) => {
                         지원
                       </Typography>
                     </Stack>
-                  ) : (
-                    <div style={{ marginBottom: -28 }}></div>
                   )}
                 </Stack>
               </PrimaryCard>
