@@ -40,30 +40,32 @@ const SimpleDialog = (props: QuestDiscordDialogProps) => {
           },
         }}
       >
-        {/*<DialogTitle>{props.title}</DialogTitle>*/}
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"space-between"}
-        >
-          <Typography textAlign={"left"} variant={"h5"}>
-            {props.title}
-          </Typography>
-          {/*<Button>abc</Button>*/}
-          <IconButton
-            sx={{
-              borderRadius: 32,
-              marginRight: 0,
-              "&:hover": {
-                boxShadow: "none",
-                transform: "translateY(0px)",
-              },
-            }}
-            onClick={props.onCloseBtnClicked}
+        {/*{props.title}</DialogTitle>*/}
+        <DialogTitle>
+          <Stack
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
           >
-            <CloseIcon></CloseIcon>
-          </IconButton>
-        </Stack>
+            <Typography textAlign={"left"} variant={"h6"}>
+              {props.title}
+            </Typography>
+            {/*<Button>abc</Button>*/}
+            <IconButton
+              sx={{
+                borderRadius: 32,
+                marginRight: 0,
+                "&:hover": {
+                  boxShadow: "none",
+                  transform: "translateY(0px)",
+                },
+              }}
+              onClick={props.onCloseBtnClicked}
+            >
+              <CloseIcon></CloseIcon>
+            </IconButton>
+          </Stack>
+        </DialogTitle>
         <DialogContent>{props.children}</DialogContent>
       </Dialog>
     </>
