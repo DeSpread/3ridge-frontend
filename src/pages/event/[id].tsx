@@ -1438,6 +1438,9 @@ const Event = (props: AppProps) => {
         onClose={() => {
           setSimpleWarningDialogTitle("");
         }}
+        onCloseBtnClicked={() => {
+          setSimpleWarningDialogTitle("");
+        }}
       >
         <Typography>
           {`${simpleWarningDialogTitle} 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
