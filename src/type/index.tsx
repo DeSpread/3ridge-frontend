@@ -32,9 +32,9 @@ export interface MouseEventWithParam<T> extends React.MouseEvent<HTMLElement> {
 }
 
 export const SUPPORTED_NETWORKS = {
+  EVM: "evm",
   APTOS: "aptos",
   SUI: "sui",
-  EVM: "evm",
   STACKS: "stacks",
   UNKNOWN: "unknown",
 } as const;
