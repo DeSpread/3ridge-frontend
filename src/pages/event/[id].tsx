@@ -169,22 +169,6 @@ const Event = (props: AppProps) => {
     updateVerifyAll();
   }, [ticketData, userData?._id]);
 
-  // if (ticketData?.untilTime) {
-  //   console.log(ticketData?.untilTime);
-  //   const date = new Date(
-  //     ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-  //   );
-  //   const utcString = date.toLocaleString("en-US", { timeZone: "UTC" });
-  //   console.log(utcString);
-  //   console.log(new Date(utcString));
-  //   format(
-  //     new Date(
-  //       ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-  //     ),
-  //     "yyyy/MM/dd"
-  //   );
-  // }
-
   const updateVerifyAll = () => {
     if (!userData?._id || initVerifiedList) return;
     if (lockUpdateVerifyAll) return;
@@ -1090,9 +1074,10 @@ const Event = (props: AppProps) => {
                             width: "100%",
                           }}
                           expiryTimestamp={
-                            new Date(
-                              ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                            )
+                            parseStrToDate(ticketData?.untilTime ?? "")
+                            // new Date(
+                            //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+                            // )
                           }
                         />
                       )
