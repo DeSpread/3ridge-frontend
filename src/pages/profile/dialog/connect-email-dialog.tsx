@@ -214,8 +214,8 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                             mail
                           );
                         if (res.status === 204) {
-                          setCount(60);
-                          let _vDate = addSeconds(new Date(), 61);
+                          setCount(COUNT);
+                          let _vDate = addSeconds(new Date(), COUNT + 1);
                           let intervalId = setInterval(() => {
                             const now = new Date();
                             //@ts-ignore
