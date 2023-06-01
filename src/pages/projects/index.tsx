@@ -144,6 +144,7 @@ const Projects = () => {
                             direction={"row"}
                             spacing={1}
                             alignItems={"center"}
+                            marginRight={"-30px"}
                           >
                             <Typography
                               variant={smUp ? "body2" : "caption"}
@@ -158,7 +159,7 @@ const Projects = () => {
                             >
                               {e.name}
                             </Typography>
-                            <CheckIcon></CheckIcon>
+                            <CheckIcon width={20}></CheckIcon>
                           </Stack>
                         </Box>
                       </Stack>
