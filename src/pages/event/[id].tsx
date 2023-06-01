@@ -68,6 +68,7 @@ import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 import { gql, request } from "graphql-request";
 import { findEmailQuests } from "../../util/type-util";
 import { useMobile } from "../../provider/mobile/mobile-context";
+import { parseStrToDate } from "../../util/date-util";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -167,6 +168,22 @@ const Event = (props: AppProps) => {
   useEffect(() => {
     updateVerifyAll();
   }, [ticketData, userData?._id]);
+
+  // if (ticketData?.untilTime) {
+  //   console.log(ticketData?.untilTime);
+  //   const date = new Date(
+  //     ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+  //   );
+  //   const utcString = date.toLocaleString("en-US", { timeZone: "UTC" });
+  //   console.log(utcString);
+  //   console.log(new Date(utcString));
+  //   format(
+  //     new Date(
+  //       ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+  //     ),
+  //     "yyyy/MM/dd"
+  //   );
+  // }
 
   const updateVerifyAll = () => {
     if (!userData?._id || initVerifiedList) return;
@@ -490,14 +507,13 @@ const Event = (props: AppProps) => {
                           {smUp ? (
                             <StyledChip
                               label={`${format(
-                                new Date(
-                                  ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                                ),
+                                parseStrToDate(ticketData?.beginTime ?? ""),
                                 "yyyy/MM/dd"
                               )} ~ ${format(
-                                new Date(
-                                  ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                                ),
+                                // new Date(
+                                //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+                                // ),
+                                parseStrToDate(ticketData?.untilTime ?? ""),
                                 "yyyy/MM/dd"
                               )} (UTC+09:00)`}
                             ></StyledChip>
@@ -508,8 +524,11 @@ const Event = (props: AppProps) => {
                                 <Stack sx={{}}>
                                   <Typography variant={"body2"}>
                                     {`${format(
-                                      new Date(
-                                        ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
+                                      // new Date(
+                                      //   ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
+                                      // ),
+                                      parseStrToDate(
+                                        ticketData?.beginTime ?? ""
                                       ),
                                       "yyyy/MM/dd"
                                     )}
@@ -517,8 +536,11 @@ const Event = (props: AppProps) => {
                                   </Typography>
                                   <Typography variant={"body2"}>
                                     {`${format(
-                                      new Date(
-                                        ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+                                      // new Date(
+                                      //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+                                      // ),
+                                      parseStrToDate(
+                                        ticketData?.untilTime ?? ""
                                       ),
                                       "yyyy/MM/dd"
                                     )} (UTC+09:00)
@@ -540,17 +562,19 @@ const Event = (props: AppProps) => {
                       {ticketData?.beginTime && ticketData?.untilTime && (
                         <>
                           <Typography>{`${format(
-                            new Date(
-                              ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                            ),
-                            "yyyy/MM/dd hh:mm:ss"
+                            // new Date(
+                            //   ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
+                            // ),
+                            parseStrToDate(ticketData?.beginTime ?? ""),
+                            "yyyy/MM/dd"
                           )}`}</Typography>
                           <Typography>
                             {`~ ${format(
-                              new Date(
-                                ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                              ),
-                              "yyyy/MM/dd hh:mm:ss"
+                              // new Date(
+                              //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
+                              // ),
+                              parseStrToDate(ticketData?.untilTime ?? ""),
+                              "yyyy/MM/dd"
                             )} (UTC+09:00)`}
                           </Typography>
                         </>
