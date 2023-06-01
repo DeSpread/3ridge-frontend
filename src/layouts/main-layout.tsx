@@ -206,7 +206,7 @@ const MainLayout = (props: MainLayoutProps) => {
                     "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/beta.svg"
                   }
                   height={smUp ? 30 : 30}
-                  width={smUp ? 35 : 35}
+                  width={smUp ? 30 : 30}
                   alt={""}
                 />
               </Stack>
