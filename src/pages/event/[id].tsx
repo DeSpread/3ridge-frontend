@@ -170,6 +170,15 @@ const Event = (props: AppProps) => {
   const [eventDespHtmlContent, setEventDespHtmlContent] = useState("");
   const [lockUpdateVerifyAll, setLockUpdateVerifyAll] = useState(false);
   const { isMobile } = useMobile();
+  const [hasMetamask, setHasMetask] = useState(false);
+
+  useEffect(() => {
+    const { ethereum } = window;
+    //@ts-ignore
+    const _hasMetamask = ethereum ? ethereum.isMetaMask : false;
+    console.log("_hasMetamask", _hasMetamask);
+    setHasMetask(_hasMetamask);
+  }, []);
 
   useEffect(() => {
     updateVerifyAll();
@@ -796,6 +805,28 @@ const Event = (props: AppProps) => {
                   )}
                 </Stack>
               </Box>
+              {isMobile && !hasMetamask && (
+                <Box sx={{ marginTop: 100 }}>
+                  <LinkTypography
+                    variant={"body1"}
+                    onClick={async () => {
+                      const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
+                      location.href = link;
+                    }}
+                    href={"#"}
+                    sx={{
+                      fontWeight: "bold",
+                      "&:hover": {
+                        color: "#914e1d",
+                        textDecoration: "underline",
+                      },
+                      color: theme.palette.warning.main,
+                    }}
+                  >
+                    이 링크를 누르시면 메타마스크에서 해당 페이지가 열립니다.
+                  </LinkTypography>
+                </Box>
+              )}
             </Stack>
 
             <Stack

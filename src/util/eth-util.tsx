@@ -6,12 +6,11 @@ const goToMetaMaskDeppLinkWhenMobile = (
   walletName?: string,
   isMobile?: boolean
 ) => {
-  const { ethereum } = window;
-  //@ts-ignore
-  const isMetaMask = ethereum ? ethereum.isMetaMask : false;
+  const hasMetamaskFlag = hasMetamask();
+
   if (
     isMobile &&
-    !isMetaMask &&
+    !hasMetamaskFlag &&
     (walletName === WALLET_NAMES.META_MASK ||
       walletName === WALLET_NAMES.COINBASE_WALLET)
   ) {
@@ -19,6 +18,16 @@ const goToMetaMaskDeppLinkWhenMobile = (
     return true;
   }
   return false;
+};
+
+const hasMetamask = () => {
+  if (typeof window !== "undefined") {
+    return false;
+  }
+  const { ethereum } = window;
+  //@ts-ignore
+  const hasMetamask = ethereum ? ethereum.isMetaMask : false;
+  return hasMetamask;
 };
 
 export { goToMetaMaskDeppLinkWhenMobile };
