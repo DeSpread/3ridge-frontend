@@ -74,6 +74,7 @@ import {
 } from "../../util/type-util";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import { parseStrToDate } from "../../util/date-util";
+import StringHelper from "../../helper/string-helper";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -428,14 +429,6 @@ const Event = (props: AppProps) => {
       return "지갑";
     }
     return chain;
-  };
-
-  const getRewardAmountLabel = (rewardAmount?: number) => {
-    const _rewardAmount = rewardAmount ?? 0;
-    if (_rewardAmount >= 10000000) {
-      return "제한없음";
-    }
-    return _rewardAmount + "명";
   };
 
   const showTwitterConnectAlert = () => {
@@ -1260,7 +1253,7 @@ const Event = (props: AppProps) => {
                         <Typography variant={"body1"}>대상자 수</Typography>
                         <Stack direction={"row"} alignItems={"center"}>
                           <Typography variant={"h6"}>
-                            {getRewardAmountLabel(
+                            {StringHelper.getInstance().getRewardAmountLabel(
                               ticketData?.rewardPolicy?.context?.rewardAmount
                             )}
                           </Typography>

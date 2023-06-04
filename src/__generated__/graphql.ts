@@ -488,7 +488,8 @@ export enum QuestPolicyType {
   VerifyTelegram = 'VERIFY_TELEGRAM',
   VerifyTwitterFollow = 'VERIFY_TWITTER_FOLLOW',
   VerifyTwitterLiking = 'VERIFY_TWITTER_LIKING',
-  VerifyTwitterRetweet = 'VERIFY_TWITTER_RETWEET'
+  VerifyTwitterRetweet = 'VERIFY_TWITTER_RETWEET',
+  VerifyWalletAddress = 'VERIFY_WALLET_ADDRESS'
 }
 
 export type RewardPolicy = {
