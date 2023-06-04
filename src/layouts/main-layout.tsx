@@ -92,8 +92,8 @@ const MainLayout = (props: MainLayoutProps) => {
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
-  const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
-    useState(false);
+  // const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
+  //   useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const { isMobile } = useMobile();
 
@@ -242,7 +242,8 @@ const MainLayout = (props: MainLayoutProps) => {
                         onClick={(e) => {
                           e.preventDefault();
                           // setShowSignInDialog(true);
-                          setSignInWithNetworkSelectVisible(true);
+                          // setSignInWithNetworkSelectVisible(true);
+                          setShowSignInDialog(true);
                         }}
                       >
                         지갑 연결
@@ -278,7 +279,8 @@ const MainLayout = (props: MainLayoutProps) => {
                   onLeaderBoardClick={asyncGoToLeaderBoard}
                   onSignInClick={async (e) => {
                     e.preventDefault();
-                    setSignInWithNetworkSelectVisible(true);
+                    // setSignInWithNetworkSelectVisible(true);
+                    setShowSignInDialog(true);
                   }}
                 ></SubMenuButton>
               ))}
@@ -297,29 +299,29 @@ const MainLayout = (props: MainLayoutProps) => {
       </Box>
 
       {/*--- Dialog ---*/}
-      <SignInDialog
-        title={"안녕하세요 다시 만나서 반가워요!"}
-        open={isSignDialogOpen}
-        onCloseBtnClicked={(e) => {
-          e.preventDefault();
-          setShowSignInDialog(false);
-        }}
-        onSignUpClicked={(e) => {
-          setShowSignInDialog(false);
-        }}
-        onSignInWithClicked={(e) => {
-          setSignUpWithVisible(true);
-          setShowSignInDialog(false);
-        }}
-        onClose={() => {
-          setShowSignInDialog(false);
-        }}
-        onContinueWithWalletClicked={(e) => {
-          e.preventDefault();
-          setShowSignInDialog(false);
-          setSignInWithNetworkSelectVisible(true);
-        }}
-      ></SignInDialog>
+      {/*<SignInDialog*/}
+      {/*  title={"안녕하세요 다시 만나서 반가워요!"}*/}
+      {/*  open={isSignDialogOpen}*/}
+      {/*  onCloseBtnClicked={(e) => {*/}
+      {/*    e.preventDefault();*/}
+      {/*    setShowSignInDialog(false);*/}
+      {/*  }}*/}
+      {/*  onSignUpClicked={(e) => {*/}
+      {/*    setShowSignInDialog(false);*/}
+      {/*  }}*/}
+      {/*  onSignInWithClicked={(e) => {*/}
+      {/*    setSignUpWithVisible(true);*/}
+      {/*    setShowSignInDialog(false);*/}
+      {/*  }}*/}
+      {/*  onClose={() => {*/}
+      {/*    setShowSignInDialog(false);*/}
+      {/*  }}*/}
+      {/*  onContinueWithWalletClicked={(e) => {*/}
+      {/*    e.preventDefault();*/}
+      {/*    setShowSignInDialog(false);*/}
+      {/*    setSignInWithNetworkSelectVisible(true);*/}
+      {/*  }}*/}
+      {/*></SignInDialog>*/}
       <SignInWithDialog
         title={"가입하기"}
         open={signUpWithVisible}
@@ -387,16 +389,19 @@ const MainLayout = (props: MainLayoutProps) => {
       ></SignInWithEmailDialog>
       <SignInWithNetworkSelectDialog
         title={"연결하려는 네트워트를 선택하세요"}
-        open={signInWithNetworkSelectVisible}
+        open={isSignDialogOpen}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
-          setSignInWithNetworkSelectVisible(false);
+          setShowSignInDialog(false);
+          // setSignInWithNetworkSelectVisible(false);
         }}
         onClose={() => {
-          setSignInWithNetworkSelectVisible(false);
+          setShowSignInDialog(false);
+          // setSignInWithNetworkSelectVisible(false);
         }}
         onNetworkButtonClicked={(network) => {
-          setSignInWithNetworkSelectVisible(false);
+          setShowSignInDialog(false);
+          // setSignInWithNetworkSelectVisible(false);
           setSelectedNetwork(network); // console.log(network);
         }}
       ></SignInWithNetworkSelectDialog>

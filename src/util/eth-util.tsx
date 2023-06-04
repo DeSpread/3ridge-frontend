@@ -21,9 +21,6 @@ const goToMetaMaskDeppLinkWhenMobile = (
 };
 
 const hasMetamask = () => {
-  if (typeof window !== "undefined") {
-    return false;
-  }
   const { ethereum } = window;
   //@ts-ignore
   const hasMetamask = ethereum ? ethereum.isMetaMask : false;
