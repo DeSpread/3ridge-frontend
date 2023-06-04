@@ -227,6 +227,11 @@ const Event = (props: AppProps) => {
             }
           }
 
+          if (!isStarted() || isExpired()) {
+            // console.log("aaa");
+            return;
+          }
+
           const walletQuests = findVerifyHasWalletQuests(ticketData);
           const walletQuestChains = walletQuests?.map(
             //@ts-ignore
@@ -359,13 +364,20 @@ const Event = (props: AppProps) => {
   }, [userData?.walletAddressInfos]);
 
   const isExpired = () => {
-    return ticketData?.untilTime //rewardPolicy?.context?.untilTime
+    return parseStrToDate(ticketData?.untilTime ?? "") //rewardPolicy?.context?.untilTime
       ? //@ts-ignore
-        new Date(ticketData?.untilTime) -
+        parseStrToDate(ticketData?.untilTime ?? "") -
           //@ts-ignore
           new Date() <
           0
       : true;
+  };
+
+  const isStarted = () => {
+    return parseStrToDate(ticketData?.beginTime ?? "")
+      ? //@ts-ignore
+        parseStrToDate(ticketData?.beginTime ?? "") - new Date() < 0
+      : false;
   };
 
   const updateVerifyState = (index: number) => {
@@ -462,6 +474,22 @@ const Event = (props: AppProps) => {
       return true;
     }
     return false;
+  };
+
+  const getLoadingButtonLabel = () => {
+    if (isExpired()) {
+      return "이벤트가 종료되었어요";
+    }
+    if (!isStarted()) {
+      return "이벤트가 시작되지 않았습니다";
+    }
+    if (claimCompleted) {
+      return "이미 리워드를 클레임 하였습니다";
+    }
+    if (ticketData?.rewardPolicy?.context?.rewardClaimable) {
+      return "리워드 클레임";
+    }
+    return "리워드 예정";
   };
 
   return (
@@ -801,7 +829,9 @@ const Event = (props: AppProps) => {
                       description={quest.description}
                       disabled={
                         (userData?._id ? false : true) ||
-                        isExceededTicketParticipants()
+                        isExceededTicketParticipants() ||
+                        !isStarted() ||
+                        isExpired()
                       }
                       verified={verifiedList[index]}
                       overrideConfirmBtnLabel={getConfirmBtnLabel(quest)}
@@ -1149,7 +1179,7 @@ const Event = (props: AppProps) => {
                             본 이벤트가 끝났습니다
                           </Typography>
                         </Stack>
-                      ) : (
+                      ) : isStarted() ? (
                         <TimerBoard
                           sx={{
                             marginTop: 4,
@@ -1163,6 +1193,24 @@ const Event = (props: AppProps) => {
                             // )
                           }
                         />
+                      ) : (
+                        <Stack
+                          sx={{
+                            background: "",
+                            paddingTop: 5,
+                            paddingBottom: 2,
+                          }}
+                          direction={"row"}
+                          alignItems={"center"}
+                          justifyContent={"center"}
+                        >
+                          <Typography
+                            variant={"h6"}
+                            sx={{ color: theme.palette.secondary.main }}
+                          >
+                            이벤트가 시작되지 않았습니다
+                          </Typography>
+                        </Stack>
                       )
                     ) : (
                       <DummyTimerBoard
@@ -1323,6 +1371,7 @@ const Event = (props: AppProps) => {
                   claimCompleted ||
                   // updatingClaimCompleted ||
                   isExpired() ||
+                  !isStarted() ||
                   !ticketData?.rewardPolicy?.context?.rewardClaimable
                 }
                 onClick={async (e) => {
@@ -1387,13 +1436,7 @@ const Event = (props: AppProps) => {
                   }
                 }}
               >
-                {isExpired()
-                  ? "이벤트가 종료되었어요"
-                  : claimCompleted
-                  ? "이미 리워드를 클레임 하였습니다"
-                  : ticketData?.rewardPolicy?.context?.rewardClaimable
-                  ? "리워드 클레임"
-                  : "리워드 예정"}
+                {getLoadingButtonLabel()}
               </LoadingButton>
             </Stack>
 
