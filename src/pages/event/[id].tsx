@@ -714,17 +714,10 @@ const Event = (props: AppProps) => {
               </Box>
             )}
 
-            {!isExceededTicketParticipants() && userData?._id === undefined && (
-              <Box sx={{}}>
-                <Typography
-                  variant={smUp ? "h5" : "h6"}
-                  sx={{
-                    color: theme.palette.secondary.main,
-                    marginTop: smUp ? 0 : -5,
-                    background: "",
-                    textAlign: smUp ? "left" : "center",
-                  }}
-                >
+            {hasMetamask &&
+              !isExceededTicketParticipants() &&
+              userData?._id === undefined && (
+                <Box sx={{}}>
                   <>
                     <Card>
                       <CardContent>
@@ -748,7 +741,36 @@ const Event = (props: AppProps) => {
                       </CardContent>
                     </Card>
                   </>
-                </Typography>
+                </Box>
+              )}
+
+            {isMobile && !hasMetamask && (
+              <Box sx={{}}>
+                <Card>
+                  <CardContent>
+                    <Box sx={{}}>
+                      <LinkTypography
+                        variant={"body1"}
+                        onClick={async () => {
+                          const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
+                          location.href = link;
+                        }}
+                        href={"#"}
+                        sx={{
+                          fontWeight: "bold",
+                          "&:hover": {
+                            color: "#914e1d",
+                            textDecoration: "underline",
+                          },
+                          color: theme.palette.warning.main,
+                        }}
+                      >
+                        이 링크를 누르시면 메타마스크에서 해당 페이지가
+                        열립니다.
+                      </LinkTypography>
+                    </Box>
+                  </CardContent>
+                </Card>
               </Box>
             )}
             {userData?._id && !walletConnectedForTicket && (
@@ -805,28 +827,6 @@ const Event = (props: AppProps) => {
                   )}
                 </Stack>
               </Box>
-              {isMobile && !hasMetamask && (
-                <Box sx={{ marginTop: 100 }}>
-                  <LinkTypography
-                    variant={"body1"}
-                    onClick={async () => {
-                      const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
-                      location.href = link;
-                    }}
-                    href={"#"}
-                    sx={{
-                      fontWeight: "bold",
-                      "&:hover": {
-                        color: "#914e1d",
-                        textDecoration: "underline",
-                      },
-                      color: theme.palette.warning.main,
-                    }}
-                  >
-                    이 링크를 누르시면 메타마스크에서 해당 페이지가 열립니다.
-                  </LinkTypography>
-                </Box>
-              )}
             </Stack>
 
             <Stack
