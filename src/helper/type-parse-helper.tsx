@@ -9,8 +9,9 @@ import {
   DiscordQuestContext,
   Verify3ridgePointContext,
   TelegramQuestContext,
-  VerifyEmailContext,
-  VerifyWalletAddressContext,
+  VerifyHasEmailContext,
+  VerifyHasWalletAddressContext,
+  VerifyHasTwitter,
 } from "../type";
 import { QuestPolicyType } from "../__generated__/graphql";
 
@@ -61,9 +62,11 @@ class TypeParseHelper {
       } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT) {
         return contextJson as Verify3ridgePointContext;
       } else if (questPolicyType === QuestPolicyType.VerifyEmail) {
-        return contextJson as VerifyEmailContext;
-      } else if (questPolicyType === QuestPolicyType.VerifyWalletAddress) {
-        return contextJson as VerifyWalletAddressContext;
+        return contextJson as VerifyHasEmailContext;
+      } else if (questPolicyType === QuestPolicyType.VerifyHasWalletAddress) {
+        return contextJson as VerifyHasWalletAddressContext;
+      } else if (questPolicyType === QuestPolicyType.VerifyHasTwitter) {
+        return contextJson as VerifyHasTwitter;
       }
     } catch (e) {
       console.log(context, questPolicyType);

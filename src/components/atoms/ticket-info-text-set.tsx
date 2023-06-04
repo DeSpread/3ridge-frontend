@@ -1,6 +1,7 @@
 import { Box, Grid, Typography, TypographyProps } from "@mui/material";
 import React, { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
 import { PartialTicket } from "../../type";
+import StringHelper from "../../helper/string-helper";
 
 type TicketInfoViewProps = TypographyProps & {
   ticket?: PartialTicket;
@@ -38,7 +39,9 @@ const TicketInfoTextSet = ({ ticket, sx }: TicketInfoViewProps) => {
         {ticket?.rewardPolicy?.context?.rewardAmount && (
           <Box sx={{ paddingLeft: "4px" }}>
             <Typography variant={"body2"} sx={{ ...sx }}>
-              {` / ${ticket?.rewardPolicy?.context?.rewardAmount ?? ""} 명`}
+              {` / ${StringHelper.getInstance().getRewardAmountLabel(
+                ticket?.rewardPolicy?.context?.rewardAmount
+              )}`}
             </Typography>
           </Box>
         )}

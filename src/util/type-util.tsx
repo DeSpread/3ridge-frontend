@@ -88,12 +88,30 @@ const getUserMail = (user?: User) => {
   return undefined;
 };
 
-const findEmailQuests = (ticket: Ticket) => {
+const findVerifyHasEmailQuests = (ticket: Ticket) => {
   if (!ticket) return null;
-  const mailQuests = ticket?.quests?.filter(
-    (e) => e.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail
+  const targetQuests = ticket?.quests?.filter(
+    (e) =>
+      e.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
+      e.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail
   );
-  return mailQuests;
+  return targetQuests;
+};
+
+const findVerifyHasWalletQuests = (ticket: Ticket) => {
+  if (!ticket) return null;
+  const targetQuests = ticket?.quests?.filter(
+    (e) => e.questPolicy?.questPolicy === QuestPolicyType.VerifyHasWalletAddress
+  );
+  return targetQuests;
+};
+
+const findVerifyHasTwitter = (ticket: Ticket) => {
+  if (!ticket) return null;
+  const targetQuests = ticket?.quests?.filter(
+    (e) => e.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter
+  );
+  return targetQuests;
 };
 
 export {
@@ -102,5 +120,7 @@ export {
   convertToWalletName,
   filterFeatureEventTickets,
   getUserMail,
-  findEmailQuests,
+  findVerifyHasEmailQuests,
+  findVerifyHasWalletQuests,
+  findVerifyHasTwitter,
 };
