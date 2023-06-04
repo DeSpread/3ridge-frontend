@@ -31,6 +31,7 @@ import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import {
   DiscordQuestContext,
   MouseEventWithParam,
+  Quest,
   QUEST_POLICY_TYPE,
   QuizQuestContext,
   REWARD_POLICY_TYPE,
@@ -66,7 +67,11 @@ import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 import { gql, request } from "graphql-request";
-import { findEmailQuests } from "../../util/type-util";
+import {
+  findVerifyHasEmailQuests,
+  findVerifyHasTwitter,
+  findVerifyHasWalletQuests,
+} from "../../util/type-util";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import { parseStrToDate } from "../../util/date-util";
 
@@ -193,23 +198,23 @@ const Event = (props: AppProps) => {
           setInitVerifiedList(true);
           asyncUpdateClaimCompleted().then(() => {});
           // console.log("newVerifiedList", newVerifiedList);
-          const emailQuests = findEmailQuests(ticketData);
-          // console.log("emailQuests", emailQuests);
+          const emailQuests = findVerifyHasEmailQuests(ticketData);
           const emailQuestsIds = emailQuests?.map((eq) => eq._id);
           // console.log("emailQuestsIds", emailQuestsIds);
+          const verifiedPromiseList: any[] = [];
+
           if (ids && (emailQuestsIds?.length ?? 0) > 0) {
-            const hasAllVerifiedEmail = emailQuestsIds?.reduce(
+            const hasAllVerified = emailQuestsIds?.reduce(
               (accumulator, currentValue) =>
                 accumulator && newVerifiedList[ids?.indexOf(currentValue)],
               true
             );
             // console.log("hasAllVerifiedEmail", hasAllVerifiedEmail);
-            if (!hasAllVerifiedEmail) {
+            if (!hasAllVerified) {
               if (userData?.email) {
-                const verifiedEmailPromiseList: any[] = [];
                 emailQuestsIds?.forEach((e) => {
                   if (ticketData?._id && e)
-                    verifiedEmailPromiseList.push(
+                    verifiedPromiseList.push(
                       asyncCompleteQuestOfUser(ticketData?._id, e)
                     );
                 });
@@ -217,26 +222,77 @@ const Event = (props: AppProps) => {
                 //   "verifiedEmailPromiseList",
                 //   verifiedEmailPromiseList
                 // );
-                if (
-                  verifiedEmailPromiseList &&
-                  (verifiedEmailPromiseList?.length ?? 0) > 0
-                ) {
-                  Promise.all(verifiedEmailPromiseList)
-                    .then((completeQuestRes) => {
-                      setTimeout(() => {
-                        // console.log("recursive updateVerifyAll");
-                        updateVerifyAll();
-                      }, 0);
-                    })
-                    .catch((e) => {
-                      console.log(e);
-                    })
-                    .finally(() => {
-                      setLockUpdateVerifyAll(false);
-                    });
+              }
+            }
+          }
+
+          const walletQuests = findVerifyHasWalletQuests(ticketData);
+          const walletQuestChains = walletQuests?.map(
+            //@ts-ignore
+            (eq) => eq.questPolicy?.context?.chain
+          );
+          const walletQuestsIds = walletQuests?.map((eq) => eq._id);
+          if (ids && (walletQuestsIds?.length ?? 0) > 0) {
+            const hasAllVerified = walletQuestsIds?.reduce(
+              (accumulator, currentValue) =>
+                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+              true
+            );
+            if (!hasAllVerified) {
+              const networks = userData?.walletAddressInfos
+                ?.filter((e) => e.address)
+                .map((e) => e.network.toUpperCase());
+              console.log("networks", networks);
+              for (let i = 0; i < (walletQuestChains?.length ?? 0); i++) {
+                const chain = walletQuestChains?.[i]?.toUpperCase();
+                if (networks?.includes(chain)) {
+                  const __id = walletQuestsIds?.[i] ?? undefined;
+                  if (ticketData?._id && __id) {
+                    // console.log("aaa", ticketData?._id, __id);
+                    verifiedPromiseList.push(
+                      asyncCompleteQuestOfUser(ticketData?._id, __id)
+                    );
+                  }
                 }
               }
             }
+          }
+
+          const twitterQuests = findVerifyHasTwitter(ticketData);
+          const twitterQuestsIds = twitterQuests?.map((eq) => eq._id);
+          if (ids && (twitterQuestsIds?.length ?? 0) > 0) {
+            const hasAllVerified = twitterQuestsIds?.reduce(
+              (accumulator, currentValue) =>
+                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+              true
+            );
+            if (!hasAllVerified) {
+              // console.log(twitterQuests);
+              if (userData?.userSocial?.twitterId) {
+                twitterQuestsIds?.forEach((e) => {
+                  if (ticketData?._id && e)
+                    verifiedPromiseList.push(
+                      asyncCompleteQuestOfUser(ticketData?._id, e)
+                    );
+                });
+              }
+            }
+          }
+
+          if (verifiedPromiseList && (verifiedPromiseList?.length ?? 0) > 0) {
+            Promise.all(verifiedPromiseList)
+              .then((completeQuestRes) => {
+                setTimeout(() => {
+                  // console.log("recursive updateVerifyAll");
+                  updateVerifyAll();
+                }, 0);
+              })
+              .catch((e) => {
+                console.log(e);
+              })
+              .finally(() => {
+                setLockUpdateVerifyAll(false);
+              });
           } else {
             setLockUpdateVerifyAll(false);
           }
@@ -353,6 +409,33 @@ const Event = (props: AppProps) => {
     setShowProfileEditDialog(true);
     await router.push(`/profile/${userData?.name}`);
     closeLoading();
+  };
+
+  const getConfirmBtnLabel = (quest: Partial<Quest>) => {
+    return quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
+      quest.questPolicy?.questPolicy ===
+        QuestPolicyType.VerifyHasWalletAddress ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter
+      ? "연동하기"
+      : undefined;
+  };
+
+  const changeChainToAlias = (chain: string) => {
+    if (chain === "offchain-by-email") {
+      return "이메일";
+    } else if (chain === "offchain-by-wallet") {
+      return "지갑";
+    }
+    return chain;
+  };
+
+  const getRewardAmountLabel = (rewardAmount?: number) => {
+    const _rewardAmount = rewardAmount ?? 0;
+    if (_rewardAmount >= 10000000) {
+      return "제한없음";
+    }
+    return _rewardAmount + "명";
   };
 
   const showTwitterConnectAlert = () => {
@@ -728,12 +811,7 @@ const Event = (props: AppProps) => {
                         isExceededTicketParticipants()
                       }
                       verified={verifiedList[index]}
-                      overrideConfirmBtnLabel={
-                        quest.questPolicy?.questPolicy ===
-                        QuestPolicyType.VerifyEmail
-                          ? "연동하기"
-                          : undefined
-                      }
+                      overrideConfirmBtnLabel={getConfirmBtnLabel(quest)}
                       hideStartButton={
                         quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT ||
@@ -744,7 +822,13 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
                         quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyEmail
+                          QuestPolicyType.VerifyEmail ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyHasEmail ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyHasWalletAddress ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyHasTwitter
                       }
                       onVerifyBtnClicked={async (e) => {
                         const myEvent = e as MouseEventWithParam<{
@@ -822,7 +906,13 @@ const Event = (props: AppProps) => {
                             updateVerifyState(index);
                           } else if (
                             quest.questPolicy?.questPolicy ===
-                            QuestPolicyType.VerifyEmail
+                              QuestPolicyType.VerifyEmail ||
+                            quest.questPolicy?.questPolicy ===
+                              QuestPolicyType.VerifyHasEmail ||
+                            quest.questPolicy?.questPolicy ===
+                              QuestPolicyType.VerifyHasWalletAddress ||
+                            quest.questPolicy?.questPolicy ===
+                              QuestPolicyType.VerifyHasTwitter
                           ) {
                             myEvent.params.callback("success");
                             asyncGoToProfileAndEditDialogOpen().then();
@@ -1170,10 +1260,9 @@ const Event = (props: AppProps) => {
                         <Typography variant={"body1"}>대상자 수</Typography>
                         <Stack direction={"row"} alignItems={"center"}>
                           <Typography variant={"h6"}>
-                            {`${
-                              ticketData?.rewardPolicy?.context?.rewardAmount ??
-                              ""
-                            } 명`}
+                            {getRewardAmountLabel(
+                              ticketData?.rewardPolicy?.context?.rewardAmount
+                            )}
                           </Typography>
                         </Stack>
                       </Stack>
@@ -1205,7 +1294,9 @@ const Event = (props: AppProps) => {
                       spacing={1}
                     >
                       <Typography variant={"body2"}>
-                        등록된 이메일 통해 보상 지급 예정
+                        {`등록된 ${changeChainToAlias(
+                          ticketData.rewardPolicy?.context?.rewardChain
+                        )} 통해 보상 지급 예정`}
                       </Typography>
                     </Stack>
                   ) : (

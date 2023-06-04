@@ -482,11 +482,13 @@ export enum QuestPolicyType {
   VerifyAptosHasNft = 'VERIFY_APTOS_HAS_NFT',
   VerifyDiscord = 'VERIFY_DISCORD',
   VerifyEmail = 'VERIFY_EMAIL',
+  VerifyHasEmail = 'VERIFY_HAS_EMAIL',
+  VerifyHasTwitter = 'VERIFY_HAS_TWITTER',
+  VerifyHasWalletAddress = 'VERIFY_HAS_WALLET_ADDRESS',
   VerifyTelegram = 'VERIFY_TELEGRAM',
   VerifyTwitterFollow = 'VERIFY_TWITTER_FOLLOW',
   VerifyTwitterLiking = 'VERIFY_TWITTER_LIKING',
-  VerifyTwitterRetweet = 'VERIFY_TWITTER_RETWEET',
-  VerifyWalletAddress = 'VERIFY_WALLET_ADDRESS'
+  VerifyTwitterRetweet = 'VERIFY_TWITTER_RETWEET'
 }
 
 export type RewardPolicy = {

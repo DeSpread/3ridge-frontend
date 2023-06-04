@@ -211,6 +211,9 @@ export type Quest = {
       | DiscordQuestContext
       | TelegramQuestContext
       | Verify3ridgePointContext
+      | VerifyHasEmailContext
+      | VerifyHasWalletAddressContext
+      | VerifyHasTwitter
       | undefined;
     questPolicy?: string;
   };
@@ -248,9 +251,11 @@ export type Verify3ridgePointContext = {
   point: number;
 };
 
-export type VerifyEmailContext = {};
+export type VerifyHasEmailContext = {};
 
-export type VerifyWalletAddressContext = {
+export type VerifyHasTwitter = {};
+
+export type VerifyHasWalletAddressContext = {
   chain: string;
 };
 
