@@ -57,7 +57,7 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const COUNT = 120;
+  const COUNT = 600;
 
   return (
     <Dialog
