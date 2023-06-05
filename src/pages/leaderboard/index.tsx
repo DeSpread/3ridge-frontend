@@ -241,9 +241,9 @@ const Leaderboard = () => {
                     )}
                     {!userRankLoading && userRank && (
                       <RankCard
-                        onClick={async () => {
-                          await routeToUserProfile(userData);
-                        }}
+                        // onClick={async () => {
+                        //   await routeToUserProfile(userData);
+                        // }}
                         user={userData}
                         rank={userRank}
                       ></RankCard>
@@ -261,9 +261,9 @@ const Leaderboard = () => {
                   {leaderUsersData?.map((e, index) => {
                     return (
                       <RankCard
-                        onClick={async (event) => {
-                          await routeToUserProfile(e);
-                        }}
+                        // onClick={async (event) => {
+                        //   await routeToUserProfile(e);
+                        // }}
                         user={e}
                         rank={index + 1}
                         key={index}
