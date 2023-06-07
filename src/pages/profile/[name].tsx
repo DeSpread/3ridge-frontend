@@ -270,7 +270,8 @@ const Profile = () => {
                       .filter(
                         (network) =>
                           network === SUPPORTED_NETWORKS.EVM ||
-                          (!isMobile && network === SUPPORTED_NETWORKS.APTOS)
+                          (!isMobile && network === SUPPORTED_NETWORKS.APTOS) ||
+                          network === SUPPORTED_NETWORKS.STACKS
                       ) // FIXME: 이더리움만 현재는 나오게끔 하지만, 다른 체인을 보여주고 disabled 하는게 더 좋아보임
                       .filter(
                         (_, index) =>
