@@ -834,6 +834,7 @@ const Event = (props: AppProps) => {
                     <div
                       style={{
                         textAlign: "justify",
+                        color: "white",
                       }}
                       dangerouslySetInnerHTML={{ __html: eventDespHtmlContent }}
                     ></div>
