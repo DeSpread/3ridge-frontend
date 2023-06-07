@@ -778,8 +778,7 @@ const Event = (props: AppProps) => {
                         {ticketData?._id !== "6445ef8e7cf8560dd56dafc3"
                           ? `이 링크를 누르시면 메타마스크 에서 해당 페이지가
                         열립니다.`
-                          : `이 링크를 누르시면 xverse에서 해당 페이지가
-                        열립니다.`}
+                          : `이 링크를 누르시면, 스택스 지갑 Xverse 설치 페이지로 이동합니다`}
                       </LinkTypography>
                     </Box>
                   </CardContent>
