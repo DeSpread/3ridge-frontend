@@ -749,7 +749,7 @@ const Event = (props: AppProps) => {
                 </Box>
               )}
 
-            {isMobile && !hasMetamask && (
+            {isMobile && !hasMetamask && !isLoggedIn && (
               <Box sx={{}}>
                 <Card>
                   <CardContent>
@@ -757,8 +757,13 @@ const Event = (props: AppProps) => {
                       <LinkTypography
                         variant={"body1"}
                         onClick={async () => {
-                          const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
-                          location.href = link;
+                          if (ticketData?._id !== "6445ef8e7cf8560dd56dafc3") {
+                            const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
+                            location.href = link;
+                          } else {
+                            const link = `https://xverse.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
+                            location.href = link;
+                          }
                         }}
                         href={"#"}
                         sx={{
@@ -770,8 +775,11 @@ const Event = (props: AppProps) => {
                           color: theme.palette.warning.main,
                         }}
                       >
-                        이 링크를 누르시면 메타마스크에서 해당 페이지가
-                        열립니다.
+                        {ticketData?._id !== "6445ef8e7cf8560dd56dafc3"
+                          ? `이 링크를 누르시면 메타마스크 에서 해당 페이지가
+                        열립니다.`
+                          : `이 링크를 누르시면 xverse에서 해당 페이지가
+                        열립니다.`}
                       </LinkTypography>
                     </Box>
                   </CardContent>
