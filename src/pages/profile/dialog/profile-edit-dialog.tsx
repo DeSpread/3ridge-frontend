@@ -247,7 +247,8 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
 
                     const disabledBtn = !(
                       (!isMobile && e === SUPPORTED_NETWORKS.APTOS) ||
-                      e === SUPPORTED_NETWORKS.EVM
+                      e === SUPPORTED_NETWORKS.EVM ||
+                      e === SUPPORTED_NETWORKS.STACKS
                     );
 
                     return (

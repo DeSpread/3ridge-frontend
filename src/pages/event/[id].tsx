@@ -35,6 +35,7 @@ import {
   QUEST_POLICY_TYPE,
   QuizQuestContext,
   REWARD_POLICY_TYPE,
+  SUPPORTED_NETWORKS,
   TelegramQuestContext,
   TwitterFollowQuestContext,
   TwitterLikingQuestContext,
@@ -364,10 +365,14 @@ const Event = (props: AppProps) => {
         .map((e) => e.network)
         .filter(
           (e) =>
-            e ===
-            (ticketData.rewardPolicy?.context?.rewardChain === "polygon"
-              ? "evm"
-              : ticketData.rewardPolicy?.context?.rewardChain)
+            String(e).toLowerCase() ===
+            (String(
+              ticketData.rewardPolicy?.context?.rewardChain
+            ).toLowerCase() === "polygon"
+              ? SUPPORTED_NETWORKS.EVM
+              : String(
+                  ticketData.rewardPolicy?.context?.rewardChain
+                ).toLowerCase())
         )?.length ?? 0) !== 0
     );
   }, [userData?.walletAddressInfos]);
