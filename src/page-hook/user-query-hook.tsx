@@ -131,40 +131,44 @@ export function useUserQuery(props: { name?: string }) {
               }
             : undefined,
         },
-        participatingTickets: participatingTickets?.map((e) => {
-          return {
-            _id: e._id ?? undefined,
-            title: e.title ?? undefined,
-            description: e.description ?? undefined,
-            project: e.project
-              ? {
-                  _id: e.project?._id ?? undefined,
-                  categories: e.project?.categories ?? undefined,
-                  description: e.project?.description ?? undefined,
-                  imageUrl: e.project?.imageUrl ?? undefined,
-                  name: e.project.name,
-                }
-              : undefined,
-            imageUrl: e.imageUrl ?? undefined,
-            rewardPolicy: {
-              context: typeParseHelper.parseRewardPolicy(
-                e.rewardPolicy?.context ?? undefined,
-                e.rewardPolicy?.rewardPolicyType ?? undefined
-              ),
-              rewardPolicyType: e.rewardPolicy?.rewardPolicyType ?? undefined,
-            },
-            quests: e.quests
-              ? e.quests?.map((e) => {
-                  return { _id: e._id ?? undefined };
-                })
-              : undefined,
-            winners: e.winners?.map((_e) => {
-              return {
-                name: _e.name ?? undefined,
-              };
-            }),
-          };
-        }),
+        participatingTickets: participatingTickets
+          ?.filter((e, index) => {
+            return participatingTickets?.indexOf(e) === index;
+          })
+          ?.map((e) => {
+            return {
+              _id: e._id ?? undefined,
+              title: e.title ?? undefined,
+              description: e.description ?? undefined,
+              project: e.project
+                ? {
+                    _id: e.project?._id ?? undefined,
+                    categories: e.project?.categories ?? undefined,
+                    description: e.project?.description ?? undefined,
+                    imageUrl: e.project?.imageUrl ?? undefined,
+                    name: e.project.name,
+                  }
+                : undefined,
+              imageUrl: e.imageUrl ?? undefined,
+              rewardPolicy: {
+                context: typeParseHelper.parseRewardPolicy(
+                  e.rewardPolicy?.context ?? undefined,
+                  e.rewardPolicy?.rewardPolicyType ?? undefined
+                ),
+                rewardPolicyType: e.rewardPolicy?.rewardPolicyType ?? undefined,
+              },
+              quests: e.quests
+                ? e.quests?.map((e) => {
+                    return { _id: e._id ?? undefined };
+                  })
+                : undefined,
+              winners: e.winners?.map((_e) => {
+                return {
+                  name: _e.name ?? undefined,
+                };
+              }),
+            };
+          }),
       };
     });
   };
