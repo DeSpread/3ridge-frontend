@@ -115,7 +115,7 @@ export default class ErrorBoundary extends React.Component<
       );
     }
 
-    console.log("unhandled client error");
+    // console.log("unhandled client error");
 
     return this.props.children;
   }

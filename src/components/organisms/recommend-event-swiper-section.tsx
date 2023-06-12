@@ -57,8 +57,7 @@ const RecommendEventSwiperSection = (props: {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  const swiperRef = useRef<SwiperCore>();
 
   return (
     <Stack
@@ -86,7 +85,6 @@ const RecommendEventSwiperSection = (props: {
         </Box>
         <Box>
           <IconButton
-            ref={prevRef}
             sx={{
               borderRadius: 32,
               width: smUp ? 38 : 32,
@@ -103,11 +101,14 @@ const RecommendEventSwiperSection = (props: {
               },
               visibility: props.isLoading ? "hidden" : "visible",
             }}
+            onClick={(e) => {
+              swiperRef.current?.slidePrev();
+            }}
           >
             <ArrowBackIosNewIcon fontSize={smUp ? "medium" : "small"} />
           </IconButton>
           <IconButton
-            ref={nextRef}
+            // ref={nextRef}
             sx={{
               borderRadius: 32,
               width: smUp ? 38 : 32,
@@ -122,6 +123,9 @@ const RecommendEventSwiperSection = (props: {
                 transform: "scale(1)",
               },
               visibility: props.isLoading ? "hidden" : "visible",
+            }}
+            onClick={(e) => {
+              swiperRef.current?.slideNext();
             }}
           >
             <ArrowForwardIosIcon fontSize={smUp ? "medium" : "small"} />
@@ -145,9 +149,8 @@ const RecommendEventSwiperSection = (props: {
             spaceBetween={smUp ? 18 : 1}
             slidesPerView={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
             scrollbar={{ draggable: true }}
-            navigation={{
-              prevEl: prevRef.current,
-              nextEl: nextRef.current,
+            onBeforeInit={(swiper) => {
+              swiperRef.current = swiper;
             }}
           >
             {props.isLoading &&

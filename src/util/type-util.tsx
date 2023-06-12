@@ -70,13 +70,9 @@ const isSupportedNetwork = (chainName: string) => {
 };
 
 const filterFeatureEventTickets = (ticketsData: Ticket[]) => {
-  return ticketsData
-    ?.filter((ticket) =>
-      ["640018b9debaef951761e7a1"].includes(ticket._id ?? "")
-    )
-    .sort((a, b) => {
-      return (a?.project?.name ?? "") > (b?.project?.name ?? "") ? -1 : 1;
-    });
+  return ticketsData?.sort((a, b) => {
+    return (a?.project?.name ?? "") > (b?.project?.name ?? "") ? -1 : 1;
+  });
 };
 
 const getUserMail = (user?: User) => {
