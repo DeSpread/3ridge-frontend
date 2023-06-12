@@ -9,8 +9,7 @@ import {
 } from "../../type";
 import { TicketSortType } from "../../__generated__/graphql";
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
-import { Link, Stack, Typography } from "@mui/material";
-import PrimaryButton from "../atoms/primary-button";
+import { Stack, Typography } from "@mui/material";
 import TicketsSection from "./tickets-section";
 
 const AllEventsSection = () => {
