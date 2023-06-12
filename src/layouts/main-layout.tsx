@@ -241,9 +241,9 @@ const MainLayout = (props: MainLayoutProps) => {
                         }}
                         onClick={(e) => {
                           e.preventDefault();
-                          // setShowSignInDialog(true);
-                          // setSignInWithNetworkSelectVisible(true);
                           setShowSignInDialog(true);
+                          // setSignInWithNetworkSelectVisible(true);
+                          // setShowSignInDialog(true);
                         }}
                       >
                         지갑 연결

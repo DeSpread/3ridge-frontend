@@ -27,6 +27,7 @@ import { useRouter } from "next/router";
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 import { isMobile } from "react-device-detect";
 import { MobileContext } from "../provider/mobile/mobile-context";
+import ErrorBoundary from "../components/error-boundary";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
@@ -100,7 +101,9 @@ const App = (props: AppPropsWithLayout) => {
                   >
                     <MobileContext.Provider value={{ isMobile }}>
                       <MasterProvider>
-                        {getLayout(<Component {...pageProps} />)}
+                        <ErrorBoundary>
+                          {getLayout(<Component {...pageProps} />)}
+                        </ErrorBoundary>
                       </MasterProvider>
                     </MobileContext.Provider>
                   </AptosWalletAdapterProvider>
