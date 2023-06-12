@@ -9,17 +9,14 @@ import {
 } from "../../type";
 import { TicketSortType } from "../../__generated__/graphql";
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
-import { Link, Stack, Typography } from "@mui/material";
-import PrimaryButton from "../atoms/primary-button";
+import { Stack, Typography } from "@mui/material";
 import TicketsSection from "./tickets-section";
 
 const AllEventsSection = () => {
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
 
-  const [filterType, setFilterType] = useState<FilterType>(
-    FILTER_TYPE.AVAILABLE
-  );
+  const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
 
   const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
     TicketSortType.Trending
@@ -70,8 +67,10 @@ const AllEventsSection = () => {
             const index = e;
             const filterType =
               index === 0
-                ? FILTER_TYPE.AVAILABLE
+                ? FILTER_TYPE.ALL
                 : index === 1
+                ? FILTER_TYPE.AVAILABLE
+                : index === 2
                 ? FILTER_TYPE.COMPLETE
                 : FILTER_TYPE.MISSED;
             setFilterType(filterType);

@@ -298,6 +298,7 @@ export const FILTER_TYPE = {
   AVAILABLE: "AVAILABLE",
   COMPLETE: "COMPLETE",
   MISSED: "MISSED",
+  ALL: "ALL",
 };
 
 export type FilterType = ObjectValues<typeof FILTER_TYPE>;

@@ -28,7 +28,7 @@ const Home = () => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
-    filterType: FILTER_TYPE.AVAILABLE,
+    filterType: FILTER_TYPE.ALL,
     sort: TicketSortType.Newest,
   });
   const swiperContainerRef = useRef<HTMLDivElement>(null);
@@ -116,7 +116,8 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={filterFeatureEventTickets(ticketsData)}
+                  ticketsData={ticketsData}
+                  // ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Stack>
             </Stack>
@@ -169,7 +170,8 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={filterFeatureEventTickets(ticketsData)}
+                  ticketsData={ticketsData}
+                  // ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Box>
             </Stack>
@@ -188,17 +190,6 @@ const Home = () => {
     </>
   );
 };
-
-// Home.getInitialProps = async (ctx: NextPageContext) => {
-//   let mobile;
-//   if (ctx.req) {
-//     const md = new MobileDetect(ctx.req.headers["user-agent"] ?? "");
-//     mobile = !!md.mobile();
-//   } else {
-//     mobile = isMobileInDevice;
-//   }
-//   return { isMobile: mobile };
-// };
 
 Home.getLayout = (page: ReactElement | ReactElement[]) => (
   <MainLayout footerComponent={<HomeFooter />}>{page}</MainLayout>
