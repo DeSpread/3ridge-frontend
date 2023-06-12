@@ -116,7 +116,8 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={filterFeatureEventTickets(ticketsData)}
+                  ticketsData={ticketsData}
+                  // ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Stack>
             </Stack>
@@ -169,7 +170,8 @@ const Home = () => {
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
-                  ticketsData={filterFeatureEventTickets(ticketsData)}
+                  ticketsData={ticketsData}
+                  // ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
               </Box>
             </Stack>

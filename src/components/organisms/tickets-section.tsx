@@ -144,7 +144,7 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
 
 const TabButtonGroup = (props: TabButtonGroupProps) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
-  const TITLES = ["진행 중", "종료됨", "놓친 이벤트"];
+  const TITLES = ["전체", "진행 중", "종료됨", "놓친 이벤트"];
 
   const a11yProps = (index: number) => {
     return {
@@ -168,9 +168,12 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
       }}
       sx={{ background: "" }}
     >
-      <AntTab label={TITLES[0]} {...a11yProps(0)} />
-      <AntTab label={TITLES[1]} {...a11yProps(1)} />
-      <AntTab label={TITLES[2]} {...a11yProps(2)} />
+      {TITLES.map((e, index) => {
+        return <AntTab label={e} key={index} {...a11yProps(index)} />;
+      })}
+      {/*<AntTab label={TITLES[0]} {...a11yProps(0)} />*/}
+      {/*<AntTab label={TITLES[1]} {...a11yProps(1)} />*/}
+      {/*<AntTab label={TITLES[2]} {...a11yProps(2)} />*/}
     </Tabs>
   );
 };
