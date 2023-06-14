@@ -176,6 +176,20 @@ const Event = (props: AppProps) => {
   const [hasMetamask, setHasMetask] = useState(false);
   const [isFire, setFire] = React.useState(false);
 
+  // useEffect(() => {
+  //   const handleRouteChange = (url: string) => {
+  //     // if (url && typeof url === "string" && !url.includes("profile")) {
+  //     setShowProfileEditDialog(false);
+  //     // }
+  //   };
+  //   router.events.on("routeChangeComplete", handleRouteChange);
+  //   router.events.on("hashChangeComplete", handleRouteChange);
+  //   return () => {
+  //     router.events.off("routeChangeComplete", handleRouteChange);
+  //     router.events.off("hashChangeComplete", handleRouteChange);
+  //   };
+  // }, [router.events]);
+
   useEffect(() => {
     const { ethereum } = window;
     //@ts-ignore
