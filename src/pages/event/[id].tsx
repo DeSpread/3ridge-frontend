@@ -27,7 +27,6 @@ import { decodeBase64, nFormatter } from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
-
 import {
   DiscordQuestContext,
   MouseEventWithParam,
@@ -62,23 +61,21 @@ import TimerBoard, {
   DummyTimerBoard,
 } from "../../components/molecules/timer-board";
 import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
-import ComponentHelper from "../../helper/component-helper";
 import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
-import { gql, request } from "graphql-request";
 import {
   findVerifyHasEmailQuests,
+  findVerifyHasTelegram,
   findVerifyHasTwitter,
   findVerifyHasWalletQuests,
-  findVerifyHasTelegram,
 } from "../../util/type-util";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import { parseStrToDate } from "../../util/date-util";
 import StringHelper from "../../helper/string-helper";
 import Realistic from "../../components/realistic";
-import Backdrop from "@mui/material/Backdrop";
+import { useMountedState, useGetSet } from "react-use";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -176,20 +173,7 @@ const Event = (props: AppProps) => {
   const { isMobile } = useMobile();
   const [hasMetamask, setHasMetask] = useState(false);
   const [isFire, setFire] = React.useState(false);
-
-  // useEffect(() => {
-  //   const handleRouteChange = (url: string) => {
-  //     // if (url && typeof url === "string" && !url.includes("profile")) {
-  //     setShowProfileEditDialog(false);
-  //     // }
-  //   };
-  //   router.events.on("routeChangeComplete", handleRouteChange);
-  //   router.events.on("hashChangeComplete", handleRouteChange);
-  //   return () => {
-  //     router.events.off("routeChangeComplete", handleRouteChange);
-  //     router.events.off("hashChangeComplete", handleRouteChange);
-  //   };
-  // }, [router.events]);
+  const [lazyFire, setLazyFire] = React.useState(false);
 
   useEffect(() => {
     const { ethereum } = window;
@@ -374,6 +358,34 @@ const Event = (props: AppProps) => {
     }
   });
 
+  const isMounted = useMountedState();
+
+  const [initCount, setInitCount] = useGetSet(0);
+
+  useEffect(() => {
+    if (verifiedList.length === 0) return;
+    if (!isMounted) return;
+    if (initCount() === 0) {
+      return setInitCount(initCount() + 1);
+    }
+
+    const allComplete = verifiedList
+      .map((e, _index) => {
+        return e;
+      })
+      .reduce((accumulator, currentValue) => accumulator && currentValue, true);
+    console.log("verifiedList", verifiedList, simpleWarningDialogTitle);
+    if (allComplete) {
+      if (simpleWarningDialogTitle === "") {
+        setFire(true);
+      } else {
+        setLazyFire(true);
+      }
+    }
+  }, [verifiedList, updateIndex]);
+
+  // useMount(() => {});
+
   const claimRewardDisabled = useMemo(() => {
     if (userData?._id === undefined) return true;
     if (verifiedList.length === 0) return true;
@@ -430,16 +442,16 @@ const Event = (props: AppProps) => {
     setUpdateIndex((prevState) => {
       return prevState + 1;
     });
-    const allComplete = verifiedList
-      .map((e, _index) => {
-        if (_index == index) return true;
-        return e;
-      })
-      .reduce((accumulator, currentValue) => accumulator && currentValue, true);
-    console.log("allComplete", allComplete);
-    if (allComplete) {
-      setFire(true);
-    }
+    // const allComplete = verifiedList
+    //   .map((e, _index) => {
+    //     if (_index == index) return true;
+    //     return e;
+    //   })
+    //   .reduce((accumulator, currentValue) => accumulator && currentValue, true);
+    // console.log("allComplete", allComplete, simpleWarningDialogTitle);
+    // if (allComplete && simpleWarningDialogTitle === "") {
+    //   setFire(true);
+    // }
     asyncRefreshTicketData();
   };
 
@@ -622,14 +634,6 @@ const Event = (props: AppProps) => {
           );
           break;
       }
-      try {
-        const res = await asyncCompleteQuestOfUser(ticketData._id, quest?._id);
-        updateVerifyState(index);
-      } catch (e) {
-        if (getErrorMessage(e) === "user already participated ticket") {
-          updateVerifyState(index);
-        }
-      }
       let title = "";
       if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
         title = "디스코드";
@@ -639,6 +643,14 @@ const Event = (props: AppProps) => {
         title = "텔레그램";
       }
       setSimpleWarningDialogTitle(title);
+      try {
+        const res = await asyncCompleteQuestOfUser(ticketData._id, quest?._id);
+        updateVerifyState(index);
+      } catch (e) {
+        if (getErrorMessage(e) === "user already participated ticket") {
+          updateVerifyState(index);
+        }
+      }
     } else if (
       quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
     ) {
@@ -739,6 +751,15 @@ const Event = (props: AppProps) => {
           content: getLocaleErrorMessage(e),
         });
       }
+    }
+  };
+
+  const doLazyFire = () => {
+    if (lazyFire) {
+      setTimeout(() => {
+        setFire(true);
+        setLazyFire(false);
+      }, 500);
     }
   };
 
@@ -1612,9 +1633,11 @@ const Event = (props: AppProps) => {
         title={"Notification"}
         onClose={() => {
           setSimpleWarningDialogTitle("");
+          doLazyFire();
         }}
         onCloseBtnClicked={() => {
           setSimpleWarningDialogTitle("");
+          doLazyFire();
         }}
       >
         <Typography>
