@@ -39,6 +39,7 @@ import {
   TwitterFollowQuestContext,
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
+  VerifyHasWalletAddressContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
@@ -209,124 +210,125 @@ const Event = (props: AppProps) => {
           setVerifiedList(newVerifiedList);
           setInitVerifiedList(true);
           asyncUpdateClaimCompleted().then(() => {});
-          const emailQuests = findVerifyHasEmailQuests(ticketData);
-          const emailQuestsIds = emailQuests?.map((eq) => eq._id);
-          const verifiedPromiseList: any[] = [];
-
-          if (ids && (emailQuestsIds?.length ?? 0) > 0) {
-            const hasAllVerified = emailQuestsIds?.reduce(
-              (accumulator, currentValue) =>
-                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-              true
-            );
-            if (!hasAllVerified) {
-              if (userData?.email) {
-                emailQuestsIds?.forEach((e) => {
-                  if (ticketData?._id && e)
-                    verifiedPromiseList.push(
-                      asyncCompleteQuestOfUser(ticketData?._id, e)
-                    );
-                });
-              }
-            }
-          }
-
-          if (!isStarted() || isExpired()) {
-            return;
-          }
-
-          const walletQuests = findVerifyHasWalletQuests(ticketData);
-          const walletQuestChains = walletQuests?.map(
-            //@ts-ignore
-            (eq) => eq.questPolicy?.context?.chain
-          );
-          const walletQuestsIds = walletQuests?.map((eq) => eq._id);
-          if (ids && (walletQuestsIds?.length ?? 0) > 0) {
-            const hasAllVerified = walletQuestsIds?.reduce(
-              (accumulator, currentValue) =>
-                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-              true
-            );
-            if (!hasAllVerified) {
-              const networks = userData?.walletAddressInfos
-                ?.filter((e) => e.address)
-                .map((e) => e.network.toUpperCase());
-              for (let i = 0; i < (walletQuestChains?.length ?? 0); i++) {
-                const chain = walletQuestChains?.[i]?.toUpperCase();
-                if (networks?.includes(chain)) {
-                  const __id = walletQuestsIds?.[i] ?? undefined;
-                  if (ticketData?._id && __id) {
-                    // console.log("aaa", ticketData?._id, __id);
-                    verifiedPromiseList.push(
-                      asyncCompleteQuestOfUser(ticketData?._id, __id)
-                    );
-                  }
-                }
-              }
-            }
-          }
-
-          const twitterQuests = findVerifyHasTwitter(ticketData);
-          const twitterQuestsIds = twitterQuests?.map((eq) => eq._id);
-          if (ids && (twitterQuestsIds?.length ?? 0) > 0) {
-            const hasAllVerified = twitterQuestsIds?.reduce(
-              (accumulator, currentValue) =>
-                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-              true
-            );
-            if (!hasAllVerified) {
-              // console.log(twitterQuests);
-              if (userData?.userSocial?.twitterId) {
-                twitterQuestsIds?.forEach((e) => {
-                  if (ticketData?._id && e)
-                    verifiedPromiseList.push(
-                      asyncCompleteQuestOfUser(ticketData?._id, e)
-                    );
-                });
-              }
-            }
-          }
-
-          const telegramQuests = findVerifyHasTelegram(ticketData);
-          const telegramQuestsIds = telegramQuests?.map((eq) => eq._id);
-          if (ids && (telegramQuestsIds?.length ?? 0) > 0) {
-            const hasAllVerified = telegramQuestsIds?.reduce(
-              (accumulator, currentValue) =>
-                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-              true
-            );
-            if (!hasAllVerified) {
-              if (userData?.userSocial?.telegramUser?.id) {
-                telegramQuestsIds?.forEach((e) => {
-                  if (ticketData?._id && e)
-                    verifiedPromiseList.push(
-                      asyncCompleteQuestOfUser(ticketData?._id, e)
-                    );
-                });
-              }
-            }
-          }
-
-          if (verifiedPromiseList && (verifiedPromiseList?.length ?? 0) > 0) {
-            Promise.all(verifiedPromiseList)
-              .then((completeQuestRes) => {
-                setTimeout(() => {
-                  // console.log("recursive updateVerifyAll");
-                  updateVerifyAll();
-                }, 0);
-              })
-              .catch((e) => {
-                console.log(e);
-              })
-              .finally(() => {
-                setLockUpdateVerifyAll(false);
-              });
-          } else {
-            setLockUpdateVerifyAll(false);
-          }
+          // const emailQuests = findVerifyHasEmailQuests(ticketData);
+          // const emailQuestsIds = emailQuests?.map((eq) => eq._id);
+          // const verifiedPromiseList: any[] = [];
+          //
+          // if (ids && (emailQuestsIds?.length ?? 0) > 0) {
+          //   const hasAllVerified = emailQuestsIds?.reduce(
+          //     (accumulator, currentValue) =>
+          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+          //     true
+          //   );
+          //   if (!hasAllVerified) {
+          //     if (userData?.email) {
+          //       emailQuestsIds?.forEach((e) => {
+          //         if (ticketData?._id && e)
+          //           verifiedPromiseList.push(
+          //             asyncCompleteQuestOfUser(ticketData?._id, e)
+          //           );
+          //       });
+          //     }
+          //   }
+          // }
+          //
+          // if (!isStarted() || isExpired()) {
+          //   return;
+          // }
+          //
+          // const walletQuests = findVerifyHasWalletQuests(ticketData);
+          // const walletQuestChains = walletQuests?.map(
+          //   //@ts-ignore
+          //   (eq) => eq.questPolicy?.context?.chain
+          // );
+          // const walletQuestsIds = walletQuests?.map((eq) => eq._id);
+          // if (ids && (walletQuestsIds?.length ?? 0) > 0) {
+          //   const hasAllVerified = walletQuestsIds?.reduce(
+          //     (accumulator, currentValue) =>
+          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+          //     true
+          //   );
+          //   if (!hasAllVerified) {
+          //     const networks = userData?.walletAddressInfos
+          //       ?.filter((e) => e.address)
+          //       .map((e) => e.network.toUpperCase());
+          //     for (let i = 0; i < (walletQuestChains?.length ?? 0); i++) {
+          //       const chain = walletQuestChains?.[i]?.toUpperCase();
+          //       if (networks?.includes(chain)) {
+          //         const __id = walletQuestsIds?.[i] ?? undefined;
+          //         if (ticketData?._id && __id) {
+          //           // console.log("aaa", ticketData?._id, __id);
+          //           verifiedPromiseList.push(
+          //             asyncCompleteQuestOfUser(ticketData?._id, __id)
+          //           );
+          //         }
+          //       }
+          //     }
+          //   }
+          // }
+          //
+          // const twitterQuests = findVerifyHasTwitter(ticketData);
+          // const twitterQuestsIds = twitterQuests?.map((eq) => eq._id);
+          // if (ids && (twitterQuestsIds?.length ?? 0) > 0) {
+          //   const hasAllVerified = twitterQuestsIds?.reduce(
+          //     (accumulator, currentValue) =>
+          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+          //     true
+          //   );
+          //   if (!hasAllVerified) {
+          //     // console.log(twitterQuests);
+          //     if (userData?.userSocial?.twitterId) {
+          //       twitterQuestsIds?.forEach((e) => {
+          //         if (ticketData?._id && e)
+          //           verifiedPromiseList.push(
+          //             asyncCompleteQuestOfUser(ticketData?._id, e)
+          //           );
+          //       });
+          //     }
+          //   }
+          // }
+          //
+          // const telegramQuests = findVerifyHasTelegram(ticketData);
+          // const telegramQuestsIds = telegramQuests?.map((eq) => eq._id);
+          // if (ids && (telegramQuestsIds?.length ?? 0) > 0) {
+          //   const hasAllVerified = telegramQuestsIds?.reduce(
+          //     (accumulator, currentValue) =>
+          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+          //     true
+          //   );
+          //   if (!hasAllVerified) {
+          //     if (userData?.userSocial?.telegramUser?.id) {
+          //       telegramQuestsIds?.forEach((e) => {
+          //         if (ticketData?._id && e)
+          //           verifiedPromiseList.push(
+          //             asyncCompleteQuestOfUser(ticketData?._id, e)
+          //           );
+          //       });
+          //     }
+          //   }
+          // }
+          //
+          // if (verifiedPromiseList && (verifiedPromiseList?.length ?? 0) > 0) {
+          //   Promise.all(verifiedPromiseList)
+          //     .then((completeQuestRes) => {
+          //       setTimeout(() => {
+          //         // console.log("recursive updateVerifyAll");
+          //         updateVerifyAll();
+          //       }, 0);
+          //     })
+          //     .catch((e) => {
+          //       console.log(e);
+          //     })
+          //     .finally(() => {
+          //       setLockUpdateVerifyAll(false);
+          //     });
+          // } else {
+          //   setLockUpdateVerifyAll(false);
+          // }
+          setLockUpdateVerifyAll(false);
         })
         .catch((err) => {
-          // console.log(err);
+          console.log(err);
           setLockUpdateVerifyAll(false);
         });
     } else {
@@ -374,7 +376,7 @@ const Event = (props: AppProps) => {
         return e;
       })
       .reduce((accumulator, currentValue) => accumulator && currentValue, true);
-    console.log("verifiedList", verifiedList, simpleWarningDialogTitle);
+    // console.log("verifiedList", verifiedList, simpleWarningDialogTitle);
     if (allComplete) {
       if (simpleWarningDialogTitle === "") {
         setFire(true);
@@ -489,14 +491,15 @@ const Event = (props: AppProps) => {
   };
 
   const getConfirmBtnLabel = (quest: Partial<Quest>) => {
-    return quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
-      quest.questPolicy?.questPolicy ===
-        QuestPolicyType.VerifyHasWalletAddress ||
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
-      ? "연동하기"
-      : undefined;
+    // return quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
+    //   quest.questPolicy?.questPolicy ===
+    //     QuestPolicyType.VerifyHasWalletAddress ||
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
+    //   ? "연동하기"
+    //   : undefined;
+    return undefined;
   };
 
   const changeChainToAlias = (chain: string) => {
@@ -658,6 +661,15 @@ const Event = (props: AppProps) => {
       if (quest.questGuides?.[0]?.content) {
         setHtmlContent(decodeBase64(quest.questGuides[0].content));
       }
+    } else if (
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
+      quest.questPolicy?.questPolicy ===
+        QuestPolicyType.VerifyHasWalletAddress ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
+    ) {
+      asyncGoToProfileAndEditDialogOpen().then();
     }
   };
 
@@ -725,15 +737,83 @@ const Event = (props: AppProps) => {
         updateVerifyState(index);
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail
+      ) {
+        if (userData?.email) {
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          myEvent.params.callback("success");
+          updateVerifyState(index);
+        } else {
+          showAlert({
+            title: "알림",
+            content: "프로필 페이지에서 이메일을 연결해주세요.",
+          });
+          myEvent.params.callback("success");
+        }
+      } else if (
         quest.questPolicy?.questPolicy ===
-          QuestPolicyType.VerifyHasWalletAddress ||
-        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
+        QuestPolicyType.VerifyHasWalletAddress
+      ) {
+        const networks = userData?.walletAddressInfos
+          ?.filter((e) => e.address)
+          .map((e) => e.network.toUpperCase());
+        const verifyHasWalletAddressContext = quest.questPolicy
+          ?.context as VerifyHasWalletAddressContext;
+        const chain = verifyHasWalletAddressContext?.chain?.toUpperCase();
+        // console.log("chain", chain, networks);
+        if (chain === "ANY") {
+          if (networks?.length ?? 0 > 0) {
+            await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+            myEvent.params.callback("success");
+            updateVerifyState(index);
+          } else {
+            showAlert({
+              title: "알림",
+              content: "프로필 페이지에서 지갑을 연결해주세요.",
+            });
+            myEvent.params.callback("success");
+          }
+        } else {
+          if (networks?.includes(chain)) {
+            await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+            myEvent.params.callback("success");
+            updateVerifyState(index);
+          } else {
+            showAlert({
+              title: "알림",
+              content: `프로필 페이지에서 ${chain} 지갑을 연결해주세요.`,
+            });
+            myEvent.params.callback("success");
+          }
+        }
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter
+      ) {
+        if (userData?.userSocial?.twitterId) {
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          myEvent.params.callback("success");
+          updateVerifyState(index);
+        } else {
+          showAlert({
+            title: "알림",
+            content: `프로필 페이지에서 트위터를 연동해주세요`,
+          });
+          myEvent.params.callback("success");
+        }
+      } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
       ) {
-        // console.log("aaa");
-        myEvent.params.callback("success");
-        asyncGoToProfileAndEditDialogOpen().then();
+        if (userData?.userSocial?.telegramUser?.id) {
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          myEvent.params.callback("success");
+          updateVerifyState(index);
+        } else {
+          showAlert({
+            title: "알림",
+            content: `프로필 페이지에서 텔레그램을 연동해주세요`,
+          });
+          myEvent.params.callback("success");
+        }
       }
     } catch (e) {
       const errorMessage = getErrorMessage(e);
@@ -1161,17 +1241,17 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||
                         quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyEmail ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasEmail ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasWalletAddress ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasTwitter ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasTelegram
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyEmail ||
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyHasEmail ||
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyHasWalletAddress ||
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyHasTwitter ||
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyHasTelegram
                       }
                       onVerifyBtnClicked={async (e) => {
                         await asyncVerifyQuest(e, quest, index);
