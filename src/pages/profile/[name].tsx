@@ -105,12 +105,6 @@ const Profile = () => {
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
   const [imageFile, setImageFile] = useState<File>();
-  const [tokensData, setTokensData] = useState<
-    {
-      name: string;
-      metaDataUri: string;
-    }[]
-  >([]);
 
   const resourceFactory = ResourceFactory.getInstance();
   const [selectedNetwork, setSelectedNetwork] = useState("");
@@ -122,11 +116,14 @@ const Profile = () => {
   }, [signedUserData, userData]);
 
   useEffect(() => {
+    if (isProfileEditDialogOpen) {
+      setOpenProfileEditDialog(true);
+    }
+  }, []);
+
+  useEffect(() => {
     const handleRouteChange = (url: string) => {
-      if (url && typeof url === "string") {
-        if (isProfileEditDialogOpen) {
-          setOpenProfileEditDialog(true);
-        }
+      if (url && typeof url === "string" && !url.includes("profile")) {
         setShowProfileEditDialog(false);
       }
     };
@@ -479,6 +476,7 @@ const Profile = () => {
                       sx={{ marginBottom: 1, marginLeft: -1 }}
                       onClick={() => {
                         setOpenProfileEditDialog(true);
+                        // setShowProfileEditDialog(true);
                       }}
                       disabled={!isSingedUserProfile}
                     >
@@ -682,6 +680,7 @@ const Profile = () => {
         title={"프로필 수정하기"}
         onClose={() => {
           setOpenProfileEditDialog(false);
+          setShowProfileEditDialog(false);
         }}
         open={openProfileEditDialog}
         walletValidatorButtonOnClick={async (e) => {
@@ -787,6 +786,7 @@ const Profile = () => {
         isMailLoggedIn={isMailLoggedIn || isGoogleLoggedIn}
         onCloseBtnClicked={(e) => {
           setOpenProfileEditDialog(false);
+          setShowProfileEditDialog(false);
         }}
         onFileImageAdded={(f) => {
           setImageFile(f);

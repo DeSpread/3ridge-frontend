@@ -146,7 +146,7 @@ const useSignedUserQuery = () => {
 
   useEffect(() => {
     if (walletLoggedInInfo.address) {
-      console.log("walletLoggedInInfo.address", walletLoggedInInfo.address);
+      // console.log("walletLoggedInInfo.address", walletLoggedInInfo.address);
       (async () => {
         try {
           setLoading(true);

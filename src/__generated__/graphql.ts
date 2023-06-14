@@ -483,6 +483,7 @@ export enum QuestPolicyType {
   VerifyDiscord = 'VERIFY_DISCORD',
   VerifyEmail = 'VERIFY_EMAIL',
   VerifyHasEmail = 'VERIFY_HAS_EMAIL',
+  VerifyHasTelegram = 'VERIFY_HAS_TELEGRAM',
   VerifyHasTwitter = 'VERIFY_HAS_TWITTER',
   VerifyHasWalletAddress = 'VERIFY_HAS_WALLET_ADDRESS',
   VerifyTelegram = 'VERIFY_TELEGRAM',

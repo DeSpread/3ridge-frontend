@@ -42,6 +42,7 @@ export function useTicketsQuery(props: {
             : props.filterType === FILTER_TYPE.COMPLETE
             ? TicketStatusType.Completed
             : TicketStatusType.All;
+        // console.log("aaa", props.sort, status, ticketIsVisibleOnly);
         const { data } = await client.query({
           query: GET_TICKETS,
           variables: {
@@ -50,6 +51,8 @@ export function useTicketsQuery(props: {
             isVisibleOnly: ticketIsVisibleOnly,
           },
         });
+        // console.log("bbb");
+        // console.log(data.tickets);
         updateSetTicketsData(data.tickets);
       } else {
         const status =

@@ -71,49 +71,49 @@ export default class ErrorBoundary extends React.Component<
   render() {
     const { error } = this.state;
 
-    if (error) {
-      return (
-        <>
-          {this.props.children}
-          <SimpleDialog
-            open={true}
-            title={"예상치 못한 문제가 발생하였습니다"}
-            onClose={() => {
-              this.setState({ error: null });
-            }}
-            onCloseBtnClicked={() => {
-              this.setState({ error: null });
-            }}
-          >
-            <Stack>
-              <Typography>오류 내용</Typography>
-              <Box sx={{ marginBottom: 1 }}>
-                <Typography variant={"body1"}>
-                  {getErrorMessage(error)}
-                </Typography>
-              </Box>
-              <Typography>문제가 지속될 경우</Typography>
-              <Typography>
-                아래 이메일 링크로 개발자에게 문의해 보세요
-              </Typography>
-              <LinkTypography
-                sx={{
-                  fontWeight: "bold",
-                  color: "#f8810a",
-                  "&:hover": {
-                    color: "#bdbdbd",
-                    textDecoration: "underline",
-                  },
-                }}
-                href={"mailto:hans@despread.io?Subject=에러문의사항"}
-              >
-                이메일 문의
-              </LinkTypography>
-            </Stack>
-          </SimpleDialog>
-        </>
-      );
-    }
+    // if (error) {
+    //   return (
+    //     <>
+    //       {this.props.children}
+    //       <SimpleDialog
+    //         open={true}
+    //         title={"예상치 못한 문제가 발생하였습니다"}
+    //         onClose={() => {
+    //           this.setState({ error: null });
+    //         }}
+    //         onCloseBtnClicked={() => {
+    //           this.setState({ error: null });
+    //         }}
+    //       >
+    //         <Stack>
+    //           <Typography>오류 내용</Typography>
+    //           <Box sx={{ marginBottom: 1 }}>
+    //             <Typography variant={"body1"}>
+    //               {getErrorMessage(error)}
+    //             </Typography>
+    //           </Box>
+    //           <Typography>문제가 지속될 경우</Typography>
+    //           <Typography>
+    //             아래 이메일 링크로 개발자에게 문의해 보세요
+    //           </Typography>
+    //           <LinkTypography
+    //             sx={{
+    //               fontWeight: "bold",
+    //               color: "#f8810a",
+    //               "&:hover": {
+    //                 color: "#904e1d",
+    //                 textDecoration: "underline",
+    //               },
+    //             }}
+    //             href={"mailto:hans@despread.io?Subject=에러문의사항"}
+    //           >
+    //             이메일 문의
+    //           </LinkTypography>
+    //         </Stack>
+    //       </SimpleDialog>
+    //     </>
+    //   );
+    // }
 
     // console.log("unhandled client error");
 

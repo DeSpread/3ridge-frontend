@@ -12,6 +12,7 @@ import {
   VerifyHasEmailContext,
   VerifyHasWalletAddressContext,
   VerifyHasTwitter,
+  VerifyHasTelegram,
 } from "../type";
 import { QuestPolicyType } from "../__generated__/graphql";
 
@@ -67,6 +68,8 @@ class TypeParseHelper {
         return contextJson as VerifyHasWalletAddressContext;
       } else if (questPolicyType === QuestPolicyType.VerifyHasTwitter) {
         return contextJson as VerifyHasTwitter;
+      } else if (questPolicyType === QuestPolicyType.VerifyHasTelegram) {
+        return contextJson as VerifyHasTelegram;
       }
     } catch (e) {
       console.log(context, questPolicyType);

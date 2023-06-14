@@ -27,7 +27,6 @@ import { decodeBase64, nFormatter } from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
-
 import {
   DiscordQuestContext,
   MouseEventWithParam,
@@ -40,6 +39,7 @@ import {
   TwitterFollowQuestContext,
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
+  VerifyHasWalletAddressContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
@@ -62,20 +62,21 @@ import TimerBoard, {
   DummyTimerBoard,
 } from "../../components/molecules/timer-board";
 import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
-import ComponentHelper from "../../helper/component-helper";
 import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
-import { gql, request } from "graphql-request";
 import {
   findVerifyHasEmailQuests,
+  findVerifyHasTelegram,
   findVerifyHasTwitter,
   findVerifyHasWalletQuests,
 } from "../../util/type-util";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import { parseStrToDate } from "../../util/date-util";
 import StringHelper from "../../helper/string-helper";
+import Realistic from "../../components/realistic";
+import { useMountedState, useGetSet } from "react-use";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -172,12 +173,13 @@ const Event = (props: AppProps) => {
   const [lockUpdateVerifyAll, setLockUpdateVerifyAll] = useState(false);
   const { isMobile } = useMobile();
   const [hasMetamask, setHasMetask] = useState(false);
+  const [isFire, setFire] = React.useState(false);
+  const [lazyFire, setLazyFire] = React.useState(false);
 
   useEffect(() => {
     const { ethereum } = window;
     //@ts-ignore
     const _hasMetamask = ethereum ? ethereum.isMetaMask : false;
-    console.log("_hasMetamask", _hasMetamask);
     setHasMetask(_hasMetamask);
   }, []);
 
@@ -208,113 +210,125 @@ const Event = (props: AppProps) => {
           setVerifiedList(newVerifiedList);
           setInitVerifiedList(true);
           asyncUpdateClaimCompleted().then(() => {});
-          // console.log("newVerifiedList", newVerifiedList);
-          const emailQuests = findVerifyHasEmailQuests(ticketData);
-          const emailQuestsIds = emailQuests?.map((eq) => eq._id);
-          // console.log("emailQuestsIds", emailQuestsIds);
-          const verifiedPromiseList: any[] = [];
-
-          if (ids && (emailQuestsIds?.length ?? 0) > 0) {
-            const hasAllVerified = emailQuestsIds?.reduce(
-              (accumulator, currentValue) =>
-                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-              true
-            );
-            // console.log("hasAllVerifiedEmail", hasAllVerifiedEmail);
-            if (!hasAllVerified) {
-              if (userData?.email) {
-                emailQuestsIds?.forEach((e) => {
-                  if (ticketData?._id && e)
-                    verifiedPromiseList.push(
-                      asyncCompleteQuestOfUser(ticketData?._id, e)
-                    );
-                });
-                // console.log(
-                //   "verifiedEmailPromiseList",
-                //   verifiedEmailPromiseList
-                // );
-              }
-            }
-          }
-
-          if (!isStarted() || isExpired()) {
-            // console.log("aaa");
-            return;
-          }
-
-          const walletQuests = findVerifyHasWalletQuests(ticketData);
-          const walletQuestChains = walletQuests?.map(
-            //@ts-ignore
-            (eq) => eq.questPolicy?.context?.chain
-          );
-          const walletQuestsIds = walletQuests?.map((eq) => eq._id);
-          if (ids && (walletQuestsIds?.length ?? 0) > 0) {
-            const hasAllVerified = walletQuestsIds?.reduce(
-              (accumulator, currentValue) =>
-                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-              true
-            );
-            if (!hasAllVerified) {
-              const networks = userData?.walletAddressInfos
-                ?.filter((e) => e.address)
-                .map((e) => e.network.toUpperCase());
-              console.log("networks", networks);
-              for (let i = 0; i < (walletQuestChains?.length ?? 0); i++) {
-                const chain = walletQuestChains?.[i]?.toUpperCase();
-                if (networks?.includes(chain)) {
-                  const __id = walletQuestsIds?.[i] ?? undefined;
-                  if (ticketData?._id && __id) {
-                    // console.log("aaa", ticketData?._id, __id);
-                    verifiedPromiseList.push(
-                      asyncCompleteQuestOfUser(ticketData?._id, __id)
-                    );
-                  }
-                }
-              }
-            }
-          }
-
-          const twitterQuests = findVerifyHasTwitter(ticketData);
-          const twitterQuestsIds = twitterQuests?.map((eq) => eq._id);
-          if (ids && (twitterQuestsIds?.length ?? 0) > 0) {
-            const hasAllVerified = twitterQuestsIds?.reduce(
-              (accumulator, currentValue) =>
-                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-              true
-            );
-            if (!hasAllVerified) {
-              // console.log(twitterQuests);
-              if (userData?.userSocial?.twitterId) {
-                twitterQuestsIds?.forEach((e) => {
-                  if (ticketData?._id && e)
-                    verifiedPromiseList.push(
-                      asyncCompleteQuestOfUser(ticketData?._id, e)
-                    );
-                });
-              }
-            }
-          }
-
-          if (verifiedPromiseList && (verifiedPromiseList?.length ?? 0) > 0) {
-            Promise.all(verifiedPromiseList)
-              .then((completeQuestRes) => {
-                setTimeout(() => {
-                  // console.log("recursive updateVerifyAll");
-                  updateVerifyAll();
-                }, 0);
-              })
-              .catch((e) => {
-                console.log(e);
-              })
-              .finally(() => {
-                setLockUpdateVerifyAll(false);
-              });
-          } else {
-            setLockUpdateVerifyAll(false);
-          }
+          // const emailQuests = findVerifyHasEmailQuests(ticketData);
+          // const emailQuestsIds = emailQuests?.map((eq) => eq._id);
+          // const verifiedPromiseList: any[] = [];
+          //
+          // if (ids && (emailQuestsIds?.length ?? 0) > 0) {
+          //   const hasAllVerified = emailQuestsIds?.reduce(
+          //     (accumulator, currentValue) =>
+          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+          //     true
+          //   );
+          //   if (!hasAllVerified) {
+          //     if (userData?.email) {
+          //       emailQuestsIds?.forEach((e) => {
+          //         if (ticketData?._id && e)
+          //           verifiedPromiseList.push(
+          //             asyncCompleteQuestOfUser(ticketData?._id, e)
+          //           );
+          //       });
+          //     }
+          //   }
+          // }
+          //
+          // if (!isStarted() || isExpired()) {
+          //   return;
+          // }
+          //
+          // const walletQuests = findVerifyHasWalletQuests(ticketData);
+          // const walletQuestChains = walletQuests?.map(
+          //   //@ts-ignore
+          //   (eq) => eq.questPolicy?.context?.chain
+          // );
+          // const walletQuestsIds = walletQuests?.map((eq) => eq._id);
+          // if (ids && (walletQuestsIds?.length ?? 0) > 0) {
+          //   const hasAllVerified = walletQuestsIds?.reduce(
+          //     (accumulator, currentValue) =>
+          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+          //     true
+          //   );
+          //   if (!hasAllVerified) {
+          //     const networks = userData?.walletAddressInfos
+          //       ?.filter((e) => e.address)
+          //       .map((e) => e.network.toUpperCase());
+          //     for (let i = 0; i < (walletQuestChains?.length ?? 0); i++) {
+          //       const chain = walletQuestChains?.[i]?.toUpperCase();
+          //       if (networks?.includes(chain)) {
+          //         const __id = walletQuestsIds?.[i] ?? undefined;
+          //         if (ticketData?._id && __id) {
+          //           // console.log("aaa", ticketData?._id, __id);
+          //           verifiedPromiseList.push(
+          //             asyncCompleteQuestOfUser(ticketData?._id, __id)
+          //           );
+          //         }
+          //       }
+          //     }
+          //   }
+          // }
+          //
+          // const twitterQuests = findVerifyHasTwitter(ticketData);
+          // const twitterQuestsIds = twitterQuests?.map((eq) => eq._id);
+          // if (ids && (twitterQuestsIds?.length ?? 0) > 0) {
+          //   const hasAllVerified = twitterQuestsIds?.reduce(
+          //     (accumulator, currentValue) =>
+          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+          //     true
+          //   );
+          //   if (!hasAllVerified) {
+          //     // console.log(twitterQuests);
+          //     if (userData?.userSocial?.twitterId) {
+          //       twitterQuestsIds?.forEach((e) => {
+          //         if (ticketData?._id && e)
+          //           verifiedPromiseList.push(
+          //             asyncCompleteQuestOfUser(ticketData?._id, e)
+          //           );
+          //       });
+          //     }
+          //   }
+          // }
+          //
+          // const telegramQuests = findVerifyHasTelegram(ticketData);
+          // const telegramQuestsIds = telegramQuests?.map((eq) => eq._id);
+          // if (ids && (telegramQuestsIds?.length ?? 0) > 0) {
+          //   const hasAllVerified = telegramQuestsIds?.reduce(
+          //     (accumulator, currentValue) =>
+          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+          //     true
+          //   );
+          //   if (!hasAllVerified) {
+          //     if (userData?.userSocial?.telegramUser?.id) {
+          //       telegramQuestsIds?.forEach((e) => {
+          //         if (ticketData?._id && e)
+          //           verifiedPromiseList.push(
+          //             asyncCompleteQuestOfUser(ticketData?._id, e)
+          //           );
+          //       });
+          //     }
+          //   }
+          // }
+          //
+          // if (verifiedPromiseList && (verifiedPromiseList?.length ?? 0) > 0) {
+          //   Promise.all(verifiedPromiseList)
+          //     .then((completeQuestRes) => {
+          //       setTimeout(() => {
+          //         // console.log("recursive updateVerifyAll");
+          //         updateVerifyAll();
+          //       }, 0);
+          //     })
+          //     .catch((e) => {
+          //       console.log(e);
+          //     })
+          //     .finally(() => {
+          //       setLockUpdateVerifyAll(false);
+          //     });
+          // } else {
+          //   setLockUpdateVerifyAll(false);
+          // }
+          setLockUpdateVerifyAll(false);
         })
         .catch((err) => {
-          // console.log(err);
+          console.log(err);
           setLockUpdateVerifyAll(false);
         });
     } else {
@@ -345,6 +359,34 @@ const Event = (props: AppProps) => {
       setEventDespHtmlContent(decodeBase64(ticketData?.description));
     }
   });
+
+  const isMounted = useMountedState();
+
+  const [initCount, setInitCount] = useGetSet(0);
+
+  useEffect(() => {
+    if (verifiedList.length === 0) return;
+    if (!isMounted) return;
+    if (initCount() === 0) {
+      return setInitCount(initCount() + 1);
+    }
+
+    const allComplete = verifiedList
+      .map((e, _index) => {
+        return e;
+      })
+      .reduce((accumulator, currentValue) => accumulator && currentValue, true);
+    // console.log("verifiedList", verifiedList, simpleWarningDialogTitle);
+    if (allComplete) {
+      if (simpleWarningDialogTitle === "") {
+        setFire(true);
+      } else {
+        setLazyFire(true);
+      }
+    }
+  }, [verifiedList, updateIndex]);
+
+  // useMount(() => {});
 
   const claimRewardDisabled = useMemo(() => {
     if (userData?._id === undefined) return true;
@@ -402,6 +444,16 @@ const Event = (props: AppProps) => {
     setUpdateIndex((prevState) => {
       return prevState + 1;
     });
+    // const allComplete = verifiedList
+    //   .map((e, _index) => {
+    //     if (_index == index) return true;
+    //     return e;
+    //   })
+    //   .reduce((accumulator, currentValue) => accumulator && currentValue, true);
+    // console.log("allComplete", allComplete, simpleWarningDialogTitle);
+    // if (allComplete && simpleWarningDialogTitle === "") {
+    //   setFire(true);
+    // }
     asyncRefreshTicketData();
   };
 
@@ -439,13 +491,15 @@ const Event = (props: AppProps) => {
   };
 
   const getConfirmBtnLabel = (quest: Partial<Quest>) => {
-    return quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
-      quest.questPolicy?.questPolicy ===
-        QuestPolicyType.VerifyHasWalletAddress ||
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter
-      ? "연동하기"
-      : undefined;
+    // return quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
+    //   quest.questPolicy?.questPolicy ===
+    //     QuestPolicyType.VerifyHasWalletAddress ||
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
+    //   ? "연동하기"
+    //   : undefined;
+    return undefined;
   };
 
   const changeChainToAlias = (chain: string) => {
@@ -506,11 +560,301 @@ const Event = (props: AppProps) => {
     return "리워드 예정";
   };
 
+  const asyncStartQuest = async (
+    e: React.MouseEvent<Element, MouseEvent>,
+    quest: Quest,
+    index: number
+  ) => {
+    if (!ticketData._id || !quest._id) return;
+    if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.QUIZ) {
+      const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
+      setOpenQuizQuestContext(quizQuestContext);
+      setOpenQuizQuestDialog(true);
+      setOpenQuizQuestId(quest._id);
+    } else if (
+      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
+    ) {
+      try {
+        const followQuestContext = quest.questPolicy
+          .context as TwitterFollowQuestContext;
+        window.open(
+          `https://twitter.com/intent/follow?screen_name=${followQuestContext.username}`,
+          "twitter",
+          "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+        );
+      } catch (e) {
+        closeLoading();
+        showErrorAlert({ content: getErrorMessage(e) });
+      }
+    } else if (
+      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
+    ) {
+      const likingQuestContext = quest.questPolicy
+        .context as TwitterLikingQuestContext;
+      console.log(likingQuestContext);
+      window.open(
+        `https://twitter.com/intent/like?tweet_id=${likingQuestContext.tweetId}`,
+        "twitter",
+        "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+      );
+    } else if (
+      quest.questPolicy?.questPolicy ===
+      QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
+    ) {
+      try {
+        const retweetQuestContext = quest.questPolicy
+          .context as TwitterRetweetQuestContext;
+        console.log(retweetQuestContext);
+        window.open(
+          `https://twitter.com/intent/retweet?tweet_id=${retweetQuestContext.tweetId}`,
+          "twitter",
+          "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+        );
+      } catch (e) {
+        closeLoading();
+        showErrorAlert({ content: getErrorMessage(e) });
+      }
+    } else if (
+      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD ||
+      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
+    ) {
+      let questContext;
+      switch (quest.questPolicy?.questPolicy) {
+        case QUEST_POLICY_TYPE.VERIFY_DISCORD:
+          questContext = quest.questPolicy?.context as DiscordQuestContext;
+          window.open(
+            `https://discord.gg/${questContext.channelId}`,
+            "discord",
+            "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+          );
+          break;
+        case QUEST_POLICY_TYPE.VERIFY_TELEGRAM:
+          questContext = quest.questPolicy?.context as TelegramQuestContext;
+          window.open(
+            `https://t.me/${questContext.channelId}`,
+            "telegram",
+            "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+          );
+          break;
+      }
+      let title = "";
+      if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
+        title = "디스코드";
+      } else if (
+        quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
+      ) {
+        title = "텔레그램";
+      }
+      setSimpleWarningDialogTitle(title);
+      try {
+        const res = await asyncCompleteQuestOfUser(ticketData._id, quest?._id);
+        updateVerifyState(index);
+      } catch (e) {
+        if (getErrorMessage(e) === "user already participated ticket") {
+          updateVerifyState(index);
+        }
+      }
+    } else if (
+      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
+    ) {
+      setOpenContentsRendererDialog(true);
+      if (quest.questGuides?.[0]?.content) {
+        setHtmlContent(decodeBase64(quest.questGuides[0].content));
+      }
+    } else if (
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
+      quest.questPolicy?.questPolicy ===
+        QuestPolicyType.VerifyHasWalletAddress ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
+    ) {
+      asyncGoToProfileAndEditDialogOpen().then();
+    }
+  };
+
+  const asyncVerifyQuest = async (
+    e: React.MouseEvent<Element, MouseEvent>,
+    quest: Quest,
+    index: number
+  ) => {
+    const myEvent = e as MouseEventWithParam<{
+      callback: (msg: string) => void;
+    }>;
+    try {
+      if (!ticketData._id) return;
+      if (
+        quest.questPolicy?.questPolicy ===
+        QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
+      ) {
+        if (showTwitterConnectAlert()) {
+          myEvent.params.callback("success");
+          return;
+        }
+        await asyncVerifyTwitterFollowQuest(ticketData._id, quest._id ?? "");
+        myEvent.params.callback("success");
+        updateVerifyState(index);
+      } else if (
+        quest.questPolicy?.questPolicy ===
+        QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
+      ) {
+        if (showTwitterConnectAlert()) {
+          myEvent.params.callback("success");
+          return;
+        }
+        await asyncVerifyTwitterRetweetQuest(ticketData._id, quest._id ?? "");
+        myEvent.params.callback("success");
+        updateVerifyState(index);
+      } else if (
+        quest.questPolicy?.questPolicy ===
+        QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
+      ) {
+        if (showTwitterConnectAlert()) {
+          myEvent.params.callback("success");
+          return;
+        }
+        await asyncVerifyTwitterLikingQuest(ticketData._id, quest._id ?? "");
+        myEvent.params.callback("success");
+        updateVerifyState(index);
+      } else if (
+        quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT
+      ) {
+        await asyncVerify3ridgePoint(ticketData._id, quest._id ?? "");
+        myEvent.params.callback("success");
+        updateVerifyState(index);
+      } else if (
+        quest.questPolicy?.questPolicy ===
+          QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||
+        quest.questPolicy?.questPolicy ===
+          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
+        quest.questPolicy?.questPolicy ===
+          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS ||
+        quest.questPolicy?.questPolicy ===
+          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT
+      ) {
+        await asyncVerifyAptosQuest(ticketData._id, quest._id ?? "");
+        myEvent.params.callback("success");
+        updateVerifyState(index);
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail
+      ) {
+        if (userData?.email) {
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          myEvent.params.callback("success");
+          updateVerifyState(index);
+        } else {
+          showAlert({
+            title: "알림",
+            content: "프로필 페이지에서 이메일을 연결해주세요.",
+          });
+          myEvent.params.callback("success");
+        }
+      } else if (
+        quest.questPolicy?.questPolicy ===
+        QuestPolicyType.VerifyHasWalletAddress
+      ) {
+        const networks = userData?.walletAddressInfos
+          ?.filter((e) => e.address)
+          .map((e) => e.network.toUpperCase());
+        const verifyHasWalletAddressContext = quest.questPolicy
+          ?.context as VerifyHasWalletAddressContext;
+        const chain = verifyHasWalletAddressContext?.chain?.toUpperCase();
+        // console.log("chain", chain, networks);
+        if (chain === "ANY") {
+          if (networks?.length ?? 0 > 0) {
+            await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+            myEvent.params.callback("success");
+            updateVerifyState(index);
+          } else {
+            showAlert({
+              title: "알림",
+              content: "프로필 페이지에서 지갑을 연결해주세요.",
+            });
+            myEvent.params.callback("success");
+          }
+        } else {
+          if (networks?.includes(chain)) {
+            await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+            myEvent.params.callback("success");
+            updateVerifyState(index);
+          } else {
+            showAlert({
+              title: "알림",
+              content: `프로필 페이지에서 ${chain} 지갑을 연결해주세요.`,
+            });
+            myEvent.params.callback("success");
+          }
+        }
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter
+      ) {
+        if (userData?.userSocial?.twitterId) {
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          myEvent.params.callback("success");
+          updateVerifyState(index);
+        } else {
+          showAlert({
+            title: "알림",
+            content: `프로필 페이지에서 트위터를 연동해주세요`,
+          });
+          myEvent.params.callback("success");
+        }
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
+      ) {
+        if (userData?.userSocial?.telegramUser?.id) {
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          myEvent.params.callback("success");
+          updateVerifyState(index);
+        } else {
+          showAlert({
+            title: "알림",
+            content: `프로필 페이지에서 텔레그램을 연동해주세요`,
+          });
+          myEvent.params.callback("success");
+        }
+      }
+    } catch (e) {
+      const errorMessage = getErrorMessage(e);
+      console.log(errorMessage);
+      if (errorMessage === APP_ERROR_MESSAGE.ALREADY_PARTICIPATED_USER) {
+        myEvent.params.callback("success");
+        updateVerifyState(index);
+      } else if (
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW ||
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET ||
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING
+      ) {
+        showAlert({
+          title: "알림",
+          content: getLocaleErrorMessage(e),
+        });
+      }
+    }
+  };
+
+  const doLazyFire = () => {
+    if (lazyFire) {
+      setTimeout(() => {
+        setFire(true);
+        setLazyFire(false);
+      }, 500);
+    }
+  };
+
   return (
     <>
       <Head>
         <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
+      <Realistic
+        fire={isFire}
+        onFireComplete={() => {
+          setFire(false);
+        }}
+        duration={2000}
+      ></Realistic>
       <Grid
         container
         direction={"row"}
@@ -542,6 +886,13 @@ const Event = (props: AppProps) => {
                     background: "",
                   }}
                 >
+                  {/*<button*/}
+                  {/*  onClick={() => {*/}
+                  {/*    setFire(true);*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  aaa*/}
+                  {/*</button>*/}
                   {ticketData?.imageUrl ? (
                     <LazyLoadImage
                       width={smUp ? 128 : 128}
@@ -785,39 +1136,42 @@ const Event = (props: AppProps) => {
                 </Card>
               </Box>
             )}
-            {userData?._id && !walletConnectedForTicket && (
-              <Card>
-                <CardContent>
-                  <Stack
-                    direction={smUp ? "row" : "column"}
-                    alignItems={"center"}
-                    justifyContent={"space-between"}
-                    spacing={smUp ? 0 : 2}
-                  >
-                    <Stack direction={"column"}>
-                      <Typography
-                        variant={"h6"}
-                        sx={{ color: theme.palette.warning.main }}
-                        // alignContent={"center"}
-                        textAlign={"center"}
-                      >
-                        {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
-                      </Typography>
+            {userData?._id &&
+              !walletConnectedForTicket &&
+              ticketData.rewardPolicy?.context?.rewardNetwork && (
+                <Card>
+                  <CardContent>
+                    <Stack
+                      direction={smUp ? "row" : "column"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      spacing={smUp ? 0 : 2}
+                      sx={{ padding: 1, paddingTop: 0, paddingBottom: 0 }}
+                    >
+                      <Stack direction={"column"}>
+                        <Typography
+                          variant={"h6"}
+                          sx={{ color: theme.palette.warning.main }}
+                          // alignContent={"center"}
+                          textAlign={"center"}
+                        >
+                          {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
+                        </Typography>
+                      </Stack>
+                      <Stack direction={"column"}>
+                        <SecondaryButton
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            await asyncGoToProfileAndEditDialogOpen();
+                          }}
+                        >
+                          지갑 연결하러 가기
+                        </SecondaryButton>
+                      </Stack>
                     </Stack>
-                    <Stack direction={"column"}>
-                      <SecondaryButton
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          await asyncGoToProfileAndEditDialogOpen();
-                        }}
-                      >
-                        지갑 연결하러 가기
-                      </SecondaryButton>
-                    </Stack>
-                  </Stack>
-                </CardContent>
-              </Card>
-            )}
+                  </CardContent>
+                </Card>
+              )}
             <Stack
               direction={"column"}
               spacing={2}
@@ -862,7 +1216,9 @@ const Event = (props: AppProps) => {
                   const autoVerified =
                     quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
                     quest.questPolicy?.questPolicy ===
-                      QuestPolicyType.VerifyDiscord;
+                      QuestPolicyType.VerifyDiscord ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyTelegram;
 
                   return (
                     <VerifyCard
@@ -887,260 +1243,23 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||
                         quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyEmail ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasEmail ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasWalletAddress ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasTwitter
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyEmail ||
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyHasEmail ||
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyHasWalletAddress ||
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyHasTwitter ||
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyHasTelegram
                       }
                       onVerifyBtnClicked={async (e) => {
-                        const myEvent = e as MouseEventWithParam<{
-                          callback: (msg: string) => void;
-                        }>;
-                        try {
-                          if (!ticketData._id) return;
-                          if (
-                            quest.questPolicy?.questPolicy ===
-                            QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
-                          ) {
-                            if (showTwitterConnectAlert()) {
-                              myEvent.params.callback("success");
-                              return;
-                            }
-                            await asyncVerifyTwitterFollowQuest(
-                              ticketData._id,
-                              quest._id ?? ""
-                            );
-                            myEvent.params.callback("success");
-                            updateVerifyState(index);
-                          } else if (
-                            quest.questPolicy?.questPolicy ===
-                            QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
-                          ) {
-                            if (showTwitterConnectAlert()) {
-                              myEvent.params.callback("success");
-                              return;
-                            }
-                            await asyncVerifyTwitterRetweetQuest(
-                              ticketData._id,
-                              quest._id ?? ""
-                            );
-                            myEvent.params.callback("success");
-                            updateVerifyState(index);
-                          } else if (
-                            quest.questPolicy?.questPolicy ===
-                            QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
-                          ) {
-                            if (showTwitterConnectAlert()) {
-                              myEvent.params.callback("success");
-                              return;
-                            }
-                            await asyncVerifyTwitterLikingQuest(
-                              ticketData._id,
-                              quest._id ?? ""
-                            );
-                            myEvent.params.callback("success");
-                            updateVerifyState(index);
-                          } else if (
-                            quest.questPolicy?.questPolicy ===
-                            QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT
-                          ) {
-                            await asyncVerify3ridgePoint(
-                              ticketData._id,
-                              quest._id ?? ""
-                            );
-                            myEvent.params.callback("success");
-                            updateVerifyState(index);
-                          } else if (
-                            quest.questPolicy?.questPolicy ===
-                              QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||
-                            quest.questPolicy?.questPolicy ===
-                              QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
-                            quest.questPolicy?.questPolicy ===
-                              QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS ||
-                            quest.questPolicy?.questPolicy ===
-                              QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT
-                          ) {
-                            await asyncVerifyAptosQuest(
-                              ticketData._id,
-                              quest._id ?? ""
-                            );
-                            myEvent.params.callback("success");
-                            updateVerifyState(index);
-                          } else if (
-                            quest.questPolicy?.questPolicy ===
-                              QuestPolicyType.VerifyEmail ||
-                            quest.questPolicy?.questPolicy ===
-                              QuestPolicyType.VerifyHasEmail ||
-                            quest.questPolicy?.questPolicy ===
-                              QuestPolicyType.VerifyHasWalletAddress ||
-                            quest.questPolicy?.questPolicy ===
-                              QuestPolicyType.VerifyHasTwitter
-                          ) {
-                            myEvent.params.callback("success");
-                            asyncGoToProfileAndEditDialogOpen().then();
-                          }
-                        } catch (e) {
-                          const errorMessage = getErrorMessage(e);
-                          console.log(errorMessage);
-                          if (
-                            errorMessage ===
-                            APP_ERROR_MESSAGE.ALREADY_PARTICIPATED_USER
-                          ) {
-                            myEvent.params.callback("success");
-                            updateVerifyState(index);
-                          } else if (
-                            errorMessage ===
-                              APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW ||
-                            errorMessage ===
-                              APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET ||
-                            errorMessage ===
-                              APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING
-                          ) {
-                            showAlert({
-                              title: "알림",
-                              content: getLocaleErrorMessage(e),
-                            });
-                          }
-                        }
+                        await asyncVerifyQuest(e, quest, index);
                       }}
                       onStartBtnClicked={async (e) => {
-                        if (!ticketData._id || !quest._id) return;
-                        if (
-                          quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.QUIZ
-                        ) {
-                          const quizQuestContext = quest.questPolicy
-                            ?.context as QuizQuestContext;
-                          setOpenQuizQuestContext(quizQuestContext);
-                          setOpenQuizQuestDialog(true);
-                          setOpenQuizQuestId(quest._id);
-                        } else if (
-                          quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
-                        ) {
-                          try {
-                            const followQuestContext = quest.questPolicy
-                              .context as TwitterFollowQuestContext;
-                            window.open(
-                              `https://twitter.com/intent/follow?screen_name=${followQuestContext.username}`,
-                              "twitter",
-                              "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-                            );
-                          } catch (e) {
-                            closeLoading();
-                            showErrorAlert({ content: getErrorMessage(e) });
-                          }
-                        } else if (
-                          quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
-                        ) {
-                          const likingQuestContext = quest.questPolicy
-                            .context as TwitterLikingQuestContext;
-                          console.log(likingQuestContext);
-                          window.open(
-                            `https://twitter.com/intent/like?tweet_id=${likingQuestContext.tweetId}`,
-                            "twitter",
-                            "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-                          );
-                        } else if (
-                          quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
-                        ) {
-                          try {
-                            const retweetQuestContext = quest.questPolicy
-                              .context as TwitterRetweetQuestContext;
-                            console.log(retweetQuestContext);
-                            window.open(
-                              `https://twitter.com/intent/retweet?tweet_id=${retweetQuestContext.tweetId}`,
-                              "twitter",
-                              "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-                            );
-                          } catch (e) {
-                            closeLoading();
-                            showErrorAlert({ content: getErrorMessage(e) });
-                          }
-                        } else if (
-                          quest.questPolicy?.questPolicy ===
-                            QUEST_POLICY_TYPE.VERIFY_DISCORD ||
-                          quest.questPolicy?.questPolicy ===
-                            QUEST_POLICY_TYPE.VERIFY_TELEGRAM
-                        ) {
-                          let questContext;
-                          switch (quest.questPolicy?.questPolicy) {
-                            case QUEST_POLICY_TYPE.VERIFY_DISCORD:
-                              questContext = quest.questPolicy
-                                ?.context as DiscordQuestContext;
-                              window.open(
-                                `https://discord.gg/${questContext.channelId}`,
-                                "discord",
-                                "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-                              );
-                              break;
-                            case QUEST_POLICY_TYPE.VERIFY_TELEGRAM:
-                              questContext = quest.questPolicy
-                                ?.context as TelegramQuestContext;
-                              window.open(
-                                `https://t.me/${questContext.channelId}`,
-                                "telegram",
-                                "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-                              );
-                              break;
-                          }
-                          try {
-                            const res = await asyncCompleteQuestOfUser(
-                              ticketData._id,
-                              quest?._id
-                            );
-                            setVerifiedList((prevState) => {
-                              prevState[index] = true;
-                              return prevState;
-                            });
-                            setUpdateIndex((prevState) => {
-                              return prevState + 1;
-                            });
-                          } catch (e) {
-                            if (
-                              getErrorMessage(e) ===
-                              "user already participated ticket"
-                            ) {
-                              setVerifiedList((prevState) => {
-                                prevState[index] = true;
-                                return prevState;
-                              });
-                              setUpdateIndex((prevState) => {
-                                return prevState + 1;
-                              });
-                            }
-                          }
-                          let title = "";
-                          if (
-                            quest.questPolicy?.questPolicy ===
-                            QUEST_POLICY_TYPE.VERIFY_DISCORD
-                          ) {
-                            title = "디스코드";
-                          } else if (
-                            quest.questPolicy?.questPolicy ===
-                            QUEST_POLICY_TYPE.VERIFY_TELEGRAM
-                          ) {
-                            title = "텔레그램";
-                          }
-                          setSimpleWarningDialogTitle(title);
-                        } else if (
-                          quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
-                        ) {
-                          setOpenContentsRendererDialog(true);
-                          if (quest.questGuides?.[0]?.content) {
-                            setHtmlContent(
-                              decodeBase64(quest.questGuides[0].content)
-                            );
-                          }
-                        }
+                        await asyncStartQuest(e, quest, index);
                       }}
                       autoVerified={autoVerified}
                     ></VerifyCard>
@@ -1188,12 +1307,14 @@ const Event = (props: AppProps) => {
                 <Box>
                   <Card>
                     <CardContent>
-                      <Typography
-                        variant={"h6"}
-                        sx={{ color: theme.palette.success.main }}
-                      >
-                        본 이벤트의 위너가 되었습니다 🎉
-                      </Typography>
+                      <Stack sx={{ width: "100%" }} alignItems={"center"}>
+                        <Typography
+                          variant={"h6"}
+                          sx={{ color: theme.palette.success.main }}
+                        >
+                          본 이벤트의 위너가 되었습니다 🎉
+                        </Typography>
+                      </Stack>
                     </CardContent>
                   </Card>
                 </Box>
@@ -1329,10 +1450,10 @@ const Event = (props: AppProps) => {
                               "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
                             }
                             alt={"StarIcon"}
-                            width={48}
-                            height={48}
+                            width={32}
+                            height={32}
                           ></Image>
-                          <Typography variant={"h6"}>
+                          <Typography variant={"body1"}>
                             {ticketData?.rewardPolicy?.context?.point ?? 0}
                           </Typography>
                         </Stack>
@@ -1341,10 +1462,11 @@ const Event = (props: AppProps) => {
                         direction={"row"}
                         alignItems={"center"}
                         justifyContent={"space-between"}
+                        sx={{ paddingTop: 1 }}
                       >
                         <Typography variant={"body1"}>대상자 수</Typography>
                         <Stack direction={"row"} alignItems={"center"}>
-                          <Typography variant={"h6"}>
+                          <Typography variant={"body1"}>
                             {StringHelper.getInstance().getRewardAmountLabel(
                               ticketData?.rewardPolicy?.context?.rewardAmount
                             )}
@@ -1360,7 +1482,7 @@ const Event = (props: AppProps) => {
                         >
                           <Typography variant={"body1"}>리워드</Typography>
                           <Stack direction={"row"} alignItems={"center"}>
-                            <Typography variant={"h6"}>
+                            <Typography variant={"body1"}>
                               {ticketData?.rewardPolicy?.context?.rewardName ??
                                 ""}
                             </Typography>
@@ -1369,43 +1491,47 @@ const Event = (props: AppProps) => {
                       )}
                     </Box>
                   </Stack>
-                  {ticketData.rewardPolicy?.context?.rewardChain.includes(
-                    "offchain"
-                  ) ? (
-                    <Stack
-                      direction={"row"}
-                      justifyContent={"center"}
-                      alignItems={"center"}
-                      spacing={1}
-                    >
-                      <Typography variant={"body2"}>
-                        {`등록된 ${changeChainToAlias(
-                          ticketData.rewardPolicy?.context?.rewardChain
-                        )} 통해 보상 지급 예정`}
-                      </Typography>
-                    </Stack>
+                  {ticketData.rewardPolicy?.context?.rewardChain ? (
+                    ticketData.rewardPolicy?.context?.rewardChain.includes(
+                      "offchain"
+                    ) ? (
+                      <Stack
+                        direction={"row"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        spacing={1}
+                      >
+                        <Typography variant={"body2"}>
+                          {`등록된 ${changeChainToAlias(
+                            ticketData.rewardPolicy?.context?.rewardChain
+                          )} 통해 보상 지급 예정`}
+                        </Typography>
+                      </Stack>
+                    ) : (
+                      <Stack
+                        direction={"row"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        spacing={1}
+                      >
+                        <img
+                          src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
+                          width={32}
+                          height={32}
+                          style={{
+                            background: theme.palette.neutral[100],
+                            borderRadius: 16,
+                            padding: 5,
+                          }}
+                        />
+                        <Typography variant={"body2"}>
+                          {ticketData.rewardPolicy?.context?.rewardChain} 체인
+                          지원
+                        </Typography>
+                      </Stack>
+                    )
                   ) : (
-                    <Stack
-                      direction={"row"}
-                      justifyContent={"center"}
-                      alignItems={"center"}
-                      spacing={1}
-                    >
-                      <img
-                        src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
-                        width={32}
-                        height={32}
-                        style={{
-                          background: theme.palette.neutral[100],
-                          borderRadius: 16,
-                          padding: 5,
-                        }}
-                      />
-                      <Typography variant={"body2"}>
-                        {ticketData.rewardPolicy?.context?.rewardChain} 체인
-                        지원
-                      </Typography>
-                    </Stack>
+                    <></>
                   )}
                 </Stack>
               </PrimaryCard>
@@ -1489,19 +1615,13 @@ const Event = (props: AppProps) => {
                 direction={"row"}
                 alignItems={"center"}
                 spacing={1}
-                justifyContent={smUp ? "flex-start" : "center"}
+                justifyContent={"center"}
               >
-                <Typography variant="h5">
+                <Typography variant="h5" textAlign={"center"}>
                   아래의 사람들이 참여하고 있어요
                 </Typography>
               </Stack>
-              <Grid
-                container
-                // direction={"row"}
-                sx={{ marginTop: 4 }}
-                // alignItems={"center"}
-                justifyContent={smUp ? "flex-start" : "center"}
-              >
+              <Grid container sx={{ marginTop: 4 }} justifyContent={"center"}>
                 {(ticketData?.participants?.length ?? 0) > 0 ? (
                   <>
                     {ticketData?.participants?.slice(0, 10).map((e, index) => {
@@ -1571,16 +1691,19 @@ const Event = (props: AppProps) => {
                   </>
                 ) : (
                   <>
-                    <Box
+                    <Stack
                       onClick={() => {
                         // console.log("aaa");
                       }}
                       sx={{
                         cursor: "pointer",
+                        width: "100%",
+                        // background: "red",
                       }}
+                      alignItems={"center"}
                     >
                       <Typography>⛔&nbsp;EMPTY</Typography>
-                    </Box>
+                    </Stack>
                   </>
                 )}
               </Grid>
@@ -1588,14 +1711,19 @@ const Event = (props: AppProps) => {
           </Stack>
         </Grid>
       </Grid>
+
+      {/* --- Dialogs --- */}
+
       <SimpleDialog
         open={simpleWarningDialogTitle ? true : false}
         title={"Notification"}
         onClose={() => {
           setSimpleWarningDialogTitle("");
+          doLazyFire();
         }}
         onCloseBtnClicked={() => {
           setSimpleWarningDialogTitle("");
+          doLazyFire();
         }}
       >
         <Typography>

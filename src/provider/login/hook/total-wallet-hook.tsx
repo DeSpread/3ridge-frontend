@@ -113,7 +113,7 @@ export function useTotalWallet() {
       } else if (network === SUPPORTED_NETWORKS.EVM) {
         const connectors = evmConnectors.filter((e) => e.name === walletName);
         const connector = connectors[0];
-        console.log("connector", connector);
+        // console.log("connector", connector);
         evmConnect({ connector });
       } else if (network === SUPPORTED_NETWORKS.STACKS) {
         stacksConnect();
