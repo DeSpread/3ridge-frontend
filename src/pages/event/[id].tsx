@@ -1113,7 +1113,9 @@ const Event = (props: AppProps) => {
                   const autoVerified =
                     quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
                     quest.questPolicy?.questPolicy ===
-                      QuestPolicyType.VerifyDiscord;
+                      QuestPolicyType.VerifyDiscord ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyTelegram;
 
                   return (
                     <VerifyCard
