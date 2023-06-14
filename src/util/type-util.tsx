@@ -114,6 +114,14 @@ const findVerifyHasTwitter = (ticket: Ticket) => {
   return targetQuests;
 };
 
+const findVerifyHasTelegram = (ticket: Ticket) => {
+  if (!ticket) return null;
+  const targetQuests = ticket?.quests?.filter(
+    (e) => e.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
+  );
+  return targetQuests;
+};
+
 export {
   convertToSuppoertedNetwork,
   convertToChainType,
@@ -123,4 +131,5 @@ export {
   findVerifyHasEmailQuests,
   findVerifyHasWalletQuests,
   findVerifyHasTwitter,
+  findVerifyHasTelegram,
 };

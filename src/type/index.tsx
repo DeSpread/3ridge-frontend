@@ -217,6 +217,7 @@ export type Quest = {
       | VerifyHasEmailContext
       | VerifyHasWalletAddressContext
       | VerifyHasTwitter
+      | VerifyHasTelegram
       | undefined;
     questPolicy?: string;
   };
@@ -257,6 +258,8 @@ export type Verify3ridgePointContext = {
 export type VerifyHasEmailContext = {};
 
 export type VerifyHasTwitter = {};
+
+export type VerifyHasTelegram = {};
 
 export type VerifyHasWalletAddressContext = {
   chain: string;

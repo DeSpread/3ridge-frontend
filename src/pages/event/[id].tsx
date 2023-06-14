@@ -72,6 +72,7 @@ import {
   findVerifyHasEmailQuests,
   findVerifyHasTwitter,
   findVerifyHasWalletQuests,
+  findVerifyHasTelegram,
 } from "../../util/type-util";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import { parseStrToDate } from "../../util/date-util";
@@ -224,10 +225,8 @@ const Event = (props: AppProps) => {
           setVerifiedList(newVerifiedList);
           setInitVerifiedList(true);
           asyncUpdateClaimCompleted().then(() => {});
-          // console.log("newVerifiedList", newVerifiedList);
           const emailQuests = findVerifyHasEmailQuests(ticketData);
           const emailQuestsIds = emailQuests?.map((eq) => eq._id);
-          // console.log("emailQuestsIds", emailQuestsIds);
           const verifiedPromiseList: any[] = [];
 
           if (ids && (emailQuestsIds?.length ?? 0) > 0) {
@@ -236,7 +235,6 @@ const Event = (props: AppProps) => {
                 accumulator && newVerifiedList[ids?.indexOf(currentValue)],
               true
             );
-            // console.log("hasAllVerifiedEmail", hasAllVerifiedEmail);
             if (!hasAllVerified) {
               if (userData?.email) {
                 emailQuestsIds?.forEach((e) => {
@@ -245,16 +243,11 @@ const Event = (props: AppProps) => {
                       asyncCompleteQuestOfUser(ticketData?._id, e)
                     );
                 });
-                // console.log(
-                //   "verifiedEmailPromiseList",
-                //   verifiedEmailPromiseList
-                // );
               }
             }
           }
 
           if (!isStarted() || isExpired()) {
-            // console.log("aaa");
             return;
           }
 
@@ -301,6 +294,26 @@ const Event = (props: AppProps) => {
               // console.log(twitterQuests);
               if (userData?.userSocial?.twitterId) {
                 twitterQuestsIds?.forEach((e) => {
+                  if (ticketData?._id && e)
+                    verifiedPromiseList.push(
+                      asyncCompleteQuestOfUser(ticketData?._id, e)
+                    );
+                });
+              }
+            }
+          }
+
+          const telegramQuests = findVerifyHasTelegram(ticketData);
+          const telegramQuestsIds = telegramQuests?.map((eq) => eq._id);
+          if (ids && (telegramQuestsIds?.length ?? 0) > 0) {
+            const hasAllVerified = telegramQuestsIds?.reduce(
+              (accumulator, currentValue) =>
+                accumulator && newVerifiedList[ids?.indexOf(currentValue)],
+              true
+            );
+            if (!hasAllVerified) {
+              if (userData?.userSocial?.telegramUser?.id) {
+                telegramQuestsIds?.forEach((e) => {
                   if (ticketData?._id && e)
                     verifiedPromiseList.push(
                       asyncCompleteQuestOfUser(ticketData?._id, e)
@@ -468,7 +481,8 @@ const Event = (props: AppProps) => {
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
       quest.questPolicy?.questPolicy ===
         QuestPolicyType.VerifyHasWalletAddress ||
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
       ? "연동하기"
       : undefined;
   };
@@ -702,7 +716,8 @@ const Event = (props: AppProps) => {
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
         quest.questPolicy?.questPolicy ===
           QuestPolicyType.VerifyHasWalletAddress ||
-        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
       ) {
         // console.log("aaa");
         myEvent.params.callback("success");
@@ -1028,6 +1043,7 @@ const Event = (props: AppProps) => {
                     alignItems={"center"}
                     justifyContent={"space-between"}
                     spacing={smUp ? 0 : 2}
+                    sx={{ padding: 1, paddingTop: 0, paddingBottom: 0 }}
                   >
                     <Stack direction={"column"}>
                       <Typography
@@ -1130,7 +1146,9 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QuestPolicyType.VerifyHasWalletAddress ||
                         quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasTwitter
+                          QuestPolicyType.VerifyHasTwitter ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyHasTelegram
                       }
                       onVerifyBtnClicked={async (e) => {
                         await asyncVerifyQuest(e, quest, index);
