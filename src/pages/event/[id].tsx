@@ -1136,40 +1136,42 @@ const Event = (props: AppProps) => {
                 </Card>
               </Box>
             )}
-            {userData?._id && !walletConnectedForTicket && (
-              <Card>
-                <CardContent>
-                  <Stack
-                    direction={smUp ? "row" : "column"}
-                    alignItems={"center"}
-                    justifyContent={"space-between"}
-                    spacing={smUp ? 0 : 2}
-                    sx={{ padding: 1, paddingTop: 0, paddingBottom: 0 }}
-                  >
-                    <Stack direction={"column"}>
-                      <Typography
-                        variant={"h6"}
-                        sx={{ color: theme.palette.warning.main }}
-                        // alignContent={"center"}
-                        textAlign={"center"}
-                      >
-                        {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
-                      </Typography>
+            {userData?._id &&
+              !walletConnectedForTicket &&
+              ticketData.rewardPolicy?.context?.rewardNetwork && (
+                <Card>
+                  <CardContent>
+                    <Stack
+                      direction={smUp ? "row" : "column"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      spacing={smUp ? 0 : 2}
+                      sx={{ padding: 1, paddingTop: 0, paddingBottom: 0 }}
+                    >
+                      <Stack direction={"column"}>
+                        <Typography
+                          variant={"h6"}
+                          sx={{ color: theme.palette.warning.main }}
+                          // alignContent={"center"}
+                          textAlign={"center"}
+                        >
+                          {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
+                        </Typography>
+                      </Stack>
+                      <Stack direction={"column"}>
+                        <SecondaryButton
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            await asyncGoToProfileAndEditDialogOpen();
+                          }}
+                        >
+                          지갑 연결하러 가기
+                        </SecondaryButton>
+                      </Stack>
                     </Stack>
-                    <Stack direction={"column"}>
-                      <SecondaryButton
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          await asyncGoToProfileAndEditDialogOpen();
-                        }}
-                      >
-                        지갑 연결하러 가기
-                      </SecondaryButton>
-                    </Stack>
-                  </Stack>
-                </CardContent>
-              </Card>
-            )}
+                  </CardContent>
+                </Card>
+              )}
             <Stack
               direction={"column"}
               spacing={2}
@@ -1489,43 +1491,47 @@ const Event = (props: AppProps) => {
                       )}
                     </Box>
                   </Stack>
-                  {ticketData.rewardPolicy?.context?.rewardChain.includes(
-                    "offchain"
-                  ) ? (
-                    <Stack
-                      direction={"row"}
-                      justifyContent={"center"}
-                      alignItems={"center"}
-                      spacing={1}
-                    >
-                      <Typography variant={"body2"}>
-                        {`등록된 ${changeChainToAlias(
-                          ticketData.rewardPolicy?.context?.rewardChain
-                        )} 통해 보상 지급 예정`}
-                      </Typography>
-                    </Stack>
+                  {ticketData.rewardPolicy?.context?.rewardChain ? (
+                    ticketData.rewardPolicy?.context?.rewardChain.includes(
+                      "offchain"
+                    ) ? (
+                      <Stack
+                        direction={"row"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        spacing={1}
+                      >
+                        <Typography variant={"body2"}>
+                          {`등록된 ${changeChainToAlias(
+                            ticketData.rewardPolicy?.context?.rewardChain
+                          )} 통해 보상 지급 예정`}
+                        </Typography>
+                      </Stack>
+                    ) : (
+                      <Stack
+                        direction={"row"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        spacing={1}
+                      >
+                        <img
+                          src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
+                          width={32}
+                          height={32}
+                          style={{
+                            background: theme.palette.neutral[100],
+                            borderRadius: 16,
+                            padding: 5,
+                          }}
+                        />
+                        <Typography variant={"body2"}>
+                          {ticketData.rewardPolicy?.context?.rewardChain} 체인
+                          지원
+                        </Typography>
+                      </Stack>
+                    )
                   ) : (
-                    <Stack
-                      direction={"row"}
-                      justifyContent={"center"}
-                      alignItems={"center"}
-                      spacing={1}
-                    >
-                      <img
-                        src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
-                        width={32}
-                        height={32}
-                        style={{
-                          background: theme.palette.neutral[100],
-                          borderRadius: 16,
-                          padding: 5,
-                        }}
-                      />
-                      <Typography variant={"body2"}>
-                        {ticketData.rewardPolicy?.context?.rewardChain} 체인
-                        지원
-                      </Typography>
-                    </Stack>
+                    <></>
                   )}
                 </Stack>
               </PrimaryCard>
