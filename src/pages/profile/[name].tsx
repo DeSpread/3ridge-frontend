@@ -680,7 +680,7 @@ const Profile = () => {
         title={"프로필 수정하기"}
         onClose={() => {
           setOpenProfileEditDialog(false);
-          // setShowProfileEditDialog(false);
+          setShowProfileEditDialog(false);
         }}
         open={openProfileEditDialog}
         walletValidatorButtonOnClick={async (e) => {
@@ -786,7 +786,7 @@ const Profile = () => {
         isMailLoggedIn={isMailLoggedIn || isGoogleLoggedIn}
         onCloseBtnClicked={(e) => {
           setOpenProfileEditDialog(false);
-          // setShowProfileEditDialog(false);
+          setShowProfileEditDialog(false);
         }}
         onFileImageAdded={(f) => {
           setImageFile(f);
