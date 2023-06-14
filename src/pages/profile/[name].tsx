@@ -98,7 +98,7 @@ const Profile = () => {
   const { showLoading, closeLoading } = useLoading();
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
-  const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
+  // const [openProfileEditDialog, setOpenProfileEditDialog] = useState(false);
   const [openConnectEmailDialog, setOpenConnectEmailDialog] = useState(false);
   const [openConnectTwitterDialog, setOpenConnectTwitterDialog] =
     useState(false);
@@ -123,12 +123,8 @@ const Profile = () => {
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      // console.log("url", url);
-      if (url && typeof url === "string") {
-        // console.log("isProfileEditDialogOpen", isProfileEditDialogOpen);
-        if (isProfileEditDialogOpen) {
-          setOpenProfileEditDialog(true);
-        }
+      if (url && typeof url === "string" && !url.includes("profile")) {
+        setShowProfileEditDialog(false);
       }
     };
     router.events.on("routeChangeComplete", handleRouteChange);
@@ -479,7 +475,8 @@ const Profile = () => {
                     <PrimaryButton
                       sx={{ marginBottom: 1, marginLeft: -1 }}
                       onClick={() => {
-                        setOpenProfileEditDialog(true);
+                        // setOpenProfileEditDialog(true);
+                        setShowProfileEditDialog(true);
                       }}
                       disabled={!isSingedUserProfile}
                     >
@@ -682,9 +679,10 @@ const Profile = () => {
         userData={signedUserData}
         title={"프로필 수정하기"}
         onClose={() => {
-          setOpenProfileEditDialog(false);
+          // setOpenProfileEditDialog(false);
+          setShowProfileEditDialog(false);
         }}
-        open={openProfileEditDialog}
+        open={isProfileEditDialogOpen}
         walletValidatorButtonOnClick={async (e) => {
           const myEvent = e as MouseEventWithParam<{
             state?: string;
@@ -787,7 +785,7 @@ const Profile = () => {
         isWalletLoggedIn={isWalletLoggedIn}
         isMailLoggedIn={isMailLoggedIn || isGoogleLoggedIn}
         onCloseBtnClicked={(e) => {
-          setOpenProfileEditDialog(false);
+          setShowProfileEditDialog(false);
         }}
         onFileImageAdded={(f) => {
           setImageFile(f);

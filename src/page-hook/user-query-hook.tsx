@@ -22,7 +22,6 @@ export function useUserQuery(props: { name?: string }) {
       }
       try {
         setLoading(true);
-        console.log("name", props.name);
         const res = await client.query({
           query: GET_USER_BY_NAME,
           variables: {
@@ -102,7 +101,6 @@ export function useUserQuery(props: { name?: string }) {
       participatingTickets,
       gmail,
     } = data;
-    console.log("aaa", participatingTickets);
     setUserData((prevState) => {
       return {
         ...prevState,

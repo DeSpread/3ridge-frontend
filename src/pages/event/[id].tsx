@@ -180,7 +180,6 @@ const Event = (props: AppProps) => {
     const { ethereum } = window;
     //@ts-ignore
     const _hasMetamask = ethereum ? ethereum.isMetaMask : false;
-    console.log("_hasMetamask", _hasMetamask);
     setHasMetask(_hasMetamask);
   }, []);
 
@@ -261,7 +260,6 @@ const Event = (props: AppProps) => {
               const networks = userData?.walletAddressInfos
                 ?.filter((e) => e.address)
                 .map((e) => e.network.toUpperCase());
-              console.log("networks", networks);
               for (let i = 0; i < (walletQuestChains?.length ?? 0); i++) {
                 const chain = walletQuestChains?.[i]?.toUpperCase();
                 if (networks?.includes(chain)) {
