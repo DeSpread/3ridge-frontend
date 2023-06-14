@@ -133,7 +133,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                   <PrimaryButton
                     size={"medium"}
                     sx={{ width: 110 }}
-                    endIcon={<CheckIcon />}
+                    endIcon={props.verified ? <CheckIcon /> : <></>}
                     onClick={(e) => {
                       setCardState("VERIFYING");
                       let timer: NodeJS.Timer;
