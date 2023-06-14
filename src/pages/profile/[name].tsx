@@ -123,11 +123,12 @@ const Profile = () => {
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
+      // console.log("url", url);
       if (url && typeof url === "string") {
+        // console.log("isProfileEditDialogOpen", isProfileEditDialogOpen);
         if (isProfileEditDialogOpen) {
           setOpenProfileEditDialog(true);
         }
-        setShowProfileEditDialog(false);
       }
     };
     router.events.on("routeChangeComplete", handleRouteChange);

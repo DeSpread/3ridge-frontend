@@ -11,6 +11,7 @@ import React, { MouseEventHandler } from "react";
 import { QuizQuestContext, Z_INDEX_OFFSET } from "../../type";
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
+import ConfettiExplosion from "react-confetti-explosion";
 
 type QuestDiscordDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;

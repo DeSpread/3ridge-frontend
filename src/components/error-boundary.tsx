@@ -101,7 +101,7 @@ export default class ErrorBoundary extends React.Component<
                   fontWeight: "bold",
                   color: "#f8810a",
                   "&:hover": {
-                    color: "#bdbdbd",
+                    color: "#904e1d",
                     textDecoration: "underline",
                   },
                 }}

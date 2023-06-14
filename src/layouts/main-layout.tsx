@@ -1,4 +1,12 @@
-import { AppBar, Box, Stack, Toolbar, useMediaQuery } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  LinearProgress,
+  Stack,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
 import React, { MouseEventHandler, ReactNode, useMemo, useState } from "react";
@@ -152,6 +160,42 @@ const MainLayout = (props: MainLayoutProps) => {
 
   return (
     <Box sx={{ display: "flex" }}>
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    position: "absolute",*/}
+      {/*    top: "10%",*/}
+      {/*    left: "50%",*/}
+      {/*    transform: "translate(0%, -50%)",*/}
+      {/*    zIndex: 1300,*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <Backdrop*/}
+      {/*    sx={{*/}
+      {/*      color: "#fff",*/}
+      {/*      overflowY: "auto",*/}
+      {/*      display: "inline-block",*/}
+      {/*      zIndex: (theme) =>*/}
+      {/*        theme.zIndex.drawer + Z_INDEX_OFFSET.LOADING_BACKDROP,*/}
+      {/*    }}*/}
+      {/*    open={true}*/}
+      {/*  >*/}
+      {/*  </Backdrop>*/}
+      {/*</div>*/}
+      {/*<LinearProgress*/}
+      {/*  color={"info"}*/}
+      {/*  sx={{*/}
+      {/*    background: (theme) => theme.palette.action.hover,*/}
+      {/*    width: "100%",*/}
+      {/*    position: "absolute",*/}
+      {/*    top: 0,*/}
+      {/*    borderRadius: 0,*/}
+      {/*    height: "2px",*/}
+      {/*  }}*/}
+      {/*></LinearProgress>*/}
+      {/*<SimpleDialog open={true}>축하합니다.</SimpleDialog>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
+
       {/*--- Navbar ---*/}
       <AppBar
         // className={myFont.className}
@@ -287,7 +331,6 @@ const MainLayout = (props: MainLayoutProps) => {
           </Stack>
         </Box>
       </AppBar>
-
       {/*--- Body ---*/}
       <Box sx={{ flex: 1, background: "#0f0e15" }}>
         {props.backgroundComponent}
@@ -297,7 +340,6 @@ const MainLayout = (props: MainLayoutProps) => {
         </div>
         <footer>{props?.footerComponent}</footer>
       </Box>
-
       {/*--- Dialog ---*/}
       {/*<SignInDialog*/}
       {/*  title={"안녕하세요 다시 만나서 반가워요!"}*/}

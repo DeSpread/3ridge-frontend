@@ -71,8 +71,8 @@ const AllEventsSection = () => {
                 : index === 1
                 ? FILTER_TYPE.AVAILABLE
                 : index === 2
-                ? FILTER_TYPE.COMPLETE
-                : FILTER_TYPE.MISSED;
+                ? FILTER_TYPE.MISSED
+                : FILTER_TYPE.COMPLETE;
             setFilterType(filterType);
           }}
           onTab2Click={async (e) => {
