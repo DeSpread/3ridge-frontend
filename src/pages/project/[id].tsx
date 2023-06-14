@@ -32,9 +32,7 @@ import Image from "next/image";
 import { TicketSortType } from "../../__generated__/graphql";
 
 const Project = () => {
-  const [filterType, setFilterType] = useState<FilterType>(
-    FILTER_TYPE.AVAILABLE
-  );
+  const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
