@@ -931,6 +931,9 @@ const Event = (props: AppProps) => {
                   <Typography
                     variant={smUp ? "h3" : "h4"}
                     textAlign={smUp ? "left" : "center"}
+                    sx={{
+                      wordBreak: "keep-all",
+                    }}
                   >
                     {ticketData?.title}
                   </Typography>
@@ -1617,7 +1620,11 @@ const Event = (props: AppProps) => {
                 spacing={1}
                 justifyContent={"center"}
               >
-                <Typography variant="h5" textAlign={"center"}>
+                <Typography
+                  variant="h5"
+                  textAlign={"center"}
+                  sx={{ wordBreak: "keep-all" }}
+                >
                   아래의 사람들이 참여하고 있어요
                 </Typography>
               </Stack>
