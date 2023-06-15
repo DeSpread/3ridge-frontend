@@ -6,7 +6,6 @@ import {
   DialogProps,
   DialogTitle,
   Divider,
-  Grid,
   IconButton,
   Stack,
   Typography,
@@ -14,7 +13,6 @@ import {
 } from "@mui/material";
 import React, { MouseEventHandler } from "react";
 import {
-  ALLOWED_NETWORKS,
   ReversibleSvgIconProps,
   SUPPORTED_NETWORKS,
   User,
@@ -30,7 +28,6 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 import { ValidatorButton } from "../../../components/molecules/validator-button";
 import BlockIcon from "../../../components/molecules/block-icon";
 import ResourceFactory from "../../../helper/resource-factory";
-import PrimaryButton from "../../../components/atoms/primary-button";
 // @ts-ignore
 import TelegramLoginButton from "react-telegram-login";
 import { getUserMail } from "../../../util/type-util";

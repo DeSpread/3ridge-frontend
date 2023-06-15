@@ -66,17 +66,12 @@ import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
-import {
-  findVerifyHasEmailQuests,
-  findVerifyHasTelegram,
-  findVerifyHasTwitter,
-  findVerifyHasWalletQuests,
-} from "../../util/type-util";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import { parseStrToDate } from "../../util/date-util";
 import StringHelper from "../../helper/string-helper";
 import Realistic from "../../components/realistic";
-import { useMountedState, useGetSet } from "react-use";
+import { useGetSet, useMountedState } from "react-use";
+import RedeemIcon from "@mui/icons-material/Redeem";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -661,16 +656,17 @@ const Event = (props: AppProps) => {
       if (quest.questGuides?.[0]?.content) {
         setHtmlContent(decodeBase64(quest.questGuides[0].content));
       }
-    } else if (
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
-      quest.questPolicy?.questPolicy ===
-        QuestPolicyType.VerifyHasWalletAddress ||
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
-    ) {
-      asyncGoToProfileAndEditDialogOpen().then();
     }
+    // else if (
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
+    //   quest.questPolicy?.questPolicy ===
+    //     QuestPolicyType.VerifyHasWalletAddress ||
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
+    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
+    // ) {
+    //   asyncGoToProfileAndEditDialogOpen().then();
+    // }
   };
 
   const asyncVerifyQuest = async (
@@ -746,7 +742,34 @@ const Event = (props: AppProps) => {
         } else {
           showAlert({
             title: "알림",
-            content: "프로필 페이지에서 이메일을 연결해주세요.",
+            content: (
+              <>
+                <Stack>
+                  <Typography variant={"body1"}>
+                    프로필 페이지에서 이메일을 연결해주세요.
+                  </Typography>
+                  <LinkTypography
+                    variant={"body1"}
+                    href={"#"}
+                    sx={{
+                      fontWeight: "bold",
+                      "&:hover": {
+                        color: "#914e1d",
+                        textDecoration: "underline",
+                      },
+                      color: theme.palette.warning.main,
+                    }}
+                    onClick={async (e) => {
+                      asyncGoToProfileAndEditDialogOpen().then();
+                      // setShowSignInDialog(true);
+                    }}
+                  >
+                    이 링크를 누르시면 프로필 페이지로 이동합니다.
+                  </LinkTypography>
+                </Stack>
+              </>
+            ),
+            // content: "프로필 페이지에서 이메일을 연결해주세요.",
           });
           myEvent.params.callback("success");
         }
@@ -931,6 +954,9 @@ const Event = (props: AppProps) => {
                   <Typography
                     variant={smUp ? "h3" : "h4"}
                     textAlign={smUp ? "left" : "center"}
+                    sx={{
+                      wordBreak: "keep-all",
+                    }}
                   >
                     {ticketData?.title}
                   </Typography>
@@ -1243,17 +1269,17 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||
                         quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX
-                        // quest.questPolicy?.questPolicy ===
-                        //   QuestPolicyType.VerifyEmail ||
-                        // quest.questPolicy?.questPolicy ===
-                        //   QuestPolicyType.VerifyHasEmail ||
-                        // quest.questPolicy?.questPolicy ===
-                        //   QuestPolicyType.VerifyHasWalletAddress ||
-                        // quest.questPolicy?.questPolicy ===
-                        //   QuestPolicyType.VerifyHasTwitter ||
-                        // quest.questPolicy?.questPolicy ===
-                        //   QuestPolicyType.VerifyHasTelegram
+                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyEmail ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyHasEmail ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyHasWalletAddress ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyHasTwitter ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyHasTelegram
                       }
                       onVerifyBtnClicked={async (e) => {
                         await asyncVerifyQuest(e, quest, index);
@@ -1294,7 +1320,7 @@ const Event = (props: AppProps) => {
                     REWARD_POLICY_TYPE.FCFS ? (
                       <DirectionsRunIcon />
                     ) : (
-                      <AccessAlarmIcon />
+                      <RedeemIcon />
                     )
                   }
                 ></StyledChip>
@@ -1617,7 +1643,11 @@ const Event = (props: AppProps) => {
                 spacing={1}
                 justifyContent={"center"}
               >
-                <Typography variant="h5" textAlign={"center"}>
+                <Typography
+                  variant="h5"
+                  textAlign={"center"}
+                  sx={{ wordBreak: "keep-all" }}
+                >
                   아래의 사람들이 참여하고 있어요
                 </Typography>
               </Stack>

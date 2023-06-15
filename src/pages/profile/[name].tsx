@@ -336,6 +336,16 @@ const Profile = () => {
                             <Grid item key={index}>
                               <StyledChip
                                 key={index}
+                                sx={{
+                                  "&:hover": {
+                                    background: (theme: Theme) =>
+                                      theme.palette.action.hover,
+                                  },
+                                }}
+                                onClick={(e: MouseEvent) => {
+                                  e.preventDefault();
+                                  setOpenProfileEditDialog(true);
+                                }}
                                 icon={
                                   <img
                                     src={resourceFactory.getExplorerIconUri(
@@ -383,6 +393,16 @@ const Profile = () => {
                     {!getUserMail(targetUserData) && (
                       <Grid item>
                         <StyledChip
+                          sx={{
+                            "&:hover": {
+                              background: (theme: Theme) =>
+                                theme.palette.action.hover,
+                            },
+                          }}
+                          onClick={(e: MouseEvent) => {
+                            e.preventDefault();
+                            setOpenProfileEditDialog(true);
+                          }}
                           icon={<EmailIcon></EmailIcon>}
                           label={
                             <Typography
@@ -415,6 +435,16 @@ const Profile = () => {
                     {!targetUserData?.userSocial?.twitterId && (
                       <Grid item>
                         <StyledChip
+                          sx={{
+                            "&:hover": {
+                              background: (theme: Theme) =>
+                                theme.palette.action.hover,
+                            },
+                          }}
+                          onClick={(e: MouseEvent) => {
+                            e.preventDefault();
+                            setOpenProfileEditDialog(true);
+                          }}
                           icon={<TwitterIcon></TwitterIcon>}
                           label={
                             <Typography
@@ -450,6 +480,16 @@ const Profile = () => {
                     {!targetUserData?.userSocial?.telegramUser?.username && (
                       <Grid item>
                         <StyledChip
+                          sx={{
+                            "&:hover": {
+                              background: (theme: Theme) =>
+                                theme.palette.action.hover,
+                            },
+                          }}
+                          onClick={(e: MouseEvent) => {
+                            e.preventDefault();
+                            setOpenProfileEditDialog(true);
+                          }}
                           icon={<TelegramIcon></TelegramIcon>}
                           label={
                             <Typography

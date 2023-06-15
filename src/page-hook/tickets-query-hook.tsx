@@ -33,16 +33,16 @@ export function useTicketsQuery(props: {
       }
 
       setTicketsDataLoading(true);
-      console.log(
-        "useTicketsQuery",
-        "sort",
-        props.sort,
-        "status",
-        props.filterType,
-        "projectId",
-        props.projectId,
-        ticketIsVisibleOnly
-      );
+      // console.log(
+      //   "useTicketsQuery",
+      //   "sort",
+      //   props.sort,
+      //   "status",
+      //   props.filterType,
+      //   "projectId",
+      //   props.projectId,
+      //   ticketIsVisibleOnly
+      // );
 
       if (!props.projectId) {
         const status =
@@ -81,7 +81,7 @@ export function useTicketsQuery(props: {
             status: status,
           },
         });
-        console.log(data.ticketsByProjectId);
+        // console.log(data.ticketsByProjectId);
         updateSetTicketsData(data.ticketsByProjectId);
       }
       setTicketsDataLoading(false);
