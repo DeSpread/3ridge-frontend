@@ -15,6 +15,7 @@ const TicketInfoTextSet = ({ ticket, sx }: TicketInfoViewProps) => {
       justifyContent={"center"}
       // spacing={1}
       container={true}
+      // sx={{ background: "red", width: "100%" }}
     >
       <Grid
         // direction={"row"}

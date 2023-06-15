@@ -173,7 +173,14 @@ const TicketCard = (props: EventCardProps) => {
             </Box>
           </Stack>
           <Stack direction={"column"} sx={{}}>
-            <Box sx={{ height: 50, display: "flex", alignItems: "center" }}>
+            <Box
+              sx={{
+                height: 50,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Typography
                 variant={"h6"}
                 sx={{
@@ -183,16 +190,25 @@ const TicketCard = (props: EventCardProps) => {
                   WebkitLineClamp: "2",
                   WebkitBoxOrient: "vertical",
                   paddingTop: 4,
+                  wordBreak: "keep-all",
                 }}
+                textAlign={"center"}
                 fontFamily={"LINESeedKR-Bd"}
               >
                 {ticket?.title}
               </Typography>
             </Box>
             <Grid
-              sx={{ marginTop: 4, marginBottom: -2 }}
+              sx={{
+                marginTop: 4,
+                marginBottom: -2,
+                // width: "100%",
+                background: "",
+              }}
               container
               columnSpacing={1}
+              alignItems={"center"}
+              justifyContent={"center"}
             >
               <Grid item>
                 <TicketInfoTextSet ticket={ticket}></TicketInfoTextSet>
