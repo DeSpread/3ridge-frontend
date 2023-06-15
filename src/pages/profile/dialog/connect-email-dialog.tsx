@@ -259,7 +259,7 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                     <ValidatedTextInput
                       value={code}
                       onChange={(e) => {
-                        setCode(e.target.value);
+                        setCode(e.target.value?.trim());
                       }}
                       isValid={code.length === 6}
                       inputProps={{
