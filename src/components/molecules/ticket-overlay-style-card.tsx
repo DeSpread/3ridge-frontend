@@ -49,8 +49,7 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
       <Box
         sx={{
           borderRadius: 4,
-          width: height,
-          height: height,
+          height,
           background: "black",
           backgroundImage: `url("${ticket?.imageUrl}")`,
           backgroundSize: "cover",
@@ -178,6 +177,7 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                     textAlign: "center",
                     textShadow:
                       "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
+                    wordBreak: "keep-all",
                   }}
                   fontFamily={"LINESeedKR-Bd"}
                 >
@@ -189,6 +189,7 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                 sx={{
                   textShadow:
                     "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
+                  wordBreak: "keep-all",
                 }}
               ></TicketInfoTextSet>
             </Stack>
