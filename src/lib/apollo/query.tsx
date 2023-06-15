@@ -422,8 +422,12 @@ export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
 `);
 
 export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
-  query TicketsByProjectId($projectId: String!, $status: TicketStatusType) {
-    ticketsByProjectId(projectId: $projectId, status: $status) {
+  query TicketsByProjectId(
+    $projectId: String!
+    $sort: TicketSortType
+    $status: TicketStatusType
+  ) {
+    ticketsByProjectId(projectId: $projectId, sort: $sort, status: $status) {
       _id
       completed
       description
