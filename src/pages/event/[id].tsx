@@ -481,6 +481,7 @@ const Event = (props: AppProps) => {
   const asyncGoToProfileAndEditDialogOpen = async () => {
     showLoading();
     setShowProfileEditDialog(true);
+    console.log("path", `/profile/${userData?.name}`);
     await router.push(`/profile/${userData?.name}`);
     closeLoading();
   };
@@ -760,8 +761,11 @@ const Event = (props: AppProps) => {
                       color: theme.palette.warning.main,
                     }}
                     onClick={async (e) => {
+                      console.log("aaa");
                       closeAlert();
-                      asyncGoToProfileAndEditDialogOpen().then();
+                      setTimeout(() => {
+                        asyncGoToProfileAndEditDialogOpen();
+                      }, 0);
                     }}
                   >
                     이 링크를 누르시면 프로필 페이지로 이동합니다.
@@ -814,7 +818,9 @@ const Event = (props: AppProps) => {
                       }}
                       onClick={async (e) => {
                         closeAlert();
-                        asyncGoToProfileAndEditDialogOpen().then();
+                        setTimeout(() => {
+                          asyncGoToProfileAndEditDialogOpen();
+                        }, 0);
                       }}
                     >
                       이 링크를 누르시면 프로필 페이지로 이동합니다.
@@ -860,10 +866,6 @@ const Event = (props: AppProps) => {
           myEvent.params.callback("success");
           updateVerifyState(index);
         } else {
-          // showAlert({
-          //   title: "알림",
-          //   content: `프로필 페이지에서 텔레그램을 연동해주세요`,
-          // });
           showAlert({
             title: "알림",
             content: (
@@ -885,7 +887,9 @@ const Event = (props: AppProps) => {
                     }}
                     onClick={async (e) => {
                       closeAlert();
-                      asyncGoToProfileAndEditDialogOpen().then();
+                      setTimeout(() => {
+                        asyncGoToProfileAndEditDialogOpen();
+                      }, 0);
                     }}
                   >
                     이 링크를 누르시면 프로필 페이지로 이동합니다.
