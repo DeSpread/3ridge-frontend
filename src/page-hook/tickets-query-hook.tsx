@@ -33,6 +33,17 @@ export function useTicketsQuery(props: {
       }
 
       setTicketsDataLoading(true);
+      console.log(
+        "useTicketsQuery",
+        "sort",
+        props.sort,
+        "status",
+        props.filterType,
+        "projectId",
+        props.projectId,
+        ticketIsVisibleOnly
+      );
+
       if (!props.projectId) {
         const status =
           props.filterType === FILTER_TYPE.AVAILABLE
@@ -42,7 +53,6 @@ export function useTicketsQuery(props: {
             : props.filterType === FILTER_TYPE.COMPLETE
             ? TicketStatusType.Completed
             : TicketStatusType.All;
-        // console.log("aaa", props.sort, status, ticketIsVisibleOnly);
         const { data } = await client.query({
           query: GET_TICKETS,
           variables: {
@@ -58,16 +68,20 @@ export function useTicketsQuery(props: {
         const status =
           props.filterType === FILTER_TYPE.AVAILABLE
             ? TicketStatusType.Available
-            : FILTER_TYPE.MISSED
+            : props.filterType === FILTER_TYPE.MISSED
             ? TicketStatusType.Missed
-            : TicketStatusType.Completed;
+            : props.filterType === FILTER_TYPE.COMPLETE
+            ? TicketStatusType.Completed
+            : TicketStatusType.All;
         const { data } = await client.query({
           query: GET_TICKETS_BY_PROJECT_ID,
           variables: {
             projectId: props.projectId,
+            sort: props.sort,
             status: status,
           },
         });
+        console.log(data.ticketsByProjectId);
         updateSetTicketsData(data.ticketsByProjectId);
       }
       setTicketsDataLoading(false);
