@@ -14,6 +14,15 @@ const nextConfig = {
     ],
   },
   experimental: { esmExternals: true },
+  async redirects() {
+    return [
+      {
+        source: "/c/aptos-community-first",
+        destination: "/event/64882d186bd6711523e2a803",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
