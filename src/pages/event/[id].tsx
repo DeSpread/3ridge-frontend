@@ -744,7 +744,7 @@ const Event = (props: AppProps) => {
             title: "알림",
             content: (
               <>
-                <Stack>
+                <Stack spacing={1}>
                   <Typography variant={"body1"}>
                     프로필 페이지에서 이메일을 연결해주세요.
                   </Typography>
@@ -760,8 +760,8 @@ const Event = (props: AppProps) => {
                       color: theme.palette.warning.main,
                     }}
                     onClick={async (e) => {
+                      closeAlert();
                       asyncGoToProfileAndEditDialogOpen().then();
-                      // setShowSignInDialog(true);
                     }}
                   >
                     이 링크를 누르시면 프로필 페이지로 이동합니다.
@@ -769,7 +769,6 @@ const Event = (props: AppProps) => {
                 </Stack>
               </>
             ),
-            // content: "프로필 페이지에서 이메일을 연결해주세요.",
           });
           myEvent.params.callback("success");
         }
@@ -790,9 +789,39 @@ const Event = (props: AppProps) => {
             myEvent.params.callback("success");
             updateVerifyState(index);
           } else {
+            // showAlert({
+            //   title: "알림",
+            //   content: "프로필 페이지에서 지갑을 연결해주세요.",
+            // });
             showAlert({
               title: "알림",
-              content: "프로필 페이지에서 지갑을 연결해주세요.",
+              content: (
+                <>
+                  <Stack spacing={1}>
+                    <Typography variant={"body1"}>
+                      프로필 페이지에서 지갑을 연동해주세요.
+                    </Typography>
+                    <LinkTypography
+                      variant={"body1"}
+                      href={"#"}
+                      sx={{
+                        fontWeight: "bold",
+                        "&:hover": {
+                          color: "#914e1d",
+                          textDecoration: "underline",
+                        },
+                        color: theme.palette.warning.main,
+                      }}
+                      onClick={async (e) => {
+                        closeAlert();
+                        asyncGoToProfileAndEditDialogOpen().then();
+                      }}
+                    >
+                      이 링크를 누르시면 프로필 페이지로 이동합니다.
+                    </LinkTypography>
+                  </Stack>
+                </>
+              ),
             });
             myEvent.params.callback("success");
           }
@@ -831,9 +860,39 @@ const Event = (props: AppProps) => {
           myEvent.params.callback("success");
           updateVerifyState(index);
         } else {
+          // showAlert({
+          //   title: "알림",
+          //   content: `프로필 페이지에서 텔레그램을 연동해주세요`,
+          // });
           showAlert({
             title: "알림",
-            content: `프로필 페이지에서 텔레그램을 연동해주세요`,
+            content: (
+              <>
+                <Stack spacing={1}>
+                  <Typography variant={"body1"}>
+                    프로필 페이지에서 텔레그램을 연동해주세요.
+                  </Typography>
+                  <LinkTypography
+                    variant={"body1"}
+                    href={"#"}
+                    sx={{
+                      fontWeight: "bold",
+                      "&:hover": {
+                        color: "#914e1d",
+                        textDecoration: "underline",
+                      },
+                      color: theme.palette.warning.main,
+                    }}
+                    onClick={async (e) => {
+                      closeAlert();
+                      asyncGoToProfileAndEditDialogOpen().then();
+                    }}
+                  >
+                    이 링크를 누르시면 프로필 페이지로 이동합니다.
+                  </LinkTypography>
+                </Stack>
+              </>
+            ),
           });
           myEvent.params.callback("success");
         }
