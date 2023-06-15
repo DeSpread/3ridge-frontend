@@ -49,8 +49,7 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
       <Box
         sx={{
           borderRadius: 4,
-          width: height,
-          height: height,
+          height,
           background: "black",
           backgroundImage: `url("${ticket?.imageUrl}")`,
           backgroundSize: "cover",
