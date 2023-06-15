@@ -503,6 +503,8 @@ const Event = (props: AppProps) => {
       return "이메일";
     } else if (chain === "offchain-by-wallet") {
       return "지갑";
+    } else if (chain === "offchain-by-telegram") {
+      return "텔레그램 계정을";
     }
     return chain;
   };
