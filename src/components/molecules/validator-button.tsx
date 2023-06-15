@@ -66,7 +66,7 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
               sx={{
                 color: props.disabled ? "white" : theme.palette.neutral["600"],
               }}
-            >{`${props.label}에 연결되었습니다`}</Typography>
+            >{`${props.label}에 연동되었습니다`}</Typography>
           )}
           {!props.value && (
             <Typography
@@ -76,7 +76,7 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
                 color: props.disabled ? "white" : theme.palette.neutral["600"],
                 paddingRight: 1,
               }}
-            >{`${props.label}에 연결해주세요`}</Typography>
+            >{`${props.label}에 연동해주세요`}</Typography>
           )}
         </Stack>
         {props.value && (

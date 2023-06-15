@@ -28,7 +28,7 @@ const Home = () => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
-    filterType: FILTER_TYPE.AVAILABLE,
+    filterType: FILTER_TYPE.ALL,
     sort: TicketSortType.Newest,
   });
   const swiperContainerRef = useRef<HTMLDivElement>(null);

@@ -51,52 +51,183 @@ const VerifyCard = (props: VerifyCardProps) => {
     <>
       <Card sx={props.sx}>
         <CardContent sx={{ background: theme.palette.neutral[800] }}>
-          <Grid
-            container
-            alignItems={"center"}
-            justifyContent={smUp ? "space-between" : "center"}
-            columns={16}
-            rowSpacing={2}
-          >
-            <Grid item>
-              <Stack direction={"row"} alignItems={"center"}>
-                {props.index && smUp && (
-                  <Box
-                    sx={{
-                      background: (theme) => theme.palette.neutral[800],
-                      width: smUp ? 28 : 14,
-                      height: smUp ? 28 : 14,
-                      display: "flex",
-                      flex: 1,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: 28,
-                    }}
-                  >
-                    <Typography
-                      variant={smUp ? "body2" : "caption"}
+          {smUp ? (
+            <Grid
+              container
+              alignItems={"center"}
+              justifyContent={smUp ? "space-between" : "center"}
+              columns={16}
+              rowSpacing={2}
+            >
+              <Grid item>
+                <Stack direction={"row"} alignItems={"center"}>
+                  {props.index && smUp && (
+                    <Box
                       sx={{
-                        color: (theme) => theme.palette.neutral[100],
-                        width: 28,
-                        textAlign: "center",
+                        background: (theme) => theme.palette.neutral[800],
+                        width: smUp ? 28 : 14,
+                        height: smUp ? 28 : 14,
+                        display: "flex",
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: 28,
                       }}
                     >
-                      {props.index}
-                    </Typography>
-                  </Box>
-                )}
+                      <Typography
+                        variant={smUp ? "body2" : "caption"}
+                        sx={{
+                          color: (theme) => theme.palette.neutral[100],
+                          width: 28,
+                          textAlign: "center",
+                        }}
+                      >
+                        {props.index}
+                      </Typography>
+                    </Box>
+                  )}
+                  <Stack
+                    direction={"column"}
+                    justifyContent={"center"}
+                    sx={{ marginLeft: smUp ? 3 : 0 }}
+                  >
+                    <Box>
+                      <Typography
+                        variant={"h6"}
+                        sx={{
+                          wordBreak: "break-word",
+                        }}
+                        textAlign={smUp ? "left" : "center"}
+                      >
+                        {props.title}
+                      </Typography>
+                    </Box>
+                    {props.description && (
+                      <Box sx={{ marginTop: 1 }}>
+                        <Typography
+                          variant={"body2"}
+                          sx={{
+                            wordBreak: "break-word",
+                          }}
+                          textAlign={smUp ? "left" : "center"}
+                        >
+                          {props.description}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Stack>
+                </Stack>
+              </Grid>
+              <Grid item sx={{ background: "" }}>
+                <Stack
+                  direction={"row"}
+                  spacing={2}
+                  justifyContent={"flex-end"}
+                >
+                  {!props.hideStartButton && (
+                    <SecondaryButton
+                      sx={{ width: 110 }}
+                      disabled={props.disabled || props.verified}
+                      size={"medium"}
+                      onClick={props.onStartBtnClicked}
+                    >
+                      시작
+                    </SecondaryButton>
+                  )}
+                  <div style={{ position: "relative" }}>
+                    <PrimaryButton
+                      size={"medium"}
+                      sx={{ width: 110 }}
+                      endIcon={props.verified ? <CheckIcon /> : <></>}
+                      onClick={(e) => {
+                        setCardState("VERIFYING");
+                        let timer: NodeJS.Timer;
+                        let _vDate = addSeconds(new Date(), 5);
+                        function checkRemain() {
+                          const now = new Date();
+                          //@ts-ignore
+                          const distDt = _vDate - now;
+                          setVerifyingProgress((prevState) => {
+                            return prevState + 2;
+                          });
+                          if (distDt < 0) {
+                            clearInterval(timer);
+                            setCardState("IDLE");
+                            setVerifyingProgress(100);
+                            return;
+                          }
+                        }
+                        timer = setInterval(checkRemain, 100);
+                        setVerifyingProgress(0);
+                        const myEvent = {} as MouseEventWithParam<{
+                          callback: (msg: string) => void;
+                        }>;
+                        myEvent.params = {
+                          callback: (msg: string) => {
+                            setCardState("IDLE");
+                            setVerifyingProgress(0);
+                          },
+                        };
+                        props.onVerifyBtnClicked?.(myEvent);
+                      }}
+                      disabled={
+                        props.disabled ||
+                        props.verified ||
+                        props.autoVerified ||
+                        cardState === "VERIFYING"
+                      }
+                    >
+                      {cardState === "VERIFYING"
+                        ? "확인중"
+                        : props.verified
+                        ? "완료"
+                        : props.autoVerified
+                        ? getConfirmBtnLabel()
+                        : getConfirmBtnLabel()}
+                    </PrimaryButton>
+                    <div
+                      style={{
+                        position: "absolute",
+                        flex: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "100%",
+                        bottom: 9,
+                      }}
+                    >
+                      {cardState === "VERIFYING" && (
+                        <LinearProgress
+                          value={verifyingProgress}
+                          color={"warning"}
+                          variant={"determinate"}
+                          sx={{
+                            width: "60%",
+                            borderRadius: 3,
+                            height: "2px",
+                          }}
+                        ></LinearProgress>
+                      )}
+                    </div>
+                  </div>
+                </Stack>
+              </Grid>
+            </Grid>
+          ) : (
+            <Stack spacing={3}>
+              <Stack direction={"row"} alignItems={"center"}>
                 <Stack
                   direction={"column"}
                   justifyContent={"center"}
-                  sx={{ marginLeft: smUp ? 3 : 0 }}
+                  sx={{ width: "100%" }}
                 >
                   <Box>
                     <Typography
                       variant={"h6"}
                       sx={{
-                        wordBreak: "break-word",
+                        wordBreak: "keep-all",
                       }}
-                      textAlign={smUp ? "left" : "center"}
+                      textAlign={"center"}
                     >
                       {props.title}
                     </Typography>
@@ -106,9 +237,9 @@ const VerifyCard = (props: VerifyCardProps) => {
                       <Typography
                         variant={"body2"}
                         sx={{
-                          wordBreak: "break-word",
+                          wordBreak: "keep-all",
                         }}
-                        textAlign={smUp ? "left" : "center"}
+                        textAlign={"center"}
                       >
                         {props.description}
                       </Typography>
@@ -116,9 +247,12 @@ const VerifyCard = (props: VerifyCardProps) => {
                   )}
                 </Stack>
               </Stack>
-            </Grid>
-            <Grid item sx={{ background: "" }}>
-              <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
+              <Stack
+                direction={"row"}
+                spacing={2}
+                justifyContent={"center"}
+                sx={{ width: "100%" }}
+              >
                 {!props.hideStartButton && (
                   <SecondaryButton
                     sx={{ width: 110 }}
@@ -206,8 +340,8 @@ const VerifyCard = (props: VerifyCardProps) => {
                   </div>
                 </div>
               </Stack>
-            </Grid>
-          </Grid>
+            </Stack>
+          )}
         </CardContent>
       </Card>
     </>
