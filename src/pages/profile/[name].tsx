@@ -27,6 +27,7 @@ import { useLogin } from "../../provider/login/login-provider";
 import {
   MouseEventWithParam,
   MouseEventWithStateParam,
+  ObjectValues,
   SUPPORTED_NETWORKS,
   SupportedNetwork,
 } from "../../type";
@@ -63,6 +64,17 @@ import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import { goToMetaMaskDeppLinkWhenMobile } from "../../util/eth-util";
 import ConnectTwitterDialog from "./dialog/connect-twitter-dialog";
+import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
+
+export const DELETE_CONFIRM_STATE = {
+  NONE: "",
+  WALLET: "WALLET",
+  MAIL: "MAIL",
+  TWITTER: "TWITTER",
+  TELEGRAM: "TELEGRAM",
+} as const;
+
+export type DeleteConfirmState = ObjectValues<typeof DELETE_CONFIRM_STATE>;
 
 const Profile = () => {
   const router = useRouter();
@@ -108,8 +120,52 @@ const Profile = () => {
 
   const resourceFactory = ResourceFactory.getInstance();
   const [selectedNetwork, setSelectedNetwork] = useState("");
+  const [deleteConfirmDialog, setDeleteConfirmDialog] = useState(false);
+  const [deleteConfirmDialogMessage, setDeleteConfirmDialogMessage] =
+    useState("");
+  const [deleteConfirmState, setDeleteConfirmState] = useState<{
+    state: DeleteConfirmState;
+    payload?: string;
+  }>({ state: DELETE_CONFIRM_STATE.NONE });
 
   const theme = useTheme();
+
+  useEffect(() => {
+    console.log("deleteConfirmState", deleteConfirmState);
+    switch (deleteConfirmState.state) {
+      case DELETE_CONFIRM_STATE.NONE: {
+        setDeleteConfirmDialog(false);
+        setDeleteConfirmDialogMessage("");
+        break;
+      }
+      case DELETE_CONFIRM_STATE.MAIL: {
+        setDeleteConfirmDialog(true);
+        setDeleteConfirmDialogMessage("메일 연동을 해제 하시겠습니까?");
+        break;
+      }
+      case DELETE_CONFIRM_STATE.TWITTER: {
+        setDeleteConfirmDialog(true);
+        setDeleteConfirmDialogMessage("트위터 연동을 해제 하시겠습니까?");
+        break;
+      }
+      case DELETE_CONFIRM_STATE.TELEGRAM: {
+        setDeleteConfirmDialog(true);
+        setDeleteConfirmDialogMessage("텔레그램 연동을 해제 하시겠습니까?");
+        break;
+      }
+      case DELETE_CONFIRM_STATE.WALLET: {
+        setDeleteConfirmDialog(true);
+        setDeleteConfirmDialogMessage(
+          `${deleteConfirmState.payload?.toUpperCase()} 지갑 연동을 해제 하시겠습니까?`
+        );
+        break;
+      }
+      default: {
+        setDeleteConfirmDialog(false);
+        setDeleteConfirmDialogMessage("");
+      }
+    }
+  }, [deleteConfirmState]);
 
   const isSingedUserProfile = useMemo(() => {
     return signedUserData._id === userData?._id;
@@ -593,65 +649,6 @@ const Profile = () => {
                     </Grid>
                   ))}
               </Grid>
-              {/*{achievementsLoading && (*/}
-              {/*  <Stack*/}
-              {/*    direction={"column"}*/}
-              {/*    alignItems={"center"}*/}
-              {/*    sx={{ marginTop: 4 }}*/}
-              {/*  >*/}
-              {/*    <Stack*/}
-              {/*      direction={"row"}*/}
-              {/*      spacing={2}*/}
-              {/*      alignItems={"center"}*/}
-              {/*      sx={{ height: 128 }}*/}
-              {/*    >*/}
-              {/*      <CircularProgress*/}
-              {/*        size="1rem"*/}
-              {/*        sx={{*/}
-              {/*          color: theme.palette.warning.main,*/}
-              {/*        }}*/}
-              {/*      />*/}
-              {/*      <Typography*/}
-              {/*        variant={"h6"}*/}
-              {/*        sx={{ color: theme.palette.warning.main }}*/}
-              {/*      >*/}
-              {/*        Loading ...{" "}*/}
-              {/*      </Typography>*/}
-              {/*    </Stack>*/}
-              {/*  </Stack>*/}
-              {/*)}*/}
-              {/*{!achievementsLoading &&*/}
-              {/*  (tokensData?.length > 0 ? (*/}
-              {/*    <Grid container={true} spacing={2} sx={{ marginTop: 2 }}>*/}
-              {/*      {tokensData.map((e, index) => {*/}
-              {/*        return (*/}
-              {/*          <Grid item key={index}>*/}
-              {/*            <img*/}
-              {/*              src={e?.metaDataUri}*/}
-              {/*              style={{*/}
-              {/*                objectFit: "cover",*/}
-              {/*                width: 96,*/}
-              {/*                borderRadius: 96,*/}
-              {/*                borderColor: theme.palette.neutral[100],*/}
-              {/*                borderStyle: "solid",*/}
-              {/*                borderWidth: 3,*/}
-              {/*              }}*/}
-              {/*            />*/}
-              {/*          </Grid>*/}
-              {/*        );*/}
-              {/*      })}*/}
-              {/*    </Grid>*/}
-              {/*  ) : (*/}
-              {/*    <Stack*/}
-              {/*      direction={"column"}*/}
-              {/*      alignItems={"center"}*/}
-              {/*      sx={{ marginTop: 8, marginBottom: 4 }}*/}
-              {/*    >*/}
-              {/*      <Typography variant={"h6"} color={"neutral.500"}>*/}
-              {/*        앗 활동 내역이 없어요 :(*/}
-              {/*      </Typography>*/}
-              {/*    </Stack>*/}
-              {/*  ))}*/}
             </Stack>
             <Box sx={{ height: 4 }}></Box>
             {/*--- Participating event ---*/}
@@ -735,7 +732,10 @@ const Profile = () => {
           showLoading();
           try {
             if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
-              await asyncDeleteWalletAddress(network);
+              setDeleteConfirmState({
+                state: DELETE_CONFIRM_STATE.WALLET,
+                payload: network,
+              });
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
@@ -764,7 +764,7 @@ const Profile = () => {
           const myEvent = e as MouseEventWithStateParam;
           showLoading();
           if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
-            await asyncUpdateEmail("");
+            setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.MAIL });
           } else if (
             myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
           ) {
@@ -777,7 +777,7 @@ const Profile = () => {
             const myEvent = e as MouseEventWithStateParam;
             showLoading();
             if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
-              await asyncUpdateSocialTwitter("");
+              setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.TWITTER });
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
@@ -810,7 +810,7 @@ const Profile = () => {
             const myEvent = e as MouseEventWithStateParam;
             showLoading();
             if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
-              await asyncRemoveSocialTelegram();
+              setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.TELEGRAM });
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
@@ -935,6 +935,43 @@ const Profile = () => {
           })();
         }}
       ></SignInWithSupportedWalletDialog>
+      <ConfirmAlertDialog
+        open={deleteConfirmDialog}
+        onCloseBtnClicked={(e) => {
+          setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.NONE });
+        }}
+        onConfirmBtnClicked={async (e) => {
+          try {
+            const state = deleteConfirmState.state;
+            if (deleteConfirmState.state === DELETE_CONFIRM_STATE.MAIL) {
+              await asyncUpdateEmail("");
+            } else if (state === DELETE_CONFIRM_STATE.TELEGRAM) {
+              await asyncRemoveSocialTelegram();
+            } else if (state === DELETE_CONFIRM_STATE.TWITTER) {
+              await asyncUpdateSocialTwitter("");
+            } else if (state === DELETE_CONFIRM_STATE.WALLET) {
+              const network = convertToSuppoertedNetwork(
+                deleteConfirmState.payload
+              );
+              await asyncDeleteWalletAddress(network);
+            }
+            showAlert({ title: "알림", content: "완료되었습니다" });
+          } catch (e) {
+            showErrorAlert({ content: getLocaleErrorMessage(e) });
+          } finally {
+            setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.NONE });
+          }
+        }}
+        onCancelBtnClicked={(e) => {
+          setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.NONE });
+        }}
+        title={"알림"}
+        onClose={() => {
+          setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.NONE });
+        }}
+      >
+        <Box sx={{ marginTop: 2 }}>{deleteConfirmDialogMessage}</Box>
+      </ConfirmAlertDialog>
     </>
   );
 };
