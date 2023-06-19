@@ -26,6 +26,7 @@ export function useProjectsQuery() {
               officialUrl: e.projectSocial?.officialUrl ?? "",
               telegramUrl: e.projectSocial?.telegramUrl ?? "",
               twitterUrl: e.projectSocial?.twitterUrl ?? "",
+              mediumUrl: e.projectSocial?.mediumUrl ?? "",
             },
           };
         });
