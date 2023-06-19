@@ -310,8 +310,10 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                 }}
                 startIcon={<ArrowBackIcon></ArrowBackIcon>}
                 onClick={async (e) => {
-                  if (props?.backDirectionPath)
-                    await router.push(props?.backDirectionPath);
+                  setTimeout(() => {
+                    if (props?.backDirectionPath)
+                      router.push(props?.backDirectionPath);
+                  }, 0);
                 }}
               >
                 이전 이벤트로

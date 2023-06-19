@@ -74,6 +74,7 @@ import { useGetSet, useMountedState } from "react-use";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import { useSetRecoilState } from "recoil";
 import { backDirectionPathState } from "../../lib/recoil";
+import ClickTypography from "../../components/click-typhography";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -179,6 +180,8 @@ const Event = (props: AppProps) => {
     //@ts-ignore
     const _hasMetamask = ethereum ? ethereum.isMetaMask : false;
     setHasMetask(_hasMetamask);
+    setShowProfileEditDialog(false);
+    setBackDirectionPath("");
   }, []);
 
   useEffect(() => {
@@ -482,12 +485,16 @@ const Event = (props: AppProps) => {
   };
 
   const asyncGoToProfileAndEditDialogOpen = async () => {
-    showLoading();
-    setShowProfileEditDialog(true);
-    setBackDirectionPath(`/event/${ticketData?._id}`);
-    // console.log("path", `/profile/${userData?.name}`);
-    await router.push(`/profile/${userData?.name}`);
-    closeLoading();
+    try {
+      showLoading();
+      setShowProfileEditDialog(true);
+      setBackDirectionPath(`/event/${ticketData?._id}`);
+      // console.log("path", `/profile/${userData?.name}`);
+      await router.push(`/profile/${userData?.name}`);
+      closeLoading();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const getConfirmBtnLabel = (quest: Partial<Quest>) => {
@@ -520,13 +527,12 @@ const Event = (props: AppProps) => {
         content: (
           <>
             <Typography>먼저 twitter id를 연동해주세요</Typography>
-            <LinkTypography
+            <ClickTypography
               variant={"body1"}
               onClick={async () => {
                 closeAlert();
                 await asyncGoToProfileAndEditDialogOpen();
               }}
-              href={"#"}
               sx={{
                 fontWeight: "bold",
                 "&:hover": {
@@ -537,7 +543,7 @@ const Event = (props: AppProps) => {
               }}
             >
               프로필 연동하러 가기
-            </LinkTypography>
+            </ClickTypography>
           </>
         ),
       });
