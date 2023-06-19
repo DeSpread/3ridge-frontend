@@ -75,6 +75,7 @@ import RedeemIcon from "@mui/icons-material/Redeem";
 import { useSetRecoilState } from "recoil";
 import { backDirectionPathState } from "../../lib/recoil";
 import ClickTypography from "../../components/click-typhography";
+import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -1415,17 +1416,29 @@ const Event = (props: AppProps) => {
                 <Typography variant="h5">리워드</Typography>
                 <StyledChip
                   label={
-                    ticketData?.rewardPolicy?.rewardPolicyType ==
+                    ticketData?.rewardPolicy?.rewardPolicyType ===
                     REWARD_POLICY_TYPE.FCFS
                       ? "선착순"
-                      : "추첨"
+                      : ticketData?.rewardPolicy?.rewardPolicyType ===
+                        REWARD_POLICY_TYPE.LUCKY_DRAW
+                      ? "추첨"
+                      : "전원"
                   }
                   icon={
-                    ticketData?.rewardPolicy?.rewardPolicyType ==
+                    ticketData?.rewardPolicy?.rewardPolicyType ===
                     REWARD_POLICY_TYPE.FCFS ? (
                       <DirectionsRunIcon />
-                    ) : (
+                    ) : ticketData?.rewardPolicy?.rewardPolicyType ===
+                      REWARD_POLICY_TYPE.LUCKY_DRAW ? (
                       <RedeemIcon sx={{ paddingRight: "3px" }} />
+                    ) : (
+                      <AllInclusiveIcon
+                        sx={{
+                          paddingLeft: "2px",
+                          paddingRight: "3px",
+                          paddingTop: "2px",
+                        }}
+                      />
                     )
                   }
                 ></StyledChip>
