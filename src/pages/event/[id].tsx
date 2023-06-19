@@ -931,6 +931,16 @@ const Event = (props: AppProps) => {
     }
   };
 
+  const isEventComplete = () => {
+    const diff =
+      parseStrToDate(ticketData?.untilTime ?? "").getTime() -
+      new Date().getTime();
+    if (diff < 0) {
+      return true;
+    }
+    return ticketData?.completed;
+  };
+
   return (
     <>
       <Head>
@@ -1032,7 +1042,7 @@ const Event = (props: AppProps) => {
                       justifyContent={smUp ? "flex-start" : "center"}
                       rowSpacing={1}
                     >
-                      {!ticketData?.completed && (
+                      {!isEventComplete() && (
                         <Grid item>
                           <StyledChip
                             label={"진행중"}
@@ -1041,7 +1051,7 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Grid>
                       )}
-                      {ticketData?.completed && (
+                      {isEventComplete() && (
                         <Grid item>
                           <StyledChip label={"이벤트 종료"}></StyledChip>
                         </Grid>
@@ -1385,7 +1395,7 @@ const Event = (props: AppProps) => {
                     REWARD_POLICY_TYPE.FCFS ? (
                       <DirectionsRunIcon />
                     ) : (
-                      <RedeemIcon />
+                      <RedeemIcon sx={{ paddingRight: "3px" }} />
                     )
                   }
                 ></StyledChip>

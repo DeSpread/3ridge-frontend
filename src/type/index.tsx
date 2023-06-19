@@ -294,6 +294,7 @@ export type Project = {
     officialUrl: string;
     telegramUrl: string;
     twitterUrl: string;
+    mediumUrl: string;
   };
 };
 

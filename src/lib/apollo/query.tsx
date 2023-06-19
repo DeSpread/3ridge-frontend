@@ -327,6 +327,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
           officialUrl
           telegramUrl
           twitterUrl
+          mediumUrl
         }
       }
       rewardPolicy {
@@ -398,6 +399,7 @@ export const GET_PROJECTS = gql(/* GraphQL */ `
         officialUrl
         telegramUrl
         twitterUrl
+        mediumUrl
       }
     }
   }
@@ -416,6 +418,7 @@ export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
         officialUrl
         telegramUrl
         twitterUrl
+        mediumUrl
       }
     }
   }
@@ -456,6 +459,7 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
           officialUrl
           telegramUrl
           twitterUrl
+          mediumUrl
         }
       }
       rewardPolicy {

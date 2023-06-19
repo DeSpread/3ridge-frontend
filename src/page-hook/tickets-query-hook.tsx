@@ -129,6 +129,7 @@ export function useTicketsQuery(props: {
           officialUrl?: string | null;
           telegramUrl?: string | null;
           twitterUrl?: string | null;
+          mediumUrl?: string | null;
         } | null;
       } | null;
       rewardPolicy?: {
@@ -195,6 +196,7 @@ export function useTicketsQuery(props: {
               officialUrl: e.project?.projectSocial?.officialUrl ?? "",
               telegramUrl: e.project?.projectSocial?.telegramUrl ?? "",
               twitterUrl: e.project?.projectSocial?.twitterUrl ?? "",
+              mediumUrl: e.project?.projectSocial?.mediumUrl ?? "",
             },
           },
         };
