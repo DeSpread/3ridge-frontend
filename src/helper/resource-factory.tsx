@@ -52,7 +52,7 @@ class ResourceFactory {
     return undefined;
   };
 
-  getWalletInfos = (network: SupportedNetwork, isMobileBrowser: boolean) => {
+  getWalletInfos = (network: SupportedNetwork) => {
     if (network === SUPPORTED_NETWORKS.APTOS) {
       return [
         {
@@ -60,6 +60,7 @@ class ResourceFactory {
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/petra-wallet.png",
           name: "Petra",
           value: WALLET_NAMES.PETRA,
+          mobile: false,
         },
       ];
     } else if (network === SUPPORTED_NETWORKS.SUI) {
@@ -69,36 +70,31 @@ class ResourceFactory {
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-wallet-icon.jpg",
           name: "Sui wallet",
           value: WALLET_NAMES.SUI_WALLET,
+          mobile: false,
         },
       ];
-    } else if (network === SUPPORTED_NETWORKS.EVM && !isMobileBrowser) {
+    } else if (network === SUPPORTED_NETWORKS.EVM) {
       return [
         {
           imageUrl:
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/metamask-fox.svg",
           name: "MetaMask",
           value: WALLET_NAMES.META_MASK,
+          mobile: false,
         },
         {
           imageUrl:
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/coinbase.svg",
           name: "Coinbase",
           value: WALLET_NAMES.COINBASE_WALLET,
+          mobile: false,
         },
         {
           imageUrl:
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/wallet-connect-logo.png",
           name: "Wallet Connect",
           value: WALLET_NAMES.WALLET_CONNECT,
-        },
-      ];
-    } else if (network === SUPPORTED_NETWORKS.EVM && isMobileBrowser) {
-      return [
-        {
-          imageUrl:
-            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/metamask-fox.svg",
-          name: "MetaMask",
-          value: WALLET_NAMES.META_MASK,
+          mobile: true,
         },
       ];
     } else if (network === SUPPORTED_NETWORKS.STACKS) {
@@ -109,6 +105,7 @@ class ResourceFactory {
           name: "Hiro & Xverse",
           value: WALLET_NAMES.HIRO,
           backgroundColor: "white",
+          mobile: true,
         },
       ];
     }

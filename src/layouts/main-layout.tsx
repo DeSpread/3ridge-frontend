@@ -460,8 +460,7 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         walletInfos={(() => {
           return resourceFactory.getWalletInfos(
-            convertToSuppoertedNetwork(selectedNetwork),
-            isMobile
+            convertToSuppoertedNetwork(selectedNetwork)
           );
         })()}
         onWalletSelected={({ name, value }) => {

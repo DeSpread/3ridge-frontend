@@ -918,8 +918,7 @@ const Profile = () => {
         }}
         walletInfos={(() => {
           return resourceFactory.getWalletInfos(
-            convertToSuppoertedNetwork(selectedNetwork),
-            isMobile
+            convertToSuppoertedNetwork(selectedNetwork)
           );
         })()}
         onWalletSelected={({ name, value }) => {
