@@ -1035,15 +1035,24 @@ const Event = (props: AppProps) => {
               </Grid>
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  <Typography
-                    variant={smUp ? "h3" : "h4"}
-                    textAlign={smUp ? "left" : "center"}
-                    sx={{
-                      wordBreak: "keep-all",
-                    }}
-                  >
-                    {ticketData?.title}
-                  </Typography>
+                  {ticketData?.title ? (
+                    <Typography
+                      variant={smUp ? "h3" : "h4"}
+                      textAlign={smUp ? "left" : "center"}
+                      sx={{
+                        wordBreak: "keep-all",
+                      }}
+                    >
+                      {ticketData?.title}
+                    </Typography>
+                  ) : (
+                    <Box sx={{ width: smUp ? 460 : "60vw" }}>
+                      <Skeleton
+                        variant="text"
+                        sx={{ fontSize: smUp ? "2.25rem" : "2rem" }}
+                      />
+                    </Box>
+                  )}
                   {smUp ? (
                     <Grid
                       container
@@ -1146,13 +1155,21 @@ const Event = (props: AppProps) => {
                           </Typography>
                         </>
                       )}
-                      {!ticketData?.completed && (
+                      {!isEventComplete() && (
                         <Box sx={{ marginTop: 2 }}>
                           <StyledChip
                             label={"진행중"}
-                            color={"success"}
                             variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #0E8074",
+                              borderWidth: 0,
+                            }}
                           ></StyledChip>
+                        </Box>
+                      )}
+                      {isEventComplete() && (
+                        <Box sx={{ marginTop: 2 }}>
+                          <StyledChip label={"이벤트 종료"}></StyledChip>
                         </Box>
                       )}
                     </Stack>

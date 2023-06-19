@@ -286,6 +286,7 @@ const MainLayout = (props: MainLayoutProps) => {
                         onClick={(e) => {
                           e.preventDefault();
                           setShowSignInDialog(true);
+                          // open();
                           // setSignInWithNetworkSelectVisible(true);
                           // setShowSignInDialog(true);
                         }}

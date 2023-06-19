@@ -56,6 +56,7 @@ export const WALLET_NAMES = {
   PETRA: "petra",
   SUI_WALLET: "Sui Wallet",
   HIRO: "hiro",
+  WALLET_CONNECT: "WalletConnect",
 } as const;
 
 export type WalletName = ObjectValues<typeof WALLET_NAMES>;

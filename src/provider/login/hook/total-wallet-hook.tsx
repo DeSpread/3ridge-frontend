@@ -22,6 +22,7 @@ import {
 } from "../../../error/my-error";
 import { useStacksWallet } from "../../../lib/stacks/stacks-wallet-hook";
 import { convertToSuppoertedNetwork } from "../../../util/type-util";
+import { useWeb3Modal } from "@web3modal/react";
 
 export function useTotalWallet() {
   const [connectedNetwork, setConnectedNetwork] = useState("");
@@ -61,6 +62,8 @@ export function useTotalWallet() {
     connected: suiConnected,
   } = useSuiWallet();
 
+  const { isOpen, open, close, setDefaultChain } = useWeb3Modal();
+
   const {
     connect: stacksConnect,
     ownerStxAddress,
@@ -97,7 +100,7 @@ export function useTotalWallet() {
     walletName: WalletName
   ) => {
     try {
-      if (!isWalletInstalled(network)) {
+      if (!isWalletInstalled(network, walletName)) {
         return {
           connected: false,
           msg: APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED,
@@ -111,10 +114,13 @@ export function useTotalWallet() {
         );
         await suiSelect(item[0].name);
       } else if (network === SUPPORTED_NETWORKS.EVM) {
-        const connectors = evmConnectors.filter((e) => e.name === walletName);
-        const connector = connectors[0];
-        // console.log("connector", connector);
-        evmConnect({ connector });
+        if (walletName === "WalletConnect") {
+          open();
+        } else {
+          const connectors = evmConnectors.filter((e) => e.name === walletName);
+          const connector = connectors[0];
+          evmConnect({ connector });
+        }
       } else if (network === SUPPORTED_NETWORKS.STACKS) {
         stacksConnect();
       }
@@ -127,7 +133,10 @@ export function useTotalWallet() {
     }
   };
 
-  const isWalletInstalled = (network: SupportedNetwork) => {
+  const isWalletInstalled = (
+    network: SupportedNetwork,
+    walletName: WalletName
+  ) => {
     if (network === SUPPORTED_NETWORKS.APTOS) {
       if (aptosWallets[0].readyState === "NotDetected") {
         return false;
@@ -142,7 +151,7 @@ export function useTotalWallet() {
       }
       return item[0].installed;
     } else if (network === SUPPORTED_NETWORKS.EVM) {
-      const item = evmConnectors.filter((e) => e.name === "MetaMask");
+      const item = evmConnectors.filter((e) => e.name.includes(walletName));
       return item[0].ready;
     } else if (network === SUPPORTED_NETWORKS.STACKS) {
       return isStacksWalletInstalled;
@@ -191,6 +200,18 @@ export function useTotalWallet() {
     commitConnectedNetwork(undefined);
   };
 
+  const disconnectWalletByNetwork = (network: SupportedNetwork) => {
+    if (network === SUPPORTED_NETWORKS.APTOS) {
+      aptosDisconnect();
+    } else if (network === SUPPORTED_NETWORKS.SUI) {
+      suiDisconnect();
+    } else if (network === SUPPORTED_NETWORKS.EVM) {
+      evmDisconnect();
+    } else if (network === SUPPORTED_NETWORKS.STACKS) {
+      stacksDisconnect();
+    }
+  };
+
   const commitConnectedNetwork = (network: SupportedNetwork | undefined) => {
     if (network) {
       setConnectedNetwork(network);
@@ -220,6 +241,7 @@ export function useTotalWallet() {
     disconnectWallet,
     changedCounter,
     commitConnectedNetwork,
+    disconnectWalletByNetwork,
     // networkConnected,
   };
 }

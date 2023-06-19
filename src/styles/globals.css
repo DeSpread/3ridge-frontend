@@ -24,6 +24,7 @@ a {
     background: rgb(16, 14, 20);
     overflow: hidden scroll;
     overscroll-behavior-y: none;
+    --w3m-z-index: 1105
   }
 }
 

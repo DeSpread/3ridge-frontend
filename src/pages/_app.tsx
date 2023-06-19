@@ -9,7 +9,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { ApolloProvider } from "@apollo/client";
 import { client as apolloClient } from "../lib/apollo/client";
 import { WagmiConfig } from "wagmi";
-import { client as wagmiClient } from "../lib/wagmi/client";
+import { wagmiConfig, ethereumClient, projectId } from "../lib/wagmi/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { RecoilRoot } from "recoil";
 import { LoginProvider } from "../provider/login/login-provider";
@@ -23,11 +23,13 @@ import Script from "next/script";
 import { WalletProvider } from "@suiet/wallet-kit";
 import { v1 } from "uuid";
 import { useRouter } from "next/router";
+import { Web3Modal } from "@web3modal/react";
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 import { isMobile } from "react-device-detect";
 import { MobileContext } from "../provider/mobile/mobile-context";
 import ErrorBoundary from "../components/error-boundary";
+import { useWeb3ModalTheme } from "@web3modal/react";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
@@ -50,6 +52,19 @@ const App = (props: AppPropsWithLayout) => {
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
   const wallets = [new PetraWallet()];
   const router = useRouter();
+  // const { theme: web3Theme, setTheme: setWeb3Theme } = useWeb3ModalTheme();
+  //
+  // useEffect(() => {
+  //   setWeb3Theme({
+  //     themeMode: "dark",
+  //     themeVariables: {
+  //       "--w3m-font-family": "Roboto, sans-serif",
+  //       "--w3m-accent-color": "#F5841F",
+  //
+  //       // ...
+  //     },
+  //   });
+  // }, []);
 
   useEffect(() => {
     const handleRouteChange = (url: any) => {
@@ -93,7 +108,7 @@ const App = (props: AppPropsWithLayout) => {
         <GoogleOAuthProvider clientId={clientId ?? ""}>
           <RecoilRoot>
             <ApolloProvider client={apolloClient}>
-              <WagmiConfig client={wagmiClient}>
+              <WagmiConfig config={wagmiConfig}>
                 <WalletProvider>
                   <AptosWalletAdapterProvider
                     plugins={wallets}
@@ -109,6 +124,10 @@ const App = (props: AppPropsWithLayout) => {
                   </AptosWalletAdapterProvider>
                 </WalletProvider>
               </WagmiConfig>
+              <Web3Modal
+                projectId={projectId}
+                ethereumClient={ethereumClient}
+              />
             </ApolloProvider>
           </RecoilRoot>
         </GoogleOAuthProvider>

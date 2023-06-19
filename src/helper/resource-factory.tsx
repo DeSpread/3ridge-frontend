@@ -85,6 +85,12 @@ class ResourceFactory {
           name: "Coinbase",
           value: WALLET_NAMES.COINBASE_WALLET,
         },
+        {
+          imageUrl:
+            "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/wallet-connect-logo.png",
+          name: "Wallet Connect",
+          value: WALLET_NAMES.WALLET_CONNECT,
+        },
       ];
     } else if (network === SUPPORTED_NETWORKS.EVM && isMobileBrowser) {
       return [

@@ -67,6 +67,7 @@ import ConnectTwitterDialog from "./dialog/connect-twitter-dialog";
 import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
 import { backDirectionPathState } from "../../lib/recoil";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useTotalWallet } from "../../provider/login/hook/total-wallet-hook";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -121,6 +122,7 @@ const Profile = () => {
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
   const [imageFile, setImageFile] = useState<File>();
+  const { disconnectWalletByNetwork } = useTotalWallet();
 
   const resourceFactory = ResourceFactory.getInstance();
   const [selectedNetwork, setSelectedNetwork] = useState("");
@@ -929,7 +931,7 @@ const Profile = () => {
           (async () => {
             try {
               showLoading();
-              await asyncUpsertWalletAddress(
+              const res = await asyncUpsertWalletAddress(
                 selectedNetwork as SupportedNetwork,
                 walletName
               );

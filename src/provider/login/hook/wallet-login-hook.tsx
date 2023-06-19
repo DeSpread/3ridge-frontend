@@ -292,7 +292,7 @@ export function useWalletLogin() {
           return;
         }
         console.log("2. check install wallet");
-        if (!isWalletInstalled(_walletInfo?.network)) {
+        if (!isWalletInstalled(_walletInfo?.network, _walletInfo.name)) {
           onError?.(
             new AppError(
               APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED,
