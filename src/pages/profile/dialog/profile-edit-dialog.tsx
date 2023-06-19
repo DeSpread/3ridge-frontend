@@ -36,6 +36,7 @@ import { useMobile } from "../../../provider/mobile/mobile-context";
 import PrimaryButton from "../../../components/atoms/primary-button";
 import SecondaryButton from "../../../components/atoms/secondary-button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useRouter } from "next/router";
 
 const ReversibleMarkEmailIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -69,7 +70,7 @@ type ProfileEditDialogProps = DialogProps & {
   telegramValidatorButtonOnClick?: MouseEventHandler;
   onCloseBtnClicked?: MouseEventHandler;
   onFileImageAdded?: (f: File) => void;
-  // backDirectionPath?: string;
+  backDirectionPath?: string;
 };
 
 const ProfileEditDialog = (props: ProfileEditDialogProps) => {
@@ -80,6 +81,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const BUTTON_WIDTH = smUp ? 340 : "100%";
   const { isMobile } = useMobile();
+  const router = useRouter();
 
   return (
     <Dialog
@@ -297,21 +299,25 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
               </Stack>
             </Stack>
           </Stack>
-          {/*{props?.backDirectionPath && (*/}
-          {/*  <Box sx={{ width: "100%", background: "", marginLeft: 1 }}>*/}
-          {/*    <Button*/}
-          {/*      sx={{*/}
-          {/*        color: theme.palette.neutral[100],*/}
-          {/*        "&:hover": {*/}
-          {/*          backgroundColor: "rgba(255, 255, 255, 0.02)",*/}
-          {/*        },*/}
-          {/*      }}*/}
-          {/*      startIcon={<ArrowBackIcon></ArrowBackIcon>}*/}
-          {/*    >*/}
-          {/*      이전 이벤트로*/}
-          {/*    </Button>*/}
-          {/*  </Box>*/}
-          {/*)}*/}
+          {props?.backDirectionPath && (
+            <Box sx={{ width: "100%", background: "", marginLeft: 1 }}>
+              <Button
+                sx={{
+                  color: theme.palette.neutral[100],
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.02)",
+                  },
+                }}
+                startIcon={<ArrowBackIcon></ArrowBackIcon>}
+                onClick={async (e) => {
+                  if (props?.backDirectionPath)
+                    await router.push(props?.backDirectionPath);
+                }}
+              >
+                이전 이벤트로
+              </Button>
+            </Box>
+          )}
         </Stack>
       </DialogContent>
     </Dialog>

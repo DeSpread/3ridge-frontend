@@ -21,3 +21,8 @@ export const isMobileState = atom({
   key: `isMobileState/${v1()}`,
   default: false,
 });
+
+export const backDirectionPathState = atom({
+  key: `backDirectionPathState/${v1()}`,
+  default: "",
+});

@@ -72,6 +72,8 @@ import StringHelper from "../../helper/string-helper";
 import Realistic from "../../components/realistic";
 import { useGetSet, useMountedState } from "react-use";
 import RedeemIcon from "@mui/icons-material/Redeem";
+import { useSetRecoilState } from "recoil";
+import { backDirectionPathState } from "../../lib/recoil";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -170,6 +172,7 @@ const Event = (props: AppProps) => {
   const [hasMetamask, setHasMetask] = useState(false);
   const [isFire, setFire] = React.useState(false);
   const [lazyFire, setLazyFire] = React.useState(false);
+  const setBackDirectionPath = useSetRecoilState(backDirectionPathState);
 
   useEffect(() => {
     const { ethereum } = window;
@@ -481,7 +484,8 @@ const Event = (props: AppProps) => {
   const asyncGoToProfileAndEditDialogOpen = async () => {
     showLoading();
     setShowProfileEditDialog(true);
-    console.log("path", `/profile/${userData?.name}`);
+    setBackDirectionPath(`/event/${ticketData?._id}`);
+    // console.log("path", `/profile/${userData?.name}`);
     await router.push(`/profile/${userData?.name}`);
     closeLoading();
   };
@@ -763,7 +767,6 @@ const Event = (props: AppProps) => {
                       color: theme.palette.warning.main,
                     }}
                     onClick={async (e) => {
-                      console.log("aaa");
                       closeAlert();
                       setTimeout(() => {
                         asyncGoToProfileAndEditDialogOpen();
@@ -1046,8 +1049,12 @@ const Event = (props: AppProps) => {
                         <Grid item>
                           <StyledChip
                             label={"진행중"}
-                            color={"success"}
+                            // color={"success"}
                             variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #0E8074",
+                              borderWidth: 0,
+                            }}
                           ></StyledChip>
                         </Grid>
                       )}

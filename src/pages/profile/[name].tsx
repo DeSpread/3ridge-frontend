@@ -65,6 +65,8 @@ import { useMobile } from "../../provider/mobile/mobile-context";
 import { goToMetaMaskDeppLinkWhenMobile } from "../../util/eth-util";
 import ConnectTwitterDialog from "./dialog/connect-twitter-dialog";
 import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
+import { backDirectionPathState } from "../../lib/recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -96,6 +98,8 @@ const Profile = () => {
     asyncRemoveSocialTelegram,
   } = useSignedUserQuery();
   const { isMobile } = useMobile();
+  const backDirectionPath = useRecoilValue(backDirectionPathState);
+  const setBackDirectionPath = useSetRecoilState(backDirectionPathState);
 
   const { asyncTwitterSignInPopUp } = useFirebaseAuth();
   const {
@@ -181,6 +185,7 @@ const Profile = () => {
     const handleRouteChange = (url: string) => {
       if (url && typeof url === "string" && !url.includes("profile")) {
         setShowProfileEditDialog(false);
+        setBackDirectionPath("");
       }
     };
     router.events.on("routeChangeComplete", handleRouteChange);
@@ -714,10 +719,12 @@ const Profile = () => {
       {/*--- Dialogs ---*/}
       <ProfileEditDialog
         userData={signedUserData}
+        backDirectionPath={backDirectionPath}
         title={"프로필 수정하기"}
         onClose={() => {
           setOpenProfileEditDialog(false);
           setShowProfileEditDialog(false);
+          setBackDirectionPath("");
         }}
         open={openProfileEditDialog}
         walletValidatorButtonOnClick={async (e) => {
