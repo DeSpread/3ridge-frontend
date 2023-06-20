@@ -575,12 +575,7 @@ const Event = (props: AppProps) => {
     index: number
   ) => {
     if (!ticketData._id || !quest._id) return;
-    if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.QUIZ) {
-      const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
-      setOpenQuizQuestContext(quizQuestContext);
-      setOpenQuizQuestDialog(true);
-      setOpenQuizQuestId(quest._id);
-    } else if (
+    if (
       quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
     ) {
       try {
@@ -693,7 +688,13 @@ const Event = (props: AppProps) => {
     }>;
     try {
       if (!ticketData._id) return;
-      if (
+      if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.QUIZ) {
+        const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
+        setOpenQuizQuestContext(quizQuestContext);
+        setOpenQuizQuestDialog(true);
+        setOpenQuizQuestId(quest._id);
+        myEvent.params.callback("success");
+      } else if (
         quest.questPolicy?.questPolicy ===
         QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
       ) {
@@ -851,7 +852,35 @@ const Event = (props: AppProps) => {
           } else {
             showAlert({
               title: "알림",
-              content: `프로필 페이지에서 ${chain} 지갑을 연결해주세요.`,
+              content: (
+                <>
+                  <Stack spacing={1}>
+                    <Typography variant={"body1"}>
+                      프로필 페이지에서 지갑을 연동해주세요.
+                    </Typography>
+                    <LinkTypography
+                      variant={"body1"}
+                      href={"#"}
+                      sx={{
+                        fontWeight: "bold",
+                        "&:hover": {
+                          color: "#914e1d",
+                          textDecoration: "underline",
+                        },
+                        color: theme.palette.warning.main,
+                      }}
+                      onClick={async (e) => {
+                        closeAlert();
+                        setTimeout(() => {
+                          asyncGoToProfileAndEditDialogOpen();
+                        }, 0);
+                      }}
+                    >
+                      이 링크를 누르시면 프로필 페이지로 이동합니다.
+                    </LinkTypography>
+                  </Stack>
+                </>
+              ),
             });
             myEvent.params.callback("success");
           }
@@ -1346,7 +1375,6 @@ const Event = (props: AppProps) => {
               >
                 {ticketData?.quests?.map((quest, index) => {
                   const autoVerified =
-                    quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
                     quest.questPolicy?.questPolicy ===
                       QuestPolicyType.VerifyDiscord ||
                     quest.questPolicy?.questPolicy ===
@@ -1385,7 +1413,8 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QuestPolicyType.VerifyHasTwitter ||
                         quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasTelegram
+                          QuestPolicyType.VerifyHasTelegram ||
+                        quest.questPolicy?.questPolicy === QuestPolicyType.Quiz
                       }
                       onVerifyBtnClicked={async (e) => {
                         await asyncVerifyQuest(e, quest, index);
