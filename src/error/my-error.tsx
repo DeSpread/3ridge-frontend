@@ -23,6 +23,7 @@ export const APP_ERROR_MESSAGE = {
   DOES_NOT_TWITTER_FOLLOW: "user does not follow twitter",
   DOES_NOT_TWITTER_RETWEET: "user does not retweet twitter",
   DOES_NOT_TWITTER_LIKING: "user does not like twitter",
+  TICKET_ID_NOT_EXIST: "ticket id not exist",
 } as const;
 
 export class AppError extends Error {

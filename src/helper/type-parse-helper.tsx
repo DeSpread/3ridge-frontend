@@ -13,6 +13,7 @@ import {
   VerifyHasWalletAddressContext,
   VerifyHasTwitter,
   VerifyHasTelegram,
+  VerifyVisitWebsiteContext,
 } from "../type";
 import { QuestPolicyType } from "../__generated__/graphql";
 
@@ -30,7 +31,8 @@ class TypeParseHelper {
     try {
       if (
         rewardPolicyType === REWARD_POLICY_TYPE.FCFS ||
-        rewardPolicyType === REWARD_POLICY_TYPE.LUCKY_DRAW
+        rewardPolicyType === REWARD_POLICY_TYPE.LUCKY_DRAW ||
+        rewardPolicyType === REWARD_POLICY_TYPE.ALL
       ) {
         const _context = context.trim();
         const contextJson = JSON.parse(_context);
@@ -70,6 +72,8 @@ class TypeParseHelper {
         return contextJson as VerifyHasTwitter;
       } else if (questPolicyType === QuestPolicyType.VerifyHasTelegram) {
         return contextJson as VerifyHasTelegram;
+      } else if (questPolicyType === QuestPolicyType.VerifyVisitWebsite) {
+        return contextJson as VerifyVisitWebsiteContext;
       }
     } catch (e) {
       console.log(context, questPolicyType);

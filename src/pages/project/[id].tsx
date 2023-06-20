@@ -226,6 +226,26 @@ const Project = () => {
                     <TelegramIcon></TelegramIcon>
                   </LinkIconButton>
                 )}
+                {projectData?.projectSocial?.mediumUrl && (
+                  <LinkIconButton
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      background: (theme) => theme.palette.neutral["900"],
+                      borderRadius: 16,
+                    }}
+                    linkUrl={projectData?.projectSocial?.mediumUrl}
+                  >
+                    <Image
+                      src={
+                        "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/medium_icon_icon_3.svg"
+                      }
+                      alt={""}
+                      width={24}
+                      height={24}
+                    ></Image>
+                  </LinkIconButton>
+                )}
               </Stack>
             </Grid>
           </Grid>

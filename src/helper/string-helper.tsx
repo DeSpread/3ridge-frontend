@@ -27,9 +27,9 @@ class StringHelper {
   getRewardAmountLabel = (rewardAmount?: number) => {
     const _rewardAmount = rewardAmount ?? 0;
     if (_rewardAmount >= 10000000) {
-      return "제한없음";
+      return "전원";
     }
-    return _rewardAmount + "명";
+    return _rewardAmount?.toLocaleString() + "명";
   };
 }
 

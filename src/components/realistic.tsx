@@ -81,7 +81,11 @@ export default class Realistic extends Component<IProps> {
                 transform: "translate(-50%, -50%)",
               }}
             >
-              <Typography variant={"h3"} textAlign={"center"}>
+              <Typography
+                variant={"h3"}
+                textAlign={"center"}
+                sx={{ wordBreak: "keep-all" }}
+              >
                 축하합니다🎉 이벤트를 완료하셨습니다.
               </Typography>
             </Box>

@@ -18,6 +18,11 @@ import {
 } from "../../type";
 import SecondaryButton from "../atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
+import {
+  decodeBase64,
+  decodeBase64IfHtmlPattern,
+  isBase64HtmlPattern,
+} from "../../util/string-util";
 
 type QuestQuizDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
@@ -71,7 +76,7 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
       >
         <DialogTitle>
           <Stack direction={"column"} spacing={1}>
-            <Typography variant={"body2"}>{`Question ${questionIndex + 1} of ${
+            <Typography variant={"body1"}>{`Question ${questionIndex + 1} of ${
               context.quizList?.length
             }`}</Typography>
             <Typography
@@ -80,9 +85,32 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
                 wordBreak: "break-word",
               }}
             >
-              {props.context?.quizList && props.context?.quizList?.length > 0
-                ? props.context?.quizList[questionIndex].title
-                : ""}
+              {props.context?.quizList &&
+              props.context?.quizList?.length > 0 ? (
+                isBase64HtmlPattern(
+                  props.context?.quizList[questionIndex].title
+                ) ? (
+                  <div
+                    style={{
+                      textAlign: "justify",
+                      color: "white",
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: decodeBase64(
+                        props.context?.quizList[questionIndex].title
+                      ),
+                    }}
+                  ></div>
+                ) : (
+                  <Box sx={{ marginTop: 3 }}>
+                    <Typography variant={"body1"}>
+                      {props.context?.quizList[questionIndex].title}
+                    </Typography>
+                  </Box>
+                )
+              ) : (
+                <></>
+              )}
             </Typography>
           </Stack>
         </DialogTitle>

@@ -286,6 +286,7 @@ const MainLayout = (props: MainLayoutProps) => {
                         onClick={(e) => {
                           e.preventDefault();
                           setShowSignInDialog(true);
+                          // open();
                           // setSignInWithNetworkSelectVisible(true);
                           // setShowSignInDialog(true);
                         }}
@@ -459,8 +460,7 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         walletInfos={(() => {
           return resourceFactory.getWalletInfos(
-            convertToSuppoertedNetwork(selectedNetwork),
-            isMobile
+            convertToSuppoertedNetwork(selectedNetwork)
           );
         })()}
         onWalletSelected={({ name, value }) => {

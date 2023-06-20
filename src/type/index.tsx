@@ -56,6 +56,7 @@ export const WALLET_NAMES = {
   PETRA: "petra",
   SUI_WALLET: "Sui Wallet",
   HIRO: "hiro",
+  WALLET_CONNECT: "WalletConnect",
 } as const;
 
 export type WalletName = ObjectValues<typeof WALLET_NAMES>;
@@ -81,6 +82,7 @@ export const Z_INDEX_OFFSET = {
 export const REWARD_POLICY_TYPE = {
   FCFS: "FCFS",
   LUCKY_DRAW: "LUCKY_DRAW",
+  ALL: "ALL",
 };
 
 export const QUEST_POLICY_TYPE = {
@@ -95,6 +97,7 @@ export const QUEST_POLICY_TYPE = {
   VERIFY_APTOS_HAS_NFT: "VERIFY_APTOS_HAS_NFT",
   VERIFY_APTOS_EXIST_TX: "VERIFY_APTOS_EXIST_TX",
   VERIFY_APTOS_HAS_ANS: "VERIFY_APTOS_HAS_ANS",
+  VERIFY_VISIT_WEBSITE: "VERIFY_VISIT_WEBSITE",
 };
 
 export type WalletAddressInfo = {
@@ -218,6 +221,7 @@ export type Quest = {
       | VerifyHasWalletAddressContext
       | VerifyHasTwitter
       | VerifyHasTelegram
+      | VerifyVisitWebsiteContext
       | undefined;
     questPolicy?: string;
   };
@@ -261,6 +265,10 @@ export type VerifyHasTwitter = {};
 
 export type VerifyHasTelegram = {};
 
+export type VerifyVisitWebsiteContext = {
+  url: string;
+};
+
 export type VerifyHasWalletAddressContext = {
   chain: string;
 };
@@ -294,6 +302,7 @@ export type Project = {
     officialUrl: string;
     telegramUrl: string;
     twitterUrl: string;
+    mediumUrl: string;
   };
 };
 

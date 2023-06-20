@@ -327,6 +327,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
           officialUrl
           telegramUrl
           twitterUrl
+          mediumUrl
         }
       }
       rewardPolicy {
@@ -398,6 +399,7 @@ export const GET_PROJECTS = gql(/* GraphQL */ `
         officialUrl
         telegramUrl
         twitterUrl
+        mediumUrl
       }
     }
   }
@@ -416,6 +418,7 @@ export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
         officialUrl
         telegramUrl
         twitterUrl
+        mediumUrl
       }
     }
   }
@@ -456,6 +459,7 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
           officialUrl
           telegramUrl
           twitterUrl
+          mediumUrl
         }
       }
       rewardPolicy {
@@ -561,25 +565,31 @@ export const COMPLETE_QUEST_OF_USER = gql(/* GraphQL */ `
   }
 `);
 
-export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
-  mutation RequestClaimNFT(
-    $collectionName: String!
-    $nftTokenName: String!
-    $receiverAddress: String!
-    $ticketId: String!
-    $userId: String!
-  ) {
-    requestClaimNFT(
-      collectionName: $collectionName
-      nftTokenName: $nftTokenName
-      receiverAddress: $receiverAddress
-      ticketId: $ticketId
-      userId: $userId
-    ) {
-      txHash
-    }
+export const CLAIM_REWARD = gql(/* GraphQL */ `
+  mutation ClaimReward($ticketId: String!, $userId: String!) {
+    claimReward(ticketId: $ticketId, userId: $userId)
   }
 `);
+
+// export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
+//   mutation RequestClaimNFT(
+//     $collectionName: String!
+//     $nftTokenName: String!
+//     $receiverAddress: String!
+//     $ticketId: String!
+//     $userId: String!
+//   ) {
+//     requestClaimNFT(
+//       collectionName: $collectionName
+//       nftTokenName: $nftTokenName
+//       receiverAddress: $receiverAddress
+//       ticketId: $ticketId
+//       userId: $userId
+//     ) {
+//       txHash
+//     }
+//   }
+// `);
 
 export const VERIFY_APTOS_QUEST = gql(/* GraphQL */ `
   mutation VerifyAptosQuest(

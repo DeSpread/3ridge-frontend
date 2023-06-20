@@ -72,9 +72,11 @@ const isSupportedNetwork = (chainName: string) => {
 const filterFeatureEventTickets = (ticketsData: Ticket[]) => {
   return ticketsData
     ?.filter((ticket) =>
-      ["640018b9debaef951761e7a1", "64882d186bd6711523e2a803"].includes(
-        ticket._id ?? ""
-      )
+      [
+        "640018b9debaef951761e7a1",
+        "64882d186bd6711523e2a803",
+        "648971993d243bd99d06aca8",
+      ].includes(ticket._id ?? "")
     )
     .sort((a, b) => {
       return (a?.project?.name ?? "") > (b?.project?.name ?? "") ? -1 : 1;

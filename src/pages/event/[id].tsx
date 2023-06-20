@@ -40,6 +40,7 @@ import {
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
   VerifyHasWalletAddressContext,
+  VerifyVisitWebsiteContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
@@ -72,6 +73,10 @@ import StringHelper from "../../helper/string-helper";
 import Realistic from "../../components/realistic";
 import { useGetSet, useMountedState } from "react-use";
 import RedeemIcon from "@mui/icons-material/Redeem";
+import { useSetRecoilState } from "recoil";
+import { backDirectionPathState } from "../../lib/recoil";
+import ClickTypography from "../../components/click-typhography";
+import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -111,7 +116,7 @@ const LoadingButton = (props: ButtonProps) => {
             height: "100%",
           }}
         >
-          <CircularProgress></CircularProgress>
+          <CircularProgress sx={{ color: "white" }}></CircularProgress>
         </div>
       )}
     </div>
@@ -133,7 +138,7 @@ const Event = (props: AppProps) => {
     asyncVerifyTwitterRetweetQuest,
     asyncVerifyTwitterLikingQuest,
     asyncCompleteQuestOfUser,
-    asyncRequestClaimNtf,
+    asyncRewardClaim,
     asyncVerify3ridgePoint,
     asyncVerifyAptosQuest,
     asyncRefreshTicketData,
@@ -149,6 +154,8 @@ const Event = (props: AppProps) => {
   const [openContentsRendererDialog, setOpenContentsRendererDialog] =
     useState(false);
   const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
+  const [simpleWarningDialogShow, setSimpleWarningDialogShow] = useState(false);
+
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
@@ -170,12 +177,15 @@ const Event = (props: AppProps) => {
   const [hasMetamask, setHasMetask] = useState(false);
   const [isFire, setFire] = React.useState(false);
   const [lazyFire, setLazyFire] = React.useState(false);
+  const setBackDirectionPath = useSetRecoilState(backDirectionPathState);
 
   useEffect(() => {
     const { ethereum } = window;
     //@ts-ignore
     const _hasMetamask = ethereum ? ethereum.isMetaMask : false;
     setHasMetask(_hasMetamask);
+    setShowProfileEditDialog(false);
+    setBackDirectionPath("");
   }, []);
 
   useEffect(() => {
@@ -479,11 +489,16 @@ const Event = (props: AppProps) => {
   };
 
   const asyncGoToProfileAndEditDialogOpen = async () => {
-    showLoading();
-    setShowProfileEditDialog(true);
-    console.log("path", `/profile/${userData?.name}`);
-    await router.push(`/profile/${userData?.name}`);
-    closeLoading();
+    try {
+      showLoading();
+      setShowProfileEditDialog(true);
+      setBackDirectionPath(`/event/${ticketData?._id}`);
+      // console.log("path", `/profile/${userData?.name}`);
+      await router.push(`/profile/${userData?.name}`);
+      closeLoading();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const getConfirmBtnLabel = (quest: Partial<Quest>) => {
@@ -516,13 +531,12 @@ const Event = (props: AppProps) => {
         content: (
           <>
             <Typography>먼저 twitter id를 연동해주세요</Typography>
-            <LinkTypography
+            <ClickTypography
               variant={"body1"}
               onClick={async () => {
                 closeAlert();
                 await asyncGoToProfileAndEditDialogOpen();
               }}
-              href={"#"}
               sx={{
                 fontWeight: "bold",
                 "&:hover": {
@@ -533,7 +547,7 @@ const Event = (props: AppProps) => {
               }}
             >
               프로필 연동하러 가기
-            </LinkTypography>
+            </ClickTypography>
           </>
         ),
       });
@@ -564,12 +578,7 @@ const Event = (props: AppProps) => {
     index: number
   ) => {
     if (!ticketData._id || !quest._id) return;
-    if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.QUIZ) {
-      const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
-      setOpenQuizQuestContext(quizQuestContext);
-      setOpenQuizQuestDialog(true);
-      setOpenQuizQuestId(quest._id);
-    } else if (
+    if (
       quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
     ) {
       try {
@@ -614,7 +623,8 @@ const Event = (props: AppProps) => {
       }
     } else if (
       quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD ||
-      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
+      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyVisitWebsite
     ) {
       let questContext;
       switch (quest.questPolicy?.questPolicy) {
@@ -634,16 +644,29 @@ const Event = (props: AppProps) => {
             "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
           );
           break;
+        case QuestPolicyType.VerifyVisitWebsite:
+          questContext = quest.questPolicy
+            ?.context as VerifyVisitWebsiteContext;
+          // console.log(questContext?.url);
+          const newWindow = window.open(
+            questContext?.url,
+            "_blank",
+            "noopener,noreferrer"
+          );
+          if (newWindow) newWindow.opener = null;
+          break;
       }
-      let title = "";
       if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
-        title = "디스코드";
+        setSimpleWarningDialogTitle(`디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
+          참여 상태로 유지해주세요.`);
+        setSimpleWarningDialogShow(true);
       } else if (
         quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
       ) {
-        title = "텔레그램";
+        setSimpleWarningDialogTitle(`텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
+          참여 상태로 유지해주세요.`);
+        setSimpleWarningDialogShow(true);
       }
-      setSimpleWarningDialogTitle(title);
       try {
         const res = await asyncCompleteQuestOfUser(ticketData._id, quest?._id);
         updateVerifyState(index);
@@ -681,8 +704,14 @@ const Event = (props: AppProps) => {
       callback: (msg: string) => void;
     }>;
     try {
-      if (!ticketData._id) return;
-      if (
+      if (!ticketData._id || !quest?._id) return;
+      if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.QUIZ) {
+        const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
+        setOpenQuizQuestContext(quizQuestContext);
+        setOpenQuizQuestDialog(true);
+        setOpenQuizQuestId(quest._id);
+        myEvent.params.callback("success");
+      } else if (
         quest.questPolicy?.questPolicy ===
         QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
       ) {
@@ -763,7 +792,6 @@ const Event = (props: AppProps) => {
                       color: theme.palette.warning.main,
                     }}
                     onClick={async (e) => {
-                      console.log("aaa");
                       closeAlert();
                       setTimeout(() => {
                         asyncGoToProfileAndEditDialogOpen();
@@ -795,10 +823,6 @@ const Event = (props: AppProps) => {
             myEvent.params.callback("success");
             updateVerifyState(index);
           } else {
-            // showAlert({
-            //   title: "알림",
-            //   content: "프로필 페이지에서 지갑을 연결해주세요.",
-            // });
             showAlert({
               title: "알림",
               content: (
@@ -841,7 +865,35 @@ const Event = (props: AppProps) => {
           } else {
             showAlert({
               title: "알림",
-              content: `프로필 페이지에서 ${chain} 지갑을 연결해주세요.`,
+              content: (
+                <>
+                  <Stack spacing={1}>
+                    <Typography variant={"body1"}>
+                      프로필 페이지에서 지갑을 연동해주세요.
+                    </Typography>
+                    <LinkTypography
+                      variant={"body1"}
+                      href={"#"}
+                      sx={{
+                        fontWeight: "bold",
+                        "&:hover": {
+                          color: "#914e1d",
+                          textDecoration: "underline",
+                        },
+                        color: theme.palette.warning.main,
+                      }}
+                      onClick={async (e) => {
+                        closeAlert();
+                        setTimeout(() => {
+                          asyncGoToProfileAndEditDialogOpen();
+                        }, 0);
+                      }}
+                    >
+                      이 링크를 누르시면 프로필 페이지로 이동합니다.
+                    </LinkTypography>
+                  </Stack>
+                </>
+              ),
             });
             myEvent.params.callback("success");
           }
@@ -931,6 +983,16 @@ const Event = (props: AppProps) => {
     }
   };
 
+  const isEventComplete = () => {
+    const diff =
+      parseStrToDate(ticketData?.untilTime ?? "").getTime() -
+      new Date().getTime();
+    if (diff < 0) {
+      return true;
+    }
+    return ticketData?.completed;
+  };
+
   return (
     <>
       <Head>
@@ -1016,15 +1078,24 @@ const Event = (props: AppProps) => {
               </Grid>
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  <Typography
-                    variant={smUp ? "h3" : "h4"}
-                    textAlign={smUp ? "left" : "center"}
-                    sx={{
-                      wordBreak: "keep-all",
-                    }}
-                  >
-                    {ticketData?.title}
-                  </Typography>
+                  {ticketData?.title ? (
+                    <Typography
+                      variant={smUp ? "h3" : "h4"}
+                      textAlign={smUp ? "left" : "center"}
+                      sx={{
+                        wordBreak: "keep-all",
+                      }}
+                    >
+                      {ticketData?.title}
+                    </Typography>
+                  ) : (
+                    <Box sx={{ width: smUp ? 460 : "60vw" }}>
+                      <Skeleton
+                        variant="text"
+                        sx={{ fontSize: smUp ? "2.25rem" : "2rem" }}
+                      />
+                    </Box>
+                  )}
                   {smUp ? (
                     <Grid
                       container
@@ -1032,16 +1103,20 @@ const Event = (props: AppProps) => {
                       justifyContent={smUp ? "flex-start" : "center"}
                       rowSpacing={1}
                     >
-                      {!ticketData?.completed && (
+                      {!isEventComplete() && (
                         <Grid item>
                           <StyledChip
                             label={"진행중"}
-                            color={"success"}
+                            // color={"success"}
                             variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #0E8074",
+                              borderWidth: 0,
+                            }}
                           ></StyledChip>
                         </Grid>
                       )}
-                      {ticketData?.completed && (
+                      {isEventComplete() && (
                         <Grid item>
                           <StyledChip label={"이벤트 종료"}></StyledChip>
                         </Grid>
@@ -1123,13 +1198,21 @@ const Event = (props: AppProps) => {
                           </Typography>
                         </>
                       )}
-                      {!ticketData?.completed && (
+                      {!isEventComplete() && (
                         <Box sx={{ marginTop: 2 }}>
                           <StyledChip
                             label={"진행중"}
-                            color={"success"}
                             variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #0E8074",
+                              borderWidth: 0,
+                            }}
                           ></StyledChip>
+                        </Box>
+                      )}
+                      {isEventComplete() && (
+                        <Box sx={{ marginTop: 2 }}>
+                          <StyledChip label={"이벤트 종료"}></StyledChip>
                         </Box>
                       )}
                     </Stack>
@@ -1191,42 +1274,42 @@ const Event = (props: AppProps) => {
                 </Box>
               )}
 
-            {isMobile && !hasMetamask && !isLoggedIn && (
-              <Box sx={{}}>
-                <Card>
-                  <CardContent>
-                    <Box sx={{}}>
-                      <LinkTypography
-                        variant={"body1"}
-                        onClick={async () => {
-                          if (ticketData?._id !== "6445ef8e7cf8560dd56dafc3") {
-                            const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
-                            location.href = link;
-                          } else {
-                            const link = `https://xverse.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
-                            location.href = link;
-                          }
-                        }}
-                        href={"#"}
-                        sx={{
-                          fontWeight: "bold",
-                          "&:hover": {
-                            color: "#914e1d",
-                            textDecoration: "underline",
-                          },
-                          color: theme.palette.warning.main,
-                        }}
-                      >
-                        {ticketData?._id !== "6445ef8e7cf8560dd56dafc3"
-                          ? `이 링크를 누르시면 메타마스크 에서 해당 페이지가
-                        열립니다.`
-                          : `이 링크를 누르시면, 스택스 지갑 Xverse 설치 페이지로 이동합니다`}
-                      </LinkTypography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Box>
-            )}
+            {/*{isMobile && !hasMetamask && !isLoggedIn && (*/}
+            {/*  <Box sx={{}}>*/}
+            {/*    <Card>*/}
+            {/*      <CardContent>*/}
+            {/*        <Box sx={{}}>*/}
+            {/*          <LinkTypography*/}
+            {/*            variant={"body1"}*/}
+            {/*            onClick={async () => {*/}
+            {/*              if (ticketData?._id !== "6445ef8e7cf8560dd56dafc3") {*/}
+            {/*                const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;*/}
+            {/*                location.href = link;*/}
+            {/*              } else {*/}
+            {/*                const link = `https://xverse.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;*/}
+            {/*                location.href = link;*/}
+            {/*              }*/}
+            {/*            }}*/}
+            {/*            href={"#"}*/}
+            {/*            sx={{*/}
+            {/*              fontWeight: "bold",*/}
+            {/*              "&:hover": {*/}
+            {/*                color: "#914e1d",*/}
+            {/*                textDecoration: "underline",*/}
+            {/*              },*/}
+            {/*              color: theme.palette.warning.main,*/}
+            {/*            }}*/}
+            {/*          >*/}
+            {/*            {ticketData?._id !== "6445ef8e7cf8560dd56dafc3"*/}
+            {/*              ? `이 링크를 누르시면 메타마스크 에서 해당 페이지가*/}
+            {/*            열립니다.`*/}
+            {/*              : `이 링크를 누르시면, 스택스 지갑 Xverse 설치 페이지로 이동합니다`}*/}
+            {/*          </LinkTypography>*/}
+            {/*        </Box>*/}
+            {/*      </CardContent>*/}
+            {/*    </Card>*/}
+            {/*  </Box>*/}
+            {/*)}*/}
             {userData?._id &&
               !walletConnectedForTicket &&
               ticketData.rewardPolicy?.context?.rewardNetwork && (
@@ -1305,11 +1388,12 @@ const Event = (props: AppProps) => {
               >
                 {ticketData?.quests?.map((quest, index) => {
                   const autoVerified =
-                    quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
                     quest.questPolicy?.questPolicy ===
                       QuestPolicyType.VerifyDiscord ||
                     quest.questPolicy?.questPolicy ===
-                      QuestPolicyType.VerifyTelegram;
+                      QuestPolicyType.VerifyTelegram ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyVisitWebsite;
 
                   return (
                     <VerifyCard
@@ -1344,7 +1428,10 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QuestPolicyType.VerifyHasTwitter ||
                         quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasTelegram
+                          QuestPolicyType.VerifyHasTelegram ||
+                        quest.questPolicy?.questPolicy === QuestPolicyType.Quiz
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyVisitWebsite
                       }
                       onVerifyBtnClicked={async (e) => {
                         await asyncVerifyQuest(e, quest, index);
@@ -1375,17 +1462,29 @@ const Event = (props: AppProps) => {
                 <Typography variant="h5">리워드</Typography>
                 <StyledChip
                   label={
-                    ticketData?.rewardPolicy?.rewardPolicyType ==
+                    ticketData?.rewardPolicy?.rewardPolicyType ===
                     REWARD_POLICY_TYPE.FCFS
                       ? "선착순"
-                      : "추첨"
+                      : ticketData?.rewardPolicy?.rewardPolicyType ===
+                        REWARD_POLICY_TYPE.LUCKY_DRAW
+                      ? "추첨"
+                      : "전원"
                   }
                   icon={
-                    ticketData?.rewardPolicy?.rewardPolicyType ==
+                    ticketData?.rewardPolicy?.rewardPolicyType ===
                     REWARD_POLICY_TYPE.FCFS ? (
                       <DirectionsRunIcon />
+                    ) : ticketData?.rewardPolicy?.rewardPolicyType ===
+                      REWARD_POLICY_TYPE.LUCKY_DRAW ? (
+                      <RedeemIcon sx={{ paddingRight: "3px" }} />
                     ) : (
-                      <RedeemIcon />
+                      <AllInclusiveIcon
+                        sx={{
+                          paddingLeft: "2px",
+                          paddingRight: "3px",
+                          paddingTop: "2px",
+                        }}
+                      />
                     )
                   }
                 ></StyledChip>
@@ -1645,29 +1744,13 @@ const Event = (props: AppProps) => {
                   ) {
                     return;
                   }
-                  const { collectionName, tokenName, point } =
-                    ticketData?.rewardPolicy?.context;
                   if (
                     userData?.walletAddressInfos?.[0].address &&
-                    collectionName &&
-                    tokenName &&
                     ticketData?._id
                   ) {
-                    console.log(
-                      userData?.walletAddressInfos[0].address,
-                      collectionName,
-                      tokenName
-                    );
                     try {
-                      await asyncRequestClaimNtf(
-                        collectionName,
-                        tokenName,
-                        userData?.walletAddressInfos[0].address,
-                        ticketData?._id
-                      );
-                      const newRewardAmount =
-                        (userData?.rewardPoint ?? 0) + point;
-                      await asyncUpdateRewardPoint(newRewardAmount);
+                      const res = await asyncRewardClaim(ticketData?._id);
+                      console.log("res", res);
                       //@ts-ignore
                       const myEvent = e as MouseEventWithParam<{
                         callback: (msg: string) => void;
@@ -1693,6 +1776,7 @@ const Event = (props: AppProps) => {
                       });
                     } catch (e) {
                       console.log(e);
+                      showErrorAlert({ content: getLocaleErrorMessage(e) });
                     }
                   }
                 }}
@@ -1810,21 +1894,18 @@ const Event = (props: AppProps) => {
       {/* --- Dialogs --- */}
 
       <SimpleDialog
-        open={simpleWarningDialogTitle ? true : false}
+        open={simpleWarningDialogShow}
         title={"Notification"}
         onClose={() => {
-          setSimpleWarningDialogTitle("");
+          setSimpleWarningDialogShow(false);
           doLazyFire();
         }}
         onCloseBtnClicked={() => {
-          setSimpleWarningDialogTitle("");
+          setSimpleWarningDialogShow(false);
           doLazyFire();
         }}
       >
-        <Typography>
-          {`${simpleWarningDialogTitle} 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
-          참여 상태로 유지해주세요.`}
-        </Typography>
+        <Typography>{simpleWarningDialogTitle}</Typography>
       </SimpleDialog>
       <QuestQuizDialog
         open={openQuizQuestDialog}
