@@ -1274,42 +1274,42 @@ const Event = (props: AppProps) => {
                 </Box>
               )}
 
-            {isMobile && !hasMetamask && !isLoggedIn && (
-              <Box sx={{}}>
-                <Card>
-                  <CardContent>
-                    <Box sx={{}}>
-                      <LinkTypography
-                        variant={"body1"}
-                        onClick={async () => {
-                          if (ticketData?._id !== "6445ef8e7cf8560dd56dafc3") {
-                            const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
-                            location.href = link;
-                          } else {
-                            const link = `https://xverse.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;
-                            location.href = link;
-                          }
-                        }}
-                        href={"#"}
-                        sx={{
-                          fontWeight: "bold",
-                          "&:hover": {
-                            color: "#914e1d",
-                            textDecoration: "underline",
-                          },
-                          color: theme.palette.warning.main,
-                        }}
-                      >
-                        {ticketData?._id !== "6445ef8e7cf8560dd56dafc3"
-                          ? `이 링크를 누르시면 메타마스크 에서 해당 페이지가
-                        열립니다.`
-                          : `이 링크를 누르시면, 스택스 지갑 Xverse 설치 페이지로 이동합니다`}
-                      </LinkTypography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Box>
-            )}
+            {/*{isMobile && !hasMetamask && !isLoggedIn && (*/}
+            {/*  <Box sx={{}}>*/}
+            {/*    <Card>*/}
+            {/*      <CardContent>*/}
+            {/*        <Box sx={{}}>*/}
+            {/*          <LinkTypography*/}
+            {/*            variant={"body1"}*/}
+            {/*            onClick={async () => {*/}
+            {/*              if (ticketData?._id !== "6445ef8e7cf8560dd56dafc3") {*/}
+            {/*                const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;*/}
+            {/*                location.href = link;*/}
+            {/*              } else {*/}
+            {/*                const link = `https://xverse.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;*/}
+            {/*                location.href = link;*/}
+            {/*              }*/}
+            {/*            }}*/}
+            {/*            href={"#"}*/}
+            {/*            sx={{*/}
+            {/*              fontWeight: "bold",*/}
+            {/*              "&:hover": {*/}
+            {/*                color: "#914e1d",*/}
+            {/*                textDecoration: "underline",*/}
+            {/*              },*/}
+            {/*              color: theme.palette.warning.main,*/}
+            {/*            }}*/}
+            {/*          >*/}
+            {/*            {ticketData?._id !== "6445ef8e7cf8560dd56dafc3"*/}
+            {/*              ? `이 링크를 누르시면 메타마스크 에서 해당 페이지가*/}
+            {/*            열립니다.`*/}
+            {/*              : `이 링크를 누르시면, 스택스 지갑 Xverse 설치 페이지로 이동합니다`}*/}
+            {/*          </LinkTypography>*/}
+            {/*        </Box>*/}
+            {/*      </CardContent>*/}
+            {/*    </Card>*/}
+            {/*  </Box>*/}
+            {/*)}*/}
             {userData?._id &&
               !walletConnectedForTicket &&
               ticketData.rewardPolicy?.context?.rewardNetwork && (
