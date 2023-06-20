@@ -1758,17 +1758,19 @@ const Event = (props: AppProps) => {
                       myEvent.params.callback("success");
                       setClaimCompleted(true);
                       showAlert({
-                        title: "Congrats ! 🥳",
+                        title: "축하합니다! 🥳",
                         content: (
                           <>
                             <Stack direction={"column"} spacing={1}>
-                              <Typography>
-                                방금 지갑에 리워드를 보냈어요! 지갑을
-                                확인해주세요
+                              <Typography sx={{ wordBreak: "keep-all" }}>
+                                🚨 보상 NFT를 수령하기 위한 추가 작업이
+                                필요합니다!
                               </Typography>
-                              <Typography>
-                                전송된 리워드를 받기 위해서는 Petra 지갑에서
-                                Accept 해주어야 합니다. 지갑을 확인해주세요!
+                              <Typography sx={{ wordBreak: "keep-all" }}>
+                                페트라 지갑을 열고, Library 탭을 클릭하신 후,
+                                Pending 중인 트랜잭션 옆 Accept 버튼을
+                                클릭하셔야만 NFT를 정상적으로 수령하실 수
+                                있습니다. 지갑을 확인해주세요!
                               </Typography>
                             </Stack>
                           </>
