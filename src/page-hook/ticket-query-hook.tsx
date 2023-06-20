@@ -1,8 +1,8 @@
 import {
+  CLAIM_REWARD,
   COMPLETE_QUEST_OF_USER,
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
-  REQUEST_CLAIM_NFT,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
@@ -30,7 +30,7 @@ export function useTicketQuery({
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
   const [verifyAptosQuest] = useMutation(VERIFY_APTOS_QUEST);
-  const [requestClaimNFT] = useMutation(REQUEST_CLAIM_NFT);
+  const [claimReward] = useMutation(CLAIM_REWARD);
   const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
@@ -259,18 +259,10 @@ export function useTicketQuery({
     }
   };
 
-  const asyncRequestClaimNtf = async (
-    collectionName: string,
-    nftTokenName: string,
-    receiverAddress: string,
-    ticketId: string
-  ) => {
-    if (receiverAddress && userId) {
-      const res = await requestClaimNFT({
+  const asyncRewardClaim = async (ticketId: string) => {
+    if (ticketId && userId) {
+      return await claimReward({
         variables: {
-          collectionName,
-          receiverAddress,
-          nftTokenName,
           ticketId,
           userId,
         },
@@ -278,6 +270,20 @@ export function useTicketQuery({
     } else {
       throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
     }
+  };
+
+  const asyncRequestClaimNtf = async (
+    collectionName: string,
+    nftTokenName: string,
+    receiverAddress: string,
+    ticketId: string
+  ) => {
+    // if (receiverAddress && userId) {
+    //   const res = await requestClaimNFT({
+    //   });
+    // } else {
+    //   throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
+    // }
   };
 
   const asyncVerifyAptosQuest = async (ticketId: string, questId: string) => {
@@ -349,5 +355,6 @@ export function useTicketQuery({
     asyncVerify3ridgePoint,
     asyncVerifyAptosQuest,
     asyncRefreshTicketData,
+    asyncRewardClaim,
   };
 }

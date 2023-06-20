@@ -137,7 +137,7 @@ const Event = (props: AppProps) => {
     asyncVerifyTwitterRetweetQuest,
     asyncVerifyTwitterLikingQuest,
     asyncCompleteQuestOfUser,
-    asyncRequestClaimNtf,
+    asyncRewardClaim,
     asyncVerify3ridgePoint,
     asyncVerifyAptosQuest,
     asyncRefreshTicketData,
@@ -1723,29 +1723,13 @@ const Event = (props: AppProps) => {
                   ) {
                     return;
                   }
-                  const { collectionName, tokenName, point } =
-                    ticketData?.rewardPolicy?.context;
                   if (
                     userData?.walletAddressInfos?.[0].address &&
-                    collectionName &&
-                    tokenName &&
                     ticketData?._id
                   ) {
-                    console.log(
-                      userData?.walletAddressInfos[0].address,
-                      collectionName,
-                      tokenName
-                    );
                     try {
-                      await asyncRequestClaimNtf(
-                        collectionName,
-                        tokenName,
-                        userData?.walletAddressInfos[0].address,
-                        ticketData?._id
-                      );
-                      const newRewardAmount =
-                        (userData?.rewardPoint ?? 0) + point;
-                      await asyncUpdateRewardPoint(newRewardAmount);
+                      const res = await asyncRewardClaim(ticketData?._id);
+                      console.log("res", res);
                       //@ts-ignore
                       const myEvent = e as MouseEventWithParam<{
                         callback: (msg: string) => void;
@@ -1771,6 +1755,7 @@ const Event = (props: AppProps) => {
                       });
                     } catch (e) {
                       console.log(e);
+                      showErrorAlert({ content: getLocaleErrorMessage(e) });
                     }
                   }
                 }}

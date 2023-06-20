@@ -16,11 +16,6 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type AptosRequestClaimNftResponse = {
-  __typename?: 'AptosRequestClaimNFTResponse';
-  txHash: Scalars['String'];
-};
-
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   accessToken?: Maybe<Scalars['String']>;
@@ -58,6 +53,7 @@ export type IsCompletedQuestByUserIdResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   checkAndUpdateWinner: Ticket;
+  claimReward: Scalars['Boolean'];
   clearParticipatedAllEvents: Scalars['Boolean'];
   clearParticipatedAllEventsByUserId: Scalars['Boolean'];
   completeQuestOfUser: Quest;
@@ -70,7 +66,6 @@ export type Mutation = {
   removeProject: Project;
   removeTicketById: Ticket;
   removeUserByName: User;
-  requestClaimNFT: AptosRequestClaimNftResponse;
   updateProject: Project;
   updateTicketById: Ticket;
   updateUserByName: User;
@@ -83,6 +78,12 @@ export type Mutation = {
 
 
 export type MutationCheckAndUpdateWinnerArgs = {
+  ticketId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+
+export type MutationClaimRewardArgs = {
   ticketId: Scalars['String'];
   userId: Scalars['String'];
 };
@@ -155,15 +156,6 @@ export type MutationRemoveTicketByIdArgs = {
 
 export type MutationRemoveUserByNameArgs = {
   name: Scalars['String'];
-};
-
-
-export type MutationRequestClaimNftArgs = {
-  collectionName: Scalars['String'];
-  nftTokenName: Scalars['String'];
-  receiverAddress: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
 };
 
 
@@ -277,7 +269,6 @@ export type Query = {
   __typename?: 'Query';
   auth: AuthResponse;
   availableTickets: Array<Ticket>;
-  checkTokenBalanceByWalletAddress: Scalars['Float'];
   completedTickets: Array<Ticket>;
   findMissedTickets: Array<Ticket>;
   findQuestById: Quest;
@@ -288,7 +279,6 @@ export type Query = {
   isLikingTweetByUserId: User;
   isRegisteredWallet: Scalars['Boolean'];
   isRetweetedTwitterByUserId: User;
-  isRewardClaimed: Scalars['Boolean'];
   projectById: Project;
   projectByName: Array<Project>;
   projects: Array<Project>;
@@ -306,13 +296,6 @@ export type Query = {
 
 export type QueryAuthArgs = {
   userId: Scalars['String'];
-};
-
-
-export type QueryCheckTokenBalanceByWalletAddressArgs = {
-  collectionName: Scalars['String'];
-  receiverAddress: Scalars['String'];
-  tokenName: Scalars['String'];
 };
 
 
@@ -360,12 +343,6 @@ export type QueryIsRegisteredWalletArgs = {
 
 export type QueryIsRetweetedTwitterByUserIdArgs = {
   targetTweetId: Scalars['String'];
-  userId: Scalars['String'];
-};
-
-
-export type QueryIsRewardClaimedArgs = {
-  ticketId: Scalars['String'];
   userId: Scalars['String'];
 };
 
@@ -509,6 +486,7 @@ export type RewardPolicyInputType = {
 };
 
 export enum RewardPolicyType {
+  All = 'ALL',
   Fcfs = 'FCFS',
   LuckyDraw = 'LUCKY_DRAW'
 }
@@ -853,16 +831,13 @@ export type CompleteQuestOfUserMutationVariables = Exact<{
 
 export type CompleteQuestOfUserMutation = { __typename?: 'Mutation', completeQuestOfUser: { __typename?: 'Quest', _id?: string | null, title?: string | null, description?: string | null, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null } };
 
-export type RequestClaimNftMutationVariables = Exact<{
-  collectionName: Scalars['String'];
-  nftTokenName: Scalars['String'];
-  receiverAddress: Scalars['String'];
+export type ClaimRewardMutationVariables = Exact<{
   ticketId: Scalars['String'];
   userId: Scalars['String'];
 }>;
 
 
-export type RequestClaimNftMutation = { __typename?: 'Mutation', requestClaimNFT: { __typename?: 'AptosRequestClaimNFTResponse', txHash: string } };
+export type ClaimRewardMutation = { __typename?: 'Mutation', claimReward: boolean };
 
 export type VerifyAptosQuestMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -909,6 +884,6 @@ export const Verify3ridgePointDocument = {"kind":"Document","definitions":[{"kin
 export const VerifyTwitterRetweetQuestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"VerifyTwitterRetweetQuest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyTwitterRetweetQuest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"questId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questId"}}},{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<VerifyTwitterRetweetQuestMutation, VerifyTwitterRetweetQuestMutationVariables>;
 export const IsCompletedQuestByUserIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"IsCompletedQuestByUserId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isCompletedQuestByUserId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"questId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questId"}}},{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isCompleted"}},{"kind":"Field","name":{"kind":"Name","value":"questId"}}]}}]}}]} as unknown as DocumentNode<IsCompletedQuestByUserIdQuery, IsCompletedQuestByUserIdQueryVariables>;
 export const CompleteQuestOfUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CompleteQuestOfUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"completeQuestOfUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"questId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questId"}}},{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questPolicy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"context"}},{"kind":"Field","name":{"kind":"Name","value":"questPolicy"}}]}}]}}]}}]} as unknown as DocumentNode<CompleteQuestOfUserMutation, CompleteQuestOfUserMutationVariables>;
-export const RequestClaimNftDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RequestClaimNFT"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"collectionName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"nftTokenName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"receiverAddress"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"requestClaimNFT"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"collectionName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"collectionName"}}},{"kind":"Argument","name":{"kind":"Name","value":"nftTokenName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"nftTokenName"}}},{"kind":"Argument","name":{"kind":"Name","value":"receiverAddress"},"value":{"kind":"Variable","name":{"kind":"Name","value":"receiverAddress"}}},{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"txHash"}}]}}]}}]} as unknown as DocumentNode<RequestClaimNftMutation, RequestClaimNftMutationVariables>;
+export const ClaimRewardDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ClaimReward"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"claimReward"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}]}}]} as unknown as DocumentNode<ClaimRewardMutation, ClaimRewardMutationVariables>;
 export const VerifyAptosQuestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"VerifyAptosQuest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyAptosQuest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"questId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questId"}}},{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<VerifyAptosQuestMutation, VerifyAptosQuestMutationVariables>;
 export const IsRegisteredWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"IsRegisteredWallet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chain"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ChainType"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isRegisteredWallet"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"address"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}},{"kind":"Argument","name":{"kind":"Name","value":"chain"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chain"}}}]}]}}]} as unknown as DocumentNode<IsRegisteredWalletQuery, IsRegisteredWalletQueryVariables>;

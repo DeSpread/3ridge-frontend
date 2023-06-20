@@ -565,25 +565,31 @@ export const COMPLETE_QUEST_OF_USER = gql(/* GraphQL */ `
   }
 `);
 
-export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
-  mutation RequestClaimNFT(
-    $collectionName: String!
-    $nftTokenName: String!
-    $receiverAddress: String!
-    $ticketId: String!
-    $userId: String!
-  ) {
-    requestClaimNFT(
-      collectionName: $collectionName
-      nftTokenName: $nftTokenName
-      receiverAddress: $receiverAddress
-      ticketId: $ticketId
-      userId: $userId
-    ) {
-      txHash
-    }
+export const CLAIM_REWARD = gql(/* GraphQL */ `
+  mutation ClaimReward($ticketId: String!, $userId: String!) {
+    claimReward(ticketId: $ticketId, userId: $userId)
   }
 `);
+
+// export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
+//   mutation RequestClaimNFT(
+//     $collectionName: String!
+//     $nftTokenName: String!
+//     $receiverAddress: String!
+//     $ticketId: String!
+//     $userId: String!
+//   ) {
+//     requestClaimNFT(
+//       collectionName: $collectionName
+//       nftTokenName: $nftTokenName
+//       receiverAddress: $receiverAddress
+//       ticketId: $ticketId
+//       userId: $userId
+//     ) {
+//       txHash
+//     }
+//   }
+// `);
 
 export const VERIFY_APTOS_QUEST = gql(/* GraphQL */ `
   mutation VerifyAptosQuest(
