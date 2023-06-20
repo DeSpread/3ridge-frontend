@@ -115,7 +115,7 @@ const LoadingButton = (props: ButtonProps) => {
             height: "100%",
           }}
         >
-          <CircularProgress></CircularProgress>
+          <CircularProgress sx={{ color: "white" }}></CircularProgress>
         </div>
       )}
     </div>
