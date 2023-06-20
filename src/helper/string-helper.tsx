@@ -29,7 +29,7 @@ class StringHelper {
     if (_rewardAmount >= 10000000) {
       return "전원";
     }
-    return _rewardAmount + "명";
+    return _rewardAmount?.toLocaleString() + "명";
   };
 }
 
