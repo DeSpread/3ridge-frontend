@@ -97,6 +97,7 @@ export const QUEST_POLICY_TYPE = {
   VERIFY_APTOS_HAS_NFT: "VERIFY_APTOS_HAS_NFT",
   VERIFY_APTOS_EXIST_TX: "VERIFY_APTOS_EXIST_TX",
   VERIFY_APTOS_HAS_ANS: "VERIFY_APTOS_HAS_ANS",
+  VERIFY_VISIT_WEBSITE: "VERIFY_VISIT_WEBSITE",
 };
 
 export type WalletAddressInfo = {
@@ -220,6 +221,7 @@ export type Quest = {
       | VerifyHasWalletAddressContext
       | VerifyHasTwitter
       | VerifyHasTelegram
+      | VerifyVisitWebsiteContext
       | undefined;
     questPolicy?: string;
   };
@@ -262,6 +264,10 @@ export type VerifyHasEmailContext = {};
 export type VerifyHasTwitter = {};
 
 export type VerifyHasTelegram = {};
+
+export type VerifyVisitWebsiteContext = {
+  url: string;
+};
 
 export type VerifyHasWalletAddressContext = {
   chain: string;

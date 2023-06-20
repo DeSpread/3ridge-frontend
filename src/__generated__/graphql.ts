@@ -469,6 +469,7 @@ export enum QuestPolicyType {
   VerifyTwitterFollow = 'VERIFY_TWITTER_FOLLOW',
   VerifyTwitterLiking = 'VERIFY_TWITTER_LIKING',
   VerifyTwitterRetweet = 'VERIFY_TWITTER_RETWEET',
+  VerifyVisitWebsite = 'VERIFY_VISIT_WEBSITE',
   VerifyWalletAddress = 'VERIFY_WALLET_ADDRESS'
 }
 

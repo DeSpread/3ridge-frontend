@@ -40,6 +40,7 @@ import {
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
   VerifyHasWalletAddressContext,
+  VerifyVisitWebsiteContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
@@ -153,6 +154,8 @@ const Event = (props: AppProps) => {
   const [openContentsRendererDialog, setOpenContentsRendererDialog] =
     useState(false);
   const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
+  const [simpleWarningDialogShow, setSimpleWarningDialogShow] = useState(false);
+
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
@@ -620,7 +623,8 @@ const Event = (props: AppProps) => {
       }
     } else if (
       quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD ||
-      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
+      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyVisitWebsite
     ) {
       let questContext;
       switch (quest.questPolicy?.questPolicy) {
@@ -640,16 +644,29 @@ const Event = (props: AppProps) => {
             "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
           );
           break;
+        case QuestPolicyType.VerifyVisitWebsite:
+          questContext = quest.questPolicy
+            ?.context as VerifyVisitWebsiteContext;
+          // console.log(questContext?.url);
+          const newWindow = window.open(
+            questContext?.url,
+            "_blank",
+            "noopener,noreferrer"
+          );
+          if (newWindow) newWindow.opener = null;
+          break;
       }
-      let title = "";
       if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
-        title = "디스코드";
+        setSimpleWarningDialogTitle(`디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
+          참여 상태로 유지해주세요.`);
+        setSimpleWarningDialogShow(true);
       } else if (
         quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
       ) {
-        title = "텔레그램";
+        setSimpleWarningDialogTitle(`텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
+          참여 상태로 유지해주세요.`);
+        setSimpleWarningDialogShow(true);
       }
-      setSimpleWarningDialogTitle(title);
       try {
         const res = await asyncCompleteQuestOfUser(ticketData._id, quest?._id);
         updateVerifyState(index);
@@ -687,7 +704,7 @@ const Event = (props: AppProps) => {
       callback: (msg: string) => void;
     }>;
     try {
-      if (!ticketData._id) return;
+      if (!ticketData._id || !quest?._id) return;
       if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.QUIZ) {
         const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
         setOpenQuizQuestContext(quizQuestContext);
@@ -1374,7 +1391,9 @@ const Event = (props: AppProps) => {
                     quest.questPolicy?.questPolicy ===
                       QuestPolicyType.VerifyDiscord ||
                     quest.questPolicy?.questPolicy ===
-                      QuestPolicyType.VerifyTelegram;
+                      QuestPolicyType.VerifyTelegram ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyVisitWebsite;
 
                   return (
                     <VerifyCard
@@ -1411,6 +1430,8 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QuestPolicyType.VerifyHasTelegram ||
                         quest.questPolicy?.questPolicy === QuestPolicyType.Quiz
+                        // quest.questPolicy?.questPolicy ===
+                        //   QuestPolicyType.VerifyVisitWebsite
                       }
                       onVerifyBtnClicked={async (e) => {
                         await asyncVerifyQuest(e, quest, index);
@@ -1873,21 +1894,18 @@ const Event = (props: AppProps) => {
       {/* --- Dialogs --- */}
 
       <SimpleDialog
-        open={simpleWarningDialogTitle ? true : false}
+        open={simpleWarningDialogShow}
         title={"Notification"}
         onClose={() => {
-          setSimpleWarningDialogTitle("");
+          setSimpleWarningDialogShow(false);
           doLazyFire();
         }}
         onCloseBtnClicked={() => {
-          setSimpleWarningDialogTitle("");
+          setSimpleWarningDialogShow(false);
           doLazyFire();
         }}
       >
-        <Typography>
-          {`${simpleWarningDialogTitle} 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
-          참여 상태로 유지해주세요.`}
-        </Typography>
+        <Typography>{simpleWarningDialogTitle}</Typography>
       </SimpleDialog>
       <QuestQuizDialog
         open={openQuizQuestDialog}
