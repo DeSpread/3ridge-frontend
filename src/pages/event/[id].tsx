@@ -806,10 +806,6 @@ const Event = (props: AppProps) => {
             myEvent.params.callback("success");
             updateVerifyState(index);
           } else {
-            // showAlert({
-            //   title: "알림",
-            //   content: "프로필 페이지에서 지갑을 연결해주세요.",
-            // });
             showAlert({
               title: "알림",
               content: (
