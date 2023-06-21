@@ -173,7 +173,7 @@ const QuestQuizForm = (props: QuestQuizFormProps) => {
               justifyContent={"center"}
             >
               <Typography variant={"body2"}>
-                틀렸습니다 😅 다시 도전해보세요~
+                틀렸습니다 😅 다시 도전 해보세요~
               </Typography>
             </Stack>
           )}

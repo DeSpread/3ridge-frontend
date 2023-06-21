@@ -136,7 +136,7 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
               fullWidth={true}
               onClick={onNextQuestionButtonClicked}
             >
-              Next Question
+              {isLast ? "완료" : "다음 문제"}
             </SecondaryButton>
           </Box>
         </DialogContent>

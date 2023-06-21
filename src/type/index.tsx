@@ -167,6 +167,7 @@ export type FCFSRewardContext = {
   tokenName: string;
   point: number;
   rewardName?: string;
+  // rewardChainBase64HtmlContent?: string;
 };
 
 export type ParticipantInfo = {
