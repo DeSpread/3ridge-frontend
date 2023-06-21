@@ -936,7 +936,15 @@ const Profile = () => {
               );
               setSelectedNetwork("");
             } catch (e) {
-              showErrorAlert({ content: getLocaleErrorMessage(e) });
+              if (
+                e instanceof AppError &&
+                e.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED
+              ) {
+                //@ts-ignore
+                showWalletAlert(convertToSuppoertedNetwork(e.payload));
+              } else {
+                showErrorAlert({ content: getLocaleErrorMessage(e) });
+              }
             } finally {
               closeLoading();
             }

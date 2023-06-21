@@ -286,27 +286,22 @@ const useSignedUserQuery = () => {
     network: SupportedNetwork,
     walletName: WalletName
   ) => {
-    try {
-      console.log("asyncUpsertWalletAddress - network", network);
-      if (!isWalletInstalled(network, walletName)) {
-        throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED, network);
-        return;
-      }
-      const accountAddress = getAccountAddress(network);
-      console.log("asyncUpsertWalletAddress - accountAddress", accountAddress);
-      if (!accountAddress) {
-        await asyncConnectWallet(network, walletName);
-        if (network === SUPPORTED_NETWORKS.SUI) {
-          preference.updateTryConnectWallet(network);
-        } else {
-          tryConnectWalletNetwork.current = network;
-        }
-        return;
-      }
-      await _asyncUpsertWalletAddress(network, accountAddress);
-    } catch (e) {
-      throw new AppError(getErrorMessage(e));
+    console.log("asyncUpsertWalletAddress - network", network);
+    if (!isWalletInstalled(network, walletName)) {
+      throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED, network);
     }
+    const accountAddress = getAccountAddress(network);
+    console.log("asyncUpsertWalletAddress - accountAddress", accountAddress);
+    if (!accountAddress) {
+      await asyncConnectWallet(network, walletName);
+      if (network === SUPPORTED_NETWORKS.SUI) {
+        preference.updateTryConnectWallet(network);
+      } else {
+        tryConnectWalletNetwork.current = network;
+      }
+      return;
+    }
+    await _asyncUpsertWalletAddress(network, accountAddress);
   };
 
   const asyncDeleteWalletAddress = async (network: SupportedNetwork) => {
