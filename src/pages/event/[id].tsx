@@ -186,6 +186,9 @@ const Event = (props: AppProps) => {
     setHasMetask(_hasMetamask);
     setShowProfileEditDialog(false);
     setBackDirectionPath("");
+    // fetch("https://api.ipify.org/?format=json").then((res) => {
+    //   console.log(res);
+    // });
   }, []);
 
   useEffect(() => {
@@ -249,6 +252,8 @@ const Event = (props: AppProps) => {
       setEventDespHtmlContent(decodeBase64(ticketData?.description));
     }
   });
+
+  // console.log("userAgent", window.navigator.userAgent);
 
   const isMounted = useMountedState();
 
@@ -868,6 +873,13 @@ const Event = (props: AppProps) => {
     }
   };
 
+  const isEventStarted = () => {
+    const diff =
+      new Date().getTime() -
+      parseStrToDate(ticketData?.beginTime ?? "").getTime();
+    return diff > 0;
+  };
+
   const isEventComplete = () => {
     const diff =
       parseStrToDate(ticketData?.untilTime ?? "").getTime() -
@@ -988,7 +1000,20 @@ const Event = (props: AppProps) => {
                       justifyContent={smUp ? "flex-start" : "center"}
                       rowSpacing={1}
                     >
-                      {!isEventComplete() && (
+                      {!isEventStarted() && (
+                        <Grid item>
+                          <StyledChip
+                            label={"이벤트 시작전"}
+                            // color={"success"}
+                            variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #61e1ff",
+                              borderWidth: 0,
+                            }}
+                          ></StyledChip>
+                        </Grid>
+                      )}
+                      {isEventStarted() && !isEventComplete() && (
                         <Grid item>
                           <StyledChip
                             label={"진행중"}
@@ -1001,7 +1026,7 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Grid>
                       )}
-                      {isEventComplete() && (
+                      {isEventStarted() && isEventComplete() && (
                         <Grid item>
                           <StyledChip label={"이벤트 종료"}></StyledChip>
                         </Grid>
@@ -1083,7 +1108,20 @@ const Event = (props: AppProps) => {
                           </Typography>
                         </>
                       )}
-                      {!isEventComplete() && (
+                      {!isEventStarted() && (
+                        <Box sx={{ marginTop: 2 }}>
+                          <StyledChip
+                            label={"이벤트 시작전"}
+                            // color={"success"}
+                            variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #61e1ff",
+                              borderWidth: 0,
+                            }}
+                          ></StyledChip>
+                        </Box>
+                      )}
+                      {isEventStarted() && !isEventComplete() && (
                         <Box sx={{ marginTop: 2 }}>
                           <StyledChip
                             label={"진행중"}
@@ -1095,7 +1133,7 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Box>
                       )}
-                      {isEventComplete() && (
+                      {isEventStarted() && isEventComplete() && (
                         <Box sx={{ marginTop: 2 }}>
                           <StyledChip label={"이벤트 종료"}></StyledChip>
                         </Box>
