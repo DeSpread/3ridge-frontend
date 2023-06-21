@@ -1,3 +1,5 @@
+import { uuid } from "@walletconnect/legacy-utils";
+
 const validateMail = (val?: string | unknown) => {
   if (typeof val !== "string") {
     return false;
@@ -58,6 +60,12 @@ const isBase64HtmlPattern = (base64String: string) => {
   return false;
 };
 
+const getUniqId = () => {
+  const DELIMITER = "-";
+  const currentUnixTimestamp = new Date().getTime();
+  return currentUnixTimestamp + DELIMITER + uuid();
+};
+
 export {
   validateMail,
   validatePassword,
@@ -65,4 +73,5 @@ export {
   decodeBase64,
   decodeBase64IfHtmlPattern,
   isBase64HtmlPattern,
+  getUniqId,
 };

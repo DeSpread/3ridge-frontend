@@ -4,8 +4,13 @@ import { Box, Stack, Typography } from "@mui/material";
 import SimpleDialog from "./dialogs/simple-dialog";
 import LinkTypography from "./atoms/link-typography";
 import { getErrorMessage } from "../error/my-error";
+import { client } from "../lib/elastic/client";
+import { getUniqId } from "../util/string-util";
+import { LogLevel } from "../type";
 
 type ErrorBoundaryProps = React.PropsWithChildren<{}>;
+
+const elasticIndex = process.env["NEXT_PUBLIC_ELASTICSEARCH_ENDPOINT"] ?? "";
 
 interface ErrorBoundaryState {
   error: Error | null;
@@ -35,8 +40,26 @@ export default class ErrorBoundary extends React.Component<
 
   private setError = (error: Error) => {
     console.error(error);
-
+    this.asyncSendLogErrorToElastic(error).then();
     this.setState({ error });
+  };
+
+  private asyncSendLogErrorToElastic = async (error: Error) => {
+    const userAgent = window.navigator.userAgent;
+    // const res = await fetch("https://api.ipify.org/?format=json");
+    // await client.index({
+    //   index: elasticIndex,
+    //   id: getUniqId(),
+    //   document: {
+    //     createdAt: new Date(),
+    //     createdDayOfWeek: new Date().toLocaleString("en-us", {
+    //       weekday: "long",
+    //     }),
+    //     userAgent,
+    //     message: getErrorMessage(error),
+    //     logLevel: LogLevel.ERROR,
+    //   },
+    // });
   };
 
   // 전역 에러 중 캐치하지 못한 에러

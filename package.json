@@ -13,6 +13,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.1",
     "@aptos-labs/wallet-adapter-react": "^0.2.3",
+    "@elastic/elasticsearch": "^8.8.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fontsource/noto-sans": "^4.5.11",
