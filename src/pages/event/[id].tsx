@@ -1583,26 +1583,66 @@ const Event = (props: AppProps) => {
                         </Typography>
                       </Stack>
                     ) : (
-                      <Stack
-                        direction={"row"}
-                        justifyContent={"center"}
-                        alignItems={"center"}
-                        spacing={1}
-                      >
-                        <img
-                          src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
-                          width={32}
-                          height={32}
-                          style={{
-                            background: theme.palette.neutral[100],
-                            borderRadius: 16,
-                            padding: 5,
-                          }}
-                        />
-                        <Typography variant={"body2"}>
-                          {ticketData.rewardPolicy?.context?.rewardChain} 체인
-                          지원
-                        </Typography>
+                      <Stack>
+                        <Stack
+                          direction={"row"}
+                          justifyContent={"center"}
+                          alignItems={"center"}
+                          spacing={1}
+                        >
+                          <img
+                            src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
+                            width={32}
+                            height={32}
+                            style={{
+                              background: theme.palette.neutral[100],
+                              borderRadius: 16,
+                              padding: 5,
+                            }}
+                          />
+                          <Typography variant={"body2"}>
+                            {ticketData.rewardPolicy?.context?.rewardChain} 체인
+                            지원
+                          </Typography>
+                        </Stack>
+                        {ticketData.rewardPolicy?.context?.rewardInfo && (
+                          <Stack
+                            sx={{ background: "", marginTop: 1 }}
+                            alignItems={"center"}
+                          >
+                            <ClickTypography
+                              variant={"caption"}
+                              onClick={async () => {
+                                if (
+                                  ticketData.rewardPolicy?.context?.rewardInfo
+                                    ?.content
+                                ) {
+                                  setOpenContentsRendererDialog(true);
+                                  setHtmlContent(
+                                    decodeBase64(
+                                      ticketData.rewardPolicy?.context
+                                        ?.rewardInfo?.content
+                                    )
+                                  );
+                                }
+                              }}
+                              sx={{
+                                fontWeight: "bold",
+                                "&:hover": {
+                                  color: "#914e1d",
+                                  textDecoration: "underline",
+                                },
+                                color: theme.palette.warning.main,
+                                cursor: "pointer",
+                              }}
+                            >
+                              {
+                                ticketData.rewardPolicy?.context?.rewardInfo
+                                  ?.title
+                              }
+                            </ClickTypography>
+                          </Stack>
+                        )}
                       </Stack>
                     )
                   ) : (

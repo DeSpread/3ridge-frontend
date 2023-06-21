@@ -68,7 +68,7 @@ const ContentsRendererDialog = (props: ContentsRendererDialogProps) => {
           </Stack>
         </DialogTitle>
         <DialogContent>
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", background: "", marginTop: -32 }}>
             {props?.htmlContent && (
               <div
                 dangerouslySetInnerHTML={{ __html: props?.htmlContent }}
