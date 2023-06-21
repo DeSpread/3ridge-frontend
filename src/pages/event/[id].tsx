@@ -215,121 +215,6 @@ const Event = (props: AppProps) => {
           setVerifiedList(newVerifiedList);
           setInitVerifiedList(true);
           asyncUpdateClaimCompleted().then(() => {});
-          // const emailQuests = findVerifyHasEmailQuests(ticketData);
-          // const emailQuestsIds = emailQuests?.map((eq) => eq._id);
-          // const verifiedPromiseList: any[] = [];
-          //
-          // if (ids && (emailQuestsIds?.length ?? 0) > 0) {
-          //   const hasAllVerified = emailQuestsIds?.reduce(
-          //     (accumulator, currentValue) =>
-          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-          //     true
-          //   );
-          //   if (!hasAllVerified) {
-          //     if (userData?.email) {
-          //       emailQuestsIds?.forEach((e) => {
-          //         if (ticketData?._id && e)
-          //           verifiedPromiseList.push(
-          //             asyncCompleteQuestOfUser(ticketData?._id, e)
-          //           );
-          //       });
-          //     }
-          //   }
-          // }
-          //
-          // if (!isStarted() || isExpired()) {
-          //   return;
-          // }
-          //
-          // const walletQuests = findVerifyHasWalletQuests(ticketData);
-          // const walletQuestChains = walletQuests?.map(
-          //   //@ts-ignore
-          //   (eq) => eq.questPolicy?.context?.chain
-          // );
-          // const walletQuestsIds = walletQuests?.map((eq) => eq._id);
-          // if (ids && (walletQuestsIds?.length ?? 0) > 0) {
-          //   const hasAllVerified = walletQuestsIds?.reduce(
-          //     (accumulator, currentValue) =>
-          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-          //     true
-          //   );
-          //   if (!hasAllVerified) {
-          //     const networks = userData?.walletAddressInfos
-          //       ?.filter((e) => e.address)
-          //       .map((e) => e.network.toUpperCase());
-          //     for (let i = 0; i < (walletQuestChains?.length ?? 0); i++) {
-          //       const chain = walletQuestChains?.[i]?.toUpperCase();
-          //       if (networks?.includes(chain)) {
-          //         const __id = walletQuestsIds?.[i] ?? undefined;
-          //         if (ticketData?._id && __id) {
-          //           // console.log("aaa", ticketData?._id, __id);
-          //           verifiedPromiseList.push(
-          //             asyncCompleteQuestOfUser(ticketData?._id, __id)
-          //           );
-          //         }
-          //       }
-          //     }
-          //   }
-          // }
-          //
-          // const twitterQuests = findVerifyHasTwitter(ticketData);
-          // const twitterQuestsIds = twitterQuests?.map((eq) => eq._id);
-          // if (ids && (twitterQuestsIds?.length ?? 0) > 0) {
-          //   const hasAllVerified = twitterQuestsIds?.reduce(
-          //     (accumulator, currentValue) =>
-          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-          //     true
-          //   );
-          //   if (!hasAllVerified) {
-          //     // console.log(twitterQuests);
-          //     if (userData?.userSocial?.twitterId) {
-          //       twitterQuestsIds?.forEach((e) => {
-          //         if (ticketData?._id && e)
-          //           verifiedPromiseList.push(
-          //             asyncCompleteQuestOfUser(ticketData?._id, e)
-          //           );
-          //       });
-          //     }
-          //   }
-          // }
-          //
-          // const telegramQuests = findVerifyHasTelegram(ticketData);
-          // const telegramQuestsIds = telegramQuests?.map((eq) => eq._id);
-          // if (ids && (telegramQuestsIds?.length ?? 0) > 0) {
-          //   const hasAllVerified = telegramQuestsIds?.reduce(
-          //     (accumulator, currentValue) =>
-          //       accumulator && newVerifiedList[ids?.indexOf(currentValue)],
-          //     true
-          //   );
-          //   if (!hasAllVerified) {
-          //     if (userData?.userSocial?.telegramUser?.id) {
-          //       telegramQuestsIds?.forEach((e) => {
-          //         if (ticketData?._id && e)
-          //           verifiedPromiseList.push(
-          //             asyncCompleteQuestOfUser(ticketData?._id, e)
-          //           );
-          //       });
-          //     }
-          //   }
-          // }
-          //
-          // if (verifiedPromiseList && (verifiedPromiseList?.length ?? 0) > 0) {
-          //   Promise.all(verifiedPromiseList)
-          //     .then((completeQuestRes) => {
-          //       setTimeout(() => {
-          //         // console.log("recursive updateVerifyAll");
-          //         updateVerifyAll();
-          //       }, 0);
-          //     })
-          //     .catch((e) => {
-          //       console.log(e);
-          //     })
-          //     .finally(() => {
-          //       setLockUpdateVerifyAll(false);
-          //     });
-          // } else {
-          //   setLockUpdateVerifyAll(false);
-          // }
           setLockUpdateVerifyAll(false);
         })
         .catch((err) => {
@@ -1698,26 +1583,66 @@ const Event = (props: AppProps) => {
                         </Typography>
                       </Stack>
                     ) : (
-                      <Stack
-                        direction={"row"}
-                        justifyContent={"center"}
-                        alignItems={"center"}
-                        spacing={1}
-                      >
-                        <img
-                          src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
-                          width={32}
-                          height={32}
-                          style={{
-                            background: theme.palette.neutral[100],
-                            borderRadius: 16,
-                            padding: 5,
-                          }}
-                        />
-                        <Typography variant={"body2"}>
-                          {ticketData.rewardPolicy?.context?.rewardChain} 체인
-                          지원
-                        </Typography>
+                      <Stack>
+                        <Stack
+                          direction={"row"}
+                          justifyContent={"center"}
+                          alignItems={"center"}
+                          spacing={1}
+                        >
+                          <img
+                            src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
+                            width={32}
+                            height={32}
+                            style={{
+                              background: theme.palette.neutral[100],
+                              borderRadius: 16,
+                              padding: 5,
+                            }}
+                          />
+                          <Typography variant={"body2"}>
+                            {ticketData.rewardPolicy?.context?.rewardChain} 체인
+                            지원
+                          </Typography>
+                        </Stack>
+                        {ticketData.rewardPolicy?.context?.rewardInfo && (
+                          <Stack
+                            sx={{ background: "", marginTop: 1 }}
+                            alignItems={"center"}
+                          >
+                            <ClickTypography
+                              variant={"caption"}
+                              onClick={async () => {
+                                if (
+                                  ticketData.rewardPolicy?.context?.rewardInfo
+                                    ?.content
+                                ) {
+                                  setOpenContentsRendererDialog(true);
+                                  setHtmlContent(
+                                    decodeBase64(
+                                      ticketData.rewardPolicy?.context
+                                        ?.rewardInfo?.content
+                                    )
+                                  );
+                                }
+                              }}
+                              sx={{
+                                fontWeight: "bold",
+                                "&:hover": {
+                                  color: "#914e1d",
+                                  textDecoration: "underline",
+                                },
+                                color: theme.palette.warning.main,
+                                cursor: "pointer",
+                              }}
+                            >
+                              {
+                                ticketData.rewardPolicy?.context?.rewardInfo
+                                  ?.title
+                              }
+                            </ClickTypography>
+                          </Stack>
+                        )}
                       </Stack>
                     )
                   ) : (
@@ -1758,17 +1683,19 @@ const Event = (props: AppProps) => {
                       myEvent.params.callback("success");
                       setClaimCompleted(true);
                       showAlert({
-                        title: "Congrats ! 🥳",
+                        title: "축하합니다! 🥳",
                         content: (
                           <>
                             <Stack direction={"column"} spacing={1}>
-                              <Typography>
-                                방금 지갑에 리워드를 보냈어요! 지갑을
-                                확인해주세요
+                              <Typography sx={{ wordBreak: "keep-all" }}>
+                                🚨 보상 NFT를 수령하기 위한 추가 작업이
+                                필요합니다!
                               </Typography>
-                              <Typography>
-                                전송된 리워드를 받기 위해서는 Petra 지갑에서
-                                Accept 해주어야 합니다. 지갑을 확인해주세요!
+                              <Typography sx={{ wordBreak: "keep-all" }}>
+                                페트라 지갑을 열고, Library 탭을 클릭하신 후,
+                                Pending 중인 트랜잭션 옆 Accept 버튼을
+                                클릭하셔야만 NFT를 정상적으로 수령하실 수
+                                있습니다. 지갑을 확인해주세요!
                               </Typography>
                             </Stack>
                           </>

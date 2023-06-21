@@ -43,6 +43,7 @@ const documents = {
     "\n  mutation ClaimReward($ticketId: String!, $userId: String!) {\n    claimReward(ticketId: $ticketId, userId: $userId)\n  }\n": types.ClaimRewardDocument,
     "\n  mutation VerifyAptosQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyAptosQuest(questId: $questId, ticketId: $ticketId, userId: $userId) {\n      _id\n    }\n  }\n": types.VerifyAptosQuestDocument,
     "\n  query IsRegisteredWallet($address: String!, $chain: ChainType!) {\n    isRegisteredWallet(address: $address, chain: $chain)\n  }\n": types.IsRegisteredWalletDocument,
+    "\n  mutation ClearParticipatedAllEventsByUserId($userId: String!) {\n    clearParticipatedAllEventsByUserId(userId: $userId)\n  }\n": types.ClearParticipatedAllEventsByUserIdDocument,
 };
 
 /**
@@ -165,6 +166,10 @@ export function gql(source: "\n  mutation VerifyAptosQuest(\n    $questId: Strin
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query IsRegisteredWallet($address: String!, $chain: ChainType!) {\n    isRegisteredWallet(address: $address, chain: $chain)\n  }\n"): (typeof documents)["\n  query IsRegisteredWallet($address: String!, $chain: ChainType!) {\n    isRegisteredWallet(address: $address, chain: $chain)\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation ClearParticipatedAllEventsByUserId($userId: String!) {\n    clearParticipatedAllEventsByUserId(userId: $userId)\n  }\n"): (typeof documents)["\n  mutation ClearParticipatedAllEventsByUserId($userId: String!) {\n    clearParticipatedAllEventsByUserId(userId: $userId)\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

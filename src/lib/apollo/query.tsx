@@ -608,3 +608,9 @@ export const IS_REGISTER_WALLET = gql(/* GraphQL */ `
     isRegisteredWallet(address: $address, chain: $chain)
   }
 `);
+
+export const CLEAR_PARTICIPATED_ALL_EVENTS_BY_USER_ID = gql(/* GraphQL */ `
+  mutation ClearParticipatedAllEventsByUserId($userId: String!) {
+    clearParticipatedAllEventsByUserId(userId: $userId)
+  }
+`);
