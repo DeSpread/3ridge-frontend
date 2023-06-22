@@ -60,7 +60,7 @@ class ResourceFactory {
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/petra-wallet.png",
           name: "Petra",
           value: WALLET_NAMES.PETRA,
-          mobile: false,
+          mobile: true,
         },
       ];
     } else if (network === SUPPORTED_NETWORKS.SUI) {
