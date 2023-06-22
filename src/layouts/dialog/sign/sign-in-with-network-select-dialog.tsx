@@ -52,7 +52,7 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
         onClick={(e) => {
           props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.APTOS);
         }}
-        disabled={isMobile ? true : false}
+        // disabled={isMobile ? true : false}
       >
         <Stack
           sx={{ width: "100%" }}
