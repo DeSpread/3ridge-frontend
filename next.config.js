@@ -23,6 +23,15 @@ const nextConfig = {
       },
     ];
   },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/:path*",
+  //       destination:
+  //         "https://leo-e32fa2.es.us-central1.gcp.cloud.es.io:9243/:path*",
+  //     },
+  //   ];
+  // },
 };
 
 module.exports = nextConfig;

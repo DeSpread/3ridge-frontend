@@ -54,11 +54,11 @@ const HomeFooter = () => {
             }}
             onClick={async (e) => {
               e.preventDefault();
-              console.log("aaa");
-              await ElasticClient.getInstance().asyncPostErrorLog(
-                "test " + uuid()
-              );
-              // window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
+              // console.log("aaa");
+              // await ElasticClient.getInstance().asyncPostErrorLog(
+              //   "test " + uuid()
+              // );
+              window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
             }}
           >
             {smUp ? "뉴스레터 구독하기" : "뉴스레터"}

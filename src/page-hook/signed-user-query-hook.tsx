@@ -552,8 +552,10 @@ const useSignedUserQuery = () => {
               firstName: newTelegramUserInfo.firstName,
               hash: newTelegramUserInfo.hash,
               id: newTelegramUserInfo.id,
-              photoUrl: newTelegramUserInfo.photoUrl,
-              username: newTelegramUserInfo.username,
+              photoUrl: newTelegramUserInfo.photoUrl ?? "",
+              username: newTelegramUserInfo.username
+                ? newTelegramUserInfo.username
+                : newTelegramUserInfo.firstName,
             },
           },
         },
