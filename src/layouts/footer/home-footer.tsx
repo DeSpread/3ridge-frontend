@@ -15,6 +15,8 @@ import React from "react";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import EmailIcon from "@mui/icons-material/Email";
 import Image from "next/image";
+import ElasticClient from "../../remote/elastic-client";
+import { uuid } from "@walletconnect/legacy-utils";
 
 const TWITTER_LINK = "https://twitter.com/3ridge_io";
 const MAIL_LINK = "mailto:support@3ridge.io?Subject=Hello!%203ridge";
@@ -50,8 +52,12 @@ const HomeFooter = () => {
             sx={{
               width: smUp ? 150 : 124,
             }}
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault();
+              // console.log("aaa");
+              // await ElasticClient.getInstance().asyncPostErrorLog(
+              //   "test " + uuid()
+              // );
               window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
             }}
           >

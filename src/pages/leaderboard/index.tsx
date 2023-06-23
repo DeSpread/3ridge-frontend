@@ -241,9 +241,9 @@ const Leaderboard = () => {
                     )}
                     {!userRankLoading && userRank && (
                       <RankCard
-                        // onClick={async () => {
-                        //   await routeToUserProfile(userData);
-                        // }}
+                        onClick={async () => {
+                          await routeToUserProfile(userData);
+                        }}
                         user={userData}
                         rank={userRank}
                       ></RankCard>

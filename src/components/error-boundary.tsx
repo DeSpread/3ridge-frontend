@@ -1,16 +1,9 @@
 import Router from "next/router";
 import React from "react";
-import { Box, Stack, Typography } from "@mui/material";
-import SimpleDialog from "./dialogs/simple-dialog";
-import LinkTypography from "./atoms/link-typography";
 import { getErrorMessage } from "../error/my-error";
-import { client } from "../lib/elastic/client";
-import { getUniqId } from "../util/string-util";
-import { LogLevel } from "../type";
+import ElasticClient from "../remote/elastic-client";
 
 type ErrorBoundaryProps = React.PropsWithChildren<{}>;
-
-const elasticIndex = process.env["NEXT_PUBLIC_ELASTICSEARCH_ENDPOINT"] ?? "";
 
 interface ErrorBoundaryState {
   error: Error | null;
@@ -45,25 +38,15 @@ export default class ErrorBoundary extends React.Component<
   };
 
   private asyncSendLogErrorToElastic = async (error: Error) => {
-    const userAgent = window.navigator.userAgent;
-    // const res = await fetch("https://api.ipify.org/?format=json");
-    // await client.index({
-    //   index: elasticIndex,
-    //   id: getUniqId(),
-    //   document: {
-    //     createdAt: new Date(),
-    //     createdDayOfWeek: new Date().toLocaleString("en-us", {
-    //       weekday: "long",
-    //     }),
-    //     userAgent,
-    //     message: getErrorMessage(error),
-    //     logLevel: LogLevel.ERROR,
-    //   },
-    // });
+    await ElasticClient.getInstance().asyncPostErrorLog(getErrorMessage(error));
   };
 
   // 전역 에러 중 캐치하지 못한 에러
   private handleError = (event: ErrorEvent) => {
+    if (getErrorMessage(event.error).includes("Minified React error #423")) {
+      return;
+    }
+    console.log(event.error);
     this.setError(event.error);
     event.preventDefault?.();
   };

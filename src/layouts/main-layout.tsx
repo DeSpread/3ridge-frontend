@@ -8,7 +8,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import type { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import React, { MouseEventHandler, ReactNode, useMemo, useState } from "react";
 import NavbarAvatar from "../components/molecules/navbar-avatar";
 import { useRouter } from "next/router";
@@ -47,6 +47,8 @@ import ResourceFactory from "../helper/resource-factory";
 import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
 import { useMobile } from "../provider/mobile/mobile-context";
 import { goToMetaMaskDeppLinkWhenMobile } from "../util/eth-util";
+import axios from "axios";
+import ElasticClient from "../remote/elastic-client";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;

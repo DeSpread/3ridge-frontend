@@ -7,11 +7,19 @@ import { CategoryType, QuestGuide } from "../__generated__/graphql";
  * Per QUEST_POLICY_TYPE, It is required to implement context parsing
  * LinkingQuestContext, RetweetQuestContext
  * */
-export enum LogLevel {
-  INFO = "info",
-  DEBUG = "debug",
-  ERROR = "error",
-}
+export const LOG_LEVEL = {
+  INFO: "info",
+  DEBUG: "debug",
+  ERROR: "error",
+};
+
+export type LogLevel = ObjectValues<typeof LOG_LEVEL>;
+
+export type ElasticErrorDocument = {
+  userAgent?: string;
+  message?: string;
+  logLevel?: LogLevel;
+};
 
 export type SuccessErrorCallback<T> = ({
   onSuccess,

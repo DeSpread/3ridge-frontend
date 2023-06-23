@@ -61,6 +61,7 @@ class ResourceFactory {
           name: "Petra",
           value: WALLET_NAMES.PETRA,
           mobile: false,
+          // mobile: true,
         },
       ];
     } else if (network === SUPPORTED_NETWORKS.SUI) {
