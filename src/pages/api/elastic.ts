@@ -4,14 +4,14 @@ import { ElasticErrorDocument } from "../../type";
 import { getErrorMessage } from "../../error/my-error";
 import { getUniqId } from "../../util/string-util";
 const client = new Client({
-  node: process.env["NEXT_PUBLIC_ELASTICSEARCH_ENDPOINT"] ?? "",
+  node: "https://leo-e32fa2.es.us-central1.gcp.cloud.es.io:9243", //process.env["NEXT_PUBLIC_ELASTICSEARCH_ENDPOINT"] ?? "",
   auth: {
-    username: process.env["NEXT_PUBLIC_ELASTICSEARCH_AUTH_USERNAME"] ?? "",
-    password: process.env["NEXT_PUBLIC_ELASTICSEARCH_AUTH_PASSWORD"] ?? "",
+    username: "3ridge", //process.env["NEXT_PUBLIC_ELASTICSEARCH_AUTH_USERNAME"] ?? "",
+    password: "13ridge!", //process.env["NEXT_PUBLIC_ELASTICSEARCH_AUTH_PASSWORD"] ?? "",
   },
 });
 
-const LOG_INDEX = process.env["NEXT_PUBLIC_ELASTICSEARCH_INDEX"] ?? "";
+const LOG_INDEX = "3ridge-dev-frontend"; //process.env["NEXT_PUBLIC_ELASTICSEARCH_INDEX"] ?? "";
 
 type Data = {
   message: string;
