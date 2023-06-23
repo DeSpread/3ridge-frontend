@@ -15,10 +15,10 @@ export default class ElasticClient {
     //   logLevel: LOG_LEVEL.ERROR,
     // } as ElasticErrorDocument;
     // const body = JSON.stringify(doc);
-    // const headersList = {
-    //   Accept: "*/*",
-    //   "Content-Type": "application/json",
-    // };
+    const headersList = {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+    };
     // const res = await fetch("/api/elastic", {
     //   method: "POST",
     //   headers: headersList,
@@ -27,8 +27,14 @@ export default class ElasticClient {
     // console.log(res.status);
     // const res = await fetch("/api/hello");
     // console.log(res.status);
-    const res = await fetch("/api/hello", {
+    // const res = await fetch("/api/hello", {
+    //   method: "GET",
+    // });
+    // console.log(res.status);
+
+    const res = await fetch("/api/elastic", {
       method: "GET",
+      headers: headersList,
     });
     console.log(res.status);
   };
