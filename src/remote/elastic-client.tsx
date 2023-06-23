@@ -19,17 +19,29 @@ export default class ElasticClient {
       Accept: "*/*",
       "Content-Type": "application/json",
     };
+    // try {
+    //   const res = await fetch("/api/elastic", {
+    //     method: "POST",
+    //     headers: headersList,
+    //     body,
+    //   });
+    //   console.log(res.status);
+    //   console.log(res);
+    // } catch (e) {
+    //   console.log(e);
+    // }
+
     try {
       const res = await fetch("/api/elastic", {
-        method: "POST",
+        method: "GET",
         headers: headersList,
-        body,
       });
       console.log(res.status);
       console.log(res);
     } catch (e) {
       console.log(e);
     }
+
     // const res = await fetch("/api/hello");
     // console.log(res.status);
     // const res = await fetch("/api/hello", {
