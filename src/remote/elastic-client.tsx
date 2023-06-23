@@ -24,7 +24,6 @@ export default class ElasticClient {
       headers: headersList,
       body,
     });
-    const data = await res.text();
-    console.log(data);
+    console.log(res.status);
   };
 }
