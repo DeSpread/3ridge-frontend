@@ -8,21 +8,27 @@ export default class ElasticClient {
   }
 
   asyncPostErrorLog = async (message: string) => {
-    const userAgent = window.navigator.userAgent;
-    const doc = {
-      userAgent,
-      message,
-      logLevel: LOG_LEVEL.ERROR,
-    } as ElasticErrorDocument;
-    const body = JSON.stringify(doc);
-    const headersList = {
-      Accept: "*/*",
-      "Content-Type": "application/json",
-    };
-    const res = await fetch("/api/elastic", {
-      method: "POST",
-      headers: headersList,
-      body,
+    // const userAgent = window.navigator.userAgent;
+    // const doc = {
+    //   userAgent,
+    //   message,
+    //   logLevel: LOG_LEVEL.ERROR,
+    // } as ElasticErrorDocument;
+    // const body = JSON.stringify(doc);
+    // const headersList = {
+    //   Accept: "*/*",
+    //   "Content-Type": "application/json",
+    // };
+    // const res = await fetch("/api/elastic", {
+    //   method: "POST",
+    //   headers: headersList,
+    //   body,
+    // });
+    // console.log(res.status);
+    // const res = await fetch("/api/hello");
+    // console.log(res.status);
+    const res = await fetch("/api/hello", {
+      method: "GET",
     });
     console.log(res.status);
   };
