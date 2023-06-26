@@ -47,8 +47,6 @@ import ResourceFactory from "../helper/resource-factory";
 import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
 import { useMobile } from "../provider/mobile/mobile-context";
 import { goToMetaMaskDeppLinkWhenMobile } from "../util/eth-util";
-import axios from "axios";
-import ElasticClient from "../remote/elastic-client";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
