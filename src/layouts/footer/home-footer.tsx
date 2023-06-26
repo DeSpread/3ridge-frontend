@@ -52,8 +52,8 @@ const HomeFooter = () => {
             }}
             onClick={async (e) => {
               e.preventDefault();
-              throw new Error("Sentry Frontend Error");
-              // window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
+              // throw new Error("Sentry Frontend Error");
+              window.open("https://3ridge.beehiiv.com/subscribe", "_blank");
             }}
           >
             {smUp ? "뉴스레터 구독하기" : "뉴스레터"}
