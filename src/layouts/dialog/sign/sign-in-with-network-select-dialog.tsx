@@ -113,39 +113,39 @@ const SignInWithNetworkSelectDialog = (props: SignInWithWalletDialogProps) => {
           </Stack>
         </Stack>
       </SecondaryButton>
-      <SecondaryButton
-        onClick={(e) => {
-          props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.SUI);
-        }}
-        disabled={true}
-      >
-        <Stack
-          sx={{ width: "100%" }}
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Stack
-            sx={{ width: 120, background: "" }}
-            direction={"row"}
-            alignItems={"center"}
-            spacing={1}
-          >
-            <Image
-              src={
-                "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg"
-              }
-              alt={"sui"}
-              width={24}
-              height={24}
-              // style={{ mixBlendMode: "luminosity" }}
-            ></Image>
-            <Typography variant={"body2"} className={"MuiTypography"}>
-              SUI
-            </Typography>
-          </Stack>
-        </Stack>
-      </SecondaryButton>
+      {/*<SecondaryButton*/}
+      {/*  onClick={(e) => {*/}
+      {/*    props.onNetworkButtonClicked?.(SUPPORTED_NETWORKS.SUI);*/}
+      {/*  }}*/}
+      {/*  disabled={true}*/}
+      {/*>*/}
+      {/*  <Stack*/}
+      {/*    sx={{ width: "100%" }}*/}
+      {/*    direction={"row"}*/}
+      {/*    alignItems={"center"}*/}
+      {/*    justifyContent={"center"}*/}
+      {/*  >*/}
+      {/*    <Stack*/}
+      {/*      sx={{ width: 120, background: "" }}*/}
+      {/*      direction={"row"}*/}
+      {/*      alignItems={"center"}*/}
+      {/*      spacing={1}*/}
+      {/*    >*/}
+      {/*      <Image*/}
+      {/*        src={*/}
+      {/*          "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/sui-icon.svg"*/}
+      {/*        }*/}
+      {/*        alt={"sui"}*/}
+      {/*        width={24}*/}
+      {/*        height={24}*/}
+      {/*        // style={{ mixBlendMode: "luminosity" }}*/}
+      {/*      ></Image>*/}
+      {/*      <Typography variant={"body2"} className={"MuiTypography"}>*/}
+      {/*        SUI*/}
+      {/*      </Typography>*/}
+      {/*    </Stack>*/}
+      {/*  </Stack>*/}
+      {/*</SecondaryButton>*/}
     </Stack>
   );
 };

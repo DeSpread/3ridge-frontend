@@ -244,6 +244,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                           props.userData?.walletAddressInfos?.[0].network === e
                         )
                     )
+                    .filter((e) => e !== SUPPORTED_NETWORKS.SUI)
                     .map((e, i) => {
                       const addressInfo =
                         props.userData?.walletAddressInfos?.filter(
