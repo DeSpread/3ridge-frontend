@@ -1,7 +1,6 @@
 import Router from "next/router";
 import React from "react";
 import { getErrorMessage } from "../error/my-error";
-import ElasticClient from "../remote/elastic-client";
 
 type ErrorBoundaryProps = React.PropsWithChildren<{}>;
 
@@ -33,12 +32,7 @@ export default class ErrorBoundary extends React.Component<
 
   private setError = (error: Error) => {
     console.error(error);
-    this.asyncSendLogErrorToElastic(error).then();
     this.setState({ error });
-  };
-
-  private asyncSendLogErrorToElastic = async (error: Error) => {
-    await ElasticClient.getInstance().asyncPostErrorLog(getErrorMessage(error));
   };
 
   // 전역 에러 중 캐치하지 못한 에러

@@ -15,8 +15,6 @@ import React from "react";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import EmailIcon from "@mui/icons-material/Email";
 import Image from "next/image";
-import ElasticClient from "../../remote/elastic-client";
-import { uuid } from "@walletconnect/legacy-utils";
 
 const TWITTER_LINK = "https://twitter.com/3ridge_io";
 const MAIL_LINK = "mailto:support@3ridge.io?Subject=Hello!%203ridge";
