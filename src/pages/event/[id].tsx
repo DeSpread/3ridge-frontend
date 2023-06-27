@@ -1595,10 +1595,12 @@ const Event = (props: AppProps) => {
                         >
                           <Typography variant={"body1"}>리워드</Typography>
                           <Stack direction={"row"} alignItems={"center"}>
-                            <Typography variant={"body1"}>
-                              {ticketData?.rewardPolicy?.context?.rewardName ??
-                                ""}
-                            </Typography>
+                            <pre>
+                              <Typography variant={"body1"} textAlign={"right"}>
+                                {ticketData?.rewardPolicy?.context
+                                  ?.rewardName ?? ""}
+                              </Typography>
+                            </pre>
                           </Stack>
                         </Stack>
                       )}
