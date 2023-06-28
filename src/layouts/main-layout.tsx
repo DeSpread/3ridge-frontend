@@ -431,7 +431,7 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
       ></SignInWithEmailDialog>
       <SignInWithNetworkSelectDialog
-        title={"연결하려는 네트워트를 선택하세요"}
+        title={"연결하려는 네트워크를 선택하세요"}
         open={isSignDialogOpen}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
