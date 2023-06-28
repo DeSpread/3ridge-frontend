@@ -1467,7 +1467,7 @@ const Event = (props: AppProps) => {
                             variant={"h6"}
                             sx={{ color: theme.palette.secondary.main }}
                           >
-                            본 이벤트가 끝났습니다
+                            본 이벤트가 종료되었습니다
                           </Typography>
                         </Stack>
                       ) : isStarted() ? (
