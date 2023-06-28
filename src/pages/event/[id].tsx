@@ -554,6 +554,7 @@ const Event = (props: AppProps) => {
           setSimpleWarningDialogTitle(
             `디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
           );
+          setHtmlContent("");
         }
       } else if (
         quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
@@ -565,6 +566,7 @@ const Event = (props: AppProps) => {
           setSimpleWarningDialogTitle(
             `텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
           );
+          setHtmlContent("");
         }
       }
       try {
