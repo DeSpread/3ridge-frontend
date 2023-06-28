@@ -1449,7 +1449,7 @@ const Event = (props: AppProps) => {
                 <Box>
                   <Stack alignItems={"center"}>
                     <Typography variant={"body1"}>
-                      이벤트가 끝나기까지 남은 시간
+                      이벤트 종료까지 남은 시간
                     </Typography>
                     {ticketData?.untilTime ? (
                       isExpired() ? (

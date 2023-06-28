@@ -230,7 +230,7 @@ export function useTicketQuery({
     ticketId: string,
     questId: string
   ) => {
-    // console.log(ticketId, questId, userId);
+    console.log(ticketId, questId, userId);
     if (ticketId && questId && userId) {
       const res = await verifyTwitterRetweetQuest({
         variables: {
