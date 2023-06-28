@@ -547,15 +547,25 @@ const Event = (props: AppProps) => {
           break;
       }
       if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
-        setSimpleWarningDialogTitle(`디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
-          참여 상태로 유지해주세요.`);
         setSimpleWarningDialogShow(true);
+        if (quest.questGuides?.[0]?.content) {
+          setHtmlContent(decodeBase64(quest.questGuides[0].content));
+        } else {
+          setSimpleWarningDialogTitle(
+            `디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
+          );
+        }
       } else if (
         quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
       ) {
-        setSimpleWarningDialogTitle(`텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
-          참여 상태로 유지해주세요.`);
         setSimpleWarningDialogShow(true);
+        if (quest.questGuides?.[0]?.content) {
+          setHtmlContent(decodeBase64(quest.questGuides[0].content));
+        } else {
+          setSimpleWarningDialogTitle(
+            `텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
+          );
+        }
       }
       try {
         const res = await asyncCompleteQuestOfUser(ticketData._id, quest?._id);
@@ -609,7 +619,8 @@ const Event = (props: AppProps) => {
           myEvent.params.callback("success");
           return;
         }
-        await asyncVerifyTwitterFollowQuest(ticketData._id, quest._id ?? "");
+        // await asyncVerifyTwitterFollowQuest(ticketData._id, quest._id ?? "");
+        await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
         myEvent.params.callback("success");
         updateVerifyState(index);
       } else if (
@@ -1859,21 +1870,6 @@ const Event = (props: AppProps) => {
       </Grid>
 
       {/* --- Dialogs --- */}
-
-      <SimpleDialog
-        open={simpleWarningDialogShow}
-        title={"Notification"}
-        onClose={() => {
-          setSimpleWarningDialogShow(false);
-          doLazyFire();
-        }}
-        onCloseBtnClicked={() => {
-          setSimpleWarningDialogShow(false);
-          doLazyFire();
-        }}
-      >
-        <Typography>{simpleWarningDialogTitle}</Typography>
-      </SimpleDialog>
       <QuestQuizDialog
         open={openQuizQuestDialog}
         context={openQuizQuestContext}
@@ -1912,6 +1908,23 @@ const Event = (props: AppProps) => {
         }}
         htmlContent={htmlContent}
       ></ContentsRendererDialog>
+      <SimpleDialog
+        open={simpleWarningDialogShow}
+        title={"Notification"}
+        onClose={() => {
+          setSimpleWarningDialogShow(false);
+          doLazyFire();
+        }}
+        onCloseBtnClicked={() => {
+          setSimpleWarningDialogShow(false);
+          doLazyFire();
+        }}
+      >
+        {htmlContent && (
+          <div dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
+        )}
+        {!htmlContent && <Typography>{simpleWarningDialogTitle}</Typography>}
+      </SimpleDialog>
     </>
   );
 };

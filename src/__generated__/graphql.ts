@@ -181,6 +181,7 @@ export type MutationUpdateTicketByIdArgs = {
   ticketId: Scalars['String'];
   title?: InputMaybe<Scalars['String']>;
   untilTime?: InputMaybe<Scalars['DateTime']>;
+  visible?: InputMaybe<Scalars['Boolean']>;
   winners?: InputMaybe<Array<UserInputType>>;
 };
 
@@ -273,6 +274,7 @@ export type Query = {
   findMissedTickets: Array<Ticket>;
   findQuestById: Quest;
   findRankByUserId: Scalars['Float'];
+  getWalletAddressOfWinner: Array<Scalars['String']>;
   isCompletedQuestByUserId: IsCompletedQuestByUserIdResponse;
   isCompletedTicket: Scalars['Boolean'];
   isFollowTwitterByUserId: User;
@@ -308,6 +310,12 @@ export type QueryFindRankByUserIdArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   userId: Scalars['String'];
+};
+
+
+export type QueryGetWalletAddressOfWinnerArgs = {
+  chainType: Scalars['String'];
+  ticketId: Scalars['String'];
 };
 
 

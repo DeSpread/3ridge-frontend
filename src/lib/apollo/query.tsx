@@ -614,3 +614,11 @@ export const CLEAR_PARTICIPATED_ALL_EVENTS_BY_USER_ID = gql(/* GraphQL */ `
     clearParticipatedAllEventsByUserId(userId: $userId)
   }
 `);
+
+export const UPDATE_TICKET_VISIBLE = gql(/* GraphQL */ `
+  mutation UpdateTicketVisible($ticketId: String!, $visible: Boolean) {
+    updateTicketById(ticketId: $ticketId, visible: $visible) {
+      _id
+    }
+  }
+`);

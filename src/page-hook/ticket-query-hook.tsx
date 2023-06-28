@@ -3,6 +3,7 @@ import {
   COMPLETE_QUEST_OF_USER,
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
+  UPDATE_TICKET_VISIBLE,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
@@ -343,6 +344,8 @@ export function useTicketQuery({
       questId,
     };
   };
+
+  // const asyncUpdateTicketVisible;
 
   return {
     ticketData,
