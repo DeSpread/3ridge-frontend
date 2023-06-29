@@ -446,6 +446,38 @@ const Event = (props: AppProps) => {
     return false;
   };
 
+  const renderConnectWalletAlertMessage = () => {
+    return (
+      <>
+        <Stack spacing={1}>
+          <Typography variant={"body1"}>
+            프로필 페이지에서 지갑을 연동해주세요.
+          </Typography>
+          <LinkTypography
+            variant={"body1"}
+            href={"#"}
+            sx={{
+              fontWeight: "bold",
+              "&:hover": {
+                color: "#914e1d",
+                textDecoration: "underline",
+              },
+              color: theme.palette.warning.main,
+            }}
+            onClick={async (e) => {
+              closeAlert();
+              setTimeout(() => {
+                asyncGoToProfileAndEditDialogOpen();
+              }, 0);
+            }}
+          >
+            이 링크를 누르시면 프로필 페이지로 이동합니다.
+          </LinkTypography>
+        </Stack>
+      </>
+    );
+  };
+
   const getLoadingButtonLabel = () => {
     if (isExpired()) {
       return "이벤트가 종료되었어요";
@@ -728,35 +760,7 @@ const Event = (props: AppProps) => {
           } else {
             showAlert({
               title: "알림",
-              content: (
-                <>
-                  <Stack spacing={1}>
-                    <Typography variant={"body1"}>
-                      프로필 페이지에서 지갑을 연동해주세요.
-                    </Typography>
-                    <LinkTypography
-                      variant={"body1"}
-                      href={"#"}
-                      sx={{
-                        fontWeight: "bold",
-                        "&:hover": {
-                          color: "#914e1d",
-                          textDecoration: "underline",
-                        },
-                        color: theme.palette.warning.main,
-                      }}
-                      onClick={async (e) => {
-                        closeAlert();
-                        setTimeout(() => {
-                          asyncGoToProfileAndEditDialogOpen();
-                        }, 0);
-                      }}
-                    >
-                      이 링크를 누르시면 프로필 페이지로 이동합니다.
-                    </LinkTypography>
-                  </Stack>
-                </>
-              ),
+              content: renderConnectWalletAlertMessage(),
             });
             myEvent.params.callback("success");
           }
@@ -768,35 +772,7 @@ const Event = (props: AppProps) => {
           } else {
             showAlert({
               title: "알림",
-              content: (
-                <>
-                  <Stack spacing={1}>
-                    <Typography variant={"body1"}>
-                      프로필 페이지에서 지갑을 연동해주세요.
-                    </Typography>
-                    <LinkTypography
-                      variant={"body1"}
-                      href={"#"}
-                      sx={{
-                        fontWeight: "bold",
-                        "&:hover": {
-                          color: "#914e1d",
-                          textDecoration: "underline",
-                        },
-                        color: theme.palette.warning.main,
-                      }}
-                      onClick={async (e) => {
-                        closeAlert();
-                        setTimeout(() => {
-                          asyncGoToProfileAndEditDialogOpen();
-                        }, 0);
-                      }}
-                    >
-                      이 링크를 누르시면 프로필 페이지로 이동합니다.
-                    </LinkTypography>
-                  </Stack>
-                </>
-              ),
+              content: renderConnectWalletAlertMessage(),
             });
             myEvent.params.callback("success");
           }
@@ -867,11 +843,19 @@ const Event = (props: AppProps) => {
       } else if (
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW ||
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET ||
-        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING ||
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_HAVE_APTOS_NFT
       ) {
         showAlert({
           title: "알림",
           content: getLocaleErrorMessage(e),
+        });
+      } else if (
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_HAVA_APTOS_WALLET
+      ) {
+        showAlert({
+          title: "알림",
+          content: renderConnectWalletAlertMessage(),
         });
       }
     }
