@@ -446,6 +446,38 @@ const Event = (props: AppProps) => {
     return false;
   };
 
+  const renderConnectWalletAlertMessage = () => {
+    return (
+      <>
+        <Stack spacing={1}>
+          <Typography variant={"body1"}>
+            프로필 페이지에서 지갑을 연동해주세요.
+          </Typography>
+          <LinkTypography
+            variant={"body1"}
+            href={"#"}
+            sx={{
+              fontWeight: "bold",
+              "&:hover": {
+                color: "#914e1d",
+                textDecoration: "underline",
+              },
+              color: theme.palette.warning.main,
+            }}
+            onClick={async (e) => {
+              closeAlert();
+              setTimeout(() => {
+                asyncGoToProfileAndEditDialogOpen();
+              }, 0);
+            }}
+          >
+            이 링크를 누르시면 프로필 페이지로 이동합니다.
+          </LinkTypography>
+        </Stack>
+      </>
+    );
+  };
+
   const getLoadingButtonLabel = () => {
     if (isExpired()) {
       return "이벤트가 종료되었어요";
@@ -547,15 +579,27 @@ const Event = (props: AppProps) => {
           break;
       }
       if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
-        setSimpleWarningDialogTitle(`디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
-          참여 상태로 유지해주세요.`);
         setSimpleWarningDialogShow(true);
+        if (quest.questGuides?.[0]?.content) {
+          setHtmlContent(decodeBase64(quest.questGuides[0].content));
+        } else {
+          setSimpleWarningDialogTitle(
+            `디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
+          );
+          setHtmlContent("");
+        }
       } else if (
         quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
       ) {
-        setSimpleWarningDialogTitle(`텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에
-          참여 상태로 유지해주세요.`);
         setSimpleWarningDialogShow(true);
+        if (quest.questGuides?.[0]?.content) {
+          setHtmlContent(decodeBase64(quest.questGuides[0].content));
+        } else {
+          setSimpleWarningDialogTitle(
+            `텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
+          );
+          setHtmlContent("");
+        }
       }
       try {
         const res = await asyncCompleteQuestOfUser(ticketData._id, quest?._id);
@@ -609,7 +653,8 @@ const Event = (props: AppProps) => {
           myEvent.params.callback("success");
           return;
         }
-        await asyncVerifyTwitterFollowQuest(ticketData._id, quest._id ?? "");
+        // await asyncVerifyTwitterFollowQuest(ticketData._id, quest._id ?? "");
+        await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
         myEvent.params.callback("success");
         updateVerifyState(index);
       } else if (
@@ -715,35 +760,7 @@ const Event = (props: AppProps) => {
           } else {
             showAlert({
               title: "알림",
-              content: (
-                <>
-                  <Stack spacing={1}>
-                    <Typography variant={"body1"}>
-                      프로필 페이지에서 지갑을 연동해주세요.
-                    </Typography>
-                    <LinkTypography
-                      variant={"body1"}
-                      href={"#"}
-                      sx={{
-                        fontWeight: "bold",
-                        "&:hover": {
-                          color: "#914e1d",
-                          textDecoration: "underline",
-                        },
-                        color: theme.palette.warning.main,
-                      }}
-                      onClick={async (e) => {
-                        closeAlert();
-                        setTimeout(() => {
-                          asyncGoToProfileAndEditDialogOpen();
-                        }, 0);
-                      }}
-                    >
-                      이 링크를 누르시면 프로필 페이지로 이동합니다.
-                    </LinkTypography>
-                  </Stack>
-                </>
-              ),
+              content: renderConnectWalletAlertMessage(),
             });
             myEvent.params.callback("success");
           }
@@ -755,35 +772,7 @@ const Event = (props: AppProps) => {
           } else {
             showAlert({
               title: "알림",
-              content: (
-                <>
-                  <Stack spacing={1}>
-                    <Typography variant={"body1"}>
-                      프로필 페이지에서 지갑을 연동해주세요.
-                    </Typography>
-                    <LinkTypography
-                      variant={"body1"}
-                      href={"#"}
-                      sx={{
-                        fontWeight: "bold",
-                        "&:hover": {
-                          color: "#914e1d",
-                          textDecoration: "underline",
-                        },
-                        color: theme.palette.warning.main,
-                      }}
-                      onClick={async (e) => {
-                        closeAlert();
-                        setTimeout(() => {
-                          asyncGoToProfileAndEditDialogOpen();
-                        }, 0);
-                      }}
-                    >
-                      이 링크를 누르시면 프로필 페이지로 이동합니다.
-                    </LinkTypography>
-                  </Stack>
-                </>
-              ),
+              content: renderConnectWalletAlertMessage(),
             });
             myEvent.params.callback("success");
           }
@@ -854,11 +843,19 @@ const Event = (props: AppProps) => {
       } else if (
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW ||
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET ||
-        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING ||
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_HAVE_APTOS_NFT
       ) {
         showAlert({
           title: "알림",
           content: getLocaleErrorMessage(e),
+        });
+      } else if (
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_HAVA_APTOS_WALLET
+      ) {
+        showAlert({
+          title: "알림",
+          content: renderConnectWalletAlertMessage(),
         });
       }
     }
@@ -1436,7 +1433,7 @@ const Event = (props: AppProps) => {
                 <Box>
                   <Stack alignItems={"center"}>
                     <Typography variant={"body1"}>
-                      이벤트가 끝나기까지 남은 시간
+                      이벤트 종료까지 남은 시간
                     </Typography>
                     {ticketData?.untilTime ? (
                       isExpired() ? (
@@ -1454,7 +1451,7 @@ const Event = (props: AppProps) => {
                             variant={"h6"}
                             sx={{ color: theme.palette.secondary.main }}
                           >
-                            본 이벤트가 끝났습니다
+                            본 이벤트가 종료되었습니다
                           </Typography>
                         </Stack>
                       ) : isStarted() ? (
@@ -1859,21 +1856,6 @@ const Event = (props: AppProps) => {
       </Grid>
 
       {/* --- Dialogs --- */}
-
-      <SimpleDialog
-        open={simpleWarningDialogShow}
-        title={"Notification"}
-        onClose={() => {
-          setSimpleWarningDialogShow(false);
-          doLazyFire();
-        }}
-        onCloseBtnClicked={() => {
-          setSimpleWarningDialogShow(false);
-          doLazyFire();
-        }}
-      >
-        <Typography>{simpleWarningDialogTitle}</Typography>
-      </SimpleDialog>
       <QuestQuizDialog
         open={openQuizQuestDialog}
         context={openQuizQuestContext}
@@ -1912,6 +1894,23 @@ const Event = (props: AppProps) => {
         }}
         htmlContent={htmlContent}
       ></ContentsRendererDialog>
+      <SimpleDialog
+        open={simpleWarningDialogShow}
+        title={"Notification"}
+        onClose={() => {
+          setSimpleWarningDialogShow(false);
+          doLazyFire();
+        }}
+        onCloseBtnClicked={() => {
+          setSimpleWarningDialogShow(false);
+          doLazyFire();
+        }}
+      >
+        {htmlContent && (
+          <div dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
+        )}
+        {!htmlContent && <Typography>{simpleWarningDialogTitle}</Typography>}
+      </SimpleDialog>
     </>
   );
 };

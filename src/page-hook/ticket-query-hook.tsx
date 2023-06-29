@@ -3,6 +3,7 @@ import {
   COMPLETE_QUEST_OF_USER,
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
+  UPDATE_TICKET_VISIBLE,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
@@ -15,6 +16,7 @@ import { Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
+import Console from "../helper/console-helper";
 
 export function useTicketQuery({
   userId,
@@ -199,7 +201,9 @@ export function useTicketQuery({
     questId: string
   ) => {
     if (ticketId && questId && userId) {
-      console.log(ticketId, questId, userId);
+      Console.log(
+        `verifyTwitterFollowQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
       const res = await verifyTwitterFollowQuest({
         variables: {
           ticketId,
@@ -229,6 +233,7 @@ export function useTicketQuery({
     ticketId: string,
     questId: string
   ) => {
+    console.log(ticketId, questId, userId);
     if (ticketId && questId && userId) {
       const res = await verifyTwitterRetweetQuest({
         variables: {
@@ -288,6 +293,9 @@ export function useTicketQuery({
 
   const asyncVerifyAptosQuest = async (ticketId: string, questId: string) => {
     if (ticketId && questId && userId) {
+      Console.log(
+        `verifyAptosQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
       const res = await verifyAptosQuest({
         variables: {
           ticketId,
@@ -343,6 +351,8 @@ export function useTicketQuery({
       questId,
     };
   };
+
+  // const asyncUpdateTicketVisible;
 
   return {
     ticketData,

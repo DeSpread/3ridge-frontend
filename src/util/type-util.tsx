@@ -73,9 +73,9 @@ const filterFeatureEventTickets = (ticketsData: Ticket[]) => {
   return ticketsData
     ?.filter((ticket) =>
       [
+        "649a4fe6dd77fc310cd88a22",
         "640018b9debaef951761e7a1",
         "64882d186bd6711523e2a803",
-        "648971993d243bd99d06aca8",
       ].includes(ticket._id ?? "")
     )
     .sort((a, b) => {
