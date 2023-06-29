@@ -3,6 +3,7 @@ import {
   COMPLETE_QUEST_OF_USER,
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
+  UPDATE_TICKET_VISIBLE,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
@@ -15,6 +16,7 @@ import { Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
+import Console from "../helper/console-helper";
 
 export function useTicketQuery({
   userId,
@@ -199,7 +201,9 @@ export function useTicketQuery({
     questId: string
   ) => {
     if (ticketId && questId && userId) {
-      console.log(ticketId, questId, userId);
+      Console.log(
+        `verifyTwitterFollowQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
       const res = await verifyTwitterFollowQuest({
         variables: {
           ticketId,
@@ -215,6 +219,9 @@ export function useTicketQuery({
     questId: string
   ) => {
     if (ticketId && questId && userId) {
+      Console.log(
+        `VerifyTwitterLikingQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
       const res = await verifyTwitterLikingQuest({
         variables: {
           ticketId,
@@ -230,6 +237,9 @@ export function useTicketQuery({
     questId: string
   ) => {
     if (ticketId && questId && userId) {
+      Console.log(
+        `VerifyTwitterRetweetQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
       const res = await verifyTwitterRetweetQuest({
         variables: {
           ticketId,
@@ -246,7 +256,10 @@ export function useTicketQuery({
     ticketId: string,
     questId: string
   ) => {
-    if (questId && userId) {
+    if (ticketId && questId && userId) {
+      Console.log(
+        `CompleteQuestOfUser(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
       const res = await completeQuestOfUser({
         variables: {
           ticketId,
@@ -261,6 +274,7 @@ export function useTicketQuery({
 
   const asyncRewardClaim = async (ticketId: string) => {
     if (ticketId && userId) {
+      Console.log(`claimReward(ticketId: "${ticketId}", userId: "${userId}")`);
       return await claimReward({
         variables: {
           ticketId,
@@ -272,22 +286,11 @@ export function useTicketQuery({
     }
   };
 
-  const asyncRequestClaimNtf = async (
-    collectionName: string,
-    nftTokenName: string,
-    receiverAddress: string,
-    ticketId: string
-  ) => {
-    // if (receiverAddress && userId) {
-    //   const res = await requestClaimNFT({
-    //   });
-    // } else {
-    //   throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
-    // }
-  };
-
   const asyncVerifyAptosQuest = async (ticketId: string, questId: string) => {
     if (ticketId && questId && userId) {
+      Console.log(
+        `verifyAptosQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
       const res = await verifyAptosQuest({
         variables: {
           ticketId,
@@ -302,6 +305,9 @@ export function useTicketQuery({
 
   const asyncVerify3ridgePoint = async (ticketId: string, questId: string) => {
     if (ticketId && questId && userId) {
+      Console.log(
+        `verifyAptosQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
       const res = await verify3ridgePoint({
         variables: {
           ticketId,
@@ -344,6 +350,8 @@ export function useTicketQuery({
     };
   };
 
+  // const asyncUpdateTicketVisible;
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -351,7 +359,6 @@ export function useTicketQuery({
     asyncVerifyTwitterRetweetQuest,
     asyncVerifyTwitterLikingQuest,
     asyncCompleteQuestOfUser,
-    asyncRequestClaimNtf,
     asyncVerify3ridgePoint,
     asyncVerifyAptosQuest,
     asyncRefreshTicketData,
