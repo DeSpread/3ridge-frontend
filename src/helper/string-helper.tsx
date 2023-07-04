@@ -1,3 +1,6 @@
+import { ContentEncodingType, ContentMetadata } from "../__generated__/graphql";
+import { decodeBase64 } from "../util/string-util";
+
 class StringHelper {
   private static instance: StringHelper;
 
@@ -30,6 +33,13 @@ class StringHelper {
       return "전원";
     }
     return _rewardAmount?.toLocaleString() + "명";
+  };
+
+  decodeContentMetaData = (contentMetaData: ContentMetadata) => {
+    if (contentMetaData.contentEncodingType === ContentEncodingType.Base64) {
+      return decodeBase64(contentMetaData.content);
+    }
+    return contentMetaData.content;
   };
 }
 

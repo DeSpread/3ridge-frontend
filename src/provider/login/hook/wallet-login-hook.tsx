@@ -20,7 +20,7 @@ import addMinutes from "date-fns/addMinutes";
 import {
   convertToChainType,
   convertToSuppoertedNetwork,
-} from "../../../util/type-util";
+} from "../../../helper/type-helper";
 import { useTotalWallet } from "./total-wallet-hook";
 
 export function useWalletLogin() {

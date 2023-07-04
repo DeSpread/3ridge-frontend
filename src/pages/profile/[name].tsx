@@ -7,7 +7,9 @@ import {
   Box,
   Divider,
   Grid,
+  IconButton,
   Skeleton,
+  Snackbar,
   Stack,
   Theme,
   Typography,
@@ -57,17 +59,18 @@ import {
   convertToSuppoertedNetwork,
   convertToWalletName,
   getUserMail,
-} from "../../util/type-util";
+} from "../../helper/type-helper";
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import { useMobile } from "../../provider/mobile/mobile-context";
-import { goToMetaMaskDeppLinkWhenMobile } from "../../util/eth-util";
+import { goToMetaMaskDeppLinkWhenMobile } from "../../helper/eth-helper";
 import ConnectTwitterDialog from "./dialog/connect-twitter-dialog";
 import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
 import { backDirectionPathState } from "../../lib/recoil";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTotalWallet } from "../../provider/login/hook/total-wallet-hook";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -289,7 +292,7 @@ const Profile = () => {
                   maxWidth: 230,
                 }}
               ></LinearProgress>
-              <Stack direction={"row"} alignItems={"center"}>
+              <Stack direction={"row"} alignItems={"center"} spacing={1}>
                 {targetUserData?.walletAddressInfos?.[0]?.address ? (
                   <Box sx={{ maxWidth: 260 }}>
                     <GradientTypography variant={"h4"}>
@@ -305,6 +308,9 @@ const Profile = () => {
                     </GradientTypography>
                   </Box>
                 )}
+                <IconButton>
+                  <ContentCopyIcon></ContentCopyIcon>
+                </IconButton>
               </Stack>
               <Grid
                 container

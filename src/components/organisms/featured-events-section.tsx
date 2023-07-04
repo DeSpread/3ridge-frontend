@@ -1,34 +1,24 @@
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
 import React, { useRef, useState } from "react";
-import {
-  FILTER_TYPE,
-  FilterType,
-  MouseEventWithParam,
-  TicketEventParam,
-} from "../../type";
-import { TicketSortType } from "../../__generated__/graphql";
+import { FILTER_TYPE, FilterType } from "../../type";
+import { EventType, TicketSortType } from "../../__generated__/graphql";
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import {
   Box,
-  Button,
-  Grid,
   IconButton,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import TicketsSection from "./tickets-section";
 import SwiperCore, { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import TicketOverlayStyleCard from "../molecules/ticket-overlay-style-card";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
 import "swiper/css";
 import useWindowDimensions from "../../page-hook/window-dimensions"; //basic
-import { filterFeatureEventTickets } from "../../util/type-util";
 
 SwiperCore.use([Navigation]);
 
@@ -45,6 +35,7 @@ const FeaturedEventsSection = () => {
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType,
     sort: ticketSortType,
+    eventTypes: [EventType.Main],
   });
 
   const [width] = useWindowDimensions();
@@ -129,7 +120,7 @@ const FeaturedEventsSection = () => {
           style={{ paddingTop: 2 }}
         >
           {!ticketsDataLoading &&
-            filterFeatureEventTickets(ticketsData)?.map((ticket, index) => {
+            ticketsData?.map((ticket, index) => {
               return (
                 <SwiperSlide key={index}>
                   <TicketCard

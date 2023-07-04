@@ -1,7 +1,7 @@
 import { AppError } from "../error/my-error";
 import React from "react";
 import { SvgIconProps } from "@mui/material";
-import { CategoryType, QuestGuide } from "../__generated__/graphql";
+import { CategoryType, ContentMetadata } from "../__generated__/graphql";
 
 /*
  * Per QUEST_POLICY_TYPE, It is required to implement context parsing
@@ -15,11 +15,7 @@ export const LOG_LEVEL = {
 
 export type LogLevel = ObjectValues<typeof LOG_LEVEL>;
 
-export type ElasticErrorDocument = {
-  userAgent?: string;
-  message?: string;
-  logLevel?: LogLevel;
-};
+export type ComponentRenderFunc = (src?: string) => JSX.Element;
 
 export type SuccessErrorCallback<T> = ({
   onSuccess,
@@ -199,6 +195,7 @@ export type Ticket = {
   beginTime?: string;
   untilTime?: string;
   description?: string;
+  description_v2?: ContentMetadata;
   completed?: boolean;
   participants?: { _id?: string; name?: string; profileImageUrl?: string }[];
   participantCount?: number;
@@ -225,6 +222,7 @@ export type PartialQuest = Partial<Quest>;
 export type Quest = {
   _id?: string;
   title?: string;
+  title_v2?: ContentMetadata;
   description?: string;
   questPolicy?: {
     context?:
@@ -244,7 +242,7 @@ export type Quest = {
     questPolicy?: string;
   };
   completedUsers?: User[];
-  questGuides?: QuestGuide[];
+  questGuides?: ContentMetadata[];
   isComplete?: boolean;
 };
 

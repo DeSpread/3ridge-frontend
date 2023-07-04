@@ -32,11 +32,11 @@ import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-w
 import {
   convertToSuppoertedNetwork,
   convertToWalletName,
-} from "../../util/type-util";
+} from "../../helper/type-helper";
 import ResourceFactory from "../../helper/resource-factory";
 import { useTheme } from "@mui/material/styles";
 import { useMobile } from "../../provider/mobile/mobile-context";
-import { goToMetaMaskDeppLinkWhenMobile } from "../../util/eth-util";
+import { goToMetaMaskDeppLinkWhenMobile } from "../../helper/eth-helper";
 
 const FORM_TYPE = {
   SELECT: "SELECT",

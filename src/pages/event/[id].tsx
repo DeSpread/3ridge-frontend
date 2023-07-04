@@ -271,7 +271,7 @@ const Event = (props: AppProps) => {
         return e;
       })
       .reduce((accumulator, currentValue) => accumulator && currentValue, true);
-    // console.log("verifiedList", verifiedList, simpleWarningDialogTitle);
+
     if (allComplete) {
       if (simpleWarningDialogTitle === "") {
         setFire(true);
@@ -280,8 +280,6 @@ const Event = (props: AppProps) => {
       }
     }
   }, [verifiedList, updateIndex]);
-
-  // useMount(() => {});
 
   const claimRewardDisabled = useMemo(() => {
     if (userData?._id === undefined) return true;
@@ -339,16 +337,6 @@ const Event = (props: AppProps) => {
     setUpdateIndex((prevState) => {
       return prevState + 1;
     });
-    // const allComplete = verifiedList
-    //   .map((e, _index) => {
-    //     if (_index == index) return true;
-    //     return e;
-    //   })
-    //   .reduce((accumulator, currentValue) => accumulator && currentValue, true);
-    // console.log("allComplete", allComplete, simpleWarningDialogTitle);
-    // if (allComplete && simpleWarningDialogTitle === "") {
-    //   setFire(true);
-    // }
     asyncRefreshTicketData();
   };
 
@@ -383,7 +371,6 @@ const Event = (props: AppProps) => {
       showLoading();
       setShowProfileEditDialog(true);
       setBackDirectionPath(`/event/${ticketData?._id}`);
-      // console.log("path", `/profile/${userData?.name}`);
       await router.push(`/profile/${userData?.name}`);
       closeLoading();
     } catch (e) {
@@ -392,14 +379,6 @@ const Event = (props: AppProps) => {
   };
 
   const getConfirmBtnLabel = (quest: Partial<Quest>) => {
-    // return quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
-    //   quest.questPolicy?.questPolicy ===
-    //     QuestPolicyType.VerifyHasWalletAddress ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
-    //   ? "연동하기"
-    //   : undefined;
     return undefined;
   };
 
@@ -617,16 +596,6 @@ const Event = (props: AppProps) => {
         setHtmlContent(decodeBase64(quest.questGuides[0].content));
       }
     }
-    // else if (
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
-    //   quest.questPolicy?.questPolicy ===
-    //     QuestPolicyType.VerifyHasWalletAddress ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
-    // ) {
-    //   asyncGoToProfileAndEditDialogOpen().then();
-    // }
   };
 
   const asyncVerifyQuest = async (
@@ -1036,9 +1005,6 @@ const Event = (props: AppProps) => {
                                 parseStrToDate(ticketData?.beginTime ?? ""),
                                 "yyyy/MM/dd"
                               )} ~ ${format(
-                                // new Date(
-                                //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                                // ),
                                 parseStrToDate(ticketData?.untilTime ?? ""),
                                 "yyyy/MM/dd"
                               )} (UTC+09:00)`}
@@ -1050,9 +1016,6 @@ const Event = (props: AppProps) => {
                                 <Stack sx={{}}>
                                   <Typography variant={"body2"}>
                                     {`${format(
-                                      // new Date(
-                                      //   ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                                      // ),
                                       parseStrToDate(
                                         ticketData?.beginTime ?? ""
                                       ),
@@ -1062,9 +1025,6 @@ const Event = (props: AppProps) => {
                                   </Typography>
                                   <Typography variant={"body2"}>
                                     {`${format(
-                                      // new Date(
-                                      //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                                      // ),
                                       parseStrToDate(
                                         ticketData?.untilTime ?? ""
                                       ),
@@ -1088,17 +1048,11 @@ const Event = (props: AppProps) => {
                       {ticketData?.beginTime && ticketData?.untilTime && (
                         <>
                           <Typography>{`${format(
-                            // new Date(
-                            //   ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                            // ),
                             parseStrToDate(ticketData?.beginTime ?? ""),
                             "yyyy/MM/dd"
                           )}`}</Typography>
                           <Typography>
                             {`~ ${format(
-                              // new Date(
-                              //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                              // ),
                               parseStrToDate(ticketData?.untilTime ?? ""),
                               "yyyy/MM/dd"
                             )} (UTC+09:00)`}
@@ -1193,43 +1147,6 @@ const Event = (props: AppProps) => {
                   </>
                 </Box>
               )}
-
-            {/*{isMobile && !hasMetamask && !isLoggedIn && (*/}
-            {/*  <Box sx={{}}>*/}
-            {/*    <Card>*/}
-            {/*      <CardContent>*/}
-            {/*        <Box sx={{}}>*/}
-            {/*          <LinkTypography*/}
-            {/*            variant={"body1"}*/}
-            {/*            onClick={async () => {*/}
-            {/*              if (ticketData?._id !== "6445ef8e7cf8560dd56dafc3") {*/}
-            {/*                const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;*/}
-            {/*                location.href = link;*/}
-            {/*              } else {*/}
-            {/*                const link = `https://xverse.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;*/}
-            {/*                location.href = link;*/}
-            {/*              }*/}
-            {/*            }}*/}
-            {/*            href={"#"}*/}
-            {/*            sx={{*/}
-            {/*              fontWeight: "bold",*/}
-            {/*              "&:hover": {*/}
-            {/*                color: "#914e1d",*/}
-            {/*                textDecoration: "underline",*/}
-            {/*              },*/}
-            {/*              color: theme.palette.warning.main,*/}
-            {/*            }}*/}
-            {/*          >*/}
-            {/*            {ticketData?._id !== "6445ef8e7cf8560dd56dafc3"*/}
-            {/*              ? `이 링크를 누르시면 메타마스크 에서 해당 페이지가*/}
-            {/*            열립니다.`*/}
-            {/*              : `이 링크를 누르시면, 스택스 지갑 Xverse 설치 페이지로 이동합니다`}*/}
-            {/*          </LinkTypography>*/}
-            {/*        </Box>*/}
-            {/*      </CardContent>*/}
-            {/*    </Card>*/}
-            {/*  </Box>*/}
-            {/*)}*/}
             {userData?._id &&
               !walletConnectedForTicket &&
               ticketData.rewardPolicy?.context?.rewardNetwork && (
@@ -1321,6 +1238,7 @@ const Event = (props: AppProps) => {
                       sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
                       index={index + 1}
                       title={quest.title}
+                      title_v2={quest.title_v2}
                       description={quest.description}
                       disabled={
                         (userData?._id ? false : true) ||
@@ -1350,8 +1268,6 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QuestPolicyType.VerifyHasTelegram ||
                         quest.questPolicy?.questPolicy === QuestPolicyType.Quiz
-                        // quest.questPolicy?.questPolicy ===
-                        //   QuestPolicyType.VerifyVisitWebsite
                       }
                       onVerifyBtnClicked={async (e) => {
                         await asyncVerifyQuest(e, quest, index);

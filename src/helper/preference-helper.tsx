@@ -1,7 +1,7 @@
 // import moment from "moment/moment";
 
 import { SupportedNetwork } from "../type";
-import { convertToSuppoertedNetwork } from "../util/type-util";
+import { convertToSuppoertedNetwork } from "./type-helper";
 
 class PreferenceHelper {
   private static instance: PreferenceHelper;

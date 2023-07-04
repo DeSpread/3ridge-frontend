@@ -20,10 +20,13 @@ import addSeconds from "date-fns/addSeconds";
 import { MouseEventWithParam } from "../../type";
 import { useTheme } from "@mui/material/styles";
 import CheckIcon from "@mui/icons-material/Check";
+import { ContentMetadata } from "../../__generated__/graphql";
+import ContentComponentBuilder from "../../helper/content-component-builder";
 
 type VerifyCardProps = PropsWithChildren & {
   sx?: CSSProperties;
   title?: string;
+  title_v2?: ContentMetadata;
   description?: string;
   summary?: string;
   index?: number;
@@ -92,15 +95,30 @@ const VerifyCard = (props: VerifyCardProps) => {
                     sx={{ marginLeft: smUp ? 3 : 0 }}
                   >
                     <Box>
-                      <Typography
-                        variant={"h6"}
-                        sx={{
-                          wordBreak: "break-word",
-                        }}
-                        textAlign={smUp ? "left" : "center"}
-                      >
-                        {props.title}
-                      </Typography>
+                      {new ContentComponentBuilder(props.title_v2)
+                        .setTextComponentFunc((content) => {
+                          return (
+                            <Typography
+                              variant={"h6"}
+                              sx={{
+                                wordBreak: "keep-all",
+                              }}
+                              textAlign={"center"}
+                            >
+                              {content}
+                            </Typography>
+                          );
+                        })
+                        .setHtmlComponentFunc((content) => {
+                          return (
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: content ?? "<></>",
+                              }}
+                            ></div>
+                          );
+                        })
+                        .build()}
                     </Box>
                     {props.description && (
                       <Box sx={{ marginTop: 1 }}>
@@ -222,15 +240,32 @@ const VerifyCard = (props: VerifyCardProps) => {
                   sx={{ width: "100%" }}
                 >
                   <Box>
-                    <Typography
-                      variant={"h6"}
-                      sx={{
-                        wordBreak: "keep-all",
-                      }}
-                      textAlign={"center"}
-                    >
-                      {props.title}
-                    </Typography>
+                    {new ContentComponentBuilder(props.title_v2)
+                      .setTextComponentFunc((content) => {
+                        console.log("text", content);
+                        return (
+                          <Typography
+                            variant={"h6"}
+                            sx={{
+                              wordBreak: "keep-all",
+                            }}
+                            textAlign={"center"}
+                          >
+                            {content}
+                          </Typography>
+                        );
+                      })
+                      .setHtmlComponentFunc((content) => {
+                        console.log("html", content);
+                        return (
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: content ?? "<></>",
+                            }}
+                          ></div>
+                        );
+                      })
+                      .build()}
                   </Box>
                   {props.description && (
                     <Box sx={{ marginTop: 1 }}>
