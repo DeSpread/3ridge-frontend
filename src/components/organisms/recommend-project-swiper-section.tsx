@@ -121,8 +121,8 @@ const RecommendProjectSwiperSection = (props: {
       >
         <Box width={props.width}>
           <Swiper
-            spaceBetween={smUp ? 18 : 1}
-            slidesPerView={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
+            spaceBetween={smUp ? 18 : 6}
+            slidesPerView={lgUp ? 6 : mdUp ? 4 : smUp ? 3 : 2}
             scrollbar={{ draggable: true }}
             onBeforeInit={(swiper) => {
               swiperRef.current = swiper;
@@ -143,9 +143,9 @@ const RecommendProjectSwiperSection = (props: {
                     <ProjectOverlayStyleCard
                       project={project}
                       onClick={async (e) => {
-                        // showLoading();
-                        // await router.push(`/event/${ticket._id}`);
-                        // closeLoading();
+                        showLoading();
+                        await router.push(`/project/${project._id}`);
+                        closeLoading();
                       }}
                     ></ProjectOverlayStyleCard>
                   </SwiperSlide>

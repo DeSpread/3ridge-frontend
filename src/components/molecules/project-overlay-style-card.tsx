@@ -3,16 +3,12 @@ import { useTheme } from "@mui/material/styles";
 import {
   Box,
   CardProps,
-  Grid,
-  Skeleton,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
-import { Ticket, Project } from "../../type";
-import TicketInfoTextSet from "../atoms/ticket-info-text-set";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import { Project } from "../../type";
 import CheckIcon from "../atoms/svg/check-icon";
 
 type ProjectCardProps = CardProps & {
@@ -59,7 +55,7 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
           transitionDuration: "0.2s",
           transitionDelay: "0s",
           borderWidth: 3,
-          borderColor: theme.palette.neutral[700], //"#343238",
+          borderColor: theme.palette.neutral[700],
           borderStyle: "solid",
           transitionTimingFunction: "ease-out",
           "&:hover": {
@@ -69,12 +65,9 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
       >
         <div
           style={{
-            // position: "absolute",
             width: height,
             height: height,
             background: "",
-            // left: 0,
-            // top: 0,
             padding: 24,
           }}
         >
@@ -105,9 +98,7 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
                 marginRight={"-30px"}
               >
                 <Typography
-                  // variant={smUp ? "body2" : "caption"}
-
-                  variant={"h6"}
+                  variant={smUp ? "body1" : "h6"}
                   color={"neutral.100"}
                   sx={{
                     overflow: "hidden",
@@ -119,7 +110,19 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
                 >
                   {project?.name}
                 </Typography>
-                <CheckIcon width={20}></CheckIcon>
+                {/*<Box sx={{ marginLeft: -10, padding: 0 }}>*/}
+                <Image
+                  src={
+                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/mark.svg"
+                  }
+                  alt={""}
+                  width={20}
+                  height={smUp ? 20 : 30}
+                  style={{
+                    marginLeft: "-0px",
+                  }}
+                ></Image>
+                {/*</Box>*/}
               </Stack>
             </Box>
           </Stack>
