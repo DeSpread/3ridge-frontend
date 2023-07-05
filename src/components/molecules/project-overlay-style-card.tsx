@@ -82,8 +82,8 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
                 <Image
                   src={project?.imageUrl}
                   alt={""}
-                  width={height * 0.45}
-                  height={height * 0.45}
+                  width={height * 0.4}
+                  height={height * 0.4}
                   style={{
                     borderRadius: height,
                   }}
@@ -110,7 +110,6 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
                 >
                   {project?.name}
                 </Typography>
-                {/*<Box sx={{ marginLeft: -10, padding: 0 }}>*/}
                 <Image
                   src={
                     "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/mark.svg"
@@ -122,7 +121,6 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
                     marginLeft: "-0px",
                   }}
                 ></Image>
-                {/*</Box>*/}
               </Stack>
             </Box>
           </Stack>
