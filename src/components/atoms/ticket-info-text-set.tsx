@@ -15,7 +15,12 @@ const TicketInfoTextSet = ({ ticket, sx }: TicketInfoViewProps) => {
           {`${ticket?.rewardPolicy?.context?.point ?? 0} 포인트`}
         </Typography>
         {ticket?.rewardPolicy?.context?.rewardAmount && (
-          <Box sx={{ paddingLeft: "4px" }}>
+          <Box
+            sx={{
+              ...sx,
+              paddingLeft: "4px",
+            }}
+          >
             <Typography variant={"body2"} textAlign={"center"}>
               {` / ${StringHelper.getInstance().getRewardAmountLabel(
                 ticket?.rewardPolicy?.context?.rewardAmount
