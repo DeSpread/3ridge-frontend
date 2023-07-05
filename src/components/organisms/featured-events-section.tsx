@@ -6,7 +6,9 @@ import { EventType, TicketSortType } from "../../__generated__/graphql";
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import {
   Box,
+  Grid,
   IconButton,
+  Skeleton,
   Stack,
   Typography,
   useMediaQuery,
@@ -119,6 +121,20 @@ const FeaturedEventsSection = () => {
           direction={"horizontal"}
           style={{ paddingTop: 2 }}
         >
+          {ticketsDataLoading &&
+            [1, 2, 3].map((e) => {
+              return (
+                <SwiperSlide key={e}>
+                  <Grid item xs={30} sm={15} md={10} lg={6}>
+                    <Skeleton
+                      height={500}
+                      variant={"rounded"}
+                      animation={"wave"}
+                    />
+                  </Grid>
+                </SwiperSlide>
+              );
+            })}
           {!ticketsDataLoading &&
             ticketsData?.map((ticket, index) => {
               return (
