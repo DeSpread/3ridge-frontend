@@ -96,7 +96,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                   >
                     <Box>
                       {new ContentComponentBuilder(props.title_v2)
-                        .setTextComponentFunc((content) => {
+                        .overrideTextComponentFunc((content) => {
                           return (
                             <Typography
                               variant={"h6"}
@@ -109,16 +109,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                             </Typography>
                           );
                         })
-                        .setHtmlComponentFunc((content) => {
-                          return (
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: content ?? "<></>",
-                              }}
-                            ></div>
-                          );
-                        })
-                        .build()}
+                        .render()}
                     </Box>
                     {props.description && (
                       <Box sx={{ marginTop: 1 }}>
@@ -241,8 +232,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                 >
                   <Box>
                     {new ContentComponentBuilder(props.title_v2)
-                      .setTextComponentFunc((content) => {
-                        console.log("text", content);
+                      .overrideTextComponentFunc((content) => {
                         return (
                           <Typography
                             variant={"h6"}
@@ -255,17 +245,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                           </Typography>
                         );
                       })
-                      .setHtmlComponentFunc((content) => {
-                        console.log("html", content);
-                        return (
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: content ?? "<></>",
-                            }}
-                          ></div>
-                        );
-                      })
-                      .build()}
+                      .render()}
                   </Box>
                   {props.description && (
                     <Box sx={{ marginTop: 1 }}>

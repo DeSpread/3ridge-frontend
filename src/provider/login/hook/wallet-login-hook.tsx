@@ -341,11 +341,7 @@ export function useWalletLogin() {
       } catch (e) {
         console.log(e);
         const message = getErrorMessage(e);
-        // if (cache.network === SUPPORTED_NETWORKS.STACKS) {
-        //   handleWalletSignUpError2(message, cache);
-        // } else {
         handleWalletSignUpError(message, cache);
-        // }
       }
     })();
   };

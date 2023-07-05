@@ -23,7 +23,7 @@ import PrimaryButton from "../../components/atoms/primary-button";
 import HomeFooter from "../../layouts/footer/home-footer";
 
 const Projects = () => {
-  const { projectsData, projectsDataLoading } = useProjectsQuery();
+  const { projectsData, projectsDataLoading } = useProjectsQuery({});
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -60,17 +60,6 @@ const Projects = () => {
           <Stack direction={"row"} spacing={1}>
             <Typography variant={"h4"}>전체 프로젝트</Typography>
           </Stack>
-          {/*<Stack direction={"row"} spacing={1}>*/}
-          {/*  <Link*/}
-          {/*    href="https://airtable.com/shr406tfeuXcHz1o0"*/}
-          {/*    color="inherit"*/}
-          {/*    underline="hover"*/}
-          {/*    target="_blank"*/}
-          {/*    rel="noreferrer"*/}
-          {/*  >*/}
-          {/*    <PrimaryButton fullWidth={true}>프로젝트 등록</PrimaryButton>*/}
-          {/*  </Link>*/}
-          {/*</Stack>*/}
         </Stack>
         <Grid
           container

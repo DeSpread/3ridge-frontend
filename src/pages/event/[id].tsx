@@ -77,6 +77,7 @@ import { useSetRecoilState } from "recoil";
 import { backDirectionPathState } from "../../lib/recoil";
 import ClickTypography from "../../components/click-typhography";
 import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
+import ContentComponentBuilder from "../../helper/content-component-builder";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -171,9 +172,7 @@ const Event = (props: AppProps) => {
     useProfileEditDialog();
   const { setShowSignInDialog } = useSignDialog();
   const [initVerifiedList, setInitVerifiedList] = useState(false);
-  const [eventDespHtmlContent, setEventDespHtmlContent] = useState("");
   const [lockUpdateVerifyAll, setLockUpdateVerifyAll] = useState(false);
-  const { isMobile } = useMobile();
   const [hasMetamask, setHasMetask] = useState(false);
   const [isFire, setFire] = React.useState(false);
   const [lazyFire, setLazyFire] = React.useState(false);
@@ -186,9 +185,6 @@ const Event = (props: AppProps) => {
     setHasMetask(_hasMetamask);
     setShowProfileEditDialog(false);
     setBackDirectionPath("");
-    // fetch("https://api.ipify.org/?format=json").then((res) => {
-    //   console.log(res);
-    // });
   }, []);
 
   useEffect(() => {
@@ -246,14 +242,6 @@ const Event = (props: AppProps) => {
     }
     asyncRefreshTicketData();
   }, [updateIndex]);
-
-  useEffect(() => {
-    if (ticketData?.description != null) {
-      setEventDespHtmlContent(decodeBase64(ticketData?.description));
-    }
-  });
-
-  // console.log("userAgent", window.navigator.userAgent);
 
   const isMounted = useMountedState();
 
@@ -1193,17 +1181,9 @@ const Event = (props: AppProps) => {
               </Typography>
 
               <Box sx={{ maxWidth: 800 }}>
-                <Stack>
-                  {eventDespHtmlContent && (
-                    <div
-                      style={{
-                        textAlign: "justify",
-                        color: "white",
-                      }}
-                      dangerouslySetInnerHTML={{ __html: eventDespHtmlContent }}
-                    ></div>
-                  )}
-                </Stack>
+                {new ContentComponentBuilder(
+                  ticketData?.description_v2
+                ).render()}
               </Box>
             </Stack>
 
@@ -1211,7 +1191,6 @@ const Event = (props: AppProps) => {
               direction={"column"}
               alignItems={smUp ? "left" : "center"}
               spacing={2}
-              // maxWidth={800}
               sx={{ background: "" }}
             >
               <Typography variant="h5" textAlign={smUp ? "left" : "left"}>

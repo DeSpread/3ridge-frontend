@@ -413,8 +413,8 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
 `);
 
 export const GET_PROJECTS = gql(/* GraphQL */ `
-  query Projects {
-    projects {
+  query Projects($eventTypes: [EventType!]) {
+    projects(eventTypes: $eventTypes) {
       _id
       categories
       description

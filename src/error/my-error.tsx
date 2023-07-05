@@ -8,7 +8,7 @@ export const APP_ERROR_MESSAGE = {
   GOOGLE_LOGIN_POPUP_CLOSED: "popup_closed",
   WALLET_NOT_INSTALLED: "wallet is not installed",
   WALLET_USER_REJECTED_REQUEST: "user rejected request",
-  WALLET_ADDRESS_ALREADY_REGISTERED: "already registered by wallet address",
+  WALLET_ADDRESS_ALREADY_REGISTERED: "Already registered by wallet address",
   SUI_WALLET_PENDING_REQUEST: "another permission request is pending",
   SUI_WALLET_PERMISSION_REJECTED: "permission rejected",
   WALLET_USER_ACCOUNT_FETCH_FAIL: "fail to get account of wallet",

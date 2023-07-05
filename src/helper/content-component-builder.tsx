@@ -1,6 +1,8 @@
 import { ContentFormatType, ContentMetadata } from "../__generated__/graphql";
 import { ComponentRenderFunc } from "../type";
 import StringHelper from "./string-helper";
+import React from "react";
+import { Typography } from "@mui/material";
 
 class ContentComponentBuilder {
   private readonly contentMetaData: ContentMetadata | undefined;
@@ -14,19 +16,31 @@ class ContentComponentBuilder {
       this.content = StringHelper.getInstance().decodeContentMetaData(
         this.contentMetaData
       );
+    this.textComponentFunc = (content) => {
+      return <Typography>{content}</Typography>;
+    };
+    this.htmlComponentFunc = (content) => {
+      return (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: content ?? "<></>",
+          }}
+        ></div>
+      );
+    };
   }
 
-  setHtmlComponentFunc = (htmlComponentFunc: ComponentRenderFunc) => {
+  overrideHtmlComponentFunc = (htmlComponentFunc: ComponentRenderFunc) => {
     this.htmlComponentFunc = htmlComponentFunc;
     return this;
   };
 
-  setTextComponentFunc = (textComponentFunc: ComponentRenderFunc) => {
+  overrideTextComponentFunc = (textComponentFunc: ComponentRenderFunc) => {
     this.textComponentFunc = textComponentFunc;
     return this;
   };
 
-  build = () => {
+  render = () => {
     switch (this.contentMetaData?.contentFormatType) {
       case ContentFormatType.Html:
         return this.htmlComponentFunc?.(this.content);
