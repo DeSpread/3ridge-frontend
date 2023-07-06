@@ -20,6 +20,8 @@ type EventCardProps = CardProps & {
 
 const BanenrOverlayStyleCard = (props: EventCardProps) => {
   const router = useRouter();
+  const theme = useTheme();
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <Stack
@@ -57,18 +59,18 @@ const BanenrOverlayStyleCard = (props: EventCardProps) => {
             <Box sx={{ marginLeft: "-12px", marginTop: "-12px" }}>
               <Image
                 alt={"3ridge-logo"}
-                width={150}
-                height={58}
+                width={160}
+                height={62}
                 src={
                   "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_white.svg"
                 }
               />
             </Box>
             <Box sx={{ marginTop: 3 }}>
-              <Typography variant={"h5"} textAlign={"left"}>
+              <Typography variant={smUp ? "h5" : "h4"} textAlign={"left"}>
                 여러분의 웹3를 위한 여정,
               </Typography>
-              <Typography variant={"h5"} textAlign={"left"}>
+              <Typography variant={smUp ? "h5" : "h4"} textAlign={"left"}>
                 웹3 온보딩 플랫폼 3ridge에서 시작하세요
               </Typography>
             </Box>

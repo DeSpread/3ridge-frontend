@@ -82,11 +82,14 @@ const BannerSwiperSection = (props: { width: number | string }) => {
                           <Stack direction={"column"} alignItems={"flex-end"}>
                             <Image
                               alt={"3ridge-logo"}
-                              width={150}
-                              height={58}
+                              width={160}
+                              height={62}
                               src={
                                 "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_white.svg"
                               }
+                              style={{
+                                marginTop: -6,
+                              }}
                             />
                           </Stack>
                         </Stack>

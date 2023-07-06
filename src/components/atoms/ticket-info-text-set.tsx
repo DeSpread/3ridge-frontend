@@ -5,9 +5,14 @@ import StringHelper from "../../helper/string-helper";
 
 type TicketInfoViewProps = TypographyProps & {
   ticket?: PartialTicket;
+  whiteSpaceMode?: boolean;
 };
 
-const TicketInfoTextSet = ({ ticket, sx }: TicketInfoViewProps) => {
+const TicketInfoTextSet = ({
+  ticket,
+  sx,
+  whiteSpaceMode,
+}: TicketInfoViewProps) => {
   return (
     <Stack>
       <Stack direction={"row"} alignItems={"center"} justifyContent={"center"}>
@@ -46,8 +51,10 @@ const TicketInfoTextSet = ({ ticket, sx }: TicketInfoViewProps) => {
             {`${ticket?.rewardPolicy?.context?.rewardName ?? ""}`}
           </Typography>
         </Box>
-      ) : (
+      ) : whiteSpaceMode ? (
         <Typography>&nbsp;</Typography>
+      ) : (
+        <></>
       )}
     </Stack>
   );

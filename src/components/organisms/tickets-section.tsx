@@ -228,7 +228,7 @@ const TicketsSection = (props: TicketSectionProps) => {
               return (
                 <Grid key={e} item xs={30} sm={15} md={10} lg={6}>
                   <Skeleton
-                    height={500}
+                    height={400}
                     variant={"rounded"}
                     animation={"wave"}
                   />

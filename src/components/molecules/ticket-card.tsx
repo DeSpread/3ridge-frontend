@@ -210,7 +210,10 @@ const TicketCard = (props: EventCardProps) => {
               justifyContent={"center"}
             >
               <Grid item>
-                <TicketInfoTextSet ticket={ticket}></TicketInfoTextSet>
+                <TicketInfoTextSet
+                  ticket={ticket}
+                  whiteSpaceMode={true}
+                ></TicketInfoTextSet>
               </Grid>
             </Grid>
           </Stack>

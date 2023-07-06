@@ -50,7 +50,7 @@ const RecommendProjectSwiperSection = (props: {
       >
         <Box>
           <Typography
-            variant={"h4"}
+            variant={smUp ? "h5" : "h4"}
             sx={{
               visibility: props.isLoading ? "hidden" : "visible",
               paddingLeft: 1,
@@ -63,8 +63,8 @@ const RecommendProjectSwiperSection = (props: {
           <IconButton
             sx={{
               borderRadius: 32,
-              width: smUp ? 38 : 32,
-              height: smUp ? 38 : 32,
+              width: smUp ? 38 : 38,
+              height: smUp ? 38 : 38,
               borderWidth: 2,
               borderStyle: "solid",
               marginRight: 1,
@@ -87,8 +87,8 @@ const RecommendProjectSwiperSection = (props: {
             // ref={nextRef}
             sx={{
               borderRadius: 32,
-              width: smUp ? 38 : 32,
-              height: smUp ? 38 : 32,
+              width: smUp ? 38 : 38,
+              height: smUp ? 38 : 38,
               borderWidth: 2,
               borderStyle: "solid",
               transition: "transform 0.2s ease",

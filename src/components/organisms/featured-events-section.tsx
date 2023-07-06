@@ -42,8 +42,7 @@ const FeaturedEventsSection = () => {
 
   const [width] = useWindowDimensions();
 
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  const swiperRef = useRef<SwiperCore>();
 
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
@@ -67,7 +66,6 @@ const FeaturedEventsSection = () => {
         </Stack>
         <Box>
           <IconButton
-            ref={prevRef}
             sx={{
               borderRadius: 32,
               width: smUp ? 38 : 32,
@@ -84,11 +82,13 @@ const FeaturedEventsSection = () => {
               },
               visibility: ticketsDataLoading ? "hidden" : "visible",
             }}
+            onClick={(e) => {
+              swiperRef.current?.slidePrev();
+            }}
           >
             <ArrowBackIosNewIcon fontSize={smUp ? "medium" : "small"} />
           </IconButton>
           <IconButton
-            ref={nextRef}
             sx={{
               borderRadius: 32,
               width: smUp ? 38 : 32,
@@ -104,39 +104,48 @@ const FeaturedEventsSection = () => {
               },
               visibility: ticketsDataLoading ? "hidden" : "visible",
             }}
+            onClick={(e) => {
+              swiperRef.current?.slideNext();
+            }}
           >
             <ArrowForwardIosIcon fontSize={smUp ? "medium" : "small"} />
           </IconButton>
         </Box>
       </Stack>
-      <Box sx={{ marginTop: 5, background: "", width: width - 48 }}>
-        <Swiper
-          spaceBetween={smUp ? 18 : 1}
-          slidesPerView={lgUp ? 5 : mdUp ? 3 : smUp ? 2 : 1}
-          scrollbar={{ draggable: true }}
-          navigation={{
-            prevEl: prevRef.current,
-            nextEl: nextRef.current,
-          }}
-          direction={"horizontal"}
-          style={{ paddingTop: 2 }}
-        >
-          {ticketsDataLoading &&
-            [1, 2, 3].map((e) => {
+      <Box
+        sx={{
+          marginTop: 5,
+          background: "",
+          width: "calc(100vw - 48px)",
+        }}
+      >
+        {ticketsDataLoading && (
+          <Grid container spacing={2} columns={30}>
+            {[1, 2, 3].map((e) => {
               return (
-                <SwiperSlide key={e}>
-                  <Grid item xs={30} sm={15} md={10} lg={6}>
-                    <Skeleton
-                      height={500}
-                      variant={"rounded"}
-                      animation={"wave"}
-                    />
-                  </Grid>
-                </SwiperSlide>
+                <Grid key={e} item xs={30} sm={15} md={10} lg={6}>
+                  <Skeleton
+                    height={400}
+                    variant={"rounded"}
+                    animation={"wave"}
+                  />
+                </Grid>
               );
             })}
-          {!ticketsDataLoading &&
-            ticketsData?.map((ticket, index) => {
+          </Grid>
+        )}
+        {!ticketsDataLoading && (
+          <Swiper
+            spaceBetween={smUp ? 18 : 1}
+            slidesPerView={lgUp ? 5 : mdUp ? 3 : smUp ? 2 : 1}
+            scrollbar={{ draggable: true }}
+            onBeforeInit={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            direction={"horizontal"}
+            style={{ paddingTop: 2 }}
+          >
+            {ticketsData?.map((ticket, index) => {
               return (
                 <SwiperSlide key={index}>
                   <TicketCard
@@ -150,7 +159,8 @@ const FeaturedEventsSection = () => {
                 </SwiperSlide>
               );
             })}
-        </Swiper>
+          </Swiper>
+        )}
       </Box>
     </Stack>
   );

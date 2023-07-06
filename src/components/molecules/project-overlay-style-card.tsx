@@ -91,36 +91,49 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
               )}
             </Stack>
             <Box sx={{ marginTop: 2 }}>
-              <Stack
-                direction={"row"}
-                spacing={1}
-                alignItems={"center"}
-                marginRight={"-30px"}
-              >
-                <Typography
-                  variant={smUp ? "body1" : "h6"}
-                  color={"neutral.100"}
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: "1",
-                    WebkitBoxOrient: "vertical",
+              <Stack direction={"row"} spacing={1} alignItems={"center"}>
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    background: "",
                   }}
                 >
-                  {project?.name}
-                </Typography>
-                <Image
-                  src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/mark.svg"
-                  }
-                  alt={""}
-                  width={20}
-                  height={smUp ? 20 : 30}
-                  style={{
-                    marginLeft: "-0px",
-                  }}
-                ></Image>
+                  <Typography
+                    variant={smUp ? "body1" : "h6"}
+                    color={"neutral.100"}
+                    sx={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: "1",
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
+                    {project?.name}
+                  </Typography>
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: smUp ? 2 : -2,
+                      right: smUp ? -20 : -24,
+                      // width: height,
+                      // background: "red",
+                    }}
+                  >
+                    <Image
+                      src={
+                        "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/mark.svg"
+                      }
+                      alt={""}
+                      width={20}
+                      height={smUp ? 20 : 30}
+                      style={{
+                        marginLeft: "-0px",
+                      }}
+                    ></Image>
+                  </div>
+                </div>
               </Stack>
             </Box>
           </Stack>
