@@ -171,6 +171,7 @@ export type FCFSRewardContext = {
   rewardChain: string;
   rewardNetwork: string;
   rewardClaimable: boolean;
+  overrideRewardChainContent?: ContentMetadata;
   nftImageUrl: string;
   collectionName: string;
   tokenName: string;

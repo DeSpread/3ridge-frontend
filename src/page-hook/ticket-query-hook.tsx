@@ -173,6 +173,7 @@ export function useTicketQuery({
           return {
             _id: e._id ?? undefined,
             title: e.title ?? undefined,
+            title_v2: e.title_v2 ?? undefined,
             description: e.description ?? undefined,
             questPolicy: {
               context: TypeParseHelper.getInstance().parseQuestPolicy(

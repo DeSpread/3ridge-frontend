@@ -178,6 +178,8 @@ const Event = (props: AppProps) => {
   const [lazyFire, setLazyFire] = React.useState(false);
   const setBackDirectionPath = useSetRecoilState(backDirectionPathState);
 
+  // console.log("ticketData", ticketData);
+
   useEffect(() => {
     const { ethereum } = window;
     //@ts-ignore
@@ -224,6 +226,10 @@ const Event = (props: AppProps) => {
       setLockUpdateVerifyAll(false);
     }
   };
+
+  useEffect(() => {
+    if (!simpleWarningDialogShow) setSimpleWarningDialogTitle("");
+  }, [simpleWarningDialogShow]);
 
   useEffect(() => {
     asyncUpdateClaimCompleted().then(() => {});
@@ -337,10 +343,6 @@ const Event = (props: AppProps) => {
     }
   };
 
-  const verifyCardDisabled = () => {
-    return (userData?._id ? false : true) || !walletConnectedForTicket;
-  };
-
   const isExceededTicketParticipants = () => {
     if (
       ticketData?.participantCount !== undefined &&
@@ -373,7 +375,7 @@ const Event = (props: AppProps) => {
   const changeChainToAlias = (chain: string) => {
     if (chain === "offchain-by-email") {
       return "이메일";
-    } else if (chain === "offchain-by-wallet") {
+    } else if (chain.includes("offchain-by-wallet")) {
       return "지갑";
     } else if (chain === "offchain-by-telegram") {
       return "텔레그램 계정을";
@@ -1185,25 +1187,15 @@ const Event = (props: AppProps) => {
               <Typography textAlign={mdUp ? "left" : "center"} variant={"h5"}>
                 이벤트 설명
               </Typography>
-              <Box sx={{}}>
+              <Box>
                 {new ContentComponentBuilder(ticketData?.description_v2)
                   .overrideHtmlComponentFunc((content) => {
                     return (
-                      <Stack
-                        sx={
-                          {
-                            // alignItems: "center",
-                            // justifyContent: "center",
-                            // background: "red",
-                          }
-                        }
-                      >
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: content ?? "<></>",
-                          }}
-                        ></div>
-                      </Stack>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: content ?? "<></>",
+                        }}
+                      ></div>
                     );
                   })
                   .render()}
