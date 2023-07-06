@@ -15,6 +15,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ProjectOverlayStyleCard from "../molecules/project-overlay-style-card";
+import SkeletonOverlayCard from "../molecules/skelton-overlay-card";
 
 SwiperCore.use([Navigation]);
 
@@ -132,7 +133,7 @@ const RecommendProjectSwiperSection = (props: {
               [1, 2, 3, 4].map((e, index) => {
                 return (
                   <SwiperSlide key={index}>
-                    {/*<SkeletonCard></SkeletonCard>*/}
+                    <SkeletonOverlayCard></SkeletonOverlayCard>
                   </SwiperSlide>
                 );
               })}
