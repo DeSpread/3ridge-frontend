@@ -67,10 +67,18 @@ const BanenrOverlayStyleCard = (props: EventCardProps) => {
               />
             </Box>
             <Box sx={{ marginTop: 3 }}>
-              <Typography variant={smUp ? "h5" : "h4"} textAlign={"left"}>
+              <Typography
+                variant={smUp ? "h5" : "h5"}
+                textAlign={"left"}
+                sx={{ wordBreak: "keep-all" }}
+              >
                 여러분의 웹3를 위한 여정,
               </Typography>
-              <Typography variant={smUp ? "h5" : "h4"} textAlign={"left"}>
+              <Typography
+                variant={smUp ? "h5" : "h5"}
+                textAlign={"left"}
+                sx={{ wordBreak: "keep-all" }}
+              >
                 웹3 온보딩 플랫폼 3ridge에서 시작하세요
               </Typography>
             </Box>

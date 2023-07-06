@@ -887,13 +887,6 @@ const Event = (props: AppProps) => {
                     background: "",
                   }}
                 >
-                  {/*<button*/}
-                  {/*  onClick={() => {*/}
-                  {/*    setFire(true);*/}
-                  {/*  }}*/}
-                  {/*>*/}
-                  {/*  aaa*/}
-                  {/*</button>*/}
                   {ticketData?.imageUrl ? (
                     <LazyLoadImage
                       width={smUp ? 128 : 128}
@@ -954,7 +947,7 @@ const Event = (props: AppProps) => {
                       justifyContent={smUp ? "flex-start" : "center"}
                       rowSpacing={1}
                     >
-                      {!isEventStarted() && (
+                      {ticketData?.beginTime && !isEventStarted() && (
                         <Grid item>
                           <StyledChip
                             label={"이벤트 시작전"}
@@ -967,11 +960,10 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Grid>
                       )}
-                      {isEventStarted() && !isEventComplete() && (
+                      {ticketData && isEventStarted() && !isEventComplete() && (
                         <Grid item>
                           <StyledChip
                             label={"진행중"}
-                            // color={"success"}
                             variant="outlined"
                             sx={{
                               boxShadow: "inset 0px 0px 0px 2px #0E8074",
@@ -980,9 +972,16 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Grid>
                       )}
-                      {isEventStarted() && isEventComplete() && (
+                      {ticketData && isEventStarted() && isEventComplete() && (
                         <Grid item>
-                          <StyledChip label={"이벤트 종료"}></StyledChip>
+                          <StyledChip
+                            label={"이벤트 종료"}
+                            variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #D14343",
+                              borderWidth: 0,
+                            }}
+                          ></StyledChip>
                         </Grid>
                       )}
                       {ticketData?.beginTime && (
@@ -1047,7 +1046,7 @@ const Event = (props: AppProps) => {
                           </Typography>
                         </>
                       )}
-                      {!isEventStarted() && (
+                      {ticketData?.beginTime && !isEventStarted() && (
                         <Box sx={{ marginTop: 2 }}>
                           <StyledChip
                             label={"이벤트 시작전"}
@@ -1060,7 +1059,7 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Box>
                       )}
-                      {isEventStarted() && !isEventComplete() && (
+                      {ticketData && isEventStarted() && !isEventComplete() && (
                         <Box sx={{ marginTop: 2 }}>
                           <StyledChip
                             label={"진행중"}
@@ -1072,9 +1071,16 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Box>
                       )}
-                      {isEventStarted() && isEventComplete() && (
+                      {ticketData && isEventStarted() && isEventComplete() && (
                         <Box sx={{ marginTop: 2 }}>
-                          <StyledChip label={"이벤트 종료"}></StyledChip>
+                          <StyledChip
+                            label={"이벤트 종료"}
+                            variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #D14343",
+                              borderWidth: 0,
+                            }}
+                          ></StyledChip>
                         </Box>
                       )}
                     </Stack>
@@ -1174,32 +1180,49 @@ const Event = (props: AppProps) => {
             <Stack
               direction={"column"}
               spacing={2}
-              alignItems={smUp ? "flex-start" : "center"}
+              alignItems={mdUp ? "flex-start" : "center"}
             >
-              <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
+              <Typography textAlign={mdUp ? "left" : "center"} variant={"h5"}>
                 이벤트 설명
               </Typography>
-
-              <Box sx={{ maxWidth: 800 }}>
-                {new ContentComponentBuilder(
-                  ticketData?.description_v2
-                ).render()}
+              <Box sx={{}}>
+                {new ContentComponentBuilder(ticketData?.description_v2)
+                  .overrideHtmlComponentFunc((content) => {
+                    return (
+                      <Stack
+                        sx={
+                          {
+                            // alignItems: "center",
+                            // justifyContent: "center",
+                            // background: "red",
+                          }
+                        }
+                      >
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: content ?? "<></>",
+                          }}
+                        ></div>
+                      </Stack>
+                    );
+                  })
+                  .render()}
               </Box>
             </Stack>
 
             <Stack
               direction={"column"}
-              alignItems={smUp ? "left" : "center"}
+              alignItems={mdUp ? "flex-start" : "center"}
               spacing={2}
               sx={{ background: "" }}
             >
-              <Typography variant="h5" textAlign={smUp ? "left" : "left"}>
+              <Typography variant="h5" textAlign={mdUp ? "left" : "center"}>
                 퀘스트
               </Typography>
               <Stack
                 direction={"column"}
                 spacing={4}
-                alignItems={"center"}
+                alignItems={mdUp ? "flex-start" : "center"}
                 sx={{}}
               >
                 {ticketData?.quests?.map((quest, index) => {

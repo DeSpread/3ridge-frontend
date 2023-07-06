@@ -100,7 +100,7 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
                   }}
                 >
                   <Typography
-                    variant={smUp ? "body1" : "h6"}
+                    variant={smUp ? "body1" : "body2"}
                     color={"neutral.100"}
                     sx={{
                       overflow: "hidden",
@@ -115,8 +115,8 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
                   <div
                     style={{
                       position: "absolute",
-                      top: smUp ? 2 : -2,
-                      right: smUp ? -20 : -24,
+                      top: smUp ? 2 : -5,
+                      right: smUp ? -20 : -20,
                       // width: height,
                       // background: "red",
                     }}
