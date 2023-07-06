@@ -48,7 +48,7 @@ const ProjectOverlayStyleCard = (props: ProjectCardProps) => {
       <Box
         sx={{
           borderRadius: 4,
-          height,
+          height: "100%",
           background: theme.palette.neutral[800],
           backgroundSize: "cover",
           transition: "all 0.2s ease-out 0s",
