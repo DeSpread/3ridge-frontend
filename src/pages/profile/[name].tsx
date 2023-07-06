@@ -71,6 +71,7 @@ import { backDirectionPathState } from "../../lib/recoil";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTotalWallet } from "../../provider/login/hook/total-wallet-hook";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { useSnackbar } from "../../provider/snackbar/snackbar-provider";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -126,6 +127,7 @@ const Profile = () => {
   const { showWalletAlert } = useWalletAlert();
   const [imageFile, setImageFile] = useState<File>();
   const { disconnectWalletByNetwork } = useTotalWallet();
+  const { showSnackbar } = useSnackbar();
 
   const resourceFactory = ResourceFactory.getInstance();
   const [selectedNetwork, setSelectedNetwork] = useState("");
@@ -294,13 +296,27 @@ const Profile = () => {
               ></LinearProgress>
               <Stack direction={"row"} alignItems={"center"} spacing={1}>
                 {targetUserData?.walletAddressInfos?.[0]?.address ? (
-                  <Box sx={{ maxWidth: 260 }}>
-                    <GradientTypography variant={"h4"}>
-                      {StringHelper.getInstance().getMidEllipsisString(
-                        targetUserData?.walletAddressInfos?.[0]?.address
-                      )}
-                    </GradientTypography>
-                  </Box>
+                  <>
+                    <Box sx={{ maxWidth: 260 }}>
+                      <GradientTypography variant={"h4"}>
+                        {StringHelper.getInstance().getMidEllipsisString(
+                          targetUserData?.walletAddressInfos?.[0]?.address
+                        )}
+                      </GradientTypography>
+                    </Box>
+                    <IconButton
+                      onClick={(e) => {
+                        if (targetUserData?.walletAddressInfos?.[0]?.address) {
+                          navigator.clipboard.writeText(
+                            targetUserData?.walletAddressInfos?.[0]?.address
+                          );
+                          showSnackbar("주소를 복사하였습니다");
+                        }
+                      }}
+                    >
+                      <ContentCopyIcon></ContentCopyIcon>
+                    </IconButton>
+                  </>
                 ) : (
                   <Box sx={{ maxWidth: 330, marginBottom: 1 }}>
                     <GradientTypography variant={"h4"}>
@@ -308,9 +324,6 @@ const Profile = () => {
                     </GradientTypography>
                   </Box>
                 )}
-                <IconButton>
-                  <ContentCopyIcon></ContentCopyIcon>
-                </IconButton>
               </Stack>
               <Grid
                 container

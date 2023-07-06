@@ -1,15 +1,38 @@
-import { createContext, PropsWithChildren, useContext } from "react";
+import * as React from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { Snackbar } from "@mui/material";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
 const SnackbarContext = createContext<{
-  showSnackbar: () => void;
+  showSnackbar: (msg?: string) => void;
 }>({
-  showSnackbar: () => {},
+  showSnackbar: (msg?: string) => {},
+});
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 export const SnackbarProvider = ({ children }: PropsWithChildren) => {
-  const showSnackbar = () => {
-    // setOpen(true);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const showSnackbar = (msg?: string) => {
+    setOpen(true);
+    if (msg) setMessage(msg);
+  };
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
   };
 
   return (
@@ -19,7 +42,16 @@ export const SnackbarProvider = ({ children }: PropsWithChildren) => {
       }}
     >
       {children}
-      <Snackbar></Snackbar>
+      <Snackbar
+        open={open}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        autoHideDuration={3000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          {message}
+        </Alert>
+      </Snackbar>
     </SnackbarContext.Provider>
   );
 };
