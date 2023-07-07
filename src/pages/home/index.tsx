@@ -15,12 +15,13 @@ import { Swiper, SwiperSlide } from "swiper/react"; // basic
 import "swiper/css"; //basic
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import { FILTER_TYPE } from "../../type";
-import { TicketSortType } from "../../__generated__/graphql";
+import { EventType, TicketSortType } from "../../__generated__/graphql";
 import useWindowDimensions from "../../page-hook/window-dimensions";
 import BannerOverlayStyleCard from "../../components/molecules/banner-overlay-style-card";
 import RecommendEventSwiperSection from "../../components/organisms/recommend-event-swiper-section";
 import BannerSwiperSection from "../../components/organisms/banner-swiper-section";
-import { filterFeatureEventTickets } from "../../util/type-util";
+import RecommendProjectSwiperSection from "../../components/organisms/recommend-project-swiper-section";
+import { useProjectsQuery } from "../../page-hook/projects-query-hook";
 
 const Home = () => {
   const theme = useTheme();
@@ -30,6 +31,10 @@ const Home = () => {
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType: FILTER_TYPE.ALL,
     sort: TicketSortType.Newest,
+    eventTypes: [EventType.Recommended],
+  });
+  const { projectsData, projectsDataLoading } = useProjectsQuery({
+    eventTypes: [EventType.Recommended],
   });
   const swiperContainerRef = useRef<HTMLDivElement>(null);
   const [width] = useWindowDimensions();
@@ -38,8 +43,6 @@ const Home = () => {
   useEffect(() => {
     setPageLoading(false);
   }, []);
-
-  // console.log(pageLoading);
 
   const swiperWidth = useMemo(() => {
     return width * (lgUp ? 0.85 : mdUp ? 0.75 : 0.85);
@@ -117,8 +120,14 @@ const Home = () => {
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
                   ticketsData={ticketsData}
-                  // ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
+                <Box sx={{ marginTop: 8, marginBottom: 4 }}>
+                  <RecommendProjectSwiperSection
+                    isLoading={projectsDataLoading}
+                    width={swiperWidth}
+                    projectsData={projectsData}
+                  ></RecommendProjectSwiperSection>
+                </Box>
               </Stack>
             </Stack>
             <Box sx={{ marginTop: 12 }}></Box>
@@ -166,13 +175,19 @@ const Home = () => {
               <Box sx={{ marginTop: 16, marginBottom: 4 }}>
                 <BannerSwiperSection width={swiperWidth}></BannerSwiperSection>
               </Box>
-              <Box sx={{ marginTop: 8, marginBottom: 16 }}>
+              <Box sx={{ marginTop: 8, marginBottom: 8 }}>
                 <RecommendEventSwiperSection
                   isLoading={ticketsDataLoading}
                   width={swiperWidth}
                   ticketsData={ticketsData}
-                  // ticketsData={filterFeatureEventTickets(ticketsData)}
                 ></RecommendEventSwiperSection>
+              </Box>
+              <Box sx={{ marginTop: 8, marginBottom: 16 }}>
+                <RecommendProjectSwiperSection
+                  isLoading={projectsDataLoading}
+                  width={swiperWidth}
+                  projectsData={projectsData}
+                ></RecommendProjectSwiperSection>
               </Box>
             </Stack>
           </Stack>

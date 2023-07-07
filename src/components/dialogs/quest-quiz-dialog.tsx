@@ -18,11 +18,7 @@ import {
 } from "../../type";
 import SecondaryButton from "../atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
-import {
-  decodeBase64,
-  decodeBase64IfHtmlPattern,
-  isBase64HtmlPattern,
-} from "../../util/string-util";
+import { decodeBase64 } from "../../util/string-util";
 
 type QuestQuizDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
@@ -87,27 +83,11 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
             >
               {props.context?.quizList &&
               props.context?.quizList?.length > 0 ? (
-                isBase64HtmlPattern(
-                  props.context?.quizList[questionIndex].title
-                ) ? (
-                  <div
-                    style={{
-                      textAlign: "justify",
-                      color: "white",
-                    }}
-                    dangerouslySetInnerHTML={{
-                      __html: decodeBase64(
-                        props.context?.quizList[questionIndex].title
-                      ),
-                    }}
-                  ></div>
-                ) : (
-                  <Box sx={{ marginTop: 3 }}>
-                    <Typography variant={"body1"}>
-                      {props.context?.quizList[questionIndex].title}
-                    </Typography>
-                  </Box>
-                )
+                <Box sx={{ marginTop: 3 }}>
+                  <Typography variant={"body1"}>
+                    {props.context?.quizList[questionIndex].title}
+                  </Typography>
+                </Box>
               ) : (
                 <></>
               )}

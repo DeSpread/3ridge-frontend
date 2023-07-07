@@ -43,24 +43,7 @@ const decodeBase64 = (base64String: string) => {
   return decodedString;
 };
 
-const decodeBase64IfHtmlPattern = (base64String: string) => {
-  const firstSixLetters = base64String.substring(0, 6);
-  // console.log("firstSixLetters", firstSixLetters);
-  if (firstSixLetters === "PHA+PH") {
-    return decodeBase64(base64String);
-  }
-  return base64String;
-};
-
-const isBase64HtmlPattern = (base64String: string) => {
-  const firstSixLetters = base64String.substring(0, 6);
-  if (firstSixLetters === "PHA+PH") {
-    return true;
-  }
-  return false;
-};
-
-const getUniqId = () => {
+const generateUniqId = () => {
   const DELIMITER = "-";
   const currentUnixTimestamp = new Date().getTime();
   return currentUnixTimestamp + DELIMITER + uuid();
@@ -71,7 +54,5 @@ export {
   validatePassword,
   nFormatter,
   decodeBase64,
-  decodeBase64IfHtmlPattern,
-  isBase64HtmlPattern,
-  getUniqId,
+  generateUniqId,
 };

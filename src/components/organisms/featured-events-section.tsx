@@ -1,34 +1,26 @@
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
 import React, { useRef, useState } from "react";
-import {
-  FILTER_TYPE,
-  FilterType,
-  MouseEventWithParam,
-  TicketEventParam,
-} from "../../type";
-import { TicketSortType } from "../../__generated__/graphql";
+import { FILTER_TYPE, FilterType } from "../../type";
+import { EventType, TicketSortType } from "../../__generated__/graphql";
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import {
   Box,
-  Button,
   Grid,
   IconButton,
+  Skeleton,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import TicketsSection from "./tickets-section";
 import SwiperCore, { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import TicketOverlayStyleCard from "../molecules/ticket-overlay-style-card";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
 import "swiper/css";
 import useWindowDimensions from "../../page-hook/window-dimensions"; //basic
-import { filterFeatureEventTickets } from "../../util/type-util";
 
 SwiperCore.use([Navigation]);
 
@@ -45,12 +37,12 @@ const FeaturedEventsSection = () => {
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType,
     sort: ticketSortType,
+    eventTypes: [EventType.Main],
   });
 
   const [width] = useWindowDimensions();
 
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  const swiperRef = useRef<SwiperCore>();
 
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
@@ -74,7 +66,6 @@ const FeaturedEventsSection = () => {
         </Stack>
         <Box>
           <IconButton
-            ref={prevRef}
             sx={{
               borderRadius: 32,
               width: smUp ? 38 : 32,
@@ -91,11 +82,13 @@ const FeaturedEventsSection = () => {
               },
               visibility: ticketsDataLoading ? "hidden" : "visible",
             }}
+            onClick={(e) => {
+              swiperRef.current?.slidePrev();
+            }}
           >
             <ArrowBackIosNewIcon fontSize={smUp ? "medium" : "small"} />
           </IconButton>
           <IconButton
-            ref={nextRef}
             sx={{
               borderRadius: 32,
               width: smUp ? 38 : 32,
@@ -111,25 +104,48 @@ const FeaturedEventsSection = () => {
               },
               visibility: ticketsDataLoading ? "hidden" : "visible",
             }}
+            onClick={(e) => {
+              swiperRef.current?.slideNext();
+            }}
           >
             <ArrowForwardIosIcon fontSize={smUp ? "medium" : "small"} />
           </IconButton>
         </Box>
       </Stack>
-      <Box sx={{ marginTop: 5, background: "", width: width - 48 }}>
-        <Swiper
-          spaceBetween={smUp ? 18 : 1}
-          slidesPerView={lgUp ? 5 : mdUp ? 3 : smUp ? 2 : 1}
-          scrollbar={{ draggable: true }}
-          navigation={{
-            prevEl: prevRef.current,
-            nextEl: nextRef.current,
-          }}
-          direction={"horizontal"}
-          style={{ paddingTop: 2 }}
-        >
-          {!ticketsDataLoading &&
-            filterFeatureEventTickets(ticketsData)?.map((ticket, index) => {
+      <Box
+        sx={{
+          marginTop: 5,
+          background: "",
+          width: "calc(100vw - 48px)",
+        }}
+      >
+        {ticketsDataLoading && (
+          <Grid container spacing={2} columns={30}>
+            {[1, 2, 3].map((e) => {
+              return (
+                <Grid key={e} item xs={30} sm={15} md={10} lg={6}>
+                  <Skeleton
+                    height={400}
+                    variant={"rounded"}
+                    animation={"wave"}
+                  />
+                </Grid>
+              );
+            })}
+          </Grid>
+        )}
+        {!ticketsDataLoading && (
+          <Swiper
+            spaceBetween={smUp ? 18 : 1}
+            slidesPerView={lgUp ? 5 : mdUp ? 3 : smUp ? 2 : 1}
+            scrollbar={{ draggable: true }}
+            onBeforeInit={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            direction={"horizontal"}
+            style={{ paddingTop: 2 }}
+          >
+            {ticketsData?.map((ticket, index) => {
               return (
                 <SwiperSlide key={index}>
                   <TicketCard
@@ -143,7 +159,8 @@ const FeaturedEventsSection = () => {
                 </SwiperSlide>
               );
             })}
-        </Swiper>
+          </Swiper>
+        )}
       </Box>
     </Stack>
   );

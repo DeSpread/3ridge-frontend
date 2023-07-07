@@ -5,6 +5,9 @@ import { FILTER_TYPE, FilterType, Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import {
   CategoryType,
+  ContentEncodingType,
+  ContentFormatType,
+  EventType,
   QuestPolicyType,
   RewardPolicyType,
   TicketSortType,
@@ -21,6 +24,7 @@ export function useTicketsQuery(props: {
   projectId?: string;
   filterType?: FilterType;
   sort?: TicketSortType;
+  eventTypes?: EventType[];
 }) {
   const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
   const [ticketsDataLoading, setTicketsDataLoading] = useState(true);
@@ -33,16 +37,6 @@ export function useTicketsQuery(props: {
       }
 
       setTicketsDataLoading(true);
-      // console.log(
-      //   "useTicketsQuery",
-      //   "sort",
-      //   props.sort,
-      //   "status",
-      //   props.filterType,
-      //   "projectId",
-      //   props.projectId,
-      //   ticketIsVisibleOnly
-      // );
 
       if (!props.projectId) {
         const status =
@@ -58,11 +52,10 @@ export function useTicketsQuery(props: {
           variables: {
             sort: props.sort,
             status,
+            eventTypes: props.eventTypes,
             isVisibleOnly: ticketIsVisibleOnly,
           },
         });
-        // console.log("bbb");
-        // console.log(data.tickets);
         updateSetTicketsData(data.tickets);
       } else {
         const status =
@@ -79,6 +72,8 @@ export function useTicketsQuery(props: {
             projectId: props.projectId,
             sort: props.sort,
             status: status,
+            eventTypes: props.eventTypes,
+            isVisibleOnly: ticketIsVisibleOnly,
           },
         });
         // console.log(data.ticketsByProjectId);
@@ -96,6 +91,12 @@ export function useTicketsQuery(props: {
       untilTime?: any | null;
       completed?: boolean | null;
       description?: string | null;
+      description_v2?: {
+        __typename?: "ContentMetadata";
+        contentFormatType: ContentFormatType;
+        contentEncodingType: ContentEncodingType;
+        content: string;
+      } | null;
       imageUrl?: string | null;
       title?: string | null;
       participants?: Array<{
@@ -109,6 +110,12 @@ export function useTicketsQuery(props: {
         __typename?: "Quest";
         _id?: string | null;
         title?: string | null;
+        title_v2?: {
+          __typename?: "ContentMetadata";
+          contentFormatType: ContentFormatType;
+          contentEncodingType: ContentEncodingType;
+          content: string;
+        } | null;
         description?: string | null;
         questPolicy?: {
           __typename?: "QuestPolicy";
@@ -148,6 +155,7 @@ export function useTicketsQuery(props: {
           untilTime: e.untilTime ?? undefined,
           title: e.title ?? undefined,
           description: e.description ?? undefined,
+          description_v2: e.description_v2 ?? undefined,
           completed: e.completed ?? undefined,
           participants: e.participants?.map((_e) => {
             return {
@@ -162,6 +170,7 @@ export function useTicketsQuery(props: {
             return {
               _id: _e._id ?? undefined,
               title: _e.title ?? undefined,
+              title_v2: _e.title_v2 ?? undefined,
               description: _e.description ?? undefined,
               questPolicy: {
                 context: TypeParseHelper.getInstance().parseQuestPolicy(

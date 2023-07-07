@@ -37,17 +37,6 @@ const AllEventsSection = () => {
         <Stack direction={"row"} spacing={1}>
           <Typography variant={"h4"}>전체 이벤트</Typography>
         </Stack>
-        {/*<Stack direction={"row"} spacing={1}>*/}
-        {/*  <Link*/}
-        {/*    href="https://airtable.com/shrOt7v8B4WntvR1h"*/}
-        {/*    color="inherit"*/}
-        {/*    underline="hover"*/}
-        {/*    target="_blank"*/}
-        {/*    rel="noreferrer"*/}
-        {/*  >*/}
-        {/*    <PrimaryButton fullWidth={true}>이벤트 등록</PrimaryButton>*/}
-        {/*  </Link>*/}
-        {/*</Stack>*/}
       </Stack>
       {ticketsData && (
         <TicketsSection
@@ -82,18 +71,6 @@ const AllEventsSection = () => {
           }}
         ></TicketsSection>
       )}
-      {/*<Box*/}
-      {/*  sx={{*/}
-      {/*    display: "flex",*/}
-      {/*    alignItems: "center",*/}
-      {/*    justifyContent: "center",*/}
-      {/*    padding: 8,*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <GradientButton size={"large"} sx={{ width: 156, height: 60 }}>*/}
-      {/*    Load more*/}
-      {/*  </GradientButton>*/}
-      {/*</Box>*/}
     </Stack>
   );
 };

@@ -5,7 +5,12 @@ import {
   User,
   WALLET_NAMES,
 } from "../type";
-import { ChainType, QuestPolicyType } from "../__generated__/graphql";
+import {
+  ChainType,
+  ContentEncodingType,
+  ContentMetadata,
+  QuestPolicyType,
+} from "../__generated__/graphql";
 
 const convertToSuppoertedNetwork = (network?: string | ChainType) => {
   if (network === SUPPORTED_NETWORKS.SUI || network === ChainType.Sui) {
@@ -69,20 +74,6 @@ const isSupportedNetwork = (chainName: string) => {
   return false;
 };
 
-const filterFeatureEventTickets = (ticketsData: Ticket[]) => {
-  return ticketsData
-    ?.filter((ticket) =>
-      [
-        "649a4fe6dd77fc310cd88a22",
-        "640018b9debaef951761e7a1",
-        "64882d186bd6711523e2a803",
-      ].includes(ticket._id ?? "")
-    )
-    .sort((a, b) => {
-      return (a?.project?.name ?? "") > (b?.project?.name ?? "") ? -1 : 1;
-    });
-};
-
 const getUserMail = (user?: User) => {
   if (user?.email) {
     return user?.email;
@@ -130,7 +121,6 @@ export {
   convertToSuppoertedNetwork,
   convertToChainType,
   convertToWalletName,
-  filterFeatureEventTickets,
   getUserMail,
   findVerifyHasEmailQuests,
   findVerifyHasWalletQuests,

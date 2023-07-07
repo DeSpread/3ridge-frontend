@@ -1,53 +1,62 @@
-import { Box, Grid, Typography, TypographyProps } from "@mui/material";
+import { Box, Grid, Stack, Typography, TypographyProps } from "@mui/material";
 import React, { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
 import { PartialTicket } from "../../type";
 import StringHelper from "../../helper/string-helper";
 
 type TicketInfoViewProps = TypographyProps & {
   ticket?: PartialTicket;
+  whiteSpaceMode?: boolean;
 };
 
-const TicketInfoTextSet = ({ ticket, sx }: TicketInfoViewProps) => {
+const TicketInfoTextSet = ({
+  ticket,
+  sx,
+  whiteSpaceMode,
+}: TicketInfoViewProps) => {
   return (
-    <Grid
-      direction={"row"}
-      alignItems={"center"}
-      justifyContent={"center"}
-      // spacing={1}
-      container={true}
-      // sx={{ background: "red", width: "100%" }}
-    >
-      <Grid
-        // direction={"row"}
-        // alignItems={"center"}
-        // justifyContent={"center"}
-        item
-      >
-        <Typography variant={"body2"} sx={{ ...sx }}>
+    <Stack>
+      <Stack direction={"row"} alignItems={"center"} justifyContent={"center"}>
+        <Typography variant={"body2"} sx={{ ...sx }} textAlign={"center"}>
           {`${ticket?.rewardPolicy?.context?.point ?? 0} 포인트`}
         </Typography>
-      </Grid>
-      <Grid item>
-        {ticket?.rewardPolicy?.context?.rewardName && (
-          <Box sx={{ paddingLeft: "4px" }}>
-            <Typography variant={"body2"} sx={{ ...sx }}>
-              {`/ ${ticket?.rewardPolicy?.context?.rewardName ?? ""}`}
-            </Typography>
-          </Box>
-        )}
-      </Grid>
-      <Grid item>
         {ticket?.rewardPolicy?.context?.rewardAmount && (
-          <Box sx={{ paddingLeft: "4px" }}>
-            <Typography variant={"body2"} sx={{ ...sx }}>
+          <Box
+            sx={{
+              ...sx,
+              paddingLeft: "4px",
+            }}
+          >
+            <Typography variant={"body2"} textAlign={"center"}>
               {` / ${StringHelper.getInstance().getRewardAmountLabel(
                 ticket?.rewardPolicy?.context?.rewardAmount
               )}`}
             </Typography>
           </Box>
         )}
-      </Grid>
-    </Grid>
+      </Stack>
+      {ticket?.rewardPolicy?.context?.rewardName ? (
+        <Box sx={{}}>
+          <Typography
+            variant={"body2"}
+            sx={{
+              ...sx,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: "1",
+              WebkitBoxOrient: "vertical",
+            }}
+            textAlign={"center"}
+          >
+            {`${ticket?.rewardPolicy?.context?.rewardName ?? ""}`}
+          </Typography>
+        </Box>
+      ) : whiteSpaceMode ? (
+        <Typography>&nbsp;</Typography>
+      ) : (
+        <></>
+      )}
+    </Stack>
   );
 };
 

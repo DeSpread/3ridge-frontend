@@ -1,15 +1,14 @@
 import "../styles/globals.css";
 
 import React, { ReactElement, ReactNode, useEffect } from "react";
-import type { AppContext, AppProps } from "next/app";
-import NextApp from "next/app";
-import type { NextPage, NextPageContext } from "next";
+import type { AppProps } from "next/app";
+import type { NextPage } from "next";
 import { createTheme } from "../theme";
 import { ThemeProvider } from "@mui/material/styles";
 import { ApolloProvider } from "@apollo/client";
 import { client as apolloClient } from "../lib/apollo/client";
 import { WagmiConfig } from "wagmi";
-import { wagmiConfig, ethereumClient, projectId } from "../lib/wagmi/client";
+import { ethereumClient, projectId, wagmiConfig } from "../lib/wagmi/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { RecoilRoot } from "recoil";
 import { LoginProvider } from "../provider/login/login-provider";
@@ -29,12 +28,13 @@ import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 import { isMobile } from "react-device-detect";
 import { MobileContext } from "../provider/mobile/mobile-context";
 import ErrorBoundary from "../components/error-boundary";
-import { useWeb3ModalTheme } from "@web3modal/react";
+import { SnackbarProvider } from "../provider/snackbar/snackbar-provider";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
 providers.push(AlertProvider);
 providers.push(LoadingProvider);
+providers.push(SnackbarProvider);
 
 const MasterProvider = providers.master();
 
@@ -52,19 +52,6 @@ const App = (props: AppPropsWithLayout) => {
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
   const wallets = [new PetraWallet()];
   const router = useRouter();
-  // const { theme: web3Theme, setTheme: setWeb3Theme } = useWeb3ModalTheme();
-  //
-  // useEffect(() => {
-  //   setWeb3Theme({
-  //     themeMode: "dark",
-  //     themeVariables: {
-  //       "--w3m-font-family": "Roboto, sans-serif",
-  //       "--w3m-accent-color": "#F5841F",
-  //
-  //       // ...
-  //     },
-  //   });
-  // }, []);
 
   useEffect(() => {
     const handleRouteChange = (url: any) => {

@@ -20,7 +20,7 @@ import addMinutes from "date-fns/addMinutes";
 import {
   convertToChainType,
   convertToSuppoertedNetwork,
-} from "../../../util/type-util";
+} from "../../../helper/type-helper";
 import { useTotalWallet } from "./total-wallet-hook";
 
 export function useWalletLogin() {
@@ -341,11 +341,7 @@ export function useWalletLogin() {
       } catch (e) {
         console.log(e);
         const message = getErrorMessage(e);
-        // if (cache.network === SUPPORTED_NETWORKS.STACKS) {
-        //   handleWalletSignUpError2(message, cache);
-        // } else {
         handleWalletSignUpError(message, cache);
-        // }
       }
     })();
   };

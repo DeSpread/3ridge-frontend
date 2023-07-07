@@ -21,7 +21,7 @@ import {
   getErrorMessage,
 } from "../../../error/my-error";
 import { useStacksWallet } from "../../../lib/stacks/stacks-wallet-hook";
-import { convertToSuppoertedNetwork } from "../../../util/type-util";
+import { convertToSuppoertedNetwork } from "../../../helper/type-helper";
 import { useWeb3Modal } from "@web3modal/react";
 
 export function useTotalWallet() {
