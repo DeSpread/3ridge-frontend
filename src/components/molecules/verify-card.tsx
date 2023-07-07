@@ -103,7 +103,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                               sx={{
                                 wordBreak: "keep-all",
                               }}
-                              textAlign={"center"}
+                              // textAlign={"center"}
                             >
                               {content}
                             </Typography>
