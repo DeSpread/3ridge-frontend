@@ -28,9 +28,8 @@ const FeaturedEventsSection = () => {
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
 
-  const [filterType, setFilterType] = useState<FilterType>(
-    FILTER_TYPE.AVAILABLE
-  );
+  const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
+
   const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
     TicketSortType.Trending
   );
