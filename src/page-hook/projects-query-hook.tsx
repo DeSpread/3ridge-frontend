@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { Project } from "../type";
 import { client } from "../lib/apollo/client";
 import { GET_PROJECTS } from "../lib/apollo/query";
+import { EventType } from "../__generated__/graphql";
 
-export function useProjectsQuery() {
+export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
   const [projectsData, setProjectsData] = useState<Project[]>([]);
   const [projectsDataLoading, setProjectsDataLoading] = useState(false);
 
@@ -12,6 +13,9 @@ export function useProjectsQuery() {
       setProjectsDataLoading(true);
       const { data } = await client.query({
         query: GET_PROJECTS,
+        variables: {
+          eventTypes: props?.eventTypes ?? undefined,
+        },
       });
       setProjectsData((prevState) => {
         return data.projects.map((e) => {

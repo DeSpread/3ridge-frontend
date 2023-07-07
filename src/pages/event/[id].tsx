@@ -77,6 +77,7 @@ import { useSetRecoilState } from "recoil";
 import { backDirectionPathState } from "../../lib/recoil";
 import ClickTypography from "../../components/click-typhography";
 import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
+import ContentComponentBuilder from "../../helper/content-component-builder";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -171,13 +172,13 @@ const Event = (props: AppProps) => {
     useProfileEditDialog();
   const { setShowSignInDialog } = useSignDialog();
   const [initVerifiedList, setInitVerifiedList] = useState(false);
-  const [eventDespHtmlContent, setEventDespHtmlContent] = useState("");
   const [lockUpdateVerifyAll, setLockUpdateVerifyAll] = useState(false);
-  const { isMobile } = useMobile();
   const [hasMetamask, setHasMetask] = useState(false);
   const [isFire, setFire] = React.useState(false);
   const [lazyFire, setLazyFire] = React.useState(false);
   const setBackDirectionPath = useSetRecoilState(backDirectionPathState);
+
+  // console.log("ticketData", ticketData);
 
   useEffect(() => {
     const { ethereum } = window;
@@ -186,9 +187,6 @@ const Event = (props: AppProps) => {
     setHasMetask(_hasMetamask);
     setShowProfileEditDialog(false);
     setBackDirectionPath("");
-    // fetch("https://api.ipify.org/?format=json").then((res) => {
-    //   console.log(res);
-    // });
   }, []);
 
   useEffect(() => {
@@ -230,6 +228,10 @@ const Event = (props: AppProps) => {
   };
 
   useEffect(() => {
+    if (!simpleWarningDialogShow) setSimpleWarningDialogTitle("");
+  }, [simpleWarningDialogShow]);
+
+  useEffect(() => {
     asyncUpdateClaimCompleted().then(() => {});
   }, [updateIndex]);
 
@@ -247,14 +249,6 @@ const Event = (props: AppProps) => {
     asyncRefreshTicketData();
   }, [updateIndex]);
 
-  useEffect(() => {
-    if (ticketData?.description != null) {
-      setEventDespHtmlContent(decodeBase64(ticketData?.description));
-    }
-  });
-
-  // console.log("userAgent", window.navigator.userAgent);
-
   const isMounted = useMountedState();
 
   const [initCount, setInitCount] = useGetSet(0);
@@ -271,7 +265,7 @@ const Event = (props: AppProps) => {
         return e;
       })
       .reduce((accumulator, currentValue) => accumulator && currentValue, true);
-    // console.log("verifiedList", verifiedList, simpleWarningDialogTitle);
+
     if (allComplete) {
       if (simpleWarningDialogTitle === "") {
         setFire(true);
@@ -280,8 +274,6 @@ const Event = (props: AppProps) => {
       }
     }
   }, [verifiedList, updateIndex]);
-
-  // useMount(() => {});
 
   const claimRewardDisabled = useMemo(() => {
     if (userData?._id === undefined) return true;
@@ -339,16 +331,6 @@ const Event = (props: AppProps) => {
     setUpdateIndex((prevState) => {
       return prevState + 1;
     });
-    // const allComplete = verifiedList
-    //   .map((e, _index) => {
-    //     if (_index == index) return true;
-    //     return e;
-    //   })
-    //   .reduce((accumulator, currentValue) => accumulator && currentValue, true);
-    // console.log("allComplete", allComplete, simpleWarningDialogTitle);
-    // if (allComplete && simpleWarningDialogTitle === "") {
-    //   setFire(true);
-    // }
     asyncRefreshTicketData();
   };
 
@@ -359,10 +341,6 @@ const Event = (props: AppProps) => {
       }
       setUpdatingClaimCompleted(false);
     }
-  };
-
-  const verifyCardDisabled = () => {
-    return (userData?._id ? false : true) || !walletConnectedForTicket;
   };
 
   const isExceededTicketParticipants = () => {
@@ -383,7 +361,6 @@ const Event = (props: AppProps) => {
       showLoading();
       setShowProfileEditDialog(true);
       setBackDirectionPath(`/event/${ticketData?._id}`);
-      // console.log("path", `/profile/${userData?.name}`);
       await router.push(`/profile/${userData?.name}`);
       closeLoading();
     } catch (e) {
@@ -392,21 +369,13 @@ const Event = (props: AppProps) => {
   };
 
   const getConfirmBtnLabel = (quest: Partial<Quest>) => {
-    // return quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
-    //   quest.questPolicy?.questPolicy ===
-    //     QuestPolicyType.VerifyHasWalletAddress ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
-    //   ? "연동하기"
-    //   : undefined;
     return undefined;
   };
 
   const changeChainToAlias = (chain: string) => {
     if (chain === "offchain-by-email") {
       return "이메일";
-    } else if (chain === "offchain-by-wallet") {
+    } else if (chain.includes("offchain-by-wallet")) {
       return "지갑";
     } else if (chain === "offchain-by-telegram") {
       return "텔레그램 계정을";
@@ -492,6 +461,96 @@ const Event = (props: AppProps) => {
       return "리워드 클레임";
     }
     return "리워드 예정";
+  };
+
+  const getRewardLabel = () => {
+    if (ticketData.rewardPolicy?.context?.rewardChain) {
+      if (ticketData.rewardPolicy?.context?.overrideRewardChainContent) {
+        return new ContentComponentBuilder(
+          ticketData.rewardPolicy?.context?.overrideRewardChainContent
+        )
+          .overrideHtmlComponentFunc((content) => {
+            return (
+              <Stack sx={{ background: "", alignItems: "center" }}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: content ?? "<></>",
+                  }}
+                ></div>
+              </Stack>
+            );
+          })
+          .render();
+      }
+      return ticketData.rewardPolicy?.context?.rewardChain.includes(
+        "offchain"
+      ) ? (
+        <Stack
+          direction={"row"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          spacing={1}
+        >
+          <Typography variant={"body2"}>
+            {`등록된 ${changeChainToAlias(
+              ticketData.rewardPolicy?.context?.rewardChain
+            )} 통해 보상 지급 예정`}
+          </Typography>
+        </Stack>
+      ) : (
+        <Stack>
+          <Stack
+            direction={"row"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            spacing={1}
+          >
+            <img
+              src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
+              width={32}
+              height={32}
+              style={{
+                background: theme.palette.neutral[100],
+                borderRadius: 16,
+                padding: 5,
+              }}
+            />
+            <Typography variant={"body2"}>
+              {ticketData.rewardPolicy?.context?.rewardChain} 체인 지원
+            </Typography>
+          </Stack>
+          {ticketData.rewardPolicy?.context?.rewardInfo && (
+            <Stack sx={{ background: "", marginTop: 1 }} alignItems={"center"}>
+              <ClickTypography
+                variant={"caption"}
+                onClick={async () => {
+                  if (ticketData.rewardPolicy?.context?.rewardInfo?.content) {
+                    setOpenContentsRendererDialog(true);
+                    setHtmlContent(
+                      decodeBase64(
+                        ticketData.rewardPolicy?.context?.rewardInfo?.content
+                      )
+                    );
+                  }
+                }}
+                sx={{
+                  fontWeight: "bold",
+                  "&:hover": {
+                    color: "#914e1d",
+                    textDecoration: "underline",
+                  },
+                  color: theme.palette.warning.main,
+                  cursor: "pointer",
+                }}
+              >
+                {ticketData.rewardPolicy?.context?.rewardInfo?.title}
+              </ClickTypography>
+            </Stack>
+          )}
+        </Stack>
+      );
+    }
+    return <></>;
   };
 
   const asyncStartQuest = async (
@@ -617,16 +676,6 @@ const Event = (props: AppProps) => {
         setHtmlContent(decodeBase64(quest.questGuides[0].content));
       }
     }
-    // else if (
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail ||
-    //   quest.questPolicy?.questPolicy ===
-    //     QuestPolicyType.VerifyHasWalletAddress ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter ||
-    //   quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
-    // ) {
-    //   asyncGoToProfileAndEditDialogOpen().then();
-    // }
   };
 
   const asyncVerifyQuest = async (
@@ -930,13 +979,6 @@ const Event = (props: AppProps) => {
                     background: "",
                   }}
                 >
-                  {/*<button*/}
-                  {/*  onClick={() => {*/}
-                  {/*    setFire(true);*/}
-                  {/*  }}*/}
-                  {/*>*/}
-                  {/*  aaa*/}
-                  {/*</button>*/}
                   {ticketData?.imageUrl ? (
                     <LazyLoadImage
                       width={smUp ? 128 : 128}
@@ -997,7 +1039,7 @@ const Event = (props: AppProps) => {
                       justifyContent={smUp ? "flex-start" : "center"}
                       rowSpacing={1}
                     >
-                      {!isEventStarted() && (
+                      {ticketData?.beginTime && !isEventStarted() && (
                         <Grid item>
                           <StyledChip
                             label={"이벤트 시작전"}
@@ -1010,11 +1052,10 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Grid>
                       )}
-                      {isEventStarted() && !isEventComplete() && (
+                      {ticketData && isEventStarted() && !isEventComplete() && (
                         <Grid item>
                           <StyledChip
                             label={"진행중"}
-                            // color={"success"}
                             variant="outlined"
                             sx={{
                               boxShadow: "inset 0px 0px 0px 2px #0E8074",
@@ -1023,9 +1064,16 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Grid>
                       )}
-                      {isEventStarted() && isEventComplete() && (
+                      {ticketData && isEventStarted() && isEventComplete() && (
                         <Grid item>
-                          <StyledChip label={"이벤트 종료"}></StyledChip>
+                          <StyledChip
+                            label={"이벤트 종료"}
+                            variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #D14343",
+                              borderWidth: 0,
+                            }}
+                          ></StyledChip>
                         </Grid>
                       )}
                       {ticketData?.beginTime && (
@@ -1036,9 +1084,6 @@ const Event = (props: AppProps) => {
                                 parseStrToDate(ticketData?.beginTime ?? ""),
                                 "yyyy/MM/dd"
                               )} ~ ${format(
-                                // new Date(
-                                //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                                // ),
                                 parseStrToDate(ticketData?.untilTime ?? ""),
                                 "yyyy/MM/dd"
                               )} (UTC+09:00)`}
@@ -1050,9 +1095,6 @@ const Event = (props: AppProps) => {
                                 <Stack sx={{}}>
                                   <Typography variant={"body2"}>
                                     {`${format(
-                                      // new Date(
-                                      //   ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                                      // ),
                                       parseStrToDate(
                                         ticketData?.beginTime ?? ""
                                       ),
@@ -1062,9 +1104,6 @@ const Event = (props: AppProps) => {
                                   </Typography>
                                   <Typography variant={"body2"}>
                                     {`${format(
-                                      // new Date(
-                                      //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                                      // ),
                                       parseStrToDate(
                                         ticketData?.untilTime ?? ""
                                       ),
@@ -1088,24 +1127,18 @@ const Event = (props: AppProps) => {
                       {ticketData?.beginTime && ticketData?.untilTime && (
                         <>
                           <Typography>{`${format(
-                            // new Date(
-                            //   ticketData?.beginTime ?? "" //rewardPolicy?.context?.beginTime
-                            // ),
                             parseStrToDate(ticketData?.beginTime ?? ""),
                             "yyyy/MM/dd"
                           )}`}</Typography>
                           <Typography>
                             {`~ ${format(
-                              // new Date(
-                              //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                              // ),
                               parseStrToDate(ticketData?.untilTime ?? ""),
                               "yyyy/MM/dd"
                             )} (UTC+09:00)`}
                           </Typography>
                         </>
                       )}
-                      {!isEventStarted() && (
+                      {ticketData?.beginTime && !isEventStarted() && (
                         <Box sx={{ marginTop: 2 }}>
                           <StyledChip
                             label={"이벤트 시작전"}
@@ -1118,7 +1151,7 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Box>
                       )}
-                      {isEventStarted() && !isEventComplete() && (
+                      {ticketData && isEventStarted() && !isEventComplete() && (
                         <Box sx={{ marginTop: 2 }}>
                           <StyledChip
                             label={"진행중"}
@@ -1130,9 +1163,16 @@ const Event = (props: AppProps) => {
                           ></StyledChip>
                         </Box>
                       )}
-                      {isEventStarted() && isEventComplete() && (
+                      {ticketData && isEventStarted() && isEventComplete() && (
                         <Box sx={{ marginTop: 2 }}>
-                          <StyledChip label={"이벤트 종료"}></StyledChip>
+                          <StyledChip
+                            label={"이벤트 종료"}
+                            variant="outlined"
+                            sx={{
+                              boxShadow: "inset 0px 0px 0px 2px #D14343",
+                              borderWidth: 0,
+                            }}
+                          ></StyledChip>
                         </Box>
                       )}
                     </Stack>
@@ -1193,43 +1233,6 @@ const Event = (props: AppProps) => {
                   </>
                 </Box>
               )}
-
-            {/*{isMobile && !hasMetamask && !isLoggedIn && (*/}
-            {/*  <Box sx={{}}>*/}
-            {/*    <Card>*/}
-            {/*      <CardContent>*/}
-            {/*        <Box sx={{}}>*/}
-            {/*          <LinkTypography*/}
-            {/*            variant={"body1"}*/}
-            {/*            onClick={async () => {*/}
-            {/*              if (ticketData?._id !== "6445ef8e7cf8560dd56dafc3") {*/}
-            {/*                const link = `https://metamask.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;*/}
-            {/*                location.href = link;*/}
-            {/*              } else {*/}
-            {/*                const link = `https://xverse.app.link/dapp/${process.env["NEXT_PUBLIC_HOME_URI"]}/event/${ticketData?._id}`;*/}
-            {/*                location.href = link;*/}
-            {/*              }*/}
-            {/*            }}*/}
-            {/*            href={"#"}*/}
-            {/*            sx={{*/}
-            {/*              fontWeight: "bold",*/}
-            {/*              "&:hover": {*/}
-            {/*                color: "#914e1d",*/}
-            {/*                textDecoration: "underline",*/}
-            {/*              },*/}
-            {/*              color: theme.palette.warning.main,*/}
-            {/*            }}*/}
-            {/*          >*/}
-            {/*            {ticketData?._id !== "6445ef8e7cf8560dd56dafc3"*/}
-            {/*              ? `이 링크를 누르시면 메타마스크 에서 해당 페이지가*/}
-            {/*            열립니다.`*/}
-            {/*              : `이 링크를 누르시면, 스택스 지갑 Xverse 설치 페이지로 이동합니다`}*/}
-            {/*          </LinkTypography>*/}
-            {/*        </Box>*/}
-            {/*      </CardContent>*/}
-            {/*    </Card>*/}
-            {/*  </Box>*/}
-            {/*)}*/}
             {userData?._id &&
               !walletConnectedForTicket &&
               ticketData.rewardPolicy?.context?.rewardNetwork && (
@@ -1269,41 +1272,48 @@ const Event = (props: AppProps) => {
             <Stack
               direction={"column"}
               spacing={2}
-              alignItems={smUp ? "flex-start" : "center"}
+              alignItems={mdUp ? "flex-start" : "center"}
             >
-              <Typography textAlign={smUp ? "left" : "left"} variant={"h5"}>
+              <Typography textAlign={mdUp ? "left" : "center"} variant={"h5"}>
                 이벤트 설명
               </Typography>
-
-              <Box sx={{ maxWidth: 800 }}>
-                <Stack>
-                  {eventDespHtmlContent && (
-                    <div
-                      style={{
-                        textAlign: "justify",
-                        color: "white",
-                      }}
-                      dangerouslySetInnerHTML={{ __html: eventDespHtmlContent }}
-                    ></div>
-                  )}
-                </Stack>
+              <Box>
+                {new ContentComponentBuilder(ticketData?.description_v2)
+                  .overrideHtmlComponentFunc((content) => {
+                    return (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: content ?? "<></>",
+                        }}
+                      ></div>
+                    );
+                  })
+                  .overrideTextComponentFunc((content) => {
+                    return (
+                      <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>
+                        <Typography sx={{ wordBreak: "keep-all" }}>
+                          {content}
+                        </Typography>
+                      </Box>
+                    );
+                  })
+                  .render()}
               </Box>
             </Stack>
 
             <Stack
               direction={"column"}
-              alignItems={smUp ? "left" : "center"}
+              alignItems={mdUp ? "flex-start" : "center"}
               spacing={2}
-              // maxWidth={800}
               sx={{ background: "" }}
             >
-              <Typography variant="h5" textAlign={smUp ? "left" : "left"}>
+              <Typography variant="h5" textAlign={mdUp ? "left" : "center"}>
                 퀘스트
               </Typography>
               <Stack
                 direction={"column"}
                 spacing={4}
-                alignItems={"center"}
+                alignItems={mdUp ? "flex-start" : "center"}
                 sx={{}}
               >
                 {ticketData?.quests?.map((quest, index) => {
@@ -1321,6 +1331,7 @@ const Event = (props: AppProps) => {
                       sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
                       index={index + 1}
                       title={quest.title}
+                      title_v2={quest.title_v2}
                       description={quest.description}
                       disabled={
                         (userData?._id ? false : true) ||
@@ -1350,8 +1361,6 @@ const Event = (props: AppProps) => {
                         quest.questPolicy?.questPolicy ===
                           QuestPolicyType.VerifyHasTelegram ||
                         quest.questPolicy?.questPolicy === QuestPolicyType.Quiz
-                        // quest.questPolicy?.questPolicy ===
-                        //   QuestPolicyType.VerifyVisitWebsite
                       }
                       onVerifyBtnClicked={async (e) => {
                         await asyncVerifyQuest(e, quest, index);
@@ -1603,88 +1612,7 @@ const Event = (props: AppProps) => {
                       )}
                     </Box>
                   </Stack>
-                  {ticketData.rewardPolicy?.context?.rewardChain ? (
-                    ticketData.rewardPolicy?.context?.rewardChain.includes(
-                      "offchain"
-                    ) ? (
-                      <Stack
-                        direction={"row"}
-                        justifyContent={"center"}
-                        alignItems={"center"}
-                        spacing={1}
-                      >
-                        <Typography variant={"body2"}>
-                          {`등록된 ${changeChainToAlias(
-                            ticketData.rewardPolicy?.context?.rewardChain
-                          )} 통해 보상 지급 예정`}
-                        </Typography>
-                      </Stack>
-                    ) : (
-                      <Stack>
-                        <Stack
-                          direction={"row"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                          spacing={1}
-                        >
-                          <img
-                            src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
-                            width={32}
-                            height={32}
-                            style={{
-                              background: theme.palette.neutral[100],
-                              borderRadius: 16,
-                              padding: 5,
-                            }}
-                          />
-                          <Typography variant={"body2"}>
-                            {ticketData.rewardPolicy?.context?.rewardChain} 체인
-                            지원
-                          </Typography>
-                        </Stack>
-                        {ticketData.rewardPolicy?.context?.rewardInfo && (
-                          <Stack
-                            sx={{ background: "", marginTop: 1 }}
-                            alignItems={"center"}
-                          >
-                            <ClickTypography
-                              variant={"caption"}
-                              onClick={async () => {
-                                if (
-                                  ticketData.rewardPolicy?.context?.rewardInfo
-                                    ?.content
-                                ) {
-                                  setOpenContentsRendererDialog(true);
-                                  setHtmlContent(
-                                    decodeBase64(
-                                      ticketData.rewardPolicy?.context
-                                        ?.rewardInfo?.content
-                                    )
-                                  );
-                                }
-                              }}
-                              sx={{
-                                fontWeight: "bold",
-                                "&:hover": {
-                                  color: "#914e1d",
-                                  textDecoration: "underline",
-                                },
-                                color: theme.palette.warning.main,
-                                cursor: "pointer",
-                              }}
-                            >
-                              {
-                                ticketData.rewardPolicy?.context?.rewardInfo
-                                  ?.title
-                              }
-                            </ClickTypography>
-                          </Stack>
-                        )}
-                      </Stack>
-                    )
-                  ) : (
-                    <></>
-                  )}
+                  {getRewardLabel()}
                 </Stack>
               </PrimaryCard>
               <LoadingButton

@@ -26,7 +26,7 @@ import { userDataState } from "../lib/recoil";
 import {
   convertToChainType,
   convertToSuppoertedNetwork,
-} from "../util/type-util";
+} from "../helper/type-helper";
 import {
   SUPPORTED_NETWORKS,
   SupportedNetwork,
@@ -36,7 +36,7 @@ import {
 } from "../type";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 import { ChainType } from "../__generated__/graphql";
-import { promiseTelegramLoginAuth } from "../util/telegram-util";
+import { promiseTelegramLoginAuth } from "../helper/telegram-helper";
 import { delay } from "../util/timer";
 import PreferenceHelper from "../helper/preference-helper";
 import addMinutes from "date-fns/addMinutes";

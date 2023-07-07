@@ -1,5 +1,7 @@
 import { Typography, TypographyProps } from "@mui/material";
-import React from "react";
+import React, { CSSProperties } from "react";
+import { ContentFormatType, ContentMetadata } from "../__generated__/graphql";
+import StringHelper from "./string-helper";
 
 class ComponentHelper {
   private static instance: ComponentHelper;
@@ -10,7 +12,7 @@ class ComponentHelper {
     return this.instance || (this.instance = new this());
   }
 
-  multiLineContentText = (content?: string, props?: TypographyProps) => {
+  renderMultiLineContentText = (content?: string, props?: TypographyProps) => {
     if (!content) return <></>;
     return content.split("\n").map((e, index) => {
       return (

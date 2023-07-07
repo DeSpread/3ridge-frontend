@@ -31,7 +31,7 @@ import BlockIcon from "../../../components/molecules/block-icon";
 import ResourceFactory from "../../../helper/resource-factory";
 // @ts-ignore
 import TelegramLoginButton from "react-telegram-login";
-import { getUserMail } from "../../../util/type-util";
+import { getUserMail } from "../../../helper/type-helper";
 import { useMobile } from "../../../provider/mobile/mobile-context";
 import PrimaryButton from "../../../components/atoms/primary-button";
 import SecondaryButton from "../../../components/atoms/secondary-button";

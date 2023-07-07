@@ -7,7 +7,9 @@ import {
   Box,
   Divider,
   Grid,
+  IconButton,
   Skeleton,
+  Snackbar,
   Stack,
   Theme,
   Typography,
@@ -57,17 +59,19 @@ import {
   convertToSuppoertedNetwork,
   convertToWalletName,
   getUserMail,
-} from "../../util/type-util";
+} from "../../helper/type-helper";
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import { useMobile } from "../../provider/mobile/mobile-context";
-import { goToMetaMaskDeppLinkWhenMobile } from "../../util/eth-util";
+import { goToMetaMaskDeppLinkWhenMobile } from "../../helper/eth-helper";
 import ConnectTwitterDialog from "./dialog/connect-twitter-dialog";
 import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
 import { backDirectionPathState } from "../../lib/recoil";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTotalWallet } from "../../provider/login/hook/total-wallet-hook";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { useSnackbar } from "../../provider/snackbar/snackbar-provider";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -123,6 +127,7 @@ const Profile = () => {
   const { showWalletAlert } = useWalletAlert();
   const [imageFile, setImageFile] = useState<File>();
   const { disconnectWalletByNetwork } = useTotalWallet();
+  const { showSnackbar } = useSnackbar();
 
   const resourceFactory = ResourceFactory.getInstance();
   const [selectedNetwork, setSelectedNetwork] = useState("");
@@ -289,15 +294,29 @@ const Profile = () => {
                   maxWidth: 230,
                 }}
               ></LinearProgress>
-              <Stack direction={"row"} alignItems={"center"}>
+              <Stack direction={"row"} alignItems={"center"} spacing={1}>
                 {targetUserData?.walletAddressInfos?.[0]?.address ? (
-                  <Box sx={{ maxWidth: 260 }}>
-                    <GradientTypography variant={"h4"}>
-                      {StringHelper.getInstance().getMidEllipsisString(
-                        targetUserData?.walletAddressInfos?.[0]?.address
-                      )}
-                    </GradientTypography>
-                  </Box>
+                  <>
+                    <Box sx={{ maxWidth: 260 }}>
+                      <GradientTypography variant={"h4"}>
+                        {StringHelper.getInstance().getMidEllipsisString(
+                          targetUserData?.walletAddressInfos?.[0]?.address
+                        )}
+                      </GradientTypography>
+                    </Box>
+                    <IconButton
+                      onClick={(e) => {
+                        if (targetUserData?.walletAddressInfos?.[0]?.address) {
+                          navigator.clipboard.writeText(
+                            targetUserData?.walletAddressInfos?.[0]?.address
+                          );
+                          showSnackbar("주소를 복사하였습니다");
+                        }
+                      }}
+                    >
+                      <ContentCopyIcon></ContentCopyIcon>
+                    </IconButton>
+                  </>
                 ) : (
                   <Box sx={{ maxWidth: 330, marginBottom: 1 }}>
                     <GradientTypography variant={"h4"}>

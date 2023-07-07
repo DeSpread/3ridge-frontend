@@ -1,26 +1,23 @@
-import { MAIL_VERIFY } from "../type";
-import { Link as MuiLink, Stack, Typography } from "@mui/material";
-import Link from "next/link";
 import React from "react";
 
 export const APP_ERROR_MESSAGE = {
   UNKNOWN: "UNKNOWN",
-  EMAIL_ALREADY_USE: "EMAIL_ALREADY_USE",
-  EMAIL_PENDING_VERIFY: "EMAIL_PENDING_VERIFY",
-  EMAIL_ALREADY_VERIFIED: "EMAIL_ALREADY_VERIFIED",
+  EMAIL_ALREADY_USE: "email is already used",
+  EMAIL_PENDING_VERIFY: "email is pending in verifying",
+  EMAIL_ALREADY_VERIFIED: "email is already verified",
   GOOGLE_LOGIN_POPUP_CLOSED: "popup_closed",
-  WALLET_NOT_INSTALLED: "WALLET_NOT_INSTALLED",
-  WALLET_USER_REJECTED_REQUEST: "User rejected request",
+  WALLET_NOT_INSTALLED: "wallet is not installed",
+  WALLET_USER_REJECTED_REQUEST: "user rejected request",
   WALLET_ADDRESS_ALREADY_REGISTERED: "Already registered by wallet address",
-  SUI_WALLET_PENDING_REQUEST: "Another permission request is pending",
-  SUI_WALLET_PERMISSION_REJECTED: "Permission rejected",
-  WALLET_USER_ACCOUNT_FETCH_FAIL: "Fail to get account of wallet",
+  SUI_WALLET_PENDING_REQUEST: "another permission request is pending",
+  SUI_WALLET_PERMISSION_REJECTED: "permission rejected",
+  WALLET_USER_ACCOUNT_FETCH_FAIL: "fail to get account of wallet",
   FIREBASE_USER_NOT_FOUND: "auth/user-not-found",
   FIREBASE_WRONG_PASSWORD: "auth/wrong-password",
   FIREBASE_TOO_MANY_REQUESTS: "auth/too-many-requests",
   PARAMETER_ERROR: "parameter error",
-  EMAIL_NOT_AUTHORIZED: "Not yet authorized",
-  EMAIL_PASSWORD_NOT_CORRECT: "Password is not correct",
+  EMAIL_NOT_AUTHORIZED: "not yet authorized",
+  EMAIL_PASSWORD_NOT_CORRECT: "password is not correct",
   EMAIL_AUTH_CODE_TIMEOUT: "auth code is timeout",
   ALREADY_PARTICIPATED_USER: "user already participated ticket",
   DOES_NOT_TWITTER_FOLLOW: "user does not follow twitter",

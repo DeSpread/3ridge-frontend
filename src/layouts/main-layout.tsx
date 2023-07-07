@@ -42,11 +42,11 @@ import { useWalletAlert } from "../page-hook/wallet-alert-hook";
 import {
   convertToSuppoertedNetwork,
   convertToWalletName,
-} from "../util/type-util";
+} from "../helper/type-helper";
 import ResourceFactory from "../helper/resource-factory";
 import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
 import { useMobile } from "../provider/mobile/mobile-context";
-import { goToMetaMaskDeppLinkWhenMobile } from "../util/eth-util";
+import { goToMetaMaskDeppLinkWhenMobile } from "../helper/eth-helper";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;

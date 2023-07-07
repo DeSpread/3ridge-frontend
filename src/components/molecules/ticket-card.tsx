@@ -60,7 +60,7 @@ const TicketCard = (props: EventCardProps) => {
         transitionTimingFunction: "ease-out",
         "&:hover": {
           borderColor: theme.palette.secondary.main,
-          transform: "translate(0,-2px)",
+          transform: "translate(0,0px)",
         },
         cursor: "pointer",
         ...props.sx,
@@ -202,7 +202,6 @@ const TicketCard = (props: EventCardProps) => {
               sx={{
                 marginTop: 4,
                 marginBottom: -2,
-                // width: "100%",
                 background: "",
               }}
               container
@@ -211,7 +210,10 @@ const TicketCard = (props: EventCardProps) => {
               justifyContent={"center"}
             >
               <Grid item>
-                <TicketInfoTextSet ticket={ticket}></TicketInfoTextSet>
+                <TicketInfoTextSet
+                  ticket={ticket}
+                  whiteSpaceMode={true}
+                ></TicketInfoTextSet>
               </Grid>
             </Grid>
           </Stack>

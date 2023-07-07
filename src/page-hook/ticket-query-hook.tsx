@@ -52,6 +52,7 @@ export function useTicketQuery({
         beginTime,
         untilTime,
         description,
+        description_v2,
         completed,
         participants,
         participantCount,
@@ -65,6 +66,7 @@ export function useTicketQuery({
         rewardPolicy?.context ?? undefined,
         rewardPolicy?.rewardPolicyType ?? undefined
       );
+
       setTicketData((prevState) => {
         return {
           ...prevState,
@@ -73,6 +75,7 @@ export function useTicketQuery({
           beginTime: beginTime ?? undefined,
           untilTime: untilTime ?? undefined,
           description: description ?? undefined,
+          description_v2: description_v2 ?? undefined,
           completed: completed ?? undefined,
           participants: participants?.map((e) => {
             return {
@@ -87,6 +90,7 @@ export function useTicketQuery({
             return {
               _id: e._id ?? undefined,
               title: e.title ?? undefined,
+              title_v2: e.title_v2 ?? undefined,
               description: e.description ?? undefined,
               questPolicy: {
                 context: TypeParseHelper.getInstance().parseQuestPolicy(
@@ -134,6 +138,7 @@ export function useTicketQuery({
       beginTime,
       untilTime,
       description,
+      description_v2,
       completed,
       participants,
       quests,
@@ -154,6 +159,7 @@ export function useTicketQuery({
         beginTime: beginTime ?? undefined,
         untilTime: untilTime ?? undefined,
         description: description ?? undefined,
+        description_v2: description_v2 ?? undefined,
         completed: completed ?? undefined,
         participants: participants?.map((e) => {
           return {
@@ -167,6 +173,7 @@ export function useTicketQuery({
           return {
             _id: e._id ?? undefined,
             title: e.title ?? undefined,
+            title_v2: e.title_v2 ?? undefined,
             description: e.description ?? undefined,
             questPolicy: {
               context: TypeParseHelper.getInstance().parseQuestPolicy(
@@ -349,8 +356,6 @@ export function useTicketQuery({
       questId,
     };
   };
-
-  // const asyncUpdateTicketVisible;
 
   return {
     ticketData,

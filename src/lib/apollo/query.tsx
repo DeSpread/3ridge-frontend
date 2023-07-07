@@ -293,14 +293,25 @@ export const GET_TICKETS = gql(/* GraphQL */ `
   query Tickets(
     $sort: TicketSortType
     $status: TicketStatusType
+    $eventTypes: [EventType!]
     $isVisibleOnly: Boolean
   ) {
-    tickets(sort: $sort, status: $status, isVisibleOnly: $isVisibleOnly) {
+    tickets(
+      sort: $sort
+      status: $status
+      eventTypes: $eventTypes
+      isVisibleOnly: $isVisibleOnly
+    ) {
       _id
       beginTime
       untilTime
       completed
       description
+      description_v2 {
+        contentFormatType
+        contentEncodingType
+        content
+      }
       participants {
         _id
         name
@@ -310,6 +321,11 @@ export const GET_TICKETS = gql(/* GraphQL */ `
       quests {
         _id
         title
+        title_v2 {
+          contentFormatType
+          contentEncodingType
+          content
+        }
         description
         questPolicy {
           context
@@ -350,6 +366,11 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       untilTime
       completed
       description
+      description_v2 {
+        contentFormatType
+        contentEncodingType
+        content
+      }
       participants {
         _id
         name
@@ -360,6 +381,11 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       quests {
         _id
         title
+        title_v2 {
+          contentFormatType
+          contentEncodingType
+          content
+        }
         description
         questPolicy {
           context
@@ -387,8 +413,8 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
 `);
 
 export const GET_PROJECTS = gql(/* GraphQL */ `
-  query Projects {
-    projects {
+  query Projects($eventTypes: [EventType!]) {
+    projects(eventTypes: $eventTypes) {
       _id
       categories
       description
@@ -429,11 +455,24 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
     $projectId: String!
     $sort: TicketSortType
     $status: TicketStatusType
+    $eventTypes: [EventType!]
+    $isVisibleOnly: Boolean
   ) {
-    ticketsByProjectId(projectId: $projectId, sort: $sort, status: $status) {
+    ticketsByProjectId(
+      projectId: $projectId
+      sort: $sort
+      status: $status
+      eventTypes: $eventTypes
+      isVisibleOnly: $isVisibleOnly
+    ) {
       _id
       completed
       description
+      description_v2 {
+        contentFormatType
+        contentEncodingType
+        content
+      }
       participants {
         name
         profileImageUrl
@@ -442,6 +481,11 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
       quests {
         _id
         title
+        title_v2 {
+          contentFormatType
+          contentEncodingType
+          content
+        }
         description
         questPolicy {
           context
@@ -556,6 +600,11 @@ export const COMPLETE_QUEST_OF_USER = gql(/* GraphQL */ `
     ) {
       _id
       title
+      title_v2 {
+        contentFormatType
+        contentEncodingType
+        content
+      }
       description
       questPolicy {
         context
@@ -570,26 +619,6 @@ export const CLAIM_REWARD = gql(/* GraphQL */ `
     claimReward(ticketId: $ticketId, userId: $userId)
   }
 `);
-
-// export const REQUEST_CLAIM_NFT = gql(/* GraphQL */ `
-//   mutation RequestClaimNFT(
-//     $collectionName: String!
-//     $nftTokenName: String!
-//     $receiverAddress: String!
-//     $ticketId: String!
-//     $userId: String!
-//   ) {
-//     requestClaimNFT(
-//       collectionName: $collectionName
-//       nftTokenName: $nftTokenName
-//       receiverAddress: $receiverAddress
-//       ticketId: $ticketId
-//       userId: $userId
-//     ) {
-//       txHash
-//     }
-//   }
-// `);
 
 export const VERIFY_APTOS_QUEST = gql(/* GraphQL */ `
   mutation VerifyAptosQuest(

@@ -1,28 +1,27 @@
-import { Ticket } from "../../type";
+import { Project, Ticket } from "../../type";
 import { useTheme } from "@mui/material/styles";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import {
   Box,
   IconButton,
-  Skeleton,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
+import SwiperCore, { Navigation } from "swiper";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Swiper, SwiperSlide } from "swiper/react";
-import TicketOverlayStyleCard from "../molecules/ticket-overlay-style-card";
-import SwiperCore, { Navigation } from "swiper";
+import ProjectOverlayStyleCard from "../molecules/project-overlay-style-card";
 import SkeletonOverlayCard from "../molecules/skelton-overlay-card";
 
 SwiperCore.use([Navigation]);
 
-const RecommendEventSwiperSection = (props: {
+const RecommendProjectSwiperSection = (props: {
   width: number | string;
-  ticketsData: Ticket[];
+  projectsData: Project[];
   isLoading: boolean;
 }) => {
   const theme = useTheme();
@@ -57,7 +56,7 @@ const RecommendEventSwiperSection = (props: {
               paddingLeft: 1,
             }}
           >
-            추천 이벤트
+            추천 프로젝트
           </Typography>
         </Box>
         <Box>
@@ -123,8 +122,8 @@ const RecommendEventSwiperSection = (props: {
       >
         <Box width={props.width}>
           <Swiper
-            spaceBetween={smUp ? 18 : 1}
-            slidesPerView={lgUp ? 4 : mdUp ? 3 : smUp ? 2 : 1}
+            spaceBetween={smUp ? 18 : 6}
+            slidesPerView={lgUp ? 6 : mdUp ? 4 : smUp ? 3 : 2}
             scrollbar={{ draggable: true }}
             onBeforeInit={(swiper) => {
               swiperRef.current = swiper;
@@ -139,17 +138,17 @@ const RecommendEventSwiperSection = (props: {
                 );
               })}
             {!props.isLoading &&
-              props.ticketsData?.map((ticket, index) => {
+              props.projectsData?.map((project, index) => {
                 return (
                   <SwiperSlide key={index}>
-                    <TicketOverlayStyleCard
-                      ticket={ticket}
+                    <ProjectOverlayStyleCard
+                      project={project}
                       onClick={async (e) => {
                         showLoading();
-                        await router.push(`/event/${ticket._id}`);
+                        await router.push(`/project/${project._id}`);
                         closeLoading();
                       }}
-                    ></TicketOverlayStyleCard>
+                    ></ProjectOverlayStyleCard>
                   </SwiperSlide>
                 );
               })}
@@ -160,4 +159,4 @@ const RecommendEventSwiperSection = (props: {
   );
 };
 
-export default RecommendEventSwiperSection;
+export default RecommendProjectSwiperSection;
