@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, useMemo, useState } from "react";
+import React, {
+  ReactElement,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -78,6 +84,7 @@ import { backDirectionPathState } from "../../lib/recoil";
 import ClickTypography from "../../components/click-typhography";
 import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 import ContentComponentBuilder from "../../helper/content-component-builder";
+import { useTimer } from "react-timer-hook";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -177,8 +184,6 @@ const Event = (props: AppProps) => {
   const [isFire, setFire] = React.useState(false);
   const [lazyFire, setLazyFire] = React.useState(false);
   const setBackDirectionPath = useSetRecoilState(backDirectionPathState);
-
-  // console.log("ticketData", ticketData);
 
   useEffect(() => {
     const { ethereum } = window;
@@ -1441,28 +1446,31 @@ const Event = (props: AppProps) => {
               <PrimaryCard hoverEffect={false}>
                 <Box>
                   <Stack alignItems={"center"}>
-                    <Typography variant={"body1"}>
-                      이벤트 종료까지 남은 시간
+                    <Typography
+                      variant={"body1"}
+                      sx={{
+                        color: isExpired()
+                          ? "#D14343"
+                          : isStarted()
+                          ? "white"
+                          : "#61e1ff",
+                      }}
+                    >
+                      {isExpired()
+                        ? "본 이벤트가 종료되었습니다"
+                        : isStarted()
+                        ? "이벤트 종료까지 남은 시간"
+                        : "이벤트 시작까지 남은 시간"}
                     </Typography>
                     {ticketData?.untilTime ? (
                       isExpired() ? (
-                        <Stack
+                        <DummyTimerBoard
                           sx={{
+                            marginTop: 4,
                             background: "",
-                            paddingTop: 5,
-                            paddingBottom: 2,
+                            width: "100%",
                           }}
-                          direction={"row"}
-                          alignItems={"center"}
-                          justifyContent={"center"}
-                        >
-                          <Typography
-                            variant={"h6"}
-                            sx={{ color: theme.palette.secondary.main }}
-                          >
-                            본 이벤트가 종료되었습니다
-                          </Typography>
-                        </Stack>
+                        />
                       ) : isStarted() ? (
                         <TimerBoard
                           sx={{
@@ -1470,31 +1478,25 @@ const Event = (props: AppProps) => {
                             background: "",
                             width: "100%",
                           }}
-                          expiryTimestamp={
-                            parseStrToDate(ticketData?.untilTime ?? "")
-                            // new Date(
-                            //   ticketData?.untilTime ?? "" //rewardPolicy?.context?.untilTime
-                            // )
-                          }
+                          expiryTimestamp={parseStrToDate(
+                            ticketData?.untilTime ?? ""
+                          )}
                         />
                       ) : (
-                        <Stack
+                        <TimerBoard
                           sx={{
+                            marginTop: 4,
                             background: "",
-                            paddingTop: 5,
-                            paddingBottom: 2,
+                            width: "100%",
                           }}
-                          direction={"row"}
-                          alignItems={"center"}
-                          justifyContent={"center"}
-                        >
-                          <Typography
-                            variant={"h6"}
-                            sx={{ color: theme.palette.secondary.main }}
-                          >
-                            이벤트가 시작되지 않았습니다
-                          </Typography>
-                        </Stack>
+                          expiryTimestamp={parseStrToDate(
+                            ticketData?.beginTime ?? ""
+                          )}
+                          onExpire={() => {
+                            console.log("refresh all");
+                            window.location.reload();
+                          }}
+                        />
                       )
                     ) : (
                       <DummyTimerBoard

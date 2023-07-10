@@ -22,7 +22,7 @@ export const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
           sx={{ width: CELL_WIDTH }}
         >
           <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Days</Typography>
+          <Typography variant={"body2"}>일</Typography>
         </Stack>
         <Stack
           direction={"column"}
@@ -30,7 +30,7 @@ export const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
           sx={{ width: CELL_WIDTH }}
         >
           <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Hours</Typography>
+          <Typography variant={"body2"}>시</Typography>
         </Stack>
         <Stack
           direction={"column"}
@@ -38,7 +38,7 @@ export const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
           sx={{ width: CELL_WIDTH }}
         >
           <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Minutes</Typography>
+          <Typography variant={"body2"}>분</Typography>
         </Stack>
         <Stack
           direction={"column"}
@@ -46,7 +46,7 @@ export const DummyTimerBoard = (props: { sx?: CSSProperties }) => {
           sx={{ width: CELL_WIDTH }}
         >
           <Typography variant={"h5"}>{"00"}</Typography>
-          <Typography variant={"body2"}>Seconds</Typography>
+          <Typography variant={"body2"}>초</Typography>
         </Stack>
       </Stack>
     </Box>
