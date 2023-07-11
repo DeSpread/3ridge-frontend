@@ -62,6 +62,7 @@ export function useUserQuery(props: { name?: string }) {
       rewardPolicy?: {
         __typename?: "RewardPolicy";
         context: string;
+        rewardPoint: number;
         rewardPolicyType: RewardPolicyType;
       } | null;
       winners?: Array<{
@@ -153,6 +154,7 @@ export function useUserQuery(props: { name?: string }) {
                   e.rewardPolicy?.context ?? undefined,
                   e.rewardPolicy?.rewardPolicyType ?? undefined
                 ),
+                rewardPoint: e.rewardPolicy?.rewardPoint ?? undefined,
                 rewardPolicyType: e.rewardPolicy?.rewardPolicyType ?? undefined,
               },
               quests: e.quests
