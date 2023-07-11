@@ -157,7 +157,8 @@ const Event = (props: AppProps) => {
   const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
   const [simpleWarningDialogShow, setSimpleWarningDialogShow] = useState(false);
 
-  const [openAgreementDialog, setOpenAgreementDialog] = useState(false);
+  const [openAgreementQuestDialog, setOpenAgreementQuestDialog] =
+    useState(false);
   const [openAgreementQuestId, setOpenAgreementQuestId] = useState<string>();
   const [openAgreementQuestContext, setOpenAgreementQuestContext] =
     useState<VerifyAgreementContext>({ agreementList: [] });
@@ -280,16 +281,20 @@ const Event = (props: AppProps) => {
     }
   }, [verifiedList, updateIndex]);
 
-  // const openAgreementDialog = (
-  //   questId: string,
-  //   quizContext: QuizQuestContext
-  // ) => {
-  //   setOpenAgreementDialog(true);
-  //   // const [openAgreementDialog, setOpenAgreementDialog] = useState(false);
-  //   // const [openAgreementQuestId, setOpenAgreementQuestId] = useState<string>();
-  //   // const [openAgreementQuestContext, setOpenAgreementQuestContext] =
-  //   //   useState<VerifyAgreementContext>({ agreementList: [] });
-  // };
+  const openAgreementDialog = (
+    questId: string,
+    agreementContext: VerifyAgreementContext
+  ) => {
+    setOpenAgreementQuestDialog(true);
+    setOpenAgreementQuestId(questId);
+    setOpenAgreementQuestContext(agreementContext);
+  };
+
+  const closeAgreementDialog = () => {
+    setOpenAgreementQuestDialog(false);
+    setOpenAgreementQuestId(undefined);
+    setOpenAgreementQuestContext({ agreementList: [] });
+  };
 
   const openQuizDialog = (questId: string, quizContext: QuizQuestContext) => {
     setOpenQuizQuestDialog(true);
@@ -723,6 +728,13 @@ const Event = (props: AppProps) => {
       if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.QUIZ) {
         const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
         openQuizDialog(quest._id, quizQuestContext);
+        myEvent.params.callback("success");
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAgreement
+      ) {
+        const verifyAgreementContext = quest.questPolicy
+          ?.context as VerifyAgreementContext;
+        openAgreementDialog(quest._id, verifyAgreementContext);
         myEvent.params.callback("success");
       } else if (
         quest.questPolicy?.questPolicy ===
@@ -1391,7 +1403,10 @@ const Event = (props: AppProps) => {
                           QuestPolicyType.VerifyHasTwitter ||
                         quest.questPolicy?.questPolicy ===
                           QuestPolicyType.VerifyHasTelegram ||
-                        quest.questPolicy?.questPolicy === QuestPolicyType.Quiz
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.Quiz ||
+                        quest.questPolicy?.questPolicy ===
+                          QuestPolicyType.VerifyAgreement
                       }
                       onVerifyBtnClicked={async (e) => {
                         await asyncVerifyQuest(e, quest, index);
@@ -1811,7 +1826,34 @@ const Event = (props: AppProps) => {
       </Grid>
 
       {/* --- Dialogs --- */}
-      {/*<AgreementDialog></AgreementDialog>*/}
+      <AgreementDialog
+        open={openAgreementQuestDialog}
+        context={openAgreementQuestContext}
+        onClose={() => {
+          closeAgreementDialog();
+        }}
+        onCompleteAgreement={() => {
+          if (openAgreementQuestId) {
+            const ids = ticketData?.quests?.map((e) => {
+              return e._id;
+            });
+            const index = ids?.indexOf(openAgreementQuestId) as number;
+            if (index !== undefined && ticketData._id) {
+              try {
+                asyncCompleteQuestOfUser(
+                  ticketData._id,
+                  openAgreementQuestId
+                ).then((res) => {
+                  updateVerifyState(index);
+                });
+              } catch (e) {
+              } finally {
+                closeAgreementDialog();
+              }
+            }
+          }
+        }}
+      ></AgreementDialog>
       <QuestQuizDialog
         open={openQuizQuestDialog}
         context={openQuizQuestContext}

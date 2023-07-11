@@ -300,6 +300,10 @@ export type AgreementContent = {
   correctOptionIndex: number;
 };
 
+export type AgreementEventParam = {
+  correct: boolean;
+};
+
 export type QuizQuestContext = {
   quizList?: QuizContent[];
 };
