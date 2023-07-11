@@ -2,16 +2,26 @@ import {
   Box,
   DialogContent,
   DialogProps,
+  IconButton,
   Stack,
   Typography,
 } from "@mui/material";
 import * as React from "react";
 import { MouseEventHandler, useMemo, useState } from "react";
-import { VerifyAgreementContext, Z_INDEX_OFFSET } from "../../type";
+import {
+  AgreementEventParam,
+  MouseEventWithParam,
+  VerifyAgreementContext,
+  Z_INDEX_OFFSET,
+} from "../../type";
 import { useTheme } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import SecondaryButton from "../atoms/secondary-button";
+import ContentMetaDataRenderComponent from "../atoms/content-meta-data-render-component";
+import QuestQuizForm from "../molecules/quest-quiz-form";
+import QuestAgreementForm from "../molecules/quest-agreement-form";
+import CloseIcon from "@mui/icons-material/Close";
 
 type AgreementDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
@@ -68,52 +78,79 @@ const AgreementDialog = (props: AgreementDialogProps) => {
         }}
       >
         <DialogTitle>
-          <Stack direction={"column"} spacing={1}>
-            {/*<Typography variant={"body1"}>{`Question ${agreementIndex + 1} of ${*/}
-            {/*  context.agreementList?.length*/}
-            {/*}`}</Typography>*/}
-            <Typography
-              variant={"h5"}
-              sx={{
-                wordBreak: "break-word",
-              }}
-            >
-              {props.context?.agreementList &&
-              props.context?.agreementList?.length > 0 ? (
-                <Box sx={{ marginTop: 3 }}>
-                  {/*<Typography variant={"body1"}>*/}
-                  {/*  {props.context?.agreementList[questionIndex]?.title.}*/}
-                  {/*</Typography>*/}
-                </Box>
-              ) : (
-                <></>
-              )}
-            </Typography>
+          <Stack
+            direction={"column"}
+            spacing={1}
+            sx={{ marginTop: -2, marginBottom: 1 }}
+          >
+            <Box sx={{ paddingBottom: 3, paddingTop: 3 }}>
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+              >
+                {(context.agreementList?.length ?? 0) > 1 ? (
+                  <Typography variant={"body1"}>{`확인 ${
+                    agreementIndex + 1
+                  } of ${context.agreementList?.length}`}</Typography>
+                ) : (
+                  <Typography variant={"h6"}>&nbsp;</Typography>
+                )}
+                <IconButton
+                  sx={{
+                    borderRadius: 32,
+                    marginRight: 0,
+                    "&:hover": {
+                      boxShadow: "none",
+                      transform: "translateY(0px)",
+                    },
+                  }}
+                  onClick={props.onCloseBtnClicked}
+                >
+                  <CloseIcon></CloseIcon>
+                </IconButton>
+              </Stack>
+            </Box>
+            {props.context?.agreementList &&
+            props.context?.agreementList?.length > 0 ? (
+              <Box sx={{ marginTop: 3 }}>
+                <ContentMetaDataRenderComponent
+                  contentMetaData={
+                    props.context?.agreementList[agreementIndex]?.title
+                  }
+                  textComponentFunc={(content) => {
+                    return <Typography variant={"body1"}>{content}</Typography>;
+                  }}
+                ></ContentMetaDataRenderComponent>
+              </Box>
+            ) : (
+              <></>
+            )}
           </Stack>
         </DialogTitle>
         <DialogContent>
           <Box sx={{ marginTop: 1 }}>
-            {/*<QuestQuizForm*/}
-            {/*  quizContent={*/}
-            {/*    props.context?.agreementList*/}
-            {/*      ? props.context?.agreementList[questionIndex]*/}
-            {/*      : undefined*/}
-            {/*  }*/}
-            {/*  onSelectChanged={(e) => {*/}
-            {/*    const myEvent = e as MouseEventWithParam<QuizEventParam>;*/}
-            {/*    setActiveNextQuestion(myEvent.params.correct);*/}
-            {/*  }}*/}
-            {/*  id={questionIndex}*/}
-            {/*  isLast={isLast}*/}
-            {/*/>*/}
+            <QuestAgreementForm
+              agreementContent={
+                props.context?.agreementList
+                  ? props.context?.agreementList[agreementIndex]
+                  : undefined
+              }
+              onSelectChanged={(e) => {
+                const myEvent = e as MouseEventWithParam<AgreementEventParam>;
+                setActiveNext(myEvent.params.correct);
+              }}
+              id={agreementIndex}
+              isLast={isLast}
+            />
           </Box>
-          <Box sx={{ marginTop: 0 }}>
+          <Box sx={{ marginTop: 4 }}>
             <SecondaryButton
               disabled={!activeNext}
               fullWidth={true}
               onClick={onNextQuestionButtonClicked}
             >
-              {isLast ? "완료" : "다음"}
+              {isLast ? "확인" : "다음"}
             </SecondaryButton>
           </Box>
         </DialogContent>
