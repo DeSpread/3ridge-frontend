@@ -1,10 +1,4 @@
-import React, {
-  ReactElement,
-  useEffect,
-  useMemo,
-  useState,
-  useCallback,
-} from "react";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -32,7 +26,6 @@ import SecondaryButton from "../../components/atoms/secondary-button";
 import { decodeBase64, nFormatter } from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
-import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import {
   DiscordQuestContext,
   MouseEventWithParam,
@@ -45,6 +38,7 @@ import {
   TwitterFollowQuestContext,
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
+  VerifyAgreementContext,
   VerifyHasWalletAddressContext,
   VerifyVisitWebsiteContext,
 } from "../../type";
@@ -73,7 +67,6 @@ import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
-import { useMobile } from "../../provider/mobile/mobile-context";
 import { parseStrToDate } from "../../util/date-util";
 import StringHelper from "../../helper/string-helper";
 import Realistic from "../../components/realistic";
@@ -83,8 +76,9 @@ import { useSetRecoilState } from "recoil";
 import { backDirectionPathState } from "../../lib/recoil";
 import ClickTypography from "../../components/click-typhography";
 import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
-import ContentComponentBuilder from "../../helper/content-component-builder";
-import { useTimer } from "react-timer-hook";
+import ComponentHelper from "../../helper/component-helper";
+import ContentMetaDataRenderComponent from "../../components/atoms/content-meta-data-render-component";
+import AgreementDialog from "../../components/dialogs/agreement-dialog";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -158,15 +152,21 @@ const Event = (props: AppProps) => {
         : undefined
       : undefined,
   });
-  const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
   const [openContentsRendererDialog, setOpenContentsRendererDialog] =
     useState(false);
   const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
   const [simpleWarningDialogShow, setSimpleWarningDialogShow] = useState(false);
 
+  const [openAgreementDialog, setOpenAgreementDialog] = useState(false);
+  const [openAgreementQuestId, setOpenAgreementQuestId] = useState<string>();
+  const [openAgreementQuestContext, setOpenAgreementQuestContext] =
+    useState<VerifyAgreementContext>({ agreementList: [] });
+
+  const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
   const [openQuizQuestContext, setOpenQuizQuestContext] =
     useState<QuizQuestContext>({ quizList: [] });
+
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
   const { asyncTwitterSignInPopUp } = useFirebaseAuth();
   const { showLoading, closeLoading } = useLoading();
@@ -280,6 +280,29 @@ const Event = (props: AppProps) => {
     }
   }, [verifiedList, updateIndex]);
 
+  // const openAgreementDialog = (
+  //   questId: string,
+  //   quizContext: QuizQuestContext
+  // ) => {
+  //   setOpenAgreementDialog(true);
+  //   // const [openAgreementDialog, setOpenAgreementDialog] = useState(false);
+  //   // const [openAgreementQuestId, setOpenAgreementQuestId] = useState<string>();
+  //   // const [openAgreementQuestContext, setOpenAgreementQuestContext] =
+  //   //   useState<VerifyAgreementContext>({ agreementList: [] });
+  // };
+
+  const openQuizDialog = (questId: string, quizContext: QuizQuestContext) => {
+    setOpenQuizQuestDialog(true);
+    setOpenQuizQuestId(questId);
+    setOpenQuizQuestContext(quizContext);
+  };
+
+  const closeQuizDialog = () => {
+    setOpenQuizQuestDialog(false);
+    setOpenQuizQuestId(undefined);
+    setOpenQuizQuestContext({ quizList: [] });
+  };
+
   const claimRewardDisabled = useMemo(() => {
     if (userData?._id === undefined) return true;
     if (verifiedList.length === 0) return true;
@@ -351,7 +374,8 @@ const Event = (props: AppProps) => {
   const isExceededTicketParticipants = () => {
     if (
       ticketData?.participantCount !== undefined &&
-      ticketData?.rewardPolicy?.context?.limitNumber !== undefined
+      ticketData?.rewardPolicy?.context?.limitNumber !== undefined &&
+      ticketData?.rewardPolicy?.rewardPolicyType === REWARD_POLICY_TYPE.FCFS
     ) {
       return (
         ticketData?.participantCount >=
@@ -471,21 +495,24 @@ const Event = (props: AppProps) => {
   const getRewardLabel = () => {
     if (ticketData.rewardPolicy?.context?.rewardChain) {
       if (ticketData.rewardPolicy?.context?.overrideRewardChainContent) {
-        return new ContentComponentBuilder(
-          ticketData.rewardPolicy?.context?.overrideRewardChainContent
-        )
-          .overrideHtmlComponentFunc((content) => {
-            return (
-              <Stack sx={{ background: "", alignItems: "center" }}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: content ?? "<></>",
-                  }}
-                ></div>
-              </Stack>
-            );
-          })
-          .render();
+        return (
+          <ContentMetaDataRenderComponent
+            contentMetaData={
+              ticketData.rewardPolicy?.context?.overrideRewardChainContent
+            }
+            htmlComponentFunc={(content) => {
+              return (
+                <Stack sx={{ background: "", alignItems: "center" }}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: content ?? "<></>",
+                    }}
+                  ></div>
+                </Stack>
+              );
+            }}
+          />
+        );
       }
       return ticketData.rewardPolicy?.context?.rewardChain.includes(
         "offchain"
@@ -695,9 +722,7 @@ const Event = (props: AppProps) => {
       if (!ticketData._id || !quest?._id) return;
       if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.QUIZ) {
         const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
-        setOpenQuizQuestContext(quizQuestContext);
-        setOpenQuizQuestDialog(true);
-        setOpenQuizQuestId(quest._id);
+        openQuizDialog(quest._id, quizQuestContext);
         myEvent.params.callback("success");
       } else if (
         quest.questPolicy?.questPolicy ===
@@ -957,7 +982,6 @@ const Event = (props: AppProps) => {
         container
         direction={"row"}
         justifyContent={"center"}
-        // spacing={6}
         columnSpacing={6}
         rowSpacing={6}
         sx={{ marginTop: smUp ? 8 : 0, marginBottom: 12 }}
@@ -972,7 +996,7 @@ const Event = (props: AppProps) => {
               container
               spacing={4}
               direction={"row"}
-              alignItems="center"
+              // alignItems="center"
               justifyContent={mdUp ? "flex-start" : "center"}
               sx={{ background: "", marginBottom: 2 }}
             >
@@ -1020,15 +1044,17 @@ const Event = (props: AppProps) => {
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
                   {ticketData?.title ? (
-                    <Typography
-                      variant={smUp ? "h3" : "h4"}
-                      textAlign={smUp ? "left" : "center"}
-                      sx={{
-                        wordBreak: "keep-all",
-                      }}
-                    >
-                      {ticketData?.title}
-                    </Typography>
+                    <Box sx={{ background: "", maxWidth: 600 }}>
+                      <Typography
+                        variant={smUp ? "h3" : "h4"}
+                        textAlign={smUp ? "left" : "center"}
+                        sx={{
+                          wordBreak: "keep-all",
+                        }}
+                      >
+                        {ticketData?.title}
+                      </Typography>
+                    </Box>
                   ) : (
                     <Box sx={{ width: smUp ? 460 : "60vw" }}>
                       <Skeleton
@@ -1254,7 +1280,6 @@ const Event = (props: AppProps) => {
                         <Typography
                           variant={"h6"}
                           sx={{ color: theme.palette.warning.main }}
-                          // alignContent={"center"}
                           textAlign={"center"}
                         >
                           {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
@@ -1283,17 +1308,9 @@ const Event = (props: AppProps) => {
                 이벤트 설명
               </Typography>
               <Box>
-                {new ContentComponentBuilder(ticketData?.description_v2)
-                  .overrideHtmlComponentFunc((content) => {
-                    return (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: content ?? "<></>",
-                        }}
-                      ></div>
-                    );
-                  })
-                  .overrideTextComponentFunc((content) => {
+                <ContentMetaDataRenderComponent
+                  contentMetaData={ticketData?.description_v2}
+                  textComponentFunc={(content) => {
                     return (
                       <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>
                         <Typography sx={{ wordBreak: "keep-all" }}>
@@ -1301,8 +1318,17 @@ const Event = (props: AppProps) => {
                         </Typography>
                       </Box>
                     );
-                  })
-                  .render()}
+                  }}
+                  htmlComponentFunc={(content) => {
+                    return (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: content ?? "<></>",
+                        }}
+                      ></div>
+                    );
+                  }}
+                ></ContentMetaDataRenderComponent>
               </Box>
             </Stack>
 
@@ -1575,7 +1601,7 @@ const Event = (props: AppProps) => {
                             height={32}
                           ></Image>
                           <Typography variant={"body1"}>
-                            {ticketData?.rewardPolicy?.context?.point ?? 0}
+                            {ticketData?.rewardPolicy?.rewardPoint ?? 0}
                           </Typography>
                         </Stack>
                       </Stack>
@@ -1589,7 +1615,7 @@ const Event = (props: AppProps) => {
                         <Stack direction={"row"} alignItems={"center"}>
                           <Typography variant={"body1"}>
                             {StringHelper.getInstance().getRewardAmountLabel(
-                              ticketData?.rewardPolicy?.context?.rewardAmount
+                              ticketData?.rewardPolicy?.context?.limitNumber
                             )}
                           </Typography>
                         </Stack>
@@ -1602,13 +1628,12 @@ const Event = (props: AppProps) => {
                           sx={{ paddingTop: 1 }}
                         >
                           <Typography variant={"body1"}>리워드</Typography>
-                          <Stack direction={"row"} alignItems={"center"}>
-                            <pre>
-                              <Typography variant={"body1"} textAlign={"right"}>
-                                {ticketData?.rewardPolicy?.context
-                                  ?.rewardName ?? ""}
-                              </Typography>
-                            </pre>
+                          <Stack direction={"column"} alignItems={"flex-end"}>
+                            {ComponentHelper.getInstance().renderMultiLineContentText(
+                              ticketData?.rewardPolicy?.context?.rewardName ??
+                                "",
+                              { variant: "body1", textAlign: "right" }
+                            )}
                           </Stack>
                         </Stack>
                       )}
@@ -1786,11 +1811,12 @@ const Event = (props: AppProps) => {
       </Grid>
 
       {/* --- Dialogs --- */}
+      {/*<AgreementDialog></AgreementDialog>*/}
       <QuestQuizDialog
         open={openQuizQuestDialog}
         context={openQuizQuestContext}
         onClose={() => {
-          setOpenQuizQuestDialog(false);
+          closeQuizDialog();
         }}
         onCompleteQuiz={() => {
           if (openQuizQuestId) {
@@ -1807,7 +1833,7 @@ const Event = (props: AppProps) => {
                 );
               } catch (e) {
               } finally {
-                setOpenQuizQuestDialog(false);
+                closeQuizDialog();
               }
             }
           }

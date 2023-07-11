@@ -137,11 +137,13 @@ export function useTicketsQuery(props: {
           telegramUrl?: string | null;
           twitterUrl?: string | null;
           mediumUrl?: string | null;
+          naverBlogUrl?: string | null;
         } | null;
       } | null;
       rewardPolicy?: {
         __typename?: "RewardPolicy";
         context: string;
+        rewardPoint: number;
         rewardPolicyType: RewardPolicyType;
       } | null;
       winners?: Array<{ __typename?: "User"; name?: string | null }> | null;
@@ -187,6 +189,7 @@ export function useTicketsQuery(props: {
               e.rewardPolicy?.context ?? undefined,
               e.rewardPolicy?.rewardPolicyType ?? undefined
             ),
+            rewardPoint: e.rewardPolicy?.rewardPoint ?? undefined,
             rewardPolicyType: e.rewardPolicy?.rewardPolicyType ?? undefined,
           },
           winners: e.winners?.map((_e) => {
@@ -206,6 +209,7 @@ export function useTicketsQuery(props: {
               telegramUrl: e.project?.projectSocial?.telegramUrl ?? "",
               twitterUrl: e.project?.projectSocial?.twitterUrl ?? "",
               mediumUrl: e.project?.projectSocial?.mediumUrl ?? "",
+              naverBlogUrl: e.project?.projectSocial?.naverBlogUrl ?? "",
             },
           },
         };
