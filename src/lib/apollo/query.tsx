@@ -45,6 +45,7 @@ export const GET_USER_BY_NAME = gql(/* GraphQL */ `
         }
         rewardPolicy {
           context
+          rewardPoint
           rewardPolicyType
         }
         title
@@ -344,10 +345,12 @@ export const GET_TICKETS = gql(/* GraphQL */ `
           telegramUrl
           twitterUrl
           mediumUrl
+          naverBlogUrl
         }
       }
       rewardPolicy {
         context
+        rewardPoint
         rewardPolicyType
       }
       title
@@ -399,6 +402,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       }
       rewardPolicy {
         context
+        rewardPoint
         rewardPolicyType
       }
       title
@@ -426,6 +430,7 @@ export const GET_PROJECTS = gql(/* GraphQL */ `
         telegramUrl
         twitterUrl
         mediumUrl
+        naverBlogUrl
       }
     }
   }
@@ -445,6 +450,7 @@ export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
         telegramUrl
         twitterUrl
         mediumUrl
+        naverBlogUrl
       }
     }
   }
@@ -504,10 +510,12 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
           telegramUrl
           twitterUrl
           mediumUrl
+          naverBlogUrl
         }
       }
       rewardPolicy {
         context
+        rewardPoint
         rewardPolicyType
       }
       title

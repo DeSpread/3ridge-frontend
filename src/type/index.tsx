@@ -162,7 +162,7 @@ export type ReversibleSvgIconProps = SvgIconProps & {
 
 export type MouseEventWithStateParam = MouseEventWithParam<{ state?: string }>;
 
-export type FCFSRewardContext = {
+export type RewardContext = {
   limitNumber: number;
   beginTime: string;
   untilTime: string;
@@ -175,7 +175,6 @@ export type FCFSRewardContext = {
   nftImageUrl: string;
   collectionName: string;
   tokenName: string;
-  point: number;
   rewardName?: string;
   rewardInfo?: {
     title: string;
@@ -203,7 +202,8 @@ export type Ticket = {
   quests?: PartialQuest[];
   imageUrl?: string;
   rewardPolicy?: {
-    context?: FCFSRewardContext | undefined;
+    context?: RewardContext;
+    rewardPoint?: number;
     rewardPolicyType?: string;
   };
   winners?: {
@@ -290,6 +290,16 @@ export type VerifyHasWalletAddressContext = {
   chain: string;
 };
 
+export type VerifyAgreementContext = {
+  agreementList?: AgreementContent[];
+};
+
+export type AgreementContent = {
+  title: ContentMetadata;
+  options: string[];
+  correctOptionIndex: number;
+};
+
 export type QuizQuestContext = {
   quizList?: QuizContent[];
 };
@@ -320,6 +330,7 @@ export type Project = {
     telegramUrl: string;
     twitterUrl: string;
     mediumUrl: string;
+    naverBlogUrl: string;
   };
 };
 

@@ -105,6 +105,7 @@ export function useTicketQuery({
           }),
           rewardPolicy: {
             context: _rewardPolicy,
+            rewardPoint: rewardPolicy?.rewardPoint ?? undefined,
             rewardPolicyType: rewardPolicy?.rewardPolicyType ?? undefined,
           },
           winners: winners?.map((e) => {
@@ -147,6 +148,7 @@ export function useTicketQuery({
       imageUrl,
       rewardClaimedUsers,
     } = data.ticketById;
+    // console.log("rewardPolicy", rewardPolicy);
     const _rewardPolicy = typeParseHelper.parseRewardPolicy(
       rewardPolicy?.context ?? undefined,
       rewardPolicy?.rewardPolicyType ?? undefined
@@ -188,6 +190,7 @@ export function useTicketQuery({
         }),
         rewardPolicy: {
           context: _rewardPolicy,
+          rewardPoint: rewardPolicy?.rewardPoint ?? undefined,
           rewardPolicyType: rewardPolicy?.rewardPolicyType ?? undefined,
         },
         winners: winners?.map((e) => {

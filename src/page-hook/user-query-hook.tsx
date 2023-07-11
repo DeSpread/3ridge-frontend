@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { client } from "../lib/apollo/client";
 import { GET_USER_BY_NAME } from "../lib/apollo/query";
-import { FCFSRewardContext, User } from "../type";
+import { RewardContext, User } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { convertToSuppoertedNetwork } from "../helper/type-helper";
 import {

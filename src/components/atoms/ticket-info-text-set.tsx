@@ -17,9 +17,9 @@ const TicketInfoTextSet = ({
     <Stack>
       <Stack direction={"row"} alignItems={"center"} justifyContent={"center"}>
         <Typography variant={"body2"} sx={{ ...sx }} textAlign={"center"}>
-          {`${ticket?.rewardPolicy?.context?.point ?? 0} 포인트`}
+          {`${ticket?.rewardPolicy?.rewardPoint ?? 0} 포인트`}
         </Typography>
-        {ticket?.rewardPolicy?.context?.rewardAmount && (
+        {ticket?.rewardPolicy?.context?.limitNumber && (
           <Box
             sx={{
               ...sx,
@@ -28,7 +28,7 @@ const TicketInfoTextSet = ({
           >
             <Typography variant={"body2"} textAlign={"center"}>
               {` / ${StringHelper.getInstance().getRewardAmountLabel(
-                ticket?.rewardPolicy?.context?.rewardAmount
+                ticket?.rewardPolicy?.context?.limitNumber
               )}`}
             </Typography>
           </Box>
