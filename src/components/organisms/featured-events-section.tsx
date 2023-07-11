@@ -31,7 +31,7 @@ const FeaturedEventsSection = () => {
   const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
 
   const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
-    TicketSortType.Trending
+    TicketSortType.Newest
   );
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType,
