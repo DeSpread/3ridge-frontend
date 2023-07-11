@@ -158,10 +158,10 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
             </Stack>
             <Stack
               sx={{
-                background: "#00000066",
+                background: "#000000c0", //66
                 justifyContent: "center",
-                borderRadius: 4,
-                padding: 1,
+                borderRadius: 3,
+                padding: 2,
                 alignItems: "center",
               }}
             >

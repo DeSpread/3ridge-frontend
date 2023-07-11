@@ -31,6 +31,7 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
               telegramUrl: e.projectSocial?.telegramUrl ?? "",
               twitterUrl: e.projectSocial?.twitterUrl ?? "",
               mediumUrl: e.projectSocial?.mediumUrl ?? "",
+              naverBlogUrl: e.projectSocial?.naverBlogUrl ?? "",
             },
           };
         });

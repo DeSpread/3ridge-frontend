@@ -21,7 +21,7 @@ import { MouseEventWithParam } from "../../type";
 import { useTheme } from "@mui/material/styles";
 import CheckIcon from "@mui/icons-material/Check";
 import { ContentMetadata } from "../../__generated__/graphql";
-import ContentComponentBuilder from "../../helper/content-component-builder";
+import ContentMetaDataRenderComponent from "../atoms/content-meta-data-render-component";
 
 type VerifyCardProps = PropsWithChildren & {
   sx?: CSSProperties;
@@ -95,21 +95,21 @@ const VerifyCard = (props: VerifyCardProps) => {
                     sx={{ marginLeft: smUp ? 3 : 0 }}
                   >
                     <Box>
-                      {new ContentComponentBuilder(props.title_v2)
-                        .overrideTextComponentFunc((content) => {
+                      <ContentMetaDataRenderComponent
+                        contentMetaData={props.title_v2}
+                        textComponentFunc={(content) => {
                           return (
                             <Typography
                               variant={"h6"}
                               sx={{
                                 wordBreak: "keep-all",
                               }}
-                              // textAlign={"center"}
                             >
                               {content}
                             </Typography>
                           );
-                        })
-                        .render()}
+                        }}
+                      ></ContentMetaDataRenderComponent>
                     </Box>
                     {props.description && (
                       <Box sx={{ marginTop: 1 }}>
@@ -231,21 +231,22 @@ const VerifyCard = (props: VerifyCardProps) => {
                   sx={{ width: "100%" }}
                 >
                   <Box>
-                    {new ContentComponentBuilder(props.title_v2)
-                      .overrideTextComponentFunc((content) => {
+                    <ContentMetaDataRenderComponent
+                      contentMetaData={props.title_v2}
+                      textComponentFunc={(content) => {
                         return (
                           <Typography
                             variant={"h6"}
                             sx={{
                               wordBreak: "keep-all",
                             }}
-                            textAlign={"center"}
+                            // textAlign={"center"}
                           >
                             {content}
                           </Typography>
                         );
-                      })
-                      .render()}
+                      }}
+                    ></ContentMetaDataRenderComponent>
                   </Box>
                   {props.description && (
                     <Box sx={{ marginTop: 1 }}>

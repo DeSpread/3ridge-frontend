@@ -1,5 +1,5 @@
 import {
-  FCFSRewardContext,
+  RewardContext,
   TwitterFollowQuestContext,
   QUEST_POLICY_TYPE,
   QuizQuestContext,
@@ -14,6 +14,7 @@ import {
   VerifyHasTwitter,
   VerifyHasTelegram,
   VerifyVisitWebsiteContext,
+  VerifyAgreementContext,
 } from "../type";
 import { QuestPolicyType } from "../__generated__/graphql";
 
@@ -36,7 +37,7 @@ class TypeParseHelper {
       ) {
         const _context = context.trim();
         const contextJson = JSON.parse(_context);
-        const res = contextJson as FCFSRewardContext;
+        const res = contextJson as RewardContext;
         return res;
       }
     } catch (e) {
@@ -74,6 +75,8 @@ class TypeParseHelper {
         return contextJson as VerifyHasTelegram;
       } else if (questPolicyType === QuestPolicyType.VerifyVisitWebsite) {
         return contextJson as VerifyVisitWebsiteContext;
+      } else if (questPolicyType === QuestPolicyType.VerifyAgreement) {
+        return contextJson as VerifyAgreementContext;
       }
     } catch (e) {
       console.log(context, questPolicyType);

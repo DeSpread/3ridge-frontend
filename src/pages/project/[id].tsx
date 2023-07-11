@@ -246,6 +246,26 @@ const Project = () => {
                     ></Image>
                   </LinkIconButton>
                 )}
+                {projectData?.projectSocial?.naverBlogUrl && (
+                  <LinkIconButton
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      background: (theme) => theme.palette.neutral["900"],
+                      borderRadius: 16,
+                    }}
+                    linkUrl={projectData?.projectSocial?.naverBlogUrl}
+                  >
+                    <Image
+                      src={
+                        "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/naver-svgrepo-com.svg"
+                      }
+                      alt={""}
+                      width={24}
+                      height={24}
+                    ></Image>
+                  </LinkIconButton>
+                )}
               </Stack>
             </Grid>
           </Grid>
