@@ -1719,7 +1719,7 @@ const Event = (props: AppProps) => {
               </LoadingButton>
             </Stack>
 
-            <Stack direction={"column"}>
+            <Stack direction={"column"} sx={{ background: "", maxWidth: 350 }}>
               <Stack
                 direction={"row"}
                 alignItems={"center"}
