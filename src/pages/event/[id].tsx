@@ -1268,6 +1268,7 @@ const Event = (props: AppProps) => {
                           onClick={async (e) => {
                             setShowSignInDialog(true);
                           }}
+                          textAlign={mdUp ? "left" : "center"}
                         >
                           로그인 후, 이벤트에 참여하실 수 있어요 😅
                         </LinkTypography>
