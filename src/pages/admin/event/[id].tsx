@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, useMediaQuery } from "@mui/material";
+import { Box, Grid, IconButton, Stack, useMediaQuery } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import MainLayout from "../../../layouts/main-layout";
 import Head from "next/head";
@@ -6,9 +6,10 @@ import { useTheme } from "@mui/material/styles";
 import { useSignedUserQuery } from "../../../page-hook/signed-user-query-hook";
 import { useTicketQuery } from "../../../page-hook/ticket-query-hook";
 import { useRouter } from "next/router";
-import EventImage from "../../event/components/event-image";
+import EventImage from "../../../components/atoms/pages/event/event-image";
 import WithEditorContainer from "../../../hoc/with-editor-container";
 import { EditorAction, EditorTargetAction } from "../../../type";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 const _EventImage = WithEditorContainer(EventImage);
 
@@ -67,16 +68,37 @@ const Event = () => {
                     background: "",
                   }}
                 >
-                  <_EventImage
-                    imageUrl={ticketData?.imageUrl}
-                    onClickForEdit={(e) => {
-                      setSelectedTargetAction({
-                        target: "imageUrl",
-                        action: EditorAction.UPDATE,
-                      });
-                    }}
-                    onClickForDelete={(e) => {}}
-                  ></_EventImage>
+                  {/*<_EventImage*/}
+                  {/*  imageUrl={ticketData?.imageUrl}*/}
+                  {/*  onClickForEdit={(e) => {*/}
+                  {/*    setSelectedTargetAction({*/}
+                  {/*      target: "imageUrl",*/}
+                  {/*      action: EditorAction.UPDATE,*/}
+                  {/*    });*/}
+                  {/*  }}*/}
+                  {/*  onClickForDelete={(e) => {}}*/}
+                  {/*>*/}
+                  {/*</_EventImage>*/}
+                  <IconButton>
+                    <input
+                      name={"newImage"}
+                      type="file"
+                      hidden
+                      onChange={(e) => {
+                        console.log(e);
+                        if (e.target.files?.[0]) {
+                          const file = e.target.files[0];
+                          if (
+                            /\/(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(file.type)
+                          ) {
+                            // props.onFileImageAdded?.(file);
+                          }
+                        }
+                        e.target.value = "";
+                      }}
+                    />
+                    <AddPhotoAlternateIcon></AddPhotoAlternateIcon>
+                  </IconButton>
                 </Box>
               </Grid>
               <Grid item>

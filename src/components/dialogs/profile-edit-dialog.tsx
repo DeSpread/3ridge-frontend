@@ -18,23 +18,23 @@ import {
   SUPPORTED_NETWORKS,
   User,
   Z_INDEX_OFFSET,
-} from "../../../type";
+} from "../../type";
 import { useTheme } from "@mui/material/styles";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
-import StringHelper from "../../../helper/string-helper";
+import StringHelper from "../../helper/string-helper";
 import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";
-import { ValidatorButton } from "../../../components/molecules/validator-button";
-import BlockIcon from "../../../components/molecules/block-icon";
-import ResourceFactory from "../../../helper/resource-factory";
+import { ValidatorButton } from "../molecules/validator-button";
+import BlockIcon from "../molecules/block-icon";
+import ResourceFactory from "../../helper/resource-factory";
 // @ts-ignore
 import TelegramLoginButton from "react-telegram-login";
-import { getUserMail } from "../../../helper/type-helper";
-import { useMobile } from "../../../provider/mobile/mobile-context";
-import PrimaryButton from "../../../components/atoms/primary-button";
-import SecondaryButton from "../../../components/atoms/secondary-button";
+import { getUserMail } from "../../helper/type-helper";
+import { useMobile } from "../../provider/mobile/mobile-context";
+import PrimaryButton from "../atoms/primary-button";
+import SecondaryButton from "../atoms/secondary-button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/router";
 

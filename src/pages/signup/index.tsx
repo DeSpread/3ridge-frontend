@@ -4,8 +4,8 @@ import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import HomeFooter from "../../layouts/footer/home-footer";
 import Head from "next/head";
 import LinkTypography from "../../components/atoms/link-typography";
-import SignUpSelectForm from "./components/sign-up-select-form";
-import SignUpOthersForm from "./components/sign-up-others-form";
+import SignUpSelectForm from "../../components/molecules/form/sign-up-select-form";
+import SignUpOthersForm from "../../components/molecules/form/sign-up-others-form";
 import { useRouter } from "next/router";
 import { useLogin } from "../../provider/login/login-provider";
 import {
@@ -15,7 +15,7 @@ import {
   getLocaleErrorMessage,
 } from "../../error/my-error";
 import { useAlert } from "../../provider/alert/alert-provider";
-import SignUpWithEmailForm from "./components/sign-up-with-email-form";
+import SignUpWithEmailForm from "../../components/molecules/form/sign-up-with-email-form";
 import {
   EmailSignUpEventParams,
   MAIL_VERIFY,
@@ -50,13 +50,7 @@ type FormType = ObjectValues<typeof FORM_TYPE>;
 const Signup = () => {
   const router = useRouter();
   const { showErrorAlert, showAlert } = useAlert();
-  const {
-    googleSignUp,
-    walletSignUp,
-    emailVerify,
-    emailSignIn,
-    // resendEmailVerify,
-  } = useLogin();
+  const { googleSignUp, walletSignUp, emailVerify, emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
   const { setShowSignInDialog } = useSignDialog();
   const [signupParams, setSignUpParams] = useState<EmailSignUpEventParams>({

@@ -1,8 +1,8 @@
 import { Avatar, Stack, Typography } from "@mui/material";
-import SecondaryButton from "../../../components/atoms/secondary-button";
-import PrimaryButton from "../../../components/atoms/primary-button";
-import EmailIcon from "../../../components/atoms/svg/email-icon";
-import LinkTypography from "../../../components/atoms/link-typography";
+import SecondaryButton from "../../atoms/secondary-button";
+import PrimaryButton from "../../atoms/primary-button";
+import EmailIcon from "../../atoms/svg/email-icon";
+import LinkTypography from "../../atoms/link-typography";
 import { useTheme } from "@mui/material/styles";
 import { MouseEventHandler, PropsWithChildren } from "react";
 

@@ -1,16 +1,14 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React from "react";
 import { useTheme } from "@mui/material/styles";
 import {
   Box,
   CardProps,
-  Grid,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
 import { Ticket } from "../../type";
-import SecondaryButton from "../atoms/secondary-button";
 import PrimaryButton from "../atoms/primary-button";
 import { useRouter } from "next/router";
 

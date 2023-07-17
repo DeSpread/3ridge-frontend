@@ -4,7 +4,6 @@ import { useTheme } from "@mui/material/styles";
 
 const EventTitle = ({ title }: { title?: string }) => {
   const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return title ? (

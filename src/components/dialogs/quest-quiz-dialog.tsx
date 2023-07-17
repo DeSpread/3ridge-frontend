@@ -9,7 +9,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import QuestQuizForm from "../molecules/quest-quiz-form";
+import QuestQuizForm from "../molecules/form/quest-quiz-form";
 import {
   MouseEventWithParam,
   QuizEventParam,

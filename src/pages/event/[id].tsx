@@ -79,8 +79,8 @@ import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 import ComponentHelper from "../../helper/component-helper";
 import ContentMetaDataRenderComponent from "../../components/atoms/content-meta-data-render-component";
 import AgreementDialog from "../../components/dialogs/agreement-dialog";
-import EventTitle from "./components/event-title";
-import EventImage from "./components/event-image";
+import EventTitle from "../../components/atoms/pages/event/event-title";
+import EventImage from "../../components/atoms/pages/event/event-image";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);

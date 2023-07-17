@@ -10,10 +10,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { MouseEventHandler, useMemo, useState } from "react";
-import { Z_INDEX_OFFSET } from "../../../type";
-import SecondaryButton from "../../../components/atoms/secondary-button";
-import ValidatedTextInput from "../../../components/molecules/validated-text-input";
-import { useSignedUserQuery } from "../../../page-hook/signed-user-query-hook";
+import { Z_INDEX_OFFSET } from "../../type";
+import SecondaryButton from "../atoms/secondary-button";
+import ValidatedTextInput from "../molecules/validated-text-input";
+import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 
 type ConnectTwitterDialogProps = DialogProps & {
   onCloseBtnClicked: MouseEventHandler;

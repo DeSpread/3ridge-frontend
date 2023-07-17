@@ -12,23 +12,23 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { MouseEventHandler, useState } from "react";
-import VerifyYourEmailForm from "../../../components/organisms/verify-your-email-form";
-import SendVerificationEmailForm from "../../../components/organisms/send-verification-email-form";
+import VerifyYourEmailForm from "../organisms/verify-your-email-form";
+import SendVerificationEmailForm from "../organisms/send-verification-email-form";
 import {
   EmailSignUpEventParams,
   MouseEventWithParam,
   ObjectValues,
   Z_INDEX_OFFSET,
-} from "../../../type";
-import MailTextField from "../../../components/molecules/mail-text-field";
-import SecondaryButton from "../../../components/atoms/secondary-button";
-import { validateMail } from "../../../util/string-util";
-import AwsClient from "../../../remote/aws-client";
-import { useAlert } from "../../../provider/alert/alert-provider";
-import { getLocaleErrorMessage } from "../../../error/my-error";
+} from "../../type";
+import MailTextField from "../molecules/mail-text-field";
+import SecondaryButton from "../atoms/secondary-button";
+import { validateMail } from "../../util/string-util";
+import AwsClient from "../../remote/aws-client";
+import { useAlert } from "../../provider/alert/alert-provider";
+import { getLocaleErrorMessage } from "../../error/my-error";
 import CircularProgress from "@mui/material/CircularProgress";
 import addSeconds from "date-fns/addSeconds";
-import ValidatedTextInput from "../../../components/molecules/validated-text-input";
+import ValidatedTextInput from "../molecules/validated-text-input";
 import { useTheme } from "@mui/material/styles";
 
 export const CONNECT_MAIL_DIALOG_FORM_TYPE = {

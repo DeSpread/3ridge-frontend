@@ -23,7 +23,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import PrimaryButton from "../../components/atoms/primary-button";
-import ProfileEditDialog from "./dialog/profile-edit-dialog";
+import ProfileEditDialog from "../../components/dialogs/profile-edit-dialog";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useLogin } from "../../provider/login/login-provider";
 import {
@@ -33,7 +33,7 @@ import {
   SUPPORTED_NETWORKS,
   SupportedNetwork,
 } from "../../type";
-import ConnectEmailDialog from "./dialog/connect-email-dialog";
+import ConnectEmailDialog from "../../components/dialogs/connect-email-dialog";
 import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import {
@@ -42,7 +42,7 @@ import {
   getErrorMessage,
   getLocaleErrorMessage,
 } from "../../error/my-error";
-import PictureEditDialog from "./dialog/picture-edit-dialog";
+import PictureEditDialog from "../../components/dialogs/picture-edit-dialog";
 import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-button";
 import AwsClient from "../../remote/aws-client";
 import StyledChip from "../../components/atoms/styled/styled-chip";
@@ -65,7 +65,7 @@ import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-w
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import { goToMetaMaskDeppLinkWhenMobile } from "../../helper/eth-helper";
-import ConnectTwitterDialog from "./dialog/connect-twitter-dialog";
+import ConnectTwitterDialog from "../../components/dialogs/connect-twitter-dialog";
 import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
 import { backDirectionPathState } from "../../lib/recoil";
 import { useRecoilValue, useSetRecoilState } from "recoil";

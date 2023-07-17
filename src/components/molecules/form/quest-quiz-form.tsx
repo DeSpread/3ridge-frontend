@@ -7,8 +7,6 @@ import {
   useState,
 } from "react";
 import {
-  Box,
-  Chip,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -18,17 +16,17 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import PrimaryCard from "../atoms/primary-card";
+import PrimaryCard from "../../atoms/primary-card";
 import {
   MouseEventWithParam,
-  AgreementContent,
-  AgreementEventParam,
-} from "../../type";
+  QuizContent,
+  QuizEventParam,
+} from "../../../type";
 import { useTheme } from "@mui/material/styles";
 
-export type QuestAgreementFormProps = PropsWithChildren & {
+export type QuestQuizFormProps = PropsWithChildren & {
   cardSx?: CSSProperties;
-  agreementContent?: AgreementContent;
+  quizContent?: QuizContent;
   onSelectChanged?: MouseEventHandler;
   id?: number;
   isLast?: boolean;
@@ -38,7 +36,7 @@ const StyledRadio = styled(Radio)(({ theme }) => ({
   color: theme.palette.neutral[800],
 }));
 
-const QuestAgreementOption = (props: {
+const QuestQuizOption = (props: {
   value: number;
   label: string;
   correct: boolean;
@@ -101,23 +99,24 @@ const QuestAgreementOption = (props: {
   );
 };
 
-const QuestAgreementForm = (props: QuestAgreementFormProps) => {
-  const { agreementContent } = props;
+const QuestQuizForm = (props: QuestQuizFormProps) => {
+  const { quizContent } = props;
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
   useEffect(() => {
     setSelectedIndex(-1);
   }, [props.id]);
 
+  // event: React.ChangeEvent<HTMLInputElement>,     value: string
   const onChange = (
     event: React.ChangeEvent<HTMLInputElement> | undefined,
     value: string
   ) => {
     const _selectedIndex = parseInt(value);
     setSelectedIndex(_selectedIndex);
-    const myEvent = {} as MouseEventWithParam<AgreementEventParam>;
+    const myEvent = {} as MouseEventWithParam<QuizEventParam>;
     myEvent.params = {
-      correct: _selectedIndex === agreementContent?.correctOptionIndex,
+      correct: _selectedIndex === quizContent?.correctOptionIndex,
     };
     props?.onSelectChanged?.(myEvent);
   };
@@ -135,64 +134,64 @@ const QuestAgreementForm = (props: QuestAgreementFormProps) => {
             value={selectedIndex}
           >
             <Stack spacing={2}>
-              {agreementContent?.options?.map((e, index) => {
+              {quizContent?.options?.map((e, index) => {
                 return (
-                  <QuestAgreementOption
+                  <QuestQuizOption
                     key={index}
                     label={e}
                     value={index}
-                    correct={index === agreementContent?.correctOptionIndex}
+                    correct={index === quizContent.correctOptionIndex}
                     selected={index === selectedIndex}
                     onCardItemClick={(e) => {
                       onChange(undefined, index.toString());
                       // setSelectedIndex(index);
                     }}
-                  ></QuestAgreementOption>
+                  ></QuestQuizOption>
                 );
               })}
             </Stack>
           </RadioGroup>
         </FormControl>
-        {/*{agreementContent?.correctOptionIndex === selectedIndex && (*/}
-        {/*  <Stack*/}
-        {/*    direction={"row"}*/}
-        {/*    sx={{ marginTop: 2, marginBottom: 2 }}*/}
-        {/*    alignItems={"center"}*/}
-        {/*    justifyContent={"center"}*/}
-        {/*  >*/}
-        {/*    {props.isLast ? (*/}
-        {/*      <Typography variant={"body2"}>축하합니다! 🎉</Typography>*/}
-        {/*    ) : (*/}
-        {/*      <Typography variant={"body2"}>잘하셨어요! 😊</Typography>*/}
-        {/*    )}*/}
-        {/*  </Stack>*/}
-        {/*)}*/}
-        {/*{selectedIndex !== -1 &&*/}
-        {/*  agreementContent?.correctOptionIndex !== selectedIndex && (*/}
-        {/*    <Stack*/}
-        {/*      direction={"row"}*/}
-        {/*      sx={{ marginTop: 2, marginBottom: 2 }}*/}
-        {/*      alignItems={"center"}*/}
-        {/*      justifyContent={"center"}*/}
-        {/*    >*/}
-        {/*      <Typography variant={"body2"}>*/}
-        {/*        틀렸습니다 😅 다시 도전 해보세요~*/}
-        {/*      </Typography>*/}
-        {/*    </Stack>*/}
-        {/*  )}*/}
-        {/*{selectedIndex === -1 && (*/}
-        {/*  <Stack*/}
-        {/*    direction={"row"}*/}
-        {/*    sx={{ marginTop: 2, marginBottom: 2 }}*/}
-        {/*    alignItems={"center"}*/}
-        {/*    justifyContent={"center"}*/}
-        {/*  >*/}
-        {/*    <Typography variant={"body2"}>&nbsp;</Typography>*/}
-        {/*  </Stack>*/}
-        {/*)}*/}
+        {quizContent?.correctOptionIndex === selectedIndex && (
+          <Stack
+            direction={"row"}
+            sx={{ marginTop: 2, marginBottom: 2 }}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            {props.isLast ? (
+              <Typography variant={"body2"}>축하합니다! 🎉</Typography>
+            ) : (
+              <Typography variant={"body2"}>잘하셨어요! 😊</Typography>
+            )}
+          </Stack>
+        )}
+        {selectedIndex !== -1 &&
+          quizContent?.correctOptionIndex !== selectedIndex && (
+            <Stack
+              direction={"row"}
+              sx={{ marginTop: 2, marginBottom: 2 }}
+              alignItems={"center"}
+              justifyContent={"center"}
+            >
+              <Typography variant={"body2"}>
+                틀렸습니다 😅 다시 도전 해보세요~
+              </Typography>
+            </Stack>
+          )}
+        {selectedIndex === -1 && (
+          <Stack
+            direction={"row"}
+            sx={{ marginTop: 2, marginBottom: 2 }}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Typography variant={"body2"}>&nbsp;</Typography>
+          </Stack>
+        )}
       </Stack>
     </>
   );
 };
 
-export default QuestAgreementForm;
+export default QuestQuizForm;

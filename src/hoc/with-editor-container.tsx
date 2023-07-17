@@ -8,7 +8,7 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
 ) {
   const ComponentWith = (
     props: T & {
-      onClickForEdit: React.MouseEventHandler<HTMLDivElement>;
+      onClickForEdit?: React.MouseEventHandler<HTMLDivElement>;
       onClickForDelete?: React.MouseEventHandler<HTMLButtonElement>;
     }
   ) => {
@@ -75,6 +75,7 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
             <CloseIcon></CloseIcon>
           </IconButton>
         </Stack>
+        {props.children}
       </div>
     );
   };
