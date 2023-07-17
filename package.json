@@ -60,6 +60,7 @@
     "react-hammerjs": "^1.0.1",
     "react-i18next": "^12.2.0",
     "react-lazy-load-image-component": "^1.5.6",
+    "react-query": "^3.39.3",
     "react-timer-hook": "^3.0.5",
     "react-use": "^17.4.0",
     "recoil": "^0.7.6",

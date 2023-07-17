@@ -659,3 +659,11 @@ export const UPDATE_TICKET_VISIBLE = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const UPDATE_TICKET_IMAGE_URL = gql(/* GraphQL */ `
+  mutation UpdateTicketImageUrl($ticketId: String!, $imageUrl: String) {
+    updateTicketById(ticketId: $ticketId, imageUrl: $imageUrl) {
+      _id
+    }
+  }
+`);
