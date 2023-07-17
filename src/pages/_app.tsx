@@ -23,9 +23,10 @@ import { WalletProvider } from "@suiet/wallet-kit";
 import { v1 } from "uuid";
 import { useRouter } from "next/router";
 import { Web3Modal } from "@web3modal/react";
-
+import { QueryClient, QueryClientProvider } from "react-query";
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 import { isMobile } from "react-device-detect";
+
 import { MobileContext } from "../provider/mobile/mobile-context";
 import ErrorBoundary from "../components/error-boundary";
 import { SnackbarProvider } from "../provider/snackbar/snackbar-provider";
@@ -45,6 +46,8 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
+
+const queryClient = new QueryClient();
 
 const App = (props: AppPropsWithLayout) => {
   const { Component, pageProps } = props;
@@ -96,20 +99,22 @@ const App = (props: AppPropsWithLayout) => {
           <RecoilRoot>
             <ApolloProvider client={apolloClient}>
               <WagmiConfig config={wagmiConfig}>
-                <WalletProvider>
-                  <AptosWalletAdapterProvider
-                    plugins={wallets}
-                    autoConnect={true}
-                  >
-                    <MobileContext.Provider value={{ isMobile }}>
-                      <MasterProvider>
-                        <ErrorBoundary>
-                          {getLayout(<Component {...pageProps} />)}
-                        </ErrorBoundary>
-                      </MasterProvider>
-                    </MobileContext.Provider>
-                  </AptosWalletAdapterProvider>
-                </WalletProvider>
+                <QueryClientProvider client={queryClient}>
+                  <WalletProvider>
+                    <AptosWalletAdapterProvider
+                      plugins={wallets}
+                      autoConnect={true}
+                    >
+                      <MobileContext.Provider value={{ isMobile }}>
+                        <MasterProvider>
+                          <ErrorBoundary>
+                            {getLayout(<Component {...pageProps} />)}
+                          </ErrorBoundary>
+                        </MasterProvider>
+                      </MobileContext.Provider>
+                    </AptosWalletAdapterProvider>
+                  </WalletProvider>
+                </QueryClientProvider>
               </WagmiConfig>
               <Web3Modal
                 projectId={projectId}

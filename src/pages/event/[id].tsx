@@ -79,6 +79,8 @@ import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 import ComponentHelper from "../../helper/component-helper";
 import ContentMetaDataRenderComponent from "../../components/atoms/content-meta-data-render-component";
 import AgreementDialog from "../../components/dialogs/agreement-dialog";
+import EventTitle from "./components/event-title";
+import EventImage from "./components/event-image";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -1020,61 +1022,12 @@ const Event = (props: AppProps) => {
                     background: "",
                   }}
                 >
-                  {ticketData?.imageUrl ? (
-                    <LazyLoadImage
-                      width={smUp ? 128 : 128}
-                      height={smUp ? 128 : 128}
-                      src={ticketData?.imageUrl}
-                      style={{
-                        borderRadius: 10,
-                        borderColor: theme.palette.neutral[700],
-                        borderStyle: "solid",
-                        borderWidth: 2,
-                      }}
-                      effect="blur"
-                      beforeLoad={() => {
-                        return (
-                          <Skeleton
-                            width={smUp ? 128 : 128}
-                            height={smUp ? 128 : 128}
-                            animation={"wave"}
-                            variant={"rounded"}
-                          ></Skeleton>
-                        );
-                      }}
-                    ></LazyLoadImage>
-                  ) : (
-                    <Skeleton
-                      width={128}
-                      height={128}
-                      variant={"rounded"}
-                      animation={"wave"}
-                    ></Skeleton>
-                  )}
+                  <EventImage imageUrl={ticketData?.imageUrl}></EventImage>
                 </Box>
               </Grid>
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  {ticketData?.title ? (
-                    <Box sx={{ background: "", maxWidth: 600 }}>
-                      <Typography
-                        variant={smUp ? "h3" : "h4"}
-                        textAlign={smUp ? "left" : "center"}
-                        sx={{
-                          wordBreak: "keep-all",
-                        }}
-                      >
-                        {ticketData?.title}
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Box sx={{ width: smUp ? 460 : "60vw" }}>
-                      <Skeleton
-                        variant="text"
-                        sx={{ fontSize: smUp ? "2.25rem" : "2rem" }}
-                      />
-                    </Box>
-                  )}
+                  <EventTitle title={ticketData?.title}></EventTitle>
                   {smUp ? (
                     <Grid
                       container

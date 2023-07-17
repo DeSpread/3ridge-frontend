@@ -72,6 +72,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTotalWallet } from "../../provider/login/hook/total-wallet-hook";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useSnackbar } from "../../provider/snackbar/snackbar-provider";
+import useSimpleStorage from "../../page-hook/simple-storage-hook";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -140,6 +141,8 @@ const Profile = () => {
   }>({ state: DELETE_CONFIRM_STATE.NONE });
 
   const theme = useTheme();
+
+  const { asyncUploadImage } = useSimpleStorage();
 
   useEffect(() => {
     console.log("deleteConfirmState", deleteConfirmState);
@@ -900,12 +903,13 @@ const Profile = () => {
             (async () => {
               const includeQuestion =
                 signedUserData?.profileImageUrl?.includes("?");
-              await AwsClient.getInstance().asyncUploadProfileImage({
-                base64Data,
-                imageName: `${signedUserData?.name}.${ext}`,
-              });
+              const res = await asyncUploadImage(
+                `profile/${signedUserData?.name}.${ext}`,
+                base64Data
+              );
+              const data = await res.text();
 
-              let profileImageUrl = `https://sakura-frontend.s3.ap-northeast-2.amazonaws.com/profile/${signedUserData?.name}.${ext}`;
+              let profileImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/profile/${signedUserData?.name}.${ext}`;
               if (!includeQuestion) {
                 profileImageUrl += "?";
               }

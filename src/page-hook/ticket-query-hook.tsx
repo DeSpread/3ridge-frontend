@@ -3,12 +3,12 @@ import {
   COMPLETE_QUEST_OF_USER,
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
-  UPDATE_TICKET_VISIBLE,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
+  UPDATE_TICKET_IMAGE_URL,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -33,6 +33,7 @@ export function useTicketQuery({
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
   const [verifyAptosQuest] = useMutation(VERIFY_APTOS_QUEST);
   const [claimReward] = useMutation(CLAIM_REWARD);
+  const [updateTicketImageUrl] = useMutation(UPDATE_TICKET_IMAGE_URL);
   const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
@@ -360,6 +361,17 @@ export function useTicketQuery({
     };
   };
 
+  const asyncUpdateImageUrl = async (imageUrl?: string) => {
+    if (id) {
+      await updateTicketImageUrl({
+        variables: {
+          ticketId: id,
+          imageUrl,
+        },
+      });
+    }
+  };
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -371,5 +383,6 @@ export function useTicketQuery({
     asyncVerifyAptosQuest,
     asyncRefreshTicketData,
     asyncRewardClaim,
+    asyncUpdateImageUrl,
   };
 }
