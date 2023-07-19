@@ -1,5 +1,5 @@
 import { Box, Grid, IconButton, Stack, useMediaQuery } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import MainLayout from "../../../layouts/main-layout";
 import Head from "next/head";
 import { useTheme } from "@mui/material/styles";
@@ -8,8 +8,11 @@ import { useTicketQuery } from "../../../page-hook/ticket-query-hook";
 import { useRouter } from "next/router";
 import EventImage from "../../../components/atoms/pages/event/event-image";
 import WithEditorContainer from "../../../hoc/with-editor-container";
-import { EditorAction, EditorTargetAction } from "../../../type";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import useSimpleStorage from "../../../page-hook/simple-storage-hook";
+import {
+  asyncReadAsBase64Data,
+  getFileExtension,
+} from "../../../util/file-util";
 
 const _EventImage = WithEditorContainer(EventImage);
 
@@ -21,18 +24,23 @@ const Event = () => {
   const router = useRouter();
 
   const { userData } = useSignedUserQuery();
+  const { asyncUploadImage } = useSimpleStorage();
 
-  const [selectedTargetAction, setSelectedTargetAction] =
-    useState<EditorTargetAction>();
+  const [updateIndex, setUpdateIndex] = useState(0);
 
-  const { ticketData } = useTicketQuery({
-    userId: userData._id,
-    id: router.isReady
-      ? typeof router.query.id === "string"
-        ? router.query.id
-        : undefined
-      : undefined,
-  });
+  const { ticketData, asyncUpdateImageUrl, asyncRefreshTicketData } =
+    useTicketQuery({
+      userId: userData._id,
+      id: router.isReady
+        ? typeof router.query.id === "string"
+          ? router.query.id
+          : undefined
+        : undefined,
+    });
+
+  useEffect(() => {
+    asyncRefreshTicketData();
+  }, [updateIndex]);
 
   return (
     <>
@@ -68,37 +76,53 @@ const Event = () => {
                     background: "",
                   }}
                 >
-                  {/*<_EventImage*/}
-                  {/*  imageUrl={ticketData?.imageUrl}*/}
-                  {/*  onClickForEdit={(e) => {*/}
-                  {/*    setSelectedTargetAction({*/}
-                  {/*      target: "imageUrl",*/}
-                  {/*      action: EditorAction.UPDATE,*/}
-                  {/*    });*/}
-                  {/*  }}*/}
-                  {/*  onClickForDelete={(e) => {}}*/}
-                  {/*>*/}
-                  {/*</_EventImage>*/}
-                  <IconButton>
-                    <input
-                      name={"newImage"}
-                      type="file"
-                      hidden
-                      onChange={(e) => {
-                        console.log(e);
-                        if (e.target.files?.[0]) {
-                          const file = e.target.files[0];
-                          if (
-                            /\/(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(file.type)
-                          ) {
-                            // props.onFileImageAdded?.(file);
-                          }
-                        }
-                        e.target.value = "";
+                  <_EventImage imageUrl={ticketData?.imageUrl}>
+                    <IconButton
+                      component="label"
+                      sx={{
+                        top: 16,
+                        left: 16,
+                        width: 128,
+                        height: 128,
                       }}
-                    />
-                    <AddPhotoAlternateIcon></AddPhotoAlternateIcon>
-                  </IconButton>
+                    >
+                      <input
+                        name={"newImage"}
+                        type="file"
+                        hidden
+                        onChange={async (e) => {
+                          if (e.target.files?.[0]) {
+                            const file = e.target.files[0];
+                            if (
+                              /\/(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(
+                                file.type
+                              )
+                            ) {
+                              const includeQuestion =
+                                ticketData?.imageUrl?.includes("?");
+                              const base64Data = await asyncReadAsBase64Data(
+                                file
+                              );
+                              const ext = getFileExtension(file);
+                              await asyncUploadImage(
+                                `event/cover/${ticketData?._id}.${ext}`,
+                                base64Data
+                              );
+                              let ticketImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/event/cover/${ticketData?._id}.${ext}`;
+                              if (!includeQuestion) {
+                                ticketImageUrl += "?";
+                              }
+                              await asyncUpdateImageUrl(ticketImageUrl);
+                              setUpdateIndex((prevState) => {
+                                return prevState + 1;
+                              });
+                            }
+                          }
+                          e.target.value = "";
+                        }}
+                      />
+                    </IconButton>
+                  </_EventImage>
                 </Box>
               </Grid>
               <Grid item>

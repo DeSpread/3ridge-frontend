@@ -907,7 +907,7 @@ const Profile = () => {
                 `profile/${signedUserData?.name}.${ext}`,
                 base64Data
               );
-              const data = await res.text();
+              // const data = await res.text();
 
               let profileImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/profile/${signedUserData?.name}.${ext}`;
               if (!includeQuestion) {

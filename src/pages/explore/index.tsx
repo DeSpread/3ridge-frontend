@@ -22,11 +22,11 @@ const Explore = (props: AppProps) => {
       <Box
         style={{
           flex: 1,
-          background: "",
-          paddingLeft: 24,
-          paddingRight: 24,
-          paddingBottom: 48,
-          paddingTop: smUp ? 0 : 16,
+          paddingLeft: "32px",
+          paddingRight: "32px",
+          paddingBottom: smUp ? "32px" : "48px",
+          paddingTop: smUp ? "32px" : "48px",
+          backgroundColor: "",
         }}
       >
         <FeaturedEventsSection></FeaturedEventsSection>

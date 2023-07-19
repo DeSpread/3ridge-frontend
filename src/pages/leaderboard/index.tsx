@@ -210,70 +210,72 @@ const Leaderboard = () => {
       <Head>
         <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
-      <Grid
-        container
-        direction={"row"}
-        justifyContent={"center"}
-        spacing={5}
-        sx={{ marginTop: 0, marginBottom: 12, background: "" }}
+      <Box
+        sx={{
+          flex: 1,
+          paddingLeft: "32px",
+          paddingRight: "32px",
+          paddingTop: smUp ? "32px" : "48px",
+          minHeight: "100vh",
+          paddingBottom: smUp ? "32px" : "48px",
+          backgroundColor: "",
+        }}
       >
-        <Grid item sx={{ background: "" }}>
-          <Box sx={{ minWidth: smUp ? 800 : 200, background: "" }}>
-            <Stack direction={"column"}>
-              <Typography variant={"h4"}>유저 랭킹</Typography>
-              {userData._id && (
-                <Box sx={{ marginTop: 5 }}>
-                  <Stack direction={"column"} spacing={2}>
-                    <Box>
-                      <Typography variant={"h6"}>내 랭킹</Typography>
-                    </Box>
-                    {(userRankLoading || !userRank) && (
-                      <Box>
-                        <Skeleton
-                          width={800}
-                          height={86}
-                          animation={"wave"}
-                          variant={"rounded"}
-                        ></Skeleton>
-                      </Box>
-                    )}
-                    {!userRankLoading && userRank && (
-                      <RankCard
-                        onClick={async () => {
-                          await routeToUserProfile(userData);
-                        }}
-                        user={userData}
-                        rank={userRank}
-                      ></RankCard>
-                    )}
-                  </Stack>
-                </Box>
-              )}
+        <Stack sx={{ width: "100%", background: "" }} alignItems={"center"}>
+          <Box sx={{ minWidth: mdUp ? 800 : "100%", background: "" }}>
+            <Typography variant={"h4"}>유저 랭킹</Typography>
+            {userData._id && (
               <Box sx={{ marginTop: 5 }}>
                 <Stack direction={"column"} spacing={2}>
                   <Box>
-                    <Typography variant={"h6"}>
-                      최근 30일 동안의 유저 활동 기준
-                    </Typography>
+                    <Typography variant={"h6"}>내 랭킹</Typography>
                   </Box>
-                  {leaderUsersData?.map((e, index) => {
-                    return (
-                      <RankCard
-                        // onClick={async (event) => {
-                        //   await routeToUserProfile(e);
-                        // }}
-                        user={e}
-                        rank={index + 1}
-                        key={index}
-                      />
-                    );
-                  })}
+                  {(userRankLoading || !userRank) && (
+                    <Box>
+                      <Skeleton
+                        width={800}
+                        height={86}
+                        animation={"wave"}
+                        variant={"rounded"}
+                      ></Skeleton>
+                    </Box>
+                  )}
+                  {!userRankLoading && userRank && (
+                    <RankCard
+                      onClick={async () => {
+                        await routeToUserProfile(userData);
+                      }}
+                      user={userData}
+                      rank={userRank}
+                    ></RankCard>
+                  )}
                 </Stack>
               </Box>
-            </Stack>
+            )}
+            <Box sx={{ marginTop: 5 }}>
+              <Stack direction={"column"} spacing={2}>
+                <Box>
+                  <Typography variant={"h6"}>
+                    최근 30일 동안의 유저 활동 기준
+                  </Typography>
+                </Box>
+                {leaderUsersData?.map((e, index) => {
+                  return (
+                    <RankCard
+                      // onClick={async (event) => {
+                      //   await routeToUserProfile(e);
+                      // }}
+                      user={e}
+                      rank={index + 1}
+                      key={index}
+                    />
+                  );
+                })}
+              </Stack>
+            </Box>
           </Box>
-        </Grid>
-      </Grid>
+        </Stack>
+      </Box>
     </>
   );
 };

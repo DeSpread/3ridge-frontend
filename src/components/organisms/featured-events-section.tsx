@@ -58,7 +58,6 @@ const FeaturedEventsSection = () => {
         direction={"row"}
         alignItems={"center"}
         justifyContent={"space-between"}
-        sx={{ marginTop: "32px" }}
       >
         <Stack direction={"row"} spacing={1}>
           <Typography variant={"h4"}>주요 이벤트</Typography>
@@ -115,7 +114,7 @@ const FeaturedEventsSection = () => {
         sx={{
           marginTop: 5,
           background: "",
-          width: "calc(100vw - 48px)",
+          width: "calc(100vw - 64px)",
         }}
       >
         {ticketsDataLoading && (

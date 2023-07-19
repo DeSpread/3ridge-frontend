@@ -39,7 +39,9 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
             },
           }}
           onClick={props.onClickForEdit}
-        ></Box>
+        >
+          {props.children}
+        </Box>
         <Stack
           sx={{
             position: "absolute",
@@ -75,7 +77,7 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
             <CloseIcon></CloseIcon>
           </IconButton>
         </Stack>
-        {props.children}
+        {/*{props.children}*/}
       </div>
     );
   };
