@@ -81,6 +81,7 @@ import ContentMetaDataRenderComponent from "../../components/atoms/content-meta-
 import AgreementDialog from "../../components/dialogs/agreement-dialog";
 import EventTitle from "../../components/atoms/pages/event/event-title";
 import EventImage from "../../components/atoms/pages/event/event-image";
+import EventDateRange from "../../components/atoms/pages/event/event-date-range";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -963,23 +964,6 @@ const Event = (props: AppProps) => {
     }
   };
 
-  const isEventStarted = () => {
-    const diff =
-      new Date().getTime() -
-      parseStrToDate(ticketData?.beginTime ?? "").getTime();
-    return diff > 0;
-  };
-
-  const isEventComplete = () => {
-    const diff =
-      parseStrToDate(ticketData?.untilTime ?? "").getTime() -
-      new Date().getTime();
-    if (diff < 0) {
-      return true;
-    }
-    return ticketData?.completed;
-  };
-
   return (
     <>
       <Head>
@@ -1028,151 +1012,7 @@ const Event = (props: AppProps) => {
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
                   <EventTitle title={ticketData?.title}></EventTitle>
-                  {smUp ? (
-                    <Grid
-                      container
-                      alignItems={"left"}
-                      justifyContent={smUp ? "flex-start" : "center"}
-                      rowSpacing={1}
-                    >
-                      {ticketData?.beginTime && !isEventStarted() && (
-                        <Grid item>
-                          <StyledChip
-                            label={"이벤트 시작전"}
-                            // color={"success"}
-                            variant="outlined"
-                            sx={{
-                              boxShadow: "inset 0px 0px 0px 2px #61e1ff",
-                              borderWidth: 0,
-                            }}
-                          ></StyledChip>
-                        </Grid>
-                      )}
-                      {ticketData && isEventStarted() && !isEventComplete() && (
-                        <Grid item>
-                          <StyledChip
-                            label={"진행중"}
-                            variant="outlined"
-                            sx={{
-                              boxShadow: "inset 0px 0px 0px 2px #0E8074",
-                              borderWidth: 0,
-                            }}
-                          ></StyledChip>
-                        </Grid>
-                      )}
-                      {ticketData && isEventStarted() && isEventComplete() && (
-                        <Grid item>
-                          <StyledChip
-                            label={"이벤트 종료"}
-                            variant="outlined"
-                            sx={{
-                              boxShadow: "inset 0px 0px 0px 2px #D14343",
-                              borderWidth: 0,
-                            }}
-                          ></StyledChip>
-                        </Grid>
-                      )}
-                      {ticketData?.beginTime && (
-                        <Grid item sx={{ marginLeft: 1 }}>
-                          {smUp ? (
-                            <StyledChip
-                              label={`${format(
-                                parseStrToDate(ticketData?.beginTime ?? ""),
-                                "yyyy/MM/dd"
-                              )} ~ ${format(
-                                parseStrToDate(ticketData?.untilTime ?? ""),
-                                "yyyy/MM/dd"
-                              )} (UTC+09:00)`}
-                            ></StyledChip>
-                          ) : (
-                            <StyledChip
-                              sx={{ paddingTop: 4, paddingBottom: 4 }}
-                              label={
-                                <Stack sx={{}}>
-                                  <Typography variant={"body2"}>
-                                    {`${format(
-                                      parseStrToDate(
-                                        ticketData?.beginTime ?? ""
-                                      ),
-                                      "yyyy/MM/dd"
-                                    )}
-                                  ~`}
-                                  </Typography>
-                                  <Typography variant={"body2"}>
-                                    {`${format(
-                                      parseStrToDate(
-                                        ticketData?.untilTime ?? ""
-                                      ),
-                                      "yyyy/MM/dd"
-                                    )} (UTC+09:00)
-                                  `}
-                                  </Typography>
-                                </Stack>
-                              }
-                            ></StyledChip>
-                          )}
-                        </Grid>
-                      )}
-                    </Grid>
-                  ) : (
-                    <Stack
-                      alignItems={"center"}
-                      justifyContent={"center"}
-                      sx={{ background: "" }}
-                    >
-                      {ticketData?.beginTime && ticketData?.untilTime && (
-                        <>
-                          <Typography>{`${format(
-                            parseStrToDate(ticketData?.beginTime ?? ""),
-                            "yyyy/MM/dd"
-                          )}`}</Typography>
-                          <Typography>
-                            {`~ ${format(
-                              parseStrToDate(ticketData?.untilTime ?? ""),
-                              "yyyy/MM/dd"
-                            )} (UTC+09:00)`}
-                          </Typography>
-                        </>
-                      )}
-                      {ticketData?.beginTime && !isEventStarted() && (
-                        <Box sx={{ marginTop: 2 }}>
-                          <StyledChip
-                            label={"이벤트 시작전"}
-                            // color={"success"}
-                            variant="outlined"
-                            sx={{
-                              boxShadow: "inset 0px 0px 0px 2px #61e1ff",
-                              borderWidth: 0,
-                            }}
-                          ></StyledChip>
-                        </Box>
-                      )}
-                      {ticketData && isEventStarted() && !isEventComplete() && (
-                        <Box sx={{ marginTop: 2 }}>
-                          <StyledChip
-                            label={"진행중"}
-                            variant="outlined"
-                            sx={{
-                              boxShadow: "inset 0px 0px 0px 2px #0E8074",
-                              borderWidth: 0,
-                            }}
-                          ></StyledChip>
-                        </Box>
-                      )}
-                      {ticketData && isEventStarted() && isEventComplete() && (
-                        <Box sx={{ marginTop: 2 }}>
-                          <StyledChip
-                            label={"이벤트 종료"}
-                            variant="outlined"
-                            sx={{
-                              boxShadow: "inset 0px 0px 0px 2px #D14343",
-                              borderWidth: 0,
-                            }}
-                          ></StyledChip>
-                        </Box>
-                      )}
-                    </Stack>
-                  )}
+                  <EventDateRange ticketData={ticketData}></EventDateRange>
                 </Stack>
               </Grid>
             </Grid>

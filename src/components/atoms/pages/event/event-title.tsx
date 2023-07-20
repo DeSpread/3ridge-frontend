@@ -1,8 +1,8 @@
 import { Box, Skeleton, Typography, useMediaQuery } from "@mui/material";
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
 
-const EventTitle = ({ title }: { title?: string }) => {
+const EventTitle = ({ title }: { title?: string } & PropsWithChildren) => {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 

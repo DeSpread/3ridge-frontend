@@ -22,6 +22,7 @@
     "@mui/lab": "^5.0.0-alpha.111",
     "@mui/material": "^5.10.16",
     "@mui/styled-engine-sc": "^5.10.16",
+    "@mui/x-date-pickers": "^6.10.0",
     "@react-oauth/google": "^0.5.1",
     "@sentry/nextjs": "^7.56.0",
     "@stacks/connect": "^7.3.1",

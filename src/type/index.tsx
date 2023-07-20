@@ -346,14 +346,3 @@ export const FILTER_TYPE = {
 };
 
 export type FilterType = ObjectValues<typeof FILTER_TYPE>;
-
-export enum EditorAction {
-  CREATE,
-  UPDATE,
-  DELETE,
-}
-
-export type EditorTargetAction = {
-  target?: string;
-  action?: EditorAction;
-};

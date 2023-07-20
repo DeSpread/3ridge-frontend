@@ -9,6 +9,8 @@ import {
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
   UPDATE_TICKET_IMAGE_URL,
+  UPDATE_TICKET_TITLE,
+  UPDATE_TICKET_DATE_RANGE_TIME,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -34,6 +36,10 @@ export function useTicketQuery({
   const [verifyAptosQuest] = useMutation(VERIFY_APTOS_QUEST);
   const [claimReward] = useMutation(CLAIM_REWARD);
   const [updateTicketImageUrl] = useMutation(UPDATE_TICKET_IMAGE_URL);
+  const [updateTicketTitle] = useMutation(UPDATE_TICKET_TITLE);
+  const [updateTicketDateRangeTime] = useMutation(
+    UPDATE_TICKET_DATE_RANGE_TIME
+  );
   const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
@@ -372,6 +378,32 @@ export function useTicketQuery({
     }
   };
 
+  const asyncUpdateTitle = async (title?: string) => {
+    if (id) {
+      await updateTicketTitle({
+        variables: {
+          ticketId: id,
+          title,
+        },
+      });
+    }
+  };
+
+  const asyncUpdateTicketDateRangeTime = async (
+    beginTime?: Date,
+    untilTime?: Date
+  ) => {
+    if (id) {
+      await updateTicketDateRangeTime({
+        variables: {
+          ticketId: id,
+          beginTime,
+          untilTime,
+        },
+      });
+    }
+  };
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -384,5 +416,7 @@ export function useTicketQuery({
     asyncRefreshTicketData,
     asyncRewardClaim,
     asyncUpdateImageUrl,
+    asyncUpdateTitle,
+    asyncUpdateTicketDateRangeTime,
   };
 }

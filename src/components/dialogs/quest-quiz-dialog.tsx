@@ -18,7 +18,6 @@ import {
 } from "../../type";
 import SecondaryButton from "../atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
-import { decodeBase64 } from "../../util/string-util";
 
 type QuestQuizDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;

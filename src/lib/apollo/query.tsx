@@ -667,3 +667,27 @@ export const UPDATE_TICKET_IMAGE_URL = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const UPDATE_TICKET_TITLE = gql(/* GraphQL */ `
+  mutation UpdateTicketTitle($ticketId: String!, $title: String) {
+    updateTicketById(ticketId: $ticketId, title: $title) {
+      _id
+    }
+  }
+`);
+
+export const UPDATE_TICKET_DATE_RANGE_TIME = gql(/* GraphQL */ `
+  mutation UpdateTicketDateRangeTime(
+    $ticketId: String!
+    $beginTime: DateTime
+    $untilTime: DateTime
+  ) {
+    updateTicketById(
+      ticketId: $ticketId
+      beginTime: $beginTime
+      untilTime: $untilTime
+    ) {
+      _id
+    }
+  }
+`);

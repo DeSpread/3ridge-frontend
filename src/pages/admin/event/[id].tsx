@@ -1,5 +1,5 @@
-import { Box, Grid, IconButton, Stack, useMediaQuery } from "@mui/material";
-import React, { ReactElement, useEffect, useState } from "react";
+import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import React, { ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../../layouts/main-layout";
 import Head from "next/head";
 import { useTheme } from "@mui/material/styles";
@@ -13,8 +13,24 @@ import {
   asyncReadAsBase64Data,
   getFileExtension,
 } from "../../../util/file-util";
+import { useLoading } from "../../../provider/loading/loading-provider";
+import EventTitle from "../../../components/atoms/pages/event/event-title";
+import EventEmptyBox from "../../../components/atoms/pages/event/event-empty-box";
+import InputButton from "../../../components/molecules/input-button";
+import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
+import EventDateRange from "../../../components/atoms/pages/event/event-date-range";
+import DateEditDialog from "../../../components/dialogs/date-range-edit-dialog";
+import { parseStrToDate } from "../../../util/date-util";
 
+const _EventDateRange = WithEditorContainer(EventDateRange);
+const _EmptyBox = WithEditorContainer(EventEmptyBox);
 const _EventImage = WithEditorContainer(EventImage);
+const _EventTitle = WithEditorContainer(EventTitle);
+
+enum EVENT_COMPONENT_TARGET {
+  "TITLE",
+  "DATE_RANGE_TIME",
+}
 
 const Event = () => {
   const theme = useTheme();
@@ -25,22 +41,75 @@ const Event = () => {
 
   const { userData } = useSignedUserQuery();
   const { asyncUploadImage } = useSimpleStorage();
+  const { showLoading, closeLoading } = useLoading();
 
-  const [updateIndex, setUpdateIndex] = useState(0);
+  const [openTextEditDialog, setOpenTextEditDialog] = useState(false);
+  const [openDateEditDialog, setOpenDateEditDialog] = useState(false);
+  const [eventComponentTarget, setEventComponentTarget] =
+    useState<EVENT_COMPONENT_TARGET>();
 
-  const { ticketData, asyncUpdateImageUrl, asyncRefreshTicketData } =
-    useTicketQuery({
-      userId: userData._id,
-      id: router.isReady
-        ? typeof router.query.id === "string"
-          ? router.query.id
-          : undefined
-        : undefined,
-    });
+  const {
+    ticketData,
+    asyncUpdateImageUrl,
+    asyncUpdateTitle,
+    asyncRefreshTicketData,
+    asyncUpdateTicketDateRangeTime,
+  } = useTicketQuery({
+    userId: userData._id,
+    id: router.isReady
+      ? typeof router.query.id === "string"
+        ? router.query.id
+        : undefined
+      : undefined,
+  });
 
-  useEffect(() => {
-    asyncRefreshTicketData();
-  }, [updateIndex]);
+  const dialogTitle = useMemo(() => {
+    switch (eventComponentTarget) {
+      case EVENT_COMPONENT_TARGET.TITLE:
+        return "제목";
+      case EVENT_COMPONENT_TARGET.DATE_RANGE_TIME:
+        return "일정 설정";
+    }
+  }, [eventComponentTarget]);
+
+  const asyncRefreshAll = async () => {
+    await asyncRefreshTicketData();
+  };
+
+  const showTextEditDialog = (target: EVENT_COMPONENT_TARGET) => {
+    setOpenTextEditDialog(true);
+    setEventComponentTarget(target);
+  };
+
+  const showDateEditDialog = (target: EVENT_COMPONENT_TARGET) => {
+    setOpenDateEditDialog(true);
+    setEventComponentTarget(target);
+  };
+
+  const closeTextEditDialog = () => {
+    setOpenTextEditDialog(false);
+    setEventComponentTarget(undefined);
+  };
+
+  const closeDateEditDialog = () => {
+    setOpenDateEditDialog(false);
+    setEventComponentTarget(undefined);
+  };
+
+  const asyncUpdateImageUrlByFile = async (file: File) => {
+    showLoading();
+    const includeQuestion = ticketData?.imageUrl?.includes("?");
+    const base64Data = await asyncReadAsBase64Data(file);
+    const ext = getFileExtension(file);
+    await asyncUploadImage(`event/cover/${ticketData?._id}.${ext}`, base64Data);
+    let ticketImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/event/cover/${ticketData?._id}.${ext}`;
+    if (!includeQuestion) {
+      ticketImageUrl += "?";
+    }
+    await asyncUpdateImageUrl(ticketImageUrl);
+    await asyncRefreshAll();
+    closeLoading();
+  };
 
   return (
     <>
@@ -76,204 +145,77 @@ const Event = () => {
                     background: "",
                   }}
                 >
-                  <_EventImage imageUrl={ticketData?.imageUrl}>
-                    <IconButton
-                      component="label"
-                      sx={{
-                        top: 16,
-                        left: 16,
-                        width: 128,
-                        height: 128,
+                  {ticketData?.imageUrl && (
+                    <_EventImage
+                      imageUrl={ticketData?.imageUrl}
+                      onClickForDelete={async (e) => {
+                        showLoading();
+                        await asyncUpdateImageUrl("");
+                        await asyncRefreshAll();
+                        closeLoading();
                       }}
                     >
-                      <input
-                        name={"newImage"}
-                        type="file"
-                        hidden
-                        onChange={async (e) => {
-                          if (e.target.files?.[0]) {
-                            const file = e.target.files[0];
-                            if (
-                              /\/(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(
-                                file.type
-                              )
-                            ) {
-                              const includeQuestion =
-                                ticketData?.imageUrl?.includes("?");
-                              const base64Data = await asyncReadAsBase64Data(
-                                file
-                              );
-                              const ext = getFileExtension(file);
-                              await asyncUploadImage(
-                                `event/cover/${ticketData?._id}.${ext}`,
-                                base64Data
-                              );
-                              let ticketImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/event/cover/${ticketData?._id}.${ext}`;
-                              if (!includeQuestion) {
-                                ticketImageUrl += "?";
-                              }
-                              await asyncUpdateImageUrl(ticketImageUrl);
-                              setUpdateIndex((prevState) => {
-                                return prevState + 1;
-                              });
-                            }
-                          }
-                          e.target.value = "";
+                      <InputButton
+                        sx={{ top: 16, left: 16, width: 128, height: 128 }}
+                        onChanged={async (file: File) => {
+                          await asyncUpdateImageUrlByFile(file);
                         }}
-                      />
-                    </IconButton>
-                  </_EventImage>
+                      ></InputButton>
+                    </_EventImage>
+                  )}
+                  {!ticketData?.imageUrl && (
+                    <_EmptyBox sx={{ width: 128, height: 128 }}>
+                      <InputButton
+                        sx={{ top: 16, left: 16, width: 128, height: 128 }}
+                        onChanged={async (file: File) => {
+                          await asyncUpdateImageUrlByFile(file);
+                        }}
+                      ></InputButton>
+                    </_EmptyBox>
+                  )}
                 </Box>
               </Grid>
               <Grid item>
-                {/*<Stack spacing={1} sx={{ marginBottom: 2 }}>*/}
-                {/*  <EventTitle title={ticketData?.title}></EventTitle>*/}
-                {/*  {smUp ? (*/}
-                {/*    <Grid*/}
-                {/*      container*/}
-                {/*      alignItems={"left"}*/}
-                {/*      justifyContent={smUp ? "flex-start" : "center"}*/}
-                {/*      rowSpacing={1}*/}
-                {/*    >*/}
-                {/*      {ticketData?.beginTime && !isEventStarted() && (*/}
-                {/*        <Grid item>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"이벤트 시작전"}*/}
-                {/*            // color={"success"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #61e1ff",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Grid>*/}
-                {/*      )}*/}
-                {/*      {ticketData && isEventStarted() && !isEventComplete() && (*/}
-                {/*        <Grid item>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"진행중"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #0E8074",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Grid>*/}
-                {/*      )}*/}
-                {/*      {ticketData && isEventStarted() && isEventComplete() && (*/}
-                {/*        <Grid item>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"이벤트 종료"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #D14343",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Grid>*/}
-                {/*      )}*/}
-                {/*      {ticketData?.beginTime && (*/}
-                {/*        <Grid item sx={{ marginLeft: 1 }}>*/}
-                {/*          {smUp ? (*/}
-                {/*            <StyledChip*/}
-                {/*              label={`${format(*/}
-                {/*                parseStrToDate(ticketData?.beginTime ?? ""),*/}
-                {/*                "yyyy/MM/dd"*/}
-                {/*              )} ~ ${format(*/}
-                {/*                parseStrToDate(ticketData?.untilTime ?? ""),*/}
-                {/*                "yyyy/MM/dd"*/}
-                {/*              )} (UTC+09:00)`}*/}
-                {/*            ></StyledChip>*/}
-                {/*          ) : (*/}
-                {/*            <StyledChip*/}
-                {/*              sx={{ paddingTop: 4, paddingBottom: 4 }}*/}
-                {/*              label={*/}
-                {/*                <Stack sx={{}}>*/}
-                {/*                  <Typography variant={"body2"}>*/}
-                {/*                    {`${format(*/}
-                {/*                      parseStrToDate(*/}
-                {/*                        ticketData?.beginTime ?? ""*/}
-                {/*                      ),*/}
-                {/*                      "yyyy/MM/dd"*/}
-                {/*                    )}*/}
-                {/*                  ~`}*/}
-                {/*                  </Typography>*/}
-                {/*                  <Typography variant={"body2"}>*/}
-                {/*                    {`${format(*/}
-                {/*                      parseStrToDate(*/}
-                {/*                        ticketData?.untilTime ?? ""*/}
-                {/*                      ),*/}
-                {/*                      "yyyy/MM/dd"*/}
-                {/*                    )} (UTC+09:00)*/}
-                {/*                  `}*/}
-                {/*                  </Typography>*/}
-                {/*                </Stack>*/}
-                {/*              }*/}
-                {/*            ></StyledChip>*/}
-                {/*          )}*/}
-                {/*        </Grid>*/}
-                {/*      )}*/}
-                {/*    </Grid>*/}
-                {/*  ) : (*/}
-                {/*    <Stack*/}
-                {/*      alignItems={"center"}*/}
-                {/*      justifyContent={"center"}*/}
-                {/*      sx={{ background: "" }}*/}
-                {/*    >*/}
-                {/*      {ticketData?.beginTime && ticketData?.untilTime && (*/}
-                {/*        <>*/}
-                {/*          <Typography>{`${format(*/}
-                {/*            parseStrToDate(ticketData?.beginTime ?? ""),*/}
-                {/*            "yyyy/MM/dd"*/}
-                {/*          )}`}</Typography>*/}
-                {/*          <Typography>*/}
-                {/*            {`~ ${format(*/}
-                {/*              parseStrToDate(ticketData?.untilTime ?? ""),*/}
-                {/*              "yyyy/MM/dd"*/}
-                {/*            )} (UTC+09:00)`}*/}
-                {/*          </Typography>*/}
-                {/*        </>*/}
-                {/*      )}*/}
-                {/*      {ticketData?.beginTime && !isEventStarted() && (*/}
-                {/*        <Box sx={{ marginTop: 2 }}>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"이벤트 시작전"}*/}
-                {/*            // color={"success"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #61e1ff",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Box>*/}
-                {/*      )}*/}
-                {/*      {ticketData && isEventStarted() && !isEventComplete() && (*/}
-                {/*        <Box sx={{ marginTop: 2 }}>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"진행중"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #0E8074",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Box>*/}
-                {/*      )}*/}
-                {/*      {ticketData && isEventStarted() && isEventComplete() && (*/}
-                {/*        <Box sx={{ marginTop: 2 }}>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"이벤트 종료"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #D14343",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Box>*/}
-                {/*      )}*/}
-                {/*    </Stack>*/}
-                {/*  )}*/}
-                {/*</Stack>*/}
+                <Stack spacing={1} sx={{ marginBottom: 2 }}>
+                  {ticketData?.title && (
+                    <_EventTitle
+                      title={ticketData?.title}
+                      onClickForEdit={async (e) => {
+                        showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
+                      }}
+                      onClickForDelete={async (e) => {
+                        showLoading();
+                        await asyncUpdateTitle("");
+                        await asyncRefreshAll();
+                        closeLoading();
+                      }}
+                    ></_EventTitle>
+                  )}
+                  {!ticketData?.title && (
+                    <_EmptyBox
+                      sx={{ width: 512, height: 48 }}
+                      onClickForEdit={async (e) => {
+                        showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
+                      }}
+                    >
+                      <Stack
+                        sx={{ width: "100%", height: "100%" }}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                      >
+                        <Typography>제목을 입력해주세요</Typography>
+                      </Stack>
+                    </_EmptyBox>
+                  )}
+                  <_EventDateRange
+                    ticketData={ticketData}
+                    onClickForEdit={async (e) => {
+                      showDateEditDialog(
+                        EVENT_COMPONENT_TARGET.DATE_RANGE_TIME
+                      );
+                    }}
+                  ></_EventDateRange>
+                </Stack>
               </Grid>
             </Grid>
             {/*{isExceededTicketParticipants() && (*/}
@@ -477,6 +419,44 @@ const Event = () => {
           </Stack>
         </Grid>
       </Grid>
+      <TextEditDialog
+        open={openTextEditDialog}
+        title={dialogTitle}
+        onCloseBtnClicked={(e) => {
+          closeTextEditDialog();
+        }}
+        onConfirmBtnClicked={async (text) => {
+          showLoading();
+          switch (eventComponentTarget) {
+            case EVENT_COMPONENT_TARGET.TITLE:
+              await asyncUpdateTitle(text);
+              break;
+          }
+          await asyncRefreshAll();
+          closeTextEditDialog();
+          closeLoading();
+        }}
+      ></TextEditDialog>
+      <DateEditDialog
+        initBeginDate={parseStrToDate(ticketData?.beginTime ?? "")}
+        initEndDate={parseStrToDate(ticketData?.untilTime ?? "")}
+        open={openDateEditDialog}
+        title={dialogTitle}
+        onCloseBtnClicked={(e) => {
+          closeDateEditDialog();
+        }}
+        onConfirmBtnClicked={async (beginDate, endDate) => {
+          showLoading();
+          switch (eventComponentTarget) {
+            case EVENT_COMPONENT_TARGET.DATE_RANGE_TIME:
+              await asyncUpdateTicketDateRangeTime(beginDate, endDate);
+              break;
+          }
+          await asyncRefreshAll();
+          closeDateEditDialog();
+          closeLoading();
+        }}
+      ></DateEditDialog>
     </>
   );
 };

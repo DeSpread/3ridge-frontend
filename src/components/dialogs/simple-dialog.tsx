@@ -12,20 +12,19 @@ import { QuizQuestContext, Z_INDEX_OFFSET } from "../../type";
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 
-type QuestDiscordDialogProps = DialogProps & {
+export type QuestSimpleDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
 };
 
-const SimpleDialog = (props: QuestDiscordDialogProps) => {
+const SimpleDialog = (props: QuestSimpleDialogProps) => {
   const { ...rest } = props;
   const theme = useTheme();
 
   return (
     <>
       <Dialog
-        {...rest}
-        fullWidth
         maxWidth={"xs"}
+        fullWidth
         sx={{
           backdropFilter: "blur(2px)",
           zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.DIALOG,
@@ -39,8 +38,8 @@ const SimpleDialog = (props: QuestDiscordDialogProps) => {
             padding: 8,
           },
         }}
+        {...rest}
       >
-        {/*{props.title}</DialogTitle>*/}
         <DialogTitle>
           <Stack
             direction={"row"}
@@ -50,14 +49,12 @@ const SimpleDialog = (props: QuestDiscordDialogProps) => {
             <Typography textAlign={"left"} variant={"h6"}>
               {props.title}
             </Typography>
-            {/*<Button>abc</Button>*/}
             <IconButton
               sx={{
                 borderRadius: 32,
                 marginRight: 0,
                 "&:hover": {
                   boxShadow: "none",
-                  transform: "translateY(0px)",
                 },
               }}
               onClick={props.onCloseBtnClicked}
