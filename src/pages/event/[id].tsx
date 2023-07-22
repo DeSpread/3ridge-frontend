@@ -56,7 +56,6 @@ import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
 import BlockIcon from "../../components/atomic/molecules/block-icon";
 import TimerBoard, {
@@ -1362,9 +1361,9 @@ const Event = (props: AppProps) => {
                           marginBottom: 2,
                         }}
                       >
-                        {ticketData?.rewardPolicy?.context?.nftImageUrl && (
+                        {ticketData?.rewardPolicy?.context?.nftImageUrl ? (
                           <Box>
-                            <LazyLoadImage
+                            <Image
                               className={"lazyLoadImage"}
                               width={smUp ? 300 : 260}
                               height={smUp ? 300 : 260}
@@ -1377,19 +1376,16 @@ const Event = (props: AppProps) => {
                                 borderColor: "",
                                 borderStyle: "solid",
                               }}
-                              effect="blur"
-                              beforeLoad={() => {
-                                return (
-                                  <Skeleton
-                                    width={smUp ? 300 : 260}
-                                    height={smUp ? 300 : 260}
-                                    animation={"wave"}
-                                    variant={"rounded"}
-                                  ></Skeleton>
-                                );
-                              }}
-                            ></LazyLoadImage>
+                              alt={""}
+                            ></Image>
                           </Box>
+                        ) : (
+                          <Skeleton
+                            width={smUp ? 300 : 260}
+                            height={smUp ? 300 : 260}
+                            animation={"wave"}
+                            variant={"rounded"}
+                          ></Skeleton>
                         )}
                       </Box>
                     </Stack>

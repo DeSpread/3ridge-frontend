@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -7,16 +6,13 @@ import {
   Grid,
   Skeleton,
   Stack,
-  Theme,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useLayoutEffect } from "react";
-import { Ticket, User } from "../../../type";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import { Ticket } from "../../../type";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
-import StyledChip from "../atoms/styled/styled-chip";
 import TicketInfoTextSet from "../atoms/ticket-info-text-set";
 
 type EventCardProps = CardProps & {
@@ -148,27 +144,24 @@ const TicketCard = (props: EventCardProps) => {
                 justifyContent: "center",
               }}
             >
-              {ticket?.imageUrl && (
-                <LazyLoadImage
+              {ticket?.imageUrl ? (
+                <Image
                   width={height}
                   height={height}
-                  src={ticket?.imageUrl}
+                  alt={""}
                   style={{
                     borderRadius: 4,
                     objectFit: "cover",
                   }}
-                  effect="blur"
-                  beforeLoad={() => {
-                    return (
-                      <Skeleton
-                        width={height}
-                        height={height}
-                        animation={"wave"}
-                        variant={"rounded"}
-                      ></Skeleton>
-                    );
-                  }}
-                ></LazyLoadImage>
+                  src={ticket?.imageUrl}
+                ></Image>
+              ) : (
+                <Skeleton
+                  width={height}
+                  height={height}
+                  animation={"wave"}
+                  variant={"rounded"}
+                ></Skeleton>
               )}
             </Box>
           </Stack>

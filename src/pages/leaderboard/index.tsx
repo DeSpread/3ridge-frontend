@@ -20,11 +20,11 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atomic/atoms/gradient-typography";
 import { useTheme } from "@mui/material/styles";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useLeaderUserRankQuery } from "../../page-hook/leader-user-rank-query-hook";
 import BlockIcon from "../../components/atomic/molecules/block-icon";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
+import Image from "next/image";
 
 const RankCard = ({
   user,
@@ -128,27 +128,20 @@ const RankCard = ({
             )}
           </Box>
           <Box sx={{ marginLeft: smUp ? 1 : "1px" }}>
-            {profileImageUrl && (
-              <LazyLoadImage
+            {profileImageUrl ? (
+              <Image
                 width={smUp ? 52 : 38}
                 height={smUp ? 52 : 38}
                 src={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
-                style={{
-                  borderRadius: smUp ? 52 : 38,
-                  objectFit: "cover",
-                }}
-                effect="blur"
-                beforeLoad={() => {
-                  return (
-                    <Skeleton
-                      width={smUp ? 52 : 38}
-                      height={smUp ? 52 : 38}
-                      animation={"wave"}
-                      variant={"rounded"}
-                    ></Skeleton>
-                  );
-                }}
-              ></LazyLoadImage>
+                alt={""}
+              ></Image>
+            ) : (
+              <Skeleton
+                width={smUp ? 52 : 38}
+                height={smUp ? 52 : 38}
+                animation={"wave"}
+                variant={"rounded"}
+              ></Skeleton>
             )}
             {!profileImageUrl && _id && (
               <BlockIcon seed={_id} scale={smUp ? 6 : 5}></BlockIcon>
@@ -158,7 +151,6 @@ const RankCard = ({
             direction={"column"}
             sx={{ marginLeft: smUp ? 3 : 2, maxWidth: smUp ? "100%" : "50%" }}
           >
-            {/*<Box sx={{ paddingRight: 2 }}>*/}
             <GradientTypography
               variant={smUp ? "body2" : "caption"}
               sx={{
@@ -167,7 +159,6 @@ const RankCard = ({
             >
               {convertedName}
             </GradientTypography>
-            {/*</Box>*/}
           </Stack>
         </Stack>
         <Box sx={{ marginRight: smUp ? 2 : 0, marginLeft: smUp ? 0 : 1 }}>

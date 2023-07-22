@@ -1,25 +1,11 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  Link,
-  Skeleton,
-  Stack,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import Head from "next/head";
 import React, { ReactElement } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { useTheme } from "@mui/material/styles";
-import CheckIcon from "../../components/atomic/atoms/svg/check-icon";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useProjectsQuery } from "../../page-hook/projects-query-hook";
-import PrimaryButton from "../../components/atomic/atoms/primary-button";
 import HomeFooter from "../../layouts/footer/home-footer";
 import ProjectOverlayStyleCard from "../../components/atomic/molecules/project-overlay-style-card";
 import SkeletonOverlayCard from "../../components/atomic/molecules/skelton-overlay-card";

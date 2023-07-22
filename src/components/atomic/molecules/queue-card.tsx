@@ -1,17 +1,6 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CardProps,
-  Skeleton,
-  Stack,
-  Typography,
-  Grid,
-} from "@mui/material";
-import React, { useEffect, useLayoutEffect } from "react";
-import StyledChip from "../atoms/styled/styled-chip";
+import { Card, CardContent, CardProps, Grid } from "@mui/material";
+import React from "react";
 import { Ticket } from "../../../type";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 
 type QueueCardProps = CardProps & {
   ticket?: Ticket;

@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import MainLayout from "../../layouts/main-layout";
-import { AppProps } from "next/app";
 import Head from "next/head";
 import {
   Avatar,
@@ -9,7 +8,6 @@ import {
   Grid,
   IconButton,
   Skeleton,
-  Snackbar,
   Stack,
   Theme,
   Typography,
@@ -44,11 +42,8 @@ import {
 } from "../../error/my-error";
 import PictureEditDialog from "../../components/dialogs/picture-edit-dialog";
 import { VALIDATOR_BUTTON_STATES } from "../../components/atomic/molecules/validator-button";
-import AwsClient from "../../remote/aws-client";
 import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
-import { gql, request } from "graphql-request";
-import CircularProgress from "@mui/material/CircularProgress";
 import BlockIcon from "../../components/atomic/molecules/block-icon";
 import { useUserQuery } from "../../page-hook/user-query-hook";
 import { useRouter } from "next/router";
