@@ -128,23 +128,31 @@ const RankCard = ({
             )}
           </Box>
           <Box sx={{ marginLeft: smUp ? 1 : "1px" }}>
-            {profileImageUrl ? (
+            {profileImageUrl && (
               <Image
                 width={smUp ? 52 : 38}
                 height={smUp ? 52 : 38}
                 src={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
                 alt={""}
+                style={{
+                  borderRadius: smUp ? 52 : 38,
+                  objectFit: "cover",
+                }}
               ></Image>
-            ) : (
+            )}
+            {!profileImageUrl && _id && (
+              <BlockIcon seed={_id} scale={smUp ? 6 : 5}></BlockIcon>
+            )}
+            {!_id && (
               <Skeleton
                 width={smUp ? 52 : 38}
                 height={smUp ? 52 : 38}
                 animation={"wave"}
                 variant={"rounded"}
+                style={{
+                  borderRadius: smUp ? 52 : 38,
+                }}
               ></Skeleton>
-            )}
-            {!profileImageUrl && _id && (
-              <BlockIcon seed={_id} scale={smUp ? 6 : 5}></BlockIcon>
             )}
           </Box>
           <Stack
