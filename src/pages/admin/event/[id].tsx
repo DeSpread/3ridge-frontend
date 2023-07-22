@@ -6,30 +6,35 @@ import { useTheme } from "@mui/material/styles";
 import { useSignedUserQuery } from "../../../page-hook/signed-user-query-hook";
 import { useTicketQuery } from "../../../page-hook/ticket-query-hook";
 import { useRouter } from "next/router";
-import EventImage from "../../../components/atoms/pages/event/event-image";
+import EventImage from "../../../components/pages/event/event-image";
 import WithEditorContainer from "../../../hoc/with-editor-container";
 import useSimpleStorage from "../../../page-hook/simple-storage-hook";
 import {
   asyncReadAsBase64Data,
   getFileExtension,
 } from "../../../util/file-util";
+// import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useLoading } from "../../../provider/loading/loading-provider";
-import EventTitle from "../../../components/atoms/pages/event/event-title";
-import EventEmptyBox from "../../../components/atoms/pages/event/event-empty-box";
-import InputButton from "../../../components/molecules/input-button";
+import EventTitle from "../../../components/pages/event/event-title";
+import EventEmptyBox from "../../../components/pages/event/event-empty-box";
+import InputButton from "../../../components/atomic/molecules/input-button";
 import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
-import EventDateRange from "../../../components/atoms/pages/event/event-date-range";
+import EventDateRange from "../../../components/pages/event/event-date-range";
 import DateEditDialog from "../../../components/dialogs/date-range-edit-dialog";
 import { parseStrToDate } from "../../../util/date-util";
+import EventDescription from "../../../components/pages/event/event-description";
+import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
 
 const _EventDateRange = WithEditorContainer(EventDateRange);
 const _EmptyBox = WithEditorContainer(EventEmptyBox);
 const _EventImage = WithEditorContainer(EventImage);
 const _EventTitle = WithEditorContainer(EventTitle);
+const _EventDescription = WithEditorContainer(EventDescription);
 
 enum EVENT_COMPONENT_TARGET {
   "TITLE",
   "DATE_RANGE_TIME",
+  "DESCRIPTION",
 }
 
 const Event = () => {
@@ -44,6 +49,9 @@ const Event = () => {
   const { showLoading, closeLoading } = useLoading();
 
   const [openTextEditDialog, setOpenTextEditDialog] = useState(false);
+  const [openContentMetaDataEditDialog, setOpenContentMetaDataEditDialog] =
+    useState(false);
+  const [textEditDefaultText, setTextEditDefaultText] = useState<string>();
   const [openDateEditDialog, setOpenDateEditDialog] = useState(false);
   const [eventComponentTarget, setEventComponentTarget] =
     useState<EVENT_COMPONENT_TARGET>();
@@ -69,6 +77,8 @@ const Event = () => {
         return "제목";
       case EVENT_COMPONENT_TARGET.DATE_RANGE_TIME:
         return "일정 설정";
+      case EVENT_COMPONENT_TARGET.DESCRIPTION:
+        return "이벤트 설명";
     }
   }, [eventComponentTarget]);
 
@@ -76,13 +86,25 @@ const Event = () => {
     await asyncRefreshTicketData();
   };
 
-  const showTextEditDialog = (target: EVENT_COMPONENT_TARGET) => {
+  const showTextEditDialog = (
+    target: EVENT_COMPONENT_TARGET,
+    defaultText?: string
+  ) => {
     setOpenTextEditDialog(true);
     setEventComponentTarget(target);
+    setTextEditDefaultText(defaultText);
   };
 
   const showDateEditDialog = (target: EVENT_COMPONENT_TARGET) => {
     setOpenDateEditDialog(true);
+    setEventComponentTarget(target);
+    setTextEditDefaultText("");
+  };
+
+  const showOpenContentMetaDataEditDialog = (
+    target: EVENT_COMPONENT_TARGET
+  ) => {
+    setOpenContentMetaDataEditDialog(true);
     setEventComponentTarget(target);
   };
 
@@ -93,6 +115,11 @@ const Event = () => {
 
   const closeDateEditDialog = () => {
     setOpenDateEditDialog(false);
+    setEventComponentTarget(undefined);
+  };
+
+  const closeOpenContentMetaDataEditDialog = () => {
+    setOpenContentMetaDataEditDialog(false);
     setEventComponentTarget(undefined);
   };
 
@@ -110,6 +137,11 @@ const Event = () => {
     await asyncRefreshAll();
     closeLoading();
   };
+
+  // const source = `
+  //   ## MarkdownPreview
+  //   > todo: React component preview markdown text.
+  // `;
 
   return (
     <>
@@ -145,68 +177,41 @@ const Event = () => {
                     background: "",
                   }}
                 >
-                  {ticketData?.imageUrl && (
-                    <_EventImage
-                      imageUrl={ticketData?.imageUrl}
-                      onClickForDelete={async (e) => {
-                        showLoading();
-                        await asyncUpdateImageUrl("");
-                        await asyncRefreshAll();
-                        closeLoading();
+                  <_EventImage
+                    imageUrl={ticketData?.imageUrl}
+                    onClickForDelete={async (e) => {
+                      showLoading();
+                      await asyncUpdateImageUrl("");
+                      await asyncRefreshAll();
+                      closeLoading();
+                    }}
+                  >
+                    <InputButton
+                      sx={{ top: 16, left: 16, width: 128, height: 128 }}
+                      onChanged={async (file: File) => {
+                        await asyncUpdateImageUrlByFile(file);
                       }}
-                    >
-                      <InputButton
-                        sx={{ top: 16, left: 16, width: 128, height: 128 }}
-                        onChanged={async (file: File) => {
-                          await asyncUpdateImageUrlByFile(file);
-                        }}
-                      ></InputButton>
-                    </_EventImage>
-                  )}
-                  {!ticketData?.imageUrl && (
-                    <_EmptyBox sx={{ width: 128, height: 128 }}>
-                      <InputButton
-                        sx={{ top: 16, left: 16, width: 128, height: 128 }}
-                        onChanged={async (file: File) => {
-                          await asyncUpdateImageUrlByFile(file);
-                        }}
-                      ></InputButton>
-                    </_EmptyBox>
-                  )}
+                    ></InputButton>
+                  </_EventImage>
                 </Box>
               </Grid>
               <Grid item>
                 <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  {ticketData?.title && (
-                    <_EventTitle
-                      title={ticketData?.title}
-                      onClickForEdit={async (e) => {
-                        showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
-                      }}
-                      onClickForDelete={async (e) => {
-                        showLoading();
-                        await asyncUpdateTitle("");
-                        await asyncRefreshAll();
-                        closeLoading();
-                      }}
-                    ></_EventTitle>
-                  )}
-                  {!ticketData?.title && (
-                    <_EmptyBox
-                      sx={{ width: 512, height: 48 }}
-                      onClickForEdit={async (e) => {
-                        showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
-                      }}
-                    >
-                      <Stack
-                        sx={{ width: "100%", height: "100%" }}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                      >
-                        <Typography>제목을 입력해주세요</Typography>
-                      </Stack>
-                    </_EmptyBox>
-                  )}
+                  <_EventTitle
+                    title={ticketData?.title}
+                    onClickForEdit={async (e) => {
+                      showTextEditDialog(
+                        EVENT_COMPONENT_TARGET.TITLE,
+                        ticketData?.title
+                      );
+                    }}
+                    onClickForDelete={async (e) => {
+                      showLoading();
+                      await asyncUpdateTitle("");
+                      await asyncRefreshAll();
+                      closeLoading();
+                    }}
+                  ></_EventTitle>
                   <_EventDateRange
                     ticketData={ticketData}
                     onClickForEdit={async (e) => {
@@ -215,98 +220,24 @@ const Event = () => {
                       );
                     }}
                   ></_EventDateRange>
+                  {/*<MarkdownPreview source={source} />*/}
                 </Stack>
               </Grid>
             </Grid>
-            {/*{isExceededTicketParticipants() && (*/}
-            {/*  <Box sx={{}}>*/}
-            {/*    <>*/}
-            {/*      <Card>*/}
-            {/*        <CardContent>*/}
-            {/*          <Typography*/}
-            {/*            variant={"body1"}*/}
-            {/*            sx={{*/}
-            {/*              color: theme.palette.warning.main,*/}
-            {/*              marginTop: smUp ? 0 : -5,*/}
-            {/*              background: "",*/}
-            {/*              textAlign: smUp ? "left" : "center",*/}
-            {/*            }}*/}
-            {/*          >*/}
-            {/*            최대 참여자{" "}*/}
-            {/*            {ticketData?.rewardPolicy?.context?.limitNumber}명을*/}
-            {/*            초과하여 이벤트에 참여하실 수 없습니다 😅*/}
-            {/*          </Typography>*/}
-            {/*        </CardContent>*/}
-            {/*      </Card>*/}
-            {/*    </>*/}
-            {/*  </Box>*/}
-            {/*)}*/}
 
-            {/*{hasMetamask &&*/}
-            {/*  !isExceededTicketParticipants() &&*/}
-            {/*  userData?._id === undefined && (*/}
-            {/*    <Box sx={{}}>*/}
-            {/*      <>*/}
-            {/*        <Card>*/}
-            {/*          <CardContent>*/}
-            {/*            <LinkTypography*/}
-            {/*              variant={"body1"}*/}
-            {/*              href={"#"}*/}
-            {/*              sx={{*/}
-            {/*                fontWeight: "bold",*/}
-            {/*                "&:hover": {*/}
-            {/*                  color: "#914e1d",*/}
-            {/*                  textDecoration: "underline",*/}
-            {/*                },*/}
-            {/*                color: theme.palette.warning.main,*/}
-            {/*              }}*/}
-            {/*              onClick={async (e) => {*/}
-            {/*                setShowSignInDialog(true);*/}
-            {/*              }}*/}
-            {/*              textAlign={mdUp ? "left" : "center"}*/}
-            {/*            >*/}
-            {/*              로그인 후, 이벤트에 참여하실 수 있어요 😅*/}
-            {/*            </LinkTypography>*/}
-            {/*          </CardContent>*/}
-            {/*        </Card>*/}
-            {/*      </>*/}
-            {/*    </Box>*/}
-            {/*  )}*/}
-            {/*{userData?._id &&*/}
-            {/*  !walletConnectedForTicket &&*/}
-            {/*  ticketData.rewardPolicy?.context?.rewardNetwork && (*/}
-            {/*    <Card>*/}
-            {/*      <CardContent>*/}
-            {/*        <Stack*/}
-            {/*          direction={smUp ? "row" : "column"}*/}
-            {/*          alignItems={"center"}*/}
-            {/*          justifyContent={"space-between"}*/}
-            {/*          spacing={smUp ? 0 : 2}*/}
-            {/*          sx={{ padding: 1, paddingTop: 0, paddingBottom: 0 }}*/}
-            {/*        >*/}
-            {/*          <Stack direction={"column"}>*/}
-            {/*            <Typography*/}
-            {/*              variant={"h6"}*/}
-            {/*              sx={{ color: theme.palette.warning.main }}*/}
-            {/*              textAlign={"center"}*/}
-            {/*            >*/}
-            {/*              {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}*/}
-            {/*            </Typography>*/}
-            {/*          </Stack>*/}
-            {/*          <Stack direction={"column"}>*/}
-            {/*            <SecondaryButton*/}
-            {/*              onClick={async (e) => {*/}
-            {/*                e.preventDefault();*/}
-            {/*                await asyncGoToProfileAndEditDialogOpen();*/}
-            {/*              }}*/}
-            {/*            >*/}
-            {/*              지갑 연결하러 가기*/}
-            {/*            </SecondaryButton>*/}
-            {/*          </Stack>*/}
-            {/*        </Stack>*/}
-            {/*      </CardContent>*/}
-            {/*    </Card>*/}
-            {/*  )}*/}
+            {/* isExceededTicketParticipants */}
+            {/* hasMetamask */}
+            {/* walletConnectedForTicket */}
+
+            <_EventDescription
+              ticketData={ticketData}
+              onClickForEdit={async (e) => {
+                showOpenContentMetaDataEditDialog(
+                  EVENT_COMPONENT_TARGET.DESCRIPTION
+                );
+              }}
+            ></_EventDescription>
+
             {/*<Stack*/}
             {/*  direction={"column"}*/}
             {/*  spacing={2}*/}
@@ -422,6 +353,7 @@ const Event = () => {
       <TextEditDialog
         open={openTextEditDialog}
         title={dialogTitle}
+        defaultText={textEditDefaultText}
         onCloseBtnClicked={(e) => {
           closeTextEditDialog();
         }}
@@ -457,6 +389,13 @@ const Event = () => {
           closeLoading();
         }}
       ></DateEditDialog>
+      <ContentMetaDataEditDialog
+        open={openContentMetaDataEditDialog}
+        title={dialogTitle}
+        onCloseBtnClicked={(e) => {
+          closeOpenContentMetaDataEditDialog();
+        }}
+      ></ContentMetaDataEditDialog>
     </>
   );
 };

@@ -13,6 +13,7 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
     }
   ) => {
     const theme = useTheme();
+    const OFFSET_SIZE = 2;
 
     return (
       <div style={{ position: "relative" }}>
@@ -20,15 +21,15 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
         <Box
           sx={{
             position: "absolute",
-            left: -16,
-            top: -16,
-            width: `calc(100% + 32px);`,
-            height: `calc(100% + 32px);`,
+            left: -OFFSET_SIZE,
+            top: -OFFSET_SIZE,
+            width: `calc(100% + ${OFFSET_SIZE * 2}px);`,
+            height: `calc(100% + ${OFFSET_SIZE * 2}px);`,
             background: "",
             borderWidth: 2,
             borderStyle: "solid",
             borderColor: "white",
-            borderRadius: 2,
+            borderRadius: 1,
             cursor: "pointer",
             transition: "all 0.2s ease-out 0s",
             transitionDuration: "0.2s",
@@ -42,42 +43,6 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
         >
           {props.children}
         </Box>
-        <Stack
-          sx={{
-            position: "absolute",
-            left: -32,
-            top: -32,
-            background: "",
-            borderWidth: 2,
-            borderStyle: "solid",
-            borderColor: "white",
-            borderRadius: 16,
-            backgroundColor: "black",
-            width: 32,
-            height: 32,
-            transition: "all 0.2s ease-out 0s",
-            transitionDuration: "0.2s",
-            transitionDelay: "0s",
-            transitionTimingFunction: "ease-out",
-            "&:hover": {
-              borderColor: theme.palette.error.main,
-              "& .MuiIconButton": {
-                color: theme.palette.error.main,
-              },
-            },
-          }}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <IconButton
-            className={"MuiIconButton"}
-            sx={{ borderRadius: 16, width: 16, height: 16 }}
-            onClick={props.onClickForDelete}
-          >
-            <CloseIcon></CloseIcon>
-          </IconButton>
-        </Stack>
-        {/*{props.children}*/}
       </div>
     );
   };

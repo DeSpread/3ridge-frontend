@@ -45,3 +45,28 @@ a {
 .tlogin-button {
   background: red;
 }
+
+.container__editor {
+  font-size: 1rem;
+  border-width: 3px;
+  /*transition-property: all;*/
+  /*border-style: solid;*/
+  /*font-variant-ligatures: common-ligatures;*/
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px #35333a;
+  transition: box-shadow 0.1s ease-out 0s;
+}
+
+.container__editor:hover {
+  box-shadow: 0 0 0 2px #787385;
+  /*border-color: #35333a;*/
+  /*font-size: 2rem;*/
+  /*border-width: 0.16rem;*/
+  /*border-style: solid;*/
+  /*font-variant-ligatures: common-ligatures;*/
+  /*border-radius: 8px;*/
+}
+
+.container__editor textarea {
+  outline: 0px;
+}

@@ -11,8 +11,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import React, { MouseEventHandler, useMemo, useState } from "react";
 import { Z_INDEX_OFFSET } from "../../type";
-import SecondaryButton from "../atoms/secondary-button";
-import ValidatedTextInput from "../molecules/validated-text-input";
+import SecondaryButton from "../atomic/atoms/secondary-button";
+import ValidatedTextInput from "../atomic/molecules/validated-text-input";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 
 type ConnectTwitterDialogProps = DialogProps & {

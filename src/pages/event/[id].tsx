@@ -16,13 +16,13 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import VerifyCard from "../../components/molecules/verify-card";
+import VerifyCard from "../../components/atomic/molecules/verify-card";
 import { useTicketQuery } from "../../page-hook/ticket-query-hook";
 import { format } from "date-fns";
-import StyledChip from "../../components/atoms/styled/styled-chip";
+import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
-import PrimaryCard from "../../components/atoms/primary-card";
-import SecondaryButton from "../../components/atoms/secondary-button";
+import PrimaryCard from "../../components/atomic/atoms/primary-card";
+import SecondaryButton from "../../components/atomic/atoms/secondary-button";
 import { decodeBase64, nFormatter } from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
@@ -58,30 +58,31 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from "next/image";
-import BlockIcon from "../../components/molecules/block-icon";
+import BlockIcon from "../../components/atomic/molecules/block-icon";
 import TimerBoard, {
   DummyTimerBoard,
-} from "../../components/molecules/timer-board";
+} from "../../components/atomic/molecules/timer-board";
 import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
 import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
-import LinkTypography from "../../components/atoms/link-typography";
+import LinkTypography from "../../components/atomic/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 import { parseStrToDate } from "../../util/date-util";
 import StringHelper from "../../helper/string-helper";
-import Realistic from "../../components/realistic";
+import Realistic from "../../components/effects/realistic";
 import { useGetSet, useMountedState } from "react-use";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import { useSetRecoilState } from "recoil";
 import { backDirectionPathState } from "../../lib/recoil";
-import ClickTypography from "../../components/click-typhography";
+import ClickTypography from "../../components/atomic/atoms/click-typhography";
 import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 import ComponentHelper from "../../helper/component-helper";
-import ContentMetaDataRenderComponent from "../../components/atoms/content-meta-data-render-component";
+import ContentMetaDataRenderComponent from "../../components/atomic/atoms/content-meta-data-render-component";
 import AgreementDialog from "../../components/dialogs/agreement-dialog";
-import EventTitle from "../../components/atoms/pages/event/event-title";
-import EventImage from "../../components/atoms/pages/event/event-image";
-import EventDateRange from "../../components/atoms/pages/event/event-date-range";
+import EventTitle from "../../components/pages/event/event-title";
+import EventImage from "../../components/pages/event/event-image";
+import EventDateRange from "../../components/pages/event/event-date-range";
+import EventDescription from "../../components/pages/event/event-description";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -1039,7 +1040,6 @@ const Event = (props: AppProps) => {
                 </>
               </Box>
             )}
-
             {hasMetamask &&
               !isExceededTicketParticipants() &&
               userData?._id === undefined && (
@@ -1105,38 +1105,39 @@ const Event = (props: AppProps) => {
                   </CardContent>
                 </Card>
               )}
-            <Stack
-              direction={"column"}
-              spacing={2}
-              alignItems={mdUp ? "flex-start" : "center"}
-            >
-              <Typography textAlign={mdUp ? "left" : "center"} variant={"h5"}>
-                이벤트 설명
-              </Typography>
-              <Box>
-                <ContentMetaDataRenderComponent
-                  contentMetaData={ticketData?.description_v2}
-                  textComponentFunc={(content) => {
-                    return (
-                      <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>
-                        <Typography sx={{ wordBreak: "keep-all" }}>
-                          {content}
-                        </Typography>
-                      </Box>
-                    );
-                  }}
-                  htmlComponentFunc={(content) => {
-                    return (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: content ?? "<></>",
-                        }}
-                      ></div>
-                    );
-                  }}
-                ></ContentMetaDataRenderComponent>
-              </Box>
-            </Stack>
+            <EventDescription ticketData={ticketData}></EventDescription>
+            {/*<Stack*/}
+            {/*  direction={"column"}*/}
+            {/*  spacing={2}*/}
+            {/*  alignItems={mdUp ? "flex-start" : "center"}*/}
+            {/*>*/}
+            {/*  <Typography textAlign={mdUp ? "left" : "center"} variant={"h5"}>*/}
+            {/*    이벤트 설명*/}
+            {/*  </Typography>*/}
+            {/*  <Box>*/}
+            {/*    <ContentMetaDataRenderComponent*/}
+            {/*      contentMetaData={ticketData?.description_v2}*/}
+            {/*      textComponentFunc={(content) => {*/}
+            {/*        return (*/}
+            {/*          <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>*/}
+            {/*            <Typography sx={{ wordBreak: "keep-all" }}>*/}
+            {/*              {content}*/}
+            {/*            </Typography>*/}
+            {/*          </Box>*/}
+            {/*        );*/}
+            {/*      }}*/}
+            {/*      htmlComponentFunc={(content) => {*/}
+            {/*        return (*/}
+            {/*          <div*/}
+            {/*            dangerouslySetInnerHTML={{*/}
+            {/*              __html: content ?? "<></>",*/}
+            {/*            }}*/}
+            {/*          ></div>*/}
+            {/*        );*/}
+            {/*      }}*/}
+            {/*    ></ContentMetaDataRenderComponent>*/}
+            {/*  </Box>*/}
+            {/*</Stack>*/}
 
             <Stack
               direction={"column"}

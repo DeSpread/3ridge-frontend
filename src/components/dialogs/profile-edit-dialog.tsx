@@ -26,15 +26,15 @@ import StringHelper from "../../helper/string-helper";
 import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";
-import { ValidatorButton } from "../molecules/validator-button";
-import BlockIcon from "../molecules/block-icon";
+import { ValidatorButton } from "../atomic/molecules/validator-button";
+import BlockIcon from "../atomic/molecules/block-icon";
 import ResourceFactory from "../../helper/resource-factory";
 // @ts-ignore
 import TelegramLoginButton from "react-telegram-login";
 import { getUserMail } from "../../helper/type-helper";
 import { useMobile } from "../../provider/mobile/mobile-context";
-import PrimaryButton from "../atoms/primary-button";
-import SecondaryButton from "../atoms/secondary-button";
+import PrimaryButton from "../atomic/atoms/primary-button";
+import SecondaryButton from "../atomic/atoms/secondary-button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/router";
 

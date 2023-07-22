@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "prismjs/themes/prism-tomorrow.css";
 
 import React, { ReactElement, ReactNode, useEffect } from "react";
 import type { AppProps } from "next/app";

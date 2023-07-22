@@ -12,11 +12,11 @@ import { QuizQuestContext, Z_INDEX_OFFSET } from "../../type";
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 
-export type QuestSimpleDialogProps = DialogProps & {
+export type SimpleDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
 };
 
-const SimpleDialog = (props: QuestSimpleDialogProps) => {
+const SimpleDialog = (props: SimpleDialogProps) => {
   const { ...rest } = props;
   const theme = useTheme();
 
@@ -37,6 +37,10 @@ const SimpleDialog = (props: QuestSimpleDialogProps) => {
             borderStyle: "solid",
             padding: 8,
           },
+        }}
+        onClose={() => {
+          // @ts-ignore
+          props.onCloseBtnClicked?.(undefined);
         }}
         {...rest}
       >

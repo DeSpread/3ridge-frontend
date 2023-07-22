@@ -1,11 +1,12 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import SimpleDialog, { QuestSimpleDialogProps } from "./simple-dialog";
+import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
-import SecondaryButton from "../atoms/secondary-button";
+import SecondaryButton from "../atomic/atoms/secondary-button";
 import { TimeField } from "@mui/x-date-pickers";
 import { useTheme } from "@mui/material/styles";
 import { format, subHours } from "date-fns";
 import { parseStrToDate } from "../../util/date-util";
+import { useAlert } from "../../provider/alert/alert-provider";
 
 const DateEditDialog = (
   props: {
@@ -13,13 +14,14 @@ const DateEditDialog = (
     initEndDate: Date;
     onCloseBtnClicked?: MouseEventHandler;
     onConfirmBtnClicked?: (beginDate: Date, endDate: Date) => void;
-  } & QuestSimpleDialogProps
+  } & SimpleDialogProps
 ) => {
   const { ...rest } = props;
   const [beginDate, setBeginDate] = useState(props.initBeginDate);
   const [endDate, setEndDate] = useState(props.initEndDate);
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const { showErrorAlert, showAlert } = useAlert();
 
   useEffect(() => {
     if (props.initBeginDate?.toString() !== "Invalid Date")
@@ -90,7 +92,15 @@ const DateEditDialog = (
                 endDate?.toString() === "Invalid Date"
                   ? props.initEndDate
                   : endDate;
-              // console.log(subHours(_beginDate, 9), _endDate);
+
+              console.log(_beginDate.getTime() - _endDate.getTime());
+              if (_endDate.getTime() - _beginDate.getTime() < 0) {
+                showAlert({
+                  title: "알림",
+                  content: "마지막 시간값은 시작 시간보다 커야합니다.",
+                });
+                return;
+              }
               props.onConfirmBtnClicked?.(_beginDate, _endDate);
             }}
           >

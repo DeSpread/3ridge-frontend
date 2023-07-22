@@ -16,7 +16,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import PrimaryButton from "../../components/atoms/primary-button";
+import PrimaryButton from "../../components/atomic/atoms/primary-button";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import { useAdminQuery } from "../../page-hook/admin-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";

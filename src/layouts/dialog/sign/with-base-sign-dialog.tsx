@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { MouseEventHandler } from "react";
-import LinkTypography from "../../../components/atoms/link-typography";
+import LinkTypography from "../../../components/atomic/atoms/link-typography";
 import { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 import { Z_INDEX_OFFSET } from "../../../type";

@@ -16,13 +16,13 @@ import {
 } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import StringHelper from "../../helper/string-helper";
-import GradientTypography from "../../components/atoms/gradient-typography";
+import GradientTypography from "../../components/atomic/atoms/gradient-typography";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";
-import PrimaryButton from "../../components/atoms/primary-button";
+import PrimaryButton from "../../components/atomic/atoms/primary-button";
 import ProfileEditDialog from "../../components/dialogs/profile-edit-dialog";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useLogin } from "../../provider/login/login-provider";
@@ -43,16 +43,16 @@ import {
   getLocaleErrorMessage,
 } from "../../error/my-error";
 import PictureEditDialog from "../../components/dialogs/picture-edit-dialog";
-import { VALIDATOR_BUTTON_STATES } from "../../components/molecules/validator-button";
+import { VALIDATOR_BUTTON_STATES } from "../../components/atomic/molecules/validator-button";
 import AwsClient from "../../remote/aws-client";
-import StyledChip from "../../components/atoms/styled/styled-chip";
+import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
 import { gql, request } from "graphql-request";
 import CircularProgress from "@mui/material/CircularProgress";
-import BlockIcon from "../../components/molecules/block-icon";
+import BlockIcon from "../../components/atomic/molecules/block-icon";
 import { useUserQuery } from "../../page-hook/user-query-hook";
 import { useRouter } from "next/router";
-import TicketCard from "../../components/molecules/ticket-card";
+import TicketCard from "../../components/atomic/molecules/ticket-card";
 import Image from "next/image";
 import ResourceFactory from "../../helper/resource-factory";
 import {

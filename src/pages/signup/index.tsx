@@ -3,9 +3,9 @@ import MainLayout from "../../layouts/main-layout";
 import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import HomeFooter from "../../layouts/footer/home-footer";
 import Head from "next/head";
-import LinkTypography from "../../components/atoms/link-typography";
-import SignUpSelectForm from "../../components/molecules/form/sign-up-select-form";
-import SignUpOthersForm from "../../components/molecules/form/sign-up-others-form";
+import LinkTypography from "../../components/atomic/atoms/link-typography";
+import SignUpSelectForm from "../../components/form/sign-up-select-form";
+import SignUpOthersForm from "../../components/form/sign-up-others-form";
 import { useRouter } from "next/router";
 import { useLogin } from "../../provider/login/login-provider";
 import {
@@ -15,7 +15,7 @@ import {
   getLocaleErrorMessage,
 } from "../../error/my-error";
 import { useAlert } from "../../provider/alert/alert-provider";
-import SignUpWithEmailForm from "../../components/molecules/form/sign-up-with-email-form";
+import SignUpWithEmailForm from "../../components/form/sign-up-with-email-form";
 import {
   EmailSignUpEventParams,
   MAIL_VERIFY,
@@ -23,7 +23,7 @@ import {
   ObjectValues,
   SupportedNetwork,
 } from "../../type";
-import VerifyYourEmailForm from "../../components/organisms/verify-your-email-form";
+import VerifyYourEmailForm from "../../components/form/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 import AwsClient from "../../remote/aws-client";

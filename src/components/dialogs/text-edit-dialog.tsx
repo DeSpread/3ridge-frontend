@@ -1,38 +1,30 @@
-import React, { MouseEventHandler, useState } from "react";
-import SimpleDialog, { QuestSimpleDialogProps } from "./simple-dialog";
+import React, { MouseEventHandler, useEffect, useState } from "react";
+import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
 import { Box, Stack } from "@mui/material";
-import StyledOutlinedInput from "../atoms/styled/styled-outlined-input";
-import SecondaryButton from "../atoms/secondary-button";
+import StyledOutlinedInput from "../atomic/atoms/styled/styled-outlined-input";
+import SecondaryButton from "../atomic/atoms/secondary-button";
 
 const TextEditDialog = (
   props: {
-    onCloseBtnClicked?: MouseEventHandler;
-    onConfirmBtnClicked?: (text: string) => void;
-    placeholder?: string;
+    onConfirmBtnClicked?: (text?: string) => void;
     onChanged?: (text: string) => void;
-  } & QuestSimpleDialogProps
+    defaultText?: string;
+  } & SimpleDialogProps
 ) => {
-  const { ...rest } = props;
-  const [textValue, setTextValue] = useState("");
+  const { defaultText, ...rest } = props;
+  const [textValue, setTextValue] = useState(defaultText);
+
+  useEffect(() => {
+    if (defaultText) {
+      setTextValue(defaultText);
+    }
+  }, [defaultText]);
 
   return (
-    <SimpleDialog
-      {...rest}
-      maxWidth={"sm"}
-      onClose={() => {
-        setTextValue("");
-        // @ts-ignore
-        props.onCloseBtnClicked?.(undefined);
-      }}
-      onCloseBtnClicked={(e) => {
-        setTextValue("");
-        props.onCloseBtnClicked?.(e);
-      }}
-    >
+    <SimpleDialog {...rest} maxWidth={"sm"}>
       <Stack sx={{ marginTop: 1 }}>
         <Box sx={{ width: "100%", background: "", position: "relative" }}>
           <StyledOutlinedInput
-            placeholder={props.placeholder}
             sx={{
               width: "100%",
             }}
@@ -43,6 +35,7 @@ const TextEditDialog = (
               setTextValue(e.target.value);
               props.onChanged?.(e.target.value);
             }}
+            multiline
           />
         </Box>
         <Stack
@@ -55,7 +48,6 @@ const TextEditDialog = (
             onClick={(e) => {
               e.preventDefault();
               props.onConfirmBtnClicked?.(textValue);
-              setTextValue("");
             }}
           >
             확인

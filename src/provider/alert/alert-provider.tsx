@@ -22,6 +22,8 @@ import { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 import Draggable from "react-draggable";
 import ComponentHelper from "../../helper/component-helper";
+import LinkTypography from "../../components/atomic/atoms/link-typography";
+import { useTheme } from "@mui/material/styles";
 
 const AlertContext = createContext<{
   showAlert: ({
@@ -56,6 +58,7 @@ const Transition = React.forwardRef(function Transition(
 export const AlertProvider = ({ children }: PropsWithChildren) => {
   const [open, setOpen] = useState(false);
   const alertDescRef = useRef<AlertDesc>({});
+  const theme = useTheme();
 
   const showAlert = ({
     title,
@@ -74,7 +77,26 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
     alertDescRef.current.content = (
       <Stack direction={"column"} sx={{ flex: 1, background: "" }}>
         <div>{content}</div>
-        <div>Contact to hans@despread.io</div>
+        <Stack direction={"row"} alignItems={"center"} sx={{ marginTop: 2 }}>
+          <LinkTypography
+            href={"https://discord.gg/3ridge"}
+            sx={{
+              fontWeight: "bold",
+              "&:hover": {
+                color: "#914e1d",
+                textDecoration: "underline",
+              },
+              color: theme.palette.warning.main,
+            }}
+            variant={"body1"}
+          >
+            3ridge 디스코드
+          </LinkTypography>
+          <Typography variant={"body1"}>
+            에서 Ticket을 통해 문의하세요
+          </Typography>
+        </Stack>
+        {/*<div>디스코드 </div>*/}
       </Stack>
     );
     setOpen(true);
@@ -85,12 +107,6 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
     alertDescRef.current.content = undefined;
     setOpen(false);
   };
-
-  // const multiLineContentText = (content: string) => {
-  //   return content.split("\n").map((e, index) => {
-  //     return <Typography key={index}>{e}</Typography>;
-  //   });
-  // };
 
   return (
     <AlertContext.Provider value={{ showAlert, closeAlert, showErrorAlert }}>

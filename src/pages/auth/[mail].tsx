@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { Stack, Typography, Box, Divider, Skeleton, Link } from "@mui/material";
 import MainLayout from "../../layouts/main-layout";
 import { useRouter } from "next/router";
-import PrimaryButton from "../../components/atoms/primary-button";
+import PrimaryButton from "../../components/atomic/atoms/primary-button";
 import NextLink from "next/link";
 import { useTheme } from "@mui/material/styles";
 import AwsClient from "../../remote/aws-client";

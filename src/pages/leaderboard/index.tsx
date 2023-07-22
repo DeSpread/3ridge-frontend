@@ -12,17 +12,17 @@ import {
 } from "@mui/material";
 import MainLayout from "../../layouts/main-layout";
 import { useLeaderUsersQuery } from "../../page-hook/leader-users-query-hook";
-import XpChip from "../../components/atoms/styled/xp-chip";
+import XpChip from "../../components/atomic/atoms/styled/xp-chip";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { User } from "../../type";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import StringHelper from "../../helper/string-helper";
-import GradientTypography from "../../components/atoms/gradient-typography";
+import GradientTypography from "../../components/atomic/atoms/gradient-typography";
 import { useTheme } from "@mui/material/styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useLeaderUserRankQuery } from "../../page-hook/leader-user-rank-query-hook";
-import BlockIcon from "../../components/molecules/block-icon";
+import BlockIcon from "../../components/atomic/molecules/block-icon";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
 

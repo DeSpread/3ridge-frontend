@@ -1,8 +1,8 @@
 import { SUPPORTED_NETWORKS, SupportedNetwork, WALLET_NAMES } from "../type";
-import AptosIcon from "../components/atoms/svg/aptos-icon";
-import EthIcon from "../components/atoms/svg/eth-icon";
-import SuiIcon from "../components/atoms/svg/sui-icon";
-import StacksIcon from "../components/atoms/svg/stacks-icon";
+import AptosIcon from "../components/atomic/atoms/svg/aptos-icon";
+import EthIcon from "../components/atomic/atoms/svg/eth-icon";
+import SuiIcon from "../components/atomic/atoms/svg/sui-icon";
+import StacksIcon from "../components/atomic/atoms/svg/stacks-icon";
 
 class ResourceFactory {
   private static instance: ResourceFactory;

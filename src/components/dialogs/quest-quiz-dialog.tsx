@@ -9,14 +9,14 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import QuestQuizForm from "../molecules/form/quest-quiz-form";
+import QuestQuizForm from "../form/quest-quiz-form";
 import {
   MouseEventWithParam,
   QuizEventParam,
   QuizQuestContext,
   Z_INDEX_OFFSET,
 } from "../../type";
-import SecondaryButton from "../atoms/secondary-button";
+import SecondaryButton from "../atomic/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
 
 type QuestQuizDialogProps = DialogProps & {

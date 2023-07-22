@@ -10,9 +10,9 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { PropsWithChildren, useEffect } from "react";
 import React, { MouseEventHandler, ReactNode, useMemo, useState } from "react";
-import NavbarAvatar from "../components/molecules/navbar-avatar";
+import NavbarAvatar from "../components/atomic/molecules/navbar-avatar";
 import { useRouter } from "next/router";
-import SecondaryButton from "../components/atoms/secondary-button";
+import SecondaryButton from "../components/atomic/atoms/secondary-button";
 import SignInDialog from "./dialog/sign/sign-in-dialog";
 import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
 import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
@@ -33,8 +33,8 @@ import {
   Z_INDEX_OFFSET,
 } from "../type";
 import { useSignDialog } from "../page-hook/sign-dialog-hook";
-import NavbarButton from "../components/atoms/navbar-button";
-import SubMenuButton from "../components/molecules/sub-menu-button";
+import NavbarButton from "../components/atomic/atoms/navbar-button";
+import SubMenuButton from "../components/atomic/molecules/sub-menu-button";
 import Image from "next/image";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
@@ -44,7 +44,7 @@ import {
   convertToWalletName,
 } from "../helper/type-helper";
 import ResourceFactory from "../helper/resource-factory";
-import MobileNavigatorBar from "../components/atoms/mobile/mobile-navigator-bar";
+import MobileNavigatorBar from "../components/atomic/atoms/mobile/mobile-navigator-bar";
 import { useMobile } from "../provider/mobile/mobile-context";
 import { goToMetaMaskDeppLinkWhenMobile } from "../helper/eth-helper";
 
