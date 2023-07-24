@@ -1,16 +1,10 @@
 import {
   SUPPORTED_NETWORKS,
   SupportedNetwork,
-  Ticket,
   User,
   WALLET_NAMES,
 } from "../type";
-import {
-  ChainType,
-  ContentEncodingType,
-  ContentMetadata,
-  QuestPolicyType,
-} from "../__generated__/graphql";
+import { ChainType } from "../__generated__/graphql";
 
 const convertToSuppoertedNetwork = (network?: string | ChainType) => {
   if (network === SUPPORTED_NETWORKS.SUI || network === ChainType.Sui) {
@@ -83,47 +77,9 @@ const getUserMail = (user?: User) => {
   return undefined;
 };
 
-const findVerifyHasEmailQuests = (ticket: Ticket) => {
-  if (!ticket) return null;
-  const targetQuests = ticket?.quests?.filter(
-    (e) =>
-      e.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-      e.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail
-  );
-  return targetQuests;
-};
-
-const findVerifyHasWalletQuests = (ticket: Ticket) => {
-  if (!ticket) return null;
-  const targetQuests = ticket?.quests?.filter(
-    (e) => e.questPolicy?.questPolicy === QuestPolicyType.VerifyHasWalletAddress
-  );
-  return targetQuests;
-};
-
-const findVerifyHasTwitter = (ticket: Ticket) => {
-  if (!ticket) return null;
-  const targetQuests = ticket?.quests?.filter(
-    (e) => e.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter
-  );
-  return targetQuests;
-};
-
-const findVerifyHasTelegram = (ticket: Ticket) => {
-  if (!ticket) return null;
-  const targetQuests = ticket?.quests?.filter(
-    (e) => e.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
-  );
-  return targetQuests;
-};
-
 export {
   convertToSuppoertedNetwork,
   convertToChainType,
   convertToWalletName,
   getUserMail,
-  findVerifyHasEmailQuests,
-  findVerifyHasWalletQuests,
-  findVerifyHasTwitter,
-  findVerifyHasTelegram,
 };

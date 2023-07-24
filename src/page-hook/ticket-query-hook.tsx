@@ -11,6 +11,7 @@ import {
   UPDATE_TICKET_IMAGE_URL,
   UPDATE_TICKET_TITLE,
   UPDATE_TICKET_DATE_RANGE_TIME,
+  UPDATE_TICKET_DESCRIPTION,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
 import Console from "../helper/console-helper";
+import { ContentMetadata } from "../__generated__/graphql";
 
 export function useTicketQuery({
   userId,
@@ -40,6 +42,7 @@ export function useTicketQuery({
   const [updateTicketDateRangeTime] = useMutation(
     UPDATE_TICKET_DATE_RANGE_TIME
   );
+  const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
   const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
@@ -404,6 +407,19 @@ export function useTicketQuery({
     }
   };
 
+  const asyncUpdateTicketDescription = async (
+    description?: ContentMetadata
+  ) => {
+    if (id) {
+      await updateTicketDescription({
+        variables: {
+          ticketId: id,
+          description_v2: description,
+        },
+      });
+    }
+  };
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -418,5 +434,6 @@ export function useTicketQuery({
     asyncUpdateImageUrl,
     asyncUpdateTitle,
     asyncUpdateTicketDateRangeTime,
+    asyncUpdateTicketDescription,
   };
 }

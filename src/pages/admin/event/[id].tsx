@@ -62,6 +62,7 @@ const Event = () => {
     asyncUpdateTitle,
     asyncRefreshTicketData,
     asyncUpdateTicketDateRangeTime,
+    asyncUpdateTicketDescription,
   } = useTicketQuery({
     userId: userData._id,
     id: router.isReady
@@ -79,6 +80,13 @@ const Event = () => {
         return "일정 설정";
       case EVENT_COMPONENT_TARGET.DESCRIPTION:
         return "이벤트 설명";
+    }
+  }, [eventComponentTarget]);
+
+  const dialogContent = useMemo(() => {
+    switch (eventComponentTarget) {
+      case EVENT_COMPONENT_TARGET.DESCRIPTION:
+        return ticketData?.description_v2;
     }
   }, [eventComponentTarget]);
 
@@ -137,11 +145,6 @@ const Event = () => {
     await asyncRefreshAll();
     closeLoading();
   };
-
-  // const source = `
-  //   ## MarkdownPreview
-  //   > todo: React component preview markdown text.
-  // `;
 
   return (
     <>
@@ -220,7 +223,6 @@ const Event = () => {
                       );
                     }}
                   ></_EventDateRange>
-                  {/*<MarkdownPreview source={source} />*/}
                 </Stack>
               </Grid>
             </Grid>
@@ -392,8 +394,21 @@ const Event = () => {
       <ContentMetaDataEditDialog
         open={openContentMetaDataEditDialog}
         title={dialogTitle}
+        content={dialogContent}
         onCloseBtnClicked={(e) => {
           closeOpenContentMetaDataEditDialog();
+        }}
+        onConfirmBtnClicked={async (data) => {
+          showLoading();
+          switch (eventComponentTarget) {
+            case EVENT_COMPONENT_TARGET.DESCRIPTION:
+              // console.log(data);
+              await asyncUpdateTicketDescription(data);
+              break;
+          }
+          await asyncRefreshAll();
+          closeOpenContentMetaDataEditDialog();
+          closeLoading();
         }}
       ></ContentMetaDataEditDialog>
     </>

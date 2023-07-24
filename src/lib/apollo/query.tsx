@@ -691,3 +691,14 @@ export const UPDATE_TICKET_DATE_RANGE_TIME = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const UPDATE_TICKET_DESCRIPTION = gql(/* GraphQL */ `
+  mutation UpdateTicketDescription(
+    $ticketId: String!
+    $description_v2: ContentMetadataInputType
+  ) {
+    updateTicketById(ticketId: $ticketId, description_v2: $description_v2) {
+      _id
+    }
+  }
+`);

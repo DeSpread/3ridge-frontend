@@ -26,11 +26,18 @@ const EventDescription = (
         <ContentMetaDataRenderComponent
           contentMetaData={ticketData?.description_v2}
           textComponentFunc={(content) => {
+            console.log(content?.split("\n"));
             return (
               <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>
-                <Typography sx={{ wordBreak: "keep-all" }}>
-                  {content}
-                </Typography>
+                <Stack>
+                  {content?.split("\n")?.map((e, i) => {
+                    return (
+                      <Typography key={i} sx={{ wordBreak: "keep-all" }}>
+                        {e}
+                      </Typography>
+                    );
+                  })}
+                </Stack>
               </Box>
             );
           }}

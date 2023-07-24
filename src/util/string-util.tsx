@@ -43,6 +43,11 @@ const decodeBase64 = (base64String: string) => {
   return decodedString;
 };
 
+const encodeBase64 = (plainText: string) => {
+  const buffer = Buffer.from(plainText, "utf-8");
+  return buffer.toString("base64");
+};
+
 const generateUniqId = () => {
   const DELIMITER = "-";
   const currentUnixTimestamp = new Date().getTime();
@@ -54,5 +59,6 @@ export {
   validatePassword,
   nFormatter,
   decodeBase64,
+  encodeBase64,
   generateUniqId,
 };

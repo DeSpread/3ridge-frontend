@@ -48,6 +48,7 @@ const documents = {
     "\n  mutation UpdateTicketImageUrl($ticketId: String!, $imageUrl: String) {\n    updateTicketById(ticketId: $ticketId, imageUrl: $imageUrl) {\n      _id\n    }\n  }\n": types.UpdateTicketImageUrlDocument,
     "\n  mutation UpdateTicketTitle($ticketId: String!, $title: String) {\n    updateTicketById(ticketId: $ticketId, title: $title) {\n      _id\n    }\n  }\n": types.UpdateTicketTitleDocument,
     "\n  mutation UpdateTicketDateRangeTime(\n    $ticketId: String!\n    $beginTime: DateTime\n    $untilTime: DateTime\n  ) {\n    updateTicketById(\n      ticketId: $ticketId\n      beginTime: $beginTime\n      untilTime: $untilTime\n    ) {\n      _id\n    }\n  }\n": types.UpdateTicketDateRangeTimeDocument,
+    "\n  mutation UpdateTicketDescription(\n    $ticketId: String!\n    $description_v2: ContentMetadataInputType\n  ) {\n    updateTicketById(ticketId: $ticketId, description_v2: $description_v2) {\n      _id\n    }\n  }\n": types.UpdateTicketDescriptionDocument,
 };
 
 /**
@@ -190,6 +191,10 @@ export function gql(source: "\n  mutation UpdateTicketTitle($ticketId: String!, 
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateTicketDateRangeTime(\n    $ticketId: String!\n    $beginTime: DateTime\n    $untilTime: DateTime\n  ) {\n    updateTicketById(\n      ticketId: $ticketId\n      beginTime: $beginTime\n      untilTime: $untilTime\n    ) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateTicketDateRangeTime(\n    $ticketId: String!\n    $beginTime: DateTime\n    $untilTime: DateTime\n  ) {\n    updateTicketById(\n      ticketId: $ticketId\n      beginTime: $beginTime\n      untilTime: $untilTime\n    ) {\n      _id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateTicketDescription(\n    $ticketId: String!\n    $description_v2: ContentMetadataInputType\n  ) {\n    updateTicketById(ticketId: $ticketId, description_v2: $description_v2) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateTicketDescription(\n    $ticketId: String!\n    $description_v2: ContentMetadataInputType\n  ) {\n    updateTicketById(ticketId: $ticketId, description_v2: $description_v2) {\n      _id\n    }\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
