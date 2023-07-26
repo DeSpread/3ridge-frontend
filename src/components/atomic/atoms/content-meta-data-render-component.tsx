@@ -3,9 +3,44 @@ import {
   ContentFormatType,
   ContentMetadata,
 } from "../../../__generated__/graphql";
-import { useCallback } from "react";
-import { Typography } from "@mui/material";
+import {
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { Box, Stack, Typography } from "@mui/material";
 import StringHelper from "../../../helper/string-helper";
+import { marked } from "marked";
+import LinkTypography from "./link-typography";
+
+marked.use({
+  gfm: true,
+  breaks: true,
+});
+
+const MarkDownRenderer = ({
+  content,
+}: { content?: string } & PropsWithChildren) => {
+  const html = useMemo(() => {
+    if (!content) {
+      return "";
+    }
+    const html = marked.parse(content);
+    console.log(html);
+    return html;
+  }, [content]);
+
+  return (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: html ?? "<></>",
+      }}
+    ></div>
+  );
+};
 
 const ContentMetaDataRenderComponent = ({
   contentMetaData,
@@ -21,10 +56,14 @@ const ContentMetaDataRenderComponent = ({
   textComponentFunc = (content) => {
     return <Typography>{content}</Typography>;
   },
+  markComponentFunc = (content) => {
+    return <MarkDownRenderer content={content}></MarkDownRenderer>;
+  },
 }: {
   contentMetaData?: ContentMetadata;
   htmlComponentFunc?: ComponentRenderFunc;
   textComponentFunc?: ComponentRenderFunc;
+  markComponentFunc?: ComponentRenderFunc;
 }) => {
   const comp = useCallback(() => {
     if (contentMetaData) {
@@ -37,12 +76,20 @@ const ContentMetaDataRenderComponent = ({
         case ContentFormatType.Text:
           return textComponentFunc?.(content);
 
+        case ContentFormatType.Markdown:
+          return markComponentFunc?.(content);
+
         default:
           return <></>;
       }
     }
     return <></>;
-  }, [contentMetaData, htmlComponentFunc, textComponentFunc]);
+  }, [
+    contentMetaData,
+    htmlComponentFunc,
+    textComponentFunc,
+    markComponentFunc,
+  ]);
 
   return comp();
 };

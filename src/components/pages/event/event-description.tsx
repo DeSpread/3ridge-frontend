@@ -22,11 +22,10 @@ const EventDescription = (
       <Typography textAlign={mdUp ? "left" : "center"} variant={"h5"}>
         이벤트 설명
       </Typography>
-      <Box>
+      <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>
         <ContentMetaDataRenderComponent
           contentMetaData={ticketData?.description_v2}
           textComponentFunc={(content) => {
-            console.log(content?.split("\n"));
             return (
               <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>
                 <Stack>

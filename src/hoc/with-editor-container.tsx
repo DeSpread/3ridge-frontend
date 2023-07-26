@@ -14,6 +14,7 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
   ) => {
     const theme = useTheme();
     const OFFSET_SIZE = 2;
+    const ICON_SIZE = 8;
 
     return (
       <div style={{ position: "relative" }}>
@@ -43,6 +44,41 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
         >
           {props.children}
         </Box>
+        {props.onClickForDelete && (
+          <Stack
+            sx={{
+              position: "absolute",
+              left: -ICON_SIZE * 2,
+              top: -ICON_SIZE * 2,
+              background: "",
+              borderWidth: 2,
+              borderStyle: "solid",
+              borderColor: "white",
+              borderRadius: 16,
+              backgroundColor: "black",
+              transition: "all 0.2s ease-out 0s",
+              transitionDuration: "0.2s",
+              transitionDelay: "0s",
+              transitionTimingFunction: "ease-out",
+              "&:hover": {
+                borderColor: theme.palette.error.main,
+                "& .MuiIconButton": {
+                  color: theme.palette.error.main,
+                },
+              },
+            }}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <IconButton
+              className={"MuiIconButton"}
+              sx={{ borderRadius: 16, width: ICON_SIZE, height: ICON_SIZE }}
+              onClick={props.onClickForDelete}
+            >
+              <CloseIcon></CloseIcon>
+            </IconButton>
+          </Stack>
+        )}
       </div>
     );
   };

@@ -2,14 +2,118 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: LINESeedKR-Rg, LINESeedKR-Bd;
   background: rgb(16, 14, 20);
+  word-break: keep-all;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  font-family: 'LINESeedKR-Rg';
+  color: #f8810a;
+  cursor: pointer;
+}
+
+a:hover {
+  color: #904e1d;
+  text-decoration: underline;
+}
+
+h1 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 700;
+  font-size: 4.1rem;
+  line-height: 1.375;
+  word-break: keep-all;
+}
+
+h2 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1.375;
+  word-break: keep-all;
+}
+
+h3 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 700;
+  font-size: 2.25rem;
+  line-height: 1.375;
+  word-break: keep-all;
+}
+
+h4 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.375;
+  word-break: keep-all;
+}
+
+h5 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.375;
+  word-break: keep-all;
+}
+
+h6 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.375;
+  word-break: keep-all;
+}
+
+body1 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+body2 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.57;
+  word-break: keep-all;
+}
+
+subtitle1 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.75;
+  word-break: keep-all;
+}
+
+subtitle2 {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.57;
+  word-break: keep-all;
+}
+
+overline {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 2.5;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  word-break: keep-all;
+}
+
+caption {
+  font-family: 'LINESeedKR-Rg';
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.66;
+  word-break: keep-all;
 }
 
 * {
@@ -47,26 +151,80 @@ a {
 }
 
 .container__editor {
-  font-size: 1rem;
+  font-family: 'LINESeedKR-Rg';
+  font-size: 0.9rem;
+  line-height: 1.5;
   border-width: 3px;
-  /*transition-property: all;*/
-  /*border-style: solid;*/
-  /*font-variant-ligatures: common-ligatures;*/
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 0 0 2px #35333a;
   transition: box-shadow 0.1s ease-out 0s;
+  font-variant-ligatures: common-ligatures;
 }
 
 .container__editor:hover {
   box-shadow: 0 0 0 2px #787385;
-  /*border-color: #35333a;*/
-  /*font-size: 2rem;*/
-  /*border-width: 0.16rem;*/
-  /*border-style: solid;*/
-  /*font-variant-ligatures: common-ligatures;*/
-  /*border-radius: 8px;*/
 }
 
 .container__editor textarea {
   outline: 0px;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #90a4ae;
+}
+.token.punctuation {
+  color: #9e9e9e;
+}
+.namespace {
+  opacity: 0.7;
+}
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #e91e63;
+}
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #4caf50;
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #795548;
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #3f51b5;
+}
+.token.function {
+  color: #f44336;
+}
+.token.regex,
+.token.important,
+.token.variable {
+  color: #ff9800;
+}
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+.token.entity {
+  cursor: help;
 }

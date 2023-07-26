@@ -16,9 +16,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import VerifyCard from "../../components/atomic/molecules/verify-card";
 import { useTicketQuery } from "../../page-hook/ticket-query-hook";
-import { format } from "date-fns";
 import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import PrimaryCard from "../../components/atomic/atoms/primary-card";
@@ -30,7 +28,6 @@ import {
   DiscordQuestContext,
   MouseEventWithParam,
   Quest,
-  QUEST_POLICY_TYPE,
   QuizQuestContext,
   REWARD_POLICY_TYPE,
   SUPPORTED_NETWORKS,
@@ -82,6 +79,7 @@ import EventTitle from "../../components/pages/event/event-title";
 import EventImage from "../../components/pages/event/event-image";
 import EventDateRange from "../../components/pages/event/event-date-range";
 import EventDescription from "../../components/pages/event/event-description";
+import EventQuests from "../../components/pages/event/event-quests";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -405,10 +403,6 @@ const Event = (props: AppProps) => {
     }
   };
 
-  const getConfirmBtnLabel = (quest: Partial<Quest>) => {
-    return undefined;
-  };
-
   const changeChainToAlias = (chain: string) => {
     if (chain === "offchain-by-email") {
       return "이메일";
@@ -600,7 +594,7 @@ const Event = (props: AppProps) => {
   ) => {
     if (!ticketData._id || !quest._id) return;
     if (
-      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterFollow
     ) {
       try {
         const followQuestContext = quest.questPolicy
@@ -615,7 +609,7 @@ const Event = (props: AppProps) => {
         showErrorAlert({ content: getErrorMessage(e) });
       }
     } else if (
-      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterLiking
     ) {
       const likingQuestContext = quest.questPolicy
         .context as TwitterLikingQuestContext;
@@ -626,8 +620,7 @@ const Event = (props: AppProps) => {
         "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
       );
     } else if (
-      quest.questPolicy?.questPolicy ===
-      QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterRetweet
     ) {
       try {
         const retweetQuestContext = quest.questPolicy
@@ -643,13 +636,13 @@ const Event = (props: AppProps) => {
         showErrorAlert({ content: getErrorMessage(e) });
       }
     } else if (
-      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD ||
-      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram ||
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyVisitWebsite
     ) {
       let questContext;
       switch (quest.questPolicy?.questPolicy) {
-        case QUEST_POLICY_TYPE.VERIFY_DISCORD:
+        case QuestPolicyType.VerifyDiscord:
           questContext = quest.questPolicy?.context as DiscordQuestContext;
           window.open(
             `https://discord.gg/${questContext.channelId}`,
@@ -657,7 +650,7 @@ const Event = (props: AppProps) => {
             "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
           );
           break;
-        case QUEST_POLICY_TYPE.VERIFY_TELEGRAM:
+        case QuestPolicyType.VerifyTelegram:
           questContext = quest.questPolicy?.context as TelegramQuestContext;
           window.open(
             `https://t.me/${questContext.channelId}`,
@@ -677,7 +670,7 @@ const Event = (props: AppProps) => {
           if (newWindow) newWindow.opener = null;
           break;
       }
-      if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
+      if (quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord) {
         setSimpleWarningDialogShow(true);
         if (quest.questGuides?.[0]?.content) {
           setHtmlContent(decodeBase64(quest.questGuides[0].content));
@@ -688,7 +681,7 @@ const Event = (props: AppProps) => {
           setHtmlContent("");
         }
       } else if (
-        quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_TELEGRAM
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram
       ) {
         setSimpleWarningDialogShow(true);
         if (quest.questGuides?.[0]?.content) {
@@ -709,7 +702,7 @@ const Event = (props: AppProps) => {
         }
       }
     } else if (
-      quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAptosHasAns
     ) {
       setOpenContentsRendererDialog(true);
       if (quest.questGuides?.[0]?.content) {
@@ -728,7 +721,7 @@ const Event = (props: AppProps) => {
     }>;
     try {
       if (!ticketData._id || !quest?._id) return;
-      if (quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.QUIZ) {
+      if (quest.questPolicy?.questPolicy === QuestPolicyType.Quiz) {
         const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
         openQuizDialog(quest._id, quizQuestContext);
         myEvent.params.callback("success");
@@ -740,8 +733,7 @@ const Event = (props: AppProps) => {
         openAgreementDialog(quest._id, verifyAgreementContext);
         myEvent.params.callback("success");
       } else if (
-        quest.questPolicy?.questPolicy ===
-        QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterFollow
       ) {
         if (showTwitterConnectAlert()) {
           myEvent.params.callback("success");
@@ -752,8 +744,7 @@ const Event = (props: AppProps) => {
         myEvent.params.callback("success");
         updateVerifyState(index);
       } else if (
-        quest.questPolicy?.questPolicy ===
-        QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterRetweet
       ) {
         if (showTwitterConnectAlert()) {
           myEvent.params.callback("success");
@@ -763,8 +754,7 @@ const Event = (props: AppProps) => {
         myEvent.params.callback("success");
         updateVerifyState(index);
       } else if (
-        quest.questPolicy?.questPolicy ===
-        QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterLiking
       ) {
         if (showTwitterConnectAlert()) {
           myEvent.params.callback("success");
@@ -774,20 +764,17 @@ const Event = (props: AppProps) => {
         myEvent.params.callback("success");
         updateVerifyState(index);
       } else if (
-        quest.questPolicy?.questPolicy === QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT
+        quest.questPolicy?.questPolicy === QuestPolicyType.Verify_3RidgePoint
       ) {
         await asyncVerify3ridgePoint(ticketData._id, quest._id ?? "");
         myEvent.params.callback("success");
         updateVerifyState(index);
       } else if (
         quest.questPolicy?.questPolicy ===
-          QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||
-        quest.questPolicy?.questPolicy ===
-          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
-        quest.questPolicy?.questPolicy ===
-          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_ANS ||
-        quest.questPolicy?.questPolicy ===
-          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT
+          QuestPolicyType.VerifyAptosBridgeToAptos ||
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAptosExistTx ||
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAptosHasAns ||
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAptosHasNft
       ) {
         await asyncVerifyAptosQuest(ticketData._id, quest._id ?? "");
         myEvent.params.callback("success");
@@ -1046,24 +1033,15 @@ const Event = (props: AppProps) => {
                   <>
                     <Card>
                       <CardContent>
-                        <LinkTypography
+                        <ClickTypography
                           variant={"body1"}
-                          href={"#"}
-                          sx={{
-                            fontWeight: "bold",
-                            "&:hover": {
-                              color: "#914e1d",
-                              textDecoration: "underline",
-                            },
-                            color: theme.palette.warning.main,
-                          }}
                           onClick={async (e) => {
                             setShowSignInDialog(true);
                           }}
                           textAlign={mdUp ? "left" : "center"}
                         >
                           로그인 후, 이벤트에 참여하실 수 있어요 😅
-                        </LinkTypography>
+                        </ClickTypography>
                       </CardContent>
                     </Card>
                   </>
@@ -1105,115 +1083,18 @@ const Event = (props: AppProps) => {
                 </Card>
               )}
             <EventDescription ticketData={ticketData}></EventDescription>
-            {/*<Stack*/}
-            {/*  direction={"column"}*/}
-            {/*  spacing={2}*/}
-            {/*  alignItems={mdUp ? "flex-start" : "center"}*/}
-            {/*>*/}
-            {/*  <Typography textAlign={mdUp ? "left" : "center"} variant={"h5"}>*/}
-            {/*    이벤트 설명*/}
-            {/*  </Typography>*/}
-            {/*  <Box>*/}
-            {/*    <ContentMetaDataRenderComponent*/}
-            {/*      contentMetaData={ticketData?.description_v2}*/}
-            {/*      textComponentFunc={(content) => {*/}
-            {/*        return (*/}
-            {/*          <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>*/}
-            {/*            <Typography sx={{ wordBreak: "keep-all" }}>*/}
-            {/*              {content}*/}
-            {/*            </Typography>*/}
-            {/*          </Box>*/}
-            {/*        );*/}
-            {/*      }}*/}
-            {/*      htmlComponentFunc={(content) => {*/}
-            {/*        return (*/}
-            {/*          <div*/}
-            {/*            dangerouslySetInnerHTML={{*/}
-            {/*              __html: content ?? "<></>",*/}
-            {/*            }}*/}
-            {/*          ></div>*/}
-            {/*        );*/}
-            {/*      }}*/}
-            {/*    ></ContentMetaDataRenderComponent>*/}
-            {/*  </Box>*/}
-            {/*</Stack>*/}
 
-            <Stack
-              direction={"column"}
-              alignItems={mdUp ? "flex-start" : "center"}
-              spacing={2}
-              sx={{ background: "" }}
-            >
-              <Typography variant="h5" textAlign={mdUp ? "left" : "center"}>
-                퀘스트
-              </Typography>
-              <Stack
-                direction={"column"}
-                spacing={4}
-                alignItems={mdUp ? "flex-start" : "center"}
-                sx={{}}
-              >
-                {ticketData?.quests?.map((quest, index) => {
-                  const autoVerified =
-                    quest.questPolicy?.questPolicy ===
-                      QuestPolicyType.VerifyDiscord ||
-                    quest.questPolicy?.questPolicy ===
-                      QuestPolicyType.VerifyTelegram ||
-                    quest.questPolicy?.questPolicy ===
-                      QuestPolicyType.VerifyVisitWebsite;
-
-                  return (
-                    <VerifyCard
-                      key={index + 1}
-                      sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
-                      index={index + 1}
-                      title={quest.title}
-                      title_v2={quest.title_v2}
-                      description={quest.description}
-                      disabled={
-                        (userData?._id ? false : true) ||
-                        isExceededTicketParticipants() ||
-                        !isStarted() ||
-                        isExpired()
-                      }
-                      verified={verifiedList[index]}
-                      overrideConfirmBtnLabel={getConfirmBtnLabel(quest)}
-                      hideStartButton={
-                        quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT ||
-                        quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||
-                        quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||
-                        quest.questPolicy?.questPolicy ===
-                          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyEmail ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasEmail ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasWalletAddress ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasTwitter ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyHasTelegram ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.Quiz ||
-                        quest.questPolicy?.questPolicy ===
-                          QuestPolicyType.VerifyAgreement
-                      }
-                      onVerifyBtnClicked={async (e) => {
-                        await asyncVerifyQuest(e, quest, index);
-                      }}
-                      onStartBtnClicked={async (e) => {
-                        await asyncStartQuest(e, quest, index);
-                      }}
-                      autoVerified={autoVerified}
-                    ></VerifyCard>
-                  );
-                })}
-              </Stack>
-            </Stack>
+            <EventQuests
+              ticketData={ticketData}
+              userData={userData}
+              verifiedList={verifiedList}
+              onVerifyBtnClicked={async (e, quest, index) => {
+                await asyncVerifyQuest(e, quest, index);
+              }}
+              onStartBtnClicked={async (e, quest, index) => {
+                await asyncStartQuest(e, quest, index);
+              }}
+            ></EventQuests>
           </Stack>
         </Grid>
         <Grid item>

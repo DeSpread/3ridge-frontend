@@ -16,12 +16,13 @@ import {
 } from "../../__generated__/graphql";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
-// import loadLanguages from "prismjs/components/prism-markdown";
 import { useTheme } from "@mui/material/styles";
 import StyledOutlinedInput from "../atomic/atoms/styled/styled-outlined-input";
 import { decodeBase64, encodeBase64 } from "../../util/string-util";
-
-// loadLanguages(["javascript"]);
+require("prismjs/components/prism-jsx");
+require("prismjs/components/prism-markdown");
+// require("prismjs/components/prism-");
+import { highlight, languages } from "prismjs";
 
 const ContentMetaDataEditDialog = (
   props: {
@@ -71,7 +72,7 @@ const ContentMetaDataEditDialog = (
   return (
     <SimpleDialog {...rest} maxWidth={"sm"}>
       <Stack sx={{ marginTop: 1 }}>
-        <Stack sx={{ width: "100%", background: "" }} alignItems={"flex-end"}>
+        <Stack sx={{ width: "100%", background: "" }} alignItems={"flex-start"}>
           <Box>
             <FormControl>
               <InputLabel>TYPE</InputLabel>
@@ -96,60 +97,56 @@ const ContentMetaDataEditDialog = (
             </FormControl>
           </Box>
         </Stack>
-        {contentFormatType === ContentFormatType.Text && (
-          <Box sx={{ width: "100%", marginTop: 1 }}>
-            <StyledOutlinedInput
-              sx={{
-                width: "100%",
-              }}
+        <Box sx={{ width: "100%", marginTop: 2 }}>
+          {contentFormatType === ContentFormatType.Text && (
+            <Editor
               value={textValue}
-              onChange={(
-                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                setTextValue(e.target.value);
-              }}
-              multiline
+              onValueChange={(code) => setTextValue(code)}
+              highlight={(code) =>
+                highlight(code, languages.markup!, "markdown")
+              }
+              padding={15}
+              className="container__editor"
             />
-          </Box>
-        )}
-        {contentFormatType === ContentFormatType.Html && (
-          <Box sx={{ width: "100%", marginTop: 1 }}>
+          )}
+          {contentFormatType === ContentFormatType.Html && (
             <Editor
               value={codeValue}
-              onValueChange={(code: React.SetStateAction<string>) =>
-                setCodeValue(code)
-              }
-              highlight={(_code: any) =>
-                Prism.highlight(_code, Prism.languages.javascript, "javascript")
-              }
-              padding={10}
-              style={{
-                width: "100%",
-                borderColor: theme.palette.neutral[700],
-              }}
+              onValueChange={(code) => setCodeValue(code)}
+              highlight={(code) => highlight(code, languages.jsx!, "jsx")}
+              padding={15}
               className="container__editor"
             />
-          </Box>
-        )}
-        {contentFormatType === ContentFormatType.Markdown && (
-          <Box sx={{ width: "100%", marginTop: 1 }}>
+          )}
+          {contentFormatType === ContentFormatType.Markdown && (
             <Editor
               value={markdownValue}
-              onValueChange={(code: React.SetStateAction<string>) =>
-                setMarkdownValue(code)
+              onValueChange={(code) => setMarkdownValue(code)}
+              highlight={(code) =>
+                highlight(code, languages.markup!, "markdown")
               }
-              highlight={(_code: any) =>
-                Prism.highlight(_code, Prism.languages.markup, "markdown")
-              }
-              padding={10}
-              style={{
-                width: "100%",
-                borderColor: theme.palette.neutral[700],
-              }}
+              padding={15}
               className="container__editor"
             />
-          </Box>
-        )}
+            // <Editor
+            //   value={markdownValue}
+            //   onValueChange={(code: React.SetStateAction<string>) =>
+            //     setMarkdownValue(code)
+            //   }
+            //   highlight={(_code: any) =>
+            //     Prism.highlight(_code, Prism.languages.markup, "markdown")
+            //   }
+            //   padding={10}
+            //   style={{
+            //     width: "100%",
+            //     borderColor: theme.palette.neutral[700],
+            //     paddingTop: 3,
+            //     paddingBottom: 3,
+            //   }}
+            //   className="container__editor"
+            // />
+          )}
+        </Box>
         <Stack
           direction={"row"}
           justifyContent={"flex-end"}
@@ -174,6 +171,7 @@ const ContentMetaDataEditDialog = (
                 contentEncodingType,
                 contentFormatType: contentFormatType,
               };
+              // console.log(newContentMetaData);
               props.onConfirmBtnClicked?.(newContentMetaData);
             }}
           >

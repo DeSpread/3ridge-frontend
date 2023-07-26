@@ -7,20 +7,19 @@ type LinkTypographyProps = TypographyProps & {
 };
 
 const LinkTypography = (props: LinkTypographyProps) => {
-  const theme = useTheme();
   return (
-    <NextLink href={props.href ?? ""}>
+    <NextLink href={props.href ?? ""} rel="noopener noreferrer" target="_blank">
       <Typography
         sx={{
-          ...props.sx,
           fontWeight: "bold",
+          color: "#f8810a",
           "&:hover": {
-            color: theme.palette.action.hover,
+            color: "#904e1d",
             textDecoration: "underline",
           },
+          cursor: "pointer",
         }}
         {...props}
-        // variant={"body2"}
       >
         {props.children}
       </Typography>

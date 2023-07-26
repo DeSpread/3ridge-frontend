@@ -1,5 +1,12 @@
-import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
-import React, { ReactElement, useMemo, useState } from "react";
+import {
+  Box,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import MainLayout from "../../../layouts/main-layout";
 import Head from "next/head";
 import { useTheme } from "@mui/material/styles";
@@ -13,7 +20,6 @@ import {
   asyncReadAsBase64Data,
   getFileExtension,
 } from "../../../util/file-util";
-// import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useLoading } from "../../../provider/loading/loading-provider";
 import EventTitle from "../../../components/pages/event/event-title";
 import EventEmptyBox from "../../../components/pages/event/event-empty-box";
@@ -24,12 +30,21 @@ import DateEditDialog from "../../../components/dialogs/date-range-edit-dialog";
 import { parseStrToDate } from "../../../util/date-util";
 import EventDescription from "../../../components/pages/event/event-description";
 import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
+import ContentMetaDataRenderComponent from "../../../components/atomic/atoms/content-meta-data-render-component";
+import {
+  ContentEncodingType,
+  ContentFormatType,
+} from "../../../__generated__/graphql";
+import EventQuests from "../../../components/pages/event/event-quests";
+import AddIcon from "@mui/icons-material/Add";
+import QuestCreateDialog from "../../../components/dialogs/quest-create-dialog";
 
 const _EventDateRange = WithEditorContainer(EventDateRange);
 const _EmptyBox = WithEditorContainer(EventEmptyBox);
 const _EventImage = WithEditorContainer(EventImage);
 const _EventTitle = WithEditorContainer(EventTitle);
 const _EventDescription = WithEditorContainer(EventDescription);
+const _EventQuests = WithEditorContainer(EventQuests);
 
 enum EVENT_COMPONENT_TARGET {
   "TITLE",
@@ -51,10 +66,17 @@ const Event = () => {
   const [openTextEditDialog, setOpenTextEditDialog] = useState(false);
   const [openContentMetaDataEditDialog, setOpenContentMetaDataEditDialog] =
     useState(false);
+  const [openQuestCreateDialog, setOpenQuestCreateDialog] = useState(false);
   const [textEditDefaultText, setTextEditDefaultText] = useState<string>();
   const [openDateEditDialog, setOpenDateEditDialog] = useState(false);
   const [eventComponentTarget, setEventComponentTarget] =
     useState<EVENT_COMPONENT_TARGET>();
+
+  const ticketId = router.isReady
+    ? typeof router.query.id === "string"
+      ? router.query.id
+      : undefined
+    : undefined;
 
   const {
     ticketData,
@@ -65,11 +87,7 @@ const Event = () => {
     asyncUpdateTicketDescription,
   } = useTicketQuery({
     userId: userData._id,
-    id: router.isReady
-      ? typeof router.query.id === "string"
-        ? router.query.id
-        : undefined
-      : undefined,
+    id: ticketId,
   });
 
   const dialogTitle = useMemo(() => {
@@ -89,6 +107,10 @@ const Event = () => {
         return ticketData?.description_v2;
     }
   }, [eventComponentTarget]);
+
+  const verifiedList = useMemo(() => {
+    return new Array(ticketData?.quests?.length ?? 0).fill(true);
+  }, [ticketData?.quests]);
 
   const asyncRefreshAll = async () => {
     await asyncRefreshTicketData();
@@ -180,17 +202,9 @@ const Event = () => {
                     background: "",
                   }}
                 >
-                  <_EventImage
-                    imageUrl={ticketData?.imageUrl}
-                    onClickForDelete={async (e) => {
-                      showLoading();
-                      await asyncUpdateImageUrl("");
-                      await asyncRefreshAll();
-                      closeLoading();
-                    }}
-                  >
+                  <_EventImage imageUrl={ticketData?.imageUrl}>
                     <InputButton
-                      sx={{ top: 16, left: 16, width: 128, height: 128 }}
+                      sx={{ top: 2, left: 2, width: 126, height: 126 }}
                       onChanged={async (file: File) => {
                         await asyncUpdateImageUrlByFile(file);
                       }}
@@ -207,12 +221,6 @@ const Event = () => {
                         EVENT_COMPONENT_TARGET.TITLE,
                         ticketData?.title
                       );
-                    }}
-                    onClickForDelete={async (e) => {
-                      showLoading();
-                      await asyncUpdateTitle("");
-                      await asyncRefreshAll();
-                      closeLoading();
                     }}
                   ></_EventTitle>
                   <_EventDateRange
@@ -240,115 +248,36 @@ const Event = () => {
               }}
             ></_EventDescription>
 
-            {/*<Stack*/}
-            {/*  direction={"column"}*/}
-            {/*  spacing={2}*/}
-            {/*  alignItems={mdUp ? "flex-start" : "center"}*/}
-            {/*>*/}
-            {/*  <Typography textAlign={mdUp ? "left" : "center"} variant={"h5"}>*/}
-            {/*    이벤트 설명*/}
-            {/*  </Typography>*/}
-            {/*  <Box>*/}
-            {/*    <ContentMetaDataRenderComponent*/}
-            {/*      contentMetaData={ticketData?.description_v2}*/}
-            {/*      textComponentFunc={(content) => {*/}
-            {/*        return (*/}
-            {/*          <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>*/}
-            {/*            <Typography sx={{ wordBreak: "keep-all" }}>*/}
-            {/*              {content}*/}
-            {/*            </Typography>*/}
-            {/*          </Box>*/}
-            {/*        );*/}
-            {/*      }}*/}
-            {/*      htmlComponentFunc={(content) => {*/}
-            {/*        return (*/}
-            {/*          <div*/}
-            {/*            dangerouslySetInnerHTML={{*/}
-            {/*              __html: content ?? "<></>",*/}
-            {/*            }}*/}
-            {/*          ></div>*/}
-            {/*        );*/}
-            {/*      }}*/}
-            {/*    ></ContentMetaDataRenderComponent>*/}
-            {/*  </Box>*/}
-            {/*</Stack>*/}
-
-            {/*<Stack*/}
-            {/*  direction={"column"}*/}
-            {/*  alignItems={mdUp ? "flex-start" : "center"}*/}
-            {/*  spacing={2}*/}
-            {/*  sx={{ background: "" }}*/}
-            {/*>*/}
-            {/*  <Typography variant="h5" textAlign={mdUp ? "left" : "center"}>*/}
-            {/*    퀘스트*/}
-            {/*  </Typography>*/}
-            {/*<Stack*/}
-            {/*  direction={"column"}*/}
-            {/*  spacing={4}*/}
-            {/*  alignItems={mdUp ? "flex-start" : "center"}*/}
-            {/*  sx={{}}*/}
-            {/*>*/}
-            {/*  {ticketData?.quests?.map((quest, index) => {*/}
-            {/*    const autoVerified =*/}
-            {/*      quest.questPolicy?.questPolicy ===*/}
-            {/*      QuestPolicyType.VerifyDiscord ||*/}
-            {/*      quest.questPolicy?.questPolicy ===*/}
-            {/*      QuestPolicyType.VerifyTelegram ||*/}
-            {/*      quest.questPolicy?.questPolicy ===*/}
-            {/*      QuestPolicyType.VerifyVisitWebsite;*/}
-
-            {/*    return (*/}
-            {/*      <VerifyCard*/}
-            {/*        key={index + 1}*/}
-            {/*        sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}*/}
-            {/*        index={index + 1}*/}
-            {/*        title={quest.title}*/}
-            {/*        title_v2={quest.title_v2}*/}
-            {/*        description={quest.description}*/}
-            {/*        disabled={*/}
-            {/*          (userData?._id ? false : true) ||*/}
-            {/*          isExceededTicketParticipants() ||*/}
-            {/*          !isStarted() ||*/}
-            {/*          isExpired()*/}
-            {/*        }*/}
-            {/*        verified={verifiedList[index]}*/}
-            {/*        overrideConfirmBtnLabel={getConfirmBtnLabel(quest)}*/}
-            {/*        hideStartButton={*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyEmail ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyHasEmail ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyHasWalletAddress ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyHasTwitter ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyHasTelegram ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.Quiz ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyAgreement*/}
-            {/*        }*/}
-            {/*        onVerifyBtnClicked={async (e) => {*/}
-            {/*          await asyncVerifyQuest(e, quest, index);*/}
-            {/*        }}*/}
-            {/*        onStartBtnClicked={async (e) => {*/}
-            {/*          await asyncStartQuest(e, quest, index);*/}
-            {/*        }}*/}
-            {/*        autoVerified={autoVerified}*/}
-            {/*      ></VerifyCard>*/}
-            {/*    );*/}
-            {/*  })}*/}
-            {/*</Stack>*/}
-            {/*</Stack>*/}
+            <_EventQuests
+              ticketData={ticketData}
+              userData={userData}
+              verifiedList={verifiedList}
+              onVerifyBtnClicked={async (e, quest, index) => {
+                // await asyncVerifyQuest(e, quest, index);
+              }}
+              onStartBtnClicked={async (e, quest, index) => {
+                // await asyncStartQuest(e, quest, index);
+              }}
+            >
+              <IconButton
+                className={"MuiIconButton"}
+                sx={{
+                  position: "absolute",
+                  top: `calc(100% + 32px)`,
+                  left: `calc(50% - 16px)`,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  borderWidth: 1,
+                  borderStyle: "solid",
+                }}
+                onClick={(e) => {
+                  setOpenQuestCreateDialog(true);
+                }}
+              >
+                <AddIcon fontSize={"large"}></AddIcon>
+              </IconButton>
+            </_EventQuests>
           </Stack>
         </Grid>
       </Grid>
@@ -411,6 +340,14 @@ const Event = () => {
           closeLoading();
         }}
       ></ContentMetaDataEditDialog>
+      <QuestCreateDialog
+        ticketId={ticketId}
+        userId={userData?._id}
+        open={openQuestCreateDialog}
+        onCloseBtnClicked={(e) => {
+          setOpenQuestCreateDialog(false);
+        }}
+      ></QuestCreateDialog>
     </>
   );
 };

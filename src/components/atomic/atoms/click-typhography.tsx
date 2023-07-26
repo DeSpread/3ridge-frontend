@@ -3,16 +3,17 @@ import NextLink from "next/link";
 import { Typography, TypographyProps } from "@mui/material";
 
 const ClickTypography = (props: TypographyProps) => {
-  const theme = useTheme();
   return (
     <Typography
       sx={{
         ...props.sx,
         fontWeight: "bold",
+        color: "#f8810a",
         "&:hover": {
-          color: theme.palette.action.hover,
+          color: "#904e1d",
           textDecoration: "underline",
         },
+        cursor: "pointer",
       }}
       {...props}
       // variant={"body2"}

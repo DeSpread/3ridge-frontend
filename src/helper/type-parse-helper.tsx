@@ -1,7 +1,6 @@
 import {
   RewardContext,
   TwitterFollowQuestContext,
-  QUEST_POLICY_TYPE,
   QuizQuestContext,
   TwitterRetweetQuestContext,
   REWARD_POLICY_TYPE,
@@ -51,19 +50,19 @@ class TypeParseHelper {
     try {
       const _context = context.trim();
       const contextJson = JSON.parse(_context);
-      if (questPolicyType === QUEST_POLICY_TYPE.QUIZ) {
+      if (questPolicyType === QuestPolicyType.Quiz) {
         return contextJson as QuizQuestContext;
-      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TWITTER_RETWEET) {
+      } else if (questPolicyType === QuestPolicyType.VerifyTwitterRetweet) {
         return contextJson as TwitterRetweetQuestContext;
-      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TWITTER_FOLLOW) {
+      } else if (questPolicyType === QuestPolicyType.VerifyTwitterFollow) {
         return contextJson as TwitterFollowQuestContext;
-      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TWITTER_LIKING) {
+      } else if (questPolicyType === QuestPolicyType.VerifyTwitterLiking) {
         return contextJson as TwitterLikingQuestContext;
-      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_DISCORD) {
+      } else if (questPolicyType === QuestPolicyType.VerifyDiscord) {
         return contextJson as DiscordQuestContext;
-      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_TELEGRAM) {
+      } else if (questPolicyType === QuestPolicyType.VerifyTelegram) {
         return contextJson as TelegramQuestContext;
-      } else if (questPolicyType === QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT) {
+      } else if (questPolicyType === QuestPolicyType.Verify_3RidgePoint) {
         return contextJson as Verify3ridgePointContext;
       } else if (questPolicyType === QuestPolicyType.VerifyEmail) {
         return contextJson as VerifyHasEmailContext;
