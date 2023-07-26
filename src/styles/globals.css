@@ -11,6 +11,7 @@ a {
   font-family: 'LINESeedKR-Rg';
   color: #f8810a;
   cursor: pointer;
+  text-decoration: none;
 }
 
 a:hover {

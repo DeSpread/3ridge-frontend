@@ -702,3 +702,17 @@ export const UPDATE_TICKET_DESCRIPTION = gql(/* GraphQL */ `
     }
   }
 `);
+
+// createTicket(
+//   beginTime: DateTime
+// description: String
+// description_v2: ContentMetadataInputType
+// imageUrl: String
+// project: String
+// quests: [QuestInputType!]
+// rewardPolicy: RewardPolicyInputType
+// title: String
+// untilTime: DateTime
+// ): Ticket!
+
+export const CREATE_TICKET = gql(/* GraphQL */ ``);

@@ -5,13 +5,29 @@ import React from "react";
 const InputWithLabel = (
   props: {
     label?: string;
+    labelWidth?: string | number;
   } & OutlinedInputProps
 ) => {
-  const { label, ...rest } = props;
+  const { label, labelWidth, ...rest } = props;
   return (
-    <Stack direction={"row"} alignItems={"center"}>
-      <Box>
-        <Typography variant={"body2"}>{label}</Typography>
+    <Stack
+      direction={"row"}
+      alignItems={"center"}
+      justifyContent={"flex-start"}
+    >
+      <Box sx={{ width: labelWidth }}>
+        <Typography
+          variant={"body2"}
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: "1",
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {label}
+        </Typography>
       </Box>
       <StyledOutlinedInput fullWidth sx={{ marginLeft: 3 }} {...rest} />
     </Stack>

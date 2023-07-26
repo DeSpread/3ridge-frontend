@@ -7,36 +7,32 @@ import {
   MenuItem,
   Select,
   Stack,
-  Typography,
 } from "@mui/material";
 import SecondaryButton from "../atomic/atoms/secondary-button";
-import { QuestPolicyType } from "../../__generated__/graphql";
-import { useTicketQuery } from "../../page-hook/ticket-query-hook";
-import StyledOutlinedInput from "../atomic/atoms/styled/styled-outlined-input";
+import {
+  ContentMetadata,
+  QuestPolicy,
+  QuestPolicyType,
+} from "../../__generated__/graphql";
 import { useTheme } from "@mui/material/styles";
-import InputWithLabel from "../atomic/atoms/input-with-label";
+import { TelegramQuestEditForm } from "../form/quest/quest-edit-from";
 
 const QuestCreateDialog = (
   props: {
-    userId?: string;
-    ticketId?: string;
-    onConfirmBtnClicked?: (text?: string) => void;
-    onChanged?: (text: string) => void;
+    onConfirmBtnClicked?: (
+      questPolicy?: QuestPolicy,
+      title_v2?: ContentMetadata
+    ) => void;
   } & SimpleDialogProps
 ) => {
-  const { ticketId, userId, ...rest } = props;
+  const { onConfirmBtnClicked, ...rest } = props;
   const theme = useTheme();
-
-  const {} = useTicketQuery({
-    userId,
-    id: ticketId,
-  });
-
-  const [telegramHandle, setTelegramHandle] = useState<string>();
 
   const [questPolicyType, setQuestPolicyType] = useState<QuestPolicyType>(
     QuestPolicyType.VerifyTelegram
   );
+  const [questPolicy, setQuestPolicy] = useState<QuestPolicy>();
+  const [titleV2, setTitleV2] = useState<ContentMetadata>();
 
   return (
     <SimpleDialog {...rest} maxWidth={"sm"}>
@@ -73,22 +69,15 @@ const QuestCreateDialog = (
           }}
         >
           {questPolicyType === QuestPolicyType.VerifyTelegram && (
-            <Stack spacing={1}>
-              <InputWithLabel
-                label={"텔레그램 핸들 (@없이 핸들만)"}
-                value={telegramHandle}
-                onChange={(e) => {
-                  setTelegramHandle(e.target.value);
-                }}
-              ></InputWithLabel>
-              <InputWithLabel
-                label={"메세지"}
-                value={telegramHandle}
-                onChange={(e) => {
-                  setTelegramHandle(e.target.value);
-                }}
-              ></InputWithLabel>
-            </Stack>
+            <TelegramQuestEditForm
+              onChange={(
+                questPolicy?: QuestPolicy,
+                title_v2?: ContentMetadata
+              ) => {
+                setQuestPolicy(questPolicy);
+                setTitleV2(title_v2);
+              }}
+            ></TelegramQuestEditForm>
           )}
         </Box>
         <Stack
@@ -100,6 +89,7 @@ const QuestCreateDialog = (
             fullWidth={true}
             onClick={(e) => {
               e.preventDefault();
+              onConfirmBtnClicked?.(questPolicy, titleV2);
             }}
           >
             확인

@@ -19,8 +19,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import SecondaryButton from "../atomic/atoms/secondary-button";
 import ContentMetaDataRenderComponent from "../atomic/atoms/content-meta-data-render-component";
-import QuestQuizForm from "../form/quest-quiz-form";
-import QuestAgreementForm from "../form/quest-agreement-form";
+import QuestQuizForm from "../form/quest/quest-quiz-form";
+import QuestAgreementForm from "../form/quest/quest-agreement-form";
 import CloseIcon from "@mui/icons-material/Close";
 
 type AgreementDialogProps = DialogProps & {

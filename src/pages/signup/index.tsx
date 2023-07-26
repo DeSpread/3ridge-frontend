@@ -4,8 +4,8 @@ import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import HomeFooter from "../../layouts/footer/home-footer";
 import Head from "next/head";
 import LinkTypography from "../../components/atomic/atoms/link-typography";
-import SignUpSelectForm from "../../components/form/sign-up-select-form";
-import SignUpOthersForm from "../../components/form/sign-up-others-form";
+import SignUpSelectForm from "../../components/form/signup/sign-up-select-form";
+import SignUpOthersForm from "../../components/form/signup/sign-up-others-form";
 import { useRouter } from "next/router";
 import { useLogin } from "../../provider/login/login-provider";
 import {
@@ -15,7 +15,7 @@ import {
   getLocaleErrorMessage,
 } from "../../error/my-error";
 import { useAlert } from "../../provider/alert/alert-provider";
-import SignUpWithEmailForm from "../../components/form/sign-up-with-email-form";
+import SignUpWithEmailForm from "../../components/form/signup/sign-up-with-email-form";
 import {
   EmailSignUpEventParams,
   MAIL_VERIFY,

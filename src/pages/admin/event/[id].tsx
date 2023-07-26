@@ -1,12 +1,5 @@
-import {
-  Box,
-  Grid,
-  IconButton,
-  Stack,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
-import React, { ReactElement, useEffect, useMemo, useState } from "react";
+import { Box, Grid, IconButton, Stack, useMediaQuery } from "@mui/material";
+import React, { ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../../layouts/main-layout";
 import Head from "next/head";
 import { useTheme } from "@mui/material/styles";
@@ -34,10 +27,13 @@ import ContentMetaDataRenderComponent from "../../../components/atomic/atoms/con
 import {
   ContentEncodingType,
   ContentFormatType,
+  ContentMetadata,
+  QuestPolicy,
 } from "../../../__generated__/graphql";
 import EventQuests from "../../../components/pages/event/event-quests";
 import AddIcon from "@mui/icons-material/Add";
 import QuestCreateDialog from "../../../components/dialogs/quest-create-dialog";
+import dedent from "dedent";
 
 const _EventDateRange = WithEditorContainer(EventDateRange);
 const _EmptyBox = WithEditorContainer(EventEmptyBox);
@@ -278,6 +274,14 @@ const Event = () => {
                 <AddIcon fontSize={"large"}></AddIcon>
               </IconButton>
             </_EventQuests>
+
+            {/*<ContentMetaDataRenderComponent*/}
+            {/*  contentMetaData={{*/}
+            {/*    content: dedent`<h6><a href=\\"https://t.me/BlockstackChatKorea\\" target=\\"_blank\\">@BlockstackChatKorea</a> 텔레그램 팔로우하ㄱ</h6>`,*/}
+            {/*    contentEncodingType: ContentEncodingType.None,*/}
+            {/*    contentFormatType: ContentFormatType.Html,*/}
+            {/*  }}*/}
+            {/*></ContentMetaDataRenderComponent>*/}
           </Stack>
         </Grid>
       </Grid>
@@ -331,7 +335,6 @@ const Event = () => {
           showLoading();
           switch (eventComponentTarget) {
             case EVENT_COMPONENT_TARGET.DESCRIPTION:
-              // console.log(data);
               await asyncUpdateTicketDescription(data);
               break;
           }
@@ -341,11 +344,15 @@ const Event = () => {
         }}
       ></ContentMetaDataEditDialog>
       <QuestCreateDialog
-        ticketId={ticketId}
-        userId={userData?._id}
         open={openQuestCreateDialog}
         onCloseBtnClicked={(e) => {
           setOpenQuestCreateDialog(false);
+        }}
+        onConfirmBtnClicked={(
+          questPolicy?: QuestPolicy,
+          title_v2?: ContentMetadata
+        ) => {
+          console.log(questPolicy, title_v2);
         }}
       ></QuestCreateDialog>
     </>
