@@ -128,23 +128,6 @@ const ContentMetaDataEditDialog = (
               padding={15}
               className="container__editor"
             />
-            // <Editor
-            //   value={markdownValue}
-            //   onValueChange={(code: React.SetStateAction<string>) =>
-            //     setMarkdownValue(code)
-            //   }
-            //   highlight={(_code: any) =>
-            //     Prism.highlight(_code, Prism.languages.markup, "markdown")
-            //   }
-            //   padding={10}
-            //   style={{
-            //     width: "100%",
-            //     borderColor: theme.palette.neutral[700],
-            //     paddingTop: 3,
-            //     paddingBottom: 3,
-            //   }}
-            //   className="container__editor"
-            // />
           )}
         </Box>
         <Stack
@@ -171,7 +154,6 @@ const ContentMetaDataEditDialog = (
                 contentEncodingType,
                 contentFormatType: contentFormatType,
               };
-              // console.log(newContentMetaData);
               props.onConfirmBtnClicked?.(newContentMetaData);
             }}
           >

@@ -12,6 +12,7 @@ import {
   UPDATE_TICKET_TITLE,
   UPDATE_TICKET_DATE_RANGE_TIME,
   UPDATE_TICKET_DESCRIPTION,
+  CREATE_QUEST,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -20,7 +21,7 @@ import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
 import Console from "../helper/console-helper";
-import { ContentMetadata } from "../__generated__/graphql";
+import { ContentMetadata, QuestPolicy } from "../__generated__/graphql";
 
 export function useTicketQuery({
   userId,
@@ -43,6 +44,7 @@ export function useTicketQuery({
     UPDATE_TICKET_DATE_RANGE_TIME
   );
   const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
+  const [createQuest] = useMutation(CREATE_QUEST);
   const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
@@ -420,6 +422,22 @@ export function useTicketQuery({
     }
   };
 
+  const asyncCreateQuest = async (
+    title?: ContentMetadata,
+    questPolicy?: QuestPolicy
+  ) => {
+    if (id) {
+      await createQuest({
+        variables: {
+          ticketId: id,
+          title_v2: title,
+          description: "",
+          questPolicy,
+        },
+      });
+    }
+  };
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -435,5 +453,6 @@ export function useTicketQuery({
     asyncUpdateTitle,
     asyncUpdateTicketDateRangeTime,
     asyncUpdateTicketDescription,
+    asyncCreateQuest,
   };
 }

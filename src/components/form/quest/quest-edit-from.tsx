@@ -21,6 +21,7 @@ const TelegramQuestEditForm = (props: {
   const { onChange } = props;
 
   const updateData = (_telegramHandle?: string, _telegramMessage?: string) => {
+    _telegramHandle = _telegramHandle?.trim();
     const onlyHandle = _telegramHandle?.replace("@", "");
     const context = { channelId: _telegramHandle?.replace("@", "") };
 
@@ -32,14 +33,18 @@ const TelegramQuestEditForm = (props: {
     let content = _telegramMessage ?? "";
     if (_telegramHandle && content?.includes(_telegramHandle)) {
       content =
-        _telegramMessage?.replace(
-          _telegramHandle,
-          dedent`<a href="https://t.me/${onlyHandle}" target="_blank">${_telegramHandle}</a>`
-        ) ?? "";
+        _telegramMessage
+          ?.trim()
+          ?.replace(" ", "&nbsp")
+          ?.replace(
+            _telegramHandle,
+            dedent`<a style="{a-style}" href="https://t.me/${onlyHandle}" target="_blank">${_telegramHandle}</a>`
+          )
+          .trim() ?? "";
     }
 
     const _newContentMetaData = {
-      content: dedent`<h6>${content}</h6>`,
+      content: dedent`<h6 style="{h6-style}">${content}</h6>`,
       contentEncodingType: ContentEncodingType.None,
       contentFormatType: ContentFormatType.Html,
     };

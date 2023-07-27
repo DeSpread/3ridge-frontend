@@ -23,17 +23,10 @@ import DateEditDialog from "../../../components/dialogs/date-range-edit-dialog";
 import { parseStrToDate } from "../../../util/date-util";
 import EventDescription from "../../../components/pages/event/event-description";
 import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
-import ContentMetaDataRenderComponent from "../../../components/atomic/atoms/content-meta-data-render-component";
-import {
-  ContentEncodingType,
-  ContentFormatType,
-  ContentMetadata,
-  QuestPolicy,
-} from "../../../__generated__/graphql";
+import { ContentMetadata, QuestPolicy } from "../../../__generated__/graphql";
 import EventQuests from "../../../components/pages/event/event-quests";
 import AddIcon from "@mui/icons-material/Add";
 import QuestCreateDialog from "../../../components/dialogs/quest-create-dialog";
-import dedent from "dedent";
 
 const _EventDateRange = WithEditorContainer(EventDateRange);
 const _EmptyBox = WithEditorContainer(EventEmptyBox);
@@ -81,6 +74,7 @@ const Event = () => {
     asyncRefreshTicketData,
     asyncUpdateTicketDateRangeTime,
     asyncUpdateTicketDescription,
+    asyncCreateQuest,
   } = useTicketQuery({
     userId: userData._id,
     id: ticketId,
@@ -255,6 +249,7 @@ const Event = () => {
                 // await asyncStartQuest(e, quest, index);
               }}
             >
+              {}
               <IconButton
                 className={"MuiIconButton"}
                 sx={{
@@ -348,11 +343,15 @@ const Event = () => {
         onCloseBtnClicked={(e) => {
           setOpenQuestCreateDialog(false);
         }}
-        onConfirmBtnClicked={(
+        onConfirmBtnClicked={async (
           questPolicy?: QuestPolicy,
           title_v2?: ContentMetadata
         ) => {
-          console.log(questPolicy, title_v2);
+          showLoading();
+          await asyncCreateQuest(title_v2, questPolicy);
+          await asyncRefreshAll();
+          setOpenQuestCreateDialog(false);
+          closeLoading();
         }}
       ></QuestCreateDialog>
     </>

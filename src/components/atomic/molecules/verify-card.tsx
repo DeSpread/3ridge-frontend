@@ -75,6 +75,21 @@ const VerifyCard = (props: VerifyCardProps) => {
                     </Typography>
                   );
                 }}
+                htmlComponentFunc={(content) => {
+                  return (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          content
+                            ?.replace(
+                              "{a-style}",
+                              "display: block; text-align: center;"
+                            )
+                            .replace("{h6-style}", "text-align: center;") ?? "",
+                      }}
+                    ></div>
+                  );
+                }}
               ></ContentMetaDataRenderComponent>
             </Box>
             {props.description && (
@@ -243,6 +258,18 @@ const VerifyCard = (props: VerifyCardProps) => {
                       >
                         {content}
                       </Typography>
+                    );
+                  }}
+                  htmlComponentFunc={(content) => {
+                    return (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            content
+                              ?.replace("{a-style}", "")
+                              .replace("{h6-style}", "") ?? "",
+                        }}
+                      ></div>
                     );
                   }}
                 ></ContentMetaDataRenderComponent>
