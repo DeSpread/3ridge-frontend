@@ -7,7 +7,7 @@ import {
   TwitterLikingQuestContext,
   DiscordQuestContext,
   Verify3ridgePointContext,
-  TelegramQuestContext,
+  QuestContextVerifyTelegram,
   VerifyHasEmailContext,
   VerifyHasWalletAddressContext,
   VerifyHasTwitter,
@@ -61,7 +61,7 @@ class TypeParseHelper {
       } else if (questPolicyType === QuestPolicyType.VerifyDiscord) {
         return contextJson as DiscordQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyTelegram) {
-        return contextJson as TelegramQuestContext;
+        return contextJson as QuestContextVerifyTelegram;
       } else if (questPolicyType === QuestPolicyType.Verify_3RidgePoint) {
         return contextJson as Verify3ridgePointContext;
       } else if (questPolicyType === QuestPolicyType.VerifyEmail) {

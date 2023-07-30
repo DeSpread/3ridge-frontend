@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { parseStrToDate } from "../../../util/date-util";
+import DateUtil from "../../../util/date-util";
 import { Ticket } from "../../../type";
 import StyledChip from "../../atomic/atoms/styled/styled-chip";
 import { format } from "date-fns";
@@ -13,17 +13,11 @@ const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {
   const { ticketData } = props;
 
   const isEventStarted = () => {
-    const diff =
-      new Date().getTime() -
-      parseStrToDate(ticketData?.beginTime ?? "").getTime();
-    return diff > 0;
+    return DateUtil.isAfter(new Date(), ticketData?.beginTime);
   };
 
   const isEventComplete = () => {
-    const diff =
-      parseStrToDate(ticketData?.untilTime ?? "").getTime() -
-      new Date().getTime();
-    if (diff < 0) {
+    if (DateUtil.isAfter(new Date(), ticketData?.untilTime)) {
       return true;
     }
     return ticketData?.completed;
@@ -81,10 +75,10 @@ const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {
           {smUp ? (
             <StyledChip
               label={`${format(
-                parseStrToDate(ticketData?.beginTime ?? ""),
+                DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
                 "yyyy/MM/dd"
               )} ~ ${format(
-                parseStrToDate(ticketData?.untilTime ?? ""),
+                DateUtil.parseStrToDate(ticketData?.untilTime ?? ""),
                 "yyyy/MM/dd"
               )} (UTC+09:00)`}
             ></StyledChip>
@@ -95,14 +89,14 @@ const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {
                 <Stack sx={{}}>
                   <Typography variant={"body2"}>
                     {`${format(
-                      parseStrToDate(ticketData?.beginTime ?? ""),
+                      DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
                       "yyyy/MM/dd"
                     )}
                   ~`}
                   </Typography>
                   <Typography variant={"body2"}>
                     {`${format(
-                      parseStrToDate(ticketData?.untilTime ?? ""),
+                      DateUtil.parseStrToDate(ticketData?.untilTime ?? ""),
                       "yyyy/MM/dd"
                     )} (UTC+09:00)
                   `}
@@ -123,12 +117,12 @@ const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {
       {ticketData?.beginTime && ticketData?.untilTime && (
         <>
           <Typography>{`${format(
-            parseStrToDate(ticketData?.beginTime ?? ""),
+            DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
             "yyyy/MM/dd"
           )}`}</Typography>
           <Typography>
             {`~ ${format(
-              parseStrToDate(ticketData?.untilTime ?? ""),
+              DateUtil.parseStrToDate(ticketData?.untilTime ?? ""),
               "yyyy/MM/dd"
             )} (UTC+09:00)`}
           </Typography>

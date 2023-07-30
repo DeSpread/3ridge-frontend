@@ -1,10 +1,15 @@
 import {
+  RewardContext,
   SUPPORTED_NETWORKS,
   SupportedNetwork,
   User,
   WALLET_NAMES,
 } from "../type";
-import { ChainType } from "../__generated__/graphql";
+import {
+  ChainType,
+  RewardPolicy,
+  RewardPolicyType,
+} from "../__generated__/graphql";
 
 const convertToSuppoertedNetwork = (network?: string | ChainType) => {
   if (network === SUPPORTED_NETWORKS.SUI || network === ChainType.Sui) {
@@ -77,9 +82,23 @@ const getUserMail = (user?: User) => {
   return undefined;
 };
 
+const convertToServerRewardPolicy = (rewardPolicy: {
+  context?: RewardContext;
+  rewardPoint?: number;
+  rewardPolicyType?: RewardPolicyType;
+}) => {
+  const newRewardPolicy: RewardPolicy = {
+    context: JSON.stringify(rewardPolicy.context),
+    rewardPolicyType: rewardPolicy.rewardPolicyType ?? RewardPolicyType.Fcfs,
+    rewardPoint: rewardPolicy.rewardPoint ?? 0,
+  };
+  return newRewardPolicy;
+};
+
 export {
   convertToSuppoertedNetwork,
   convertToChainType,
   convertToWalletName,
   getUserMail,
+  convertToServerRewardPolicy,
 };

@@ -4,8 +4,6 @@ import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import SecondaryButton from "../atomic/atoms/secondary-button";
 import { TimeField } from "@mui/x-date-pickers";
 import { useTheme } from "@mui/material/styles";
-import { format, subHours } from "date-fns";
-import { parseStrToDate } from "../../util/date-util";
 import { useAlert } from "../../provider/alert/alert-provider";
 
 const DateEditDialog = (
@@ -21,7 +19,7 @@ const DateEditDialog = (
   const [endDate, setEndDate] = useState(props.initEndDate);
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
-  const { showErrorAlert, showAlert } = useAlert();
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     if (props.initBeginDate?.toString() !== "Invalid Date")
@@ -56,6 +54,30 @@ const DateEditDialog = (
                   setBeginDate(newValue);
                 }}
                 format="yyyy-MM-dd HH:mm:ss"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "transparent",
+                      boxShadow: "0 0 0 2px #35333a",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderWidth: 0,
+                      borderColor: "transparent",
+                      boxShadow: "0 0 0 2px #787385",
+                    },
+                    "&:hover fieldset": {
+                      borderWidth: 0,
+                      borderColor: "transparent",
+                      backgroundColor: "transparent",
+                      transition: "box-shadow 0.1s ease-out 0s",
+                      boxShadow: "0 0 0 2px #787385",
+                      transitionDuration: "0.1s",
+                      transitionDelay: "0s",
+                      transitionTimingFunction: "ease-out",
+                      transitionProperty: "box-shadow",
+                    },
+                  },
+                }}
               />
             </Stack>
           </Grid>
@@ -71,6 +93,30 @@ const DateEditDialog = (
                   setEndDate(newValue);
                 }}
                 format="yyyy-MM-dd HH:mm:ss"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "transparent",
+                      boxShadow: "0 0 0 2px #35333a",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderWidth: 0,
+                      borderColor: "transparent",
+                      boxShadow: "0 0 0 2px #787385",
+                    },
+                    "&:hover fieldset": {
+                      borderWidth: 0,
+                      borderColor: "transparent",
+                      backgroundColor: "transparent",
+                      transition: "box-shadow 0.1s ease-out 0s",
+                      boxShadow: "0 0 0 2px #787385",
+                      transitionDuration: "0.1s",
+                      transitionDelay: "0s",
+                      transitionTimingFunction: "ease-out",
+                      transitionProperty: "box-shadow",
+                    },
+                  },
+                }}
               />
             </Stack>
           </Grid>

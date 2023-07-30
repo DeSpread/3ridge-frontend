@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Skeleton, useMediaQuery } from "@mui/material";
+import { Box, Skeleton, useMediaQuery } from "@mui/material";
 import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
 
@@ -19,6 +19,7 @@ const EventImage = ({
         borderColor: theme.palette.neutral[700],
         borderStyle: "solid",
         borderWidth: 2,
+        margin: 0,
       }}
     ></Image>
   ) : (

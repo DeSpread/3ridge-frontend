@@ -29,7 +29,6 @@ const MarkDownRenderer = ({
       return "";
     }
     const html = marked.parse(content);
-    console.log(html);
     return html;
   }, [content]);
 

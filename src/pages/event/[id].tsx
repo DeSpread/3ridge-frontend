@@ -8,18 +8,13 @@ import {
   ButtonProps,
   Card,
   CardContent,
-  Divider,
   Grid,
-  Skeleton,
   Stack,
   Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { useTicketQuery } from "../../page-hook/ticket-query-hook";
-import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
-import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
-import PrimaryCard from "../../components/atomic/atoms/primary-card";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
 import { decodeBase64, nFormatter } from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
@@ -28,10 +23,10 @@ import {
   DiscordQuestContext,
   MouseEventWithParam,
   Quest,
+  QuestContextVerifyTelegram,
   QuizQuestContext,
   REWARD_POLICY_TYPE,
   SUPPORTED_NETWORKS,
-  TelegramQuestContext,
   TwitterFollowQuestContext,
   TwitterLikingQuestContext,
   TwitterRetweetQuestContext,
@@ -53,26 +48,17 @@ import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
-import Image from "next/image";
 import BlockIcon from "../../components/atomic/molecules/block-icon";
-import TimerBoard, {
-  DummyTimerBoard,
-} from "../../components/atomic/molecules/timer-board";
 import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
 import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atomic/atoms/link-typography";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
-import { parseStrToDate } from "../../util/date-util";
-import StringHelper from "../../helper/string-helper";
 import Realistic from "../../components/effects/realistic";
 import { useGetSet, useMountedState } from "react-use";
-import RedeemIcon from "@mui/icons-material/Redeem";
 import { useSetRecoilState } from "recoil";
 import { backDirectionPathState } from "../../lib/recoil";
 import ClickTypography from "../../components/atomic/atoms/click-typhography";
-import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
-import ComponentHelper from "../../helper/component-helper";
 import ContentMetaDataRenderComponent from "../../components/atomic/atoms/content-meta-data-render-component";
 import AgreementDialog from "../../components/dialogs/agreement-dialog";
 import EventTitle from "../../components/pages/event/event-title";
@@ -80,6 +66,10 @@ import EventImage from "../../components/pages/event/event-image";
 import EventDateRange from "../../components/pages/event/event-date-range";
 import EventDescription from "../../components/pages/event/event-description";
 import EventQuests from "../../components/pages/event/event-quests";
+import EventRewardPolicy from "../../components/pages/event/reward/event-reward-policy";
+import EventTimeBoard from "../../components/pages/event/event-time-board";
+import EventRewardDescription from "../../components/pages/event/reward/event-reward-description";
+import DateUtil from "../../util/date-util";
 
 const LoadingButton = (props: ButtonProps) => {
   const [loading, setLoading] = useState(false);
@@ -341,19 +331,14 @@ const Event = (props: AppProps) => {
   }, [userData?.walletAddressInfos]);
 
   const isExpired = () => {
-    return parseStrToDate(ticketData?.untilTime ?? "") //rewardPolicy?.context?.untilTime
-      ? //@ts-ignore
-        parseStrToDate(ticketData?.untilTime ?? "") -
-          //@ts-ignore
-          new Date() <
-          0
+    return ticketData?.untilTime
+      ? DateUtil.isAfter(new Date(), ticketData?.untilTime)
       : true;
   };
 
   const isStarted = () => {
-    return parseStrToDate(ticketData?.beginTime ?? "")
-      ? //@ts-ignore
-        parseStrToDate(ticketData?.beginTime ?? "") - new Date() < 0
+    return ticketData?.beginTime
+      ? DateUtil.isAfter(new Date(), ticketData?.beginTime)
       : false;
   };
 
@@ -651,7 +636,8 @@ const Event = (props: AppProps) => {
           );
           break;
         case QuestPolicyType.VerifyTelegram:
-          questContext = quest.questPolicy?.context as TelegramQuestContext;
+          questContext = quest.questPolicy
+            ?.context as QuestContextVerifyTelegram;
           window.open(
             `https://t.me/${questContext.channelId}`,
             "telegram",
@@ -1101,44 +1087,10 @@ const Event = (props: AppProps) => {
           <Stack
             direction={"column"}
             spacing={10}
-            sx={{ minWidth: smUp ? 260 : 260, padding: smUp ? 0 : 4 }}
+            sx={{ minWidth: 260, padding: smUp ? 0 : 4 }}
           >
             <Stack direction={"column"} spacing={5}>
-              <Stack
-                direction={"row"}
-                justifyContent={"space-between"}
-                sx={{ background: "" }}
-              >
-                <Typography variant="h5">리워드</Typography>
-                <StyledChip
-                  label={
-                    ticketData?.rewardPolicy?.rewardPolicyType ===
-                    REWARD_POLICY_TYPE.FCFS
-                      ? "선착순"
-                      : ticketData?.rewardPolicy?.rewardPolicyType ===
-                        REWARD_POLICY_TYPE.LUCKY_DRAW
-                      ? "추첨"
-                      : "전원"
-                  }
-                  icon={
-                    ticketData?.rewardPolicy?.rewardPolicyType ===
-                    REWARD_POLICY_TYPE.FCFS ? (
-                      <DirectionsRunIcon />
-                    ) : ticketData?.rewardPolicy?.rewardPolicyType ===
-                      REWARD_POLICY_TYPE.LUCKY_DRAW ? (
-                      <RedeemIcon sx={{ paddingRight: "3px" }} />
-                    ) : (
-                      <AllInclusiveIcon
-                        sx={{
-                          paddingLeft: "2px",
-                          paddingRight: "3px",
-                          paddingTop: "2px",
-                        }}
-                      />
-                    )
-                  }
-                ></StyledChip>
-              </Stack>
+              <EventRewardPolicy ticketData={ticketData}></EventRewardPolicy>
               {(ticketData?.winners?.filter(
                 (winner) =>
                   String(winner.name).toUpperCase().trim() ===
@@ -1159,176 +1111,10 @@ const Event = (props: AppProps) => {
                   </Card>
                 </Box>
               )}
-              <PrimaryCard hoverEffect={false}>
-                <Box>
-                  <Stack alignItems={"center"}>
-                    <Typography
-                      variant={"body1"}
-                      sx={{
-                        color: isExpired()
-                          ? "#D14343"
-                          : isStarted()
-                          ? "white"
-                          : "#61e1ff",
-                      }}
-                    >
-                      {isExpired()
-                        ? "본 이벤트가 종료되었습니다"
-                        : isStarted()
-                        ? "이벤트 종료까지 남은 시간"
-                        : "이벤트 시작까지 남은 시간"}
-                    </Typography>
-                    {ticketData?.untilTime ? (
-                      isExpired() ? (
-                        <DummyTimerBoard
-                          sx={{
-                            marginTop: 4,
-                            background: "",
-                            width: "100%",
-                          }}
-                        />
-                      ) : isStarted() ? (
-                        <TimerBoard
-                          sx={{
-                            marginTop: 4,
-                            background: "",
-                            width: "100%",
-                          }}
-                          expiryTimestamp={parseStrToDate(
-                            ticketData?.untilTime ?? ""
-                          )}
-                        />
-                      ) : (
-                        <TimerBoard
-                          sx={{
-                            marginTop: 4,
-                            background: "",
-                            width: "100%",
-                          }}
-                          expiryTimestamp={parseStrToDate(
-                            ticketData?.beginTime ?? ""
-                          )}
-                          onExpire={() => {
-                            console.log("refresh all");
-                            window.location.reload();
-                          }}
-                        />
-                      )
-                    ) : (
-                      <DummyTimerBoard
-                        sx={{
-                          marginTop: 4,
-                          background: "",
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                  </Stack>
-                </Box>
-              </PrimaryCard>
-              <PrimaryCard>
-                <Stack direction={"column"} spacing={5} sx={{}}>
-                  <Stack direction={"column"} spacing={2}>
-                    <Stack
-                      direction={"column"}
-                      alignItems={"center"}
-                      justifyContent={"center"}
-                    >
-                      <Box
-                        sx={{
-                          width: smUp ? 300 : 260,
-                          height: smUp ? 300 : 260,
-                          borderRadius: 2,
-                          marginBottom: 2,
-                        }}
-                      >
-                        {ticketData?.rewardPolicy?.context?.nftImageUrl ? (
-                          <Box>
-                            <Image
-                              className={"lazyLoadImage"}
-                              width={smUp ? 300 : 260}
-                              height={smUp ? 300 : 260}
-                              src={
-                                ticketData?.rewardPolicy?.context?.nftImageUrl
-                              }
-                              style={{
-                                borderWidth: 3,
-                                borderRadius: 16,
-                                borderColor: "",
-                                borderStyle: "solid",
-                              }}
-                              alt={""}
-                            ></Image>
-                          </Box>
-                        ) : (
-                          <Skeleton
-                            width={smUp ? 300 : 260}
-                            height={smUp ? 300 : 260}
-                            animation={"wave"}
-                            variant={"rounded"}
-                          ></Skeleton>
-                        )}
-                      </Box>
-                    </Stack>
-                    <Divider></Divider>
-                    <Box>
-                      <Stack
-                        direction={"row"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                      >
-                        <Typography variant={"body1"}>포인트</Typography>
-                        <Stack direction={"row"} alignItems={"center"}>
-                          <Image
-                            src={
-                              "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/icon_point.svg"
-                            }
-                            alt={"StarIcon"}
-                            width={32}
-                            height={32}
-                          ></Image>
-                          <Typography variant={"body1"}>
-                            {ticketData?.rewardPolicy?.rewardPoint ?? 0}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      <Stack
-                        direction={"row"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                        sx={{ paddingTop: 1 }}
-                      >
-                        <Typography variant={"body1"}>대상자 수</Typography>
-                        <Stack direction={"row"} alignItems={"center"}>
-                          <Typography variant={"body1"}>
-                            {StringHelper.getInstance().getRewardAmountLabel(
-                              ticketData?.rewardPolicy?.context?.limitNumber
-                            )}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      {ticketData?.rewardPolicy?.context?.rewardName && (
-                        <Stack
-                          direction={"row"}
-                          alignItems={"center"}
-                          justifyContent={"space-between"}
-                          sx={{ paddingTop: 1 }}
-                        >
-                          <Typography variant={"body1"}>리워드</Typography>
-                          <Stack direction={"column"} alignItems={"flex-end"}>
-                            {ComponentHelper.getInstance().renderMultiLineContentText(
-                              ticketData?.rewardPolicy?.context?.rewardName ??
-                                "",
-                              { variant: "body1", textAlign: "right" }
-                            )}
-                          </Stack>
-                        </Stack>
-                      )}
-                    </Box>
-                  </Stack>
-                  {getRewardLabel()}
-                </Stack>
-              </PrimaryCard>
+              <EventTimeBoard ticketData={ticketData}></EventTimeBoard>
+              <EventRewardDescription
+                ticketData={ticketData}
+              ></EventRewardDescription>
               <LoadingButton
                 disabled={
                   claimRewardDisabled ||

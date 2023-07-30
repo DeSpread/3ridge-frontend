@@ -13,6 +13,9 @@ import {
   UPDATE_TICKET_DATE_RANGE_TIME,
   UPDATE_TICKET_DESCRIPTION,
   CREATE_QUEST,
+  DELETE_QUEST,
+  UPDATE_QUEST,
+  UPDATE_TICKET_REWARD_POLICY,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -21,7 +24,11 @@ import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
 import Console from "../helper/console-helper";
-import { ContentMetadata, QuestPolicy } from "../__generated__/graphql";
+import {
+  ContentMetadata,
+  QuestPolicy,
+  RewardPolicy,
+} from "../__generated__/graphql";
 
 export function useTicketQuery({
   userId,
@@ -44,7 +51,11 @@ export function useTicketQuery({
     UPDATE_TICKET_DATE_RANGE_TIME
   );
   const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
+  const [updateTicketRewardPolicy] = useMutation(UPDATE_TICKET_REWARD_POLICY);
+
   const [createQuest] = useMutation(CREATE_QUEST);
+  const [deleteQuest] = useMutation(DELETE_QUEST);
+  const [updateQuest] = useMutation(UPDATE_QUEST);
   const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
@@ -438,6 +449,43 @@ export function useTicketQuery({
     }
   };
 
+  const asyncDeleteQuest = async (questId: string) => {
+    if (id) {
+      await deleteQuest({
+        variables: {
+          ticketId: id,
+          questId,
+        },
+      });
+    }
+  };
+
+  const asyncUpdateQuest = async (
+    questId: string,
+    questPolicy?: QuestPolicy,
+    title?: ContentMetadata
+  ) => {
+    await updateQuest({
+      variables: {
+        id: questId,
+        description: "",
+        questPolicy,
+        title_v2: title,
+      },
+    });
+  };
+
+  const asyncUpdateTicketRewardPolicy = async (rewardPolicy: RewardPolicy) => {
+    if (id) {
+      await updateTicketRewardPolicy({
+        variables: {
+          ticketId: id,
+          rewardPolicy,
+        },
+      });
+    }
+  };
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -454,5 +502,8 @@ export function useTicketQuery({
     asyncUpdateTicketDateRangeTime,
     asyncUpdateTicketDescription,
     asyncCreateQuest,
+    asyncDeleteQuest,
+    asyncUpdateQuest,
+    asyncUpdateTicketRewardPolicy,
   };
 }

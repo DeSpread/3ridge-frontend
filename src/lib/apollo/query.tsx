@@ -703,6 +703,17 @@ export const UPDATE_TICKET_DESCRIPTION = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_TICKET_REWARD_POLICY = gql(/* GraphQL */ `
+  mutation UpdateTicketRewardPolicy(
+    $ticketId: String!
+    $rewardPolicy: RewardPolicyInputType
+  ) {
+    updateTicketById(ticketId: $ticketId, rewardPolicy: $rewardPolicy) {
+      _id
+    }
+  }
+`);
+
 export const CREATE_QUEST = gql(/* GraphQL */ `
   mutation CreateQuest(
     $ticketId: String!
@@ -715,6 +726,30 @@ export const CREATE_QUEST = gql(/* GraphQL */ `
       title_v2: $title_v2
       description: $description
       questPolicy: $questPolicy
+    ) {
+      _id
+    }
+  }
+`);
+
+export const DELETE_QUEST = gql(/* GraphQL */ `
+  mutation DeleteQuest($questId: String!, $ticketId: String!) {
+    deleteQuest(questId: $questId, ticketId: $ticketId)
+  }
+`);
+
+export const UPDATE_QUEST = gql(/* GraphQL */ `
+  mutation UpdateQuest(
+    $description: String!
+    $id: String!
+    $questPolicy: QuestPolicyInputType
+    $title_v2: ContentMetadataInputType
+  ) {
+    updateQuest(
+      description: $description
+      id: $id
+      questPolicy: $questPolicy
+      title_v2: $title_v2
     ) {
       _id
     }

@@ -1,10 +1,17 @@
-import { Stack, Typography, useMediaQuery } from "@mui/material";
+import {
+  IconButton,
+  Stack,
+  Typography,
+  useMediaQuery,
+  Box,
+} from "@mui/material";
 import { QuestPolicyType } from "../../../__generated__/graphql";
 import VerifyCard from "../../atomic/molecules/verify-card";
 import { Quest, REWARD_POLICY_TYPE, Ticket, User } from "../../../type";
 import React, { MouseEventHandler, PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
-import { parseStrToDate } from "../../../util/date-util";
+import DateUtil from "../../../util/date-util";
+import CloseIcon from "@mui/icons-material/Close";
 
 const EventQuests = (
   props: {
@@ -21,6 +28,16 @@ const EventQuests = (
       quest: Quest,
       index: number
     ) => void;
+    onEditBtnClicked?: (
+      e: React.MouseEvent<Element, MouseEvent>,
+      quest: Quest,
+      index: number
+    ) => void;
+    onDeleteBtnClicked?: (
+      e: React.MouseEvent<Element, MouseEvent>,
+      quest: Quest,
+      index: number
+    ) => void;
   } & PropsWithChildren
 ) => {
   const {
@@ -29,11 +46,15 @@ const EventQuests = (
     verifiedList,
     onVerifyBtnClicked,
     onStartBtnClicked,
+    onEditBtnClicked,
+    onDeleteBtnClicked,
   } = props;
 
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+
+  const ICON_SIZE = 32;
 
   const isExceededTicketParticipants = () => {
     if (
@@ -50,16 +71,16 @@ const EventQuests = (
   };
 
   const isStarted = () => {
-    return parseStrToDate(ticketData?.beginTime ?? "")
+    return DateUtil.parseStrToDate(ticketData?.beginTime ?? "")
       ? //@ts-ignore
-        parseStrToDate(ticketData?.beginTime ?? "") - new Date() < 0
+        DateUtil.parseStrToDate(ticketData?.beginTime ?? "") - new Date() < 0
       : false;
   };
 
   const isExpired = () => {
-    return parseStrToDate(ticketData?.untilTime ?? "") //rewardPolicy?.context?.untilTime
+    return DateUtil.parseStrToDate(ticketData?.untilTime ?? "")
       ? //@ts-ignore
-        parseStrToDate(ticketData?.untilTime ?? "") -
+        DateUtil.parseStrToDate(ticketData?.untilTime ?? "") -
           //@ts-ignore
           new Date() <
           0
@@ -94,52 +115,125 @@ const EventQuests = (
               QuestPolicyType.VerifyVisitWebsite;
 
           return (
-            <VerifyCard
-              key={index + 1}
-              sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
-              index={index + 1}
-              title={quest.title}
-              title_v2={quest.title_v2}
-              description={quest.description}
-              disabled={
-                (userData?._id ? false : true) ||
-                isExceededTicketParticipants() ||
-                !isStarted() ||
-                isExpired()
-              }
-              verified={verifiedList[index]}
-              overrideConfirmBtnLabel={getConfirmBtnLabel(quest)}
-              hideStartButton={
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.Verify_3RidgePoint ||
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyAptosBridgeToAptos ||
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyAptosHasNft ||
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyAptosExistTx ||
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyEmail ||
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyHasEmail ||
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyHasWalletAddress ||
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyHasTwitter ||
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyHasTelegram ||
-                quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
-                quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyAgreement
-              }
-              onVerifyBtnClicked={async (e) => {
-                onVerifyBtnClicked?.(e, quest, index);
-              }}
-              onStartBtnClicked={async (e) => {
-                onStartBtnClicked?.(e, quest, index);
-              }}
-              autoVerified={autoVerified}
-            ></VerifyCard>
+            <div style={{ position: "relative" }} key={index + 1}>
+              <VerifyCard
+                key={index + 1}
+                sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
+                index={index + 1}
+                title={quest.title}
+                title_v2={quest.title_v2}
+                description={quest.description}
+                disabled={
+                  (userData?._id ? false : true) ||
+                  isExceededTicketParticipants() ||
+                  !isStarted() ||
+                  isExpired()
+                }
+                verified={verifiedList[index]}
+                overrideConfirmBtnLabel={getConfirmBtnLabel(quest)}
+                hideStartButton={
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.Verify_3RidgePoint ||
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyAptosBridgeToAptos ||
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyAptosHasNft ||
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyAptosExistTx ||
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyEmail ||
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyHasEmail ||
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyHasWalletAddress ||
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyHasTwitter ||
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyHasTelegram ||
+                  quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
+                  quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyAgreement
+                }
+                onVerifyBtnClicked={async (e) => {
+                  onVerifyBtnClicked?.(e, quest, index);
+                }}
+                onStartBtnClicked={async (e) => {
+                  onStartBtnClicked?.(e, quest, index);
+                }}
+                autoVerified={autoVerified}
+              ></VerifyCard>
+              {onEditBtnClicked && onDeleteBtnClicked && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    borderWidth: 2,
+                    borderStyle: "solid",
+                    borderColor: "white",
+                    borderRadius: 1,
+                    zIndex: theme.zIndex.drawer,
+                    cursor: "pointer",
+                    margin: 0,
+                    transition: "all 0.2s ease-out 0s",
+                    transitionDuration: "0.2s",
+                    transitionDelay: "0s",
+                    "&:hover": {
+                      borderColor: theme.palette.secondary.main,
+                      background: "#61E1FF55",
+                    },
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEditBtnClicked?.(e, quest, index);
+                  }}
+                >
+                  <Stack
+                    sx={{
+                      position: "absolute",
+                      left: `calc(100% + ${-ICON_SIZE / 2}px);`,
+                      top: -(ICON_SIZE / 2),
+                      background: "",
+                      borderWidth: 2,
+                      borderStyle: "solid",
+                      borderColor: "white",
+                      borderRadius: 16,
+                      backgroundColor: "black",
+                      transition: "all 0.2s ease-out 0s",
+                      transitionDuration: "0.2s",
+                      transitionDelay: "0s",
+                      transitionTimingFunction: "ease-out",
+                      "&:hover": {
+                        borderColor: theme.palette.error.main,
+                        "& .MuiIconButton": {
+                          color: theme.palette.error.main,
+                        },
+                      },
+                    }}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    zIndex={theme.zIndex.drawer + 1}
+                  >
+                    <IconButton
+                      className={"MuiIconButton"}
+                      sx={{
+                        borderRadius: 16,
+                        width: ICON_SIZE,
+                        height: ICON_SIZE,
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteBtnClicked?.(e, quest, index);
+                      }}
+                    >
+                      <CloseIcon></CloseIcon>
+                    </IconButton>
+                  </Stack>
+                </Box>
+              )}
+            </div>
           );
         })}
       </Stack>

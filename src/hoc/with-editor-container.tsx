@@ -17,7 +17,7 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
     const ICON_SIZE = 8;
 
     return (
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", background: "" }}>
         <WrappedComponent {...(props as T)} />
         <Box
           sx={{
@@ -38,6 +38,7 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
             transitionTimingFunction: "ease-out",
             "&:hover": {
               borderColor: theme.palette.secondary.main,
+              background: "#61E1FF55",
             },
           }}
           onClick={props.onClickForEdit}

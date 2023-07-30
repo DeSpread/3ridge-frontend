@@ -1,7 +1,12 @@
 import { AppError } from "../error/my-error";
 import React from "react";
 import { SvgIconProps } from "@mui/material";
-import { CategoryType, ContentMetadata } from "../__generated__/graphql";
+import {
+  CategoryType,
+  ContentMetadata,
+  QuestPolicyType,
+  RewardPolicyType,
+} from "../__generated__/graphql";
 
 /*
  * Per QUEST_POLICY_TYPE, It is required to implement context parsing
@@ -189,7 +194,7 @@ export type Ticket = {
   rewardPolicy?: {
     context?: RewardContext;
     rewardPoint?: number;
-    rewardPolicyType?: string;
+    rewardPolicyType?: RewardPolicyType;
   };
   winners?: {
     _id?: string;
@@ -217,7 +222,7 @@ export type Quest = {
       | TwitterRetweetQuestContext
       | TwitterFollowQuestContext
       | DiscordQuestContext
-      | TelegramQuestContext
+      | QuestContextVerifyTelegram
       | Verify3ridgePointContext
       | VerifyHasEmailContext
       | VerifyHasWalletAddressContext
@@ -225,7 +230,7 @@ export type Quest = {
       | VerifyHasTelegram
       | VerifyVisitWebsiteContext
       | undefined;
-    questPolicy?: string;
+    questPolicy?: QuestPolicyType;
   };
   completedUsers?: User[];
   questGuides?: ContentMetadata[];
@@ -253,7 +258,7 @@ export type DiscordQuestContext = {
   channelId: string;
 };
 
-export type TelegramQuestContext = {
+export type QuestContextVerifyTelegram = {
   channelId: string;
 };
 

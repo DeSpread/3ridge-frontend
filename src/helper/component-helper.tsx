@@ -1,7 +1,5 @@
 import { Typography, TypographyProps } from "@mui/material";
-import React, { CSSProperties } from "react";
-import { ContentFormatType, ContentMetadata } from "../__generated__/graphql";
-import StringHelper from "./string-helper";
+import React from "react";
 
 class ComponentHelper {
   private static instance: ComponentHelper;

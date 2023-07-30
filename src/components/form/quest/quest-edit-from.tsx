@@ -11,14 +11,34 @@ import {
   Scalars,
 } from "../../../__generated__/graphql";
 import dedent from "dedent";
+import { Quest, QuestContextVerifyTelegram } from "../../../type";
 
 const TelegramQuestEditForm = (props: {
+  editedQuest?: Quest;
   onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
 }) => {
   const [telegramHandle, setTelegramHandle] = useState<string>();
   const [telegramMessage, setTelegramMessage] = useState<string>();
 
-  const { onChange } = props;
+  const { editedQuest, onChange } = props;
+
+  useEffect(() => {
+    if (editedQuest) {
+      if (
+        editedQuest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram
+      ) {
+        const context = editedQuest.questPolicy
+          ?.context as QuestContextVerifyTelegram;
+        setTelegramHandle(`@${context.channelId}`);
+        setTelegramMessage(
+          editedQuest.title_v2?.content
+            .replace(/<\/?[^>]+(>|$)/g, "")
+            .replace("&nbsp", " ")
+            .trim()
+        );
+      }
+    }
+  }, [editedQuest]);
 
   const updateData = (_telegramHandle?: string, _telegramMessage?: string) => {
     _telegramHandle = _telegramHandle?.trim();
