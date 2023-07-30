@@ -159,7 +159,7 @@ const EventRewardDescription = (
               <Typography variant={"body1"}>대상자 수</Typography>
               <Stack direction={"row"} alignItems={"center"}>
                 <Typography variant={"body1"}>
-                  {StringHelper.getInstance().getRewardAmountLabel(
+                  {StringHelper.getRewardAmountLabel(
                     ticketData?.rewardPolicy?.context?.limitNumber
                   )}
                 </Typography>

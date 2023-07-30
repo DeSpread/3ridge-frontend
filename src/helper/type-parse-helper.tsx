@@ -18,15 +18,10 @@ import {
 import { QuestPolicyType } from "../__generated__/graphql";
 
 class TypeParseHelper {
-  private static instance: TypeParseHelper;
-
-  private constructor() {}
-
-  public static getInstance() {
-    return this.instance || (this.instance = new this());
-  }
-
-  parseRewardPolicy = (context?: string, rewardPolicyType?: string) => {
+  public static parseRewardPolicy = (
+    context?: string,
+    rewardPolicyType?: string
+  ) => {
     if (!context) return undefined;
     try {
       if (
@@ -45,7 +40,10 @@ class TypeParseHelper {
     return undefined;
   };
 
-  parseQuestPolicy = (context?: string, questPolicyType?: string) => {
+  public static parseQuestPolicy = (
+    context?: string,
+    questPolicyType?: string
+  ) => {
     if (!context) return undefined;
     try {
       const _context = context.trim();

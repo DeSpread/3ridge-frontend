@@ -27,7 +27,7 @@ const TicketInfoTextSet = ({
             }}
           >
             <Typography variant={"body2"} textAlign={"center"}>
-              {` / ${StringHelper.getInstance().getRewardAmountLabel(
+              {` / ${StringHelper.getRewardAmountLabel(
                 ticket?.rewardPolicy?.context?.limitNumber
               )}`}
             </Typography>

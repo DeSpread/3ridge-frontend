@@ -56,7 +56,6 @@ export function useTicketQuery({
   const [createQuest] = useMutation(CREATE_QUEST);
   const [deleteQuest] = useMutation(DELETE_QUEST);
   const [updateQuest] = useMutation(UPDATE_QUEST);
-  const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
     (async () => {
@@ -85,7 +84,7 @@ export function useTicketQuery({
         imageUrl,
         rewardClaimedUsers,
       } = data.ticketById;
-      const _rewardPolicy = typeParseHelper.parseRewardPolicy(
+      const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
         rewardPolicy?.context ?? undefined,
         rewardPolicy?.rewardPolicyType ?? undefined
       );
@@ -116,7 +115,7 @@ export function useTicketQuery({
               title_v2: e.title_v2 ?? undefined,
               description: e.description ?? undefined,
               questPolicy: {
-                context: TypeParseHelper.getInstance().parseQuestPolicy(
+                context: TypeParseHelper.parseQuestPolicy(
                   e.questPolicy?.context,
                   e.questPolicy?.questPolicy
                 ),
@@ -172,7 +171,7 @@ export function useTicketQuery({
       rewardClaimedUsers,
     } = data.ticketById;
     // console.log("rewardPolicy", rewardPolicy);
-    const _rewardPolicy = typeParseHelper.parseRewardPolicy(
+    const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
       rewardPolicy?.context ?? undefined,
       rewardPolicy?.rewardPolicyType ?? undefined
     );
@@ -201,7 +200,7 @@ export function useTicketQuery({
             title_v2: e.title_v2 ?? undefined,
             description: e.description ?? undefined,
             questPolicy: {
-              context: TypeParseHelper.getInstance().parseQuestPolicy(
+              context: TypeParseHelper.parseQuestPolicy(
                 e.questPolicy?.context,
                 e.questPolicy?.questPolicy
               ),

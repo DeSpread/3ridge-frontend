@@ -297,7 +297,7 @@ const Profile = () => {
                   <>
                     <Box sx={{ maxWidth: 260 }}>
                       <GradientTypography variant={"h4"}>
-                        {StringHelper.getInstance().getMidEllipsisString(
+                        {StringHelper.getMidEllipsisString(
                           targetUserData?.walletAddressInfos?.[0]?.address
                         )}
                       </GradientTypography>
@@ -403,7 +403,7 @@ const Profile = () => {
                                     variant={"body2"}
                                     color={"neutral.100"}
                                   >
-                                    {StringHelper.getInstance().getMidEllipsisString(
+                                    {StringHelper.getMidEllipsisString(
                                       addressInfo?.address
                                     )}
                                   </Typography>

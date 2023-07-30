@@ -66,8 +66,7 @@ const ContentMetaDataRenderComponent = ({
 }) => {
   const comp = useCallback(() => {
     if (contentMetaData) {
-      const content =
-        StringHelper.getInstance().decodeContentMetaData(contentMetaData);
+      const content = StringHelper.decodeContentMetaData(contentMetaData);
       switch (contentMetaData?.contentFormatType) {
         case ContentFormatType.Html:
           return htmlComponentFunc?.(content);

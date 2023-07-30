@@ -28,7 +28,6 @@ export function useTicketsQuery(props: {
 }) {
   const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
   const [ticketsDataLoading, setTicketsDataLoading] = useState(true);
-  const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
     (async () => {
@@ -175,7 +174,7 @@ export function useTicketsQuery(props: {
               title_v2: _e.title_v2 ?? undefined,
               description: _e.description ?? undefined,
               questPolicy: {
-                context: TypeParseHelper.getInstance().parseQuestPolicy(
+                context: TypeParseHelper.parseQuestPolicy(
                   _e.questPolicy?.context,
                   _e.questPolicy?.questPolicy
                 ),
@@ -185,7 +184,7 @@ export function useTicketsQuery(props: {
             };
           }),
           rewardPolicy: {
-            context: typeParseHelper.parseRewardPolicy(
+            context: TypeParseHelper.parseRewardPolicy(
               e.rewardPolicy?.context ?? undefined,
               e.rewardPolicy?.rewardPolicyType ?? undefined
             ),

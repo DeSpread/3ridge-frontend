@@ -266,7 +266,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                               svgIcon={resourceFactory.getValidatorButtonSvg(e)}
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
-                              value={StringHelper.getInstance().getMidEllipsisString(
+                              value={StringHelper.getMidEllipsisString(
                                 addressInfo?.address
                               )}
                               payload={e}
@@ -284,7 +284,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                               svgIcon={resourceFactory.getValidatorButtonSvg(e)}
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
-                              value={StringHelper.getInstance().getMidEllipsisString(
+                              value={StringHelper.getMidEllipsisString(
                                 addressInfo?.address
                               )}
                               payload={e}

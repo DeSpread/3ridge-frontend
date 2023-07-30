@@ -133,9 +133,7 @@ const NavbarAvatar = ({
             <Stack direction={"column"}>
               {walletAddress && (
                 <GradientTypography>
-                  {StringHelper.getInstance().getMidEllipsisString(
-                    `${walletAddress}`
-                  )}
+                  {StringHelper.getMidEllipsisString(`${walletAddress}`)}
                 </GradientTypography>
               )}
               <Stack direction={"row"} alignItems={"center"} spacing={1}>

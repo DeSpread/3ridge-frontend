@@ -13,7 +13,6 @@ import {
 export function useUserQuery(props: { name?: string }) {
   const [userData, setUserData] = useState<User>();
   const [loading, setLoading] = useState(false);
-  const typeParseHelper = TypeParseHelper.getInstance();
 
   useEffect(() => {
     (async () => {
@@ -150,7 +149,7 @@ export function useUserQuery(props: { name?: string }) {
                 : undefined,
               imageUrl: e.imageUrl ?? undefined,
               rewardPolicy: {
-                context: typeParseHelper.parseRewardPolicy(
+                context: TypeParseHelper.parseRewardPolicy(
                   e.rewardPolicy?.context ?? undefined,
                   e.rewardPolicy?.rewardPolicyType ?? undefined
                 ),
