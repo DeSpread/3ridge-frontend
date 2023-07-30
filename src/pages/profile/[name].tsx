@@ -50,16 +50,12 @@ import { useRouter } from "next/router";
 import TicketCard from "../../components/atomic/molecules/ticket-card";
 import Image from "next/image";
 import ResourceFactory from "../../helper/resource-factory";
-import {
-  convertToSuppoertedNetwork,
-  convertToWalletName,
-  getUserMail,
-} from "../../helper/type-helper";
+import TypeHelper from "../../helper/type-helper";
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import { useMobile } from "../../provider/mobile/mobile-context";
-import { goToMetaMaskDeppLinkWhenMobile } from "../../helper/eth-helper";
+import EthUtil from "../../util/eth-util";
 import ConnectTwitterDialog from "../../components/dialogs/connect-twitter-dialog";
 import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
 import { backDirectionPathState } from "../../lib/recoil";
@@ -125,7 +121,6 @@ const Profile = () => {
   const { disconnectWalletByNetwork } = useTotalWallet();
   const { showSnackbar } = useSnackbar();
 
-  const resourceFactory = ResourceFactory.getInstance();
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [deleteConfirmDialog, setDeleteConfirmDialog] = useState(false);
   const [deleteConfirmDialogMessage, setDeleteConfirmDialogMessage] =
@@ -297,7 +292,7 @@ const Profile = () => {
                   <>
                     <Box sx={{ maxWidth: 260 }}>
                       <GradientTypography variant={"h4"}>
-                        {StringHelper.getMidEllipsisString(
+                        {StringHelper.convertAddressToMidEllipsis(
                           targetUserData?.walletAddressInfos?.[0]?.address
                         )}
                       </GradientTypography>
@@ -374,7 +369,7 @@ const Profile = () => {
                                 onClick={(e: MouseEvent) => {
                                   e.preventDefault();
                                   const newWindow = window.open(
-                                    resourceFactory.getExplorerUri(
+                                    ResourceFactory.getExplorerUri(
                                       addressInfo.network,
                                       addressInfo.address
                                     ),
@@ -385,7 +380,7 @@ const Profile = () => {
                                 }}
                                 icon={
                                   <img
-                                    src={resourceFactory.getExplorerIconUri(
+                                    src={ResourceFactory.getExplorerIconUri(
                                       addressInfo.network
                                     )}
                                     width={16}
@@ -403,7 +398,7 @@ const Profile = () => {
                                     variant={"body2"}
                                     color={"neutral.100"}
                                   >
-                                    {StringHelper.getMidEllipsisString(
+                                    {StringHelper.convertAddressToMidEllipsis(
                                       addressInfo?.address
                                     )}
                                   </Typography>
@@ -428,7 +423,7 @@ const Profile = () => {
                                 }}
                                 icon={
                                   <img
-                                    src={resourceFactory.getExplorerIconUri(
+                                    src={ResourceFactory.getExplorerIconUri(
                                       network
                                     )}
                                     width={16}
@@ -454,7 +449,7 @@ const Profile = () => {
                           );
                         }
                       })}
-                    {getUserMail(targetUserData) && (
+                    {TypeHelper.getUserMail(targetUserData) && (
                       <Grid item>
                         <StyledChip
                           icon={<MarkEmailReadIcon></MarkEmailReadIcon>}
@@ -464,13 +459,13 @@ const Profile = () => {
                               variant={"body2"}
                               color={"neutral.100"}
                             >
-                              {getUserMail(targetUserData)}
+                              {TypeHelper.getUserMail(targetUserData)}
                             </Typography>
                           }
                         ></StyledChip>
                       </Grid>
                     )}
-                    {!getUserMail(targetUserData) && (
+                    {!TypeHelper.getUserMail(targetUserData) && (
                       <Grid item>
                         <StyledChip
                           sx={{
@@ -753,8 +748,7 @@ const Profile = () => {
           }>;
           const { params } = myEvent;
           const { state, payload } = params;
-          // console.log(state, payload);
-          const network = convertToSuppoertedNetwork(payload);
+          const network = TypeHelper.convertToSuppoertedNetwork(payload);
           showLoading();
           try {
             if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
@@ -935,14 +929,14 @@ const Profile = () => {
           setSelectedNetwork("");
         }}
         walletInfos={(() => {
-          return resourceFactory.getWalletInfos(
-            convertToSuppoertedNetwork(selectedNetwork)
+          return ResourceFactory.getWalletInfos(
+            TypeHelper.convertToSuppoertedNetwork(selectedNetwork)
           );
         })()}
         onWalletSelected={({ name, value }) => {
-          const walletName = convertToWalletName(value);
+          const walletName = TypeHelper.convertToWalletName(value);
           if (!walletName) return;
-          if (goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
+          if (EthUtil.goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
             return;
           }
           (async () => {
@@ -984,7 +978,7 @@ const Profile = () => {
             } else if (state === DELETE_CONFIRM_STATE.TWITTER) {
               await asyncUpdateSocialTwitter("");
             } else if (state === DELETE_CONFIRM_STATE.WALLET) {
-              const network = convertToSuppoertedNetwork(
+              const network = TypeHelper.convertToSuppoertedNetwork(
                 deleteConfirmState.payload
               );
               await asyncDeleteWalletAddress(network);

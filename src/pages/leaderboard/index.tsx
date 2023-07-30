@@ -43,8 +43,8 @@ const RankCard = ({
 
   const convertedName = useMemo(() => {
     // if (name?.substring(0, 2).toLocaleLowerCase() === "0x") {
-    if (smUp) return StringHelper.getMidEllipsisString(name, 10, 8);
-    return StringHelper.getMidEllipsisString(name);
+    if (smUp) return StringHelper.convertAddressToMidEllipsis(name, 10, 8);
+    return StringHelper.convertAddressToMidEllipsis(name);
     // }
     // return name;
   }, [name]);

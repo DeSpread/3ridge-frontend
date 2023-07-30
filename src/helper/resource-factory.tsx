@@ -5,15 +5,10 @@ import SuiIcon from "../components/atomic/atoms/svg/sui-icon";
 import StacksIcon from "../components/atomic/atoms/svg/stacks-icon";
 
 class ResourceFactory {
-  private static instance: ResourceFactory;
-
-  private constructor() {}
-
-  public static getInstance() {
-    return this.instance || (this.instance = new this());
-  }
-
-  getExplorerUri = (network: SupportedNetwork, address: string) => {
+  public static getExplorerUri = (
+    network: SupportedNetwork,
+    address: string
+  ) => {
     if (network === SUPPORTED_NETWORKS.EVM) {
       return `https://etherscan.io/address/${address}`;
     } else if (network === SUPPORTED_NETWORKS.SUI) {
@@ -26,7 +21,7 @@ class ResourceFactory {
     return "/";
   };
 
-  getExplorerIconUri = (network: SupportedNetwork) => {
+  public static getExplorerIconUri = (network: SupportedNetwork) => {
     if (network === SUPPORTED_NETWORKS.EVM) {
       return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/ethereum-eth-logo-diamond-purple.svg";
     } else if (network === SUPPORTED_NETWORKS.SUI) {
@@ -39,7 +34,7 @@ class ResourceFactory {
     return undefined;
   };
 
-  getValidatorButtonSvg = (network: SupportedNetwork) => {
+  public static getValidatorButtonSvg = (network: SupportedNetwork) => {
     if (network === SUPPORTED_NETWORKS.EVM) {
       return EthIcon;
     } else if (network === SUPPORTED_NETWORKS.SUI) {
@@ -52,7 +47,7 @@ class ResourceFactory {
     return undefined;
   };
 
-  getWalletInfos = (network: SupportedNetwork) => {
+  public static getWalletInfos = (network: SupportedNetwork) => {
     if (network === SUPPORTED_NETWORKS.APTOS) {
       return [
         {

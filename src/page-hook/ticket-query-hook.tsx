@@ -23,7 +23,7 @@ import { Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
-import Console from "../helper/console-helper";
+import Console from "../util/console-util";
 import {
   ContentMetadata,
   QuestPolicy,

@@ -3,6 +3,7 @@ import React, { PropsWithChildren } from "react";
 import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import ContentMetaDataRenderComponent from "../../atomic/atoms/content-meta-data-render-component";
 import { useTheme } from "@mui/material/styles";
+import ComponentHelper from "../../../helper/component-helper";
 
 const EventDescription = (
   props: { ticketData?: Ticket } & PropsWithChildren
@@ -29,12 +30,8 @@ const EventDescription = (
             return (
               <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>
                 <Stack>
-                  {content?.split("\n")?.map((e, i) => {
-                    return (
-                      <Typography key={i} sx={{ wordBreak: "keep-all" }}>
-                        {e}
-                      </Typography>
-                    );
+                  {ComponentHelper.renderMultiLineContentText(content, {
+                    sx: { wordBreak: "keep-all" },
                   })}
                 </Stack>
               </Box>

@@ -18,7 +18,7 @@ import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import { useTheme } from "@mui/material/styles";
 import StyledOutlinedInput from "../atomic/atoms/styled/styled-outlined-input";
-import { decodeBase64, encodeBase64 } from "../../util/string-util";
+import StringUtil from "../../util/string-util";
 require("prismjs/components/prism-jsx");
 require("prismjs/components/prism-markdown");
 // require("prismjs/components/prism-");
@@ -51,7 +51,7 @@ const ContentMetaDataEditDialog = (
     if (content?.content) {
       let targetValue;
       if (content?.contentEncodingType === ContentEncodingType.Base64) {
-        targetValue = decodeBase64(content?.content);
+        targetValue = StringUtil.decodeBase64(content?.content);
       } else if (content?.contentEncodingType === ContentEncodingType.None) {
         targetValue = content?.content;
       }
@@ -145,9 +145,9 @@ const ContentMetaDataEditDialog = (
                   : ContentEncodingType.Base64;
               let content = textValue;
               if (contentFormatType === ContentFormatType.Html) {
-                content = encodeBase64(codeValue);
+                content = StringUtil.encodeBase64(codeValue);
               } else if (contentFormatType === ContentFormatType.Markdown) {
-                content = encodeBase64(markdownValue);
+                content = StringUtil.encodeBase64(markdownValue);
               }
               const newContentMetaData = {
                 content,

@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Dialog,
   DialogContent,
   DialogProps,
@@ -12,17 +11,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { MouseEventHandler, useState } from "react";
-import VerifyYourEmailForm from "../form/verify-your-email-form";
-import SendVerificationEmailForm from "../form/send-verification-email-form";
-import {
-  EmailSignUpEventParams,
-  MouseEventWithParam,
-  ObjectValues,
-  Z_INDEX_OFFSET,
-} from "../../type";
+import { ObjectValues, Z_INDEX_OFFSET } from "../../type";
 import MailTextField from "../atomic/molecules/mail-text-field";
 import SecondaryButton from "../atomic/atoms/secondary-button";
-import { validateMail } from "../../util/string-util";
+import StringUtil from "../../util/string-util";
 import AwsClient from "../../remote/aws-client";
 import { useAlert } from "../../provider/alert/alert-provider";
 import { getLocaleErrorMessage } from "../../error/my-error";
@@ -124,7 +116,11 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                     }}
                   >
                     <SecondaryButton
-                      disabled={!validateMail(mail) || authLoading || count > 0}
+                      disabled={
+                        !StringUtil.validateMail(mail) ||
+                        authLoading ||
+                        count > 0
+                      }
                       color={"secondary"}
                       variant={"contained"}
                       sx={{
@@ -187,7 +183,9 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                 )}
                 {!smUp && (
                   <SecondaryButton
-                    disabled={!validateMail(mail) || authLoading || count > 0}
+                    disabled={
+                      !StringUtil.validateMail(mail) || authLoading || count > 0
+                    }
                     color={"secondary"}
                     variant={"contained"}
                     sx={{

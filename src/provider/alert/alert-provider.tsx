@@ -162,7 +162,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
         >
           <DialogContentText sx={{ background: "" }}>
             {typeof alertDescRef.current.content === "string" &&
-              ComponentHelper.getInstance().renderMultiLineContentText(
+              ComponentHelper.renderMultiLineContentText(
                 alertDescRef.current.content
               )}
             {typeof alertDescRef.current.content !== "string" &&

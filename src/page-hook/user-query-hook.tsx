@@ -3,7 +3,7 @@ import { client } from "../lib/apollo/client";
 import { GET_USER_BY_NAME } from "../lib/apollo/query";
 import { RewardContext, User } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
-import { convertToSuppoertedNetwork } from "../helper/type-helper";
+import TypeHelper from "../helper/type-helper";
 import {
   CategoryType,
   ChainType,
@@ -112,7 +112,7 @@ export function useUserQuery(props: { name?: string }) {
         walletAddressInfos: wallets?.map((e) => {
           return {
             address: e.address,
-            network: convertToSuppoertedNetwork(e.chain),
+            network: TypeHelper.convertToSuppoertedNetwork(e.chain),
           };
         }),
         rewardPoint: rewardPoint ?? undefined,

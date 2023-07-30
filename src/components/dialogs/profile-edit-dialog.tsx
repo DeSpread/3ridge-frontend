@@ -31,10 +31,8 @@ import BlockIcon from "../atomic/molecules/block-icon";
 import ResourceFactory from "../../helper/resource-factory";
 // @ts-ignore
 import TelegramLoginButton from "react-telegram-login";
-import { getUserMail } from "../../helper/type-helper";
+import TypeHelper from "../../helper/type-helper";
 import { useMobile } from "../../provider/mobile/mobile-context";
-import PrimaryButton from "../atomic/atoms/primary-button";
-import SecondaryButton from "../atomic/atoms/secondary-button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/router";
 
@@ -76,7 +74,6 @@ type ProfileEditDialogProps = DialogProps & {
 const ProfileEditDialog = (props: ProfileEditDialogProps) => {
   const theme = useTheme();
   const { ...rest } = props;
-  const resourceFactory = ResourceFactory.getInstance();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const BUTTON_WIDTH = smUp ? 340 : "100%";
@@ -198,7 +195,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                       label={"Email"}
                       onClick={props.emailValidatorButtonOnClick}
                       size={"small"}
-                      value={getUserMail(props.userData)}
+                      value={TypeHelper.getUserMail(props.userData)}
                       fullWidth={true}
                       payload={""}
                     ></ValidatorButton>
@@ -263,10 +260,10 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                             <ValidatorButton
                               disabled={disabledBtn}
                               label={e.toUpperCase()}
-                              svgIcon={resourceFactory.getValidatorButtonSvg(e)}
+                              svgIcon={ResourceFactory.getValidatorButtonSvg(e)}
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
-                              value={StringHelper.getMidEllipsisString(
+                              value={StringHelper.convertAddressToMidEllipsis(
                                 addressInfo?.address
                               )}
                               payload={e}
@@ -281,10 +278,10 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                             <ValidatorButton
                               // disabled={disabledBtn}
                               label={e.toUpperCase()}
-                              svgIcon={resourceFactory.getValidatorButtonSvg(e)}
+                              svgIcon={ResourceFactory.getValidatorButtonSvg(e)}
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
-                              value={StringHelper.getMidEllipsisString(
+                              value={StringHelper.convertAddressToMidEllipsis(
                                 addressInfo?.address
                               )}
                               payload={e}

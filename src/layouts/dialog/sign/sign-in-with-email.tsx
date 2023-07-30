@@ -5,7 +5,7 @@ import React, { MouseEventHandler, useMemo, useState } from "react";
 import MailTextField from "../../../components/atomic/molecules/mail-text-field";
 import SecondaryButton from "../../../components/atomic/atoms/secondary-button";
 import { EmailSignUpEventParams, MouseEventWithParam } from "../../../type";
-import { validateMail } from "../../../util/string-util";
+import StringUtil from "../../../util/string-util";
 
 type SignInWithEmailProps = SignDialogProps & {
   onSignInWithEmailClicked: MouseEventHandler;
@@ -16,7 +16,7 @@ const SignInWithDialogContent = (props: SignInWithEmailProps) => {
   const [mail, setMail] = useState("");
 
   const buttonDisabled = useMemo(() => {
-    return (mail ? true : false) && !validateMail(mail);
+    return (mail ? true : false) && !StringUtil.validateMail(mail);
   }, [mail]);
 
   return (

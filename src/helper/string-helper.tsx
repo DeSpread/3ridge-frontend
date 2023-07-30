@@ -1,8 +1,8 @@
 import { ContentEncodingType, ContentMetadata } from "../__generated__/graphql";
-import { decodeBase64 } from "../util/string-util";
+import StringUtil from "../util/string-util";
 
 class StringHelper {
-  public static getMidEllipsisString = (
+  public static convertAddressToMidEllipsis = (
     src: string | undefined,
     preLen = 6,
     postLen = 4
@@ -29,7 +29,7 @@ class StringHelper {
 
   public static decodeContentMetaData = (contentMetaData: ContentMetadata) => {
     if (contentMetaData.contentEncodingType === ContentEncodingType.Base64) {
-      return decodeBase64(contentMetaData.content);
+      return StringUtil.decodeBase64(contentMetaData.content);
     }
     return contentMetaData.content;
   };

@@ -174,7 +174,7 @@ const EventRewardDescription = (
               >
                 <Typography variant={"body1"}>리워드</Typography>
                 <Stack direction={"column"} alignItems={"flex-end"}>
-                  {ComponentHelper.getInstance().renderMultiLineContentText(
+                  {ComponentHelper.renderMultiLineContentText(
                     ticketData?.rewardPolicy?.context?.rewardName ?? "",
                     { variant: "body1", textAlign: "right" }
                   )}

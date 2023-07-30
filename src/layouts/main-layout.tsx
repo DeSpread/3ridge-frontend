@@ -39,14 +39,11 @@ import Image from "next/image";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useWalletAlert } from "../page-hook/wallet-alert-hook";
-import {
-  convertToSuppoertedNetwork,
-  convertToWalletName,
-} from "../helper/type-helper";
+import TypeHelper from "../helper/type-helper";
 import ResourceFactory from "../helper/resource-factory";
 import MobileNavigatorBar from "../components/atomic/atoms/mobile/mobile-navigator-bar";
 import { useMobile } from "../provider/mobile/mobile-context";
-import { goToMetaMaskDeppLinkWhenMobile } from "../helper/eth-helper";
+import EthUtil from "../util/eth-util";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -109,8 +106,6 @@ const MainLayout = (props: MainLayoutProps) => {
   const { showWalletAlert } = useWalletAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
-
-  const resourceFactory = ResourceFactory.getInstance();
 
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
@@ -459,14 +454,14 @@ const MainLayout = (props: MainLayoutProps) => {
           setSelectedNetwork("");
         }}
         walletInfos={(() => {
-          return resourceFactory.getWalletInfos(
-            convertToSuppoertedNetwork(selectedNetwork)
+          return ResourceFactory.getWalletInfos(
+            TypeHelper.convertToSuppoertedNetwork(selectedNetwork)
           );
         })()}
         onWalletSelected={({ name, value }) => {
-          const walletName = convertToWalletName(value);
+          const walletName = TypeHelper.convertToWalletName(value);
 
-          if (goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
+          if (EthUtil.goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
             return;
           }
 

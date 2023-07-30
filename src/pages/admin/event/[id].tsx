@@ -9,10 +9,7 @@ import { useRouter } from "next/router";
 import EventImage from "../../../components/pages/event/event-image";
 import WithEditorContainer from "../../../hoc/with-editor-container";
 import useSimpleStorage from "../../../page-hook/simple-storage-hook";
-import {
-  asyncReadAsBase64Data,
-  getFileExtension,
-} from "../../../util/file-util";
+import FileUtil from "../../../util/file-util";
 import { useLoading } from "../../../provider/loading/loading-provider";
 import EventTitle from "../../../components/pages/event/event-title";
 import EventEmptyBox from "../../../components/pages/event/event-empty-box";
@@ -33,7 +30,7 @@ import EventTimeBoard from "../../../components/pages/event/event-time-board";
 import EventRewardDescription from "../../../components/pages/event/reward/event-reward-description";
 import EventRewardImage from "../../../components/pages/event/reward/description/event-reward-image";
 import TicketRewardPolicyEditDialog from "../../../components/dialogs/ticket-reward-policy-edit-dialog";
-import { convertToServerRewardPolicy } from "../../../helper/type-helper";
+import TypeHelper from "../../../helper/type-helper";
 import NumberEditDialog from "../../../components/dialogs/number-edit-dialog";
 import EventRewardPoint from "../../../components/pages/event/reward/description/event-reward-point";
 
@@ -201,7 +198,7 @@ const Event = () => {
     showLoading();
     const includeQuestion =
       ticketData?.rewardPolicy?.context?.nftImageUrl?.includes("?");
-    const base64Data = await asyncReadAsBase64Data(file);
+    const base64Data = await FileUtil.asyncReadAsBase64Data(file);
     await asyncUploadImage(`reward/${file.name}`, base64Data);
     let nftImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/reward/${file.name}`;
     if (!includeQuestion) {
@@ -211,7 +208,8 @@ const Event = () => {
     if (rewardPolicy?.context) {
       rewardPolicy.context.nftImageUrl = nftImageUrl;
     }
-    const newRewardPolicy = convertToServerRewardPolicy(rewardPolicy);
+    const newRewardPolicy =
+      TypeHelper.convertToServerRewardPolicy(rewardPolicy);
     await asyncUpdateTicketRewardPolicy(newRewardPolicy);
     await asyncRefreshAll();
     closeLoading();
@@ -220,8 +218,8 @@ const Event = () => {
   const asyncUpdateImageUrlByFile = async (file: File) => {
     showLoading();
     const includeQuestion = ticketData?.imageUrl?.includes("?");
-    const base64Data = await asyncReadAsBase64Data(file);
-    const ext = getFileExtension(file);
+    const base64Data = await FileUtil.asyncReadAsBase64Data(file);
+    const ext = FileUtil.getFileExtension(file);
     await asyncUploadImage(`event/cover/${ticketData?._id}.${ext}`, base64Data);
     let ticketImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/event/cover/${ticketData?._id}.${ext}`;
     if (!includeQuestion) {
@@ -485,7 +483,8 @@ const Event = () => {
           showLoading();
           const rewardPolicy = { ...ticketData?.rewardPolicy };
           rewardPolicy.rewardPolicyType = _rewardPolicyType;
-          const newRewardPolicy = convertToServerRewardPolicy(rewardPolicy);
+          const newRewardPolicy =
+            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
           await asyncUpdateTicketRewardPolicy(newRewardPolicy);
           await asyncRefreshAll();
           setOpenTicketRewardPolicyEditDialog(false);
@@ -504,7 +503,8 @@ const Event = () => {
           showLoading();
           const rewardPolicy = { ...ticketData?.rewardPolicy };
           rewardPolicy.rewardPoint = val;
-          const newRewardPolicy = convertToServerRewardPolicy(rewardPolicy);
+          const newRewardPolicy =
+            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
           await asyncUpdateTicketRewardPolicy(newRewardPolicy);
           await asyncRefreshAll();
           closeOpenNumberEditDialog();

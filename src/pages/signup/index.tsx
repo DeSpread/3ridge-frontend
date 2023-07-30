@@ -29,14 +29,11 @@ import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 import AwsClient from "../../remote/aws-client";
 import SignInWithNetworkSelectDialog from "../../layouts/dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
-import {
-  convertToSuppoertedNetwork,
-  convertToWalletName,
-} from "../../helper/type-helper";
+import TypeHelper from "../../helper/type-helper";
 import ResourceFactory from "../../helper/resource-factory";
 import { useTheme } from "@mui/material/styles";
 import { useMobile } from "../../provider/mobile/mobile-context";
-import { goToMetaMaskDeppLinkWhenMobile } from "../../helper/eth-helper";
+import EthUtil from "../../util/eth-util";
 
 const FORM_TYPE = {
   SELECT: "SELECT",
@@ -61,7 +58,6 @@ const Signup = () => {
   const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
     useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState("");
-  const resourceFactory = ResourceFactory.getInstance();
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -292,14 +288,14 @@ const Signup = () => {
             setSelectedNetwork("");
           }}
           walletInfos={(() => {
-            return resourceFactory.getWalletInfos(
-              convertToSuppoertedNetwork(selectedNetwork)
+            return ResourceFactory.getWalletInfos(
+              TypeHelper.convertToSuppoertedNetwork(selectedNetwork)
             );
           })()}
           onWalletSelected={({ name, value }) => {
-            const walletName = convertToWalletName(value);
+            const walletName = TypeHelper.convertToWalletName(value);
 
-            if (goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
+            if (EthUtil.goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
               return;
             }
 

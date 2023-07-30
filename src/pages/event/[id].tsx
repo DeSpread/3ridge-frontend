@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useTicketQuery } from "../../page-hook/ticket-query-hook";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
-import { decodeBase64, nFormatter } from "../../util/string-util";
+import StringUtil from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import {
@@ -546,7 +546,7 @@ const Event = (props: AppProps) => {
                   if (ticketData.rewardPolicy?.context?.rewardInfo?.content) {
                     setOpenContentsRendererDialog(true);
                     setHtmlContent(
-                      decodeBase64(
+                      StringUtil.decodeBase64(
                         ticketData.rewardPolicy?.context?.rewardInfo?.content
                       )
                     );
@@ -659,7 +659,7 @@ const Event = (props: AppProps) => {
       if (quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord) {
         setSimpleWarningDialogShow(true);
         if (quest.questGuides?.[0]?.content) {
-          setHtmlContent(decodeBase64(quest.questGuides[0].content));
+          setHtmlContent(StringUtil.decodeBase64(quest.questGuides[0].content));
         } else {
           setSimpleWarningDialogTitle(
             `디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
@@ -671,7 +671,7 @@ const Event = (props: AppProps) => {
       ) {
         setSimpleWarningDialogShow(true);
         if (quest.questGuides?.[0]?.content) {
-          setHtmlContent(decodeBase64(quest.questGuides[0].content));
+          setHtmlContent(StringUtil.decodeBase64(quest.questGuides[0].content));
         } else {
           setSimpleWarningDialogTitle(
             `텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
@@ -692,7 +692,7 @@ const Event = (props: AppProps) => {
     ) {
       setOpenContentsRendererDialog(true);
       if (quest.questGuides?.[0]?.content) {
-        setHtmlContent(decodeBase64(quest.questGuides[0].content));
+        setHtmlContent(StringUtil.decodeBase64(quest.questGuides[0].content));
       }
     }
   };
@@ -1251,7 +1251,7 @@ const Event = (props: AppProps) => {
                               variant={"caption"}
                               color={"neutral.100"}
                             >
-                              {`+${nFormatter(
+                              {`+${StringUtil.nFormatter(
                                 ticketData?.participants?.length - 10,
                                 4
                               )}`}
