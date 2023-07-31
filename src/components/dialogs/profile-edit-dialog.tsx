@@ -28,7 +28,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import { ValidatorButton } from "../atomic/molecules/validator-button";
 import BlockIcon from "../atomic/molecules/block-icon";
-import ResourceFactory from "../../helper/resource-factory";
+import ResourceHelper from "../../helper/resource-helper";
 // @ts-ignore
 import TelegramLoginButton from "react-telegram-login";
 import TypeHelper from "../../helper/type-helper";
@@ -260,7 +260,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                             <ValidatorButton
                               disabled={disabledBtn}
                               label={e.toUpperCase()}
-                              svgIcon={ResourceFactory.getValidatorButtonSvg(e)}
+                              svgIcon={ResourceHelper.getValidatorButtonSvg(e)}
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
                               value={StringHelper.convertAddressToMidEllipsis(
@@ -278,7 +278,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                             <ValidatorButton
                               // disabled={disabledBtn}
                               label={e.toUpperCase()}
-                              svgIcon={ResourceFactory.getValidatorButtonSvg(e)}
+                              svgIcon={ResourceHelper.getValidatorButtonSvg(e)}
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
                               value={StringHelper.convertAddressToMidEllipsis(

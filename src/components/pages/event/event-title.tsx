@@ -20,7 +20,7 @@ const EventTitle = ({ title }: { title?: string } & PropsWithChildren) => {
     </Box>
   ) : (
     <Box sx={{ width: smUp ? 460 : "60vw" }}>
-      <Skeleton variant="text" sx={{ fontSize: smUp ? "2.25rem" : "2rem" }} />
+      <Typography variant={smUp ? "h3" : "h4"}>&nbsp;</Typography>
     </Box>
   );
 };

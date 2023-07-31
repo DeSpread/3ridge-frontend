@@ -3,8 +3,9 @@ import AptosIcon from "../components/atomic/atoms/svg/aptos-icon";
 import EthIcon from "../components/atomic/atoms/svg/eth-icon";
 import SuiIcon from "../components/atomic/atoms/svg/sui-icon";
 import StacksIcon from "../components/atomic/atoms/svg/stacks-icon";
+import { ChainType } from "../__generated__/graphql";
 
-class ResourceFactory {
+class ResourceHelper {
   public static getExplorerUri = (
     network: SupportedNetwork,
     address: string
@@ -32,6 +33,26 @@ class ResourceFactory {
       return "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/stacks-icon.svg";
     }
     return undefined;
+  };
+
+  public static getIconUri = (chain: ChainType) => {
+    console.log(chain);
+    if (chain === ChainType.Evm) {
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/eth.png";
+    } else if (chain === ChainType.Sui) {
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/sui.svg";
+    } else if (chain === ChainType.Aptos) {
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/APTOS.svg";
+    } else if (chain === ChainType.Stacks) {
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/stacks-icon.svg";
+    } else if (chain === ChainType.Matic) {
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/matic-logo.png";
+    } else if (chain === ChainType.Arb) {
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/arbitrum.png";
+    } else if (chain === ChainType.Bnb) {
+      return "https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/bnb.svg";
+    }
+    return "";
   };
 
   public static getValidatorButtonSvg = (network: SupportedNetwork) => {
@@ -109,4 +130,4 @@ class ResourceFactory {
   };
 }
 
-export default ResourceFactory;
+export default ResourceHelper;

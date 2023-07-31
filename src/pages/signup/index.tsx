@@ -30,7 +30,7 @@ import AwsClient from "../../remote/aws-client";
 import SignInWithNetworkSelectDialog from "../../layouts/dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import TypeHelper from "../../helper/type-helper";
-import ResourceFactory from "../../helper/resource-factory";
+import ResourceHelper from "../../helper/resource-helper";
 import { useTheme } from "@mui/material/styles";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import EthUtil from "../../util/eth-util";
@@ -288,7 +288,7 @@ const Signup = () => {
             setSelectedNetwork("");
           }}
           walletInfos={(() => {
-            return ResourceFactory.getWalletInfos(
+            return ResourceHelper.getWalletInfos(
               TypeHelper.convertToSuppoertedNetwork(selectedNetwork)
             );
           })()}

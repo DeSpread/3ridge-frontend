@@ -3,14 +3,11 @@ import MainLayout from "../../layouts/main-layout";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import {
-  Avatar,
   Box,
-  ButtonProps,
   Card,
   CardContent,
   Grid,
   Stack,
-  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -20,19 +17,19 @@ import StringUtil from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import {
-  DiscordQuestContext,
+  VerifyDiscordQuestContext,
   MouseEventWithParam,
   Quest,
-  QuestContextVerifyTelegram,
+  VerifyTelegramQuestContext,
   QuizQuestContext,
   REWARD_POLICY_TYPE,
   SUPPORTED_NETWORKS,
-  TwitterFollowQuestContext,
-  TwitterLikingQuestContext,
-  TwitterRetweetQuestContext,
-  VerifyAgreementContext,
-  VerifyHasWalletAddressContext,
-  VerifyVisitWebsiteContext,
+  VerifyTwitterFollowQuestContext,
+  VerifyTwitterLikingQuestContext,
+  VerifyTwitterRetweetQuestContext,
+  VerifyAgreementQuestContext,
+  VerifyHasWalletAddressQuestContext,
+  VerifyVisitWebsiteQuestContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
@@ -46,9 +43,6 @@ import {
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
-import CircularProgress from "@mui/material/CircularProgress";
-import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
-import BlockIcon from "../../components/atomic/molecules/block-icon";
 import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
 import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
@@ -59,7 +53,6 @@ import { useGetSet, useMountedState } from "react-use";
 import { useSetRecoilState } from "recoil";
 import { backDirectionPathState } from "../../lib/recoil";
 import ClickTypography from "../../components/atomic/atoms/click-typhography";
-import ContentMetaDataRenderComponent from "../../components/atomic/atoms/content-meta-data-render-component";
 import AgreementDialog from "../../components/dialogs/agreement-dialog";
 import EventTitle from "../../components/pages/event/event-title";
 import EventImage from "../../components/pages/event/event-image";
@@ -70,51 +63,9 @@ import EventRewardPolicy from "../../components/pages/event/reward/event-reward-
 import EventTimeBoard from "../../components/pages/event/event-time-board";
 import EventRewardDescription from "../../components/pages/event/reward/event-reward-description";
 import DateUtil from "../../util/date-util";
-
-const LoadingButton = (props: ButtonProps) => {
-  const [loading, setLoading] = useState(false);
-
-  return (
-    <div style={{ position: "relative", width: "100%" }}>
-      <SecondaryButton
-        {...props}
-        fullWidth={true}
-        disabled={props.disabled || loading}
-        onClick={(e) => {
-          setLoading(true);
-          const myEvent = {} as MouseEventWithParam<{
-            callback: (msg: string) => void;
-          }>;
-          myEvent.params = {
-            callback: (msg: string) => {
-              setLoading(false);
-            },
-          };
-          //@ts-ignore
-          props.onClick?.(myEvent);
-        }}
-      >
-        {props.children}
-      </SecondaryButton>
-      {loading && (
-        <div
-          style={{
-            position: "absolute",
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            transform: "translateY(-100%)",
-            height: "100%",
-          }}
-        >
-          <CircularProgress sx={{ color: "white" }}></CircularProgress>
-        </div>
-      )}
-    </div>
-  );
-};
+import ButtonWithLoading from "../../components/atomic/molecules/button-with-loading";
+import EventParticipants from "../../components/pages/event/event-participants";
+import TicketRewardHowToDialog from "../../components/dialogs/ticket-reward-how-to-dialog";
 
 const Event = (props: AppProps) => {
   const { userData, asyncUpdateSocialTwitter, asyncUpdateRewardPoint } =
@@ -147,12 +98,14 @@ const Event = (props: AppProps) => {
     useState(false);
   const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
   const [simpleWarningDialogShow, setSimpleWarningDialogShow] = useState(false);
-
+  const [openTicketRewardHowToDialog, setOpenTicketRewardHowToDialog] =
+    useState(false);
   const [openAgreementQuestDialog, setOpenAgreementQuestDialog] =
     useState(false);
+
   const [openAgreementQuestId, setOpenAgreementQuestId] = useState<string>();
   const [openAgreementQuestContext, setOpenAgreementQuestContext] =
-    useState<VerifyAgreementContext>({ agreementList: [] });
+    useState<VerifyAgreementQuestContext>({ agreementList: [] });
 
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
   const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
@@ -274,7 +227,7 @@ const Event = (props: AppProps) => {
 
   const openAgreementDialog = (
     questId: string,
-    agreementContext: VerifyAgreementContext
+    agreementContext: VerifyAgreementQuestContext
   ) => {
     setOpenAgreementQuestDialog(true);
     setOpenAgreementQuestId(questId);
@@ -388,17 +341,6 @@ const Event = (props: AppProps) => {
     }
   };
 
-  const changeChainToAlias = (chain: string) => {
-    if (chain === "offchain-by-email") {
-      return "이메일";
-    } else if (chain.includes("offchain-by-wallet")) {
-      return "지갑";
-    } else if (chain === "offchain-by-telegram") {
-      return "텔레그램 계정을";
-    }
-    return chain;
-  };
-
   const showTwitterConnectAlert = () => {
     if (!userData?.userSocial?.twitterId) {
       showAlert({
@@ -479,99 +421,6 @@ const Event = (props: AppProps) => {
     return "리워드 예정";
   };
 
-  const getRewardLabel = () => {
-    if (ticketData.rewardPolicy?.context?.rewardChain) {
-      if (ticketData.rewardPolicy?.context?.overrideRewardChainContent) {
-        return (
-          <ContentMetaDataRenderComponent
-            contentMetaData={
-              ticketData.rewardPolicy?.context?.overrideRewardChainContent
-            }
-            htmlComponentFunc={(content) => {
-              return (
-                <Stack sx={{ background: "", alignItems: "center" }}>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: content ?? "<></>",
-                    }}
-                  ></div>
-                </Stack>
-              );
-            }}
-          />
-        );
-      }
-      return ticketData.rewardPolicy?.context?.rewardChain.includes(
-        "offchain"
-      ) ? (
-        <Stack
-          direction={"row"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          spacing={1}
-        >
-          <Typography variant={"body2"}>
-            {`등록된 ${changeChainToAlias(
-              ticketData.rewardPolicy?.context?.rewardChain
-            )} 통해 보상 지급 예정`}
-          </Typography>
-        </Stack>
-      ) : (
-        <Stack>
-          <Stack
-            direction={"row"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            spacing={1}
-          >
-            <img
-              src={`https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/${ticketData.rewardPolicy?.context?.rewardChain}.svg`}
-              width={32}
-              height={32}
-              style={{
-                background: theme.palette.neutral[100],
-                borderRadius: 16,
-                padding: 5,
-              }}
-            />
-            <Typography variant={"body2"}>
-              {ticketData.rewardPolicy?.context?.rewardChain} 체인 지원
-            </Typography>
-          </Stack>
-          {ticketData.rewardPolicy?.context?.rewardInfo && (
-            <Stack sx={{ background: "", marginTop: 1 }} alignItems={"center"}>
-              <ClickTypography
-                variant={"caption"}
-                onClick={async () => {
-                  if (ticketData.rewardPolicy?.context?.rewardInfo?.content) {
-                    setOpenContentsRendererDialog(true);
-                    setHtmlContent(
-                      StringUtil.decodeBase64(
-                        ticketData.rewardPolicy?.context?.rewardInfo?.content
-                      )
-                    );
-                  }
-                }}
-                sx={{
-                  fontWeight: "bold",
-                  "&:hover": {
-                    color: "#914e1d",
-                    textDecoration: "underline",
-                  },
-                  color: theme.palette.warning.main,
-                  cursor: "pointer",
-                }}
-              >
-                {ticketData.rewardPolicy?.context?.rewardInfo?.title}
-              </ClickTypography>
-            </Stack>
-          )}
-        </Stack>
-      );
-    }
-    return <></>;
-  };
-
   const asyncStartQuest = async (
     e: React.MouseEvent<Element, MouseEvent>,
     quest: Quest,
@@ -583,7 +432,7 @@ const Event = (props: AppProps) => {
     ) {
       try {
         const followQuestContext = quest.questPolicy
-          .context as TwitterFollowQuestContext;
+          .context as VerifyTwitterFollowQuestContext;
         window.open(
           `https://twitter.com/intent/follow?screen_name=${followQuestContext.username}`,
           "twitter",
@@ -597,7 +446,7 @@ const Event = (props: AppProps) => {
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterLiking
     ) {
       const likingQuestContext = quest.questPolicy
-        .context as TwitterLikingQuestContext;
+        .context as VerifyTwitterLikingQuestContext;
       console.log(likingQuestContext);
       window.open(
         `https://twitter.com/intent/like?tweet_id=${likingQuestContext.tweetId}`,
@@ -609,7 +458,7 @@ const Event = (props: AppProps) => {
     ) {
       try {
         const retweetQuestContext = quest.questPolicy
-          .context as TwitterRetweetQuestContext;
+          .context as VerifyTwitterRetweetQuestContext;
         console.log(retweetQuestContext);
         window.open(
           `https://twitter.com/intent/retweet?tweet_id=${retweetQuestContext.tweetId}`,
@@ -628,7 +477,8 @@ const Event = (props: AppProps) => {
       let questContext;
       switch (quest.questPolicy?.questPolicy) {
         case QuestPolicyType.VerifyDiscord:
-          questContext = quest.questPolicy?.context as DiscordQuestContext;
+          questContext = quest.questPolicy
+            ?.context as VerifyDiscordQuestContext;
           window.open(
             `https://discord.gg/${questContext.channelId}`,
             "discord",
@@ -637,7 +487,7 @@ const Event = (props: AppProps) => {
           break;
         case QuestPolicyType.VerifyTelegram:
           questContext = quest.questPolicy
-            ?.context as QuestContextVerifyTelegram;
+            ?.context as VerifyTelegramQuestContext;
           window.open(
             `https://t.me/${questContext.channelId}`,
             "telegram",
@@ -646,7 +496,7 @@ const Event = (props: AppProps) => {
           break;
         case QuestPolicyType.VerifyVisitWebsite:
           questContext = quest.questPolicy
-            ?.context as VerifyVisitWebsiteContext;
+            ?.context as VerifyVisitWebsiteQuestContext;
           // console.log(questContext?.url);
           const newWindow = window.open(
             questContext?.url,
@@ -715,7 +565,7 @@ const Event = (props: AppProps) => {
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAgreement
       ) {
         const verifyAgreementContext = quest.questPolicy
-          ?.context as VerifyAgreementContext;
+          ?.context as VerifyAgreementQuestContext;
         openAgreementDialog(quest._id, verifyAgreementContext);
         myEvent.params.callback("success");
       } else if (
@@ -816,7 +666,7 @@ const Event = (props: AppProps) => {
           ?.filter((e) => e.address)
           .map((e) => e.network.toUpperCase());
         const verifyHasWalletAddressContext = quest.questPolicy
-          ?.context as VerifyHasWalletAddressContext;
+          ?.context as VerifyHasWalletAddressQuestContext;
         const chain = verifyHasWalletAddressContext?.chain?.toUpperCase();
         // console.log("chain", chain, networks);
         if (chain === "ANY") {
@@ -967,7 +817,6 @@ const Event = (props: AppProps) => {
               container
               spacing={4}
               direction={"row"}
-              // alignItems="center"
               justifyContent={mdUp ? "flex-start" : "center"}
               sx={{ background: "", marginBottom: 2 }}
             >
@@ -1035,7 +884,7 @@ const Event = (props: AppProps) => {
               )}
             {userData?._id &&
               !walletConnectedForTicket &&
-              ticketData.rewardPolicy?.context?.rewardNetwork && (
+              ticketData.rewardPolicy?.context?.rewardChain && (
                 <Card>
                   <CardContent>
                     <Stack
@@ -1051,7 +900,7 @@ const Event = (props: AppProps) => {
                           sx={{ color: theme.palette.warning.main }}
                           textAlign={"center"}
                         >
-                          {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}
+                          {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardChain}을 지원하는 지갑 연결이 필요해요`}{" "}
                         </Typography>
                       </Stack>
                       <Stack direction={"column"}>
@@ -1114,8 +963,11 @@ const Event = (props: AppProps) => {
               <EventTimeBoard ticketData={ticketData}></EventTimeBoard>
               <EventRewardDescription
                 ticketData={ticketData}
+                onClick={(e) => {
+                  setOpenTicketRewardHowToDialog(true);
+                }}
               ></EventRewardDescription>
-              <LoadingButton
+              <ButtonWithLoading
                 disabled={
                   claimRewardDisabled ||
                   claimCompleted ||
@@ -1174,111 +1026,9 @@ const Event = (props: AppProps) => {
                 }}
               >
                 {getLoadingButtonLabel()}
-              </LoadingButton>
+              </ButtonWithLoading>
             </Stack>
-
-            <Stack direction={"column"} sx={{ background: "", maxWidth: 350 }}>
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                spacing={1}
-                justifyContent={"center"}
-              >
-                <Typography
-                  variant="h5"
-                  textAlign={"center"}
-                  sx={{ wordBreak: "keep-all" }}
-                >
-                  아래의 사람들이 참여하고 있어요
-                </Typography>
-              </Stack>
-              <Grid container sx={{ marginTop: 4 }} justifyContent={"center"}>
-                {(ticketData?.participants?.length ?? 0) > 0 ? (
-                  <>
-                    {ticketData?.participants?.slice(0, 10).map((e, index) => {
-                      return (
-                        <Grid item key={index}>
-                          {e.profileImageUrl && (
-                            <Tooltip
-                              title={e.name}
-                              key={index}
-                              // sx={{ zIndex: 1 + index }}
-                            >
-                              <Avatar
-                                alt=""
-                                src={
-                                  e.profileImageUrl ??
-                                  DEFAULT_PROFILE_IMAGE_DATA_SRC
-                                }
-                                sx={{
-                                  width: 42,
-                                  height: 42,
-                                }}
-                              />
-                            </Tooltip>
-                          )}
-                          {!e.profileImageUrl && e?._id && (
-                            <Tooltip title={e.name} key={index}>
-                              <div style={{ width: 42, height: 42 }}>
-                                <BlockIcon seed={e?._id} scale={5}></BlockIcon>
-                              </div>
-                            </Tooltip>
-                          )}
-                        </Grid>
-                      );
-                    })}
-                    {ticketData?.participants?.length &&
-                      ticketData?.participants?.length > 10 && (
-                        <Grid item>
-                          <Box
-                            sx={{
-                              width: 42,
-                              height: 42,
-                              background: (theme) =>
-                                theme.palette.neutral["800"],
-                              alignItems: "center",
-                              justifyContent: "center",
-                              display: "flex",
-                              borderRadius: 42,
-                              zIndex: 1,
-                              borderWidth: 2,
-                              borderColor: theme.palette.neutral[100],
-                              borderStyle: "solid",
-                            }}
-                            onClick={() => {}}
-                          >
-                            <Typography
-                              variant={"caption"}
-                              color={"neutral.100"}
-                            >
-                              {`+${StringUtil.nFormatter(
-                                ticketData?.participants?.length - 10,
-                                4
-                              )}`}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                      )}
-                  </>
-                ) : (
-                  <>
-                    <Stack
-                      onClick={() => {
-                        // console.log("aaa");
-                      }}
-                      sx={{
-                        cursor: "pointer",
-                        width: "100%",
-                        // background: "red",
-                      }}
-                      alignItems={"center"}
-                    >
-                      <Typography>⛔&nbsp;EMPTY</Typography>
-                    </Stack>
-                  </>
-                )}
-              </Grid>
-            </Stack>
+            <EventParticipants ticketData={ticketData}></EventParticipants>
           </Stack>
         </Grid>
       </Grid>
@@ -1367,6 +1117,12 @@ const Event = (props: AppProps) => {
         )}
         {!htmlContent && <Typography>{simpleWarningDialogTitle}</Typography>}
       </SimpleDialog>
+      <TicketRewardHowToDialog
+        open={openTicketRewardHowToDialog}
+        onCloseBtnClicked={(e) => {
+          setOpenTicketRewardHowToDialog(false);
+        }}
+      ></TicketRewardHowToDialog>
     </>
   );
 };

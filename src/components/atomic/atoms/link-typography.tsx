@@ -1,6 +1,5 @@
 import NextLink from "next/link";
 import { Typography, TypographyProps } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 
 type LinkTypographyProps = TypographyProps & {
   href?: string;

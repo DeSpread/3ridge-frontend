@@ -40,7 +40,7 @@ import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-se
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
 import { useWalletAlert } from "../page-hook/wallet-alert-hook";
 import TypeHelper from "../helper/type-helper";
-import ResourceFactory from "../helper/resource-factory";
+import ResourceHelper from "../helper/resource-helper";
 import MobileNavigatorBar from "../components/atomic/atoms/mobile/mobile-navigator-bar";
 import { useMobile } from "../provider/mobile/mobile-context";
 import EthUtil from "../util/eth-util";
@@ -454,7 +454,7 @@ const MainLayout = (props: MainLayoutProps) => {
           setSelectedNetwork("");
         }}
         walletInfos={(() => {
-          return ResourceFactory.getWalletInfos(
+          return ResourceHelper.getWalletInfos(
             TypeHelper.convertToSuppoertedNetwork(selectedNetwork)
           );
         })()}

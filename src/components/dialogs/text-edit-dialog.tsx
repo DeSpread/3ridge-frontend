@@ -15,9 +15,7 @@ const TextEditDialog = (
   const [textValue, setTextValue] = useState(defaultText);
 
   useEffect(() => {
-    if (defaultText) {
-      setTextValue(defaultText);
-    }
+    setTextValue(defaultText ?? "");
   }, [defaultText]);
 
   return (

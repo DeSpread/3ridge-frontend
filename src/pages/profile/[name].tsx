@@ -49,7 +49,7 @@ import { useUserQuery } from "../../page-hook/user-query-hook";
 import { useRouter } from "next/router";
 import TicketCard from "../../components/atomic/molecules/ticket-card";
 import Image from "next/image";
-import ResourceFactory from "../../helper/resource-factory";
+import ResourceHelper from "../../helper/resource-helper";
 import TypeHelper from "../../helper/type-helper";
 import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
@@ -369,7 +369,7 @@ const Profile = () => {
                                 onClick={(e: MouseEvent) => {
                                   e.preventDefault();
                                   const newWindow = window.open(
-                                    ResourceFactory.getExplorerUri(
+                                    ResourceHelper.getExplorerUri(
                                       addressInfo.network,
                                       addressInfo.address
                                     ),
@@ -380,7 +380,7 @@ const Profile = () => {
                                 }}
                                 icon={
                                   <img
-                                    src={ResourceFactory.getExplorerIconUri(
+                                    src={ResourceHelper.getExplorerIconUri(
                                       addressInfo.network
                                     )}
                                     width={16}
@@ -423,7 +423,7 @@ const Profile = () => {
                                 }}
                                 icon={
                                   <img
-                                    src={ResourceFactory.getExplorerIconUri(
+                                    src={ResourceHelper.getExplorerIconUri(
                                       network
                                     )}
                                     width={16}
@@ -929,7 +929,7 @@ const Profile = () => {
           setSelectedNetwork("");
         }}
         walletInfos={(() => {
-          return ResourceFactory.getWalletInfos(
+          return ResourceHelper.getWalletInfos(
             TypeHelper.convertToSuppoertedNetwork(selectedNetwork)
           );
         })()}

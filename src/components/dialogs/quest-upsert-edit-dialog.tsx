@@ -7,7 +7,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  Typography,
 } from "@mui/material";
 import SecondaryButton from "../atomic/atoms/secondary-button";
 import {
@@ -16,7 +15,12 @@ import {
   QuestPolicyType,
 } from "../../__generated__/graphql";
 import { useTheme } from "@mui/material/styles";
-import { TelegramQuestEditForm } from "../form/quest/quest-edit-from";
+import {
+  TelegramQuestEditForm,
+  Verify3ridgePointEditForm,
+  VerifyTwitterFollowEditForm,
+  VerifyTwitterRetweetOrLinkingEditForm,
+} from "../form/quest/quest-edit-from";
 import { Quest } from "../../type";
 
 const QuestUpsertEditDialog = (
@@ -33,7 +37,7 @@ const QuestUpsertEditDialog = (
   const theme = useTheme();
 
   const [questPolicyType, setQuestPolicyType] = useState<QuestPolicyType>(
-    QuestPolicyType.VerifyTelegram
+    QuestPolicyType.Verify_3RidgePoint
   );
   const [questPolicy, setQuestPolicy] = useState<QuestPolicy>();
   const [titleV2, setTitleV2] = useState<ContentMetadata>();
@@ -48,6 +52,14 @@ const QuestUpsertEditDialog = (
     switch (questPolicy) {
       case QuestPolicyType.VerifyTelegram:
         return "텔레그램 채널 방문하기";
+      case QuestPolicyType.VerifyTwitterFollow:
+        return "트위터 팔로우하기";
+      case QuestPolicyType.VerifyTwitterRetweet:
+        return "트위터 리트윗하기";
+      case QuestPolicyType.VerifyTwitterLiking:
+        return "트위터 좋아요하기";
+      case QuestPolicyType.Verify_3RidgePoint:
+        return "3ridge 포인트 보유하기";
     }
     return "";
   };
@@ -58,6 +70,11 @@ const QuestUpsertEditDialog = (
     }
     return "퀘스트 추가하기";
   }, [editedQuest]);
+
+  const onChange = (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => {
+    setQuestPolicy(questPolicy);
+    setTitleV2(title_v2);
+  };
 
   return (
     <SimpleDialog {...rest} title={dialogTitle} maxWidth={"sm"}>
@@ -80,6 +97,18 @@ const QuestUpsertEditDialog = (
                   }}
                   sx={{ minWidth: 180, background: "" }}
                 >
+                  <MenuItem value={QuestPolicyType.Verify_3RidgePoint}>
+                    {getPolicyLabel(QuestPolicyType.Verify_3RidgePoint)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyTwitterLiking}>
+                    {getPolicyLabel(QuestPolicyType.VerifyTwitterLiking)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyTwitterRetweet}>
+                    {getPolicyLabel(QuestPolicyType.VerifyTwitterRetweet)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyTwitterFollow}>
+                    {getPolicyLabel(QuestPolicyType.VerifyTwitterFollow)}
+                  </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyTelegram}>
                     {getPolicyLabel(QuestPolicyType.VerifyTelegram)}
                   </MenuItem>
@@ -88,16 +117,6 @@ const QuestUpsertEditDialog = (
             </Box>
           </Stack>
         )}
-        {/*{editedQuest && (*/}
-        {/*  <Stack*/}
-        {/*    sx={{ width: "100%", background: "" }}*/}
-        {/*    alignItems={"flex-start"}*/}
-        {/*  >*/}
-        {/*    <Box sx={{ paddingTop: 1, paddingBottom: 1 }}>*/}
-        {/*      <Typography>{dialogTitle}</Typography>*/}
-        {/*    </Box>*/}
-        {/*  </Stack>*/}
-        {/*)}*/}
         <Box
           sx={{
             width: "100%",
@@ -112,14 +131,34 @@ const QuestUpsertEditDialog = (
           {questPolicyType === QuestPolicyType.VerifyTelegram && (
             <TelegramQuestEditForm
               editedQuest={editedQuest}
-              onChange={(
-                questPolicy?: QuestPolicy,
-                title_v2?: ContentMetadata
-              ) => {
-                setQuestPolicy(questPolicy);
-                setTitleV2(title_v2);
-              }}
+              onChange={onChange}
             ></TelegramQuestEditForm>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyTwitterFollow && (
+            <VerifyTwitterFollowEditForm
+              editedQuest={editedQuest}
+              onChange={onChange}
+            ></VerifyTwitterFollowEditForm>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyTwitterRetweet && (
+            <VerifyTwitterRetweetOrLinkingEditForm
+              editedQuest={editedQuest}
+              onChange={onChange}
+              questPolicy={QuestPolicyType.VerifyTwitterRetweet}
+            ></VerifyTwitterRetweetOrLinkingEditForm>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyTwitterLiking && (
+            <VerifyTwitterRetweetOrLinkingEditForm
+              editedQuest={editedQuest}
+              onChange={onChange}
+              questPolicy={QuestPolicyType.VerifyTwitterLiking}
+            ></VerifyTwitterRetweetOrLinkingEditForm>
+          )}
+          {questPolicyType === QuestPolicyType.Verify_3RidgePoint && (
+            <Verify3ridgePointEditForm
+              editedQuest={editedQuest}
+              onChange={onChange}
+            ></Verify3ridgePointEditForm>
           )}
         </Box>
         <Stack

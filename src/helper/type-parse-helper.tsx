@@ -1,19 +1,19 @@
 import {
   RewardContext,
-  TwitterFollowQuestContext,
+  VerifyTwitterFollowQuestContext,
   QuizQuestContext,
-  TwitterRetweetQuestContext,
+  VerifyTwitterRetweetQuestContext,
   REWARD_POLICY_TYPE,
-  TwitterLikingQuestContext,
-  DiscordQuestContext,
-  Verify3ridgePointContext,
-  QuestContextVerifyTelegram,
-  VerifyHasEmailContext,
-  VerifyHasWalletAddressContext,
-  VerifyHasTwitter,
-  VerifyHasTelegram,
-  VerifyVisitWebsiteContext,
-  VerifyAgreementContext,
+  VerifyTwitterLikingQuestContext,
+  VerifyDiscordQuestContext,
+  Verify3ridgePointQuestContext,
+  VerifyTelegramQuestContext,
+  VerifyHasEmailQuestContext,
+  VerifyHasWalletAddressQuestContext,
+  VerifyHasTwitterQuestContext,
+  VerifyHasTelegramQuestContext,
+  VerifyVisitWebsiteQuestContext,
+  VerifyAgreementQuestContext,
 } from "../type";
 import { QuestPolicyType } from "../__generated__/graphql";
 
@@ -51,29 +51,29 @@ class TypeParseHelper {
       if (questPolicyType === QuestPolicyType.Quiz) {
         return contextJson as QuizQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyTwitterRetweet) {
-        return contextJson as TwitterRetweetQuestContext;
+        return contextJson as VerifyTwitterRetweetQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyTwitterFollow) {
-        return contextJson as TwitterFollowQuestContext;
+        return contextJson as VerifyTwitterFollowQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyTwitterLiking) {
-        return contextJson as TwitterLikingQuestContext;
+        return contextJson as VerifyTwitterLikingQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyDiscord) {
-        return contextJson as DiscordQuestContext;
+        return contextJson as VerifyDiscordQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyTelegram) {
-        return contextJson as QuestContextVerifyTelegram;
+        return contextJson as VerifyTelegramQuestContext;
       } else if (questPolicyType === QuestPolicyType.Verify_3RidgePoint) {
-        return contextJson as Verify3ridgePointContext;
+        return contextJson as Verify3ridgePointQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyEmail) {
-        return contextJson as VerifyHasEmailContext;
+        return contextJson as VerifyHasEmailQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyHasWalletAddress) {
-        return contextJson as VerifyHasWalletAddressContext;
+        return contextJson as VerifyHasWalletAddressQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyHasTwitter) {
-        return contextJson as VerifyHasTwitter;
+        return contextJson as VerifyHasTwitterQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyHasTelegram) {
-        return contextJson as VerifyHasTelegram;
+        return contextJson as VerifyHasTelegramQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyVisitWebsite) {
-        return contextJson as VerifyVisitWebsiteContext;
+        return contextJson as VerifyVisitWebsiteQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyAgreement) {
-        return contextJson as VerifyAgreementContext;
+        return contextJson as VerifyAgreementQuestContext;
       }
     } catch (e) {
       console.log(context, questPolicyType);

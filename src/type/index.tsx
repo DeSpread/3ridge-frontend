@@ -46,17 +46,12 @@ export interface MouseEventWithParam<T> extends React.MouseEvent<HTMLElement> {
 }
 
 export const SUPPORTED_NETWORKS = {
-  EVM: "evm",
-  APTOS: "aptos",
-  STACKS: "stacks",
-  SUI: "sui",
-  UNKNOWN: "unknown",
+  EVM: "EVM",
+  APTOS: "APTOS",
+  STACKS: "STACKS",
+  SUI: "SUI",
+  UNKNOWN: "UNKNOWN",
 } as const;
-
-export const ALLOWED_NETWORKS = [
-  SUPPORTED_NETWORKS.EVM,
-  SUPPORTED_NETWORKS.STACKS,
-];
 
 export const SUPPORTED_NETWORKS_VALUES = Object.values(SUPPORTED_NETWORKS)
   .filter((_, index) => index !== Object.values(SUPPORTED_NETWORKS).length - 1)
@@ -159,7 +154,6 @@ export type RewardContext = {
   rewardUnit: string;
   rewardAmount: number;
   rewardChain: string;
-  rewardNetwork: string;
   rewardClaimable: boolean;
   overrideRewardChainContent?: ContentMetadata;
   nftImageUrl: string;
@@ -218,17 +212,17 @@ export type Quest = {
   questPolicy?: {
     context?:
       | QuizQuestContext
-      | TwitterLikingQuestContext
-      | TwitterRetweetQuestContext
-      | TwitterFollowQuestContext
-      | DiscordQuestContext
-      | QuestContextVerifyTelegram
-      | Verify3ridgePointContext
-      | VerifyHasEmailContext
-      | VerifyHasWalletAddressContext
-      | VerifyHasTwitter
-      | VerifyHasTelegram
-      | VerifyVisitWebsiteContext
+      | VerifyTwitterLikingQuestContext
+      | VerifyTwitterRetweetQuestContext
+      | VerifyTwitterFollowQuestContext
+      | VerifyDiscordQuestContext
+      | VerifyTelegramQuestContext
+      | Verify3ridgePointQuestContext
+      | VerifyHasEmailQuestContext
+      | VerifyHasWalletAddressQuestContext
+      | VerifyHasTwitterQuestContext
+      | VerifyHasTelegramQuestContext
+      | VerifyVisitWebsiteQuestContext
       | undefined;
     questPolicy?: QuestPolicyType;
   };
@@ -237,50 +231,50 @@ export type Quest = {
   isComplete?: boolean;
 };
 
-export type TwitterLikingQuestContext = {
+export type VerifyTwitterLikingQuestContext = {
   tweetId: string;
   twitterUrl: string;
   username: string;
 };
 
-export type TwitterRetweetQuestContext = {
+export type VerifyTwitterRetweetQuestContext = {
   tweetId: string;
   twitterUrl: string;
   username: string;
 };
 
-export type TwitterFollowQuestContext = {
+export type VerifyTwitterFollowQuestContext = {
   username: string;
   twitterUrl: string;
 };
 
-export type DiscordQuestContext = {
+export type VerifyDiscordQuestContext = {
   channelId: string;
 };
 
-export type QuestContextVerifyTelegram = {
+export type VerifyTelegramQuestContext = {
   channelId: string;
 };
 
-export type Verify3ridgePointContext = {
+export type Verify3ridgePointQuestContext = {
   point: number;
 };
 
-export type VerifyHasEmailContext = {};
+export type VerifyHasEmailQuestContext = {};
 
-export type VerifyHasTwitter = {};
+export type VerifyHasTwitterQuestContext = {};
 
-export type VerifyHasTelegram = {};
+export type VerifyHasTelegramQuestContext = {};
 
-export type VerifyVisitWebsiteContext = {
+export type VerifyVisitWebsiteQuestContext = {
   url: string;
 };
 
-export type VerifyHasWalletAddressContext = {
+export type VerifyHasWalletAddressQuestContext = {
   chain: string;
 };
 
-export type VerifyAgreementContext = {
+export type VerifyAgreementQuestContext = {
   agreementList?: AgreementContent[];
 };
 

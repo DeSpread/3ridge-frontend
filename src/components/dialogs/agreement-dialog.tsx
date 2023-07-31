@@ -11,7 +11,7 @@ import { MouseEventHandler, useMemo, useState } from "react";
 import {
   AgreementEventParam,
   MouseEventWithParam,
-  VerifyAgreementContext,
+  VerifyAgreementQuestContext,
   Z_INDEX_OFFSET,
 } from "../../type";
 import { useTheme } from "@mui/material/styles";
@@ -26,7 +26,7 @@ import CloseIcon from "@mui/icons-material/Close";
 type AgreementDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
   onCompleteAgreement?: () => void;
-  context: VerifyAgreementContext;
+  context: VerifyAgreementQuestContext;
 };
 
 const AgreementDialog = (props: AgreementDialogProps) => {

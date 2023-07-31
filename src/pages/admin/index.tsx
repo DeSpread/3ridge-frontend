@@ -2,16 +2,11 @@ import React, { ReactElement } from "react";
 import MainLayout from "../../layouts/main-layout";
 import Head from "next/head";
 import {
-  Avatar,
   Box,
-  ButtonProps,
   Card,
   CardContent,
   Divider,
-  Grid,
-  Skeleton,
   Stack,
-  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";

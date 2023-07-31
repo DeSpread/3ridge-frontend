@@ -20,7 +20,11 @@ import DateEditDialog from "../../../components/dialogs/date-range-edit-dialog";
 import DateUtil from "../../../util/date-util";
 import EventDescription from "../../../components/pages/event/event-description";
 import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
-import { ContentMetadata, QuestPolicy } from "../../../__generated__/graphql";
+import {
+  ChainType,
+  ContentMetadata,
+  QuestPolicy,
+} from "../../../__generated__/graphql";
 import EventQuests from "../../../components/pages/event/event-quests";
 import AddIcon from "@mui/icons-material/Add";
 import QuestUpsertEditDialog from "../../../components/dialogs/quest-upsert-edit-dialog";
@@ -33,6 +37,11 @@ import TicketRewardPolicyEditDialog from "../../../components/dialogs/ticket-rew
 import TypeHelper from "../../../helper/type-helper";
 import NumberEditDialog from "../../../components/dialogs/number-edit-dialog";
 import EventRewardPoint from "../../../components/pages/event/reward/description/event-reward-point";
+import EventRewardLimitNumber from "../../../components/pages/event/reward/description/event-reward-limit-number";
+import EventRewardChainContent from "../../../components/pages/event/reward/description/event-reward-chain-content";
+import EventRewardName from "../../../components/pages/event/reward/description/event-reward-name";
+import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-reward-chain-content-edit-dialog";
+import { useAlert } from "../../../provider/alert/alert-provider";
 
 const _EventRewardPolicy = WithEditorContainer(EventRewardPolicy);
 const _EventDateRange = WithEditorContainer(EventDateRange);
@@ -43,13 +52,17 @@ const _EventDescription = WithEditorContainer(EventDescription);
 const _EventQuests = WithEditorContainer(EventQuests);
 const _EventRewardImage = WithEditorContainer(EventRewardImage);
 const _EventRewardPoint = WithEditorContainer(EventRewardPoint);
+const _EventRewardLimitNumber = WithEditorContainer(EventRewardLimitNumber);
+const _EventRewardChainContent = WithEditorContainer(EventRewardChainContent);
+const _EventRewardName = WithEditorContainer(EventRewardName);
 
 enum EVENT_COMPONENT_TARGET {
   "TITLE",
   "DATE_RANGE_TIME",
   "DESCRIPTION",
   "POINT",
-  "TARGET_NUMBER",
+  "LIMIT_NUMBER",
+  "REWARD_NAME",
 }
 
 const Event = () => {
@@ -73,8 +86,11 @@ const Event = () => {
     setOpenTicketRewardPolicyEditDialog,
   ] = useState(false);
   const [openNumberEditDialog, setOpenNumberEditDialog] = useState(false);
+  const [
+    openTicketRewardChainContentEditDialog,
+    setOpenTicketRewardChainContentEditDialog,
+  ] = useState(false);
 
-  const [textEditDefaultText, setTextEditDefaultText] = useState<string>();
   const [eventComponentTarget, setEventComponentTarget] =
     useState<EVENT_COMPONENT_TARGET>();
   const [editedQuest, setEditedQuest] = useState<Quest>();
@@ -111,16 +127,29 @@ const Event = () => {
         return "이벤트 설명 편집";
       case EVENT_COMPONENT_TARGET.POINT:
         return "이벤트 포인트 편집";
-      case EVENT_COMPONENT_TARGET.TARGET_NUMBER:
+      case EVENT_COMPONENT_TARGET.LIMIT_NUMBER:
         return "이벤트 대상자 수 편집";
+      case EVENT_COMPONENT_TARGET.REWARD_NAME:
+        return "이벤트 리워드 이름 편집";
+    }
+  }, [eventComponentTarget]);
+
+  const dialogDefaultText = useMemo(() => {
+    switch (eventComponentTarget) {
+      case EVENT_COMPONENT_TARGET.TITLE:
+        return ticketData?.title;
+      case EVENT_COMPONENT_TARGET.REWARD_NAME:
+        return ticketData?.rewardPolicy?.context?.rewardName;
     }
   }, [eventComponentTarget]);
 
   const numberEditDialogDefaultNumber = useMemo(() => {
-    if (EVENT_COMPONENT_TARGET.POINT)
+    if (eventComponentTarget === EVENT_COMPONENT_TARGET.POINT)
       return ticketData?.rewardPolicy?.rewardPoint ?? 0;
+    else if (eventComponentTarget === EVENT_COMPONENT_TARGET.LIMIT_NUMBER)
+      return ticketData?.rewardPolicy?.context?.limitNumber;
     return 0;
-  }, [ticketData?.rewardPolicy]);
+  }, [eventComponentTarget]);
 
   const dialogContent = useMemo(() => {
     switch (eventComponentTarget) {
@@ -137,19 +166,14 @@ const Event = () => {
     await asyncRefreshTicketData();
   };
 
-  const showTextEditDialog = (
-    target: EVENT_COMPONENT_TARGET,
-    defaultText?: string
-  ) => {
+  const showTextEditDialog = (target: EVENT_COMPONENT_TARGET) => {
     setOpenTextEditDialog(true);
     setEventComponentTarget(target);
-    setTextEditDefaultText(defaultText);
   };
 
   const showDateEditDialog = (target: EVENT_COMPONENT_TARGET) => {
     setOpenDateEditDialog(true);
     setEventComponentTarget(target);
-    setTextEditDefaultText("");
   };
 
   const showOpenContentMetaDataEditDialog = (
@@ -167,6 +191,10 @@ const Event = () => {
   const showOpenNumberEditDialog = (target: EVENT_COMPONENT_TARGET) => {
     setOpenNumberEditDialog(true);
     setEventComponentTarget(target);
+  };
+
+  const showOpenTicketRewardChainContentEditDialog = () => {
+    setOpenTicketRewardChainContentEditDialog(true);
   };
 
   const closeQuestUpsertDialog = () => {
@@ -192,6 +220,10 @@ const Event = () => {
   const closeOpenNumberEditDialog = () => {
     setOpenNumberEditDialog(false);
     setEventComponentTarget(undefined);
+  };
+
+  const closeOpenTicketRewardChainContentEditDialog = () => {
+    setOpenTicketRewardChainContentEditDialog(false);
   };
 
   const asyncUpdateRewardImageUrlByFile = async (file: File) => {
@@ -279,10 +311,7 @@ const Event = () => {
                   <_EventTitle
                     title={ticketData?.title}
                     onClickForEdit={async (e) => {
-                      showTextEditDialog(
-                        EVENT_COMPONENT_TARGET.TITLE,
-                        ticketData?.title
-                      );
+                      showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
                     }}
                   ></_EventTitle>
                   <_EventDateRange
@@ -390,15 +419,56 @@ const Event = () => {
                     ></_EventRewardPoint>
                   );
                 }}
+                eventRewardLimitNumberCompFunc={(ticketData) => {
+                  return (
+                    <_EventRewardLimitNumber
+                      ticketData={ticketData}
+                      onClickForEdit={(e) => {
+                        showOpenNumberEditDialog(
+                          EVENT_COMPONENT_TARGET.LIMIT_NUMBER
+                        );
+                      }}
+                    ></_EventRewardLimitNumber>
+                  );
+                }}
+                eventRewardNameCompFunc={(ticketData) => {
+                  return (
+                    <_EventRewardName
+                      onClickForEdit={async (e) => {
+                        showTextEditDialog(EVENT_COMPONENT_TARGET.REWARD_NAME);
+                      }}
+                      ticketData={ticketData}
+                    ></_EventRewardName>
+                  );
+                }}
+                eventRewardChainContentCompFunc={(ticketData) => {
+                  return (
+                    <_EventRewardChainContent
+                      ticketData={ticketData}
+                      onClickForEdit={async (e) => {
+                        showOpenTicketRewardChainContentEditDialog();
+                      }}
+                    ></_EventRewardChainContent>
+                  );
+                }}
               ></EventRewardDescription>
+              {/*<div*/}
+              {/*  dangerouslySetInnerHTML={{*/}
+              {/*    __html:*/}
+              {/*      '<div style="display: flex; flex-direction: row; align-items: center; justify-content: center">\n<img style="width: 1.35rem; background: white; border-radius: 1.35rem; border-width: 1px; border-color: white; border-style: solid; margin-right: 0.25rem"\n      src="https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/stacks-icon.svg"/>\n<body2>등록된 Stacks 지갑을 통해 지급 예정</body2>\n</div>',*/}
+              {/*  }}*/}
+              {/*></div>*/}
             </Stack>
           </Stack>
         </Grid>
       </Grid>
+
+      {/* --- Dialogs ---- */}
+
       <TextEditDialog
         open={openTextEditDialog}
         title={dialogTitle}
-        defaultText={textEditDefaultText}
+        defaultText={dialogDefaultText}
         onCloseBtnClicked={(e) => {
           closeTextEditDialog();
         }}
@@ -407,6 +477,13 @@ const Event = () => {
           switch (eventComponentTarget) {
             case EVENT_COMPONENT_TARGET.TITLE:
               await asyncUpdateTitle(text);
+              break;
+            case EVENT_COMPONENT_TARGET.REWARD_NAME:
+              const rewardPolicy = { ...ticketData?.rewardPolicy };
+              if (rewardPolicy.context) rewardPolicy.context.rewardName = text;
+              const newRewardPolicy =
+                TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+              await asyncUpdateTicketRewardPolicy(newRewardPolicy);
               break;
           }
           await asyncRefreshAll();
@@ -502,7 +579,14 @@ const Event = () => {
         onConfirmBtnClicked={async (val) => {
           showLoading();
           const rewardPolicy = { ...ticketData?.rewardPolicy };
-          rewardPolicy.rewardPoint = val;
+          if (eventComponentTarget === EVENT_COMPONENT_TARGET.POINT) {
+            rewardPolicy.rewardPoint = val;
+          } else if (
+            eventComponentTarget === EVENT_COMPONENT_TARGET.LIMIT_NUMBER &&
+            rewardPolicy.context
+          ) {
+            rewardPolicy.context.limitNumber = val ?? 0;
+          }
           const newRewardPolicy =
             TypeHelper.convertToServerRewardPolicy(rewardPolicy);
           await asyncUpdateTicketRewardPolicy(newRewardPolicy);
@@ -511,6 +595,37 @@ const Event = () => {
           closeLoading();
         }}
       ></NumberEditDialog>
+      <TicketRewardChainContentEditDialog
+        open={openTicketRewardChainContentEditDialog}
+        title={"이벤트 리워드 체인 편집"}
+        defaultTicketData={ticketData}
+        onCloseBtnClicked={(e) => {
+          closeOpenTicketRewardChainContentEditDialog();
+        }}
+        onConfirmBtnClicked={async (res) => {
+          showLoading();
+          const {
+            rewardChain,
+            rewardClaimable,
+            rewardUnit,
+            overrideRewardChainContent,
+          } = res;
+          const rewardPolicy = { ...ticketData?.rewardPolicy };
+          if (rewardPolicy.context) {
+            rewardPolicy.context.rewardChain = rewardChain ?? "";
+            rewardPolicy.context.rewardClaimable = rewardClaimable;
+            rewardPolicy.context.rewardUnit = rewardUnit ?? "";
+            rewardPolicy.context.overrideRewardChainContent =
+              overrideRewardChainContent;
+          }
+          const newRewardPolicy =
+            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+          await asyncRefreshAll();
+          closeOpenTicketRewardChainContentEditDialog();
+          closeLoading();
+        }}
+      ></TicketRewardChainContentEditDialog>
     </>
   );
 };
