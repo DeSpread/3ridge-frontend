@@ -900,7 +900,7 @@ const Event = (props: AppProps) => {
                           sx={{ color: theme.palette.warning.main }}
                           textAlign={"center"}
                         >
-                          {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardChain}을 지원하는 지갑 연결이 필요해요`}{" "}
+                          {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardChain} 체인을 지원하는 지갑 연결이 필요해요`}{" "}
                         </Typography>
                       </Stack>
                       <Stack direction={"column"}>
