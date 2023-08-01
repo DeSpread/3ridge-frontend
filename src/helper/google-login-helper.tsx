@@ -1,15 +1,7 @@
 import { TokenResponse } from "@react-oauth/google";
 
 class GoogleLoginHelper {
-  private static instance: GoogleLoginHelper;
-
-  private constructor() {}
-
-  public static getInstance() {
-    return this.instance || (this.instance = new this());
-  }
-
-  asyncIsLoggedInGoogle = async () => {
+  public static asyncIsLoggedInGoogle = async () => {
     const tokenResponse = this.fetchTokenResponse();
     if (!tokenResponse) return false;
     const { access_token } = tokenResponse;
@@ -28,7 +20,7 @@ class GoogleLoginHelper {
     return response.ok;
   };
 
-  asyncFetchUserInfo = async () => {
+  public static asyncFetchUserInfo = async () => {
     const tokenResponse = this.fetchTokenResponse();
     if (!tokenResponse) return false;
     const { access_token } = tokenResponse;
@@ -48,18 +40,18 @@ class GoogleLoginHelper {
     return null;
   };
 
-  googleLogout = () => {
+  public static googleLogout = () => {
     localStorage.removeItem("serializedGoogleTokenResponse");
   };
 
-  fetchTokenResponse = () => {
+  public static fetchTokenResponse = () => {
     const serialized = localStorage.getItem("serializedGoogleTokenResponse");
     if (!serialized) return false;
     const tokenResponse = JSON.parse(serialized) as TokenResponse;
     return tokenResponse;
   };
 
-  storeTokenResponse = (tokenResponse: TokenResponse) => {
+  public static storeTokenResponse = (tokenResponse: TokenResponse) => {
     localStorage.setItem(
       "serializedGoogleTokenResponse",
       JSON.stringify(tokenResponse)

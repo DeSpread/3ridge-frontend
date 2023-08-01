@@ -23,23 +23,18 @@ import {
 import { useMutation } from "@apollo/client";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userDataState } from "../lib/recoil";
-import {
-  convertToChainType,
-  convertToSuppoertedNetwork,
-} from "../helper/type-helper";
+import TypeHelper from "../helper/type-helper";
 import {
   SUPPORTED_NETWORKS,
   SupportedNetwork,
   TelegramUserInfo,
-  WALLET_NAMES,
   WalletName,
 } from "../type";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 import { ChainType } from "../__generated__/graphql";
-import { promiseTelegramLoginAuth } from "../helper/telegram-helper";
+import TelegramUtil from "../util/telegram-util";
 import { delay } from "../util/timer";
 import PreferenceHelper from "../helper/preference-helper";
-import addMinutes from "date-fns/addMinutes";
 import { useAlert } from "../provider/alert/alert-provider";
 import { useProfileEditDialog } from "./profile-edit-dialog-hook";
 
@@ -67,7 +62,6 @@ const useSignedUserQuery = () => {
 
   const tryConnectWalletNetwork = useRef<string>("");
 
-  const preference = PreferenceHelper.getInstance();
   const { showAlert, showErrorAlert } = useAlert();
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
@@ -180,7 +174,7 @@ const useSignedUserQuery = () => {
   useEffect(() => {
     try {
       if (tryConnectWalletNetwork.current) {
-        const network = convertToSuppoertedNetwork(
+        const network = TypeHelper.convertToSuppoertedNetwork(
           tryConnectWalletNetwork.current
         );
         const accountAddress = getAccountAddress(network);
@@ -197,19 +191,19 @@ const useSignedUserQuery = () => {
 
   useEffect(() => {
     try {
-      const { network, timestamp } = preference.getTryConnectWallet();
+      const { network, timestamp } = PreferenceHelper.getTryConnectWallet();
       if (network && timestamp) {
         const accountAddress = getAccountAddress(network);
         if (accountAddress) {
           _asyncUpsertWalletAddress(network, accountAddress).then((res) => {});
         }
         setShowProfileEditDialog(true);
-        preference.clearTryConnectWallet();
+        PreferenceHelper.clearTryConnectWallet();
       }
     } catch (e) {
       showErrorAlert({ content: getLocaleErrorMessage(e) });
       setShowProfileEditDialog(true);
-      preference.clearTryConnectWallet();
+      PreferenceHelper.clearTryConnectWallet();
     }
   }, []);
 
@@ -261,7 +255,7 @@ const useSignedUserQuery = () => {
         walletAddressInfos: wallets?.map((e) => {
           return {
             address: e.address,
-            network: convertToSuppoertedNetwork(e.chain),
+            network: TypeHelper.convertToSuppoertedNetwork(e.chain),
           };
         }),
         rewardPoint: rewardPoint ?? undefined,
@@ -295,7 +289,7 @@ const useSignedUserQuery = () => {
     if (!accountAddress) {
       await asyncConnectWallet(network, walletName);
       if (network === SUPPORTED_NETWORKS.SUI) {
-        preference.updateTryConnectWallet(network);
+        PreferenceHelper.updateTryConnectWallet(network);
       } else {
         tryConnectWalletNetwork.current = network;
       }
@@ -323,7 +317,7 @@ const useSignedUserQuery = () => {
           query: IS_REGISTER_WALLET,
           variables: {
             address: walletAddress,
-            chain: convertToChainType(network),
+            chain: TypeHelper.convertToChainType(network),
           },
           fetchPolicy: "no-cache",
         });
@@ -372,12 +366,12 @@ const useSignedUserQuery = () => {
           wallets: newWalletAddressInfos?.map((e) => {
             if (e.network === network) {
               return {
-                chain: convertToChainType(e.network),
+                chain: TypeHelper.convertToChainType(e.network),
                 address: walletAddress,
               };
             }
             return {
-              chain: convertToChainType(e.network),
+              chain: TypeHelper.convertToChainType(e.network),
               address: e.address,
             };
           }),
@@ -532,7 +526,7 @@ const useSignedUserQuery = () => {
   const asyncUpdateSocialTelegram = async () => {
     try {
       if (!userData.name) return;
-      const data = await promiseTelegramLoginAuth();
+      const data = await TelegramUtil.asyncLogin();
       const newTelegramUserInfo: TelegramUserInfo = {
         authDate: data["auth_date"],
         firstName: data["first_name"],

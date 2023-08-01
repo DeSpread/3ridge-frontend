@@ -16,8 +16,7 @@ export function useMyGoogleLogin() {
   useEffect(() => {
     (async () => {
       if (isGoogleLoggedIn) return;
-      const _isGoogleLoggedIn =
-        await GoogleLoginHelper.getInstance().asyncIsLoggedInGoogle();
+      const _isGoogleLoggedIn = await GoogleLoginHelper.asyncIsLoggedInGoogle();
       if (_isGoogleLoggedIn && !googleUserInfo.gmail) {
         await asyncUpdateGoogleUserInfo();
       }
@@ -30,7 +29,7 @@ export function useMyGoogleLogin() {
 
   const googleLogout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     try {
-      GoogleLoginHelper.getInstance().googleLogout();
+      GoogleLoginHelper.googleLogout();
       setGoogleUserInfo({});
       onSuccess?.();
     } catch (e) {
@@ -39,8 +38,7 @@ export function useMyGoogleLogin() {
   };
 
   const asyncUpdateGoogleUserInfo = async () => {
-    const _userInfo =
-      await GoogleLoginHelper.getInstance().asyncFetchUserInfo();
+    const _userInfo = await GoogleLoginHelper.asyncFetchUserInfo();
     if (!_userInfo) {
       return { email: null, picture: null };
     }
@@ -55,9 +53,9 @@ export function useMyGoogleLogin() {
     onSuccess: (tokenResponse) => {
       (async () => {
         try {
-          GoogleLoginHelper.getInstance().googleLogout();
+          GoogleLoginHelper.googleLogout();
           setGoogleUserInfo({});
-          GoogleLoginHelper.getInstance().storeTokenResponse(tokenResponse);
+          GoogleLoginHelper.storeTokenResponse(tokenResponse);
           const { email, picture } = await asyncUpdateGoogleUserInfo();
           onGoogleLoginOnSuccessCallback.current?.({ email, picture });
           onGoogleLoginOnSuccessCallback.current = undefined;

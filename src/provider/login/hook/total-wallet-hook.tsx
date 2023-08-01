@@ -21,13 +21,12 @@ import {
   getErrorMessage,
 } from "../../../error/my-error";
 import { useStacksWallet } from "../../../lib/stacks/stacks-wallet-hook";
-import { convertToSuppoertedNetwork } from "../../../helper/type-helper";
+import TypeHelper from "../../../helper/type-helper";
 import { useWeb3Modal } from "@web3modal/react";
 
 export function useTotalWallet() {
   const [connectedNetwork, setConnectedNetwork] = useState("");
   const [changedCounter, setChangedCounter] = useState(0);
-  const preference = PreferenceHelper.getInstance();
 
   const {
     address: evmAddress,
@@ -73,7 +72,7 @@ export function useTotalWallet() {
   } = useStacksWallet();
 
   useEffect(() => {
-    const { timestamp, network } = preference.getConnectedNetwork();
+    const { timestamp, network } = PreferenceHelper.getConnectedNetwork();
     if (!timestamp || !network) return;
     const curDate = new Date();
     const limitDate = addHours(timestamp, 4);
@@ -177,7 +176,7 @@ export function useTotalWallet() {
       return {
         network: connectedNetwork,
         address: getAccountAddress(
-          convertToSuppoertedNetwork(connectedNetwork)
+          TypeHelper.convertToSuppoertedNetwork(connectedNetwork)
         ),
       };
     }
@@ -215,23 +214,12 @@ export function useTotalWallet() {
   const commitConnectedNetwork = (network: SupportedNetwork | undefined) => {
     if (network) {
       setConnectedNetwork(network);
-      preference.updateConnectedNetwork(network);
+      PreferenceHelper.updateConnectedNetwork(network);
       return;
     }
     setConnectedNetwork("");
-    preference.clearConnectedNetwork();
+    PreferenceHelper.clearConnectedNetwork();
   };
-
-  // const networkConnected = (network: SupportedNetwork | undefined) => {
-  //   if (network === SUPPORTED_NETWORKS.EVM) {
-  //     return evmConnected;
-  //   } else if (network === SUPPORTED_NETWORKS.SUI) {
-  //     return suiConnected;
-  //   } else if (network === SUPPORTED_NETWORKS.APTOS) {
-  //     return aptosConnected;
-  //   }
-  //   return false;
-  // };
 
   return {
     asyncConnectWallet,
@@ -242,6 +230,5 @@ export function useTotalWallet() {
     changedCounter,
     commitConnectedNetwork,
     disconnectWalletByNetwork,
-    // networkConnected,
   };
 }

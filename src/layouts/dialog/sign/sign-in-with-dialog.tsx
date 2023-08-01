@@ -1,7 +1,7 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import PrimaryButton from "../../../components/atoms/primary-button";
+import PrimaryButton from "../../../components/atomic/atoms/primary-button";
 import React, { MouseEventHandler } from "react";
-import EmailIcon from "../../../components/atoms/svg/email-icon";
+import EmailIcon from "../../../components/atomic/atoms/svg/email-icon";
 import { useTheme } from "@mui/material/styles";
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 

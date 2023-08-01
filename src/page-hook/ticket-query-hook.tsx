@@ -1,14 +1,23 @@
 import {
   CLAIM_REWARD,
   COMPLETE_QUEST_OF_USER,
+  CREATE_QUEST,
+  CREATE_TICKET,
+  DELETE_QUEST,
+  DELETE_TICKET,
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
+  UPDATE_QUEST,
+  UPDATE_TICKET_DATE_RANGE_TIME,
+  UPDATE_TICKET_DESCRIPTION,
+  UPDATE_TICKET_IMAGE_URL,
+  UPDATE_TICKET_REWARD_POLICY,
+  UPDATE_TICKET_TITLE,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
-  UPDATE_TICKET_IMAGE_URL,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -16,7 +25,16 @@ import { Ticket } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
-import Console from "../helper/console-helper";
+import Console from "../util/console-util";
+import {
+  ContentEncodingType,
+  ContentFormatType,
+  ContentMetadata,
+  QuestPolicy,
+  RewardPolicy,
+  RewardPolicyType,
+} from "../__generated__/graphql";
+import add from "date-fns/add";
 
 export function useTicketQuery({
   userId,
@@ -34,7 +52,18 @@ export function useTicketQuery({
   const [verifyAptosQuest] = useMutation(VERIFY_APTOS_QUEST);
   const [claimReward] = useMutation(CLAIM_REWARD);
   const [updateTicketImageUrl] = useMutation(UPDATE_TICKET_IMAGE_URL);
-  const typeParseHelper = TypeParseHelper.getInstance();
+  const [updateTicketTitle] = useMutation(UPDATE_TICKET_TITLE);
+  const [updateTicketDateRangeTime] = useMutation(
+    UPDATE_TICKET_DATE_RANGE_TIME
+  );
+  const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
+  const [updateTicketRewardPolicy] = useMutation(UPDATE_TICKET_REWARD_POLICY);
+  const [createTicket] = useMutation(CREATE_TICKET);
+  const [deleteTicket] = useMutation(DELETE_TICKET);
+
+  const [createQuest] = useMutation(CREATE_QUEST);
+  const [deleteQuest] = useMutation(DELETE_QUEST);
+  const [updateQuest] = useMutation(UPDATE_QUEST);
 
   useEffect(() => {
     (async () => {
@@ -63,7 +92,7 @@ export function useTicketQuery({
         imageUrl,
         rewardClaimedUsers,
       } = data.ticketById;
-      const _rewardPolicy = typeParseHelper.parseRewardPolicy(
+      const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
         rewardPolicy?.context ?? undefined,
         rewardPolicy?.rewardPolicyType ?? undefined
       );
@@ -94,7 +123,7 @@ export function useTicketQuery({
               title_v2: e.title_v2 ?? undefined,
               description: e.description ?? undefined,
               questPolicy: {
-                context: TypeParseHelper.getInstance().parseQuestPolicy(
+                context: TypeParseHelper.parseQuestPolicy(
                   e.questPolicy?.context,
                   e.questPolicy?.questPolicy
                 ),
@@ -150,7 +179,7 @@ export function useTicketQuery({
       rewardClaimedUsers,
     } = data.ticketById;
     // console.log("rewardPolicy", rewardPolicy);
-    const _rewardPolicy = typeParseHelper.parseRewardPolicy(
+    const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
       rewardPolicy?.context ?? undefined,
       rewardPolicy?.rewardPolicyType ?? undefined
     );
@@ -179,7 +208,7 @@ export function useTicketQuery({
             title_v2: e.title_v2 ?? undefined,
             description: e.description ?? undefined,
             questPolicy: {
-              context: TypeParseHelper.getInstance().parseQuestPolicy(
+              context: TypeParseHelper.parseQuestPolicy(
                 e.questPolicy?.context,
                 e.questPolicy?.questPolicy
               ),
@@ -372,6 +401,136 @@ export function useTicketQuery({
     }
   };
 
+  const asyncUpdateTitle = async (title?: string) => {
+    if (id) {
+      await updateTicketTitle({
+        variables: {
+          ticketId: id,
+          title,
+        },
+      });
+    }
+  };
+
+  const asyncUpdateTicketDateRangeTime = async (
+    beginTime?: Date,
+    untilTime?: Date
+  ) => {
+    if (id) {
+      await updateTicketDateRangeTime({
+        variables: {
+          ticketId: id,
+          beginTime,
+          untilTime,
+        },
+      });
+    }
+  };
+
+  const asyncUpdateTicketDescription = async (
+    description?: ContentMetadata
+  ) => {
+    if (id) {
+      await updateTicketDescription({
+        variables: {
+          ticketId: id,
+          description_v2: description,
+        },
+      });
+    }
+  };
+
+  const asyncCreateQuest = async (
+    title?: ContentMetadata,
+    questPolicy?: QuestPolicy
+  ) => {
+    if (id) {
+      await createQuest({
+        variables: {
+          ticketId: id,
+          title_v2: title,
+          description: "",
+          questPolicy,
+        },
+      });
+    }
+  };
+
+  const asyncDeleteQuest = async (questId: string) => {
+    if (id) {
+      await deleteQuest({
+        variables: {
+          ticketId: id,
+          questId,
+        },
+      });
+    }
+  };
+
+  const asyncUpdateQuest = async (
+    questId: string,
+    questPolicy?: QuestPolicy,
+    title?: ContentMetadata
+  ) => {
+    await updateQuest({
+      variables: {
+        id: questId,
+        description: "",
+        questPolicy,
+        title_v2: title,
+      },
+    });
+  };
+
+  const asyncUpdateTicketRewardPolicy = async (rewardPolicy: RewardPolicy) => {
+    if (id) {
+      await updateTicketRewardPolicy({
+        variables: {
+          ticketId: id,
+          rewardPolicy,
+        },
+      });
+    }
+  };
+
+  const asyncCreateTicket = async () => {
+    await createTicket({
+      variables: {
+        beginTime: add(new Date(), { days: 1 }),
+        untilTime: add(new Date(), { days: 3 }),
+        title: "",
+        description_v2: {
+          content: "",
+          contentEncodingType: ContentEncodingType.Base64,
+          contentFormatType: ContentFormatType.Markdown,
+        },
+        imageUrl: "",
+        rewardPolicy: {
+          rewardPolicyType: RewardPolicyType.Fcfs,
+          rewardPoint: 30,
+          context: JSON.stringify({
+            limitNumber: 1000,
+            rewardUnit: "",
+            rewardAmount: 100,
+            rewardChain: "EVM",
+            rewardClaimable: false,
+            nftImageUrl: "",
+            rewardName: "",
+          }),
+        },
+      },
+    });
+  };
+
+  const asyncDeleteTicket = async (ticketId?: string) => {
+    if (!ticketId) return;
+    await deleteTicket({
+      variables: {
+        ticketId,
+      },
+    });
+  };
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -384,5 +543,14 @@ export function useTicketQuery({
     asyncRefreshTicketData,
     asyncRewardClaim,
     asyncUpdateImageUrl,
+    asyncUpdateTitle,
+    asyncUpdateTicketDateRangeTime,
+    asyncUpdateTicketDescription,
+    asyncCreateQuest,
+    asyncDeleteQuest,
+    asyncUpdateQuest,
+    asyncUpdateTicketRewardPolicy,
+    asyncCreateTicket,
+    asyncDeleteTicket,
   };
 }

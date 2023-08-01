@@ -1,10 +1,7 @@
-// import moment from "moment/moment";
-
 import { SupportedNetwork } from "../type";
-import { convertToSuppoertedNetwork } from "./type-helper";
+import TypeHelper from "./type-helper";
 
 class PreferenceHelper {
-  private static instance: PreferenceHelper;
   private static KEY_EMAIL_SIGN_IN_CACHE = "KEY_EMAIL_SIGN_IN_CACHE";
   private static KEY_WALLET_ADDRESS_SIGN_IN_CACHE =
     "KEY_WALLET_ADDRESS_SIGN_IN_CACHE";
@@ -12,13 +9,7 @@ class PreferenceHelper {
   private static KEY_RETRY_NETWORK_CACHE = "KEY_RETRY_NETWORK_CACHE";
   private static KEY_TRY_CONNECT_WALLET_CACHE = "KEY_TRY_CONNECT_WALLET_CACHE";
 
-  private constructor() {}
-
-  public static getInstance() {
-    return this.instance || (this.instance = new this());
-  }
-
-  private updateCacheByKey = (key: string, value: string) => {
+  private static updateCacheByKey = (key: string, value: string) => {
     localStorage.setItem(
       key,
       JSON.stringify({
@@ -28,7 +19,7 @@ class PreferenceHelper {
     );
   };
 
-  private getCacheByKey = (key: string) => {
+  private static getCacheByKey = (key: string) => {
     const cacheStr = localStorage.getItem(key);
     if (!cacheStr) return { value: undefined, timestamp: undefined };
     const cache = JSON.parse(cacheStr);
@@ -38,18 +29,18 @@ class PreferenceHelper {
     };
   };
 
-  updateEmailSignIn = (email: string) => {
+  public static updateEmailSignIn = (email: string) => {
     this.updateCacheByKey(PreferenceHelper.KEY_EMAIL_SIGN_IN_CACHE, email);
   };
 
-  updateConnectedNetwork = (network: string) => {
+  public static updateConnectedNetwork = (network: string) => {
     this.updateCacheByKey(
       PreferenceHelper.KEY_CONNECTED_NETWORK_CACHE,
       network
     );
   };
 
-  getConnectedNetwork = () => {
+  public static getConnectedNetwork = () => {
     const { value, timestamp } = this.getCacheByKey(
       PreferenceHelper.KEY_CONNECTED_NETWORK_CACHE
     );
@@ -59,11 +50,11 @@ class PreferenceHelper {
     return { network: value, timestamp };
   };
 
-  clearConnectedNetwork = () => {
+  public static clearConnectedNetwork = () => {
     localStorage.removeItem(PreferenceHelper.KEY_CONNECTED_NETWORK_CACHE);
   };
 
-  getEmailSignIn = () => {
+  public static getEmailSignIn = () => {
     const { value, timestamp } = this.getCacheByKey(
       PreferenceHelper.KEY_EMAIL_SIGN_IN_CACHE
     );
@@ -73,11 +64,11 @@ class PreferenceHelper {
     return { email: value, timestamp };
   };
 
-  clearEmailSignIn = () => {
+  public static clearEmailSignIn = () => {
     localStorage.removeItem(PreferenceHelper.KEY_EMAIL_SIGN_IN_CACHE);
   };
 
-  updateWalletSignIn = (
+  public static updateWalletSignIn = (
     walletAddress: string,
     walletNetwork: SupportedNetwork
   ) => {
@@ -87,7 +78,7 @@ class PreferenceHelper {
     );
   };
 
-  getWalletSignIn = () => {
+  public static getWalletSignIn = () => {
     const { value, timestamp } = this.getCacheByKey(
       PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE
     );
@@ -102,49 +93,49 @@ class PreferenceHelper {
     return { walletAddress, walletNetwork, timestamp };
   };
 
-  clearWalletSignIn = () => {
+  public static clearWalletSignIn = () => {
     localStorage.removeItem(PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE);
   };
 
-  updateRetryNetwork = (walletNetwork: SupportedNetwork) => {
+  public static updateRetryNetwork = (walletNetwork: SupportedNetwork) => {
     this.updateCacheByKey(
       PreferenceHelper.KEY_RETRY_NETWORK_CACHE,
       walletNetwork
     );
   };
 
-  getRetryNetwork = () => {
+  public static getRetryNetwork = () => {
     const { value, timestamp } = this.getCacheByKey(
       PreferenceHelper.KEY_RETRY_NETWORK_CACHE
     );
     if (!value || !timestamp) {
       return { network: undefined, timestamp: undefined };
     }
-    return { network: convertToSuppoertedNetwork(value), timestamp };
+    return { network: TypeHelper.convertToSuppoertedNetwork(value), timestamp };
   };
 
-  clearRetryNetwork = () => {
+  public static clearRetryNetwork = () => {
     localStorage.removeItem(PreferenceHelper.KEY_RETRY_NETWORK_CACHE);
   };
 
-  updateTryConnectWallet = (walletNetwork: SupportedNetwork) => {
+  public static updateTryConnectWallet = (walletNetwork: SupportedNetwork) => {
     this.updateCacheByKey(
       PreferenceHelper.KEY_TRY_CONNECT_WALLET_CACHE,
       walletNetwork
     );
   };
 
-  getTryConnectWallet = () => {
+  public static getTryConnectWallet = () => {
     const { value, timestamp } = this.getCacheByKey(
       PreferenceHelper.KEY_TRY_CONNECT_WALLET_CACHE
     );
     if (!value || !timestamp) {
       return { network: undefined, timestamp: undefined };
     }
-    return { network: convertToSuppoertedNetwork(value), timestamp };
+    return { network: TypeHelper.convertToSuppoertedNetwork(value), timestamp };
   };
 
-  clearTryConnectWallet = () => {
+  public static clearTryConnectWallet = () => {
     localStorage.removeItem(PreferenceHelper.KEY_TRY_CONNECT_WALLET_CACHE);
   };
 }

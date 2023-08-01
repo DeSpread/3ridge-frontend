@@ -3,9 +3,9 @@ import MainLayout from "../../layouts/main-layout";
 import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import HomeFooter from "../../layouts/footer/home-footer";
 import Head from "next/head";
-import LinkTypography from "../../components/atoms/link-typography";
-import SignUpSelectForm from "./components/sign-up-select-form";
-import SignUpOthersForm from "./components/sign-up-others-form";
+import LinkTypography from "../../components/atomic/atoms/link-typography";
+import SignUpSelectForm from "../../components/form/signup/sign-up-select-form";
+import SignUpOthersForm from "../../components/form/signup/sign-up-others-form";
 import { useRouter } from "next/router";
 import { useLogin } from "../../provider/login/login-provider";
 import {
@@ -15,7 +15,7 @@ import {
   getLocaleErrorMessage,
 } from "../../error/my-error";
 import { useAlert } from "../../provider/alert/alert-provider";
-import SignUpWithEmailForm from "./components/sign-up-with-email-form";
+import SignUpWithEmailForm from "../../components/form/signup/sign-up-with-email-form";
 import {
   EmailSignUpEventParams,
   MAIL_VERIFY,
@@ -23,20 +23,17 @@ import {
   ObjectValues,
   SupportedNetwork,
 } from "../../type";
-import VerifyYourEmailForm from "../../components/organisms/verify-your-email-form";
+import VerifyYourEmailForm from "../../components/form/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useSignDialog } from "../../page-hook/sign-dialog-hook";
 import AwsClient from "../../remote/aws-client";
 import SignInWithNetworkSelectDialog from "../../layouts/dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
-import {
-  convertToSuppoertedNetwork,
-  convertToWalletName,
-} from "../../helper/type-helper";
-import ResourceFactory from "../../helper/resource-factory";
+import TypeHelper from "../../helper/type-helper";
+import ResourceHelper from "../../helper/resource-helper";
 import { useTheme } from "@mui/material/styles";
 import { useMobile } from "../../provider/mobile/mobile-context";
-import { goToMetaMaskDeppLinkWhenMobile } from "../../helper/eth-helper";
+import EthUtil from "../../util/eth-util";
 
 const FORM_TYPE = {
   SELECT: "SELECT",
@@ -50,13 +47,7 @@ type FormType = ObjectValues<typeof FORM_TYPE>;
 const Signup = () => {
   const router = useRouter();
   const { showErrorAlert, showAlert } = useAlert();
-  const {
-    googleSignUp,
-    walletSignUp,
-    emailVerify,
-    emailSignIn,
-    // resendEmailVerify,
-  } = useLogin();
+  const { googleSignUp, walletSignUp, emailVerify, emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
   const { setShowSignInDialog } = useSignDialog();
   const [signupParams, setSignUpParams] = useState<EmailSignUpEventParams>({
@@ -67,7 +58,6 @@ const Signup = () => {
   const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
     useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState("");
-  const resourceFactory = ResourceFactory.getInstance();
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -298,14 +288,14 @@ const Signup = () => {
             setSelectedNetwork("");
           }}
           walletInfos={(() => {
-            return resourceFactory.getWalletInfos(
-              convertToSuppoertedNetwork(selectedNetwork)
+            return ResourceHelper.getWalletInfos(
+              TypeHelper.convertToSuppoertedNetwork(selectedNetwork)
             );
           })()}
           onWalletSelected={({ name, value }) => {
-            const walletName = convertToWalletName(value);
+            const walletName = TypeHelper.convertToWalletName(value);
 
-            if (goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
+            if (EthUtil.goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
               return;
             }
 
