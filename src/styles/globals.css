@@ -13,6 +13,7 @@ p {
   font-weight: 400;
   line-height: 1.5;
   margin: 0;
+  color: #F3F4F6
 }
 
 a {
@@ -35,6 +36,7 @@ h1 {
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 h2 {
@@ -44,6 +46,7 @@ h2 {
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 h3 {
@@ -53,6 +56,7 @@ h3 {
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 h4 {
@@ -62,6 +66,7 @@ h4 {
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 h5 {
@@ -71,6 +76,7 @@ h5 {
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 h6 {
@@ -80,6 +86,7 @@ h6 {
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 body1 {
@@ -89,6 +96,7 @@ body1 {
   line-height: 1.5;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 body2 {
@@ -98,6 +106,7 @@ body2 {
   line-height: 1.57;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 subtitle1 {
@@ -107,6 +116,7 @@ subtitle1 {
   line-height: 1.75;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 subtitle2 {
@@ -116,6 +126,7 @@ subtitle2 {
   line-height: 1.57;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 overline {
@@ -127,6 +138,7 @@ overline {
   text-transform: uppercase;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6;
 }
 
 caption {
@@ -136,6 +148,7 @@ caption {
   line-height: 1.66;
   word-break: keep-all;
   margin: 0;
+  color: #F3F4F6
 }
 
 * {
