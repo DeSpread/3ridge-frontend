@@ -352,6 +352,7 @@ const Event = () => {
                 await asyncRefreshAll();
                 closeLoading();
               }}
+              disableHoverEffect={true}
             >
               <IconButton
                 className={"MuiIconButton"}
@@ -369,7 +370,16 @@ const Event = () => {
                   showOpenQuestUpsertDialog(undefined);
                 }}
               >
-                <AddIcon fontSize={"large"}></AddIcon>
+                <AddIcon
+                  fontSize={"large"}
+                  sx={{
+                    borderRadius: 30,
+                    "&:hover": {
+                      borderColor: theme.palette.secondary.main,
+                      background: "#61E1FF55",
+                    },
+                  }}
+                ></AddIcon>
               </IconButton>
             </_EventQuests>
             <Box sx={{ padding: 1 }}></Box>

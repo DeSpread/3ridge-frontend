@@ -36,7 +36,7 @@ const VerifyVisitWebsiteEditForm = (props: {
 
   const [handle, setHandle] = useState<string>();
   const [message, setMessage] = useState<string>();
-  const [url, setUrl] = useState<string>("ANY");
+  const [url, setUrl] = useState<string>();
 
   useEffect(() => {
     if (editedQuest) {

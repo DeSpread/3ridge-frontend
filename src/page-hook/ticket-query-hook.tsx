@@ -1,21 +1,23 @@
 import {
   CLAIM_REWARD,
   COMPLETE_QUEST_OF_USER,
+  CREATE_QUEST,
+  CREATE_TICKET,
+  DELETE_QUEST,
+  DELETE_TICKET,
   GET_TICKET_BY_ID,
   IS_COMPLETED_QUEST_BY_USER_ID,
+  UPDATE_QUEST,
+  UPDATE_TICKET_DATE_RANGE_TIME,
+  UPDATE_TICKET_DESCRIPTION,
+  UPDATE_TICKET_IMAGE_URL,
+  UPDATE_TICKET_REWARD_POLICY,
+  UPDATE_TICKET_TITLE,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
-  UPDATE_TICKET_IMAGE_URL,
-  UPDATE_TICKET_TITLE,
-  UPDATE_TICKET_DATE_RANGE_TIME,
-  UPDATE_TICKET_DESCRIPTION,
-  CREATE_QUEST,
-  DELETE_QUEST,
-  UPDATE_QUEST,
-  UPDATE_TICKET_REWARD_POLICY,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -25,10 +27,14 @@ import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
 import Console from "../util/console-util";
 import {
+  ContentEncodingType,
+  ContentFormatType,
   ContentMetadata,
   QuestPolicy,
   RewardPolicy,
+  RewardPolicyType,
 } from "../__generated__/graphql";
+import add from "date-fns/add";
 
 export function useTicketQuery({
   userId,
@@ -52,6 +58,8 @@ export function useTicketQuery({
   );
   const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
   const [updateTicketRewardPolicy] = useMutation(UPDATE_TICKET_REWARD_POLICY);
+  const [createTicket] = useMutation(CREATE_TICKET);
+  const [deleteTicket] = useMutation(DELETE_TICKET);
 
   const [createQuest] = useMutation(CREATE_QUEST);
   const [deleteQuest] = useMutation(DELETE_QUEST);
@@ -485,6 +493,44 @@ export function useTicketQuery({
     }
   };
 
+  const asyncCreateTicket = async () => {
+    await createTicket({
+      variables: {
+        beginTime: add(new Date(), { days: 1 }),
+        untilTime: add(new Date(), { days: 3 }),
+        title: "",
+        description_v2: {
+          content: "",
+          contentEncodingType: ContentEncodingType.Base64,
+          contentFormatType: ContentFormatType.Markdown,
+        },
+        imageUrl: "",
+        rewardPolicy: {
+          rewardPolicyType: RewardPolicyType.Fcfs,
+          rewardPoint: 30,
+          context: JSON.stringify({
+            limitNumber: 1000,
+            rewardUnit: "",
+            rewardAmount: 100,
+            rewardChain: "EVM",
+            rewardClaimable: false,
+            nftImageUrl: "",
+            rewardName: "",
+          }),
+        },
+      },
+    });
+  };
+
+  const asyncDeleteTicket = async (ticketId?: string) => {
+    if (!ticketId) return;
+    await deleteTicket({
+      variables: {
+        ticketId,
+      },
+    });
+  };
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -504,5 +550,7 @@ export function useTicketQuery({
     asyncDeleteQuest,
     asyncUpdateQuest,
     asyncUpdateTicketRewardPolicy,
+    asyncCreateTicket,
+    asyncDeleteTicket,
   };
 }

@@ -10,11 +10,12 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
     props: T & {
       onClickForEdit?: React.MouseEventHandler<HTMLDivElement>;
       onClickForDelete?: React.MouseEventHandler<HTMLButtonElement>;
+      disableHoverEffect?: boolean;
     }
   ) => {
     const theme = useTheme();
     const OFFSET_SIZE = 2;
-    const ICON_SIZE = 8;
+    const ICON_SIZE = 32;
 
     return (
       <div style={{ position: "relative", background: "" }}>
@@ -37,8 +38,10 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
             transitionDelay: "0s",
             transitionTimingFunction: "ease-out",
             "&:hover": {
-              borderColor: theme.palette.secondary.main,
-              background: "#61E1FF55",
+              borderColor: props?.disableHoverEffect
+                ? "white"
+                : theme.palette.secondary.main,
+              background: props?.disableHoverEffect ? "" : "#61E1FF55",
             },
           }}
           onClick={props.onClickForEdit}
@@ -49,8 +52,8 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
           <Stack
             sx={{
               position: "absolute",
-              left: -ICON_SIZE * 2,
-              top: -ICON_SIZE * 2,
+              left: `calc(100% - ${ICON_SIZE / 2 + 8}px)`,
+              top: `${-(ICON_SIZE / 2 - 8)}px`,
               background: "",
               borderWidth: 2,
               borderStyle: "solid",

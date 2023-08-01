@@ -40,7 +40,7 @@ const QuestUpsertEditDialog = (
   const theme = useTheme();
 
   const [questPolicyType, setQuestPolicyType] = useState<QuestPolicyType>(
-    QuestPolicyType.VerifyVisitWebsite
+    QuestPolicyType.VerifyTwitterFollow
   );
   const [questPolicy, setQuestPolicy] = useState<QuestPolicy>();
   const [titleV2, setTitleV2] = useState<ContentMetadata>();
@@ -108,14 +108,14 @@ const QuestUpsertEditDialog = (
                   }}
                   sx={{ minWidth: 180, background: "" }}
                 >
+                  <MenuItem value={QuestPolicyType.VerifyTwitterFollow}>
+                    {getPolicyLabel(QuestPolicyType.VerifyTwitterFollow)}
+                  </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyTwitterLiking}>
                     {getPolicyLabel(QuestPolicyType.VerifyTwitterLiking)}
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyTwitterRetweet}>
                     {getPolicyLabel(QuestPolicyType.VerifyTwitterRetweet)}
-                  </MenuItem>
-                  <MenuItem value={QuestPolicyType.VerifyTwitterFollow}>
-                    {getPolicyLabel(QuestPolicyType.VerifyTwitterFollow)}
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyTelegram}>
                     {getPolicyLabel(QuestPolicyType.VerifyTelegram)}

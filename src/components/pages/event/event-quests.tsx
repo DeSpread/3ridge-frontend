@@ -55,6 +55,7 @@ const EventQuests = (
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   const ICON_SIZE = 32;
+  const OFFSET_SIZE = 2;
 
   const isExceededTicketParticipants = () => {
     if (
@@ -166,10 +167,10 @@ const EventQuests = (
                 <Box
                   sx={{
                     position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
+                    left: -OFFSET_SIZE,
+                    top: -OFFSET_SIZE,
+                    width: `calc(100% + ${OFFSET_SIZE * 2}px);`,
+                    height: `calc(100% + ${OFFSET_SIZE * 2}px);`,
                     borderWidth: 2,
                     borderStyle: "solid",
                     borderColor: "white",
@@ -193,8 +194,8 @@ const EventQuests = (
                   <Stack
                     sx={{
                       position: "absolute",
-                      left: `calc(100% + ${-ICON_SIZE / 2}px);`,
-                      top: -(ICON_SIZE / 2),
+                      left: `calc(100% - ${ICON_SIZE / 2 + 8}px)`,
+                      top: `${-(ICON_SIZE / 2 - 8)}px`,
                       background: "",
                       borderWidth: 2,
                       borderStyle: "solid",

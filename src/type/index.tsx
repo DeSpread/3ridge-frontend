@@ -149,22 +149,13 @@ export type MouseEventWithStateParam = MouseEventWithParam<{ state?: string }>;
 
 export type RewardContext = {
   limitNumber: number;
-  beginTime: string;
-  untilTime: string;
   rewardUnit: string;
   rewardAmount: number;
   rewardChain: string;
   rewardClaimable: boolean;
   overrideRewardChainContent?: ContentMetadata;
   nftImageUrl: string;
-  collectionName: string;
-  tokenName: string;
   rewardName?: string;
-  rewardInfo?: {
-    title: string;
-    contentFormatType: string;
-    content: string;
-  };
 };
 
 export type ParticipantInfo = {

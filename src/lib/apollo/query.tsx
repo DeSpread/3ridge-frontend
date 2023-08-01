@@ -755,3 +755,31 @@ export const UPDATE_QUEST = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const CREATE_TICKET = gql(/* GraphQL */ `
+  mutation CreateTicket(
+    $beginTime: DateTime
+    $untilTime: DateTime
+    $title: String
+    $description_v2: ContentMetadataInputType
+    $imageUrl: String
+    $rewardPolicy: RewardPolicyInputType
+  ) {
+    createTicket(
+      beginTime: $beginTime
+      description_v2: $description_v2
+      imageUrl: $imageUrl
+      rewardPolicy: $rewardPolicy
+      title: $title
+      untilTime: $untilTime
+    ) {
+      _id
+    }
+  }
+`);
+
+export const DELETE_TICKET = gql(/* GraphQL */ `
+  mutation DeleteTicket($ticketId: String!) {
+    removeTicketById(ticketId: $ticketId)
+  }
+`);
