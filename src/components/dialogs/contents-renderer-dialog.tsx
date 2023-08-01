@@ -51,7 +51,6 @@ const ContentsRendererDialog = (props: ContentsRendererDialogProps) => {
             <Typography textAlign={"left"} variant={"h5"}>
               {props.title}
             </Typography>
-            {/*<Button>abc</Button>*/}
             <IconButton
               sx={{
                 borderRadius: 32,

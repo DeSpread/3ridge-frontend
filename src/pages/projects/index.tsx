@@ -1,36 +1,50 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  Link,
-  Skeleton,
-  Stack,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import Head from "next/head";
 import React, { ReactElement } from "react";
 import MainLayout from "../../layouts/main-layout";
 import { useTheme } from "@mui/material/styles";
-import CheckIcon from "../../components/atoms/svg/check-icon";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useProjectsQuery } from "../../page-hook/projects-query-hook";
-import PrimaryButton from "../../components/atoms/primary-button";
 import HomeFooter from "../../layouts/footer/home-footer";
-import ProjectOverlayStyleCard from "../../components/molecules/project-overlay-style-card";
-import SkeletonOverlayCard from "../../components/molecules/skelton-overlay-card";
+import ProjectOverlayStyleCard from "../../components/atomic/molecules/project-overlay-style-card";
+import SkeletonOverlayCard from "../../components/atomic/molecules/skelton-overlay-card";
 
 const Projects = () => {
   const { projectsData, projectsDataLoading } = useProjectsQuery({});
   const theme = useTheme();
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const xsUp = useMediaQuery(theme.breakpoints.up("xs"));
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
+
+  const getLeftPadding = (index: number) => {
+    if (lgUp) {
+      return index % 6 === 0 ? "0px" : "5px";
+    } else if (mdUp) {
+      return index % 4 === 0 ? "0px" : "5px";
+    } else if (smUp) {
+      return index % 3 === 0 ? "0px" : "5px";
+    } else if (xsUp) {
+      return index % 2 === 0 ? "0px" : "5px";
+    }
+    return "5px";
+  };
+
+  const getRightPadding = (index: number) => {
+    if (lgUp) {
+      return index % 6 === 5 ? "0px" : "5px";
+    } else if (mdUp) {
+      return index % 4 === 3 ? "0px" : "5px";
+    } else if (smUp) {
+      return index % 3 === 2 ? "0px" : "5px";
+    } else if (xsUp) {
+      return index % 2 === 1 ? "0px" : "5px";
+    }
+    return "5px";
+  };
 
   return (
     <>
@@ -40,12 +54,12 @@ const Projects = () => {
       <Box
         style={{
           flex: 1,
-          background: "",
-          paddingLeft: 24,
-          paddingRight: 24,
-          paddingTop: smUp ? 0 : 16,
+          paddingLeft: "32px",
+          paddingRight: "32px",
+          paddingTop: smUp ? "32px" : "48px",
           minHeight: "100vh",
-          paddingBottom: 1,
+          paddingBottom: smUp ? "32px" : "48px",
+          backgroundColor: "",
         }}
       >
         <Stack
@@ -53,10 +67,7 @@ const Projects = () => {
           alignItems={"center"}
           justifyContent={"space-between"}
           sx={{
-            marginTop: "32px",
             marginBottom: 3,
-            paddingLeft: 1,
-            paddingRight: 1,
           }}
         >
           <Stack direction={"row"} spacing={1}>
@@ -80,7 +91,12 @@ const Projects = () => {
                     sm={4}
                     md={3}
                     lg={2}
-                    sx={{ padding: "10px" }}
+                    sx={{
+                      paddingLeft: getLeftPadding(index),
+                      paddingRight: getRightPadding(index),
+                      paddingTop: "5px",
+                      paddingBottom: "5px",
+                    }}
                   >
                     <ProjectOverlayStyleCard
                       project={e}

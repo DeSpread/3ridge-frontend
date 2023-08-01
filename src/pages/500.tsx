@@ -1,17 +1,7 @@
-import NextLink from "next/link";
 import Head from "next/head";
-import {
-  Box,
-  Button,
-  Container,
-  Typography,
-  useMediaQuery,
-  Stack,
-  Divider,
-} from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import PrimaryButton from "../components/atoms/primary-button";
-import LinkTypography from "../components/atoms/link-typography";
+import LinkTypography from "../components/atomic/atoms/link-typography";
 
 const ServerError = (props: { error: Error }) => {
   const theme = useTheme();

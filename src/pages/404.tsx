@@ -1,24 +1,13 @@
 import NextLink from "next/link";
 import Head from "next/head";
-import {
-  Box,
-  Button,
-  Container,
-  Typography,
-  useMediaQuery,
-  Stack,
-} from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import PrimaryButton from "../components/atoms/primary-button";
+import PrimaryButton from "../components/atomic/atoms/primary-button";
 
 const NotFound = () => {
   const theme = useTheme();
   const mobileDevice = useMediaQuery(theme.breakpoints.down("sm"));
-
-  // useEffect(() => {
-  //   gtm.push({ event: 'page_view' });
-  // }, []);
 
   return (
     <>
@@ -36,7 +25,6 @@ const NotFound = () => {
           justifyContent: "center",
         }}
       >
-        {/*<Box sx={{ height: "100vh" }}>*/}
         <Stack
           sx={{ flex: 1, marginTop: -16 }}
           alignItems={"center"}
@@ -72,7 +60,6 @@ const NotFound = () => {
             </NextLink>
           </Box>
         </Stack>
-        {/*</Box>*/}
       </Box>
     </>
   );

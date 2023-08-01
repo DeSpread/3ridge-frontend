@@ -12,19 +12,19 @@ import {
 } from "@mui/material";
 import MainLayout from "../../layouts/main-layout";
 import { useLeaderUsersQuery } from "../../page-hook/leader-users-query-hook";
-import XpChip from "../../components/atoms/styled/xp-chip";
+import XpChip from "../../components/atomic/atoms/styled/xp-chip";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
 import { User } from "../../type";
 import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import StringHelper from "../../helper/string-helper";
-import GradientTypography from "../../components/atoms/gradient-typography";
+import GradientTypography from "../../components/atomic/atoms/gradient-typography";
 import { useTheme } from "@mui/material/styles";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useLeaderUserRankQuery } from "../../page-hook/leader-user-rank-query-hook";
-import BlockIcon from "../../components/molecules/block-icon";
+import BlockIcon from "../../components/atomic/molecules/block-icon";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
+import Image from "next/image";
 
 const RankCard = ({
   user,
@@ -43,9 +43,8 @@ const RankCard = ({
 
   const convertedName = useMemo(() => {
     // if (name?.substring(0, 2).toLocaleLowerCase() === "0x") {
-    if (smUp)
-      return StringHelper.getInstance().getMidEllipsisString(name, 10, 8);
-    return StringHelper.getInstance().getMidEllipsisString(name);
+    if (smUp) return StringHelper.convertAddressToMidEllipsis(name, 10, 8);
+    return StringHelper.convertAddressToMidEllipsis(name);
     // }
     // return name;
   }, [name]);
@@ -129,36 +128,36 @@ const RankCard = ({
           </Box>
           <Box sx={{ marginLeft: smUp ? 1 : "1px" }}>
             {profileImageUrl && (
-              <LazyLoadImage
+              <Image
                 width={smUp ? 52 : 38}
                 height={smUp ? 52 : 38}
                 src={profileImageUrl ?? DEFAULT_PROFILE_IMAGE_DATA_SRC}
+                alt={""}
                 style={{
                   borderRadius: smUp ? 52 : 38,
                   objectFit: "cover",
                 }}
-                effect="blur"
-                beforeLoad={() => {
-                  return (
-                    <Skeleton
-                      width={smUp ? 52 : 38}
-                      height={smUp ? 52 : 38}
-                      animation={"wave"}
-                      variant={"rounded"}
-                    ></Skeleton>
-                  );
-                }}
-              ></LazyLoadImage>
+              ></Image>
             )}
             {!profileImageUrl && _id && (
               <BlockIcon seed={_id} scale={smUp ? 6 : 5}></BlockIcon>
+            )}
+            {!_id && (
+              <Skeleton
+                width={smUp ? 52 : 38}
+                height={smUp ? 52 : 38}
+                animation={"wave"}
+                variant={"rounded"}
+                style={{
+                  borderRadius: smUp ? 52 : 38,
+                }}
+              ></Skeleton>
             )}
           </Box>
           <Stack
             direction={"column"}
             sx={{ marginLeft: smUp ? 3 : 2, maxWidth: smUp ? "100%" : "50%" }}
           >
-            {/*<Box sx={{ paddingRight: 2 }}>*/}
             <GradientTypography
               variant={smUp ? "body2" : "caption"}
               sx={{
@@ -167,7 +166,6 @@ const RankCard = ({
             >
               {convertedName}
             </GradientTypography>
-            {/*</Box>*/}
           </Stack>
         </Stack>
         <Box sx={{ marginRight: smUp ? 2 : 0, marginLeft: smUp ? 0 : 1 }}>
@@ -210,70 +208,72 @@ const Leaderboard = () => {
       <Head>
         <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
-      <Grid
-        container
-        direction={"row"}
-        justifyContent={"center"}
-        spacing={5}
-        sx={{ marginTop: 0, marginBottom: 12, background: "" }}
+      <Box
+        sx={{
+          flex: 1,
+          paddingLeft: "32px",
+          paddingRight: "32px",
+          paddingTop: smUp ? "32px" : "48px",
+          minHeight: "100vh",
+          paddingBottom: smUp ? "32px" : "48px",
+          backgroundColor: "",
+        }}
       >
-        <Grid item sx={{ background: "" }}>
-          <Box sx={{ minWidth: smUp ? 800 : 200, background: "" }}>
-            <Stack direction={"column"}>
-              <Typography variant={"h4"}>유저 랭킹</Typography>
-              {userData._id && (
-                <Box sx={{ marginTop: 5 }}>
-                  <Stack direction={"column"} spacing={2}>
-                    <Box>
-                      <Typography variant={"h6"}>내 랭킹</Typography>
-                    </Box>
-                    {(userRankLoading || !userRank) && (
-                      <Box>
-                        <Skeleton
-                          width={800}
-                          height={86}
-                          animation={"wave"}
-                          variant={"rounded"}
-                        ></Skeleton>
-                      </Box>
-                    )}
-                    {!userRankLoading && userRank && (
-                      <RankCard
-                        onClick={async () => {
-                          await routeToUserProfile(userData);
-                        }}
-                        user={userData}
-                        rank={userRank}
-                      ></RankCard>
-                    )}
-                  </Stack>
-                </Box>
-              )}
+        <Stack sx={{ width: "100%", background: "" }} alignItems={"center"}>
+          <Box sx={{ minWidth: mdUp ? 800 : "100%", background: "" }}>
+            <Typography variant={"h4"}>유저 랭킹</Typography>
+            {userData._id && (
               <Box sx={{ marginTop: 5 }}>
                 <Stack direction={"column"} spacing={2}>
                   <Box>
-                    <Typography variant={"h6"}>
-                      최근 30일 동안의 유저 활동 기준
-                    </Typography>
+                    <Typography variant={"h6"}>내 랭킹</Typography>
                   </Box>
-                  {leaderUsersData?.map((e, index) => {
-                    return (
-                      <RankCard
-                        // onClick={async (event) => {
-                        //   await routeToUserProfile(e);
-                        // }}
-                        user={e}
-                        rank={index + 1}
-                        key={index}
-                      />
-                    );
-                  })}
+                  {(userRankLoading || !userRank) && (
+                    <Box>
+                      <Skeleton
+                        width={800}
+                        height={86}
+                        animation={"wave"}
+                        variant={"rounded"}
+                      ></Skeleton>
+                    </Box>
+                  )}
+                  {!userRankLoading && userRank && (
+                    <RankCard
+                      onClick={async () => {
+                        await routeToUserProfile(userData);
+                      }}
+                      user={userData}
+                      rank={userRank}
+                    ></RankCard>
+                  )}
                 </Stack>
               </Box>
-            </Stack>
+            )}
+            <Box sx={{ marginTop: 5 }}>
+              <Stack direction={"column"} spacing={2}>
+                <Box>
+                  <Typography variant={"h6"}>
+                    최근 30일 동안의 유저 활동 기준
+                  </Typography>
+                </Box>
+                {leaderUsersData?.map((e, index) => {
+                  return (
+                    <RankCard
+                      // onClick={async (event) => {
+                      //   await routeToUserProfile(e);
+                      // }}
+                      user={e}
+                      rank={index + 1}
+                      key={index}
+                    />
+                  );
+                })}
+              </Stack>
+            </Box>
           </Box>
-        </Grid>
-      </Grid>
+        </Stack>
+      </Box>
     </>
   );
 };

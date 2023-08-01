@@ -1,7 +1,12 @@
 import { AppError } from "../error/my-error";
 import React from "react";
 import { SvgIconProps } from "@mui/material";
-import { CategoryType, ContentMetadata } from "../__generated__/graphql";
+import {
+  CategoryType,
+  ContentMetadata,
+  QuestPolicyType,
+  RewardPolicyType,
+} from "../__generated__/graphql";
 
 /*
  * Per QUEST_POLICY_TYPE, It is required to implement context parsing
@@ -41,17 +46,12 @@ export interface MouseEventWithParam<T> extends React.MouseEvent<HTMLElement> {
 }
 
 export const SUPPORTED_NETWORKS = {
-  EVM: "evm",
-  APTOS: "aptos",
-  STACKS: "stacks",
-  SUI: "sui",
-  UNKNOWN: "unknown",
+  EVM: "EVM",
+  APTOS: "APTOS",
+  STACKS: "STACKS",
+  SUI: "SUI",
+  UNKNOWN: "UNKNOWN",
 } as const;
-
-export const ALLOWED_NETWORKS = [
-  SUPPORTED_NETWORKS.EVM,
-  SUPPORTED_NETWORKS.STACKS,
-];
 
 export const SUPPORTED_NETWORKS_VALUES = Object.values(SUPPORTED_NETWORKS)
   .filter((_, index) => index !== Object.values(SUPPORTED_NETWORKS).length - 1)
@@ -92,21 +92,6 @@ export const REWARD_POLICY_TYPE = {
   FCFS: "FCFS",
   LUCKY_DRAW: "LUCKY_DRAW",
   ALL: "ALL",
-};
-
-export const QUEST_POLICY_TYPE = {
-  QUIZ: "QUIZ",
-  VERIFY_TWITTER_RETWEET: "VERIFY_TWITTER_RETWEET",
-  VERIFY_TWITTER_FOLLOW: "VERIFY_TWITTER_FOLLOW",
-  VERIFY_TWITTER_LIKING: "VERIFY_TWITTER_LIKING",
-  VERIFY_DISCORD: "VERIFY_DISCORD",
-  VERIFY_TELEGRAM: "VERIFY_TELEGRAM",
-  VERIFY_3RIDGE_POINT: "VERIFY_3RIDGE_POINT",
-  VERIFY_APTOS_BRIDGE_TO_APTOS: "VERIFY_APTOS_BRIDGE_TO_APTOS",
-  VERIFY_APTOS_HAS_NFT: "VERIFY_APTOS_HAS_NFT",
-  VERIFY_APTOS_EXIST_TX: "VERIFY_APTOS_EXIST_TX",
-  VERIFY_APTOS_HAS_ANS: "VERIFY_APTOS_HAS_ANS",
-  VERIFY_VISIT_WEBSITE: "VERIFY_VISIT_WEBSITE",
 };
 
 export type WalletAddressInfo = {
@@ -164,23 +149,13 @@ export type MouseEventWithStateParam = MouseEventWithParam<{ state?: string }>;
 
 export type RewardContext = {
   limitNumber: number;
-  beginTime: string;
-  untilTime: string;
   rewardUnit: string;
   rewardAmount: number;
   rewardChain: string;
-  rewardNetwork: string;
   rewardClaimable: boolean;
   overrideRewardChainContent?: ContentMetadata;
   nftImageUrl: string;
-  collectionName: string;
-  tokenName: string;
   rewardName?: string;
-  rewardInfo?: {
-    title: string;
-    contentFormatType: string;
-    content: string;
-  };
 };
 
 export type ParticipantInfo = {
@@ -204,7 +179,7 @@ export type Ticket = {
   rewardPolicy?: {
     context?: RewardContext;
     rewardPoint?: number;
-    rewardPolicyType?: string;
+    rewardPolicyType?: RewardPolicyType;
   };
   winners?: {
     _id?: string;
@@ -228,69 +203,69 @@ export type Quest = {
   questPolicy?: {
     context?:
       | QuizQuestContext
-      | TwitterLikingQuestContext
-      | TwitterRetweetQuestContext
-      | TwitterFollowQuestContext
-      | DiscordQuestContext
-      | TelegramQuestContext
-      | Verify3ridgePointContext
-      | VerifyHasEmailContext
-      | VerifyHasWalletAddressContext
-      | VerifyHasTwitter
-      | VerifyHasTelegram
-      | VerifyVisitWebsiteContext
+      | VerifyTwitterLikingQuestContext
+      | VerifyTwitterRetweetQuestContext
+      | VerifyTwitterFollowQuestContext
+      | VerifyDiscordQuestContext
+      | VerifyTelegramQuestContext
+      | Verify3ridgePointQuestContext
+      | VerifyHasEmailQuestContext
+      | VerifyHasWalletAddressQuestContext
+      | VerifyHasTwitterQuestContext
+      | VerifyHasTelegramQuestContext
+      | VerifyVisitWebsiteQuestContext
       | undefined;
-    questPolicy?: string;
+    questPolicy?: QuestPolicyType;
   };
   completedUsers?: User[];
   questGuides?: ContentMetadata[];
   isComplete?: boolean;
 };
 
-export type TwitterLikingQuestContext = {
+export type VerifyTwitterLikingQuestContext = {
   tweetId: string;
   twitterUrl: string;
   username: string;
 };
 
-export type TwitterRetweetQuestContext = {
+export type VerifyTwitterRetweetQuestContext = {
   tweetId: string;
   twitterUrl: string;
   username: string;
 };
 
-export type TwitterFollowQuestContext = {
+export type VerifyTwitterFollowQuestContext = {
   username: string;
   twitterUrl: string;
 };
 
-export type DiscordQuestContext = {
+export type VerifyDiscordQuestContext = {
   channelId: string;
 };
 
-export type TelegramQuestContext = {
+export type VerifyTelegramQuestContext = {
   channelId: string;
 };
 
-export type Verify3ridgePointContext = {
+export type Verify3ridgePointQuestContext = {
   point: number;
 };
 
-export type VerifyHasEmailContext = {};
+export type VerifyHasEmailQuestContext = {};
 
-export type VerifyHasTwitter = {};
+export type VerifyHasTwitterQuestContext = {};
 
-export type VerifyHasTelegram = {};
+export type VerifyHasTelegramQuestContext = {};
 
-export type VerifyVisitWebsiteContext = {
+export type VerifyVisitWebsiteQuestContext = {
   url: string;
 };
 
-export type VerifyHasWalletAddressContext = {
+export type VerifyHasWalletAddressQuestContext = {
   chain: string;
 };
 
-export type VerifyAgreementContext = {
+export type VerifyAgreementQuestContext = {
   agreementList?: AgreementContent[];
 };
 
@@ -346,14 +321,3 @@ export const FILTER_TYPE = {
 };
 
 export type FilterType = ObjectValues<typeof FILTER_TYPE>;
-
-export enum EditorAction {
-  CREATE,
-  UPDATE,
-  DELETE,
-}
-
-export type EditorTargetAction = {
-  target?: string;
-  action?: EditorAction;
-};

@@ -13,14 +13,12 @@ import addHours from "date-fns/addHours";
 import AwsClient from "../../../remote/aws-client";
 
 export function useEmailLogin() {
-  const preference = PreferenceHelper.getInstance();
-
   const [emailLoginInfo, setEmailLoginInfo] = useState<EmailLoggedInInfo>({});
   const [createUserByEmail] = useMutation(CREATE_USER_BY_EMAIL);
 
   useEffect(() => {
     if (!isMailLoggedIn) {
-      const { email, timestamp } = preference.getEmailSignIn();
+      const { email, timestamp } = PreferenceHelper.getEmailSignIn();
       if (!email || !timestamp) {
         return;
       }
@@ -33,7 +31,7 @@ export function useEmailLogin() {
       setEmailLoginInfo((prevState) => {
         return { ...prevState, mail: email };
       });
-      preference.updateEmailSignIn(email);
+      PreferenceHelper.updateEmailSignIn(email);
     }
   }, []);
 
@@ -132,7 +130,7 @@ export function useEmailLogin() {
         setEmailLoginInfo((prevState) => {
           return { ...prevState, mail: email };
         });
-        preference.updateEmailSignIn(email);
+        PreferenceHelper.updateEmailSignIn(email);
         onSuccess?.();
         return;
       } catch (e) {
@@ -162,7 +160,7 @@ export function useEmailLogin() {
         setEmailLoginInfo((prevState) => {
           return { ...prevState, mail };
         });
-        preference.updateEmailSignIn(mail);
+        PreferenceHelper.updateEmailSignIn(mail);
         onSuccess?.();
       } catch (e) {
         onError?.(new AppError(getErrorMessage(e)));
@@ -179,7 +177,7 @@ export function useEmailLogin() {
       setEmailLoginInfo((prevState) => {
         return { ...prevState, mail: undefined };
       });
-      preference.clearEmailSignIn();
+      PreferenceHelper.clearEmailSignIn();
       onSuccess?.();
     } catch (e) {
       onError?.(new AppError(getErrorMessage(e)));

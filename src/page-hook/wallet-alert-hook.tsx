@@ -11,29 +11,29 @@ export function useWalletAlert() {
 
   const showWalletAlert = (chainName: SupportedNetwork) => {
     const data = {
-      aptos: {
+      APTOS: {
         howToInstallUrl:
           "https://medium.com/despread-creative/앱토스-생태계를-위한-관문-페트라-월렛-c2bddb076f7d",
         installUrl: "https://petra.app",
         walletName: "Petra",
       },
-      sui: {
+      SUI: {
         howToInstallUrl: "",
         installUrl:
           "https://chrome.google.com/webstore/detail/sui-wallet/opcgpfmipidbgpenhmajoajpbobppdil",
         walletName: "Sui Wallet",
       },
-      evm: {
+      EVM: {
         howToInstallUrl: "",
         installUrl: "https://metamask.io/download/",
         walletName: "Metamask",
       },
-      stacks: {
+      STACKS: {
         howToInstallUrl: "",
         installUrl: "",
         walletName: "",
       },
-      unknown: {
+      UNKNOWN: {
         howToInstallUrl: "",
         installUrl: "",
         walletName: "",

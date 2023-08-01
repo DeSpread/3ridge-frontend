@@ -1,16 +1,69 @@
-import { Box, Grid, Stack, useMediaQuery } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import { Box, Grid, IconButton, Stack, useMediaQuery } from "@mui/material";
+import React, { ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../../layouts/main-layout";
 import Head from "next/head";
 import { useTheme } from "@mui/material/styles";
 import { useSignedUserQuery } from "../../../page-hook/signed-user-query-hook";
 import { useTicketQuery } from "../../../page-hook/ticket-query-hook";
 import { useRouter } from "next/router";
-import EventImage from "../../event/components/event-image";
+import EventImage from "../../../components/pages/event/event-image";
 import WithEditorContainer from "../../../hoc/with-editor-container";
-import { EditorAction, EditorTargetAction } from "../../../type";
+import useSimpleStorage from "../../../page-hook/simple-storage-hook";
+import FileUtil from "../../../util/file-util";
+import { useLoading } from "../../../provider/loading/loading-provider";
+import EventTitle from "../../../components/pages/event/event-title";
+import EventEmptyBox from "../../../components/pages/event/event-empty-box";
+import InputButton from "../../../components/atomic/molecules/input-button";
+import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
+import EventDateRange from "../../../components/pages/event/event-date-range";
+import DateEditDialog from "../../../components/dialogs/date-range-edit-dialog";
+import DateUtil from "../../../util/date-util";
+import EventDescription from "../../../components/pages/event/event-description";
+import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
+import {
+  ChainType,
+  ContentMetadata,
+  QuestPolicy,
+} from "../../../__generated__/graphql";
+import EventQuests from "../../../components/pages/event/event-quests";
+import AddIcon from "@mui/icons-material/Add";
+import QuestUpsertEditDialog from "../../../components/dialogs/quest-upsert-edit-dialog";
+import { Quest } from "../../../type";
+import EventRewardPolicy from "../../../components/pages/event/reward/event-reward-policy";
+import EventTimeBoard from "../../../components/pages/event/event-time-board";
+import EventRewardDescription from "../../../components/pages/event/reward/event-reward-description";
+import EventRewardImage from "../../../components/pages/event/reward/description/event-reward-image";
+import TicketRewardPolicyEditDialog from "../../../components/dialogs/ticket-reward-policy-edit-dialog";
+import TypeHelper from "../../../helper/type-helper";
+import NumberEditDialog from "../../../components/dialogs/number-edit-dialog";
+import EventRewardPoint from "../../../components/pages/event/reward/description/event-reward-point";
+import EventRewardLimitNumber from "../../../components/pages/event/reward/description/event-reward-limit-number";
+import EventRewardChainContent from "../../../components/pages/event/reward/description/event-reward-chain-content";
+import EventRewardName from "../../../components/pages/event/reward/description/event-reward-name";
+import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-reward-chain-content-edit-dialog";
+import { useAlert } from "../../../provider/alert/alert-provider";
 
+const _EventRewardPolicy = WithEditorContainer(EventRewardPolicy);
+const _EventDateRange = WithEditorContainer(EventDateRange);
+const _EmptyBox = WithEditorContainer(EventEmptyBox);
 const _EventImage = WithEditorContainer(EventImage);
+const _EventTitle = WithEditorContainer(EventTitle);
+const _EventDescription = WithEditorContainer(EventDescription);
+const _EventQuests = WithEditorContainer(EventQuests);
+const _EventRewardImage = WithEditorContainer(EventRewardImage);
+const _EventRewardPoint = WithEditorContainer(EventRewardPoint);
+const _EventRewardLimitNumber = WithEditorContainer(EventRewardLimitNumber);
+const _EventRewardChainContent = WithEditorContainer(EventRewardChainContent);
+const _EventRewardName = WithEditorContainer(EventRewardName);
+
+enum EVENT_COMPONENT_TARGET {
+  "TITLE",
+  "DATE_RANGE_TIME",
+  "DESCRIPTION",
+  "POINT",
+  "LIMIT_NUMBER",
+  "REWARD_NAME",
+}
 
 const Event = () => {
   const theme = useTheme();
@@ -20,18 +73,194 @@ const Event = () => {
   const router = useRouter();
 
   const { userData } = useSignedUserQuery();
+  const { asyncUploadImage } = useSimpleStorage();
+  const { showLoading, closeLoading } = useLoading();
 
-  const [selectedTargetAction, setSelectedTargetAction] =
-    useState<EditorTargetAction>();
+  const [openTextEditDialog, setOpenTextEditDialog] = useState(false);
+  const [openContentMetaDataEditDialog, setOpenContentMetaDataEditDialog] =
+    useState(false);
+  const [openQuestUpsertDialog, setOpenQuestUpsertDialog] = useState(false);
+  const [openDateEditDialog, setOpenDateEditDialog] = useState(false);
+  const [
+    openTicketRewardPolicyEditDialog,
+    setOpenTicketRewardPolicyEditDialog,
+  ] = useState(false);
+  const [openNumberEditDialog, setOpenNumberEditDialog] = useState(false);
+  const [
+    openTicketRewardChainContentEditDialog,
+    setOpenTicketRewardChainContentEditDialog,
+  ] = useState(false);
 
-  const { ticketData } = useTicketQuery({
+  const [eventComponentTarget, setEventComponentTarget] =
+    useState<EVENT_COMPONENT_TARGET>();
+  const [editedQuest, setEditedQuest] = useState<Quest>();
+
+  const ticketId = router.isReady
+    ? typeof router.query.id === "string"
+      ? router.query.id
+      : undefined
+    : undefined;
+
+  const {
+    ticketData,
+    asyncUpdateImageUrl,
+    asyncUpdateTitle,
+    asyncRefreshTicketData,
+    asyncUpdateTicketDateRangeTime,
+    asyncUpdateTicketDescription,
+    asyncCreateQuest,
+    asyncDeleteQuest,
+    asyncUpdateQuest,
+    asyncUpdateTicketRewardPolicy,
+  } = useTicketQuery({
     userId: userData._id,
-    id: router.isReady
-      ? typeof router.query.id === "string"
-        ? router.query.id
-        : undefined
-      : undefined,
+    id: ticketId,
   });
+
+  const dialogTitle = useMemo(() => {
+    switch (eventComponentTarget) {
+      case EVENT_COMPONENT_TARGET.TITLE:
+        return "제목 편집";
+      case EVENT_COMPONENT_TARGET.DATE_RANGE_TIME:
+        return "일정 설정";
+      case EVENT_COMPONENT_TARGET.DESCRIPTION:
+        return "이벤트 설명 편집";
+      case EVENT_COMPONENT_TARGET.POINT:
+        return "이벤트 포인트 편집";
+      case EVENT_COMPONENT_TARGET.LIMIT_NUMBER:
+        return "이벤트 대상자 수 편집";
+      case EVENT_COMPONENT_TARGET.REWARD_NAME:
+        return "이벤트 리워드 이름 편집";
+    }
+  }, [eventComponentTarget]);
+
+  const dialogDefaultText = useMemo(() => {
+    switch (eventComponentTarget) {
+      case EVENT_COMPONENT_TARGET.TITLE:
+        return ticketData?.title;
+      case EVENT_COMPONENT_TARGET.REWARD_NAME:
+        return ticketData?.rewardPolicy?.context?.rewardName;
+    }
+  }, [eventComponentTarget]);
+
+  const numberEditDialogDefaultNumber = useMemo(() => {
+    if (eventComponentTarget === EVENT_COMPONENT_TARGET.POINT)
+      return ticketData?.rewardPolicy?.rewardPoint ?? 0;
+    else if (eventComponentTarget === EVENT_COMPONENT_TARGET.LIMIT_NUMBER)
+      return ticketData?.rewardPolicy?.context?.limitNumber;
+    return 0;
+  }, [eventComponentTarget]);
+
+  const dialogContent = useMemo(() => {
+    switch (eventComponentTarget) {
+      case EVENT_COMPONENT_TARGET.DESCRIPTION:
+        return ticketData?.description_v2;
+    }
+  }, [eventComponentTarget]);
+
+  const verifiedList = useMemo(() => {
+    return new Array(ticketData?.quests?.length ?? 0).fill(true);
+  }, [ticketData?.quests]);
+
+  const asyncRefreshAll = async () => {
+    await asyncRefreshTicketData();
+  };
+
+  const showTextEditDialog = (target: EVENT_COMPONENT_TARGET) => {
+    setOpenTextEditDialog(true);
+    setEventComponentTarget(target);
+  };
+
+  const showDateEditDialog = (target: EVENT_COMPONENT_TARGET) => {
+    setOpenDateEditDialog(true);
+    setEventComponentTarget(target);
+  };
+
+  const showOpenContentMetaDataEditDialog = (
+    target: EVENT_COMPONENT_TARGET
+  ) => {
+    setOpenContentMetaDataEditDialog(true);
+    setEventComponentTarget(target);
+  };
+
+  const showOpenQuestUpsertDialog = (targetQuest?: Quest) => {
+    setEditedQuest(targetQuest);
+    setOpenQuestUpsertDialog(true);
+  };
+
+  const showOpenNumberEditDialog = (target: EVENT_COMPONENT_TARGET) => {
+    setOpenNumberEditDialog(true);
+    setEventComponentTarget(target);
+  };
+
+  const showOpenTicketRewardChainContentEditDialog = () => {
+    setOpenTicketRewardChainContentEditDialog(true);
+  };
+
+  const closeQuestUpsertDialog = () => {
+    setEditedQuest(undefined);
+    setOpenQuestUpsertDialog(false);
+  };
+
+  const closeTextEditDialog = () => {
+    setOpenTextEditDialog(false);
+    setEventComponentTarget(undefined);
+  };
+
+  const closeDateEditDialog = () => {
+    setOpenDateEditDialog(false);
+    setEventComponentTarget(undefined);
+  };
+
+  const closeOpenContentMetaDataEditDialog = () => {
+    setOpenContentMetaDataEditDialog(false);
+    setEventComponentTarget(undefined);
+  };
+
+  const closeOpenNumberEditDialog = () => {
+    setOpenNumberEditDialog(false);
+    setEventComponentTarget(undefined);
+  };
+
+  const closeOpenTicketRewardChainContentEditDialog = () => {
+    setOpenTicketRewardChainContentEditDialog(false);
+  };
+
+  const asyncUpdateRewardImageUrlByFile = async (file: File) => {
+    showLoading();
+    const includeQuestion =
+      ticketData?.rewardPolicy?.context?.nftImageUrl?.includes("?");
+    const base64Data = await FileUtil.asyncReadAsBase64Data(file);
+    await asyncUploadImage(`reward/${file.name}`, base64Data);
+    let nftImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/reward/${file.name}`;
+    if (!includeQuestion) {
+      nftImageUrl += "?";
+    }
+    const rewardPolicy = { ...ticketData?.rewardPolicy };
+    if (rewardPolicy?.context) {
+      rewardPolicy.context.nftImageUrl = nftImageUrl;
+    }
+    const newRewardPolicy =
+      TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+    await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+    await asyncRefreshAll();
+    closeLoading();
+  };
+
+  const asyncUpdateImageUrlByFile = async (file: File) => {
+    showLoading();
+    const includeQuestion = ticketData?.imageUrl?.includes("?");
+    const base64Data = await FileUtil.asyncReadAsBase64Data(file);
+    const ext = FileUtil.getFileExtension(file);
+    await asyncUploadImage(`event/cover/${ticketData?._id}.${ext}`, base64Data);
+    let ticketImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/event/cover/${ticketData?._id}.${ext}`;
+    if (!includeQuestion) {
+      ticketImageUrl += "?";
+    }
+    await asyncUpdateImageUrl(ticketImageUrl);
+    await asyncRefreshAll();
+    closeLoading();
+  };
 
   return (
     <>
@@ -67,370 +296,346 @@ const Event = () => {
                     background: "",
                   }}
                 >
-                  <_EventImage
-                    imageUrl={ticketData?.imageUrl}
-                    onClickForEdit={(e) => {
-                      setSelectedTargetAction({
-                        target: "imageUrl",
-                        action: EditorAction.UPDATE,
-                      });
-                    }}
-                    onClickForDelete={(e) => {}}
-                  ></_EventImage>
+                  <_EventImage imageUrl={ticketData?.imageUrl}>
+                    <InputButton
+                      sx={{ top: -2, left: -2, width: 126, height: 126 }}
+                      onChanged={async (file: File) => {
+                        await asyncUpdateImageUrlByFile(file);
+                      }}
+                    ></InputButton>
+                  </_EventImage>
                 </Box>
               </Grid>
               <Grid item>
-                {/*<Stack spacing={1} sx={{ marginBottom: 2 }}>*/}
-                {/*  <EventTitle title={ticketData?.title}></EventTitle>*/}
-                {/*  {smUp ? (*/}
-                {/*    <Grid*/}
-                {/*      container*/}
-                {/*      alignItems={"left"}*/}
-                {/*      justifyContent={smUp ? "flex-start" : "center"}*/}
-                {/*      rowSpacing={1}*/}
-                {/*    >*/}
-                {/*      {ticketData?.beginTime && !isEventStarted() && (*/}
-                {/*        <Grid item>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"이벤트 시작전"}*/}
-                {/*            // color={"success"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #61e1ff",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Grid>*/}
-                {/*      )}*/}
-                {/*      {ticketData && isEventStarted() && !isEventComplete() && (*/}
-                {/*        <Grid item>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"진행중"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #0E8074",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Grid>*/}
-                {/*      )}*/}
-                {/*      {ticketData && isEventStarted() && isEventComplete() && (*/}
-                {/*        <Grid item>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"이벤트 종료"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #D14343",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Grid>*/}
-                {/*      )}*/}
-                {/*      {ticketData?.beginTime && (*/}
-                {/*        <Grid item sx={{ marginLeft: 1 }}>*/}
-                {/*          {smUp ? (*/}
-                {/*            <StyledChip*/}
-                {/*              label={`${format(*/}
-                {/*                parseStrToDate(ticketData?.beginTime ?? ""),*/}
-                {/*                "yyyy/MM/dd"*/}
-                {/*              )} ~ ${format(*/}
-                {/*                parseStrToDate(ticketData?.untilTime ?? ""),*/}
-                {/*                "yyyy/MM/dd"*/}
-                {/*              )} (UTC+09:00)`}*/}
-                {/*            ></StyledChip>*/}
-                {/*          ) : (*/}
-                {/*            <StyledChip*/}
-                {/*              sx={{ paddingTop: 4, paddingBottom: 4 }}*/}
-                {/*              label={*/}
-                {/*                <Stack sx={{}}>*/}
-                {/*                  <Typography variant={"body2"}>*/}
-                {/*                    {`${format(*/}
-                {/*                      parseStrToDate(*/}
-                {/*                        ticketData?.beginTime ?? ""*/}
-                {/*                      ),*/}
-                {/*                      "yyyy/MM/dd"*/}
-                {/*                    )}*/}
-                {/*                  ~`}*/}
-                {/*                  </Typography>*/}
-                {/*                  <Typography variant={"body2"}>*/}
-                {/*                    {`${format(*/}
-                {/*                      parseStrToDate(*/}
-                {/*                        ticketData?.untilTime ?? ""*/}
-                {/*                      ),*/}
-                {/*                      "yyyy/MM/dd"*/}
-                {/*                    )} (UTC+09:00)*/}
-                {/*                  `}*/}
-                {/*                  </Typography>*/}
-                {/*                </Stack>*/}
-                {/*              }*/}
-                {/*            ></StyledChip>*/}
-                {/*          )}*/}
-                {/*        </Grid>*/}
-                {/*      )}*/}
-                {/*    </Grid>*/}
-                {/*  ) : (*/}
-                {/*    <Stack*/}
-                {/*      alignItems={"center"}*/}
-                {/*      justifyContent={"center"}*/}
-                {/*      sx={{ background: "" }}*/}
-                {/*    >*/}
-                {/*      {ticketData?.beginTime && ticketData?.untilTime && (*/}
-                {/*        <>*/}
-                {/*          <Typography>{`${format(*/}
-                {/*            parseStrToDate(ticketData?.beginTime ?? ""),*/}
-                {/*            "yyyy/MM/dd"*/}
-                {/*          )}`}</Typography>*/}
-                {/*          <Typography>*/}
-                {/*            {`~ ${format(*/}
-                {/*              parseStrToDate(ticketData?.untilTime ?? ""),*/}
-                {/*              "yyyy/MM/dd"*/}
-                {/*            )} (UTC+09:00)`}*/}
-                {/*          </Typography>*/}
-                {/*        </>*/}
-                {/*      )}*/}
-                {/*      {ticketData?.beginTime && !isEventStarted() && (*/}
-                {/*        <Box sx={{ marginTop: 2 }}>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"이벤트 시작전"}*/}
-                {/*            // color={"success"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #61e1ff",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Box>*/}
-                {/*      )}*/}
-                {/*      {ticketData && isEventStarted() && !isEventComplete() && (*/}
-                {/*        <Box sx={{ marginTop: 2 }}>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"진행중"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #0E8074",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Box>*/}
-                {/*      )}*/}
-                {/*      {ticketData && isEventStarted() && isEventComplete() && (*/}
-                {/*        <Box sx={{ marginTop: 2 }}>*/}
-                {/*          <StyledChip*/}
-                {/*            label={"이벤트 종료"}*/}
-                {/*            variant="outlined"*/}
-                {/*            sx={{*/}
-                {/*              boxShadow: "inset 0px 0px 0px 2px #D14343",*/}
-                {/*              borderWidth: 0,*/}
-                {/*            }}*/}
-                {/*          ></StyledChip>*/}
-                {/*        </Box>*/}
-                {/*      )}*/}
-                {/*    </Stack>*/}
-                {/*  )}*/}
-                {/*</Stack>*/}
+                <Stack spacing={1} sx={{ marginBottom: 2 }}>
+                  <_EventTitle
+                    title={ticketData?.title}
+                    onClickForEdit={async (e) => {
+                      showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
+                    }}
+                  ></_EventTitle>
+                  <_EventDateRange
+                    ticketData={ticketData}
+                    onClickForEdit={async (e) => {
+                      showDateEditDialog(
+                        EVENT_COMPONENT_TARGET.DATE_RANGE_TIME
+                      );
+                    }}
+                  ></_EventDateRange>
+                </Stack>
               </Grid>
             </Grid>
-            {/*{isExceededTicketParticipants() && (*/}
-            {/*  <Box sx={{}}>*/}
-            {/*    <>*/}
-            {/*      <Card>*/}
-            {/*        <CardContent>*/}
-            {/*          <Typography*/}
-            {/*            variant={"body1"}*/}
-            {/*            sx={{*/}
-            {/*              color: theme.palette.warning.main,*/}
-            {/*              marginTop: smUp ? 0 : -5,*/}
-            {/*              background: "",*/}
-            {/*              textAlign: smUp ? "left" : "center",*/}
-            {/*            }}*/}
-            {/*          >*/}
-            {/*            최대 참여자{" "}*/}
-            {/*            {ticketData?.rewardPolicy?.context?.limitNumber}명을*/}
-            {/*            초과하여 이벤트에 참여하실 수 없습니다 😅*/}
-            {/*          </Typography>*/}
-            {/*        </CardContent>*/}
-            {/*      </Card>*/}
-            {/*    </>*/}
-            {/*  </Box>*/}
-            {/*)}*/}
 
-            {/*{hasMetamask &&*/}
-            {/*  !isExceededTicketParticipants() &&*/}
-            {/*  userData?._id === undefined && (*/}
-            {/*    <Box sx={{}}>*/}
-            {/*      <>*/}
-            {/*        <Card>*/}
-            {/*          <CardContent>*/}
-            {/*            <LinkTypography*/}
-            {/*              variant={"body1"}*/}
-            {/*              href={"#"}*/}
-            {/*              sx={{*/}
-            {/*                fontWeight: "bold",*/}
-            {/*                "&:hover": {*/}
-            {/*                  color: "#914e1d",*/}
-            {/*                  textDecoration: "underline",*/}
-            {/*                },*/}
-            {/*                color: theme.palette.warning.main,*/}
-            {/*              }}*/}
-            {/*              onClick={async (e) => {*/}
-            {/*                setShowSignInDialog(true);*/}
-            {/*              }}*/}
-            {/*              textAlign={mdUp ? "left" : "center"}*/}
-            {/*            >*/}
-            {/*              로그인 후, 이벤트에 참여하실 수 있어요 😅*/}
-            {/*            </LinkTypography>*/}
-            {/*          </CardContent>*/}
-            {/*        </Card>*/}
-            {/*      </>*/}
-            {/*    </Box>*/}
-            {/*  )}*/}
-            {/*{userData?._id &&*/}
-            {/*  !walletConnectedForTicket &&*/}
-            {/*  ticketData.rewardPolicy?.context?.rewardNetwork && (*/}
-            {/*    <Card>*/}
-            {/*      <CardContent>*/}
-            {/*        <Stack*/}
-            {/*          direction={smUp ? "row" : "column"}*/}
-            {/*          alignItems={"center"}*/}
-            {/*          justifyContent={"space-between"}*/}
-            {/*          spacing={smUp ? 0 : 2}*/}
-            {/*          sx={{ padding: 1, paddingTop: 0, paddingBottom: 0 }}*/}
-            {/*        >*/}
-            {/*          <Stack direction={"column"}>*/}
-            {/*            <Typography*/}
-            {/*              variant={"h6"}*/}
-            {/*              sx={{ color: theme.palette.warning.main }}*/}
-            {/*              textAlign={"center"}*/}
-            {/*            >*/}
-            {/*              {`이벤트를 위해 ${ticketData.rewardPolicy?.context?.rewardNetwork}을 지원하는 지갑 연결이 필요해요`}{" "}*/}
-            {/*            </Typography>*/}
-            {/*          </Stack>*/}
-            {/*          <Stack direction={"column"}>*/}
-            {/*            <SecondaryButton*/}
-            {/*              onClick={async (e) => {*/}
-            {/*                e.preventDefault();*/}
-            {/*                await asyncGoToProfileAndEditDialogOpen();*/}
-            {/*              }}*/}
-            {/*            >*/}
-            {/*              지갑 연결하러 가기*/}
-            {/*            </SecondaryButton>*/}
-            {/*          </Stack>*/}
-            {/*        </Stack>*/}
-            {/*      </CardContent>*/}
-            {/*    </Card>*/}
-            {/*  )}*/}
-            {/*<Stack*/}
-            {/*  direction={"column"}*/}
-            {/*  spacing={2}*/}
-            {/*  alignItems={mdUp ? "flex-start" : "center"}*/}
-            {/*>*/}
-            {/*  <Typography textAlign={mdUp ? "left" : "center"} variant={"h5"}>*/}
-            {/*    이벤트 설명*/}
-            {/*  </Typography>*/}
-            {/*  <Box>*/}
-            {/*    <ContentMetaDataRenderComponent*/}
-            {/*      contentMetaData={ticketData?.description_v2}*/}
-            {/*      textComponentFunc={(content) => {*/}
-            {/*        return (*/}
-            {/*          <Box sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}>*/}
-            {/*            <Typography sx={{ wordBreak: "keep-all" }}>*/}
-            {/*              {content}*/}
-            {/*            </Typography>*/}
-            {/*          </Box>*/}
-            {/*        );*/}
-            {/*      }}*/}
-            {/*      htmlComponentFunc={(content) => {*/}
-            {/*        return (*/}
-            {/*          <div*/}
-            {/*            dangerouslySetInnerHTML={{*/}
-            {/*              __html: content ?? "<></>",*/}
-            {/*            }}*/}
-            {/*          ></div>*/}
-            {/*        );*/}
-            {/*      }}*/}
-            {/*    ></ContentMetaDataRenderComponent>*/}
-            {/*  </Box>*/}
-            {/*</Stack>*/}
+            {/* isExceededTicketParticipants */}
+            {/* hasMetamask */}
+            {/* walletConnectedForTicket */}
 
-            {/*<Stack*/}
-            {/*  direction={"column"}*/}
-            {/*  alignItems={mdUp ? "flex-start" : "center"}*/}
-            {/*  spacing={2}*/}
-            {/*  sx={{ background: "" }}*/}
-            {/*>*/}
-            {/*  <Typography variant="h5" textAlign={mdUp ? "left" : "center"}>*/}
-            {/*    퀘스트*/}
-            {/*  </Typography>*/}
-            {/*<Stack*/}
-            {/*  direction={"column"}*/}
-            {/*  spacing={4}*/}
-            {/*  alignItems={mdUp ? "flex-start" : "center"}*/}
-            {/*  sx={{}}*/}
-            {/*>*/}
-            {/*  {ticketData?.quests?.map((quest, index) => {*/}
-            {/*    const autoVerified =*/}
-            {/*      quest.questPolicy?.questPolicy ===*/}
-            {/*      QuestPolicyType.VerifyDiscord ||*/}
-            {/*      quest.questPolicy?.questPolicy ===*/}
-            {/*      QuestPolicyType.VerifyTelegram ||*/}
-            {/*      quest.questPolicy?.questPolicy ===*/}
-            {/*      QuestPolicyType.VerifyVisitWebsite;*/}
+            <_EventDescription
+              ticketData={ticketData}
+              onClickForEdit={async (e) => {
+                showOpenContentMetaDataEditDialog(
+                  EVENT_COMPONENT_TARGET.DESCRIPTION
+                );
+              }}
+            ></_EventDescription>
 
-            {/*    return (*/}
-            {/*      <VerifyCard*/}
-            {/*        key={index + 1}*/}
-            {/*        sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}*/}
-            {/*        index={index + 1}*/}
-            {/*        title={quest.title}*/}
-            {/*        title_v2={quest.title_v2}*/}
-            {/*        description={quest.description}*/}
-            {/*        disabled={*/}
-            {/*          (userData?._id ? false : true) ||*/}
-            {/*          isExceededTicketParticipants() ||*/}
-            {/*          !isStarted() ||*/}
-            {/*          isExpired()*/}
-            {/*        }*/}
-            {/*        verified={verifiedList[index]}*/}
-            {/*        overrideConfirmBtnLabel={getConfirmBtnLabel(quest)}*/}
-            {/*        hideStartButton={*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QUEST_POLICY_TYPE.VERIFY_3RIDGE_POINT ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QUEST_POLICY_TYPE.VERIFY_APTOS_BRIDGE_TO_APTOS ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QUEST_POLICY_TYPE.VERIFY_APTOS_HAS_NFT ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QUEST_POLICY_TYPE.VERIFY_APTOS_EXIST_TX ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyEmail ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyHasEmail ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyHasWalletAddress ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyHasTwitter ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyHasTelegram ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.Quiz ||*/}
-            {/*          quest.questPolicy?.questPolicy ===*/}
-            {/*          QuestPolicyType.VerifyAgreement*/}
-            {/*        }*/}
-            {/*        onVerifyBtnClicked={async (e) => {*/}
-            {/*          await asyncVerifyQuest(e, quest, index);*/}
-            {/*        }}*/}
-            {/*        onStartBtnClicked={async (e) => {*/}
-            {/*          await asyncStartQuest(e, quest, index);*/}
-            {/*        }}*/}
-            {/*        autoVerified={autoVerified}*/}
-            {/*      ></VerifyCard>*/}
-            {/*    );*/}
-            {/*  })}*/}
-            {/*</Stack>*/}
-            {/*</Stack>*/}
+            <_EventQuests
+              ticketData={ticketData}
+              userData={userData}
+              verifiedList={verifiedList}
+              onEditBtnClicked={(e, quest, index) => {
+                showOpenQuestUpsertDialog(quest);
+              }}
+              onDeleteBtnClicked={async (e, quest, index) => {
+                showLoading();
+                if (quest?._id) await asyncDeleteQuest(quest?._id);
+                await asyncRefreshAll();
+                closeLoading();
+              }}
+              disableHoverEffect={true}
+            >
+              <IconButton
+                className={"MuiIconButton"}
+                sx={{
+                  position: "absolute",
+                  top: `calc(100% + 32px)`,
+                  left: `calc(50% - 16px)`,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                }}
+                onClick={(e) => {
+                  showOpenQuestUpsertDialog(undefined);
+                }}
+              >
+                <AddIcon
+                  fontSize={"large"}
+                  sx={{
+                    borderRadius: 30,
+                    "&:hover": {
+                      borderColor: theme.palette.secondary.main,
+                      background: "#61E1FF55",
+                    },
+                  }}
+                ></AddIcon>
+              </IconButton>
+            </_EventQuests>
+            <Box sx={{ padding: 1 }}></Box>
+          </Stack>
+        </Grid>
+        <Grid item>
+          <Stack
+            direction={"column"}
+            spacing={10}
+            sx={{ minWidth: 260, padding: smUp ? 0 : 4 }}
+          >
+            <Stack direction={"column"} spacing={5}>
+              <_EventRewardPolicy
+                ticketData={ticketData}
+                onClickForEdit={(e) => {
+                  setOpenTicketRewardPolicyEditDialog(true);
+                }}
+              ></_EventRewardPolicy>
+              <EventTimeBoard ticketData={ticketData}></EventTimeBoard>
+              <EventRewardDescription
+                ticketData={ticketData}
+                eventRewardImageCompFunc={(ticketData) => {
+                  return (
+                    <_EventRewardImage ticketData={ticketData}>
+                      <InputButton
+                        sx={{
+                          top: -2,
+                          left: -2,
+                          width: smUp ? 300 + 4 : 260 + 4,
+                          height: smUp ? 300 + 4 : 260 + 4,
+                          zIndex: theme.zIndex.drawer,
+                        }}
+                        onChanged={async (file: File) => {
+                          await asyncUpdateRewardImageUrlByFile(file);
+                        }}
+                      ></InputButton>
+                    </_EventRewardImage>
+                  );
+                }}
+                eventRewardPointCompFunc={(ticketData) => {
+                  return (
+                    <_EventRewardPoint
+                      ticketData={ticketData}
+                      onClickForEdit={(e) => {
+                        showOpenNumberEditDialog(EVENT_COMPONENT_TARGET.POINT);
+                      }}
+                    ></_EventRewardPoint>
+                  );
+                }}
+                eventRewardLimitNumberCompFunc={(ticketData) => {
+                  return (
+                    <_EventRewardLimitNumber
+                      ticketData={ticketData}
+                      onClickForEdit={(e) => {
+                        showOpenNumberEditDialog(
+                          EVENT_COMPONENT_TARGET.LIMIT_NUMBER
+                        );
+                      }}
+                    ></_EventRewardLimitNumber>
+                  );
+                }}
+                eventRewardNameCompFunc={(ticketData) => {
+                  return (
+                    <_EventRewardName
+                      onClickForEdit={async (e) => {
+                        showTextEditDialog(EVENT_COMPONENT_TARGET.REWARD_NAME);
+                      }}
+                      ticketData={ticketData}
+                    ></_EventRewardName>
+                  );
+                }}
+                eventRewardChainContentCompFunc={(ticketData) => {
+                  return (
+                    <_EventRewardChainContent
+                      ticketData={ticketData}
+                      onClickForEdit={async (e) => {
+                        showOpenTicketRewardChainContentEditDialog();
+                      }}
+                    ></_EventRewardChainContent>
+                  );
+                }}
+              ></EventRewardDescription>
+              {/*<div*/}
+              {/*  dangerouslySetInnerHTML={{*/}
+              {/*    __html:*/}
+              {/*      '<div style="display: flex; flex-direction: row; align-items: center; justify-content: center">\n<img style="width: 1.35rem; background: white; border-radius: 1.35rem; border-width: 1px; border-color: white; border-style: solid; margin-right: 0.25rem"\n      src="https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/stacks-icon.svg"/>\n<body2>등록된 Stacks 지갑을 통해 지급 예정</body2>\n</div>',*/}
+              {/*  }}*/}
+              {/*></div>*/}
+            </Stack>
           </Stack>
         </Grid>
       </Grid>
+
+      {/* --- Dialogs ---- */}
+
+      <TextEditDialog
+        open={openTextEditDialog}
+        title={dialogTitle}
+        defaultText={dialogDefaultText}
+        onCloseBtnClicked={(e) => {
+          closeTextEditDialog();
+        }}
+        onConfirmBtnClicked={async (text) => {
+          showLoading();
+          switch (eventComponentTarget) {
+            case EVENT_COMPONENT_TARGET.TITLE:
+              await asyncUpdateTitle(text);
+              break;
+            case EVENT_COMPONENT_TARGET.REWARD_NAME:
+              const rewardPolicy = { ...ticketData?.rewardPolicy };
+              if (rewardPolicy.context) rewardPolicy.context.rewardName = text;
+              const newRewardPolicy =
+                TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+              await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+              break;
+          }
+          await asyncRefreshAll();
+          closeTextEditDialog();
+          closeLoading();
+        }}
+      ></TextEditDialog>
+      <DateEditDialog
+        initBeginDate={DateUtil.parseStrToDate(ticketData?.beginTime ?? "")}
+        initEndDate={DateUtil.parseStrToDate(ticketData?.untilTime ?? "")}
+        open={openDateEditDialog}
+        title={dialogTitle}
+        onCloseBtnClicked={(e) => {
+          closeDateEditDialog();
+        }}
+        onConfirmBtnClicked={async (beginDate, endDate) => {
+          showLoading();
+          switch (eventComponentTarget) {
+            case EVENT_COMPONENT_TARGET.DATE_RANGE_TIME:
+              await asyncUpdateTicketDateRangeTime(beginDate, endDate);
+              break;
+          }
+          await asyncRefreshAll();
+          closeDateEditDialog();
+          closeLoading();
+        }}
+      ></DateEditDialog>
+      <ContentMetaDataEditDialog
+        open={openContentMetaDataEditDialog}
+        title={dialogTitle}
+        content={dialogContent}
+        onCloseBtnClicked={(e) => {
+          closeOpenContentMetaDataEditDialog();
+        }}
+        onConfirmBtnClicked={async (data) => {
+          showLoading();
+          switch (eventComponentTarget) {
+            case EVENT_COMPONENT_TARGET.DESCRIPTION:
+              await asyncUpdateTicketDescription(data);
+              break;
+          }
+          await asyncRefreshAll();
+          closeOpenContentMetaDataEditDialog();
+          closeLoading();
+        }}
+      ></ContentMetaDataEditDialog>
+      <QuestUpsertEditDialog
+        open={openQuestUpsertDialog}
+        onCloseBtnClicked={(e) => {
+          setOpenQuestUpsertDialog(false);
+        }}
+        editedQuest={editedQuest}
+        onConfirmBtnClicked={async (
+          questPolicy?: QuestPolicy,
+          title_v2?: ContentMetadata,
+          editedQuestId?: string
+        ) => {
+          showLoading();
+          if (!editedQuestId) await asyncCreateQuest(title_v2, questPolicy);
+          else await asyncUpdateQuest(editedQuestId, questPolicy, title_v2);
+          await asyncRefreshAll();
+          closeQuestUpsertDialog();
+          closeLoading();
+        }}
+      ></QuestUpsertEditDialog>
+      <TicketRewardPolicyEditDialog
+        open={openTicketRewardPolicyEditDialog}
+        title={"리워드 정책 편집"}
+        defaultQuestPolicyType={ticketData?.rewardPolicy?.rewardPolicyType}
+        onCloseBtnClicked={(e) => {
+          setOpenTicketRewardPolicyEditDialog(false);
+        }}
+        onConfirmBtnClicked={async (_rewardPolicyType) => {
+          showLoading();
+          const rewardPolicy = { ...ticketData?.rewardPolicy };
+          rewardPolicy.rewardPolicyType = _rewardPolicyType;
+          const newRewardPolicy =
+            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+          await asyncRefreshAll();
+          setOpenTicketRewardPolicyEditDialog(false);
+          closeLoading();
+        }}
+      ></TicketRewardPolicyEditDialog>
+      <NumberEditDialog
+        open={openNumberEditDialog}
+        title={dialogTitle}
+        onCloseBtnClicked={(e) => {
+          closeOpenNumberEditDialog();
+        }}
+        minNumber={0}
+        defaultNumber={numberEditDialogDefaultNumber}
+        onConfirmBtnClicked={async (val) => {
+          showLoading();
+          const rewardPolicy = { ...ticketData?.rewardPolicy };
+          if (eventComponentTarget === EVENT_COMPONENT_TARGET.POINT) {
+            rewardPolicy.rewardPoint = val;
+          } else if (
+            eventComponentTarget === EVENT_COMPONENT_TARGET.LIMIT_NUMBER &&
+            rewardPolicy.context
+          ) {
+            rewardPolicy.context.limitNumber = val ?? 0;
+          }
+          const newRewardPolicy =
+            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+          await asyncRefreshAll();
+          closeOpenNumberEditDialog();
+          closeLoading();
+        }}
+      ></NumberEditDialog>
+      <TicketRewardChainContentEditDialog
+        open={openTicketRewardChainContentEditDialog}
+        title={"이벤트 리워드 체인 편집"}
+        defaultTicketData={ticketData}
+        onCloseBtnClicked={(e) => {
+          closeOpenTicketRewardChainContentEditDialog();
+        }}
+        onConfirmBtnClicked={async (res) => {
+          showLoading();
+          const {
+            rewardChain,
+            rewardClaimable,
+            rewardUnit,
+            overrideRewardChainContent,
+          } = res;
+          const rewardPolicy = { ...ticketData?.rewardPolicy };
+          if (rewardPolicy.context) {
+            rewardPolicy.context.rewardChain = rewardChain ?? "";
+            rewardPolicy.context.rewardClaimable = rewardClaimable;
+            rewardPolicy.context.rewardUnit = rewardUnit ?? "";
+            rewardPolicy.context.overrideRewardChainContent =
+              overrideRewardChainContent;
+          }
+          const newRewardPolicy =
+            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+          await asyncRefreshAll();
+          closeOpenTicketRewardChainContentEditDialog();
+          closeLoading();
+        }}
+      ></TicketRewardChainContentEditDialog>
     </>
   );
 };

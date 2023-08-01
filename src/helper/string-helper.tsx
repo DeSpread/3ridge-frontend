@@ -1,16 +1,8 @@
 import { ContentEncodingType, ContentMetadata } from "../__generated__/graphql";
-import { decodeBase64 } from "../util/string-util";
+import StringUtil from "../util/string-util";
 
 class StringHelper {
-  private static instance: StringHelper;
-
-  private constructor() {}
-
-  public static getInstance() {
-    return this.instance || (this.instance = new this());
-  }
-
-  getMidEllipsisString = (
+  public static convertAddressToMidEllipsis = (
     src: string | undefined,
     preLen = 6,
     postLen = 4
@@ -27,7 +19,7 @@ class StringHelper {
     );
   };
 
-  getRewardAmountLabel = (rewardAmount?: number) => {
+  public static getRewardAmountLabel = (rewardAmount?: number) => {
     const _rewardAmount = rewardAmount ?? 0;
     if (_rewardAmount >= 10000000) {
       return "전원";
@@ -35,9 +27,9 @@ class StringHelper {
     return _rewardAmount?.toLocaleString() + "명";
   };
 
-  decodeContentMetaData = (contentMetaData: ContentMetadata) => {
+  public static decodeContentMetaData = (contentMetaData: ContentMetadata) => {
     if (contentMetaData.contentEncodingType === ContentEncodingType.Base64) {
-      return decodeBase64(contentMetaData.content);
+      return StringUtil.decodeBase64(contentMetaData.content);
     }
     return contentMetaData.content;
   };

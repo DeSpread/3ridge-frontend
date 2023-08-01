@@ -9,16 +9,15 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import QuestQuizForm from "../molecules/quest-quiz-form";
+import QuestQuizForm from "../form/quest/quest-quiz-form";
 import {
   MouseEventWithParam,
   QuizEventParam,
   QuizQuestContext,
   Z_INDEX_OFFSET,
 } from "../../type";
-import SecondaryButton from "../atoms/secondary-button";
+import SecondaryButton from "../atomic/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
-import { decodeBase64 } from "../../util/string-util";
 
 type QuestQuizDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;

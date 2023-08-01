@@ -30,7 +30,10 @@ export enum CategoryType {
 
 export enum ChainType {
   Aptos = 'APTOS',
+  Arb = 'ARB',
+  Bnb = 'BNB',
   Evm = 'EVM',
+  Matic = 'MATIC',
   Stacks = 'STACKS',
   Sui = 'SUI'
 }
@@ -42,7 +45,7 @@ export enum ContentEncodingType {
 
 export enum ContentFormatType {
   Html = 'HTML',
-  MarkdownV2 = 'MARKDOWN_V2',
+  Markdown = 'MARKDOWN',
   Text = 'TEXT'
 }
 
@@ -78,15 +81,19 @@ export type Mutation = {
   clearParticipatedAllEventsByUserId: Scalars['Boolean'];
   completeQuestOfUser: Quest;
   createProject: Project;
+  createQuest: Quest;
   createTicket: Ticket;
   createUserByEmail: User;
   createUserByGmail: User;
   createUserByWallet: User;
+  deleteQuest: Scalars['Boolean'];
+  deleteTicketById: Scalars['Boolean'];
   participateTicketOfUser: Ticket;
   removeProject: Project;
-  removeTicketById: Ticket;
+  removeTicketById: Scalars['Boolean'];
   removeUserByName: User;
   updateProject: Project;
+  updateQuest: Quest;
   updateTicketById: Ticket;
   updateUserByName: User;
   verify3ridgePoint: Quest;
@@ -130,8 +137,18 @@ export type MutationCreateProjectArgs = {
 };
 
 
-export type MutationCreateTicketArgs = {
+export type MutationCreateQuestArgs = {
   description?: InputMaybe<Scalars['String']>;
+  questPolicy?: InputMaybe<QuestPolicyInputType>;
+  ticketId: Scalars['String'];
+  title_v2?: InputMaybe<ContentMetadataInputType>;
+};
+
+
+export type MutationCreateTicketArgs = {
+  beginTime?: InputMaybe<Scalars['DateTime']>;
+  description?: InputMaybe<Scalars['String']>;
+  description_v2?: InputMaybe<ContentMetadataInputType>;
   imageUrl?: InputMaybe<Scalars['String']>;
   project?: InputMaybe<Scalars['String']>;
   quests?: InputMaybe<Array<QuestInputType>>;
@@ -155,6 +172,17 @@ export type MutationCreateUserByGmailArgs = {
 export type MutationCreateUserByWalletArgs = {
   address: Scalars['String'];
   chain: ChainType;
+};
+
+
+export type MutationDeleteQuestArgs = {
+  questId: Scalars['String'];
+  ticketId: Scalars['String'];
+};
+
+
+export type MutationDeleteTicketByIdArgs = {
+  ticketId: Scalars['String'];
 };
 
 
@@ -190,9 +218,19 @@ export type MutationUpdateProjectArgs = {
 };
 
 
+export type MutationUpdateQuestArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  questPolicy?: InputMaybe<QuestPolicyInputType>;
+  title_v2?: InputMaybe<ContentMetadataInputType>;
+};
+
+
 export type MutationUpdateTicketByIdArgs = {
+  beginTime?: InputMaybe<Scalars['DateTime']>;
   completed?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
+  description_v2?: InputMaybe<ContentMetadataInputType>;
   imageUrl?: InputMaybe<Scalars['String']>;
   participants?: InputMaybe<Array<UserInputType>>;
   project?: InputMaybe<Scalars['String']>;
@@ -925,6 +963,86 @@ export type UpdateTicketImageUrlMutationVariables = Exact<{
 
 export type UpdateTicketImageUrlMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
 
+export type UpdateTicketTitleMutationVariables = Exact<{
+  ticketId: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateTicketTitleMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
+
+export type UpdateTicketDateRangeTimeMutationVariables = Exact<{
+  ticketId: Scalars['String'];
+  beginTime?: InputMaybe<Scalars['DateTime']>;
+  untilTime?: InputMaybe<Scalars['DateTime']>;
+}>;
+
+
+export type UpdateTicketDateRangeTimeMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
+
+export type UpdateTicketDescriptionMutationVariables = Exact<{
+  ticketId: Scalars['String'];
+  description_v2?: InputMaybe<ContentMetadataInputType>;
+}>;
+
+
+export type UpdateTicketDescriptionMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
+
+export type UpdateTicketRewardPolicyMutationVariables = Exact<{
+  ticketId: Scalars['String'];
+  rewardPolicy?: InputMaybe<RewardPolicyInputType>;
+}>;
+
+
+export type UpdateTicketRewardPolicyMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
+
+export type CreateQuestMutationVariables = Exact<{
+  ticketId: Scalars['String'];
+  title_v2?: InputMaybe<ContentMetadataInputType>;
+  description?: InputMaybe<Scalars['String']>;
+  questPolicy?: InputMaybe<QuestPolicyInputType>;
+}>;
+
+
+export type CreateQuestMutation = { __typename?: 'Mutation', createQuest: { __typename?: 'Quest', _id?: string | null } };
+
+export type DeleteQuestMutationVariables = Exact<{
+  questId: Scalars['String'];
+  ticketId: Scalars['String'];
+}>;
+
+
+export type DeleteQuestMutation = { __typename?: 'Mutation', deleteQuest: boolean };
+
+export type UpdateQuestMutationVariables = Exact<{
+  description: Scalars['String'];
+  id: Scalars['String'];
+  questPolicy?: InputMaybe<QuestPolicyInputType>;
+  title_v2?: InputMaybe<ContentMetadataInputType>;
+}>;
+
+
+export type UpdateQuestMutation = { __typename?: 'Mutation', updateQuest: { __typename?: 'Quest', _id?: string | null } };
+
+export type CreateTicketMutationVariables = Exact<{
+  beginTime?: InputMaybe<Scalars['DateTime']>;
+  untilTime?: InputMaybe<Scalars['DateTime']>;
+  title?: InputMaybe<Scalars['String']>;
+  description_v2?: InputMaybe<ContentMetadataInputType>;
+  imageUrl?: InputMaybe<Scalars['String']>;
+  rewardPolicy?: InputMaybe<RewardPolicyInputType>;
+}>;
+
+
+export type CreateTicketMutation = { __typename?: 'Mutation', createTicket: { __typename?: 'Ticket', _id?: string | null } };
+
+export type DeleteTicketMutationVariables = Exact<{
+  ticketId: Scalars['String'];
+}>;
+
+
+export type DeleteTicketMutation = { __typename?: 'Mutation', removeTicketById: boolean };
+
 
 export const GetUsersOrderByRewardPointDescDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUsersOrderByRewardPointDesc"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"0"}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"25"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersOrderByRewardPointDesc"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"wallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}},{"kind":"Field","name":{"kind":"Name","value":"userSocial"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"twitterId"}}]}}]}}]}}]} as unknown as DocumentNode<GetUsersOrderByRewardPointDescQuery, GetUsersOrderByRewardPointDescQueryVariables>;
 export const FindRankByUserIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FindRankByUserId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"findRankByUserId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}]}}]} as unknown as DocumentNode<FindRankByUserIdQuery, FindRankByUserIdQueryVariables>;
@@ -959,3 +1077,12 @@ export const IsRegisteredWalletDocument = {"kind":"Document","definitions":[{"ki
 export const ClearParticipatedAllEventsByUserIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ClearParticipatedAllEventsByUserId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clearParticipatedAllEventsByUserId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}]}}]} as unknown as DocumentNode<ClearParticipatedAllEventsByUserIdMutation, ClearParticipatedAllEventsByUserIdMutationVariables>;
 export const UpdateTicketVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTicketVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTicketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<UpdateTicketVisibleMutation, UpdateTicketVisibleMutationVariables>;
 export const UpdateTicketImageUrlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTicketImageUrl"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"imageUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTicketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"imageUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"imageUrl"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<UpdateTicketImageUrlMutation, UpdateTicketImageUrlMutationVariables>;
+export const UpdateTicketTitleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTicketTitle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTicketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<UpdateTicketTitleMutation, UpdateTicketTitleMutationVariables>;
+export const UpdateTicketDateRangeTimeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTicketDateRangeTime"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"beginTime"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"untilTime"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTicketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"beginTime"},"value":{"kind":"Variable","name":{"kind":"Name","value":"beginTime"}}},{"kind":"Argument","name":{"kind":"Name","value":"untilTime"},"value":{"kind":"Variable","name":{"kind":"Name","value":"untilTime"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<UpdateTicketDateRangeTimeMutation, UpdateTicketDateRangeTimeMutationVariables>;
+export const UpdateTicketDescriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTicketDescription"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description_v2"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ContentMetadataInputType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTicketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"description_v2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description_v2"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<UpdateTicketDescriptionMutation, UpdateTicketDescriptionMutationVariables>;
+export const UpdateTicketRewardPolicyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTicketRewardPolicy"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"rewardPolicy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"RewardPolicyInputType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTicketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"rewardPolicy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"rewardPolicy"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<UpdateTicketRewardPolicyMutation, UpdateTicketRewardPolicyMutationVariables>;
+export const CreateQuestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateQuest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title_v2"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ContentMetadataInputType"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questPolicy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"QuestPolicyInputType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createQuest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"title_v2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title_v2"}}},{"kind":"Argument","name":{"kind":"Name","value":"description"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description"}}},{"kind":"Argument","name":{"kind":"Name","value":"questPolicy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questPolicy"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<CreateQuestMutation, CreateQuestMutationVariables>;
+export const DeleteQuestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteQuest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteQuest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"questId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questId"}}},{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}}]}]}}]} as unknown as DocumentNode<DeleteQuestMutation, DeleteQuestMutationVariables>;
+export const UpdateQuestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateQuest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questPolicy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"QuestPolicyInputType"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title_v2"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ContentMetadataInputType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateQuest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"description"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description"}}},{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"questPolicy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questPolicy"}}},{"kind":"Argument","name":{"kind":"Name","value":"title_v2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title_v2"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<UpdateQuestMutation, UpdateQuestMutationVariables>;
+export const CreateTicketDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTicket"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"beginTime"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"untilTime"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description_v2"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ContentMetadataInputType"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"imageUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"rewardPolicy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"RewardPolicyInputType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTicket"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"beginTime"},"value":{"kind":"Variable","name":{"kind":"Name","value":"beginTime"}}},{"kind":"Argument","name":{"kind":"Name","value":"description_v2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description_v2"}}},{"kind":"Argument","name":{"kind":"Name","value":"imageUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"imageUrl"}}},{"kind":"Argument","name":{"kind":"Name","value":"rewardPolicy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"rewardPolicy"}}},{"kind":"Argument","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"Argument","name":{"kind":"Name","value":"untilTime"},"value":{"kind":"Variable","name":{"kind":"Name","value":"untilTime"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<CreateTicketMutation, CreateTicketMutationVariables>;
+export const DeleteTicketDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteTicket"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeTicketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}}]}]}}]} as unknown as DocumentNode<DeleteTicketMutation, DeleteTicketMutationVariables>;

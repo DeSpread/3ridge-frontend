@@ -13,6 +13,7 @@ import {
   TicketSortType,
   TicketStatusType,
 } from "../__generated__/graphql";
+import { FetchPolicy } from "@apollo/client/core/watchQueryOptions";
 
 const ticketIsVisibleOnly =
   (process.env["NEXT_PUBLIC_TICKET_VISIBLE"] ?? "false").toLowerCase() ===
@@ -25,63 +26,73 @@ export function useTicketsQuery(props: {
   filterType?: FilterType;
   sort?: TicketSortType;
   eventTypes?: EventType[];
+  fetchPolicy?: FetchPolicy;
 }) {
   const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
   const [ticketsDataLoading, setTicketsDataLoading] = useState(true);
-  const typeParseHelper = TypeParseHelper.getInstance();
+  const { fetchPolicy } = props;
 
   useEffect(() => {
     (async () => {
-      if (!props.filterType || !props.sort) {
-        return;
-      }
-
-      setTicketsDataLoading(true);
-
-      if (!props.projectId) {
-        const status =
-          props.filterType === FILTER_TYPE.AVAILABLE
-            ? TicketStatusType.Available
-            : props.filterType === FILTER_TYPE.MISSED
-            ? TicketStatusType.Missed
-            : props.filterType === FILTER_TYPE.COMPLETE
-            ? TicketStatusType.Completed
-            : TicketStatusType.All;
-        const { data } = await client.query({
-          query: GET_TICKETS,
-          variables: {
-            sort: props.sort,
-            status,
-            eventTypes: props.eventTypes,
-            isVisibleOnly: ticketIsVisibleOnly,
-          },
-        });
-        updateSetTicketsData(data.tickets);
-      } else {
-        const status =
-          props.filterType === FILTER_TYPE.AVAILABLE
-            ? TicketStatusType.Available
-            : props.filterType === FILTER_TYPE.MISSED
-            ? TicketStatusType.Missed
-            : props.filterType === FILTER_TYPE.COMPLETE
-            ? TicketStatusType.Completed
-            : TicketStatusType.All;
-        const { data } = await client.query({
-          query: GET_TICKETS_BY_PROJECT_ID,
-          variables: {
-            projectId: props.projectId,
-            sort: props.sort,
-            status: status,
-            eventTypes: props.eventTypes,
-            isVisibleOnly: ticketIsVisibleOnly,
-          },
-        });
-        // console.log(data.ticketsByProjectId);
-        updateSetTicketsData(data.ticketsByProjectId);
-      }
-      setTicketsDataLoading(false);
+      await asyncRefreshTicketsData(fetchPolicy ? fetchPolicy : "cache-first");
     })();
   }, [props.filterType, props.projectId, props.sort]);
+
+  const asyncRefreshTicketsData = async (
+    fetchPolicy: FetchPolicy = "no-cache"
+  ) => {
+    if (!props.filterType || !props.sort) {
+      return;
+    }
+
+    setTicketsDataLoading(true);
+
+    if (!props.projectId) {
+      const status =
+        props.filterType === FILTER_TYPE.AVAILABLE
+          ? TicketStatusType.Available
+          : props.filterType === FILTER_TYPE.MISSED
+          ? TicketStatusType.Missed
+          : props.filterType === FILTER_TYPE.COMPLETE
+          ? TicketStatusType.Completed
+          : TicketStatusType.All;
+      const { data } = await client.query({
+        query: GET_TICKETS,
+        variables: {
+          sort: props.sort,
+          status,
+          eventTypes: props.eventTypes,
+          isVisibleOnly: ticketIsVisibleOnly,
+        },
+        fetchPolicy: fetchPolicy,
+      });
+      // console.log(data.tickets);
+      updateSetTicketsData(data.tickets);
+    } else {
+      const status =
+        props.filterType === FILTER_TYPE.AVAILABLE
+          ? TicketStatusType.Available
+          : props.filterType === FILTER_TYPE.MISSED
+          ? TicketStatusType.Missed
+          : props.filterType === FILTER_TYPE.COMPLETE
+          ? TicketStatusType.Completed
+          : TicketStatusType.All;
+      const { data } = await client.query({
+        query: GET_TICKETS_BY_PROJECT_ID,
+        variables: {
+          projectId: props.projectId,
+          sort: props.sort,
+          status: status,
+          eventTypes: props.eventTypes,
+          isVisibleOnly: ticketIsVisibleOnly,
+        },
+        fetchPolicy: fetchPolicy,
+      });
+      // console.log(data.ticketsByProjectId);
+      updateSetTicketsData(data.ticketsByProjectId);
+    }
+    setTicketsDataLoading(false);
+  };
 
   const updateSetTicketsData = (
     tickets: Array<{
@@ -175,7 +186,7 @@ export function useTicketsQuery(props: {
               title_v2: _e.title_v2 ?? undefined,
               description: _e.description ?? undefined,
               questPolicy: {
-                context: TypeParseHelper.getInstance().parseQuestPolicy(
+                context: TypeParseHelper.parseQuestPolicy(
                   _e.questPolicy?.context,
                   _e.questPolicy?.questPolicy
                 ),
@@ -185,7 +196,7 @@ export function useTicketsQuery(props: {
             };
           }),
           rewardPolicy: {
-            context: typeParseHelper.parseRewardPolicy(
+            context: TypeParseHelper.parseRewardPolicy(
               e.rewardPolicy?.context ?? undefined,
               e.rewardPolicy?.rewardPolicyType ?? undefined
             ),
@@ -217,5 +228,5 @@ export function useTicketsQuery(props: {
     });
   };
 
-  return { ticketsData, ticketsDataLoading };
+  return { ticketsData, ticketsDataLoading, asyncRefreshTicketsData };
 }

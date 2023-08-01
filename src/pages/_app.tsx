@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "prismjs/themes/prism-tomorrow.css";
 
 import React, { ReactElement, ReactNode, useEffect } from "react";
 import type { AppProps } from "next/app";
@@ -26,10 +27,12 @@ import { Web3Modal } from "@web3modal/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 import { isMobile } from "react-device-detect";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 import { MobileContext } from "../provider/mobile/mobile-context";
 import ErrorBoundary from "../components/error-boundary";
 import { SnackbarProvider } from "../provider/snackbar/snackbar-provider";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
@@ -96,32 +99,34 @@ const App = (props: AppPropsWithLayout) => {
       />
       <ThemeProvider theme={createTheme()}>
         <GoogleOAuthProvider clientId={clientId ?? ""}>
-          <RecoilRoot>
-            <ApolloProvider client={apolloClient}>
-              <WagmiConfig config={wagmiConfig}>
-                <QueryClientProvider client={queryClient}>
-                  <WalletProvider>
-                    <AptosWalletAdapterProvider
-                      plugins={wallets}
-                      autoConnect={true}
-                    >
-                      <MobileContext.Provider value={{ isMobile }}>
-                        <MasterProvider>
-                          <ErrorBoundary>
-                            {getLayout(<Component {...pageProps} />)}
-                          </ErrorBoundary>
-                        </MasterProvider>
-                      </MobileContext.Provider>
-                    </AptosWalletAdapterProvider>
-                  </WalletProvider>
-                </QueryClientProvider>
-              </WagmiConfig>
-              <Web3Modal
-                projectId={projectId}
-                ethereumClient={ethereumClient}
-              />
-            </ApolloProvider>
-          </RecoilRoot>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <RecoilRoot>
+              <ApolloProvider client={apolloClient}>
+                <WagmiConfig config={wagmiConfig}>
+                  <QueryClientProvider client={queryClient}>
+                    <WalletProvider>
+                      <AptosWalletAdapterProvider
+                        plugins={wallets}
+                        autoConnect={true}
+                      >
+                        <MobileContext.Provider value={{ isMobile }}>
+                          <MasterProvider>
+                            <ErrorBoundary>
+                              {getLayout(<Component {...pageProps} />)}
+                            </ErrorBoundary>
+                          </MasterProvider>
+                        </MobileContext.Provider>
+                      </AptosWalletAdapterProvider>
+                    </WalletProvider>
+                  </QueryClientProvider>
+                </WagmiConfig>
+                <Web3Modal
+                  projectId={projectId}
+                  ethereumClient={ethereumClient}
+                />
+              </ApolloProvider>
+            </RecoilRoot>
+          </LocalizationProvider>
         </GoogleOAuthProvider>
       </ThemeProvider>
     </>

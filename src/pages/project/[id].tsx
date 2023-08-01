@@ -11,11 +11,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import CheckIcon from "../../components/atoms/svg/check-icon";
+import CheckIcon from "../../components/atomic/atoms/svg/check-icon";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import { useLoading } from "../../provider/loading/loading-provider";
-import TicketsSection from "../../components/organisms/tickets-section";
+import TicketsSection from "../../components/atomic/organisms/tickets-section";
 import {
   FILTER_TYPE,
   FilterType,
@@ -27,7 +27,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import { useTheme } from "@mui/material/styles";
 import { useProjectQuery } from "../../page-hook/project-query-hook";
-import { LinkIconButton } from "../../components/molecules/link-icon-button";
+import { LinkIconButton } from "../../components/atomic/molecules/link-icon-button";
 import Image from "next/image";
 import { TicketSortType } from "../../__generated__/graphql";
 

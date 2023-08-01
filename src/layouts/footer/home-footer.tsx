@@ -7,7 +7,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import SecondaryButton from "../../components/atoms/secondary-button";
+import SecondaryButton from "../../components/atomic/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
