@@ -13,7 +13,11 @@ const InputButton = (
         onChange={async (e) => {
           if (e.target.files?.[0]) {
             const file = e.target.files[0];
-            if (/\/(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(file.type)) {
+            console.log(file);
+            if (
+              /\/(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(file.type) ||
+              file.type === "image/svg+xml"
+            ) {
               props.onChanged?.(file);
             }
           }
