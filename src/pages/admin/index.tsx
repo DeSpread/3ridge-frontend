@@ -16,11 +16,10 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import PrimaryButton from "../../components/atomic/atoms/primary-button";
-import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
-import { useAdminQuery } from "../../page-hook/admin-query-hook";
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
+import { useAdminQuery } from "../../hooks/admin-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import { getLocaleErrorMessage } from "../../error/my-error";
-import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
 import { FILTER_TYPE } from "../../type";
 import { TicketSortType } from "../../__generated__/graphql";
 import TicketCard from "../../components/atomic/molecules/ticket-card";
@@ -30,8 +29,10 @@ import WithEditorContainer from "../../hoc/with-editor-container";
 import { useRouter } from "next/router";
 import AddIcon from "@mui/icons-material/Add";
 import loading = RecoilLoadable.loading;
-import { useTicketQuery } from "../../page-hook/ticket-query-hook";
 import { useLoading } from "../../provider/loading/loading-provider";
+
+import { useTicketsQuery } from "../../hooks/tickets-query-hook";
+import { useTicketQuery } from "../../hooks/ticket-query-hook";
 
 const _TicketCard = WithEditorContainer(TicketCard);
 

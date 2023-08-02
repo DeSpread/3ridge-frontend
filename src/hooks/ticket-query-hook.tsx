@@ -21,7 +21,7 @@ import {
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
-import { Ticket } from "../type";
+import { Ticket, TicketUserQuery } from "../type";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
@@ -35,6 +35,9 @@ import {
   RewardPolicyType,
 } from "../__generated__/graphql";
 import add from "date-fns/add";
+import axios, { AxiosResponse } from "axios";
+import AxiosUtil from "../util/axios-util";
+import { useRouter } from "next/router";
 
 export function useTicketQuery({
   userId,
@@ -64,6 +67,8 @@ export function useTicketQuery({
   const [createQuest] = useMutation(CREATE_QUEST);
   const [deleteQuest] = useMutation(DELETE_QUEST);
   const [updateQuest] = useMutation(UPDATE_QUEST);
+
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -531,6 +536,24 @@ export function useTicketQuery({
     });
   };
 
+  const asyncDownloadFile = async (query: TicketUserQuery) => {
+    if (id) {
+      const domain = window.location.origin;
+      await AxiosUtil.asyncDownloadFile({
+        url: `${domain}/api/rest`, // 파일 다운로드 요청 URL
+        method: "GET",
+        responseType: "blob",
+        params: {
+          includeWalletChainType: query?.includeWalletChainType ?? "",
+          includeTwitterId: query?.includeTwitterId,
+          includeEmail: query?.includeEmail,
+          includeTelegram: query?.includeTelegram,
+          ticketId: id,
+        },
+      });
+    }
+  };
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -552,5 +575,6 @@ export function useTicketQuery({
     asyncUpdateTicketRewardPolicy,
     asyncCreateTicket,
     asyncDeleteTicket,
+    asyncDownloadFile,
   };
 }

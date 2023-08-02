@@ -65,9 +65,11 @@ const TicketRewardChainContentEditDialog = (
               label="체인"
               onChange={(e) => {
                 const { value } = e.target;
-                console.log(value);
                 //@ts-ignore
                 setChainType(value);
+                if (value !== ChainType.Aptos) {
+                  setClaimType("EMPTY");
+                }
               }}
               sx={{ minWidth: 120, background: "" }}
             >
@@ -141,7 +143,7 @@ const TicketRewardChainContentEditDialog = (
               props.onConfirmBtnClicked?.({
                 //@ts-ignore
                 rewardChain: chainType === "EMPTY" ? undefined : chainType,
-                rewardClaimable: claimType ? true : false,
+                rewardClaimable: claimType === "EMPTY" ? false : true,
                 rewardUnit: claimType === "EMPTY" ? "" : claimType,
                 overrideRewardChainContent,
               });

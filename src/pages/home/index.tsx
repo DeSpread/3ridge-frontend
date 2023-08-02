@@ -13,15 +13,15 @@ import { useTheme } from "@mui/material/styles";
 
 import { Swiper, SwiperSlide } from "swiper/react"; // basic
 import "swiper/css"; //basic
-import { useTicketsQuery } from "../../page-hook/tickets-query-hook";
+import { useTicketsQuery } from "../../hooks/tickets-query-hook";
 import { FILTER_TYPE } from "../../type";
 import { EventType, TicketSortType } from "../../__generated__/graphql";
-import useWindowDimensions from "../../page-hook/window-dimensions";
+import useWindowDimensions from "../../hooks/window-dimensions";
 import BannerOverlayStyleCard from "../../components/atomic/molecules/banner-overlay-style-card";
 import RecommendEventSwiperSection from "../../components/atomic/organisms/recommend-event-swiper-section";
 import BannerSwiperSection from "../../components/atomic/organisms/banner-swiper-section";
 import RecommendProjectSwiperSection from "../../components/atomic/organisms/recommend-project-swiper-section";
-import { useProjectsQuery } from "../../page-hook/projects-query-hook";
+import { useProjectsQuery } from "../../hooks/projects-query-hook";
 
 const Home = () => {
   const theme = useTheme();

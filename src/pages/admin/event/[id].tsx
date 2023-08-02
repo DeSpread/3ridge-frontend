@@ -1,14 +1,20 @@
-import { Box, Grid, IconButton, Stack, useMediaQuery } from "@mui/material";
-import React, { ReactElement, useMemo, useState } from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  IconButton,
+  Paper,
+  Stack,
+  useMediaQuery,
+} from "@mui/material";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import MainLayout from "../../../layouts/main-layout";
 import Head from "next/head";
 import { useTheme } from "@mui/material/styles";
-import { useSignedUserQuery } from "../../../page-hook/signed-user-query-hook";
-import { useTicketQuery } from "../../../page-hook/ticket-query-hook";
 import { useRouter } from "next/router";
 import EventImage from "../../../components/pages/event/event-image";
 import WithEditorContainer from "../../../hoc/with-editor-container";
-import useSimpleStorage from "../../../page-hook/simple-storage-hook";
 import FileUtil from "../../../util/file-util";
 import { useLoading } from "../../../provider/loading/loading-provider";
 import EventTitle from "../../../components/pages/event/event-title";
@@ -28,7 +34,7 @@ import {
 import EventQuests from "../../../components/pages/event/event-quests";
 import AddIcon from "@mui/icons-material/Add";
 import QuestUpsertEditDialog from "../../../components/dialogs/quest-upsert-edit-dialog";
-import { Quest } from "../../../type";
+import { Quest, Z_INDEX_OFFSET } from "../../../type";
 import EventRewardPolicy from "../../../components/pages/event/reward/event-reward-policy";
 import EventTimeBoard from "../../../components/pages/event/event-time-board";
 import EventRewardDescription from "../../../components/pages/event/reward/event-reward-description";
@@ -42,6 +48,14 @@ import EventRewardChainContent from "../../../components/pages/event/reward/desc
 import EventRewardName from "../../../components/pages/event/reward/description/event-reward-name";
 import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-reward-chain-content-edit-dialog";
 import { useAlert } from "../../../provider/alert/alert-provider";
+import Draggable from "react-draggable";
+
+import { useSignedUserQuery } from "../../../hooks/signed-user-query-hook";
+import { useTicketQuery } from "../../../hooks/ticket-query-hook";
+import useSimpleStorage from "../../../hooks/simple-storage-hook";
+import PrimaryButton from "../../../components/atomic/atoms/primary-button";
+import TicketEditControllerWidget from "../../../components/widget/ticket-edit-controller-widget";
+import EventParticipants from "../../../components/pages/event/event-participants";
 
 const _EventRewardPolicy = WithEditorContainer(EventRewardPolicy);
 const _EventDateRange = WithEditorContainer(EventDateRange);
@@ -112,6 +126,7 @@ const Event = () => {
     asyncDeleteQuest,
     asyncUpdateQuest,
     asyncUpdateTicketRewardPolicy,
+    asyncDownloadFile,
   } = useTicketQuery({
     userId: userData._id,
     id: ticketId,
@@ -339,49 +354,48 @@ const Event = () => {
               }}
             ></_EventDescription>
 
-            <_EventQuests
-              ticketData={ticketData}
-              userData={userData}
-              verifiedList={verifiedList}
-              onEditBtnClicked={(e, quest, index) => {
-                showOpenQuestUpsertDialog(quest);
-              }}
-              onDeleteBtnClicked={async (e, quest, index) => {
-                showLoading();
-                if (quest?._id) await asyncDeleteQuest(quest?._id);
-                await asyncRefreshAll();
-                closeLoading();
-              }}
-              disableHoverEffect={true}
-            >
-              <IconButton
-                className={"MuiIconButton"}
-                sx={{
-                  position: "absolute",
-                  top: `calc(100% + 32px)`,
-                  left: `calc(50% - 16px)`,
-                  width: 32,
-                  height: 32,
-                  borderRadius: 16,
-                  borderWidth: 2,
-                  borderStyle: "solid",
+            <Stack>
+              <EventQuests
+                ticketData={ticketData}
+                userData={userData}
+                verifiedList={verifiedList}
+                onEditBtnClicked={(e, quest, index) => {
+                  showOpenQuestUpsertDialog(quest);
                 }}
-                onClick={(e) => {
-                  showOpenQuestUpsertDialog(undefined);
+                onDeleteBtnClicked={async (e, quest, index) => {
+                  showLoading();
+                  if (quest?._id) await asyncDeleteQuest(quest?._id);
+                  await asyncRefreshAll();
+                  closeLoading();
                 }}
-              >
-                <AddIcon
-                  fontSize={"large"}
+              ></EventQuests>
+              <Stack sx={{ width: "100%", marginTop: 4 }} alignItems={"center"}>
+                <IconButton
+                  className={"MuiIconButton"}
                   sx={{
-                    borderRadius: 30,
-                    "&:hover": {
-                      borderColor: theme.palette.secondary.main,
-                      background: "#61E1FF55",
-                    },
+                    width: 32,
+                    height: 32,
+                    borderRadius: 16,
+                    borderWidth: 2,
+                    borderStyle: "solid",
                   }}
-                ></AddIcon>
-              </IconButton>
-            </_EventQuests>
+                  onClick={(e) => {
+                    showOpenQuestUpsertDialog(undefined);
+                  }}
+                >
+                  <AddIcon
+                    fontSize={"large"}
+                    sx={{
+                      borderRadius: 30,
+                      "&:hover": {
+                        borderColor: theme.palette.secondary.main,
+                        background: "#61E1FF55",
+                      },
+                    }}
+                  ></AddIcon>
+                </IconButton>
+              </Stack>
+            </Stack>
             <Box sx={{ padding: 1 }}></Box>
           </Stack>
         </Grid>
@@ -410,7 +424,6 @@ const Event = () => {
                           left: -2,
                           width: smUp ? 300 + 4 : 260 + 4,
                           height: smUp ? 300 + 4 : 260 + 4,
-                          zIndex: theme.zIndex.drawer,
                         }}
                         onChanged={async (file: File) => {
                           await asyncUpdateRewardImageUrlByFile(file);
@@ -462,6 +475,7 @@ const Event = () => {
                   );
                 }}
               ></EventRewardDescription>
+              <EventParticipants ticketData={ticketData}></EventParticipants>
               {/*<div*/}
               {/*  dangerouslySetInnerHTML={{*/}
               {/*    __html:*/}
@@ -472,6 +486,19 @@ const Event = () => {
           </Stack>
         </Grid>
       </Grid>
+
+      <div style={{ position: "absolute", right: 8, top: 64 + 8 }}>
+        <Draggable>
+          <div className="box">
+            <TicketEditControllerWidget
+              ticketId={ticketData?._id ?? ""}
+              onDownloadButtonClick={async (res) => {
+                await asyncDownloadFile(res);
+              }}
+            ></TicketEditControllerWidget>
+          </div>
+        </Draggable>
+      </div>
 
       {/* --- Dialogs ---- */}
 

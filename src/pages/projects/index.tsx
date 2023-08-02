@@ -5,7 +5,7 @@ import MainLayout from "../../layouts/main-layout";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useLoading } from "../../provider/loading/loading-provider";
-import { useProjectsQuery } from "../../page-hook/projects-query-hook";
+import { useProjectsQuery } from "../../hooks/projects-query-hook";
 import HomeFooter from "../../layouts/footer/home-footer";
 import ProjectOverlayStyleCard from "../../components/atomic/molecules/project-overlay-style-card";
 import SkeletonOverlayCard from "../../components/atomic/molecules/skelton-overlay-card";

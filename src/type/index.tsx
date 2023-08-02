@@ -3,6 +3,7 @@ import React from "react";
 import { SvgIconProps } from "@mui/material";
 import {
   CategoryType,
+  ChainType,
   ContentMetadata,
   QuestPolicyType,
   RewardPolicyType,
@@ -321,3 +322,10 @@ export const FILTER_TYPE = {
 };
 
 export type FilterType = ObjectValues<typeof FILTER_TYPE>;
+
+export type TicketUserQuery = {
+  includeWalletChainType?: ChainType;
+  includeTwitterId?: boolean;
+  includeEmail?: boolean;
+  includeTelegram?: boolean;
+};
