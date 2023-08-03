@@ -23,6 +23,7 @@ import {
   VerifyTwitterFollowEditForm,
   VerifyTwitterRetweetOrLinkingEditForm,
   VerifyVisitWebsiteEditForm,
+  VerifySurveyEditForm,
 } from "../form/quest/quest-edit-from";
 import { Quest } from "../../type";
 
@@ -40,7 +41,7 @@ const QuestUpsertEditDialog = (
   const theme = useTheme();
 
   const [questPolicyType, setQuestPolicyType] = useState<QuestPolicyType>(
-    QuestPolicyType.VerifyTwitterFollow
+    QuestPolicyType.VerifySurvey
   );
   const [questPolicy, setQuestPolicy] = useState<QuestPolicy>();
   const [titleV2, setTitleV2] = useState<ContentMetadata>();
@@ -71,6 +72,8 @@ const QuestUpsertEditDialog = (
         return "월렛 연동 인증하기";
       case QuestPolicyType.VerifyVisitWebsite:
         return "웹사이트 방문하기";
+      case QuestPolicyType.VerifySurvey:
+        return "설문";
     }
     return "";
   };
@@ -134,6 +137,9 @@ const QuestUpsertEditDialog = (
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyVisitWebsite}>
                     {getPolicyLabel(QuestPolicyType.VerifyVisitWebsite)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifySurvey}>
+                    {getPolicyLabel(QuestPolicyType.VerifySurvey)}
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -208,6 +214,12 @@ const QuestUpsertEditDialog = (
               editedQuest={editedQuest}
               onChange={onChange}
             ></VerifyVisitWebsiteEditForm>
+          )}
+          {questPolicyType === QuestPolicyType.VerifySurvey && (
+            <VerifySurveyEditForm
+              editedQuest={editedQuest}
+              onChange={onChange}
+            ></VerifySurveyEditForm>
           )}
         </Box>
         <Stack

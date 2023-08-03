@@ -10,10 +10,20 @@ class TelegramUtil {
       photo_url: string;
       username: string;
     }>((resolve, reject) => {
+      const domain = window.location.origin;
+      const botId = process.env["NEXT_PUBLIC_TELEGRAM_BOT_ID"] ?? "";
+      const botIds = botId?.split(",");
+      let targetBotId = "";
+      if (domain.includes("www")) {
+        targetBotId = botIds[0];
+      } else {
+        targetBotId = botIds.length > 1 ? botIds[1] : botIds[0];
+      }
+      console.log("bot_id", targetBotId);
       //@ts-ignore
       window.Telegram.Login.auth(
         {
-          bot_id: process.env["NEXT_PUBLIC_TELEGRAM_BOT_ID"],
+          bot_id: targetBotId,
           request_access: true,
         },
         (data: {
