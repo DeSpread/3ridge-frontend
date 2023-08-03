@@ -14,7 +14,7 @@ class TelegramUtil {
       const botId = process.env["NEXT_PUBLIC_TELEGRAM_BOT_ID"] ?? "";
       const botIds = botId?.split(",");
       let targetBotId = "";
-      if (domain.includes("www")) {
+      if (!domain.includes("www")) {
         targetBotId = botIds[0];
       } else {
         targetBotId = botIds.length > 1 ? botIds[1] : botIds[0];
