@@ -39,6 +39,8 @@ import axios, { AxiosResponse } from "axios";
 import AxiosUtil from "../util/axios-util";
 import { useRouter } from "next/router";
 
+const CLIENT_URI = process.env["NEXT_PUBLIC_APOLLO_CLIENT_URI"];
+
 export function useTicketQuery({
   userId,
   id,
@@ -538,9 +540,10 @@ export function useTicketQuery({
 
   const asyncDownloadFile = async (query: TicketUserQuery) => {
     if (id) {
-      const domain = window.location.origin;
+      const clientUri = CLIENT_URI?.replace("/graphql", "");
+      const URL = `${clientUri}/ticket/${id}/users/file`;
       await AxiosUtil.asyncDownloadFile({
-        url: `${domain}/api/rest`, // 파일 다운로드 요청 URL
+        url: URL,
         method: "GET",
         responseType: "blob",
         params: {
@@ -548,7 +551,6 @@ export function useTicketQuery({
           includeTwitterId: query?.includeTwitterId,
           includeEmail: query?.includeEmail,
           includeTelegram: query?.includeTelegram,
-          ticketId: id,
         },
       });
     }
