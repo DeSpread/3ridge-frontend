@@ -8,9 +8,10 @@ import {
   TicketEventParam,
 } from "../../../type";
 import { TicketSortType } from "../../../__generated__/graphql";
-import { useTicketsQuery } from "../../../page-hook/tickets-query-hook";
 import { Stack, Typography } from "@mui/material";
 import TicketsSection from "./tickets-section";
+
+import { useTicketsQuery } from "../../../hooks/tickets-query-hook";
 
 const AllEventsSection = () => {
   const router = useRouter();

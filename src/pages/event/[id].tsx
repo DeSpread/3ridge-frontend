@@ -11,7 +11,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useTicketQuery } from "../../page-hook/ticket-query-hook";
+import { useTicketQuery } from "../../hooks/ticket-query-hook";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
 import StringUtil from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
@@ -32,7 +32,7 @@ import {
   VerifyVisitWebsiteQuestContext,
 } from "../../type";
 import { QuestPolicyType } from "../../__generated__/graphql";
-import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import {
@@ -45,9 +45,9 @@ import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
 import { useLogin } from "../../provider/login/login-provider";
-import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
+import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atomic/atoms/link-typography";
-import { useSignDialog } from "../../page-hook/sign-dialog-hook";
+import { useSignDialog } from "../../hooks/sign-dialog-hook";
 import Realistic from "../../components/effects/realistic";
 import { useGetSet, useMountedState } from "react-use";
 import { useSetRecoilState } from "recoil";

@@ -25,7 +25,7 @@ import {
 } from "../../type";
 import VerifyYourEmailForm from "../../components/form/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
-import { useSignDialog } from "../../page-hook/sign-dialog-hook";
+import { useSignDialog } from "../../hooks/sign-dialog-hook";
 import AwsClient from "../../remote/aws-client";
 import SignInWithNetworkSelectDialog from "../../layouts/dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";

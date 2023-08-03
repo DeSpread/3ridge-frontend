@@ -15,7 +15,6 @@ import {
 import LinearProgress from "@mui/material/LinearProgress";
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atomic/atoms/gradient-typography";
-import { useSignedUserQuery } from "../../page-hook/signed-user-query-hook";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -45,15 +44,12 @@ import { VALIDATOR_BUTTON_STATES } from "../../components/atomic/molecules/valid
 import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
 import BlockIcon from "../../components/atomic/molecules/block-icon";
-import { useUserQuery } from "../../page-hook/user-query-hook";
 import { useRouter } from "next/router";
 import TicketCard from "../../components/atomic/molecules/ticket-card";
 import Image from "next/image";
 import ResourceHelper from "../../helper/resource-helper";
 import TypeHelper from "../../helper/type-helper";
-import { useWalletAlert } from "../../page-hook/wallet-alert-hook";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
-import { useProfileEditDialog } from "../../page-hook/profile-edit-dialog-hook";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import EthUtil from "../../util/eth-util";
 import ConnectTwitterDialog from "../../components/dialogs/connect-twitter-dialog";
@@ -63,7 +59,12 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTotalWallet } from "../../provider/login/hook/total-wallet-hook";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useSnackbar } from "../../provider/snackbar/snackbar-provider";
-import useSimpleStorage from "../../page-hook/simple-storage-hook";
+
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
+import useSimpleStorage from "../../hooks/simple-storage-hook";
+import { useWalletAlert } from "../../hooks/wallet-alert-hook";
+import { useUserQuery } from "../../hooks/user-query-hook";
+import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
