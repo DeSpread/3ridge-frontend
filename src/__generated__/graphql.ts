@@ -62,6 +62,21 @@ export type ContentMetadataInputType = {
   contentFormatType?: InputMaybe<ContentFormatType>;
 };
 
+export type Data = {
+  __typename?: 'Data';
+  _id?: Maybe<Scalars['String']>;
+  createdUser?: Maybe<User>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  value?: Maybe<Scalars['String']>;
+};
+
+export type DataInputType = {
+  _id?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<UserInputType>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  value?: InputMaybe<Scalars['String']>;
+};
+
 export enum EventType {
   Main = 'MAIN',
   Recommended = 'RECOMMENDED'
@@ -92,12 +107,14 @@ export type Mutation = {
   removeProject: Project;
   removeTicketById: Scalars['Boolean'];
   removeUserByName: User;
+  updateData: Data;
   updateProject: Project;
   updateQuest: Quest;
   updateTicketById: Ticket;
   updateUserByName: User;
   verify3ridgePoint: Quest;
   verifyAptosQuest: Quest;
+  verifySurveyQuest: Quest;
   verifyTwitterFollowQuest: Quest;
   verifyTwitterLikingQuest: Quest;
   verifyTwitterRetweetQuest: Quest;
@@ -207,6 +224,12 @@ export type MutationRemoveUserByNameArgs = {
 };
 
 
+export type MutationUpdateDataArgs = {
+  id: Scalars['String'];
+  value: Scalars['String'];
+};
+
+
 export type MutationUpdateProjectArgs = {
   categories?: InputMaybe<Array<CategoryType>>;
   description?: InputMaybe<Scalars['String']>;
@@ -259,6 +282,14 @@ export type MutationVerify3ridgePointArgs = {
 
 export type MutationVerifyAptosQuestArgs = {
   questId: Scalars['String'];
+  ticketId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+
+export type MutationVerifySurveyQuestArgs = {
+  questId: Scalars['String'];
+  surveyContents: Array<Scalars['String']>;
   ticketId: Scalars['String'];
   userId: Scalars['String'];
 };
@@ -491,6 +522,7 @@ export type Quest = {
   __typename?: 'Quest';
   _id?: Maybe<Scalars['String']>;
   completedUsers?: Maybe<Array<User>>;
+  dataCollection?: Maybe<Array<Data>>;
   description?: Maybe<Scalars['String']>;
   questGuides?: Maybe<Array<ContentMetadata>>;
   questPolicy?: Maybe<QuestPolicy>;
@@ -501,6 +533,7 @@ export type Quest = {
 export type QuestInputType = {
   _id?: InputMaybe<Scalars['String']>;
   completedUsers?: InputMaybe<Array<UserInputType>>;
+  dataCollection?: InputMaybe<Array<DataInputType>>;
   description?: InputMaybe<Scalars['String']>;
   questGuides?: InputMaybe<Array<ContentMetadataInputType>>;
   questPolicy?: InputMaybe<QuestPolicyInputType>;
@@ -535,6 +568,7 @@ export enum QuestPolicyType {
   VerifyHasTelegram = 'VERIFY_HAS_TELEGRAM',
   VerifyHasTwitter = 'VERIFY_HAS_TWITTER',
   VerifyHasWalletAddress = 'VERIFY_HAS_WALLET_ADDRESS',
+  VerifySurvey = 'VERIFY_SURVEY',
   VerifyTelegram = 'VERIFY_TELEGRAM',
   VerifyTwitterFollow = 'VERIFY_TWITTER_FOLLOW',
   VerifyTwitterLiking = 'VERIFY_TWITTER_LIKING',
