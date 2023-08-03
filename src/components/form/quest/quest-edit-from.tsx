@@ -1,6 +1,8 @@
 import InputWithLabel from "../../atomic/atoms/input-with-label";
 import {
+  Divider,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -20,6 +22,7 @@ import {
   Quest,
   Verify3ridgePointQuestContext,
   VerifyHasWalletAddressQuestContext,
+  VerifySurveyQuestContext,
   VerifyTelegramQuestContext,
   VerifyTwitterFollowQuestContext,
   VerifyTwitterRetweetQuestContext,
@@ -27,6 +30,216 @@ import {
 } from "../../../type";
 import NumberWithLabel from "../../atomic/atoms/number-with-label";
 import MathUtil from "../../../util/math-util";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { useTheme } from "@mui/material/styles";
+
+const VerifySurveyEditForm = (props: {
+  editedQuest?: Quest;
+  onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
+}) => {
+  const theme = useTheme();
+
+  const { editedQuest, onChange } = props;
+  const [message, setMessage] = useState<string>("");
+  const [texts, setTexts] = useState([""]);
+
+  useEffect(() => {
+    if (editedQuest) {
+      if (
+        editedQuest.questPolicy?.questPolicy === QuestPolicyType.VerifySurvey
+      ) {
+        const context = editedQuest.questPolicy
+          ?.context as VerifySurveyQuestContext;
+        setTexts((prevState) => {
+          return [...context.questions];
+        });
+        setMessage(editedQuest.title_v2?.content ?? "");
+      }
+    }
+  }, [editedQuest]);
+
+  const updateData = (_message: string, _text?: string, index?: number) => {
+    const questions = [...texts];
+    if (index !== undefined && _text) questions[index] = _text ?? "";
+    const context = { questions };
+    const _newQuestPolicy = {
+      context: JSON.stringify(context),
+      questPolicy: QuestPolicyType.VerifySurvey,
+    };
+
+    const _newContentMetaData = {
+      content: _message,
+      contentEncodingType: ContentEncodingType.None,
+      contentFormatType: ContentFormatType.Text,
+    };
+
+    onChange?.(_newQuestPolicy, _newContentMetaData);
+  };
+
+  return (
+    <Stack spacing={1}>
+      <Stack
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"flex-end"}
+        sx={{ width: "100%", background: "" }}
+      >
+        <InputWithLabel
+          label={"메세지"}
+          labelWidth={"30%"}
+          value={message}
+          onChange={(e) => {
+            const { value } = e.target;
+            setMessage(value);
+            updateData(value, undefined, undefined);
+          }}
+        ></InputWithLabel>
+        <IconButton
+          className={"MuiIconButton"}
+          sx={{
+            visibility: "hidden",
+            width: 28,
+            height: 28,
+            borderRadius: 16,
+            borderWidth: 2,
+            borderStyle: "solid",
+            marginLeft: 3,
+          }}
+        >
+          <RemoveIcon
+            fontSize={"medium"}
+            sx={{
+              borderRadius: 30,
+              "&:hover": {
+                borderColor: theme.palette.secondary.main,
+                background: "#61E1FF55",
+              },
+            }}
+          ></RemoveIcon>
+        </IconButton>
+      </Stack>
+      {texts.map((e, i) => {
+        return (
+          <Stack
+            key={i}
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"flex-end"}
+            sx={{ width: "100%", background: "" }}
+          >
+            <InputWithLabel
+              key={i}
+              label={`질문 ${i}번째`}
+              labelWidth={"30%"}
+              value={texts[i]}
+              onChange={(e) => {
+                const { value } = e.target;
+                setTexts((prevState) => {
+                  const src = [...texts];
+                  src[i] = value;
+                  return src;
+                });
+                updateData(message, value, i);
+              }}
+            ></InputWithLabel>
+            {i !== 0 && (
+              <IconButton
+                className={"MuiIconButton"}
+                sx={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 16,
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                  marginLeft: 3,
+                }}
+                onClick={(e) => {
+                  setTexts((prevState) => {
+                    const src = [...texts];
+                    return src.filter((e, _i) => _i !== i);
+                  });
+                }}
+              >
+                <RemoveIcon
+                  fontSize={"medium"}
+                  sx={{
+                    borderRadius: 30,
+                    "&:hover": {
+                      borderColor: theme.palette.secondary.main,
+                      background: "#61E1FF55",
+                    },
+                  }}
+                ></RemoveIcon>
+              </IconButton>
+            )}
+            {i === 0 && (
+              <IconButton
+                className={"MuiIconButton"}
+                sx={{
+                  visibility: "hidden",
+                  width: 28,
+                  height: 28,
+                  borderRadius: 16,
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                  marginLeft: 3,
+                }}
+              >
+                <RemoveIcon
+                  fontSize={"medium"}
+                  sx={{
+                    borderRadius: 30,
+                    "&:hover": {
+                      borderColor: theme.palette.secondary.main,
+                      background: "#61E1FF55",
+                    },
+                  }}
+                ></RemoveIcon>
+              </IconButton>
+            )}
+          </Stack>
+        );
+      })}
+      <Divider sx={{ paddingTop: 2, paddingBottom: 2 }}></Divider>
+      <Stack
+        alignItems={"center"}
+        justifyContent={"center"}
+        sx={{ width: "100%", paddingTop: 2 }}
+      >
+        <IconButton
+          className={"MuiIconButton"}
+          sx={{
+            width: 28,
+            height: 28,
+            borderRadius: 16,
+            borderWidth: 2,
+            borderStyle: "solid",
+          }}
+          onClick={(e) => {
+            setTexts((prevState) => {
+              const src = [...texts, ""];
+              return src;
+            });
+          }}
+        >
+          <AddIcon
+            fontSize={"medium"}
+            sx={{
+              borderRadius: 30,
+              "&:hover": {
+                borderColor: theme.palette.secondary.main,
+                background: "#61E1FF55",
+              },
+            }}
+          ></AddIcon>
+        </IconButton>
+      </Stack>
+    </Stack>
+  );
+};
+
+// ---
 
 const VerifyVisitWebsiteEditForm = (props: {
   editedQuest?: Quest;
@@ -643,4 +856,5 @@ export {
   VerifyEmailEditForm,
   VerifyHasWalletAddressEditForm,
   VerifyVisitWebsiteEditForm,
+  VerifySurveyEditForm,
 };

@@ -14,6 +14,7 @@ const InputWithLabel = (
       direction={"row"}
       alignItems={"center"}
       justifyContent={"flex-start"}
+      sx={{ width: "100%" }}
     >
       <Box sx={{ width: labelWidth }}>
         <Typography

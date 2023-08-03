@@ -14,6 +14,7 @@ import {
   VerifyHasTelegramQuestContext,
   VerifyVisitWebsiteQuestContext,
   VerifyAgreementQuestContext,
+  VerifySurveyQuestContext,
 } from "../type";
 import { QuestPolicyType } from "../__generated__/graphql";
 
@@ -74,6 +75,8 @@ class TypeParseHelper {
         return contextJson as VerifyVisitWebsiteQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyAgreement) {
         return contextJson as VerifyAgreementQuestContext;
+      } else if (questPolicyType === QuestPolicyType.VerifySurvey) {
+        return contextJson as VerifySurveyQuestContext;
       }
     } catch (e) {
       console.log(context, questPolicyType);

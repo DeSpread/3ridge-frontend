@@ -290,6 +290,12 @@ export type QuizContent = {
   correctOptionIndex: number;
 };
 
+export type VerifySurveyQuestContext = {
+  questions: string[];
+};
+
+// ---
+
 export type QuizEventParam = {
   correct: boolean;
 };
