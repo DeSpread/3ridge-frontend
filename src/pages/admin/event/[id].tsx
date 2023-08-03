@@ -493,7 +493,7 @@ const Event = () => {
             <TicketEditControllerWidget
               ticketId={ticketData?._id ?? ""}
               onDownloadButtonClick={async (res) => {
-                await asyncDownloadFile(res);
+                await asyncDownloadFile(res, `${ticketData?.title}.csv`);
               }}
             ></TicketEditControllerWidget>
           </div>

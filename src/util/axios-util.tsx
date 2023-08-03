@@ -1,9 +1,13 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 class AxiosUtil {
-  public static asyncDownloadFile = async (config?: AxiosRequestConfig) => {
+  public static asyncDownloadFile = async (
+    config?: AxiosRequestConfig,
+    filename?: string
+  ) => {
     const response = await axios({
       ...config,
+      responseType: "blob",
     });
     const blob = new Blob([response.data]);
     const fileObjectUrl = window.URL.createObjectURL(blob);
@@ -22,7 +26,7 @@ class AxiosUtil {
       );
       return fileName;
     };
-    link.download = extractDownloadFilename(response);
+    link.download = filename ?? extractDownloadFilename(response);
     document.body.appendChild(link);
     link.click();
     link.remove();

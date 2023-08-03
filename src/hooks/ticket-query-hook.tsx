@@ -538,21 +538,26 @@ export function useTicketQuery({
     });
   };
 
-  const asyncDownloadFile = async (query: TicketUserQuery) => {
+  const asyncDownloadFile = async (
+    query: TicketUserQuery,
+    filename?: string
+  ) => {
     if (id) {
       const clientUri = CLIENT_URI?.replace("/graphql", "");
       const URL = `${clientUri}/ticket/${id}/users/file`;
-      await AxiosUtil.asyncDownloadFile({
-        url: URL,
-        method: "GET",
-        responseType: "blob",
-        params: {
-          includeWalletChainType: query?.includeWalletChainType ?? "",
-          includeTwitterId: query?.includeTwitterId,
-          includeEmail: query?.includeEmail,
-          includeTelegram: query?.includeTelegram,
+      await AxiosUtil.asyncDownloadFile(
+        {
+          url: URL,
+          method: "GET",
+          params: {
+            includeWalletChainType: query?.includeWalletChainType ?? "",
+            includeTwitterId: query?.includeTwitterId,
+            includeEmail: query?.includeEmail,
+            includeTelegram: query?.includeTelegram,
+          },
         },
-      });
+        filename
+      );
     }
   };
 
