@@ -3,7 +3,6 @@ import { useLoading } from "../../../provider/loading/loading-provider";
 import React, { useRef, useState } from "react";
 import { FILTER_TYPE, FilterType } from "../../../type";
 import { EventType, TicketSortType } from "../../../__generated__/graphql";
-import { useTicketsQuery } from "../../../page-hook/tickets-query-hook";
 import {
   Box,
   Grid,
@@ -20,7 +19,8 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
 import "swiper/css";
-import useWindowDimensions from "../../../page-hook/window-dimensions"; //basic
+import useWindowDimensions from "../../../hooks/window-dimensions"; //basic
+import { useTicketsQuery } from "../../../hooks/tickets-query-hook";
 
 SwiperCore.use([Navigation]);
 

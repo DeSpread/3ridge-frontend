@@ -24,7 +24,7 @@ import {
   getLocaleErrorMessage,
 } from "../error/my-error";
 import { useAlert } from "../provider/alert/alert-provider";
-import { useSignedUserQuery } from "../page-hook/signed-user-query-hook";
+import { useSignedUserQuery } from "../hooks/signed-user-query-hook";
 import { useLoading } from "../provider/loading/loading-provider";
 import {
   EmailSignUpEventParams,
@@ -32,13 +32,13 @@ import {
   SupportedNetwork,
   Z_INDEX_OFFSET,
 } from "../type";
-import { useSignDialog } from "../page-hook/sign-dialog-hook";
+import { useSignDialog } from "../hooks/sign-dialog-hook";
 import NavbarButton from "../components/atomic/atoms/navbar-button";
 import SubMenuButton from "../components/atomic/molecules/sub-menu-button";
 import Image from "next/image";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
-import { useWalletAlert } from "../page-hook/wallet-alert-hook";
+import { useWalletAlert } from "../hooks/wallet-alert-hook";
 import TypeHelper from "../helper/type-helper";
 import ResourceHelper from "../helper/resource-helper";
 import MobileNavigatorBar from "../components/atomic/atoms/mobile/mobile-navigator-bar";

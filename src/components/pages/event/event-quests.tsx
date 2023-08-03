@@ -164,33 +164,34 @@ const EventQuests = (
                 autoVerified={autoVerified}
               ></VerifyCard>
               {onEditBtnClicked && onDeleteBtnClicked && (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    left: -OFFSET_SIZE,
-                    top: -OFFSET_SIZE,
-                    width: `calc(100% + ${OFFSET_SIZE * 2}px);`,
-                    height: `calc(100% + ${OFFSET_SIZE * 2}px);`,
-                    borderWidth: 2,
-                    borderStyle: "solid",
-                    borderColor: "white",
-                    borderRadius: 1,
-                    zIndex: theme.zIndex.drawer,
-                    cursor: "pointer",
-                    margin: 0,
-                    transition: "all 0.2s ease-out 0s",
-                    transitionDuration: "0.2s",
-                    transitionDelay: "0s",
-                    "&:hover": {
-                      borderColor: theme.palette.secondary.main,
-                      background: "#61E1FF55",
-                    },
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onEditBtnClicked?.(e, quest, index);
-                  }}
-                >
+                <>
+                  <Box
+                    className={"box"}
+                    sx={{
+                      position: "absolute",
+                      left: -OFFSET_SIZE,
+                      top: -OFFSET_SIZE,
+                      width: `calc(100% + ${OFFSET_SIZE * 2}px);`,
+                      height: `calc(100% + ${OFFSET_SIZE * 2}px);`,
+                      borderWidth: 2,
+                      borderStyle: "solid",
+                      borderColor: "white",
+                      borderRadius: 1,
+                      cursor: "pointer",
+                      margin: 0,
+                      transition: "all 0.2s ease-out 0s",
+                      transitionDuration: "0.2s",
+                      transitionDelay: "0s",
+                      "&:hover": {
+                        borderColor: theme.palette.secondary.main,
+                        background: "#61E1FF55",
+                      },
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEditBtnClicked?.(e, quest, index);
+                    }}
+                  ></Box>
                   <Stack
                     sx={{
                       position: "absolute",
@@ -215,7 +216,6 @@ const EventQuests = (
                     }}
                     justifyContent={"center"}
                     alignItems={"center"}
-                    zIndex={theme.zIndex.drawer + 1}
                   >
                     <IconButton
                       className={"MuiIconButton"}
@@ -232,7 +232,7 @@ const EventQuests = (
                       <CloseIcon></CloseIcon>
                     </IconButton>
                   </Stack>
-                </Box>
+                </>
               )}
             </div>
           );
