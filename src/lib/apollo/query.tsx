@@ -783,3 +783,21 @@ export const DELETE_TICKET = gql(/* GraphQL */ `
     removeTicketById(ticketId: $ticketId)
   }
 `);
+
+export const VERIFY_SURVEY_QUEST = gql(/* GraphQL */ `
+  mutation VerifySurveyQuest(
+    $questId: String!
+    $surveyContents: [String!]!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verifySurveyQuest(
+      questId: $questId
+      surveyContents: $surveyContents
+      ticketId: $ticketId
+      userId: $userId
+    ) {
+      _id
+    }
+  }
+`);

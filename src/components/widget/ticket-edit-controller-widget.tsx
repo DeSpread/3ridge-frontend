@@ -1,7 +1,7 @@
 import { Card, CardContent, Stack } from "@mui/material";
 import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
-import CompletedUserInfoDownloadForm from "../form/ticket-edit-controller/completed-user-info-download-form";
+import UserInfoDownloadForm from "../form/user-info-download-form";
 import LinkToPageForm from "../form/ticket-edit-controller/link-to-page-form";
 import { ChainType } from "../../__generated__/graphql";
 import { TicketUserQuery } from "../../type";
@@ -30,9 +30,10 @@ const TicketEditControllerWidget = (
       <CardContent>
         <Stack spacing={1}>
           <LinkToPageForm ticketId={ticketId}></LinkToPageForm>
-          <CompletedUserInfoDownloadForm
+          <UserInfoDownloadForm
+            title={"완료 유저 정보 다운로드"}
             onDownloadButtonClick={onDownloadButtonClick}
-          ></CompletedUserInfoDownloadForm>
+          ></UserInfoDownloadForm>
         </Stack>
       </CardContent>
     </Card>

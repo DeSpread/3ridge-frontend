@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
+import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 import {
   Box,
   FormControl,
@@ -8,8 +8,8 @@ import {
   Select,
   Stack,
 } from "@mui/material";
-import SecondaryButton from "../atomic/atoms/secondary-button";
-import { RewardPolicyType } from "../../__generated__/graphql";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
+import { RewardPolicyType } from "../../../__generated__/graphql";
 
 const TicketRewardPolicyEditDialog = (
   props: {

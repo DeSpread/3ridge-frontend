@@ -203,7 +203,7 @@ export type Quest = {
   description?: string;
   questPolicy?: {
     context?:
-      | QuizQuestContext
+      | VerifyQuizQuestContext
       | VerifyTwitterLikingQuestContext
       | VerifyTwitterRetweetQuestContext
       | VerifyTwitterFollowQuestContext
@@ -280,7 +280,7 @@ export type AgreementEventParam = {
   correct: boolean;
 };
 
-export type QuizQuestContext = {
+export type VerifyQuizQuestContext = {
   quizList?: QuizContent[];
 };
 

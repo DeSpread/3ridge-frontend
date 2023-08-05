@@ -3,8 +3,8 @@ import {
   ContentEncodingType,
   ContentFormatType,
   ContentMetadata,
-} from "../../__generated__/graphql";
-import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
+} from "../../../__generated__/graphql";
+import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 import {
   Box,
   FormControl,
@@ -13,12 +13,12 @@ import {
   Select,
   Stack,
 } from "@mui/material";
-import SecondaryButton from "../atomic/atoms/secondary-button";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
 import React, { useEffect, useState } from "react";
-import InputWithLabel from "../atomic/atoms/input-with-label";
+import InputWithLabel from "../../atomic/atoms/input-with-label";
 import dedent from "dedent";
-import ResourceHelper from "../../helper/resource-helper";
-import { Ticket } from "../../type";
+import ResourceHelper from "../../../helper/resource-helper";
+import { Ticket } from "../../../type";
 
 const TicketRewardChainContentEditDialog = (
   props: {

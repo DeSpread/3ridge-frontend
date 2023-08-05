@@ -6,23 +6,25 @@ import {
   Box,
   DialogContent,
   DialogProps,
+  IconButton,
   Stack,
   Typography,
 } from "@mui/material";
-import QuestQuizForm from "../form/quest/quest-quiz-form";
+import QuestQuizForm from "../../form/quest/quest-quiz-form";
 import {
   MouseEventWithParam,
   QuizEventParam,
-  QuizQuestContext,
+  VerifyQuizQuestContext,
   Z_INDEX_OFFSET,
-} from "../../type";
-import SecondaryButton from "../atomic/atoms/secondary-button";
+} from "../../../type";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 
 type QuestQuizDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
   onCompleteQuiz?: () => void;
-  context: QuizQuestContext;
+  context: VerifyQuizQuestContext;
 };
 
 const QuestQuizDialog = (props: QuestQuizDialogProps) => {
@@ -52,7 +54,6 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
   return (
     <>
       <Dialog
-        {...rest}
         fullWidth
         maxWidth={"xs"}
         sx={{
@@ -68,29 +69,54 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
             padding: 8,
           },
         }}
+        onClose={() => {
+          // @ts-ignore
+          props.onCloseBtnClicked?.(undefined);
+        }}
+        {...rest}
       >
         <DialogTitle>
-          <Stack direction={"column"} spacing={1}>
-            <Typography variant={"body1"}>{`Question ${questionIndex + 1} of ${
-              context.quizList?.length
-            }`}</Typography>
-            <Typography
-              variant={"h5"}
-              sx={{
-                wordBreak: "break-word",
-              }}
-            >
-              {props.context?.quizList &&
-              props.context?.quizList?.length > 0 ? (
-                <Box sx={{ marginTop: 3 }}>
-                  <Typography variant={"body1"}>
-                    {props.context?.quizList[questionIndex].title}
-                  </Typography>
-                </Box>
-              ) : (
-                <></>
-              )}
-            </Typography>
+          <Stack>
+            <Stack direction={"column"} spacing={1}>
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+              >
+                <Typography variant={"body1"}>{`Question ${
+                  questionIndex + 1
+                } of ${context.quizList?.length}`}</Typography>
+                <IconButton
+                  sx={{
+                    borderRadius: 32,
+                    marginRight: 0,
+                    "&:hover": {
+                      boxShadow: "none",
+                    },
+                  }}
+                  onClick={props.onCloseBtnClicked}
+                >
+                  <CloseIcon></CloseIcon>
+                </IconButton>
+              </Stack>
+              <Typography
+                variant={"h5"}
+                sx={{
+                  wordBreak: "break-word",
+                }}
+              >
+                {props.context?.quizList &&
+                props.context?.quizList?.length > 0 ? (
+                  <Box sx={{ marginTop: 3 }}>
+                    <Typography variant={"body1"}>
+                      {props.context?.quizList[questionIndex].title}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <></>
+                )}
+              </Typography>
+            </Stack>
           </Stack>
         </DialogTitle>
         <DialogContent>

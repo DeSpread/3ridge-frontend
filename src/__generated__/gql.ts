@@ -55,6 +55,7 @@ const documents = {
     "\n  mutation UpdateQuest(\n    $description: String!\n    $id: String!\n    $questPolicy: QuestPolicyInputType\n    $title_v2: ContentMetadataInputType\n  ) {\n    updateQuest(\n      description: $description\n      id: $id\n      questPolicy: $questPolicy\n      title_v2: $title_v2\n    ) {\n      _id\n    }\n  }\n": types.UpdateQuestDocument,
     "\n  mutation CreateTicket(\n    $beginTime: DateTime\n    $untilTime: DateTime\n    $title: String\n    $description_v2: ContentMetadataInputType\n    $imageUrl: String\n    $rewardPolicy: RewardPolicyInputType\n  ) {\n    createTicket(\n      beginTime: $beginTime\n      description_v2: $description_v2\n      imageUrl: $imageUrl\n      rewardPolicy: $rewardPolicy\n      title: $title\n      untilTime: $untilTime\n    ) {\n      _id\n    }\n  }\n": types.CreateTicketDocument,
     "\n  mutation DeleteTicket($ticketId: String!) {\n    removeTicketById(ticketId: $ticketId)\n  }\n": types.DeleteTicketDocument,
+    "\n  mutation VerifySurveyQuest(\n    $questId: String!\n    $surveyContents: [String!]!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifySurveyQuest(\n      questId: $questId\n      surveyContents: $surveyContents\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n": types.VerifySurveyQuestDocument,
 };
 
 /**
@@ -225,6 +226,10 @@ export function gql(source: "\n  mutation CreateTicket(\n    $beginTime: DateTim
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation DeleteTicket($ticketId: String!) {\n    removeTicketById(ticketId: $ticketId)\n  }\n"): (typeof documents)["\n  mutation DeleteTicket($ticketId: String!) {\n    removeTicketById(ticketId: $ticketId)\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation VerifySurveyQuest(\n    $questId: String!\n    $surveyContents: [String!]!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifySurveyQuest(\n      questId: $questId\n      surveyContents: $surveyContents\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation VerifySurveyQuest(\n    $questId: String!\n    $surveyContents: [String!]!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifySurveyQuest(\n      questId: $questId\n      surveyContents: $surveyContents\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
