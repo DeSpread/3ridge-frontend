@@ -15,6 +15,7 @@ import {
   UPDATE_TICKET_TITLE,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
+  VERIFY_SURVEY_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
@@ -53,6 +54,7 @@ export function useTicketQuery({
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
+  const [verifySurveyQuest] = useMutation(VERIFY_SURVEY_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
   const [verifyAptosQuest] = useMutation(VERIFY_APTOS_QUEST);
   const [claimReward] = useMutation(CLAIM_REWARD);
@@ -367,6 +369,24 @@ export function useTicketQuery({
     }
   };
 
+  const asyncVerifySurveyQuest = async (
+    questId: string,
+    answers?: string[]
+  ) => {
+    console.log("aaa", id, questId, answers, userId);
+    if (id && questId && answers && userId) {
+      console.log("bbb", id, questId, answers, userId);
+      await verifySurveyQuest({
+        variables: {
+          questId,
+          surveyContents: answers,
+          ticketId: id,
+          userId,
+        },
+      });
+    }
+  };
+
   const asyncIsCompletedQuestByUserId = async (questId: string) => {
     if (questId && userId) {
       try {
@@ -538,13 +558,37 @@ export function useTicketQuery({
     });
   };
 
-  const asyncDownloadFile = async (
+  const asyncDownloadCompletedUserFile = async (
     query: TicketUserQuery,
     filename?: string
   ) => {
     if (id) {
       const clientUri = CLIENT_URI?.replace("/graphql", "");
-      const URL = `${clientUri}/ticket/${id}/users/file`;
+      const URL = `${clientUri}/tickets/${id}/users/file`;
+      await AxiosUtil.asyncDownloadFile(
+        {
+          url: URL,
+          method: "GET",
+          params: {
+            includeWalletChainType: query?.includeWalletChainType ?? "",
+            includeTwitterId: query?.includeTwitterId,
+            includeEmail: query?.includeEmail,
+            includeTelegram: query?.includeTelegram,
+          },
+        },
+        filename
+      );
+    }
+  };
+
+  const asyncDownloadQuestDataFile = async (
+    questId?: string,
+    query?: TicketUserQuery,
+    filename?: string
+  ) => {
+    if (id && questId) {
+      const clientUri = CLIENT_URI?.replace("/graphql", "");
+      const URL = `${clientUri}/tickets/${id}/quests/${questId}/file`;
       await AxiosUtil.asyncDownloadFile(
         {
           url: URL,
@@ -582,6 +626,8 @@ export function useTicketQuery({
     asyncUpdateTicketRewardPolicy,
     asyncCreateTicket,
     asyncDeleteTicket,
-    asyncDownloadFile,
+    asyncDownloadCompletedUserFile,
+    asyncDownloadQuestDataFile,
+    asyncVerifySurveyQuest,
   };
 }

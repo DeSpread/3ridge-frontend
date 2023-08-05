@@ -19,7 +19,6 @@ class TelegramUtil {
       } else {
         targetBotId = botIds.length > 1 ? botIds[1] : botIds[0];
       }
-      console.log("bot_id", targetBotId);
       //@ts-ignore
       window.Telegram.Login.auth(
         {

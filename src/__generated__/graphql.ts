@@ -62,19 +62,12 @@ export type ContentMetadataInputType = {
   contentFormatType?: InputMaybe<ContentFormatType>;
 };
 
-export type Data = {
-  __typename?: 'Data';
-  _id?: Maybe<Scalars['String']>;
-  createdUser?: Maybe<User>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  value?: Maybe<Scalars['String']>;
-};
-
 export type DataInputType = {
   _id?: InputMaybe<Scalars['String']>;
   createdUser?: InputMaybe<UserInputType>;
+  ownerQuest?: InputMaybe<QuestInputType>;
   tags?: InputMaybe<Array<Scalars['String']>>;
-  value?: InputMaybe<Scalars['String']>;
+  values?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum EventType {
@@ -107,7 +100,6 @@ export type Mutation = {
   removeProject: Project;
   removeTicketById: Scalars['Boolean'];
   removeUserByName: User;
-  updateData: Data;
   updateProject: Project;
   updateQuest: Quest;
   updateTicketById: Ticket;
@@ -221,12 +213,6 @@ export type MutationRemoveTicketByIdArgs = {
 
 export type MutationRemoveUserByNameArgs = {
   name: Scalars['String'];
-};
-
-
-export type MutationUpdateDataArgs = {
-  id: Scalars['String'];
-  value: Scalars['String'];
 };
 
 
@@ -522,12 +508,21 @@ export type Quest = {
   __typename?: 'Quest';
   _id?: Maybe<Scalars['String']>;
   completedUsers?: Maybe<Array<User>>;
-  dataCollection?: Maybe<Array<Data>>;
+  dataCollection?: Maybe<Array<QuestData>>;
   description?: Maybe<Scalars['String']>;
   questGuides?: Maybe<Array<ContentMetadata>>;
   questPolicy?: Maybe<QuestPolicy>;
   title?: Maybe<Scalars['String']>;
   title_v2?: Maybe<ContentMetadata>;
+};
+
+export type QuestData = {
+  __typename?: 'QuestData';
+  _id?: Maybe<Scalars['String']>;
+  createdUser?: Maybe<User>;
+  ownerQuest?: Maybe<Quest>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  values?: Maybe<Array<Scalars['String']>>;
 };
 
 export type QuestInputType = {
@@ -1077,6 +1072,16 @@ export type DeleteTicketMutationVariables = Exact<{
 
 export type DeleteTicketMutation = { __typename?: 'Mutation', removeTicketById: boolean };
 
+export type VerifySurveyQuestMutationVariables = Exact<{
+  questId: Scalars['String'];
+  surveyContents: Array<Scalars['String']> | Scalars['String'];
+  ticketId: Scalars['String'];
+  userId: Scalars['String'];
+}>;
+
+
+export type VerifySurveyQuestMutation = { __typename?: 'Mutation', verifySurveyQuest: { __typename?: 'Quest', _id?: string | null } };
+
 
 export const GetUsersOrderByRewardPointDescDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUsersOrderByRewardPointDesc"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"0"}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"25"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersOrderByRewardPointDesc"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"wallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}},{"kind":"Field","name":{"kind":"Name","value":"userSocial"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"twitterId"}}]}}]}}]}}]} as unknown as DocumentNode<GetUsersOrderByRewardPointDescQuery, GetUsersOrderByRewardPointDescQueryVariables>;
 export const FindRankByUserIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FindRankByUserId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"findRankByUserId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}]}}]} as unknown as DocumentNode<FindRankByUserIdQuery, FindRankByUserIdQueryVariables>;
@@ -1120,3 +1125,4 @@ export const DeleteQuestDocument = {"kind":"Document","definitions":[{"kind":"Op
 export const UpdateQuestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateQuest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questPolicy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"QuestPolicyInputType"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title_v2"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ContentMetadataInputType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateQuest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"description"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description"}}},{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"questPolicy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questPolicy"}}},{"kind":"Argument","name":{"kind":"Name","value":"title_v2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title_v2"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<UpdateQuestMutation, UpdateQuestMutationVariables>;
 export const CreateTicketDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTicket"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"beginTime"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"untilTime"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description_v2"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ContentMetadataInputType"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"imageUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"rewardPolicy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"RewardPolicyInputType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTicket"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"beginTime"},"value":{"kind":"Variable","name":{"kind":"Name","value":"beginTime"}}},{"kind":"Argument","name":{"kind":"Name","value":"description_v2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description_v2"}}},{"kind":"Argument","name":{"kind":"Name","value":"imageUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"imageUrl"}}},{"kind":"Argument","name":{"kind":"Name","value":"rewardPolicy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"rewardPolicy"}}},{"kind":"Argument","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"Argument","name":{"kind":"Name","value":"untilTime"},"value":{"kind":"Variable","name":{"kind":"Name","value":"untilTime"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<CreateTicketMutation, CreateTicketMutationVariables>;
 export const DeleteTicketDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteTicket"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeTicketById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}}]}]}}]} as unknown as DocumentNode<DeleteTicketMutation, DeleteTicketMutationVariables>;
+export const VerifySurveyQuestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"VerifySurveyQuest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"surveyContents"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifySurveyQuest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"questId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questId"}}},{"kind":"Argument","name":{"kind":"Name","value":"surveyContents"},"value":{"kind":"Variable","name":{"kind":"Name","value":"surveyContents"}}},{"kind":"Argument","name":{"kind":"Name","value":"ticketId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ticketId"}}},{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<VerifySurveyQuestMutation, VerifySurveyQuestMutationVariables>;

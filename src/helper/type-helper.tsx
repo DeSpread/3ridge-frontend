@@ -2,6 +2,7 @@ import {
   RewardContext,
   SUPPORTED_NETWORKS,
   SupportedNetwork,
+  Ticket,
   User,
   WALLET_NAMES,
 } from "../type";
@@ -10,6 +11,7 @@ import {
   RewardPolicy,
   RewardPolicyType,
 } from "../__generated__/graphql";
+import DateUtil from "../util/date-util";
 
 class TypeHelper {
   public static convertToSuppoertedNetwork = (network?: string | ChainType) => {
@@ -97,6 +99,26 @@ class TypeHelper {
       rewardPoint: rewardPolicy.rewardPoint ?? 0,
     };
     return newRewardPolicy;
+  };
+
+  public static isTicketStarted = (ticketData?: Ticket) => {
+    return ticketData?.beginTime
+      ? DateUtil.isAfter(new Date(), ticketData?.beginTime)
+      : false;
+  };
+
+  public static isTicketExpired = (ticketData?: Ticket) => {
+    return ticketData?.untilTime
+      ? DateUtil.isAfter(new Date(), ticketData?.untilTime)
+      : true;
+  };
+
+  public static findQuestIndex = (ticketData?: Ticket, questId?: string) => {
+    const ids = ticketData?.quests?.map((e) => {
+      return e._id;
+    });
+    const index = ids?.indexOf(questId) as number;
+    return index;
   };
 }
 

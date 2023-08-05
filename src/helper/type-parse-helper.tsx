@@ -1,7 +1,7 @@
 import {
   RewardContext,
   VerifyTwitterFollowQuestContext,
-  QuizQuestContext,
+  VerifyQuizQuestContext,
   VerifyTwitterRetweetQuestContext,
   REWARD_POLICY_TYPE,
   VerifyTwitterLikingQuestContext,
@@ -50,7 +50,7 @@ class TypeParseHelper {
       const _context = context.trim();
       const contextJson = JSON.parse(_context);
       if (questPolicyType === QuestPolicyType.Quiz) {
-        return contextJson as QuizQuestContext;
+        return contextJson as VerifyQuizQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyTwitterRetweet) {
         return contextJson as VerifyTwitterRetweetQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyTwitterFollow) {
