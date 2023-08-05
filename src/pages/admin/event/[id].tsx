@@ -533,8 +533,8 @@ const Event = () => {
         </div>
       </div>
 
-      <div style={{ position: "absolute", right: 8, top: 64 + 8 }}>
-        <Draggable>
+      <div style={{ position: "absolute", right: -380, top: 64 + 8 }}>
+        <Draggable defaultPosition={{ x: -380, y: 0 }}>
           <div className="box">
             <TicketEditControllerWidget
               ticketId={ticketData?._id ?? ""}
