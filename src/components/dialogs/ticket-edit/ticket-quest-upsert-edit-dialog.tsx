@@ -1,4 +1,4 @@
-import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
+import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
@@ -8,12 +8,12 @@ import {
   Select,
   Stack,
 } from "@mui/material";
-import SecondaryButton from "../atomic/atoms/secondary-button";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
 import {
   ContentMetadata,
   QuestPolicy,
   QuestPolicyType,
-} from "../../__generated__/graphql";
+} from "../../../__generated__/graphql";
 import { useTheme } from "@mui/material/styles";
 import {
   Verify3ridgePointEditForm,
@@ -24,10 +24,10 @@ import {
   VerifyTwitterRetweetOrLinkingEditForm,
   VerifyVisitWebsiteEditForm,
   VerifySurveyEditForm,
-} from "../form/quest/quest-edit-from";
-import { Quest } from "../../type";
+} from "../../form/quest/quest-edit-from";
+import { Quest } from "../../../type";
 
-const QuestUpsertEditDialog = (
+const TicketQuestUpsertEditDialog = (
   props: {
     editedQuest?: Quest;
     onConfirmBtnClicked?: (
@@ -242,4 +242,4 @@ const QuestUpsertEditDialog = (
   );
 };
 
-export default QuestUpsertEditDialog;
+export default TicketQuestUpsertEditDialog;

@@ -14,27 +14,27 @@ import {
 import { useTicketQuery } from "../../hooks/ticket-query-hook";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
 import StringUtil from "../../util/string-util";
-import QuestQuizDialog from "../../components/dialogs/quest-quiz-dialog";
+import QuestQuizDialog from "../../components/dialogs/quest/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import {
-  VerifyDiscordQuestContext,
   MouseEventWithParam,
   Quest,
-  VerifyTelegramQuestContext,
-  QuizQuestContext,
+  VerifyQuizQuestContext,
   REWARD_POLICY_TYPE,
   SUPPORTED_NETWORKS,
+  VerifyAgreementQuestContext,
+  VerifyDiscordQuestContext,
+  VerifyHasWalletAddressQuestContext,
+  VerifySurveyQuestContext,
+  VerifyTelegramQuestContext,
   VerifyTwitterFollowQuestContext,
   VerifyTwitterLikingQuestContext,
   VerifyTwitterRetweetQuestContext,
-  VerifyAgreementQuestContext,
-  VerifyHasWalletAddressQuestContext,
   VerifyVisitWebsiteQuestContext,
 } from "../../type";
-import { QuestPolicyType } from "../../__generated__/graphql";
+import { ContentMetadata, QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
-import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import {
   APP_ERROR_MESSAGE,
   getErrorMessage,
@@ -43,7 +43,6 @@ import {
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
-import ContentsRendererDialog from "../../components/dialogs/contents-renderer-dialog";
 import { useLogin } from "../../provider/login/login-provider";
 import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
 import LinkTypography from "../../components/atomic/atoms/link-typography";
@@ -62,14 +61,15 @@ import EventQuests from "../../components/pages/event/event-quests";
 import EventRewardPolicy from "../../components/pages/event/reward/event-reward-policy";
 import EventTimeBoard from "../../components/pages/event/event-time-board";
 import EventRewardDescription from "../../components/pages/event/reward/event-reward-description";
-import DateUtil from "../../util/date-util";
 import ButtonWithLoading from "../../components/atomic/molecules/button-with-loading";
 import EventParticipants from "../../components/pages/event/event-participants";
-import TicketRewardHowToDialog from "../../components/dialogs/ticket-reward-how-to-dialog";
+import TicketRewardHowToDialog from "../../components/dialogs/ticket-edit/ticket-reward-how-to-dialog";
+import QuestSurveyDialog from "../../components/dialogs/quest/quest-survey-dialog";
+import TypeHelper from "../../helper/type-helper";
+import StringHelper from "../../helper/string-helper";
 
 const Event = (props: AppProps) => {
-  const { userData, asyncUpdateSocialTwitter, asyncUpdateRewardPoint } =
-    useSignedUserQuery();
+  const { userData } = useSignedUserQuery();
   const { isLoggedIn } = useLogin();
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -86,6 +86,7 @@ const Event = (props: AppProps) => {
     asyncVerify3ridgePoint,
     asyncVerifyAptosQuest,
     asyncRefreshTicketData,
+    asyncVerifySurveyQuest,
   } = useTicketQuery({
     userId: userData._id,
     id: router.isReady
@@ -94,8 +95,7 @@ const Event = (props: AppProps) => {
         : undefined
       : undefined,
   });
-  const [openContentsRendererDialog, setOpenContentsRendererDialog] =
-    useState(false);
+
   const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
   const [simpleWarningDialogShow, setSimpleWarningDialogShow] = useState(false);
   const [openTicketRewardHowToDialog, setOpenTicketRewardHowToDialog] =
@@ -107,21 +107,24 @@ const Event = (props: AppProps) => {
   const [openAgreementQuestContext, setOpenAgreementQuestContext] =
     useState<VerifyAgreementQuestContext>({ agreementList: [] });
 
+  const [openedQuestId, setOpenedQuestId] = useState<string>();
+
+  const [openSurveyQuestDialog, setOpenSurveyQuestDialog] = useState(false);
+  const [openedSurveyContext, setOpenedSurveyContext] =
+    useState<VerifySurveyQuestContext>({ questions: [] });
+
   const [openQuizQuestDialog, setOpenQuizQuestDialog] = useState(false);
-  const [openQuizQuestId, setOpenQuizQuestId] = useState<string>();
-  const [openQuizQuestContext, setOpenQuizQuestContext] =
-    useState<QuizQuestContext>({ quizList: [] });
+  const [openedQuizQuestContext, setOpenedQuizQuestContext] =
+    useState<VerifyQuizQuestContext>({ quizList: [] });
 
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
-  const { asyncTwitterSignInPopUp } = useFirebaseAuth();
   const { showLoading, closeLoading } = useLoading();
   const [verifiedList, setVerifiedList] = useState<boolean[]>([]);
   const [updateIndex, setUpdateIndex] = useState(0);
   const [claimCompleted, setClaimCompleted] = useState(false);
-  const [updatingClaimCompleted, setUpdatingClaimCompleted] = useState(true);
   const [htmlContent, setHtmlContent] = useState("");
-  const { isProfileEditDialogOpen, setShowProfileEditDialog } =
-    useProfileEditDialog();
+
+  const { setShowProfileEditDialog } = useProfileEditDialog();
   const { setShowSignInDialog } = useSignDialog();
   const [initVerifiedList, setInitVerifiedList] = useState(false);
   const [lockUpdateVerifyAll, setLockUpdateVerifyAll] = useState(false);
@@ -186,13 +189,6 @@ const Event = (props: AppProps) => {
   }, [updateIndex]);
 
   useEffect(() => {
-    const res = verifiedList.reduce(
-      (accumulator, currentValue) => accumulator && currentValue,
-      true
-    );
-    if (!res) {
-      return;
-    }
     if (!ticketData?._id) {
       return;
     }
@@ -240,16 +236,50 @@ const Event = (props: AppProps) => {
     setOpenAgreementQuestContext({ agreementList: [] });
   };
 
-  const openQuizDialog = (questId: string, quizContext: QuizQuestContext) => {
+  const openSurveyDialog = (
+    questId: string,
+    surveyQuestContext: VerifySurveyQuestContext
+  ) => {
+    setOpenSurveyQuestDialog(true);
+    setOpenedQuestId(questId);
+    setOpenedSurveyContext(surveyQuestContext);
+  };
+
+  const closeSurveyDialog = () => {
+    setOpenSurveyQuestDialog(false);
+    setOpenedQuestId(undefined);
+    setOpenedSurveyContext({ questions: [] });
+  };
+
+  const openQuizDialog = (
+    questId: string,
+    quizContext: VerifyQuizQuestContext
+  ) => {
     setOpenQuizQuestDialog(true);
-    setOpenQuizQuestId(questId);
-    setOpenQuizQuestContext(quizContext);
+    setOpenedQuestId(questId);
+    setOpenedQuizQuestContext(quizContext);
   };
 
   const closeQuizDialog = () => {
     setOpenQuizQuestDialog(false);
-    setOpenQuizQuestId(undefined);
-    setOpenQuizQuestContext({ quizList: [] });
+    setOpenedQuestId(undefined);
+    setOpenedQuizQuestContext({ quizList: [] });
+  };
+
+  const openSimpleWarningDialog = (content?: ContentMetadata | string) => {
+    setSimpleWarningDialogShow(true);
+    if (typeof content === "string") {
+      setSimpleWarningDialogTitle(content);
+      setHtmlContent("");
+    } else if (content) {
+      setHtmlContent(StringHelper.decodeContentMetaData(content));
+    }
+  };
+
+  const closeSimpleWarningDialog = () => {
+    setSimpleWarningDialogShow(false);
+    setSimpleWarningDialogTitle("");
+    setHtmlContent("");
   };
 
   const claimRewardDisabled = useMemo(() => {
@@ -284,15 +314,11 @@ const Event = (props: AppProps) => {
   }, [userData?.walletAddressInfos]);
 
   const isExpired = () => {
-    return ticketData?.untilTime
-      ? DateUtil.isAfter(new Date(), ticketData?.untilTime)
-      : true;
+    return TypeHelper.isTicketExpired(ticketData);
   };
 
   const isStarted = () => {
-    return ticketData?.beginTime
-      ? DateUtil.isAfter(new Date(), ticketData?.beginTime)
-      : false;
+    return TypeHelper.isTicketStarted(ticketData);
   };
 
   const updateVerifyState = (index: number) => {
@@ -311,7 +337,6 @@ const Event = (props: AppProps) => {
       if (ticketData?.rewardClaimedUserIds?.includes(userData?._id)) {
         setClaimCompleted(true);
       }
-      setUpdatingClaimCompleted(false);
     }
   };
 
@@ -469,6 +494,16 @@ const Event = (props: AppProps) => {
         closeLoading();
         showErrorAlert({ content: getErrorMessage(e) });
       }
+    } else if (quest.questPolicy?.questPolicy === QuestPolicyType.Quiz) {
+      const quizQuestContext = quest.questPolicy
+        ?.context as VerifyQuizQuestContext;
+      openQuizDialog(quest._id, quizQuestContext);
+    } else if (
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifySurvey
+    ) {
+      const surveyQuestContext = quest.questPolicy
+        ?.context as VerifySurveyQuestContext;
+      openSurveyDialog(quest._id, surveyQuestContext);
     } else if (
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord ||
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram ||
@@ -507,26 +542,22 @@ const Event = (props: AppProps) => {
           break;
       }
       if (quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord) {
-        setSimpleWarningDialogShow(true);
         if (quest.questGuides?.[0]?.content) {
-          setHtmlContent(StringUtil.decodeBase64(quest.questGuides[0].content));
+          openSimpleWarningDialog(quest.questGuides[0]);
         } else {
-          setSimpleWarningDialogTitle(
+          openSimpleWarningDialog(
             `디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
           );
-          setHtmlContent("");
         }
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram
       ) {
-        setSimpleWarningDialogShow(true);
         if (quest.questGuides?.[0]?.content) {
-          setHtmlContent(StringUtil.decodeBase64(quest.questGuides[0].content));
+          openSimpleWarningDialog(quest.questGuides[0]);
         } else {
-          setSimpleWarningDialogTitle(
+          openSimpleWarningDialog(
             `텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
           );
-          setHtmlContent("");
         }
       }
       try {
@@ -536,13 +567,6 @@ const Event = (props: AppProps) => {
         if (getErrorMessage(e) === "user already participated ticket") {
           updateVerifyState(index);
         }
-      }
-    } else if (
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAptosHasAns
-    ) {
-      setOpenContentsRendererDialog(true);
-      if (quest.questGuides?.[0]?.content) {
-        setHtmlContent(StringUtil.decodeBase64(quest.questGuides[0].content));
       }
     }
   };
@@ -557,13 +581,7 @@ const Event = (props: AppProps) => {
     }>;
     try {
       if (!ticketData._id || !quest?._id) return;
-      if (quest.questPolicy?.questPolicy === QuestPolicyType.Quiz) {
-        const quizQuestContext = quest.questPolicy?.context as QuizQuestContext;
-        openQuizDialog(quest._id, quizQuestContext);
-        myEvent.params.callback("success");
-      } else if (
-        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAgreement
-      ) {
+      if (quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAgreement) {
         const verifyAgreementContext = quest.questPolicy
           ?.context as VerifyAgreementQuestContext;
         openAgreementDialog(quest._id, verifyAgreementContext);
@@ -1064,19 +1082,16 @@ const Event = (props: AppProps) => {
       ></AgreementDialog>
       <QuestQuizDialog
         open={openQuizQuestDialog}
-        context={openQuizQuestContext}
-        onClose={() => {
+        context={openedQuizQuestContext}
+        onCloseBtnClicked={(e) => {
           closeQuizDialog();
         }}
         onCompleteQuiz={() => {
-          if (openQuizQuestId) {
-            const ids = ticketData?.quests?.map((e) => {
-              return e._id;
-            });
-            const index = ids?.indexOf(openQuizQuestId) as number;
+          if (openedQuestId) {
+            const index = TypeHelper.findQuestIndex(ticketData, openedQuestId);
             if (index !== undefined && ticketData._id) {
               try {
-                asyncCompleteQuestOfUser(ticketData._id, openQuizQuestId).then(
+                asyncCompleteQuestOfUser(ticketData._id, openedQuestId).then(
                   (res) => {
                     updateVerifyState(index);
                   }
@@ -1089,26 +1104,36 @@ const Event = (props: AppProps) => {
           }
         }}
       ></QuestQuizDialog>
-      <ContentsRendererDialog
-        open={openContentsRendererDialog}
-        onClose={() => {
-          setOpenContentsRendererDialog(false);
-        }}
+      <QuestSurveyDialog
+        context={openedSurveyContext}
+        open={openSurveyQuestDialog}
         onCloseBtnClicked={(e) => {
-          e.preventDefault();
-          setOpenContentsRendererDialog(false);
+          closeSurveyDialog();
         }}
-        htmlContent={htmlContent}
-      ></ContentsRendererDialog>
+        onConfirmBtnClicked={async (answers) => {
+          if (openedQuestId) {
+            showLoading();
+            const index = TypeHelper.findQuestIndex(ticketData, openedQuestId);
+            if (index !== undefined && ticketData._id) {
+              try {
+                await asyncVerifySurveyQuest(openedQuestId, answers);
+                openSimpleWarningDialog("설문 응답을 완료하였습니다.");
+                updateVerifyState(index);
+              } catch (e) {
+                showErrorAlert({ content: getErrorMessage(e) });
+              } finally {
+                closeSurveyDialog();
+                closeLoading();
+              }
+            }
+          }
+        }}
+      ></QuestSurveyDialog>
       <SimpleDialog
         open={simpleWarningDialogShow}
         title={"Notification"}
-        onClose={() => {
-          setSimpleWarningDialogShow(false);
-          doLazyFire();
-        }}
         onCloseBtnClicked={() => {
-          setSimpleWarningDialogShow(false);
+          closeSimpleWarningDialog();
           doLazyFire();
         }}
       >

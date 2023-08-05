@@ -1,12 +1,12 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
+import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
-import SecondaryButton from "../atomic/atoms/secondary-button";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
 import { TimeField } from "@mui/x-date-pickers";
 import { useTheme } from "@mui/material/styles";
-import { useAlert } from "../../provider/alert/alert-provider";
+import { useAlert } from "../../../provider/alert/alert-provider";
 
-const DateEditDialog = (
+const TicketDateEditDialog = (
   props: {
     initBeginDate: Date;
     initEndDate: Date;
@@ -158,4 +158,4 @@ const DateEditDialog = (
   );
 };
 
-export default DateEditDialog;
+export default TicketDateEditDialog;

@@ -10,8 +10,9 @@ import VerifyCard from "../../atomic/molecules/verify-card";
 import { Quest, REWARD_POLICY_TYPE, Ticket, User } from "../../../type";
 import React, { MouseEventHandler, PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
-import DateUtil from "../../../util/date-util";
 import CloseIcon from "@mui/icons-material/Close";
+import TypeHelper from "../../../helper/type-helper";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
 
 const EventQuests = (
   props: {
@@ -38,6 +39,11 @@ const EventQuests = (
       quest: Quest,
       index: number
     ) => void;
+    onExtractDataBtnClicked?: (
+      e: React.MouseEvent<Element, MouseEvent>,
+      quest: Quest,
+      index: number
+    ) => void;
   } & PropsWithChildren
 ) => {
   const {
@@ -48,6 +54,7 @@ const EventQuests = (
     onStartBtnClicked,
     onEditBtnClicked,
     onDeleteBtnClicked,
+    onExtractDataBtnClicked,
   } = props;
 
   const theme = useTheme();
@@ -72,20 +79,11 @@ const EventQuests = (
   };
 
   const isStarted = () => {
-    return DateUtil.parseStrToDate(ticketData?.beginTime ?? "")
-      ? //@ts-ignore
-        DateUtil.parseStrToDate(ticketData?.beginTime ?? "") - new Date() < 0
-      : false;
+    return TypeHelper.isTicketStarted(ticketData);
   };
 
   const isExpired = () => {
-    return DateUtil.parseStrToDate(ticketData?.untilTime ?? "")
-      ? //@ts-ignore
-        DateUtil.parseStrToDate(ticketData?.untilTime ?? "") -
-          //@ts-ignore
-          new Date() <
-          0
-      : true;
+    return TypeHelper.isTicketExpired(ticketData);
   };
 
   const getConfirmBtnLabel = (quest: Partial<Quest>) => {
@@ -112,6 +110,8 @@ const EventQuests = (
           const autoVerified =
             quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord ||
             quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram ||
+            quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
+            quest.questPolicy?.questPolicy === QuestPolicyType.VerifySurvey ||
             quest.questPolicy?.questPolicy ===
               QuestPolicyType.VerifyVisitWebsite;
 
@@ -151,7 +151,6 @@ const EventQuests = (
                     QuestPolicyType.VerifyHasTwitter ||
                   quest.questPolicy?.questPolicy ===
                     QuestPolicyType.VerifyHasTelegram ||
-                  quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
                   quest.questPolicy?.questPolicy ===
                     QuestPolicyType.VerifyAgreement
                 }
@@ -163,10 +162,10 @@ const EventQuests = (
                 }}
                 autoVerified={autoVerified}
               ></VerifyCard>
+              {/*--- FOR EDIT ---*/}
               {onEditBtnClicked && onDeleteBtnClicked && (
                 <>
                   <Box
-                    className={"box"}
                     sx={{
                       position: "absolute",
                       left: -OFFSET_SIZE,
@@ -234,6 +233,47 @@ const EventQuests = (
                   </Stack>
                 </>
               )}
+              {onExtractDataBtnClicked &&
+                quest?.questPolicy?.questPolicy ===
+                  QuestPolicyType.VerifySurvey && (
+                  <>
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        left: -27,
+                        top: `calc(50% - 27px)`,
+                        borderWidth: 2,
+                        borderStyle: "solid",
+                        borderColor: "white",
+                        borderRadius: 16,
+                        backgroundColor: "black",
+                        transition: "all 0.2s ease-out 0s",
+                        transitionDuration: "0.2s",
+                        transitionDelay: "0s",
+                        transitionTimingFunction: "ease-out",
+                      }}
+                    >
+                      <IconButton
+                        className={"MuiIconButton"}
+                        sx={{
+                          borderRadius: 16,
+                          width: ICON_SIZE * 1.5,
+                          height: ICON_SIZE * 1.5,
+                          "&:hover": {
+                            borderColor: theme.palette.secondary.main,
+                            background: "#61E1FF55",
+                          },
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onExtractDataBtnClicked?.(e, quest, index);
+                        }}
+                      >
+                        <SaveAltIcon fontSize={"large"}></SaveAltIcon>
+                      </IconButton>
+                    </Box>
+                  </>
+                )}
             </div>
           );
         })}

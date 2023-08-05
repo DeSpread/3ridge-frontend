@@ -11,28 +11,33 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import PrimaryButton from "../../atomic/atoms/primary-button";
+import PrimaryButton from "../atomic/atoms/primary-button";
 import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import { ChainType } from "../../../__generated__/graphql";
-import Container from "../../atomic/atoms/container";
-import { TicketUserQuery } from "../../../type";
+import { ChainType } from "../../__generated__/graphql";
+import Container from "../atomic/atoms/container";
+import { TicketUserQuery } from "../../type";
 
-const CompletedUserInfoDownloadForm = (
+const UserInfoDownloadForm = (
   props: PropsWithChildren & {
+    title?: string;
     onDownloadButtonClick?: (res: TicketUserQuery) => void;
   }
 ) => {
   const theme = useTheme();
   const [checked, setChecked] = useState([true, true, true, true]);
   const [chainType, setChainType] = useState<ChainType>(ChainType.Evm);
-  const { onDownloadButtonClick } = props;
+  const { title, onDownloadButtonClick } = props;
 
   return (
     <Container>
       <Stack spacing={1}>
-        <Typography variant={"h6"}>완료 유저 정보 다운로드</Typography>
-        <Divider></Divider>
+        {title && (
+          <>
+            <Typography variant={"h6"}>{title}</Typography>
+            <Divider></Divider>
+          </>
+        )}
         <FormGroup>
           <FormControlLabel
             checked={checked[0]}
@@ -135,4 +140,4 @@ const CompletedUserInfoDownloadForm = (
   );
 };
 
-export default CompletedUserInfoDownloadForm;
+export default UserInfoDownloadForm;

@@ -6,6 +6,7 @@ import {
   IconButton,
   Paper,
   Stack,
+  Typography,
   useMediaQuery,
 } from "@mui/material";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
@@ -22,7 +23,7 @@ import EventEmptyBox from "../../../components/pages/event/event-empty-box";
 import InputButton from "../../../components/atomic/molecules/input-button";
 import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
 import EventDateRange from "../../../components/pages/event/event-date-range";
-import DateEditDialog from "../../../components/dialogs/date-range-edit-dialog";
+import TicketDateEditDialog from "../../../components/dialogs/ticket-edit/ticket-date-range-edit-dialog";
 import DateUtil from "../../../util/date-util";
 import EventDescription from "../../../components/pages/event/event-description";
 import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
@@ -33,20 +34,21 @@ import {
 } from "../../../__generated__/graphql";
 import EventQuests from "../../../components/pages/event/event-quests";
 import AddIcon from "@mui/icons-material/Add";
-import QuestUpsertEditDialog from "../../../components/dialogs/quest-upsert-edit-dialog";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import TicketQuestUpsertEditDialog from "../../../components/dialogs/ticket-edit/ticket-quest-upsert-edit-dialog";
 import { Quest, Z_INDEX_OFFSET } from "../../../type";
 import EventRewardPolicy from "../../../components/pages/event/reward/event-reward-policy";
 import EventTimeBoard from "../../../components/pages/event/event-time-board";
 import EventRewardDescription from "../../../components/pages/event/reward/event-reward-description";
 import EventRewardImage from "../../../components/pages/event/reward/description/event-reward-image";
-import TicketRewardPolicyEditDialog from "../../../components/dialogs/ticket-reward-policy-edit-dialog";
+import TicketRewardPolicyEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-policy-edit-dialog";
 import TypeHelper from "../../../helper/type-helper";
 import NumberEditDialog from "../../../components/dialogs/number-edit-dialog";
 import EventRewardPoint from "../../../components/pages/event/reward/description/event-reward-point";
 import EventRewardLimitNumber from "../../../components/pages/event/reward/description/event-reward-limit-number";
 import EventRewardChainContent from "../../../components/pages/event/reward/description/event-reward-chain-content";
 import EventRewardName from "../../../components/pages/event/reward/description/event-reward-name";
-import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-reward-chain-content-edit-dialog";
+import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-chain-content-edit-dialog";
 import { useAlert } from "../../../provider/alert/alert-provider";
 import Draggable from "react-draggable";
 
@@ -56,6 +58,7 @@ import useSimpleStorage from "../../../hooks/simple-storage-hook";
 import PrimaryButton from "../../../components/atomic/atoms/primary-button";
 import TicketEditControllerWidget from "../../../components/widget/ticket-edit-controller-widget";
 import EventParticipants from "../../../components/pages/event/event-participants";
+import UserInfoDownloadDialog from "../../../components/dialogs/user-info-download-dialog";
 
 const _EventRewardPolicy = WithEditorContainer(EventRewardPolicy);
 const _EventDateRange = WithEditorContainer(EventDateRange);
@@ -104,6 +107,8 @@ const Event = () => {
     openTicketRewardChainContentEditDialog,
     setOpenTicketRewardChainContentEditDialog,
   ] = useState(false);
+  const [openUserInfoDownloadDialog, setOpenUserInfoDownloadDialog] =
+    useState(false);
 
   const [eventComponentTarget, setEventComponentTarget] =
     useState<EVENT_COMPONENT_TARGET>();
@@ -126,7 +131,8 @@ const Event = () => {
     asyncDeleteQuest,
     asyncUpdateQuest,
     asyncUpdateTicketRewardPolicy,
-    asyncDownloadFile,
+    asyncDownloadCompletedUserFile,
+    asyncDownloadQuestDataFile,
   } = useTicketQuery({
     userId: userData._id,
     id: ticketId,
@@ -210,6 +216,16 @@ const Event = () => {
 
   const showOpenTicketRewardChainContentEditDialog = () => {
     setOpenTicketRewardChainContentEditDialog(true);
+  };
+
+  const showOpenUserInfoDownloadDialog = (targetQuest?: Quest) => {
+    setEditedQuest(targetQuest);
+    setOpenUserInfoDownloadDialog(true);
+  };
+
+  const closeOpenUserInfoDownloadDialog = () => {
+    setEditedQuest(undefined);
+    setOpenUserInfoDownloadDialog(false);
   };
 
   const closeQuestUpsertDialog = () => {
@@ -368,6 +384,9 @@ const Event = () => {
                   await asyncRefreshAll();
                   closeLoading();
                 }}
+                onExtractDataBtnClicked={async (e, quest, index) => {
+                  showOpenUserInfoDownloadDialog(quest);
+                }}
               ></EventQuests>
               <Stack sx={{ width: "100%", marginTop: 4 }} alignItems={"center"}>
                 <IconButton
@@ -476,24 +495,54 @@ const Event = () => {
                 }}
               ></EventRewardDescription>
               <EventParticipants ticketData={ticketData}></EventParticipants>
-              {/*<div*/}
-              {/*  dangerouslySetInnerHTML={{*/}
-              {/*    __html:*/}
-              {/*      '<div style="display: flex; flex-direction: row; align-items: center; justify-content: center">\n<img style="width: 1.35rem; background: white; border-radius: 1.35rem; border-width: 1px; border-color: white; border-style: solid; margin-right: 0.25rem"\n      src="https://3ridge.s3.ap-northeast-2.amazonaws.com/reward_chain/stacks-icon.svg"/>\n<body2>등록된 Stacks 지갑을 통해 지급 예정</body2>\n</div>',*/}
-              {/*  }}*/}
-              {/*></div>*/}
             </Stack>
           </Stack>
         </Grid>
       </Grid>
 
-      <div style={{ position: "absolute", right: 8, top: 64 + 8 }}>
-        <Draggable>
+      <div style={{ position: "absolute", left: 0, top: 64 + 8 }}>
+        <div style={{ position: "absolute", top: 16, left: 32 }}>
+          <Stack direction={"row"} alignItems={"center"}>
+            <IconButton
+              onClick={async (e) => {
+                showLoading();
+                await router.push("/admin");
+                closeLoading();
+              }}
+              sx={{
+                borderRadius: 32,
+                width: 36,
+                height: 36,
+                borderWidth: 2,
+                borderStyle: "solid",
+                "&:hover": {
+                  borderColor: theme.palette.secondary.main,
+                  background: "#61E1FF55",
+                },
+              }}
+            >
+              <ArrowBackIcon></ArrowBackIcon>
+            </IconButton>
+            <Typography variant={"h6"} sx={{ marginLeft: 2 }} noWrap>
+              ADMIN으로 돌아가기
+            </Typography>
+          </Stack>
+          {/*<PrimaryButton*/}
+          {/*  startIcon={ <ArrowBackIcon></ArrowBackIcon>}*/}
+          {/*>explore</PrimaryButton>*/}
+        </div>
+      </div>
+
+      <div style={{ position: "absolute", right: -380, top: 64 + 8 }}>
+        <Draggable defaultPosition={{ x: -380, y: 0 }}>
           <div className="box">
             <TicketEditControllerWidget
               ticketId={ticketData?._id ?? ""}
               onDownloadButtonClick={async (res) => {
-                await asyncDownloadFile(res, `${ticketData?.title}.csv`);
+                await asyncDownloadCompletedUserFile(
+                  res,
+                  `${ticketData?.title}.csv`
+                );
               }}
             ></TicketEditControllerWidget>
           </div>
@@ -528,7 +577,7 @@ const Event = () => {
           closeLoading();
         }}
       ></TextEditDialog>
-      <DateEditDialog
+      <TicketDateEditDialog
         initBeginDate={DateUtil.parseStrToDate(ticketData?.beginTime ?? "")}
         initEndDate={DateUtil.parseStrToDate(ticketData?.untilTime ?? "")}
         open={openDateEditDialog}
@@ -547,7 +596,7 @@ const Event = () => {
           closeDateEditDialog();
           closeLoading();
         }}
-      ></DateEditDialog>
+      ></TicketDateEditDialog>
       <ContentMetaDataEditDialog
         open={openContentMetaDataEditDialog}
         title={dialogTitle}
@@ -567,7 +616,7 @@ const Event = () => {
           closeLoading();
         }}
       ></ContentMetaDataEditDialog>
-      <QuestUpsertEditDialog
+      <TicketQuestUpsertEditDialog
         open={openQuestUpsertDialog}
         onCloseBtnClicked={(e) => {
           setOpenQuestUpsertDialog(false);
@@ -585,7 +634,7 @@ const Event = () => {
           closeQuestUpsertDialog();
           closeLoading();
         }}
-      ></QuestUpsertEditDialog>
+      ></TicketQuestUpsertEditDialog>
       <TicketRewardPolicyEditDialog
         open={openTicketRewardPolicyEditDialog}
         title={"리워드 정책 편집"}
@@ -663,6 +712,22 @@ const Event = () => {
           closeLoading();
         }}
       ></TicketRewardChainContentEditDialog>
+      <UserInfoDownloadDialog
+        open={openUserInfoDownloadDialog}
+        title={"설문 유저 답변 다운로드"}
+        onCloseBtnClicked={(e) => {
+          closeOpenUserInfoDownloadDialog();
+        }}
+        onConfirmBtnClicked={async (ticketUserQuery) => {
+          if (editedQuest && ticketUserQuery) {
+            await asyncDownloadQuestDataFile(
+              editedQuest?._id,
+              ticketUserQuery,
+              `${editedQuest?.title_v2?.content}.csv`
+            );
+          }
+        }}
+      ></UserInfoDownloadDialog>
     </>
   );
 };
