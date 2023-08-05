@@ -6,6 +6,7 @@ import {
   IconButton,
   Paper,
   Stack,
+  Typography,
   useMediaQuery,
 } from "@mui/material";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
@@ -33,6 +34,7 @@ import {
 } from "../../../__generated__/graphql";
 import EventQuests from "../../../components/pages/event/event-quests";
 import AddIcon from "@mui/icons-material/Add";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TicketQuestUpsertEditDialog from "../../../components/dialogs/ticket-edit/ticket-quest-upsert-edit-dialog";
 import { Quest, Z_INDEX_OFFSET } from "../../../type";
 import EventRewardPolicy from "../../../components/pages/event/reward/event-reward-policy";
@@ -497,6 +499,39 @@ const Event = () => {
           </Stack>
         </Grid>
       </Grid>
+
+      <div style={{ position: "absolute", left: 0, top: 64 + 8 }}>
+        <div style={{ position: "absolute", top: 16, left: 32 }}>
+          <Stack direction={"row"} alignItems={"center"}>
+            <IconButton
+              onClick={async (e) => {
+                showLoading();
+                await router.push("/admin");
+                closeLoading();
+              }}
+              sx={{
+                borderRadius: 32,
+                width: 36,
+                height: 36,
+                borderWidth: 2,
+                borderStyle: "solid",
+                "&:hover": {
+                  borderColor: theme.palette.secondary.main,
+                  background: "#61E1FF55",
+                },
+              }}
+            >
+              <ArrowBackIcon></ArrowBackIcon>
+            </IconButton>
+            <Typography variant={"h6"} sx={{ marginLeft: 2 }} noWrap>
+              ADMIN으로 돌아가기
+            </Typography>
+          </Stack>
+          {/*<PrimaryButton*/}
+          {/*  startIcon={ <ArrowBackIcon></ArrowBackIcon>}*/}
+          {/*>explore</PrimaryButton>*/}
+        </div>
+      </div>
 
       <div style={{ position: "absolute", right: 8, top: 64 + 8 }}>
         <Draggable>
