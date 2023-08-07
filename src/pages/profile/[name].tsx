@@ -29,7 +29,7 @@ import {
   ObjectValues,
   SUPPORTED_NETWORKS,
   SupportedNetwork,
-} from "../../type";
+} from "../../types";
 import ConnectEmailDialog from "../../components/dialogs/connect-email-dialog";
 import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import { useAlert } from "../../provider/alert/alert-provider";

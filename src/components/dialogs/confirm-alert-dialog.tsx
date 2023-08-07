@@ -10,7 +10,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Z_INDEX_OFFSET } from "../../type";
+import { Z_INDEX_OFFSET } from "../../types";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { MouseEventHandler } from "react";
 

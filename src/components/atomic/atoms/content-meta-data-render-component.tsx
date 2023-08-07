@@ -1,4 +1,4 @@
-import { ComponentRenderFunc } from "../../../type";
+import { ComponentRenderFunc } from "../../../types";
 import {
   ContentFormatType,
   ContentMetadata,

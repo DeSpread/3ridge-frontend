@@ -11,7 +11,7 @@ import XpChip from "../atoms/styled/xp-chip";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
 import React from "react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { User } from "../../../type";
+import { User } from "../../../types";
 import WithOverlapChildren from "../../../hoc/with-overlap-children";
 import No1Icon from "../atoms/svg/no1-icon";
 import No2Icon from "../atoms/svg/no2-icon";

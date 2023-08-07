@@ -4,7 +4,7 @@ import { Box, Grid, Stack, Typography } from "@mui/material";
 import SecondaryButton from "../../../components/atomic/atoms/secondary-button";
 import Image from "next/image";
 import AptosIcon from "../../../components/atomic/atoms/svg/aptos-icon";
-import { SUPPORTED_NETWORKS, SupportedNetwork } from "../../../type";
+import { SUPPORTED_NETWORKS, SupportedNetwork } from "../../../types";
 import { useMobile } from "../../../provider/mobile/mobile-context";
 import SuiIcon from "../../../components/atomic/atoms/svg/sui-icon";
 

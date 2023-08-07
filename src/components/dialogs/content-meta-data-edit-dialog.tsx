@@ -15,14 +15,12 @@ import {
   ContentMetadata,
 } from "../../__generated__/graphql";
 import Editor from "react-simple-code-editor";
-import Prism from "prismjs";
+import { highlight, languages } from "prismjs";
 import { useTheme } from "@mui/material/styles";
-import StyledOutlinedInput from "../atomic/atoms/styled/styled-outlined-input";
 import StringUtil from "../../util/string-util";
+
 require("prismjs/components/prism-jsx");
 require("prismjs/components/prism-markdown");
-// require("prismjs/components/prism-");
-import { highlight, languages } from "prismjs";
 
 const ContentMetaDataEditDialog = (
   props: {

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useLoading } from "../../../provider/loading/loading-provider";
 import React, { useRef, useState } from "react";
-import { FILTER_TYPE, FilterType } from "../../../type";
+import { FILTER_TYPE, FilterType } from "../../../types";
 import { EventType, TicketSortType } from "../../../__generated__/graphql";
 import {
   Box,

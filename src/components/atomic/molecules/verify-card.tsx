@@ -17,7 +17,7 @@ import React, {
 import SecondaryButton from "../atoms/secondary-button";
 import PrimaryButton from "../atoms/primary-button";
 import addSeconds from "date-fns/addSeconds";
-import { MouseEventWithParam } from "../../../type";
+import { MouseEventWithParam } from "../../../types";
 import { useTheme } from "@mui/material/styles";
 import CheckIcon from "@mui/icons-material/Check";
 import { ContentMetadata } from "../../../__generated__/graphql";

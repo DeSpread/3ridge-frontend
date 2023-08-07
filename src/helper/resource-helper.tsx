@@ -1,4 +1,4 @@
-import { SUPPORTED_NETWORKS, SupportedNetwork, WALLET_NAMES } from "../type";
+import { SUPPORTED_NETWORKS, SupportedNetwork, WALLET_NAMES } from "../types";
 import AptosIcon from "../components/atomic/atoms/svg/aptos-icon";
 import EthIcon from "../components/atomic/atoms/svg/eth-icon";
 import SuiIcon from "../components/atomic/atoms/svg/sui-icon";

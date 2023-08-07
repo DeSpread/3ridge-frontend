@@ -5,7 +5,7 @@ import {
   Ticket,
   User,
   WALLET_NAMES,
-} from "../type";
+} from "../types";
 import {
   ChainType,
   RewardPolicy,

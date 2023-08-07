@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from "react";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import DateUtil from "../../../util/date-util";
-import { Ticket } from "../../../type";
+import { Ticket } from "../../../types";
 import StyledChip from "../../atomic/atoms/styled/styled-chip";
 import { format } from "date-fns";
 

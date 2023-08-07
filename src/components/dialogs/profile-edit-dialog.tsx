@@ -18,7 +18,7 @@ import {
   SUPPORTED_NETWORKS,
   User,
   Z_INDEX_OFFSET,
-} from "../../type";
+} from "../../types";
 import { useTheme } from "@mui/material/styles";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";

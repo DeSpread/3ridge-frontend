@@ -27,7 +27,7 @@ import {
   VerifyTwitterFollowQuestContext,
   VerifyTwitterRetweetQuestContext,
   VerifyVisitWebsiteQuestContext,
-} from "../../../type";
+} from "../../../types";
 import NumberWithLabel from "../../atomic/atoms/number-with-label";
 import MathUtil from "../../../util/math-util";
 import AddIcon from "@mui/icons-material/Add";

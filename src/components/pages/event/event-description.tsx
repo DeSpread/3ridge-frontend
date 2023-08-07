@@ -1,4 +1,4 @@
-import { Ticket } from "../../../type";
+import { Ticket } from "../../../types";
 import React, { PropsWithChildren } from "react";
 import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import ContentMetaDataRenderComponent from "../../atomic/atoms/content-meta-data-render-component";

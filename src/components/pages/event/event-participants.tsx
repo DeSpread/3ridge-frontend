@@ -3,7 +3,7 @@ import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
 import BlockIcon from "../../atomic/molecules/block-icon";
 import StringUtil from "../../../util/string-util";
 import React, { PropsWithChildren } from "react";
-import { Ticket } from "../../../type";
+import { Ticket } from "../../../types";
 import { useTheme } from "@mui/material/styles";
 
 const EventParticipants = (

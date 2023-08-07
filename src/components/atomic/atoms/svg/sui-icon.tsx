@@ -1,4 +1,4 @@
-import { ReversibleSvgIconProps } from "../../../../type";
+import { ReversibleSvgIconProps } from "../../../../types";
 import { SvgIcon } from "@mui/material";
 import React from "react";
 

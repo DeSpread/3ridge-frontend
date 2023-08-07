@@ -11,7 +11,7 @@ import {
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
   SUPPORTED_NETWORKS,
-} from "../../../type";
+} from "../../../types";
 import { CREATE_USER_BY_WALLET } from "../../../lib/apollo/query";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";

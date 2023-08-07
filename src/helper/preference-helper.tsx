@@ -1,4 +1,4 @@
-import { SupportedNetwork } from "../type";
+import { SupportedNetwork } from "../types";
 import TypeHelper from "./type-helper";
 
 class PreferenceHelper {

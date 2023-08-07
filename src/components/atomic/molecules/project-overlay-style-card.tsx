@@ -8,7 +8,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
-import { Project } from "../../../type";
+import { Project } from "../../../types";
 import CheckIcon from "../atoms/svg/check-icon";
 
 type ProjectCardProps = CardProps & {

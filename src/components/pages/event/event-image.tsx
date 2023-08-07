@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Box, Skeleton, useMediaQuery } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
 

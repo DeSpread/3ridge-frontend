@@ -6,7 +6,6 @@ import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AllEventsSection from "../../components/atomic/organisms/all-events-section";
 import FeaturedEventsSection from "../../components/atomic/organisms/featured-events-section";
-import SwiperCore, { Navigation } from "swiper";
 
 const Explore = (props: AppProps) => {
   const theme = useTheme();

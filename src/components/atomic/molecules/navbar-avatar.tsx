@@ -20,7 +20,6 @@ import StringHelper from "../../../helper/string-helper";
 import GradientTypography from "../atoms/gradient-typography";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
 import BlockIcon from "./block-icon";
 
 type StyledMenuProps = PropsWithChildren & {

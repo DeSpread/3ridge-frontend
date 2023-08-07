@@ -18,11 +18,10 @@ import { useAlert } from "../../provider/alert/alert-provider";
 import SignUpWithEmailForm from "../../components/form/signup/sign-up-with-email-form";
 import {
   EmailSignUpEventParams,
-  MAIL_VERIFY,
   MouseEventWithParam,
   ObjectValues,
   SupportedNetwork,
-} from "../../type";
+} from "../../types";
 import VerifyYourEmailForm from "../../components/form/verify-your-email-form";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useSignDialog } from "../../hooks/sign-dialog-hook";

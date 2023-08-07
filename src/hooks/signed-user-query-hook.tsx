@@ -29,7 +29,8 @@ import {
   SupportedNetwork,
   TelegramUserInfo,
   WalletName,
-} from "../type";
+  User,
+} from "../types";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 import { ChainType } from "../__generated__/graphql";
 import TelegramUtil from "../util/telegram-util";
@@ -244,7 +245,7 @@ const useSignedUserQuery = () => {
       userSocial,
       gmail,
     } = data;
-    setUserData((prevState) => {
+    setUserData((prevState: User) => {
       return {
         ...prevState,
         _id: _id ?? undefined,
@@ -445,7 +446,7 @@ const useSignedUserQuery = () => {
           rewardPoint,
         },
       });
-      setUserData((prevState) => {
+      setUserData((prevState: User) => {
         return {
           ...prevState,
           rewardPoint,
@@ -478,7 +479,7 @@ const useSignedUserQuery = () => {
           },
         },
       });
-      setUserData((prevState) => {
+      setUserData((prevState: User) => {
         return {
           ...prevState,
           userSocial: {
@@ -512,7 +513,7 @@ const useSignedUserQuery = () => {
         },
       },
     });
-    setUserData((prevState) => {
+    setUserData((prevState: User) => {
       return {
         ...prevState,
         userSocial: {
@@ -554,7 +555,7 @@ const useSignedUserQuery = () => {
           },
         },
       });
-      setUserData((prevState) => {
+      setUserData((prevState: User) => {
         return {
           ...prevState,
           userSocial: {

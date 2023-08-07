@@ -5,15 +5,7 @@ import {
   PropsWithChildren,
   useState,
 } from "react";
-import {
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  styled,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, Menu, MenuItem, Stack, styled } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import NavbarButton from "../atoms/navbar-button";
 

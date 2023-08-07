@@ -15,7 +15,7 @@ import {
   VerifyVisitWebsiteQuestContext,
   VerifyAgreementQuestContext,
   VerifySurveyQuestContext,
-} from "../type";
+} from "../types";
 import { QuestPolicyType } from "../__generated__/graphql";
 
 class TypeParseHelper {

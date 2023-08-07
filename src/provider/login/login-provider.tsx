@@ -10,7 +10,7 @@ import {
   SuccessErrorCallbackWithParam,
   PartialWalletInfo,
   WalletInfo,
-} from "../../type";
+} from "../../types";
 import { useEmailLogin } from "./hook/email-login-hook";
 
 const LoginContext = createContext<{

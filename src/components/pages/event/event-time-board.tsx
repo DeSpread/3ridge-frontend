@@ -5,7 +5,7 @@ import TimerBoard, {
 import DateUtil from "../../../util/date-util";
 import PrimaryCard from "../../atomic/atoms/primary-card";
 import React, { PropsWithChildren } from "react";
-import { Ticket } from "../../../type";
+import { Ticket } from "../../../types";
 
 const EventTimeBoard = (props: { ticketData?: Ticket } & PropsWithChildren) => {
   const { ticketData } = props;

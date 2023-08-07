@@ -25,7 +25,7 @@ import {
   VerifyVisitWebsiteEditForm,
   VerifySurveyEditForm,
 } from "../../form/quest/quest-edit-from";
-import { Quest } from "../../../type";
+import { Quest } from "../../../types";
 
 const TicketQuestUpsertEditDialog = (
   props: {

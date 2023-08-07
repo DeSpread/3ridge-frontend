@@ -14,7 +14,7 @@ import { useTheme } from "@mui/material/styles";
 import { Swiper, SwiperSlide } from "swiper/react"; // basic
 import "swiper/css"; //basic
 import { useTicketsQuery } from "../../hooks/tickets-query-hook";
-import { FILTER_TYPE } from "../../type";
+import { FILTER_TYPE } from "../../types";
 import { EventType, TicketSortType } from "../../__generated__/graphql";
 import useWindowDimensions from "../../hooks/window-dimensions";
 import BannerOverlayStyleCard from "../../components/atomic/molecules/banner-overlay-style-card";

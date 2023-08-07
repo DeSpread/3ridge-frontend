@@ -6,7 +6,7 @@ import {
   FilterType,
   MouseEventWithParam,
   TicketEventParam,
-} from "../../../type";
+} from "../../../types";
 import { TicketSortType } from "../../../__generated__/graphql";
 import { Stack, Typography } from "@mui/material";
 import TicketsSection from "./tickets-section";

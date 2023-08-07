@@ -21,7 +21,7 @@ import {
   MouseEventWithParam,
   QuizContent,
   QuizEventParam,
-} from "../../../type";
+} from "../../../types";
 import { useTheme } from "@mui/material/styles";
 
 export type QuestQuizFormProps = PropsWithChildren & {

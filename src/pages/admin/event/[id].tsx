@@ -36,7 +36,7 @@ import EventQuests from "../../../components/pages/event/event-quests";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TicketQuestUpsertEditDialog from "../../../components/dialogs/ticket-edit/ticket-quest-upsert-edit-dialog";
-import { Quest, Z_INDEX_OFFSET } from "../../../type";
+import { Quest, Z_INDEX_OFFSET } from "../../../types";
 import EventRewardPolicy from "../../../components/pages/event/reward/event-reward-policy";
 import EventTimeBoard from "../../../components/pages/event/event-time-board";
 import EventRewardDescription from "../../../components/pages/event/reward/event-reward-description";
