@@ -15,6 +15,15 @@ export const GET_USERS_ORDER_BY_REWARD_POINT_DESC = gql(/* GraphQL */ `
       userSocial {
         twitterId
       }
+      kakao {
+        id
+        connected_at
+        properties {
+          nickname
+          profile_image
+          thumbnail_image
+        }
+      }
     }
   }
 `);
@@ -74,6 +83,15 @@ export const GET_USER_BY_NAME = gql(/* GraphQL */ `
         address
         chain
       }
+      kakao {
+        id
+        connected_at
+        properties {
+          nickname
+          profile_image
+          thumbnail_image
+        }
+      }
     }
   }
 `);
@@ -99,6 +117,15 @@ export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
           id
           photoUrl
           username
+        }
+      }
+      kakao {
+        id
+        connected_at
+        properties {
+          nickname
+          profile_image
+          thumbnail_image
         }
       }
     }
@@ -128,6 +155,15 @@ export const GET_USER_BY_GMAIL = gql(/* GraphQL */ `
           username
         }
       }
+      kakao {
+        id
+        connected_at
+        properties {
+          nickname
+          profile_image
+          thumbnail_image
+        }
+      }
     }
   }
 `);
@@ -153,6 +189,15 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
           id
           photoUrl
           username
+        }
+      }
+      kakao {
+        id
+        connected_at
+        properties {
+          nickname
+          profile_image
+          thumbnail_image
         }
       }
     }
@@ -286,6 +331,30 @@ export const UPDATE_USER_TELEGRAM_BY_NAME = gql(/* GraphQL */ `
           username
         }
       }
+    }
+  }
+`);
+
+export const UPDATE_KAKAO_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateKakaoByName($name: String!, $authCode: String!) {
+    updateKakaoByName(authCode: $authCode, name: $name) {
+      kakao {
+        id
+        connected_at
+        properties {
+          nickname
+          profile_image
+          thumbnail_image
+        }
+      }
+    }
+  }
+`);
+
+export const DELETE_KAKAO_BY_NAME = gql(/* GraphQL */ `
+  mutation DeleteKakaoByName($name: String!) {
+    deleteKakaoByName(name: $name) {
+      _id
     }
   }
 `);

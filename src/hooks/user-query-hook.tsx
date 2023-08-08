@@ -89,6 +89,17 @@ export function useUserQuery(props: { name?: string }) {
         username: string;
       } | null;
     } | null;
+    kakao?: {
+      __typename?: "Kakao";
+      id: number;
+      connected_at: string;
+      properties?: {
+        __typename?: "KakaoProperties";
+        nickname: string;
+        profile_image: string;
+        thumbnail_image: string;
+      } | null;
+    } | null;
   }) => {
     const {
       email,
@@ -100,6 +111,7 @@ export function useUserQuery(props: { name?: string }) {
       userSocial,
       participatingTickets,
       gmail,
+      kakao,
     } = data;
     setUserData((prevState) => {
       return {
@@ -168,6 +180,19 @@ export function useUserQuery(props: { name?: string }) {
               }),
             };
           }),
+        kakao: kakao
+          ? {
+              id: kakao.id,
+              connected_at: kakao.connected_at,
+              properties: kakao
+                ? {
+                    profile_image: kakao.properties?.profile_image ?? "",
+                    thumbnail_image: kakao.properties?.thumbnail_image ?? "",
+                    nickname: kakao.properties?.nickname ?? "",
+                  }
+                : undefined,
+            }
+          : undefined,
       };
     });
   };

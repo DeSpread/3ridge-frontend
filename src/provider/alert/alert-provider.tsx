@@ -24,6 +24,7 @@ import Draggable from "react-draggable";
 import ComponentHelper from "../../helper/component-helper";
 import LinkTypography from "../../components/atomic/atoms/link-typography";
 import { useTheme } from "@mui/material/styles";
+import ErrorInfoForm from "../../components/form/error-info-form";
 
 const AlertContext = createContext<{
   showAlert: ({
@@ -75,29 +76,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
   const showErrorAlert = ({ content }: { content: string | ReactElement }) => {
     alertDescRef.current.title = "오류가 발생했습니다";
     alertDescRef.current.content = (
-      <Stack direction={"column"} sx={{ flex: 1, background: "" }}>
-        <div>{content}</div>
-        <Stack direction={"row"} alignItems={"center"} sx={{ marginTop: 2 }}>
-          <LinkTypography
-            href={"https://discord.gg/3ridge"}
-            sx={{
-              fontWeight: "bold",
-              "&:hover": {
-                color: "#914e1d",
-                textDecoration: "underline",
-              },
-              color: theme.palette.warning.main,
-            }}
-            variant={"body1"}
-          >
-            3ridge 디스코드
-          </LinkTypography>
-          <Typography variant={"body1"}>
-            에서 Ticket을 통해 문의하세요
-          </Typography>
-        </Stack>
-        {/*<div>디스코드 </div>*/}
-      </Stack>
+      <ErrorInfoForm content={content}></ErrorInfoForm>
     );
     setOpen(true);
   };

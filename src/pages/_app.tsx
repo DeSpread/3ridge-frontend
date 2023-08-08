@@ -110,6 +110,10 @@ const App = (props: AppPropsWithLayout) => {
         src={`https://telegram.org/js/telegram-widget.js?${v1()}`}
         async
       />
+      <Script
+        src="https://developers.kakao.com/sdk/js/kakao.js"
+        onLoad={kakaoInit}
+      ></Script>
       <ThemeProvider theme={createTheme()}>
         <GoogleOAuthProvider clientId={clientId ?? ""}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>

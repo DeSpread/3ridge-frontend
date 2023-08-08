@@ -2,10 +2,12 @@ import { useLogin } from "../provider/login/login-provider";
 import { client } from "../lib/apollo/client";
 import { useEffect, useRef, useState } from "react";
 import {
+  DELETE_KAKAO_BY_NAME,
   GET_USER_BY_EMAIL,
   GET_USER_BY_GMAIL,
   GET_USER_BY_WALLET_ADDRESS,
   IS_REGISTER_WALLET,
+  UPDATE_KAKAO_BY_NAME,
   UPDATE_USER_BY_EMAIL,
   UPDATE_USER_BY_TWITTER,
   UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
@@ -56,6 +58,8 @@ const useSignedUserQuery = () => {
   const [UpdateUserTelegramByName] = useMutation(UPDATE_USER_TELEGRAM_BY_NAME);
   const [UpdateUserRewardByName] = useMutation(UPDATE_USER_REWARD_BY_NAME);
   const [UpdateUserSocialByName] = useMutation(UPDATE_USER_SOCIAL_BY_NAME);
+  const [UpdateKakaoByName] = useMutation(UPDATE_KAKAO_BY_NAME);
+  const [DeleteKakaoByName] = useMutation(DELETE_KAKAO_BY_NAME);
 
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
@@ -150,6 +154,7 @@ const useSignedUserQuery = () => {
             return;
           }
           await delay(100);
+          console.log("try walletLoggedInInfo");
           const res = await client.query({
             query: GET_USER_BY_WALLET_ADDRESS,
             variables: {
@@ -157,6 +162,7 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
+          console.log("res", res);
           updateUserData(res.data.userByWalletAddress);
         } catch (e) {
           console.log(e);
@@ -234,6 +240,17 @@ const useSignedUserQuery = () => {
         username: string;
       } | null;
     } | null;
+    kakao?: {
+      __typename?: "Kakao";
+      id: number;
+      connected_at: string;
+      properties?: {
+        __typename?: "KakaoProperties";
+        nickname: string;
+        profile_image: string;
+        thumbnail_image: string;
+      } | null;
+    } | null;
   }) => {
     const {
       email,
@@ -244,6 +261,7 @@ const useSignedUserQuery = () => {
       rewardPoint,
       userSocial,
       gmail,
+      kakao,
     } = data;
     setUserData((prevState: User) => {
       return {
@@ -273,6 +291,19 @@ const useSignedUserQuery = () => {
               }
             : undefined,
         },
+        kakao: kakao
+          ? {
+              id: kakao.id,
+              connected_at: kakao.connected_at,
+              properties: kakao
+                ? {
+                    profile_image: kakao.properties?.profile_image ?? "",
+                    thumbnail_image: kakao.properties?.thumbnail_image ?? "",
+                    nickname: kakao.properties?.nickname ?? "",
+                  }
+                : undefined,
+            }
+          : undefined,
       };
     });
   };
@@ -570,6 +601,59 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateKakao = async (authCode: string) => {
+    if (!userData.name) return;
+    const res = await UpdateKakaoByName({
+      variables: {
+        name: userData?.name,
+        authCode,
+      },
+    });
+    // {
+    //   "data": {
+    //   "updateKakaoByName": {
+    //     "kakao": {
+    //       "id": 2952755051,
+    //         "connected_at": "2023-08-07T06:40:43Z",
+    //         "properties": {
+    //         "nickname": "김민수",
+    //           "profile_image": "http://k.kakaocdn.net/dn/ciLphb/btrgFSyMvYB/ds51zxZ2PvaKkprsWFYQgK/img_640x640.jpg",
+    //           "thumbnail_image": "http://k.kakaocdn.net/dn/ciLphb/btrgFSyMvYB/ds51zxZ2PvaKkprsWFYQgK/img_110x110.jpg",
+    //           "__typename": "KakaoProperties"
+    //       },
+    //       "__typename": "Kakao"
+    //     },
+    //     "__typename": "User"
+    //   }
+    // }
+    // }
+    const kakao = res.data?.updateKakaoByName?.kakao;
+    if (kakao) {
+      console.log(kakao);
+      setUserData((prevState: User) => {
+        return {
+          ...prevState,
+          kakao,
+        };
+      });
+    }
+  };
+
+  const asyncDeleteKakao = async () => {
+    if (!userData.name) return;
+    await DeleteKakaoByName({
+      variables: {
+        name: userData?.name,
+      },
+    });
+    setUserData((prevState: User) => {
+      return {
+        ...prevState,
+        kakao: undefined,
+      };
+    });
+  };
+
   return {
     userData,
     loading,
@@ -581,6 +665,8 @@ const useSignedUserQuery = () => {
     asyncDeleteWalletAddress,
     asyncUpdateSocialTelegram,
     asyncRemoveSocialTelegram,
+    asyncUpdateKakao,
+    asyncDeleteKakao,
   };
 };
 

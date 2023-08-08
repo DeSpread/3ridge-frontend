@@ -35,6 +35,7 @@ import TypeHelper from "../../helper/type-helper";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/router";
+import KakaoIcon from "../atomic/atoms/svg/kakao-icon";
 
 const ReversibleMarkEmailIcon = (props: ReversibleSvgIconProps) => {
   if (props.reverse) {
@@ -66,6 +67,7 @@ type ProfileEditDialogProps = DialogProps & {
   emailValidatorButtonOnClick?: MouseEventHandler;
   twitterValidatorButtonOnClick?: MouseEventHandler;
   telegramValidatorButtonOnClick?: MouseEventHandler;
+  kakaoValidatorButtonOnClick?: MouseEventHandler;
   onCloseBtnClicked?: MouseEventHandler;
   onFileImageAdded?: (f: File) => void;
   backDirectionPath?: string;
@@ -221,6 +223,14 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                       props.userData?.userSocial?.telegramUser?.username ??
                       undefined
                     }
+                    payload={""}
+                  ></ValidatorButton>
+                  <ValidatorButton
+                    svgIcon={KakaoIcon}
+                    label={"카카오톡"}
+                    onClick={props.kakaoValidatorButtonOnClick}
+                    size={"small"}
+                    value={props.userData?.kakao?.id.toString() ?? undefined}
                     payload={""}
                   ></ValidatorButton>
                 </Stack>

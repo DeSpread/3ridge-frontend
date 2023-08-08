@@ -26,3 +26,8 @@ export const backDirectionPathState = atom({
   key: `backDirectionPathState/${v1()}`,
   default: "",
 });
+
+export const kakaoRequestState = atom({
+  key: `kakaoRequestState/${v1()}`,
+  default: "",
+});
