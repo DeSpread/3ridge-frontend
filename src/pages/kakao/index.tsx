@@ -29,17 +29,19 @@ const Kakao = () => {
       }
       setUpdateLock(true);
       const { request } = PreferenceHelper.getKakaoRequest();
+      const redirectUri = `${window.location.origin}/kakao`;
       if (request === "update") {
-        const res = await asyncUpdateKakao(code);
+        const res = await asyncUpdateKakao(code, redirectUri);
+        console.log(res);
         setShowProfileEditDialog(true);
         PreferenceHelper.clearKakaoRequest();
         await router.push(`/profile/${userData?.name}`);
+        setUpdateLock(false);
       }
     } catch (e) {
       if (getErrorMessage(e) === APP_ERROR_MESSAGE.FAIL_TO_FETCH_KAKAO_INFO) {
         setErrorMessage(APP_ERROR_MESSAGE.FAIL_TO_FETCH_KAKAO_INFO);
       }
-    } finally {
       setUpdateLock(false);
     }
   };

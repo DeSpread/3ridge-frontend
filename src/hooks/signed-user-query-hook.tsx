@@ -97,7 +97,6 @@ const useSignedUserQuery = () => {
             fetchPolicy: "no-cache",
           });
           updateUserData(res.data.userByEmail);
-          console.log(res.data.userByEmail);
         } catch (e) {
           throw new AppError(getErrorMessage(e));
         } finally {
@@ -107,7 +106,6 @@ const useSignedUserQuery = () => {
     } else {
       if (!isGoogleLoggedIn && !isWalletLoggedIn) {
         setUserData({});
-        // console.log("isMailLoggedIn {}");
       }
     }
   }, [isMailLoggedIn]);
@@ -137,7 +135,6 @@ const useSignedUserQuery = () => {
       })();
     } else {
       if (!isMailLoggedIn && !isWalletLoggedIn) {
-        // console.log("isGoogleLoggedIn {}");
         setUserData({});
       }
     }
@@ -145,7 +142,6 @@ const useSignedUserQuery = () => {
 
   useEffect(() => {
     if (walletLoggedInInfo.address) {
-      // console.log("walletLoggedInInfo.address", walletLoggedInInfo.address);
       (async () => {
         try {
           setLoading(true);
@@ -154,7 +150,6 @@ const useSignedUserQuery = () => {
             return;
           }
           await delay(100);
-          console.log("try walletLoggedInInfo");
           const res = await client.query({
             query: GET_USER_BY_WALLET_ADDRESS,
             variables: {
@@ -162,7 +157,6 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
-          console.log("res", res);
           updateUserData(res.data.userByWalletAddress);
         } catch (e) {
           console.log(e);
@@ -172,7 +166,6 @@ const useSignedUserQuery = () => {
       })();
     } else {
       if (!isMailLoggedIn && !isGoogleLoggedIn) {
-        // console.log("isWalletLoggedIn {}");
         setUserData({});
       }
     }
@@ -312,12 +305,10 @@ const useSignedUserQuery = () => {
     network: SupportedNetwork,
     walletName: WalletName
   ) => {
-    console.log("asyncUpsertWalletAddress - network", network);
     if (!isWalletInstalled(network, walletName)) {
       throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED, network);
     }
     const accountAddress = getAccountAddress(network);
-    console.log("asyncUpsertWalletAddress - accountAddress", accountAddress);
     if (!accountAddress) {
       await asyncConnectWallet(network, walletName);
       if (network === SUPPORTED_NETWORKS.SUI) {
@@ -601,32 +592,15 @@ const useSignedUserQuery = () => {
     }
   };
 
-  const asyncUpdateKakao = async (authCode: string) => {
+  const asyncUpdateKakao = async (authCode: string, redirectUri: string) => {
     if (!userData.name) return;
     const res = await UpdateKakaoByName({
       variables: {
         name: userData?.name,
         authCode,
+        redirectUri,
       },
     });
-    // {
-    //   "data": {
-    //   "updateKakaoByName": {
-    //     "kakao": {
-    //       "id": 2952755051,
-    //         "connected_at": "2023-08-07T06:40:43Z",
-    //         "properties": {
-    //         "nickname": "김민수",
-    //           "profile_image": "http://k.kakaocdn.net/dn/ciLphb/btrgFSyMvYB/ds51zxZ2PvaKkprsWFYQgK/img_640x640.jpg",
-    //           "thumbnail_image": "http://k.kakaocdn.net/dn/ciLphb/btrgFSyMvYB/ds51zxZ2PvaKkprsWFYQgK/img_110x110.jpg",
-    //           "__typename": "KakaoProperties"
-    //       },
-    //       "__typename": "Kakao"
-    //     },
-    //     "__typename": "User"
-    //   }
-    // }
-    // }
     const kakao = res.data?.updateKakaoByName?.kakao;
     if (kakao) {
       console.log(kakao);

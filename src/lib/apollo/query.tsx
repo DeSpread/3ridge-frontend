@@ -336,8 +336,16 @@ export const UPDATE_USER_TELEGRAM_BY_NAME = gql(/* GraphQL */ `
 `);
 
 export const UPDATE_KAKAO_BY_NAME = gql(/* GraphQL */ `
-  mutation UpdateKakaoByName($name: String!, $authCode: String!) {
-    updateKakaoByName(authCode: $authCode, name: $name) {
+  mutation UpdateKakaoByName(
+    $name: String!
+    $authCode: String!
+    $redirectUri: String!
+  ) {
+    updateKakaoByName(
+      authCode: $authCode
+      name: $name
+      redirectUri: $redirectUri
+    ) {
       kakao {
         id
         connected_at

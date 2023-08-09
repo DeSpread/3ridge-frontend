@@ -849,7 +849,6 @@ const Profile = () => {
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
               const kakaoLogin = () => {
-                console.log("redirectUri", `${window.location.origin}/kakao`);
                 window.Kakao.Auth.authorize({
                   redirectUri: `${window.location.origin}/kakao`,
                 });
