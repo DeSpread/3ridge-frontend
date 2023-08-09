@@ -66,6 +66,7 @@ import { useWalletAlert } from "../../hooks/wallet-alert-hook";
 import { useUserQuery } from "../../hooks/user-query-hook";
 import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
 import PreferenceHelper from "../../helper/preference-helper";
+import KakaoIcon from "../../components/atomic/atoms/svg/kakao-icon";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -581,6 +582,60 @@ const Profile = () => {
                               color={"neutral.100"}
                             >
                               텔레그램을 연동해주세요
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
+                    {targetUserData?.kakao?.properties?.nickname && (
+                      <Grid item>
+                        <StyledChip
+                          icon={
+                            <KakaoIcon
+                              sx={{ color: "black", fontSize: "1.1rem" }}
+                              color={"inherit"}
+                              fontSize={"inherit"}
+                            ></KakaoIcon>
+                          }
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              {targetUserData?.kakao?.properties?.nickname}
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
+                    {!targetUserData?.kakao?.properties?.nickname && (
+                      <Grid item>
+                        <StyledChip
+                          sx={{
+                            "&:hover": {
+                              background: (theme: Theme) =>
+                                theme.palette.action.hover,
+                            },
+                          }}
+                          onClick={(e: MouseEvent) => {
+                            e.preventDefault();
+                            setOpenProfileEditDialog(true);
+                          }}
+                          icon={
+                            <KakaoIcon
+                              sx={{ color: "black", fontSize: "1.1rem" }}
+                              color={"inherit"}
+                              fontSize={"inherit"}
+                            ></KakaoIcon>
+                          }
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              카카오톡을 연동해주세요
                             </Typography>
                           }
                         ></StyledChip>
