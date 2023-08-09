@@ -1,4 +1,4 @@
-import { Ticket } from "../../../type";
+import { Ticket } from "../../../types";
 import { useTheme } from "@mui/material/styles";
 import { useLoading } from "../../../provider/loading/loading-provider";
 import { useRouter } from "next/router";

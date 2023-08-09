@@ -16,7 +16,7 @@ import {
   QuizEventParam,
   VerifyQuizQuestContext,
   Z_INDEX_OFFSET,
-} from "../../../type";
+} from "../../../types";
 import SecondaryButton from "../../atomic/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";

@@ -1,6 +1,5 @@
-import TwitterIcon from "@mui/icons-material/Twitter";
 import { IconButton, IconButtonProps } from "@mui/material";
-import React, { CSSProperties } from "react";
+import React from "react";
 
 export const LinkIconButton = (
   props: IconButtonProps & {
@@ -10,12 +9,6 @@ export const LinkIconButton = (
   return (
     <IconButton
       {...props}
-      // sx={{
-      //   width: 36,
-      //   height: 36,
-      //   background: (theme) => theme.palette.neutral["900"],
-      //   borderRadius: 16,
-      // }}
       onClick={() => {
         if (props.linkUrl) {
           const newWindow = window.open(

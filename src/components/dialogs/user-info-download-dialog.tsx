@@ -3,7 +3,7 @@ import React from "react";
 import SecondaryButton from "../atomic/atoms/secondary-button";
 import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
 import UserInfoDownloadForm from "../form/user-info-download-form";
-import { TicketUserQuery } from "../../type";
+import { TicketUserQuery } from "../../types";
 
 const UserInfoDownloadDialog = (
   props: {

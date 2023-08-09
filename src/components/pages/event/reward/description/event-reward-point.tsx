@@ -1,7 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { PropsWithChildren } from "react";
-import { Ticket } from "../../../../../type";
+import { Ticket } from "../../../../../types";
 
 const EventRewardPoint = (
   props: { ticketData?: Ticket } & PropsWithChildren

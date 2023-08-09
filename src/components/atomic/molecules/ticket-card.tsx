@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useLayoutEffect } from "react";
-import { Ticket } from "../../../type";
+import { Ticket } from "../../../types";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
 import TicketInfoTextSet from "../atoms/ticket-info-text-set";

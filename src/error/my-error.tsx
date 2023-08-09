@@ -26,6 +26,7 @@ export const APP_ERROR_MESSAGE = {
   TICKET_ID_NOT_EXIST: "ticket id not exist",
   DOES_NOT_HAVA_APTOS_WALLET: "user does not have aptos wallet",
   DOES_NOT_HAVE_APTOS_NFT: "user does not have aptos nft",
+  FAIL_TO_FETCH_KAKAO_INFO: "fail to fetch kakao info",
 } as const;
 
 export class AppError extends Error {

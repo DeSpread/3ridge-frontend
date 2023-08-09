@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { User } from "../type";
 import { client } from "../lib/apollo/client";
 import { FIND_RANK_BY_USER_ID } from "../lib/apollo/query";
 

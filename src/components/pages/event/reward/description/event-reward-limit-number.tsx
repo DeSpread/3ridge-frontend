@@ -1,4 +1,4 @@
-import { Ticket } from "../../../../../type";
+import { Ticket } from "../../../../../types";
 import { PropsWithChildren } from "react";
 import { Stack, Typography } from "@mui/material";
 import StringHelper from "../../../../../helper/string-helper";

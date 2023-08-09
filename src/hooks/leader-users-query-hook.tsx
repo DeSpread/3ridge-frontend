@@ -1,6 +1,6 @@
 import { GET_USERS_ORDER_BY_REWARD_POINT_DESC } from "../lib/apollo/query";
 import { useEffect, useState } from "react";
-import { User } from "../type";
+import { User } from "../types";
 import { client } from "../lib/apollo/client";
 
 export function useLeaderUsersQuery() {

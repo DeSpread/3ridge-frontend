@@ -1,19 +1,15 @@
-import {
-  AppBar,
-  Box,
-  LinearProgress,
-  Stack,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { AppBar, Box, Stack, Toolbar, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { PropsWithChildren, useEffect } from "react";
-import React, { MouseEventHandler, ReactNode, useMemo, useState } from "react";
+import React, {
+  MouseEventHandler,
+  PropsWithChildren,
+  ReactNode,
+  useMemo,
+  useState,
+} from "react";
 import NavbarAvatar from "../components/atomic/molecules/navbar-avatar";
 import { useRouter } from "next/router";
 import SecondaryButton from "../components/atomic/atoms/secondary-button";
-import SignInDialog from "./dialog/sign/sign-in-dialog";
 import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
 import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
 import { useLogin } from "../provider/login/login-provider";
@@ -31,7 +27,7 @@ import {
   MouseEventWithParam,
   SupportedNetwork,
   Z_INDEX_OFFSET,
-} from "../type";
+} from "../types";
 import { useSignDialog } from "../hooks/sign-dialog-hook";
 import NavbarButton from "../components/atomic/atoms/navbar-button";
 import SubMenuButton from "../components/atomic/molecules/sub-menu-button";

@@ -14,7 +14,7 @@ import MainLayout from "../../layouts/main-layout";
 import { useLeaderUsersQuery } from "../../hooks/leader-users-query-hook";
 import XpChip from "../../components/atomic/atoms/styled/xp-chip";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
-import { User } from "../../type";
+import { User } from "../../types";
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import StringHelper from "../../helper/string-helper";

@@ -1,5 +1,4 @@
 import {
-  Box,
   Checkbox,
   Divider,
   FormControl,
@@ -12,11 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import PrimaryButton from "../atomic/atoms/primary-button";
-import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import { ChainType } from "../../__generated__/graphql";
 import Container from "../atomic/atoms/container";
-import { TicketUserQuery } from "../../type";
+import { TicketUserQuery } from "../../types";
 
 const UserInfoDownloadForm = (
   props: PropsWithChildren & {

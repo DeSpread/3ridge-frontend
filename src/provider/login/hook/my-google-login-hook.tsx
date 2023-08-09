@@ -3,7 +3,7 @@ import { AppError, getErrorMessage } from "../../../error/my-error";
 import { useMutation } from "@apollo/client";
 import GoogleLoginHelper from "../../../helper/google-login-helper";
 import { useGoogleLogin } from "@react-oauth/google";
-import { GoogleLoggedInInfo, SuccessErrorCallback } from "../../../type";
+import { GoogleLoggedInInfo, SuccessErrorCallback } from "../../../types";
 import { CREATE_USER_BY_GMAIL } from "../../../lib/apollo/query";
 
 export function useMyGoogleLogin() {

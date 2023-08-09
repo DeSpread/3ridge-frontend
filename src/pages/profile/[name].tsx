@@ -29,7 +29,7 @@ import {
   ObjectValues,
   SUPPORTED_NETWORKS,
   SupportedNetwork,
-} from "../../type";
+} from "../../types";
 import ConnectEmailDialog from "../../components/dialogs/connect-email-dialog";
 import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
@@ -54,7 +54,7 @@ import { useMobile } from "../../provider/mobile/mobile-context";
 import EthUtil from "../../util/eth-util";
 import ConnectTwitterDialog from "../../components/dialogs/connect-twitter-dialog";
 import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
-import { backDirectionPathState } from "../../lib/recoil";
+import { backDirectionPathState, kakaoRequestState } from "../../lib/recoil";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTotalWallet } from "../../provider/login/hook/total-wallet-hook";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -65,6 +65,8 @@ import useSimpleStorage from "../../hooks/simple-storage-hook";
 import { useWalletAlert } from "../../hooks/wallet-alert-hook";
 import { useUserQuery } from "../../hooks/user-query-hook";
 import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
+import PreferenceHelper from "../../helper/preference-helper";
+import KakaoIcon from "../../components/atomic/atoms/svg/kakao-icon";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -72,6 +74,7 @@ export const DELETE_CONFIRM_STATE = {
   MAIL: "MAIL",
   TWITTER: "TWITTER",
   TELEGRAM: "TELEGRAM",
+  KAKAO: "KAKAO",
 } as const;
 
 export type DeleteConfirmState = ObjectValues<typeof DELETE_CONFIRM_STATE>;
@@ -94,6 +97,7 @@ const Profile = () => {
     asyncUpdateSocialTwitter,
     asyncUpdateSocialTelegram,
     asyncRemoveSocialTelegram,
+    asyncDeleteKakao,
   } = useSignedUserQuery();
   const { isMobile } = useMobile();
   const backDirectionPath = useRecoilValue(backDirectionPathState);
@@ -136,7 +140,6 @@ const Profile = () => {
   const { asyncUploadImage } = useSimpleStorage();
 
   useEffect(() => {
-    console.log("deleteConfirmState", deleteConfirmState);
     switch (deleteConfirmState.state) {
       case DELETE_CONFIRM_STATE.NONE: {
         setDeleteConfirmDialog(false);
@@ -163,6 +166,11 @@ const Profile = () => {
         setDeleteConfirmDialogMessage(
           `${deleteConfirmState.payload?.toUpperCase()} 지갑 연동을 해제 하시겠습니까?`
         );
+        break;
+      }
+      case DELETE_CONFIRM_STATE.KAKAO: {
+        setDeleteConfirmDialog(true);
+        setDeleteConfirmDialogMessage(`카카오 연동을 해제 하겠습니까?`);
         break;
       }
       default: {
@@ -345,7 +353,7 @@ const Profile = () => {
                           network === SUPPORTED_NETWORKS.EVM ||
                           (!isMobile && network === SUPPORTED_NETWORKS.APTOS) ||
                           network === SUPPORTED_NETWORKS.STACKS
-                      ) // FIXME: 이더리움만 현재는 나오게끔 하지만, 다른 체인을 보여주고 disabled 하는게 더 좋아보임
+                      )
                       .filter(
                         (_, index) =>
                           index !== Object.values(SUPPORTED_NETWORKS).length - 1
@@ -579,6 +587,60 @@ const Profile = () => {
                         ></StyledChip>
                       </Grid>
                     )}
+                    {targetUserData?.kakao?.properties?.nickname && (
+                      <Grid item>
+                        <StyledChip
+                          icon={
+                            <KakaoIcon
+                              sx={{ color: "black", fontSize: "1.1rem" }}
+                              color={"inherit"}
+                              fontSize={"inherit"}
+                            ></KakaoIcon>
+                          }
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              {targetUserData?.kakao?.properties?.nickname}
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
+                    {!targetUserData?.kakao?.properties?.nickname && (
+                      <Grid item>
+                        <StyledChip
+                          sx={{
+                            "&:hover": {
+                              background: (theme: Theme) =>
+                                theme.palette.action.hover,
+                            },
+                          }}
+                          onClick={(e: MouseEvent) => {
+                            e.preventDefault();
+                            setOpenProfileEditDialog(true);
+                          }}
+                          icon={
+                            <KakaoIcon
+                              sx={{ color: "black", fontSize: "1.1rem" }}
+                              color={"inherit"}
+                              fontSize={"inherit"}
+                            ></KakaoIcon>
+                          }
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              카카오톡을 연동해주세요
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
                   </Grid>
                 </Stack>
                 <Grid
@@ -803,17 +865,6 @@ const Profile = () => {
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
               if (isMobile) {
-                // showAlert({
-                //   title: "알림",
-                //   content: (
-                //     <Stack>
-                //       <Typography>데스크탑에서 연동해주세요.</Typography>
-                //       <Typography>
-                //         모바일은 추후에 지원될 예정입니다.
-                //       </Typography>
-                //     </Stack>
-                //   ),
-                // });
                 setOpenConnectTwitterDialog(true);
               } else {
                 const res = await asyncTwitterSignInPopUp();
@@ -836,6 +887,29 @@ const Profile = () => {
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
               await asyncUpdateSocialTelegram();
+            }
+          } catch (e) {
+            console.log(e);
+          } finally {
+            closeLoading();
+          }
+        }}
+        kakaoValidatorButtonOnClick={async (e) => {
+          try {
+            const myEvent = e as MouseEventWithStateParam;
+            showLoading();
+            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
+              setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.KAKAO });
+            } else if (
+              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
+            ) {
+              const kakaoLogin = () => {
+                window.Kakao.Auth.authorize({
+                  redirectUri: `${window.location.origin}/kakao`,
+                });
+              };
+              PreferenceHelper.updateKakaoRequest("update");
+              kakaoLogin();
             }
           } catch (e) {
             console.log(e);
@@ -983,6 +1057,9 @@ const Profile = () => {
                 deleteConfirmState.payload
               );
               await asyncDeleteWalletAddress(network);
+            } else if (state === DELETE_CONFIRM_STATE.KAKAO) {
+              console.log("try asyncDeleteKakao");
+              await asyncDeleteKakao();
             }
             showAlert({ title: "알림", content: "완료되었습니다" });
           } catch (e) {

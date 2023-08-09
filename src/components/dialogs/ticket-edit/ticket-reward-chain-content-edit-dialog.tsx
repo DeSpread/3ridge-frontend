@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import InputWithLabel from "../../atomic/atoms/input-with-label";
 import dedent from "dedent";
 import ResourceHelper from "../../../helper/resource-helper";
-import { Ticket } from "../../../type";
+import { Ticket } from "../../../types";
 
 const TicketRewardChainContentEditDialog = (
   props: {

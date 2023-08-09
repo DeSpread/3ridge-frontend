@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
-import { Box, Stack, TextField } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import SecondaryButton from "../atomic/atoms/secondary-button";
 import NumberInput from "../atomic/atoms/number-input";
 import MathUtil from "../../util/math-util";
-import { transformInputValue } from "@graphql-tools/utils";
 
 const NumberEditDialog = (
   props: {

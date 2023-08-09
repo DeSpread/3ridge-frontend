@@ -22,7 +22,7 @@ import {
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
-import { Ticket, TicketUserQuery } from "../type";
+import { Ticket, TicketUserQuery } from "../types";
 import TypeParseHelper from "../helper/type-parse-helper";
 import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";

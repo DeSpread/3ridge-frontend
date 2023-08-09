@@ -1,12 +1,11 @@
 import Head from "next/head";
 import React, { ReactElement, useEffect, useState } from "react";
-import { Stack, Typography, Box, Divider, Skeleton, Link } from "@mui/material";
+import { Box, Divider, Link, Skeleton, Stack, Typography } from "@mui/material";
 import MainLayout from "../../layouts/main-layout";
 import { useRouter } from "next/router";
 import PrimaryButton from "../../components/atomic/atoms/primary-button";
 import NextLink from "next/link";
 import { useTheme } from "@mui/material/styles";
-import AwsClient from "../../remote/aws-client";
 import { getErrorMessage } from "../../error/my-error";
 import { useLogin } from "../../provider/login/login-provider";
 import { useAlert } from "../../provider/alert/alert-provider";

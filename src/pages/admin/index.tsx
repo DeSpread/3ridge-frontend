@@ -20,7 +20,7 @@ import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import { useAdminQuery } from "../../hooks/admin-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import { getLocaleErrorMessage } from "../../error/my-error";
-import { FILTER_TYPE } from "../../type";
+import { FILTER_TYPE } from "../../types";
 import { TicketSortType } from "../../__generated__/graphql";
 import TicketCard from "../../components/atomic/molecules/ticket-card";
 import { RecoilLoadable } from "recoil";

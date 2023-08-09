@@ -1,6 +1,6 @@
 import { Box, Grid, Stack, Typography, TypographyProps } from "@mui/material";
 import React, { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
-import { PartialTicket } from "../../../type";
+import { PartialTicket } from "../../../types";
 import StringHelper from "../../../helper/string-helper";
 
 type TicketInfoViewProps = TypographyProps & {

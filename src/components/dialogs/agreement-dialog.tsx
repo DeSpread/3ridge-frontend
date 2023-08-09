@@ -13,7 +13,7 @@ import {
   MouseEventWithParam,
   VerifyAgreementQuestContext,
   Z_INDEX_OFFSET,
-} from "../../type";
+} from "../../types";
 import { useTheme } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";

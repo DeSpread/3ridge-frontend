@@ -4,7 +4,7 @@ import { DefaultPasswordTextField } from "../../../components/atomic/molecules/p
 import React, { MouseEventHandler, useMemo, useState } from "react";
 import MailTextField from "../../../components/atomic/molecules/mail-text-field";
 import SecondaryButton from "../../../components/atomic/atoms/secondary-button";
-import { EmailSignUpEventParams, MouseEventWithParam } from "../../../type";
+import { EmailSignUpEventParams, MouseEventWithParam } from "../../../types";
 import StringUtil from "../../../util/string-util";
 
 type SignInWithEmailProps = SignDialogProps & {

@@ -1,4 +1,4 @@
-import { SupportedNetwork } from "../type";
+import { SupportedNetwork } from "../types";
 import TypeHelper from "./type-helper";
 
 class PreferenceHelper {
@@ -8,6 +8,7 @@ class PreferenceHelper {
   private static KEY_CONNECTED_NETWORK_CACHE = "KEY_CONNECTED_NETWORK_CACHE";
   private static KEY_RETRY_NETWORK_CACHE = "KEY_RETRY_NETWORK_CACHE";
   private static KEY_TRY_CONNECT_WALLET_CACHE = "KEY_TRY_CONNECT_WALLET_CACHE";
+  private static KEY_KAKAO_REQUEST_CACHE = "KEY_KAKAO_REQUEST_CACHE";
 
   private static updateCacheByKey = (key: string, value: string) => {
     localStorage.setItem(
@@ -137,6 +138,24 @@ class PreferenceHelper {
 
   public static clearTryConnectWallet = () => {
     localStorage.removeItem(PreferenceHelper.KEY_TRY_CONNECT_WALLET_CACHE);
+  };
+
+  public static updateKakaoRequest = (request: string) => {
+    this.updateCacheByKey(PreferenceHelper.KEY_KAKAO_REQUEST_CACHE, request);
+  };
+
+  public static getKakaoRequest = () => {
+    const { value, timestamp } = this.getCacheByKey(
+      PreferenceHelper.KEY_KAKAO_REQUEST_CACHE
+    );
+    if (!value || !timestamp) {
+      return { network: undefined, timestamp: undefined };
+    }
+    return { request: value, timestamp };
+  };
+
+  public static clearKakaoRequest = () => {
+    localStorage.removeItem(PreferenceHelper.KEY_KAKAO_REQUEST_CACHE);
   };
 }
 

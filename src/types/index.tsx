@@ -5,6 +5,7 @@ import {
   CategoryType,
   ChainType,
   ContentMetadata,
+  Kakao,
   QuestPolicyType,
   RewardPolicyType,
 } from "../__generated__/graphql";
@@ -127,6 +128,7 @@ export type User = {
   rewardPoint?: number;
   userSocial?: { twitterId?: string; telegramUser?: TelegramUserInfo };
   participatingTickets?: PartialTicket[];
+  kakao?: Kakao;
 };
 
 export type GoogleLoggedInInfo = {

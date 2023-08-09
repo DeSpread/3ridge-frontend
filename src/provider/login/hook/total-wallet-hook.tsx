@@ -5,7 +5,7 @@ import {
   SUPPORTED_NETWORKS_VALUES,
   SupportedNetwork,
   WalletName,
-} from "../../../type";
+} from "../../../types";
 import { useEffect, useMemo, useState } from "react";
 import PreferenceHelper from "../../../helper/preference-helper";
 import addHours from "date-fns/addHours";

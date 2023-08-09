@@ -21,7 +21,7 @@ import {
   AgreementContent,
   AgreementEventParam,
   MouseEventWithParam,
-} from "../../../type";
+} from "../../../types";
 import { useTheme } from "@mui/material/styles";
 
 export type QuestAgreementFormProps = PropsWithChildren & {

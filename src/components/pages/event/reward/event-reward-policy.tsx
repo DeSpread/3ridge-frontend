@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import StyledChip from "../../../atomic/atoms/styled/styled-chip";
-import { REWARD_POLICY_TYPE, Ticket } from "../../../../type";
+import { REWARD_POLICY_TYPE, Ticket } from "../../../../types";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
