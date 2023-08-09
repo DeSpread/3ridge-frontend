@@ -1,6 +1,6 @@
 import React from "react";
 import { SvgIcon, SvgIconProps } from "@mui/material";
-import { ReversibleSvgIconProps } from "../../../../type";
+import { ReversibleSvgIconProps } from "../../../../types";
 
 function AptosIcon(props: ReversibleSvgIconProps) {
   return (

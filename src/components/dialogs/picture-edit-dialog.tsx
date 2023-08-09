@@ -12,7 +12,7 @@ import {
 import React, { MouseEventHandler, useMemo, useState, useRef } from "react";
 //@ts-ignore
 import AvatarEditor from "react-avatar-editor";
-import { Z_INDEX_OFFSET } from "../../type";
+import { Z_INDEX_OFFSET } from "../../types";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import SecondaryButton from "../atomic/atoms/secondary-button";

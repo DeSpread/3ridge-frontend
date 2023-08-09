@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
 import { Box, Stack } from "@mui/material";
 import StyledOutlinedInput from "../atomic/atoms/styled/styled-outlined-input";

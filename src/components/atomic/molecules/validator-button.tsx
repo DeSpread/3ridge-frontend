@@ -1,6 +1,6 @@
 import { Box, ButtonProps, Stack, Typography } from "@mui/material";
 import React, { MouseEventHandler } from "react";
-import { MouseEventWithParam, ReversibleSvgIconProps } from "../../../type";
+import { MouseEventWithParam, ReversibleSvgIconProps } from "../../../types";
 import { useTheme } from "@mui/material/styles";
 import PrimaryButton from "../atoms/primary-button";
 import CloseIcon from "@mui/icons-material/Close";
@@ -55,7 +55,7 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
         <Stack
           sx={{ background: "", paddingRight: 2 }}
           direction={"row"}
-          spacing={1}
+          spacing={2}
           alignItems={"center"}
         >
           {props.svgIcon && <props.svgIcon></props.svgIcon>}
@@ -74,7 +74,6 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
               variant={"body2"}
               sx={{
                 color: props.disabled ? "white" : theme.palette.neutral["600"],
-                paddingRight: 1,
               }}
             >{`${props.label}에 연동해주세요`}</Typography>
           )}

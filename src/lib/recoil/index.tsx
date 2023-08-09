@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil";
 import { v1 } from "uuid";
-import { User } from "../../type";
+import { User } from "../../types";
 
 export const showSignInDialogState = atom({
   key: `showSignInDialogState/${v1()}`,
@@ -24,5 +24,10 @@ export const isMobileState = atom({
 
 export const backDirectionPathState = atom({
   key: `backDirectionPathState/${v1()}`,
+  default: "",
+});
+
+export const kakaoRequestState = atom({
+  key: `kakaoRequestState/${v1()}`,
   default: "",
 });

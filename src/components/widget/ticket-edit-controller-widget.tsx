@@ -3,8 +3,7 @@ import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
 import UserInfoDownloadForm from "../form/user-info-download-form";
 import LinkToPageForm from "../form/ticket-edit-controller/link-to-page-form";
-import { ChainType } from "../../__generated__/graphql";
-import { TicketUserQuery } from "../../type";
+import { TicketUserQuery } from "../../types";
 
 const TicketEditControllerWidget = (
   props: PropsWithChildren & {

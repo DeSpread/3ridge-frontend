@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { MouseEventHandler, useMemo, useState } from "react";
-import { Z_INDEX_OFFSET } from "../../type";
+import { Z_INDEX_OFFSET } from "../../types";
 import SecondaryButton from "../atomic/atoms/secondary-button";
 import ValidatedTextInput from "../atomic/molecules/validated-text-input";
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";

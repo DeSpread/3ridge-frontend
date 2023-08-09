@@ -2,10 +2,12 @@ import { useLogin } from "../provider/login/login-provider";
 import { client } from "../lib/apollo/client";
 import { useEffect, useRef, useState } from "react";
 import {
+  DELETE_KAKAO_BY_NAME,
   GET_USER_BY_EMAIL,
   GET_USER_BY_GMAIL,
   GET_USER_BY_WALLET_ADDRESS,
   IS_REGISTER_WALLET,
+  UPDATE_KAKAO_BY_NAME,
   UPDATE_USER_BY_EMAIL,
   UPDATE_USER_BY_TWITTER,
   UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
@@ -29,7 +31,8 @@ import {
   SupportedNetwork,
   TelegramUserInfo,
   WalletName,
-} from "../type";
+  User,
+} from "../types";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
 import { ChainType } from "../__generated__/graphql";
 import TelegramUtil from "../util/telegram-util";
@@ -55,6 +58,8 @@ const useSignedUserQuery = () => {
   const [UpdateUserTelegramByName] = useMutation(UPDATE_USER_TELEGRAM_BY_NAME);
   const [UpdateUserRewardByName] = useMutation(UPDATE_USER_REWARD_BY_NAME);
   const [UpdateUserSocialByName] = useMutation(UPDATE_USER_SOCIAL_BY_NAME);
+  const [UpdateKakaoByName] = useMutation(UPDATE_KAKAO_BY_NAME);
+  const [DeleteKakaoByName] = useMutation(DELETE_KAKAO_BY_NAME);
 
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
@@ -92,7 +97,6 @@ const useSignedUserQuery = () => {
             fetchPolicy: "no-cache",
           });
           updateUserData(res.data.userByEmail);
-          console.log(res.data.userByEmail);
         } catch (e) {
           throw new AppError(getErrorMessage(e));
         } finally {
@@ -102,7 +106,6 @@ const useSignedUserQuery = () => {
     } else {
       if (!isGoogleLoggedIn && !isWalletLoggedIn) {
         setUserData({});
-        // console.log("isMailLoggedIn {}");
       }
     }
   }, [isMailLoggedIn]);
@@ -132,7 +135,6 @@ const useSignedUserQuery = () => {
       })();
     } else {
       if (!isMailLoggedIn && !isWalletLoggedIn) {
-        // console.log("isGoogleLoggedIn {}");
         setUserData({});
       }
     }
@@ -140,7 +142,6 @@ const useSignedUserQuery = () => {
 
   useEffect(() => {
     if (walletLoggedInInfo.address) {
-      // console.log("walletLoggedInInfo.address", walletLoggedInInfo.address);
       (async () => {
         try {
           setLoading(true);
@@ -165,7 +166,6 @@ const useSignedUserQuery = () => {
       })();
     } else {
       if (!isMailLoggedIn && !isGoogleLoggedIn) {
-        // console.log("isWalletLoggedIn {}");
         setUserData({});
       }
     }
@@ -233,6 +233,17 @@ const useSignedUserQuery = () => {
         username: string;
       } | null;
     } | null;
+    kakao?: {
+      __typename?: "Kakao";
+      id: number;
+      connected_at: string;
+      properties?: {
+        __typename?: "KakaoProperties";
+        nickname: string;
+        profile_image: string;
+        thumbnail_image: string;
+      } | null;
+    } | null;
   }) => {
     const {
       email,
@@ -243,8 +254,9 @@ const useSignedUserQuery = () => {
       rewardPoint,
       userSocial,
       gmail,
+      kakao,
     } = data;
-    setUserData((prevState) => {
+    setUserData((prevState: User) => {
       return {
         ...prevState,
         _id: _id ?? undefined,
@@ -272,6 +284,19 @@ const useSignedUserQuery = () => {
               }
             : undefined,
         },
+        kakao: kakao
+          ? {
+              id: kakao.id,
+              connected_at: kakao.connected_at,
+              properties: kakao
+                ? {
+                    profile_image: kakao.properties?.profile_image ?? "",
+                    thumbnail_image: kakao.properties?.thumbnail_image ?? "",
+                    nickname: kakao.properties?.nickname ?? "",
+                  }
+                : undefined,
+            }
+          : undefined,
       };
     });
   };
@@ -280,12 +305,10 @@ const useSignedUserQuery = () => {
     network: SupportedNetwork,
     walletName: WalletName
   ) => {
-    console.log("asyncUpsertWalletAddress - network", network);
     if (!isWalletInstalled(network, walletName)) {
       throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED, network);
     }
     const accountAddress = getAccountAddress(network);
-    console.log("asyncUpsertWalletAddress - accountAddress", accountAddress);
     if (!accountAddress) {
       await asyncConnectWallet(network, walletName);
       if (network === SUPPORTED_NETWORKS.SUI) {
@@ -445,7 +468,7 @@ const useSignedUserQuery = () => {
           rewardPoint,
         },
       });
-      setUserData((prevState) => {
+      setUserData((prevState: User) => {
         return {
           ...prevState,
           rewardPoint,
@@ -478,7 +501,7 @@ const useSignedUserQuery = () => {
           },
         },
       });
-      setUserData((prevState) => {
+      setUserData((prevState: User) => {
         return {
           ...prevState,
           userSocial: {
@@ -512,7 +535,7 @@ const useSignedUserQuery = () => {
         },
       },
     });
-    setUserData((prevState) => {
+    setUserData((prevState: User) => {
       return {
         ...prevState,
         userSocial: {
@@ -554,7 +577,7 @@ const useSignedUserQuery = () => {
           },
         },
       });
-      setUserData((prevState) => {
+      setUserData((prevState: User) => {
         return {
           ...prevState,
           userSocial: {
@@ -569,6 +592,42 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateKakao = async (authCode: string, redirectUri: string) => {
+    if (!userData.name) return;
+    const res = await UpdateKakaoByName({
+      variables: {
+        name: userData?.name,
+        authCode,
+        redirectUri,
+      },
+    });
+    const kakao = res.data?.updateKakaoByName?.kakao;
+    if (kakao) {
+      console.log(kakao);
+      setUserData((prevState: User) => {
+        return {
+          ...prevState,
+          kakao,
+        };
+      });
+    }
+  };
+
+  const asyncDeleteKakao = async () => {
+    if (!userData.name) return;
+    await DeleteKakaoByName({
+      variables: {
+        name: userData?.name,
+      },
+    });
+    setUserData((prevState: User) => {
+      return {
+        ...prevState,
+        kakao: undefined,
+      };
+    });
+  };
+
   return {
     userData,
     loading,
@@ -580,6 +639,8 @@ const useSignedUserQuery = () => {
     asyncDeleteWalletAddress,
     asyncUpdateSocialTelegram,
     asyncRemoveSocialTelegram,
+    asyncUpdateKakao,
+    asyncDeleteKakao,
   };
 };
 

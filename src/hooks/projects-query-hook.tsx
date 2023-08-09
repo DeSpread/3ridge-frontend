@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Project } from "../type";
+import { Project } from "../types";
 import { client } from "../lib/apollo/client";
 import { GET_PROJECTS } from "../lib/apollo/query";
 import { EventType } from "../__generated__/graphql";

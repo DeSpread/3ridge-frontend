@@ -21,7 +21,7 @@ import {
   FilterType,
   MouseEventWithParam,
   TicketEventParam,
-} from "../../type";
+} from "../../types";
 import { useRouter } from "next/router";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";

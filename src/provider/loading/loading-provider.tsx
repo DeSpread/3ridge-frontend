@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import { CircularProgress, LinearProgress } from "@mui/material";
-import { Z_INDEX_OFFSET } from "../../type";
+import { Z_INDEX_OFFSET } from "../../types";
 import { useTheme } from "@mui/material/styles";
 
 const LoadingContext = createContext<{

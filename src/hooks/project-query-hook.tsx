@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Project } from "../type";
+import { Project } from "../types";
 import { client } from "../lib/apollo/client";
 import { GET_PROJECT_BY_ID } from "../lib/apollo/query";
 

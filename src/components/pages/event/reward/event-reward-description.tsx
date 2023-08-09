@@ -1,4 +1,4 @@
-import { Ticket } from "../../../../type";
+import { Ticket } from "../../../../types";
 import React, { MouseEventHandler, PropsWithChildren } from "react";
 import { Box, Divider, Stack } from "@mui/material";
 import PrimaryCard from "../../../atomic/atoms/primary-card";

@@ -13,25 +13,24 @@ import {
 } from "@mui/material";
 import { useTicketQuery } from "../../hooks/ticket-query-hook";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
-import StringUtil from "../../util/string-util";
 import QuestQuizDialog from "../../components/dialogs/quest/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import {
   MouseEventWithParam,
   Quest,
-  VerifyQuizQuestContext,
   REWARD_POLICY_TYPE,
   SUPPORTED_NETWORKS,
   VerifyAgreementQuestContext,
   VerifyDiscordQuestContext,
   VerifyHasWalletAddressQuestContext,
+  VerifyQuizQuestContext,
   VerifySurveyQuestContext,
   VerifyTelegramQuestContext,
   VerifyTwitterFollowQuestContext,
   VerifyTwitterLikingQuestContext,
   VerifyTwitterRetweetQuestContext,
   VerifyVisitWebsiteQuestContext,
-} from "../../type";
+} from "../../types";
 import { ContentMetadata, QuestPolicyType } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";

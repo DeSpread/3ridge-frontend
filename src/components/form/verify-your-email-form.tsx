@@ -1,6 +1,5 @@
 import { Stack, Typography, useMediaQuery } from "@mui/material";
 import { MouseEventHandler, PropsWithChildren } from "react";
-import SecondaryButton from "../atomic/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
 import LinkTypography from "../atomic/atoms/link-typography";
 

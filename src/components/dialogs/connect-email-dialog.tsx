@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { MouseEventHandler, useState } from "react";
-import { ObjectValues, Z_INDEX_OFFSET } from "../../type";
+import { ObjectValues, Z_INDEX_OFFSET } from "../../types";
 import MailTextField from "../atomic/molecules/mail-text-field";
 import SecondaryButton from "../atomic/atoms/secondary-button";
 import StringUtil from "../../util/string-util";

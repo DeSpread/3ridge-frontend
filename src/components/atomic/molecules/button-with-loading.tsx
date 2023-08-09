@@ -1,7 +1,7 @@
 import { ButtonProps } from "@mui/material";
 import React, { useState } from "react";
 import SecondaryButton from "../atoms/secondary-button";
-import { MouseEventWithParam } from "../../../type";
+import { MouseEventWithParam } from "../../../types";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const ButtonWithLoading = (props: ButtonProps) => {

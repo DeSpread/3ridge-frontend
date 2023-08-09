@@ -3,7 +3,7 @@ import { Stack, Typography, useMediaQuery } from "@mui/material";
 import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
 import SecondaryButton from "../../atomic/atoms/secondary-button";
 import LinkTypography from "../../atomic/atoms/link-typography";
-import { EmailSignUpEventParams, MouseEventWithParam } from "../../../type";
+import { EmailSignUpEventParams, MouseEventWithParam } from "../../../types";
 import StringUtil from "../../../util/string-util";
 import MailTextField from "../../atomic/molecules/mail-text-field";
 import {

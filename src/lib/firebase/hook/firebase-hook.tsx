@@ -5,7 +5,7 @@ import {
   getAuth,
 } from "firebase/auth";
 import { AppError, getErrorMessage } from "../../../error/my-error";
-import { MAIL_VERIFY, MailVerified } from "../../../type";
+import { MAIL_VERIFY, MailVerified } from "../../../types";
 import { asyncJSTwitterSignInPopUp } from "./js-firebase";
 import { firebaseApp } from "../firebase-client";
 

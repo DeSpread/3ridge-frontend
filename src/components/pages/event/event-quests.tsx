@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { QuestPolicyType } from "../../../__generated__/graphql";
 import VerifyCard from "../../atomic/molecules/verify-card";
-import { Quest, REWARD_POLICY_TYPE, Ticket, User } from "../../../type";
+import { Quest, REWARD_POLICY_TYPE, Ticket, User } from "../../../types";
 import React, { MouseEventHandler, PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";

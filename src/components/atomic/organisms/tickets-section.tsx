@@ -16,7 +16,7 @@ import React, {
   PropsWithChildren,
   useState,
 } from "react";
-import { MouseEventWithParam, Ticket, TicketEventParam } from "../../../type";
+import { MouseEventWithParam, Ticket, TicketEventParam } from "../../../types";
 import { useTheme } from "@mui/material/styles";
 import TicketCard from "../molecules/ticket-card";
 import PrimaryButton from "../atoms/primary-button";

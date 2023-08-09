@@ -9,7 +9,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
-import { Ticket } from "../../../type";
+import { Ticket } from "../../../types";
 import TicketInfoTextSet from "../atoms/ticket-info-text-set";
 
 type EventCardProps = CardProps & {

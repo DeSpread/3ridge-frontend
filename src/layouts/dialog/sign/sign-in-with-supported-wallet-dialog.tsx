@@ -1,9 +1,4 @@
 import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
-import {
-  SUPPORTED_NETWORKS,
-  SupportedNetwork,
-  ObjectValues,
-} from "../../../type";
 import { Grid, IconButton, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";

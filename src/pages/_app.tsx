@@ -52,12 +52,25 @@ type AppPropsWithLayout = AppProps & {
 
 const queryClient = new QueryClient();
 
+declare global {
+  // Kakao 함수를 전역에서 사용할 수 있도록 선언
+  interface Window {
+    Kakao: any;
+  }
+}
+
 const App = (props: AppPropsWithLayout) => {
   const { Component, pageProps } = props;
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>);
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
   const wallets = [new PetraWallet()];
   const router = useRouter();
+
+  function kakaoInit() {
+    // 페이지가 로드되면 실행
+    window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
+    console.log(window.Kakao.isInitialized());
+  }
 
   useEffect(() => {
     const handleRouteChange = (url: any) => {
@@ -97,6 +110,10 @@ const App = (props: AppPropsWithLayout) => {
         src={`https://telegram.org/js/telegram-widget.js?${v1()}`}
         async
       />
+      <Script
+        src="https://developers.kakao.com/sdk/js/kakao.js"
+        onLoad={kakaoInit}
+      ></Script>
       <ThemeProvider theme={createTheme()}>
         <GoogleOAuthProvider clientId={clientId ?? ""}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>

@@ -3,7 +3,7 @@ import {
   EmailSignUpEventParams,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
-} from "../../../type";
+} from "../../../types";
 import { AppError, getErrorMessage } from "../../../error/my-error";
 import { useMutation } from "@apollo/client";
 import { useEffect, useMemo, useState } from "react";

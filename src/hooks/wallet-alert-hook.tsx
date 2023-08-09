@@ -3,7 +3,7 @@ import { Box, Link as MuiLink, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import { useTheme } from "@mui/material/styles";
-import { SupportedNetwork } from "../type";
+import { SupportedNetwork } from "../types";
 
 export function useWalletAlert() {
   const { showAlert } = useAlert();

@@ -1,4 +1,4 @@
-import { WALLET_NAMES } from "../type";
+import { WALLET_NAMES } from "../types";
 
 const DEEP_LINK = process.env["NEXT_PUBLIC_DEEP_LINK"];
 
