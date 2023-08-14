@@ -24,6 +24,21 @@ export const GET_USERS_ORDER_BY_REWARD_POINT_DESC = gql(/* GraphQL */ `
           thumbnail_image
         }
       }
+      discord {
+        accent_color
+        avatar
+        avatar_decoration
+        banner
+        discriminator
+        flags
+        global_name
+        id
+        locale
+        mfa_enabled
+        premium_type
+        public_flags
+        username
+      }
     }
   }
 `);
@@ -92,6 +107,21 @@ export const GET_USER_BY_NAME = gql(/* GraphQL */ `
           thumbnail_image
         }
       }
+      discord {
+        accent_color
+        avatar
+        avatar_decoration
+        banner
+        discriminator
+        flags
+        global_name
+        id
+        locale
+        mfa_enabled
+        premium_type
+        public_flags
+        username
+      }
     }
   }
 `);
@@ -127,6 +157,21 @@ export const GET_USER_BY_EMAIL = gql(/* GraphQL */ `
           profile_image
           thumbnail_image
         }
+      }
+      discord {
+        accent_color
+        avatar
+        avatar_decoration
+        banner
+        discriminator
+        flags
+        global_name
+        id
+        locale
+        mfa_enabled
+        premium_type
+        public_flags
+        username
       }
     }
   }
@@ -164,6 +209,21 @@ export const GET_USER_BY_GMAIL = gql(/* GraphQL */ `
           thumbnail_image
         }
       }
+      discord {
+        accent_color
+        avatar
+        avatar_decoration
+        banner
+        discriminator
+        flags
+        global_name
+        id
+        locale
+        mfa_enabled
+        premium_type
+        public_flags
+        username
+      }
     }
   }
 `);
@@ -199,6 +259,21 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
           profile_image
           thumbnail_image
         }
+      }
+      discord {
+        accent_color
+        avatar
+        avatar_decoration
+        banner
+        discriminator
+        flags
+        global_name
+        id
+        locale
+        mfa_enabled
+        premium_type
+        public_flags
+        username
       }
     }
   }
@@ -299,6 +374,28 @@ export const UPDATE_USER_SOCIAL_BY_NAME = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_USER_DISCORD_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateUserDiscordByName($name: String!, $discord: DiscordInputType) {
+    updateUserByName(name: $name, userUpdateInput: { discord: $discord }) {
+      discord {
+        accent_color
+        avatar
+        avatar_decoration
+        banner
+        discriminator
+        flags
+        global_name
+        id
+        locale
+        mfa_enabled
+        premium_type
+        public_flags
+        username
+      }
+    }
+  }
+`);
+
 export const UPDATE_USER_BY_TWITTER = gql(/* GraphQL */ `
   mutation UpdateUserTwitterByName($name: String!, $twitterId: String!) {
     updateUserByName(
@@ -362,6 +459,14 @@ export const UPDATE_KAKAO_BY_NAME = gql(/* GraphQL */ `
 export const DELETE_KAKAO_BY_NAME = gql(/* GraphQL */ `
   mutation DeleteKakaoByName($name: String!) {
     deleteKakaoByName(name: $name) {
+      _id
+    }
+  }
+`);
+
+export const DELETE_DISCORD_BY_NAME = gql(/* GraphQL */ `
+  mutation DeleteDiscordByName($name: String!) {
+    deleteDiscordByName(name: $name) {
       _id
     }
   }

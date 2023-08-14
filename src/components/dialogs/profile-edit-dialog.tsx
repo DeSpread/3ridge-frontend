@@ -13,12 +13,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { MouseEventHandler } from "react";
-import {
-  ReversibleSvgIconProps,
-  SUPPORTED_NETWORKS,
-  User,
-  Z_INDEX_OFFSET,
-} from "../../types";
+import { SUPPORTED_NETWORKS, User, Z_INDEX_OFFSET } from "../../types";
 import { useTheme } from "@mui/material/styles";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
@@ -29,34 +24,12 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 import { ValidatorButton } from "../atomic/molecules/validator-button";
 import BlockIcon from "../atomic/molecules/block-icon";
 import ResourceHelper from "../../helper/resource-helper";
-// @ts-ignore
-import TelegramLoginButton from "react-telegram-login";
 import TypeHelper from "../../helper/type-helper";
 import { useMobile } from "../../provider/mobile/mobile-context";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/router";
 import KakaoIcon from "../atomic/atoms/svg/kakao-icon";
-
-const ReversibleMarkEmailIcon = (props: ReversibleSvgIconProps) => {
-  if (props.reverse) {
-    return <EmailIcon {...props} color={"disabled"}></EmailIcon>;
-  }
-  return <EmailIcon {...props}></EmailIcon>;
-};
-
-const ReversibleTwitterIcon = (props: ReversibleSvgIconProps) => {
-  if (props.reverse) {
-    return <TwitterIcon {...props} color={"disabled"}></TwitterIcon>;
-  }
-  return <TwitterIcon {...props} sx={{ color: "#1d9aef" }}></TwitterIcon>;
-};
-
-const ReversibleTelegramIcon = (props: ReversibleSvgIconProps) => {
-  if (props.reverse) {
-    return <TelegramIcon {...props} color={"disabled"}></TelegramIcon>;
-  }
-  return <TelegramIcon {...props} sx={{ color: "#1d9aef" }}></TelegramIcon>;
-};
+import DiscordIcon from "../atomic/atoms/svg/discord-icon";
 
 type ProfileEditDialogProps = DialogProps & {
   title: string;
@@ -68,6 +41,7 @@ type ProfileEditDialogProps = DialogProps & {
   twitterValidatorButtonOnClick?: MouseEventHandler;
   telegramValidatorButtonOnClick?: MouseEventHandler;
   kakaoValidatorButtonOnClick?: MouseEventHandler;
+  discordValidatorButtonOnClick?: MouseEventHandler;
   onCloseBtnClicked?: MouseEventHandler;
   onFileImageAdded?: (f: File) => void;
   backDirectionPath?: string;
@@ -193,7 +167,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                 <Stack spacing={1}>
                   {!props.isMailLoggedIn && (
                     <ValidatorButton
-                      svgIcon={ReversibleMarkEmailIcon}
+                      icon={<EmailIcon></EmailIcon>}
                       label={"Email"}
                       onClick={props.emailValidatorButtonOnClick}
                       size={"small"}
@@ -203,7 +177,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                     ></ValidatorButton>
                   )}
                   <ValidatorButton
-                    svgIcon={ReversibleTwitterIcon}
+                    icon={<TwitterIcon sx={{ color: "#1d9aef" }}></TwitterIcon>}
                     label={"Twitter"}
                     onClick={props.twitterValidatorButtonOnClick}
                     size={"small"}
@@ -215,7 +189,9 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                     payload={""}
                   ></ValidatorButton>
                   <ValidatorButton
-                    svgIcon={ReversibleTelegramIcon}
+                    icon={
+                      <TelegramIcon sx={{ color: "#1d9aef" }}></TelegramIcon>
+                    }
                     label={"Telegram"}
                     onClick={props.telegramValidatorButtonOnClick}
                     size={"small"}
@@ -225,12 +201,20 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                     }
                     payload={""}
                   ></ValidatorButton>
+                  {/*<ValidatorButton*/}
+                  {/*  icon={<KakaoIcon sx={{ color: "black" }}></KakaoIcon>}*/}
+                  {/*  label={"카카오톡"}*/}
+                  {/*  onClick={props.kakaoValidatorButtonOnClick}*/}
+                  {/*  size={"small"}*/}
+                  {/*  value={props.userData?.kakao?.id.toString() ?? undefined}*/}
+                  {/*  payload={""}*/}
+                  {/*></ValidatorButton>*/}
                   <ValidatorButton
-                    svgIcon={KakaoIcon}
-                    label={"카카오톡"}
-                    onClick={props.kakaoValidatorButtonOnClick}
+                    icon={<DiscordIcon></DiscordIcon>}
+                    label={"디스코드"}
+                    onClick={props.discordValidatorButtonOnClick}
                     size={"small"}
-                    value={props.userData?.kakao?.id.toString() ?? undefined}
+                    value={props.userData?.discord?.username ?? undefined}
                     payload={""}
                   ></ValidatorButton>
                 </Stack>
@@ -270,7 +254,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                             <ValidatorButton
                               disabled={disabledBtn}
                               label={e.toUpperCase()}
-                              svgIcon={ResourceHelper.getValidatorButtonSvg(e)}
+                              icon={ResourceHelper.getValidatorButtonSvg(e)}
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
                               value={StringHelper.convertAddressToMidEllipsis(
@@ -288,7 +272,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                             <ValidatorButton
                               // disabled={disabledBtn}
                               label={e.toUpperCase()}
-                              svgIcon={ResourceHelper.getValidatorButtonSvg(e)}
+                              icon={ResourceHelper.getValidatorButtonSvg(e)}
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
                               value={StringHelper.convertAddressToMidEllipsis(

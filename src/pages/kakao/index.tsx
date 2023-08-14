@@ -36,7 +36,6 @@ const Kakao = () => {
         setShowProfileEditDialog(true);
         PreferenceHelper.clearKakaoRequest();
         await router.push(`/profile/${userData?.name}`);
-        setUpdateLock(false);
       }
     } catch (e) {
       if (getErrorMessage(e) === APP_ERROR_MESSAGE.FAIL_TO_FETCH_KAKAO_INFO) {
@@ -83,7 +82,7 @@ const Kakao = () => {
               sx={{ padding: 1 }}
             >
               <Typography variant={"h6"}>
-                카카오에서 정보를 가져오는 중입니다
+                카카오에서 유저정보를 가져오는 중입니다
               </Typography>
               <CircularProgress size="1rem" />
             </Stack>

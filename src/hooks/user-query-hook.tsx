@@ -100,6 +100,22 @@ export function useUserQuery(props: { name?: string }) {
         thumbnail_image: string;
       } | null;
     } | null;
+    discord?: {
+      __typename?: "Discord";
+      accent_color?: number | null;
+      avatar?: string | null;
+      avatar_decoration?: string | null;
+      banner?: number | null;
+      discriminator?: string | null;
+      flags?: number | null;
+      global_name?: string | null;
+      id: string;
+      locale?: string | null;
+      mfa_enabled?: boolean | null;
+      premium_type?: number | null;
+      public_flags?: number | null;
+      username: string;
+    } | null;
   }) => {
     const {
       email,
@@ -112,6 +128,7 @@ export function useUserQuery(props: { name?: string }) {
       participatingTickets,
       gmail,
       kakao,
+      discord,
     } = data;
     setUserData((prevState) => {
       return {
@@ -193,6 +210,7 @@ export function useUserQuery(props: { name?: string }) {
                 : undefined,
             }
           : undefined,
+        discord: discord ?? undefined,
       };
     });
   };

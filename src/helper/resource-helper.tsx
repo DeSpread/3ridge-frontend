@@ -57,13 +57,13 @@ class ResourceHelper {
 
   public static getValidatorButtonSvg = (network: SupportedNetwork) => {
     if (network === SUPPORTED_NETWORKS.EVM) {
-      return EthIcon;
+      return <EthIcon></EthIcon>;
     } else if (network === SUPPORTED_NETWORKS.SUI) {
-      return SuiIcon;
+      return <SuiIcon></SuiIcon>;
     } else if (network === SUPPORTED_NETWORKS.APTOS) {
-      return AptosIcon;
+      return <AptosIcon></AptosIcon>;
     } else if (network === SUPPORTED_NETWORKS.STACKS) {
-      return StacksIcon;
+      return <StacksIcon></StacksIcon>;
     }
     return undefined;
   };
