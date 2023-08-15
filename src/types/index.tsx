@@ -5,6 +5,7 @@ import {
   CategoryType,
   ChainType,
   ContentMetadata,
+  Discord,
   Kakao,
   QuestPolicyType,
   RewardPolicyType,
@@ -129,6 +130,7 @@ export type User = {
   userSocial?: { twitterId?: string; telegramUser?: TelegramUserInfo };
   participatingTickets?: PartialTicket[];
   kakao?: Kakao;
+  discord?: Discord;
 };
 
 export type GoogleLoggedInInfo = {

@@ -66,6 +66,7 @@ import TicketRewardHowToDialog from "../../components/dialogs/ticket-edit/ticket
 import QuestSurveyDialog from "../../components/dialogs/quest/quest-survey-dialog";
 import TypeHelper from "../../helper/type-helper";
 import StringHelper from "../../helper/string-helper";
+import RouterUtil from "../../util/router-util";
 
 const Event = (props: AppProps) => {
   const { userData } = useSignedUserQuery();
@@ -88,11 +89,7 @@ const Event = (props: AppProps) => {
     asyncVerifySurveyQuest,
   } = useTicketQuery({
     userId: userData._id,
-    id: router.isReady
-      ? typeof router.query.id === "string"
-        ? router.query.id
-        : undefined
-      : undefined,
+    id: RouterUtil.getStringQuery(router, "id"),
   });
 
   const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");

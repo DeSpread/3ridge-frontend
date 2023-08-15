@@ -2,6 +2,7 @@ import { useLogin } from "../provider/login/login-provider";
 import { client } from "../lib/apollo/client";
 import { useEffect, useRef, useState } from "react";
 import {
+  DELETE_DISCORD_BY_NAME,
   DELETE_KAKAO_BY_NAME,
   GET_USER_BY_EMAIL,
   GET_USER_BY_GMAIL,
@@ -10,6 +11,7 @@ import {
   UPDATE_KAKAO_BY_NAME,
   UPDATE_USER_BY_EMAIL,
   UPDATE_USER_BY_TWITTER,
+  UPDATE_USER_DISCORD_BY_NAME,
   UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
   UPDATE_USER_REWARD_BY_NAME,
   UPDATE_USER_SOCIAL_BY_NAME,
@@ -34,7 +36,7 @@ import {
   User,
 } from "../types";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
-import { ChainType } from "../__generated__/graphql";
+import { ChainType, DiscordInputType } from "../__generated__/graphql";
 import TelegramUtil from "../util/telegram-util";
 import { delay } from "../util/timer";
 import PreferenceHelper from "../helper/preference-helper";
@@ -60,6 +62,8 @@ const useSignedUserQuery = () => {
   const [UpdateUserSocialByName] = useMutation(UPDATE_USER_SOCIAL_BY_NAME);
   const [UpdateKakaoByName] = useMutation(UPDATE_KAKAO_BY_NAME);
   const [DeleteKakaoByName] = useMutation(DELETE_KAKAO_BY_NAME);
+  const [UpdateUserDiscordByName] = useMutation(UPDATE_USER_DISCORD_BY_NAME);
+  const [DeleteDiscordByName] = useMutation(DELETE_DISCORD_BY_NAME);
 
   const userData = useRecoilValue(userDataState);
   const setUserData = useSetRecoilState(userDataState);
@@ -244,6 +248,22 @@ const useSignedUserQuery = () => {
         thumbnail_image: string;
       } | null;
     } | null;
+    discord?: {
+      __typename?: "Discord";
+      accent_color?: number | null;
+      avatar?: string | null;
+      avatar_decoration?: string | null;
+      banner?: number | null;
+      discriminator?: string | null;
+      flags?: number | null;
+      global_name?: string | null;
+      id: string;
+      locale?: string | null;
+      mfa_enabled?: boolean | null;
+      premium_type?: number | null;
+      public_flags?: number | null;
+      username: string;
+    } | null;
   }) => {
     const {
       email,
@@ -255,6 +275,7 @@ const useSignedUserQuery = () => {
       userSocial,
       gmail,
       kakao,
+      discord,
     } = data;
     setUserData((prevState: User) => {
       return {
@@ -297,6 +318,7 @@ const useSignedUserQuery = () => {
                 : undefined,
             }
           : undefined,
+        discord: discord ?? undefined,
       };
     });
   };
@@ -592,6 +614,37 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateDiscord = async (discord: DiscordInputType) => {
+    if (!userData.name) return;
+    await UpdateUserDiscordByName({
+      variables: {
+        name: userData?.name,
+        discord,
+      },
+    });
+    setUserData((prevState: User) => {
+      return {
+        ...prevState,
+        discord,
+      };
+    });
+  };
+
+  const asyncDeleteDiscord = async () => {
+    if (!userData.name) return;
+    await DeleteDiscordByName({
+      variables: {
+        name: userData?.name,
+      },
+    });
+    setUserData((prevState: User) => {
+      return {
+        ...prevState,
+        discord: undefined,
+      };
+    });
+  };
+
   const asyncUpdateKakao = async (authCode: string, redirectUri: string) => {
     if (!userData.name) return;
     const res = await UpdateKakaoByName({
@@ -641,6 +694,8 @@ const useSignedUserQuery = () => {
     asyncRemoveSocialTelegram,
     asyncUpdateKakao,
     asyncDeleteKakao,
+    asyncUpdateDiscord,
+    asyncDeleteDiscord,
   };
 };
 
