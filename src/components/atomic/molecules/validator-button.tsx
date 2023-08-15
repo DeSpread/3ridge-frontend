@@ -7,7 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 type ValidatorButton<T> = ButtonProps & {
   value: string | undefined;
-  svgIcon: React.ComponentType<ReversibleSvgIconProps> | undefined;
+  icon?: React.ReactNode; //React.ComponentType<ReversibleSvgIconProps> | undefined;
   label: string | undefined;
   onClick?: MouseEventHandler;
   payload: T | undefined;
@@ -58,7 +58,8 @@ export function ValidatorButton<T>(props: ValidatorButton<T>) {
           spacing={2}
           alignItems={"center"}
         >
-          {props.svgIcon && <props.svgIcon></props.svgIcon>}
+          {props.icon}
+          {/*{props.svgIcon && <props.svgIcon></props.svgIcon>}*/}
           {props.value && (
             <Typography
               className={"MuiTypography"}

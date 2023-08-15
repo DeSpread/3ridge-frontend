@@ -59,6 +59,7 @@ import PrimaryButton from "../../../components/atomic/atoms/primary-button";
 import TicketEditControllerWidget from "../../../components/widget/ticket-edit-controller-widget";
 import EventParticipants from "../../../components/pages/event/event-participants";
 import UserInfoDownloadDialog from "../../../components/dialogs/user-info-download-dialog";
+import RouterUtil from "../../../util/router-util";
 
 const _EventRewardPolicy = WithEditorContainer(EventRewardPolicy);
 const _EventDateRange = WithEditorContainer(EventDateRange);
@@ -114,11 +115,7 @@ const Event = () => {
     useState<EVENT_COMPONENT_TARGET>();
   const [editedQuest, setEditedQuest] = useState<Quest>();
 
-  const ticketId = router.isReady
-    ? typeof router.query.id === "string"
-      ? router.query.id
-      : undefined
-    : undefined;
+  const ticketId = RouterUtil.getStringQuery(router, "id");
 
   const {
     ticketData,

@@ -67,6 +67,8 @@ import { useUserQuery } from "../../hooks/user-query-hook";
 import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
 import PreferenceHelper from "../../helper/preference-helper";
 import KakaoIcon from "../../components/atomic/atoms/svg/kakao-icon";
+import RouterUtil from "../../util/router-util";
+import DiscordIcon from "../../components/atomic/atoms/svg/discord-icon";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -75,6 +77,7 @@ export const DELETE_CONFIRM_STATE = {
   TWITTER: "TWITTER",
   TELEGRAM: "TELEGRAM",
   KAKAO: "KAKAO",
+  DISCORD: "DISCORD",
 } as const;
 
 export type DeleteConfirmState = ObjectValues<typeof DELETE_CONFIRM_STATE>;
@@ -82,11 +85,7 @@ export type DeleteConfirmState = ObjectValues<typeof DELETE_CONFIRM_STATE>;
 const Profile = () => {
   const router = useRouter();
   const { userData, loading: userDataLoading } = useUserQuery({
-    name: router.isReady
-      ? typeof router.query.name === "string"
-        ? router.query.name
-        : undefined
-      : undefined,
+    name: RouterUtil.getStringQuery(router, "name"),
   });
   const {
     userData: signedUserData,
@@ -98,6 +97,7 @@ const Profile = () => {
     asyncUpdateSocialTelegram,
     asyncRemoveSocialTelegram,
     asyncDeleteKakao,
+    asyncDeleteDiscord,
   } = useSignedUserQuery();
   const { isMobile } = useMobile();
   const backDirectionPath = useRecoilValue(backDirectionPathState);
@@ -171,6 +171,11 @@ const Profile = () => {
       case DELETE_CONFIRM_STATE.KAKAO: {
         setDeleteConfirmDialog(true);
         setDeleteConfirmDialogMessage(`카카오 연동을 해제 하겠습니까?`);
+        break;
+      }
+      case DELETE_CONFIRM_STATE.DISCORD: {
+        setDeleteConfirmDialog(true);
+        setDeleteConfirmDialogMessage(`디스코드 연동을 해제 하겠습니까?`);
         break;
       }
       default: {
@@ -587,29 +592,77 @@ const Profile = () => {
                         ></StyledChip>
                       </Grid>
                     )}
-                    {targetUserData?.kakao?.properties?.nickname && (
+                    {/*{targetUserData?.kakao?.properties?.nickname && (*/}
+                    {/*  <Grid item>*/}
+                    {/*    <StyledChip*/}
+                    {/*      icon={*/}
+                    {/*        <KakaoIcon*/}
+                    {/*          sx={{ color: "black", fontSize: "1.1rem" }}*/}
+                    {/*          color={"inherit"}*/}
+                    {/*          fontSize={"inherit"}*/}
+                    {/*        ></KakaoIcon>*/}
+                    {/*      }*/}
+                    {/*      label={*/}
+                    {/*        <Typography*/}
+                    {/*          sx={{ marginLeft: 1 }}*/}
+                    {/*          variant={"body2"}*/}
+                    {/*          color={"neutral.100"}*/}
+                    {/*        >*/}
+                    {/*          {targetUserData?.kakao?.properties?.nickname}*/}
+                    {/*        </Typography>*/}
+                    {/*      }*/}
+                    {/*    ></StyledChip>*/}
+                    {/*  </Grid>*/}
+                    {/*)}*/}
+                    {/*{!targetUserData?.kakao?.properties?.nickname && (*/}
+                    {/*  <Grid item>*/}
+                    {/*    <StyledChip*/}
+                    {/*      sx={{*/}
+                    {/*        "&:hover": {*/}
+                    {/*          background: (theme: Theme) =>*/}
+                    {/*            theme.palette.action.hover,*/}
+                    {/*        },*/}
+                    {/*      }}*/}
+                    {/*      onClick={(e: MouseEvent) => {*/}
+                    {/*        e.preventDefault();*/}
+                    {/*        setOpenProfileEditDialog(true);*/}
+                    {/*      }}*/}
+                    {/*      icon={*/}
+                    {/*        <KakaoIcon*/}
+                    {/*          sx={{ color: "black", fontSize: "1.1rem" }}*/}
+                    {/*          color={"inherit"}*/}
+                    {/*          fontSize={"inherit"}*/}
+                    {/*        ></KakaoIcon>*/}
+                    {/*      }*/}
+                    {/*      label={*/}
+                    {/*        <Typography*/}
+                    {/*          sx={{ marginLeft: 1 }}*/}
+                    {/*          variant={"body2"}*/}
+                    {/*          color={"neutral.100"}*/}
+                    {/*        >*/}
+                    {/*          카카오톡을 연동해주세요*/}
+                    {/*        </Typography>*/}
+                    {/*      }*/}
+                    {/*    ></StyledChip>*/}
+                    {/*  </Grid>*/}
+                    {/*)}*/}
+                    {targetUserData?.discord?.username && (
                       <Grid item>
                         <StyledChip
-                          icon={
-                            <KakaoIcon
-                              sx={{ color: "black", fontSize: "1.1rem" }}
-                              color={"inherit"}
-                              fontSize={"inherit"}
-                            ></KakaoIcon>
-                          }
+                          icon={<DiscordIcon></DiscordIcon>}
                           label={
                             <Typography
                               sx={{ marginLeft: 1 }}
                               variant={"body2"}
                               color={"neutral.100"}
                             >
-                              {targetUserData?.kakao?.properties?.nickname}
+                              {targetUserData?.discord?.username}
                             </Typography>
                           }
                         ></StyledChip>
                       </Grid>
                     )}
-                    {!targetUserData?.kakao?.properties?.nickname && (
+                    {!targetUserData?.discord?.username && (
                       <Grid item>
                         <StyledChip
                           sx={{
@@ -622,20 +675,14 @@ const Profile = () => {
                             e.preventDefault();
                             setOpenProfileEditDialog(true);
                           }}
-                          icon={
-                            <KakaoIcon
-                              sx={{ color: "black", fontSize: "1.1rem" }}
-                              color={"inherit"}
-                              fontSize={"inherit"}
-                            ></KakaoIcon>
-                          }
+                          icon={<DiscordIcon></DiscordIcon>}
                           label={
                             <Typography
                               sx={{ marginLeft: 1 }}
                               variant={"body2"}
                               color={"neutral.100"}
                             >
-                              카카오톡을 연동해주세요
+                              디스코드를 연동해주세요
                             </Typography>
                           }
                         ></StyledChip>
@@ -917,6 +964,23 @@ const Profile = () => {
             closeLoading();
           }
         }}
+        discordValidatorButtonOnClick={async (e) => {
+          try {
+            const myEvent = e as MouseEventWithStateParam;
+            showLoading();
+            if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
+              setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.DISCORD });
+            } else if (
+              myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
+            ) {
+              location.href = process.env["NEXT_PUBLIC_DISCORD_AUTH_URL"] ?? "";
+            }
+          } catch (e) {
+            console.log(e);
+          } finally {
+            closeLoading();
+          }
+        }}
         isWalletLoggedIn={isWalletLoggedIn}
         isMailLoggedIn={isMailLoggedIn || isGoogleLoggedIn}
         onCloseBtnClicked={(e) => {
@@ -1058,8 +1122,10 @@ const Profile = () => {
               );
               await asyncDeleteWalletAddress(network);
             } else if (state === DELETE_CONFIRM_STATE.KAKAO) {
-              console.log("try asyncDeleteKakao");
               await asyncDeleteKakao();
+            } else if (state === DELETE_CONFIRM_STATE.DISCORD) {
+              console.log("try delete discord");
+              await asyncDeleteDiscord();
             }
             showAlert({ title: "알림", content: "완료되었습니다" });
           } catch (e) {
