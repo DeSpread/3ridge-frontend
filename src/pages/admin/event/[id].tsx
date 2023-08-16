@@ -1,15 +1,12 @@
 import {
   Box,
-  Card,
-  CardContent,
   Grid,
   IconButton,
-  Paper,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { ReactElement, useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useMemo, useState } from "react";
 import MainLayout from "../../../layouts/main-layout";
 import Head from "next/head";
 import { useTheme } from "@mui/material/styles";
@@ -27,16 +24,12 @@ import TicketDateEditDialog from "../../../components/dialogs/ticket-edit/ticket
 import DateUtil from "../../../util/date-util";
 import EventDescription from "../../../components/pages/event/event-description";
 import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
-import {
-  ChainType,
-  ContentMetadata,
-  QuestPolicy,
-} from "../../../__generated__/graphql";
+import { ContentMetadata, QuestPolicy } from "../../../__generated__/graphql";
 import EventQuests from "../../../components/pages/event/event-quests";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TicketQuestUpsertEditDialog from "../../../components/dialogs/ticket-edit/ticket-quest-upsert-edit-dialog";
-import { Quest, Z_INDEX_OFFSET } from "../../../types";
+import { Quest } from "../../../types";
 import EventRewardPolicy from "../../../components/pages/event/reward/event-reward-policy";
 import EventTimeBoard from "../../../components/pages/event/event-time-board";
 import EventRewardDescription from "../../../components/pages/event/reward/event-reward-description";
@@ -49,17 +42,16 @@ import EventRewardLimitNumber from "../../../components/pages/event/reward/descr
 import EventRewardChainContent from "../../../components/pages/event/reward/description/event-reward-chain-content";
 import EventRewardName from "../../../components/pages/event/reward/description/event-reward-name";
 import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-chain-content-edit-dialog";
-import { useAlert } from "../../../provider/alert/alert-provider";
 import Draggable from "react-draggable";
 
 import { useSignedUserQuery } from "../../../hooks/signed-user-query-hook";
 import { useTicketQuery } from "../../../hooks/ticket-query-hook";
 import useSimpleStorage from "../../../hooks/simple-storage-hook";
-import PrimaryButton from "../../../components/atomic/atoms/primary-button";
 import TicketEditControllerWidget from "../../../components/widget/ticket-edit-controller-widget";
 import EventParticipants from "../../../components/pages/event/event-participants";
 import UserInfoDownloadDialog from "../../../components/dialogs/user-info-download-dialog";
 import RouterUtil from "../../../util/router-util";
+import { useProjectsQuery } from "../../../hooks/projects-query-hook";
 
 const _EventRewardPolicy = WithEditorContainer(EventRewardPolicy);
 const _EventDateRange = WithEditorContainer(EventDateRange);
@@ -93,6 +85,7 @@ const Event = () => {
   const { userData } = useSignedUserQuery();
   const { asyncUploadImage } = useSimpleStorage();
   const { showLoading, closeLoading } = useLoading();
+  const { projectsData } = useProjectsQuery({});
 
   const [openTextEditDialog, setOpenTextEditDialog] = useState(false);
   const [openContentMetaDataEditDialog, setOpenContentMetaDataEditDialog] =
@@ -127,6 +120,7 @@ const Event = () => {
     asyncCreateQuest,
     asyncDeleteQuest,
     asyncUpdateQuest,
+    asyncUpdateTicketProject,
     asyncUpdateTicketRewardPolicy,
     asyncDownloadCompletedUserFile,
     asyncDownloadQuestDataFile,
@@ -534,12 +528,25 @@ const Event = () => {
         <Draggable defaultPosition={{ x: -380, y: 0 }}>
           <div className="box">
             <TicketEditControllerWidget
-              ticketId={ticketData?._id ?? ""}
+              targetTicket={ticketData}
               onDownloadButtonClick={async (res) => {
                 await asyncDownloadCompletedUserFile(
                   res,
                   `${ticketData?.title}.csv`
                 );
+              }}
+              projects={projectsData}
+              onProjectChanged={async (projectId) => {
+                try {
+                  showLoading();
+                  // console.log("projectId", projectId);
+                  await asyncUpdateTicketProject(projectId);
+                  // console.log("projectId - finish");
+                } catch (e) {
+                  console.log(e);
+                } finally {
+                  closeLoading();
+                }
               }}
             ></TicketEditControllerWidget>
           </div>

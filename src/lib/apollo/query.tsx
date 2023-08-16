@@ -594,6 +594,21 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       rewardClaimedUsers {
         _id
       }
+      project {
+        _id
+        categories
+        description
+        imageUrl
+        name
+        projectSocial {
+          discordUrl
+          officialUrl
+          telegramUrl
+          twitterUrl
+          mediumUrl
+          naverBlogUrl
+        }
+      }
     }
   }
 `);
@@ -869,6 +884,14 @@ export const UPDATE_TICKET_IMAGE_URL = gql(/* GraphQL */ `
 export const UPDATE_TICKET_TITLE = gql(/* GraphQL */ `
   mutation UpdateTicketTitle($ticketId: String!, $title: String) {
     updateTicketById(ticketId: $ticketId, title: $title) {
+      _id
+    }
+  }
+`);
+
+export const UPDATE_TICKET_PROJECT = gql(/* GraphQL */ `
+  mutation UpdateTicketProject($ticketId: String!, $project: String) {
+    updateTicketById(ticketId: $ticketId, project: $project) {
       _id
     }
   }

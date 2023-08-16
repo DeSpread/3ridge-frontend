@@ -32,6 +32,7 @@ export const APP_ERROR_MESSAGE = {
   DISCORD_USER_NOT_FOUND_IN_SERVER: "discord user not found in server",
   DISCORD_SERVER_NOT_FOUND: "discord server not found",
   DISCORD_SERVER_ID_NOT_FOUND: "discord server id not found",
+  DISCORD_CLIENT_NOT_READY: "discord client is not ready",
 } as const;
 
 export class AppError extends Error {
