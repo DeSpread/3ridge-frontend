@@ -81,6 +81,7 @@ const Event = (props: AppProps) => {
     asyncVerifyTwitterFollowQuest,
     asyncVerifyTwitterRetweetQuest,
     asyncVerifyTwitterLikingQuest,
+    asyncVerifyDiscordQuest,
     asyncCompleteQuestOfUser,
     asyncRewardClaim,
     asyncVerify3ridgePoint,
@@ -362,6 +363,38 @@ const Event = (props: AppProps) => {
     }
   };
 
+  const showDiscordConnectAlert = () => {
+    if (!userData?.discord?.id) {
+      showAlert({
+        title: "알림",
+        content: (
+          <>
+            <Typography>먼저 디스코드 id를 연동해주세요</Typography>
+            <ClickTypography
+              variant={"body1"}
+              onClick={async () => {
+                closeAlert();
+                await asyncGoToProfileAndEditDialogOpen();
+              }}
+              sx={{
+                fontWeight: "bold",
+                "&:hover": {
+                  color: "#914e1d",
+                  textDecoration: "underline",
+                },
+                color: theme.palette.warning.main,
+              }}
+            >
+              프로필 연동하러 가기
+            </ClickTypography>
+          </>
+        ),
+      });
+      return true;
+    }
+    return false;
+  };
+
   const showTwitterConnectAlert = () => {
     if (!userData?.userSocial?.twitterId) {
       showAlert({
@@ -501,21 +534,21 @@ const Event = (props: AppProps) => {
         ?.context as VerifySurveyQuestContext;
       openSurveyDialog(quest._id, surveyQuestContext);
     } else if (
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord ||
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord
+    ) {
+      const questContext = quest.questPolicy
+        ?.context as VerifyDiscordQuestContext;
+      window.open(
+        questContext.inviteLink,
+        "discord",
+        "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+      );
+    } else if (
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram ||
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyVisitWebsite
     ) {
       let questContext;
       switch (quest.questPolicy?.questPolicy) {
-        case QuestPolicyType.VerifyDiscord:
-          questContext = quest.questPolicy
-            ?.context as VerifyDiscordQuestContext;
-          window.open(
-            `https://discord.gg/${questContext.channelId}`,
-            "discord",
-            "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-          );
-          break;
         case QuestPolicyType.VerifyTelegram:
           questContext = quest.questPolicy
             ?.context as VerifyTelegramQuestContext;
@@ -537,17 +570,7 @@ const Event = (props: AppProps) => {
           if (newWindow) newWindow.opener = null;
           break;
       }
-      if (quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord) {
-        if (quest.questGuides?.[0]?.content) {
-          openSimpleWarningDialog(quest.questGuides[0]);
-        } else {
-          openSimpleWarningDialog(
-            `디스코드 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
-          );
-        }
-      } else if (
-        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram
-      ) {
+      if (quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram) {
         if (quest.questGuides?.[0]?.content) {
           openSimpleWarningDialog(quest.questGuides[0]);
         } else {
@@ -611,6 +634,16 @@ const Event = (props: AppProps) => {
           return;
         }
         await asyncVerifyTwitterLikingQuest(ticketData._id, quest._id ?? "");
+        myEvent.params.callback("success");
+        updateVerifyState(index);
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord
+      ) {
+        if (showDiscordConnectAlert()) {
+          myEvent.params.callback("success");
+          return;
+        }
+        await asyncVerifyDiscordQuest(ticketData._id, quest._id ?? "");
         myEvent.params.callback("success");
         updateVerifyState(index);
       } else if (
@@ -775,7 +808,8 @@ const Event = (props: AppProps) => {
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW ||
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET ||
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING ||
-        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_HAVE_APTOS_NFT
+        errorMessage === APP_ERROR_MESSAGE.DOES_NOT_HAVE_APTOS_NFT ||
+        errorMessage === APP_ERROR_MESSAGE.DISCORD_USER_NOT_FOUND_IN_SERVER
       ) {
         showAlert({
           title: "알림",
@@ -788,6 +822,8 @@ const Event = (props: AppProps) => {
           title: "알림",
           content: renderConnectWalletAlertMessage(),
         });
+      } else {
+        showErrorAlert({ content: errorMessage });
       }
     }
   };

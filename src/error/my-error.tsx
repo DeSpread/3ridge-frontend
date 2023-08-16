@@ -28,6 +28,10 @@ export const APP_ERROR_MESSAGE = {
   DOES_NOT_HAVE_APTOS_NFT: "user does not have aptos nft",
   FAIL_TO_FETCH_KAKAO_INFO: "fail to fetch kakao info",
   FAIL_TO_FETCH_DISCORD_USER_INFO: "fail to fetch discord user info",
+  DISCORD_CHANNEL_ID_NOT_FOUND: "discord channel id not found",
+  DISCORD_USER_NOT_FOUND_IN_SERVER: "discord user not found in server",
+  DISCORD_SERVER_NOT_FOUND: "discord server not found",
+  DISCORD_SERVER_ID_NOT_FOUND: "discord server id not found",
 } as const;
 
 export class AppError extends Error {
@@ -59,13 +63,15 @@ export const getLocaleErrorMessage = (e: any) => {
   } else if (message === APP_ERROR_MESSAGE.EMAIL_AUTH_CODE_TIMEOUT) {
     return "코드가 만료되었습니다.";
   } else if (message === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_FOLLOW) {
-    return "트위터 팔로우를 하지 않았어요.\r\n 팔로우 하였는지 확인 부탁드립니다. 🙂";
+    return "트위터 팔로우를 하지 않았어요.\r\n 팔로우 하였는지 확인 부탁드립니다.";
   } else if (message === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET) {
     return "리트윗 여부를 확인해주세요🙂";
   } else if (message === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING) {
-    return "트위터 좋아요를 하지 않았어요.\r\n 좋아요 하였는지 확인 부탁드립니다. 🙂";
+    return "트위터 좋아요를 하지 않았어요.\r\n 좋아요 하였는지 확인 부탁드립니다.";
   } else if (message === APP_ERROR_MESSAGE.DOES_NOT_HAVE_APTOS_NFT) {
     return "NFT가 없습니다. 😢";
+  } else if (message === APP_ERROR_MESSAGE.DISCORD_USER_NOT_FOUND_IN_SERVER) {
+    return "디스코드에 참여하지 않았습니다.\r\n 확인 부탁드립니다.";
   }
   return message;
 };

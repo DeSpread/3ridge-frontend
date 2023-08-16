@@ -768,6 +768,22 @@ export const VERIFY_TWITTER_RETWEET_QUEST = gql(/* GraphQL */ `
   }
 `);
 
+export const VERIFY_DISCORD_QUEST = gql(/* GraphQL */ `
+  mutation VerifyDiscordQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verifyDiscordQuest(
+      questId: $questId
+      ticketId: $ticketId
+      userId: $userId
+    ) {
+      _id
+    }
+  }
+`);
+
 export const IS_COMPLETED_QUEST_BY_USER_ID = gql(/* GraphQL */ `
   query IsCompletedQuestByUserId($questId: String!, $userId: String!) {
     isCompletedQuestByUserId(questId: $questId, userId: $userId) {

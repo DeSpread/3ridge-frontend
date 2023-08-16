@@ -21,6 +21,7 @@ import dedent from "dedent";
 import {
   Quest,
   Verify3ridgePointQuestContext,
+  VerifyDiscordQuestContext,
   VerifyHasWalletAddressQuestContext,
   VerifySurveyQuestContext,
   VerifyTelegramQuestContext,
@@ -748,22 +749,140 @@ const VerifyTwitterFollowEditForm = (props: {
 
 // ---
 
-const VerifyTelegramOrDiscordQuestEditForm = (props: {
+const VerifyDiscordQuestEditForm = (props: {
   editedQuest?: Quest;
   onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
-  questPolicy: QuestPolicyType.VerifyTelegram | QuestPolicyType.VerifyDiscord;
 }) => {
-  const [handle, setHandle] = useState<string>();
+  const [serverName, setServerName] = useState<string>();
+  const [inviteLink, setInviteLink] = useState<string>();
+  const [serverId, setServerId] = useState<string>();
   const [message, setMessage] = useState<string>();
 
-  const { editedQuest, onChange, questPolicy } = props;
+  const { editedQuest, onChange } = props;
 
   useEffect(() => {
     if (editedQuest) {
       if (
-        editedQuest.questPolicy?.questPolicy ===
-          QuestPolicyType.VerifyTelegram ||
         editedQuest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord
+      ) {
+        const context = editedQuest.questPolicy
+          ?.context as VerifyDiscordQuestContext;
+        setServerName(context.serverName);
+        setInviteLink(context.inviteLink);
+        setServerId(context.serverId);
+        setMessage(
+          editedQuest.title_v2?.content
+            .replace(/<\/?[^>]+(>|$)/g, "")
+            .replace("&nbsp", " ")
+            .trim()
+        );
+      }
+    }
+  }, [editedQuest]);
+
+  const updateData = (
+    _serverName?: string,
+    _inviteLink?: string,
+    _serverId?: string,
+    _message?: string
+  ) => {
+    _serverName = _serverName?.trim();
+    // const onlyHandle = _handle?.replace("@", "");
+    const context = {
+      channelId: _serverName,
+      serverName: _serverName,
+      inviteLink: _inviteLink,
+      serverId: _serverId,
+    };
+
+    const _newQuestPolicy = {
+      context: JSON.stringify(context),
+      questPolicy: QuestPolicyType.VerifyDiscord,
+    };
+
+    let content = _message ?? "";
+    const hrefLink = _inviteLink; // https://discord.gg/3ridge
+
+    if (_serverName && content?.includes(_serverName)) {
+      content =
+        _message
+          ?.trim()
+          ?.replace(" ", "&nbsp")
+          ?.replace(
+            _serverName,
+            dedent`<a style="{a-style}" href="${hrefLink}" target="_blank">${_serverName}</a>`
+          )
+          .trim() ?? "";
+    }
+
+    const _newContentMetaData = {
+      content: dedent`<h6 style="{h6-style}">${content}</h6>`,
+      contentEncodingType: ContentEncodingType.None,
+      contentFormatType: ContentFormatType.Html,
+    };
+
+    onChange?.(_newQuestPolicy, _newContentMetaData);
+  };
+
+  return (
+    <Stack spacing={1}>
+      <InputWithLabel
+        label={"디스코드 서버 이름"}
+        labelWidth={"38%"}
+        value={serverName}
+        onChange={(e) => {
+          const { value } = e.target;
+          setServerName(value);
+          updateData(value, inviteLink, serverId, message);
+        }}
+      ></InputWithLabel>
+      <InputWithLabel
+        label={"디스코드 초대 링크"}
+        labelWidth={"38%"}
+        value={inviteLink}
+        onChange={(e) => {
+          const { value } = e.target;
+          setInviteLink(value);
+          updateData(serverName, value, serverId, message);
+        }}
+      ></InputWithLabel>
+      <InputWithLabel
+        label={"디스코드 서버 ID"}
+        labelWidth={"38%"}
+        value={serverId}
+        onChange={(e) => {
+          const { value } = e.target;
+          setServerId(value);
+          updateData(serverName, inviteLink, value, message);
+        }}
+      ></InputWithLabel>
+      <InputWithLabel
+        label={"메세지"}
+        labelWidth={"38%"}
+        value={message}
+        onChange={(e) => {
+          const { value } = e.target;
+          setMessage(value);
+          updateData(serverName, inviteLink, serverId, value);
+        }}
+      ></InputWithLabel>
+    </Stack>
+  );
+};
+
+const VerifyTelegramQuestEditForm = (props: {
+  editedQuest?: Quest;
+  onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
+}) => {
+  const [handle, setHandle] = useState<string>();
+  const [message, setMessage] = useState<string>();
+
+  const { editedQuest, onChange } = props;
+
+  useEffect(() => {
+    if (editedQuest) {
+      if (
+        editedQuest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram
       ) {
         const context = editedQuest.questPolicy
           ?.context as VerifyTelegramQuestContext;
@@ -785,14 +904,11 @@ const VerifyTelegramOrDiscordQuestEditForm = (props: {
 
     const _newQuestPolicy = {
       context: JSON.stringify(context),
-      questPolicy,
+      questPolicy: QuestPolicyType.VerifyTelegram,
     };
 
     let content = _message ?? "";
-    const hrefLink =
-      questPolicy === QuestPolicyType.VerifyTelegram
-        ? `https://t.me/${onlyHandle}`
-        : `https://discord.gg/${onlyHandle}`;
+    const hrefLink = `https://t.me/${onlyHandle}`;
 
     if (_handle && content?.includes(_handle)) {
       content =
@@ -815,17 +931,10 @@ const VerifyTelegramOrDiscordQuestEditForm = (props: {
     onChange?.(_newQuestPolicy, _newContentMetaData);
   };
 
-  const handleInputLabel = useMemo(() => {
-    if (questPolicy === QuestPolicyType.VerifyTelegram) {
-      return "텔레그램 핸들 (@포함)";
-    }
-    return "디스코드 핸들 (@포함)";
-  }, [questPolicy]);
-
   return (
     <Stack spacing={1}>
       <InputWithLabel
-        label={handleInputLabel}
+        label={"텔레그램 핸들 (@포함)"}
         labelWidth={"38%"}
         value={handle}
         onChange={(e) => {
@@ -849,7 +958,7 @@ const VerifyTelegramOrDiscordQuestEditForm = (props: {
 };
 
 export {
-  VerifyTelegramOrDiscordQuestEditForm,
+  VerifyTelegramQuestEditForm,
   VerifyTwitterFollowEditForm,
   VerifyTwitterRetweetOrLinkingEditForm,
   Verify3ridgePointEditForm,
@@ -857,4 +966,5 @@ export {
   VerifyHasWalletAddressEditForm,
   VerifyVisitWebsiteEditForm,
   VerifySurveyEditForm,
+  VerifyDiscordQuestEditForm,
 };

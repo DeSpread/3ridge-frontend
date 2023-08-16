@@ -108,7 +108,6 @@ const EventQuests = (
       >
         {ticketData?.quests?.map((quest, index) => {
           const autoVerified =
-            quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord ||
             quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram ||
             quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
             quest.questPolicy?.questPolicy === QuestPolicyType.VerifySurvey ||

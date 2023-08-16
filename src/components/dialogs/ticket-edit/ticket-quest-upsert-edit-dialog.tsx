@@ -19,11 +19,12 @@ import {
   Verify3ridgePointEditForm,
   VerifyEmailEditForm,
   VerifyHasWalletAddressEditForm,
-  VerifyTelegramOrDiscordQuestEditForm,
+  VerifyTelegramQuestEditForm,
   VerifyTwitterFollowEditForm,
   VerifyTwitterRetweetOrLinkingEditForm,
   VerifyVisitWebsiteEditForm,
   VerifySurveyEditForm,
+  VerifyDiscordQuestEditForm,
 } from "../../form/quest/quest-edit-from";
 import { Quest } from "../../../types";
 
@@ -158,11 +159,10 @@ const TicketQuestUpsertEditDialog = (
           }}
         >
           {questPolicyType === QuestPolicyType.VerifyTelegram && (
-            <VerifyTelegramOrDiscordQuestEditForm
+            <VerifyTelegramQuestEditForm
               editedQuest={editedQuest}
               onChange={onChange}
-              questPolicy={QuestPolicyType.VerifyTelegram}
-            ></VerifyTelegramOrDiscordQuestEditForm>
+            ></VerifyTelegramQuestEditForm>
           )}
           {questPolicyType === QuestPolicyType.VerifyTwitterFollow && (
             <VerifyTwitterFollowEditForm
@@ -191,11 +191,10 @@ const TicketQuestUpsertEditDialog = (
             ></Verify3ridgePointEditForm>
           )}
           {questPolicyType === QuestPolicyType.VerifyDiscord && (
-            <VerifyTelegramOrDiscordQuestEditForm
+            <VerifyDiscordQuestEditForm
               editedQuest={editedQuest}
               onChange={onChange}
-              questPolicy={QuestPolicyType.VerifyDiscord}
-            ></VerifyTelegramOrDiscordQuestEditForm>
+            ></VerifyDiscordQuestEditForm>
           )}
           {questPolicyType === QuestPolicyType.VerifyEmail && (
             <VerifyEmailEditForm

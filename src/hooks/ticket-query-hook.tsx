@@ -15,6 +15,7 @@ import {
   UPDATE_TICKET_TITLE,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
+  VERIFY_DISCORD_QUEST,
   VERIFY_SURVEY_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
@@ -53,6 +54,7 @@ export function useTicketQuery({
   const [verifyTwitterLikingQuest] = useMutation(VERIFY_TWITTER_LIKING_QUEST);
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
+  const [verifyDiscordQuest] = useMutation(VERIFY_DISCORD_QUEST);
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [verifySurveyQuest] = useMutation(VERIFY_SURVEY_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
@@ -335,12 +337,29 @@ export function useTicketQuery({
     }
   };
 
+  const asyncVerifyDiscordQuest = async (ticketId: string, questId: string) => {
+    if (ticketId && questId && userId) {
+      Console.log(
+        `VerifyDiscordQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
+      await verifyDiscordQuest({
+        variables: {
+          ticketId,
+          questId,
+          userId,
+        },
+      });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
+    }
+  };
+
   const asyncVerifyAptosQuest = async (ticketId: string, questId: string) => {
     if (ticketId && questId && userId) {
       Console.log(
         `verifyAptosQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
       );
-      const res = await verifyAptosQuest({
+      await verifyAptosQuest({
         variables: {
           ticketId,
           questId,
@@ -629,5 +648,6 @@ export function useTicketQuery({
     asyncDownloadCompletedUserFile,
     asyncDownloadQuestDataFile,
     asyncVerifySurveyQuest,
+    asyncVerifyDiscordQuest,
   };
 }

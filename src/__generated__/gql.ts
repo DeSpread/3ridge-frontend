@@ -42,6 +42,7 @@ const documents = {
     "\n  mutation VerifyTwitterFollowQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyTwitterFollowQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n": types.VerifyTwitterFollowQuestDocument,
     "\n  mutation Verify3ridgePoint(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verify3ridgePoint(questId: $questId, ticketId: $ticketId, userId: $userId) {\n      _id\n    }\n  }\n": types.Verify3ridgePointDocument,
     "\n  mutation VerifyTwitterRetweetQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyTwitterRetweetQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n": types.VerifyTwitterRetweetQuestDocument,
+    "\n  mutation VerifyDiscordQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyDiscordQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n": types.VerifyDiscordQuestDocument,
     "\n  query IsCompletedQuestByUserId($questId: String!, $userId: String!) {\n    isCompletedQuestByUserId(questId: $questId, userId: $userId) {\n      isCompleted\n      questId\n    }\n  }\n": types.IsCompletedQuestByUserIdDocument,
     "\n  mutation CompleteQuestOfUser(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    completeQuestOfUser(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n      title\n      title_v2 {\n        contentFormatType\n        contentEncodingType\n        content\n      }\n      description\n      questPolicy {\n        context\n        questPolicy\n      }\n    }\n  }\n": types.CompleteQuestOfUserDocument,
     "\n  mutation ClaimReward($ticketId: String!, $userId: String!) {\n    claimReward(ticketId: $ticketId, userId: $userId)\n  }\n": types.ClaimRewardDocument,
@@ -178,6 +179,10 @@ export function gql(source: "\n  mutation Verify3ridgePoint(\n    $questId: Stri
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation VerifyTwitterRetweetQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyTwitterRetweetQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation VerifyTwitterRetweetQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyTwitterRetweetQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation VerifyDiscordQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyDiscordQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation VerifyDiscordQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyDiscordQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
