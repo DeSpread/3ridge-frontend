@@ -8,8 +8,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
-import { Ticket } from "../../../types";
-import PrimaryButton from "../atoms/primary-button";
+import { Ticket } from "../../types";
+import PrimaryButton from "../atomic/atoms/primary-button";
 import { useRouter } from "next/router";
 
 type EventCardProps = CardProps & {

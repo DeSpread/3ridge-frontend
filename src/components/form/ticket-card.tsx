@@ -10,10 +10,10 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useLayoutEffect } from "react";
-import { Ticket } from "../../../types";
+import { Ticket } from "../../types";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
-import TicketInfoTextSet from "../atoms/ticket-info-text-set";
+import TicketInfoTextSet from "../atomic/atoms/ticket-info-text-set";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;

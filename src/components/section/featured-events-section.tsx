@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
-import { useLoading } from "../../../provider/loading/loading-provider";
+import { useLoading } from "../../provider/loading/loading-provider";
 import React, { useRef, useState } from "react";
-import { FILTER_TYPE, FilterType } from "../../../types";
-import { EventType, TicketSortType } from "../../../__generated__/graphql";
+import { FILTER_TYPE, FilterType } from "../../types";
+import { EventType, TicketSortType } from "../../__generated__/graphql";
 import {
   Box,
   Grid,
@@ -17,10 +17,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useTheme } from "@mui/material/styles";
-import TicketCard from "../molecules/ticket-card";
+import TicketCard from "../form/ticket-card";
 import "swiper/css";
-import useWindowDimensions from "../../../hooks/window-dimensions"; //basic
-import { useTicketsQuery } from "../../../hooks/tickets-query-hook";
+import useWindowDimensions from "../../hooks/window-dimensions"; //basic
+import { useTicketsQuery } from "../../hooks/tickets-query-hook";
 
 SwiperCore.use([Navigation]);
 

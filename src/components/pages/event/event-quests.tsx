@@ -13,6 +13,7 @@ import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import TypeHelper from "../../../helper/type-helper";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import EditRemoveButton from "../../atomic/atoms/edit-remove-button";
 
 const EventQuests = (
   props: {
@@ -190,46 +191,12 @@ const EventQuests = (
                       onEditBtnClicked?.(e, quest, index);
                     }}
                   ></Box>
-                  <Stack
-                    sx={{
-                      position: "absolute",
-                      left: `calc(100% - ${ICON_SIZE / 2 + 8}px)`,
-                      top: `${-(ICON_SIZE / 2 - 8)}px`,
-                      background: "",
-                      borderWidth: 2,
-                      borderStyle: "solid",
-                      borderColor: "white",
-                      borderRadius: 16,
-                      backgroundColor: "black",
-                      transition: "all 0.2s ease-out 0s",
-                      transitionDuration: "0.2s",
-                      transitionDelay: "0s",
-                      transitionTimingFunction: "ease-out",
-                      "&:hover": {
-                        borderColor: theme.palette.error.main,
-                        "& .MuiIconButton": {
-                          color: theme.palette.error.main,
-                        },
-                      },
+                  <EditRemoveButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteBtnClicked?.(e, quest, index);
                     }}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                  >
-                    <IconButton
-                      className={"MuiIconButton"}
-                      sx={{
-                        borderRadius: 16,
-                        width: ICON_SIZE,
-                        height: ICON_SIZE,
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteBtnClicked?.(e, quest, index);
-                      }}
-                    >
-                      <CloseIcon></CloseIcon>
-                    </IconButton>
-                  </Stack>
+                  ></EditRemoveButton>
                 </>
               )}
               {onExtractDataBtnClicked &&

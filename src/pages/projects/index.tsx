@@ -20,32 +20,6 @@ const Projects = () => {
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
 
-  const getLeftPadding = (index: number) => {
-    if (lgUp) {
-      return index % 6 === 0 ? "0px" : "5px";
-    } else if (mdUp) {
-      return index % 4 === 0 ? "0px" : "5px";
-    } else if (smUp) {
-      return index % 3 === 0 ? "0px" : "5px";
-    } else if (xsUp) {
-      return index % 2 === 0 ? "0px" : "5px";
-    }
-    return "5px";
-  };
-
-  const getRightPadding = (index: number) => {
-    if (lgUp) {
-      return index % 6 === 5 ? "0px" : "5px";
-    } else if (mdUp) {
-      return index % 4 === 3 ? "0px" : "5px";
-    } else if (smUp) {
-      return index % 3 === 2 ? "0px" : "5px";
-    } else if (xsUp) {
-      return index % 2 === 1 ? "0px" : "5px";
-    }
-    return "5px";
-  };
-
   return (
     <>
       <Head>
@@ -78,9 +52,13 @@ const Projects = () => {
           container
           direction={"row"}
           justifyContent={"center"}
-          sx={{ marginTop: 1, marginBottom: 12, background: "" }}
+          sx={{
+            marginTop: 1,
+            marginBottom: 12,
+            width: "100%",
+          }}
         >
-          <Grid container={true} sx={{ background: "" }}>
+          <Grid container={true} sx={{ background: "" }} spacing={1}>
             {!projectsDataLoading &&
               projectsData.map((e, index) => {
                 return (
@@ -91,12 +69,14 @@ const Projects = () => {
                     sm={4}
                     md={3}
                     lg={2}
-                    sx={{
-                      paddingLeft: getLeftPadding(index),
-                      paddingRight: getRightPadding(index),
-                      paddingTop: "5px",
-                      paddingBottom: "5px",
-                    }}
+                    sx={
+                      {
+                        // paddingLeft: getLeftPadding(index),
+                        // paddingRight: getRightPadding(index),
+                        // paddingTop: "5px",
+                        // paddingBottom: "5px",
+                      }
+                    }
                   >
                     <ProjectOverlayStyleCard
                       project={e}
