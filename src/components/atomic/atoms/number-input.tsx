@@ -32,6 +32,7 @@ const NumberInput = (props: TextFieldProps) => {
             transitionProperty: "box-shadow",
           },
         },
+        ...props.sx,
       }}
     ></TextField>
   );

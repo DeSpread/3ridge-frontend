@@ -21,6 +21,7 @@ import {
   VerifyEmailEditForm,
   VerifyHasDiscordOrTelegramOrTwitter,
   VerifyHasWalletAddressEditForm,
+  VerifyQuiz,
   VerifySurveyEditForm,
   VerifyTelegramQuestEditForm,
   VerifyTwitterFollowEditForm,
@@ -43,7 +44,8 @@ const TicketQuestUpsertEditDialog = (
   const theme = useTheme();
 
   const [questPolicyType, setQuestPolicyType] = useState<QuestPolicyType>(
-    QuestPolicyType.VerifyTwitterFollow
+    // QuestPolicyType.
+    QuestPolicyType.Quiz
   );
   const [questPolicy, setQuestPolicy] = useState<QuestPolicy>();
   const [titleV2, setTitleV2] = useState<ContentMetadata>();
@@ -82,6 +84,8 @@ const TicketQuestUpsertEditDialog = (
         return "텔레그램 연동하기";
       case QuestPolicyType.VerifyHasTwitter:
         return "트위터 연동하기";
+      case QuestPolicyType.Quiz:
+        return "퀴즈";
     }
     return "";
   };
@@ -157,6 +161,9 @@ const TicketQuestUpsertEditDialog = (
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyHasTwitter}>
                     {getPolicyLabel(QuestPolicyType.VerifyHasTwitter)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.Quiz}>
+                    {getPolicyLabel(QuestPolicyType.Quiz)}
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -256,6 +263,12 @@ const TicketQuestUpsertEditDialog = (
               onChange={onChange}
               questPolicy={QuestPolicyType.VerifyHasTwitter}
             ></VerifyHasDiscordOrTelegramOrTwitter>
+          )}
+          {questPolicyType === QuestPolicyType.Quiz && (
+            <VerifyQuiz
+              editedQuest={editedQuest}
+              onChange={onChange}
+            ></VerifyQuiz>
           )}
         </Box>
         <Stack
