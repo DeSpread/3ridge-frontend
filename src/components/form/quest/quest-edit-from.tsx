@@ -131,7 +131,7 @@ const VerifySurveyEditForm = (props: {
           >
             <InputWithLabel
               key={i}
-              label={`질문 ${i}번째`}
+              label={`질문 ${i + 1}번째`}
               labelWidth={"30%"}
               value={texts[i]}
               onChange={(e) => {
@@ -957,6 +957,66 @@ const VerifyTelegramQuestEditForm = (props: {
   );
 };
 
+const VerifyHasDiscordOrTelegramOrTwitter = (props: {
+  editedQuest?: Quest;
+  onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
+  questPolicy:
+    | QuestPolicyType.VerifyHasDiscord
+    | QuestPolicyType.VerifyHasTelegram
+    | QuestPolicyType.VerifyHasTwitter;
+}) => {
+  const [message, setMessage] = useState<string>();
+
+  const { editedQuest, onChange, questPolicy } = props;
+
+  useEffect(() => {
+    if (editedQuest) {
+      setMessage(
+        editedQuest.title_v2?.content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace("&nbsp", " ")
+          .trim()
+      );
+    } else {
+      setMessage("");
+    }
+  }, [editedQuest]);
+
+  const updateData = (_message?: string) => {
+    const context = {};
+
+    const _newQuestPolicy = {
+      context: JSON.stringify(context),
+      questPolicy,
+    };
+
+    const content = _message?.trim();
+
+    const _newContentMetaData = {
+      content: content ?? "",
+      contentEncodingType: ContentEncodingType.None,
+      contentFormatType: ContentFormatType.Text,
+    };
+
+    onChange?.(_newQuestPolicy, _newContentMetaData);
+  };
+
+  return (
+    <Stack spacing={1}>
+      <InputWithLabel
+        label={"메세지"}
+        labelWidth={"38%"}
+        value={message}
+        onChange={(e) => {
+          const { value } = e.target;
+          setMessage(value);
+          updateData(value);
+        }}
+      ></InputWithLabel>
+    </Stack>
+  );
+};
+
 export {
   VerifyTelegramQuestEditForm,
   VerifyTwitterFollowEditForm,
@@ -967,4 +1027,5 @@ export {
   VerifyVisitWebsiteEditForm,
   VerifySurveyEditForm,
   VerifyDiscordQuestEditForm,
+  VerifyHasDiscordOrTelegramOrTwitter,
 };

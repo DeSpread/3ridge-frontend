@@ -21,7 +21,7 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
 
   useEffect(() => {
     (async () => {
-      await asyncRefreshProjectsData("cache-first");
+      await asyncRefreshProjectsData();
     })();
   }, []);
 

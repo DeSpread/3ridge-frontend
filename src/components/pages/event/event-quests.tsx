@@ -152,6 +152,8 @@ const EventQuests = (
                   quest.questPolicy?.questPolicy ===
                     QuestPolicyType.VerifyHasTelegram ||
                   quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyHasDiscord ||
+                  quest.questPolicy?.questPolicy ===
                     QuestPolicyType.VerifyAgreement
                 }
                 onVerifyBtnClicked={async (e) => {

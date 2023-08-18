@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import ProjectOverlayStyleCard from "../atomic/molecules/project-overlay-style-card";
 import SkeletonOverlayCard from "../atomic/molecules/skelton-overlay-card";
-import React, { MouseEventHandler, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import WithEditorContainer from "../../hoc/with-editor-container";
 import { useProjectsQuery } from "../../hooks/projects-query-hook";
 import { useLoading } from "../../provider/loading/loading-provider";
@@ -95,6 +95,10 @@ const ProjectsEditSection = () => {
     setOpenEditDialog(false);
     setEditedProject(undefined);
   };
+
+  // useEffect(() => {
+  //   asyncRefreshProjectsData();
+  // }, []);
 
   return (
     <>

@@ -662,6 +662,7 @@ export enum QuestPolicyType {
   VerifyAptosHasNft = 'VERIFY_APTOS_HAS_NFT',
   VerifyDiscord = 'VERIFY_DISCORD',
   VerifyEmail = 'VERIFY_EMAIL',
+  VerifyHasDiscord = 'VERIFY_HAS_DISCORD',
   VerifyHasEmail = 'VERIFY_HAS_EMAIL',
   VerifyHasTelegram = 'VERIFY_HAS_TELEGRAM',
   VerifyHasTwitter = 'VERIFY_HAS_TWITTER',
