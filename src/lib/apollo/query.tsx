@@ -1022,3 +1022,55 @@ export const VERIFY_SURVEY_QUEST = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const DELETE_PROJECT_BY_ID = gql(/* GraphQL */ `
+  mutation RemoveProject($projectId: String!) {
+    removeProject(projectId: $projectId) {
+      _id
+    }
+  }
+`);
+
+export const CREATE_PROJECT = gql(/* GraphQL */ `
+  mutation CreateProject(
+    $name: String!
+    $categories: [CategoryType!]
+    $priority: Float
+    $description: String
+    $imageUrl: String
+    $projectSocial: ProjectSocialInputType
+  ) {
+    createProject(
+      name: $name
+      categories: $categories
+      priority: $priority
+      description: $description
+      imageUrl: $imageUrl
+      projectSocial: $projectSocial
+    ) {
+      _id
+    }
+  }
+`);
+
+export const UPDATE_PROJECT = gql(/* GraphQL */ `
+  mutation UpdateProject(
+    $projectId: String!
+    $description: String
+    $imageUrl: String
+    $name: String
+    $priority: Float
+    $projectSocial: ProjectSocialInputType
+  ) {
+    updateProject(
+      projectId: $projectId
+      description: $description
+      imageUrl: $imageUrl
+      name: $name
+      priority: $priority
+      projectSocial: $projectSocial
+    ) {
+      _id
+    }
+  }
+`);

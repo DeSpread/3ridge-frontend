@@ -58,26 +58,11 @@ const Projects = () => {
             width: "100%",
           }}
         >
-          <Grid container={true} sx={{ background: "" }} spacing={1}>
+          <Grid container={true} sx={{ background: "" }} spacing={3}>
             {!projectsDataLoading &&
               projectsData.map((e, index) => {
                 return (
-                  <Grid
-                    item
-                    key={index}
-                    xs={6}
-                    sm={4}
-                    md={3}
-                    lg={2}
-                    sx={
-                      {
-                        // paddingLeft: getLeftPadding(index),
-                        // paddingRight: getRightPadding(index),
-                        // paddingTop: "5px",
-                        // paddingBottom: "5px",
-                      }
-                    }
-                  >
+                  <Grid item key={index} xs={6} sm={4} md={3} lg={2}>
                     <ProjectOverlayStyleCard
                       project={e}
                       onClick={async (_e) => {
