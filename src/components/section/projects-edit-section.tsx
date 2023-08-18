@@ -11,12 +11,11 @@ import {
 } from "@mui/material";
 import ProjectOverlayStyleCard from "../atomic/molecules/project-overlay-style-card";
 import SkeletonOverlayCard from "../atomic/molecules/skelton-overlay-card";
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { MouseEventHandler, useState } from "react";
 import WithEditorContainer from "../../hoc/with-editor-container";
 import { useProjectsQuery } from "../../hooks/projects-query-hook";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useTheme } from "@mui/material/styles";
-import TicketCard from "../form/ticket-card";
 import AddIcon from "@mui/icons-material/Add";
 import ProjectUpsertEditDialog from "../dialogs/project-edit/project-upsert-edit-dialog";
 import { Project } from "../../__generated__/graphql";
@@ -194,7 +193,7 @@ const ProjectsEditSection = () => {
         }}
         onConfirmBtnClicked={async (p) => {
           showLoading();
-          console.log(p);
+          console.log("aaa", p);
           if (!editedProject) {
             await asyncCreateProject(p);
           } else {

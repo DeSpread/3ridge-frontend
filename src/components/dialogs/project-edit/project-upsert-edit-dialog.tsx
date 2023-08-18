@@ -166,7 +166,10 @@ const ProjectUpsertEditDialog = (
                     setProject((prevState) => {
                       return {
                         ...prevState,
-                        projectSocial: { discordUrl: value },
+                        projectSocial: {
+                          ...prevState.projectSocial,
+                          discordUrl: value,
+                        },
                       };
                     });
                   }}
@@ -180,7 +183,10 @@ const ProjectUpsertEditDialog = (
                     setProject((prevState) => {
                       return {
                         ...prevState,
-                        projectSocial: { mediumUrl: value },
+                        projectSocial: {
+                          ...prevState.projectSocial,
+                          mediumUrl: value,
+                        },
                       };
                     });
                   }}
@@ -194,7 +200,10 @@ const ProjectUpsertEditDialog = (
                     setProject((prevState) => {
                       return {
                         ...prevState,
-                        projectSocial: { officialUrl: value },
+                        projectSocial: {
+                          ...prevState.projectSocial,
+                          officialUrl: value,
+                        },
                       };
                     });
                   }}
@@ -208,7 +217,10 @@ const ProjectUpsertEditDialog = (
                     setProject((prevState) => {
                       return {
                         ...prevState,
-                        projectSocial: { telegramUrl: value },
+                        projectSocial: {
+                          ...prevState.projectSocial,
+                          telegramUrl: value,
+                        },
                       };
                     });
                   }}
@@ -222,7 +234,10 @@ const ProjectUpsertEditDialog = (
                     setProject((prevState) => {
                       return {
                         ...prevState,
-                        projectSocial: { naverBlogUrl: value },
+                        projectSocial: {
+                          ...prevState.projectSocial,
+                          naverBlogUrl: value,
+                        },
                       };
                     });
                   }}
@@ -236,7 +251,10 @@ const ProjectUpsertEditDialog = (
                     setProject((prevState) => {
                       return {
                         ...prevState,
-                        projectSocial: { twitterUrl: value },
+                        projectSocial: {
+                          ...prevState.projectSocial,
+                          twitterUrl: value,
+                        },
                       };
                     });
                   }}
