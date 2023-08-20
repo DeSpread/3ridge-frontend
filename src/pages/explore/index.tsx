@@ -4,8 +4,8 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import AllEventsSection from "../../components/atomic/organisms/all-events-section";
-import FeaturedEventsSection from "../../components/atomic/organisms/featured-events-section";
+import AllEventsSection from "../../components/section/all-events-section";
+import FeaturedEventsSection from "../../components/section/featured-events-section";
 
 const Explore = (props: AppProps) => {
   const theme = useTheme();

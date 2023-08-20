@@ -3,11 +3,17 @@ import { Typography, TypographyProps } from "@mui/material";
 
 type LinkTypographyProps = TypographyProps & {
   href?: string;
+  notOpenNewTab?: boolean;
 };
 
 const LinkTypography = (props: LinkTypographyProps) => {
+  const { notOpenNewTab } = props;
   return (
-    <NextLink href={props.href ?? ""} rel="noopener noreferrer" target="_blank">
+    <NextLink
+      href={props.href ?? ""}
+      rel="noopener noreferrer"
+      target={notOpenNewTab ? undefined : "_blank"}
+    >
       <Typography
         sx={{
           fontWeight: "bold",

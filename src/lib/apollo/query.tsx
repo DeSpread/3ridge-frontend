@@ -594,6 +594,21 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
       rewardClaimedUsers {
         _id
       }
+      project {
+        _id
+        categories
+        description
+        imageUrl
+        name
+        projectSocial {
+          discordUrl
+          officialUrl
+          telegramUrl
+          twitterUrl
+          mediumUrl
+          naverBlogUrl
+        }
+      }
     }
   }
 `);
@@ -768,6 +783,22 @@ export const VERIFY_TWITTER_RETWEET_QUEST = gql(/* GraphQL */ `
   }
 `);
 
+export const VERIFY_DISCORD_QUEST = gql(/* GraphQL */ `
+  mutation VerifyDiscordQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verifyDiscordQuest(
+      questId: $questId
+      ticketId: $ticketId
+      userId: $userId
+    ) {
+      _id
+    }
+  }
+`);
+
 export const IS_COMPLETED_QUEST_BY_USER_ID = gql(/* GraphQL */ `
   query IsCompletedQuestByUserId($questId: String!, $userId: String!) {
     isCompletedQuestByUserId(questId: $questId, userId: $userId) {
@@ -853,6 +884,14 @@ export const UPDATE_TICKET_IMAGE_URL = gql(/* GraphQL */ `
 export const UPDATE_TICKET_TITLE = gql(/* GraphQL */ `
   mutation UpdateTicketTitle($ticketId: String!, $title: String) {
     updateTicketById(ticketId: $ticketId, title: $title) {
+      _id
+    }
+  }
+`);
+
+export const UPDATE_TICKET_PROJECT = gql(/* GraphQL */ `
+  mutation UpdateTicketProject($ticketId: String!, $project: String) {
+    updateTicketById(ticketId: $ticketId, project: $project) {
       _id
     }
   }
@@ -978,6 +1017,58 @@ export const VERIFY_SURVEY_QUEST = gql(/* GraphQL */ `
       surveyContents: $surveyContents
       ticketId: $ticketId
       userId: $userId
+    ) {
+      _id
+    }
+  }
+`);
+
+export const DELETE_PROJECT_BY_ID = gql(/* GraphQL */ `
+  mutation RemoveProject($projectId: String!) {
+    removeProject(projectId: $projectId) {
+      _id
+    }
+  }
+`);
+
+export const CREATE_PROJECT = gql(/* GraphQL */ `
+  mutation CreateProject(
+    $name: String!
+    $categories: [CategoryType!]
+    $priority: Float
+    $description: String
+    $imageUrl: String
+    $projectSocial: ProjectSocialInputType
+  ) {
+    createProject(
+      name: $name
+      categories: $categories
+      priority: $priority
+      description: $description
+      imageUrl: $imageUrl
+      projectSocial: $projectSocial
+    ) {
+      _id
+    }
+  }
+`);
+
+export const UPDATE_PROJECT = gql(/* GraphQL */ `
+  mutation UpdateProject(
+    $projectId: String!
+    $description: String
+    $imageUrl: String
+    $name: String
+    $priority: Float
+    $projectSocial: ProjectSocialInputType
+  ) {
+    updateProject(
+      projectId: $projectId
+      description: $description
+      imageUrl: $imageUrl
+      name: $name
+      priority: $priority
+      projectSocial: $projectSocial
     ) {
       _id
     }

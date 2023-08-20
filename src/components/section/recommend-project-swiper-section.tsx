@@ -1,6 +1,6 @@
-import { Project, Ticket } from "../../../types";
+import { Project, Ticket } from "../../types";
 import { useTheme } from "@mui/material/styles";
-import { useLoading } from "../../../provider/loading/loading-provider";
+import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -14,8 +14,8 @@ import SwiperCore, { Navigation } from "swiper";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Swiper, SwiperSlide } from "swiper/react";
-import ProjectOverlayStyleCard from "../molecules/project-overlay-style-card";
-import SkeletonOverlayCard from "../molecules/skelton-overlay-card";
+import ProjectOverlayStyleCard from "../atomic/molecules/project-overlay-style-card";
+import SkeletonOverlayCard from "../atomic/molecules/skelton-overlay-card";
 
 SwiperCore.use([Navigation]);
 

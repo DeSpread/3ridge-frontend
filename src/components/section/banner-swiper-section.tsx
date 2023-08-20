@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import React from "react";
 import SwiperCore, { Navigation } from "swiper";
 import Image from "next/image";
-import PrimaryButton from "../atoms/primary-button";
+import PrimaryButton from "../atomic/atoms/primary-button";
 import { useRouter } from "next/router";
 
 SwiperCore.use([Navigation]);

@@ -1,6 +1,6 @@
-import { Ticket } from "../../../types";
+import { Ticket } from "../../types";
 import { useTheme } from "@mui/material/styles";
-import { useLoading } from "../../../provider/loading/loading-provider";
+import { useLoading } from "../../provider/loading/loading-provider";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -14,9 +14,9 @@ import React, { useEffect, useRef } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Swiper, SwiperSlide } from "swiper/react";
-import TicketOverlayStyleCard from "../molecules/ticket-overlay-style-card";
+import TicketOverlayStyleCard from "../form/ticket-overlay-style-card";
 import SwiperCore, { Navigation } from "swiper";
-import SkeletonOverlayCard from "../molecules/skelton-overlay-card";
+import SkeletonOverlayCard from "../atomic/molecules/skelton-overlay-card";
 
 SwiperCore.use([Navigation]);
 

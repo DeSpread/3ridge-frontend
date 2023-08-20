@@ -45,7 +45,7 @@ import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
 import { useTheme } from "@mui/material/styles";
 import BlockIcon from "../../components/atomic/molecules/block-icon";
 import { useRouter } from "next/router";
-import TicketCard from "../../components/atomic/molecules/ticket-card";
+import TicketCard from "../../components/form/ticket-card";
 import Image from "next/image";
 import ResourceHelper from "../../helper/resource-helper";
 import TypeHelper from "../../helper/type-helper";
@@ -682,7 +682,7 @@ const Profile = () => {
                               variant={"body2"}
                               color={"neutral.100"}
                             >
-                              디스코드를 연동해주세요
+                              Discord에 연동해주세요
                             </Typography>
                           }
                         ></StyledChip>
