@@ -9,8 +9,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
-import { Ticket } from "../../../types";
-import TicketInfoTextSet from "../atoms/ticket-info-text-set";
+import { Ticket } from "../../types";
+import TicketInfoTextSet from "../atomic/atoms/ticket-info-text-set";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;

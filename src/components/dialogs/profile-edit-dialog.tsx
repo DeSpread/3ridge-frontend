@@ -211,7 +211,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                   {/*></ValidatorButton>*/}
                   <ValidatorButton
                     icon={<DiscordIcon></DiscordIcon>}
-                    label={"디스코드"}
+                    label={"Discord"}
                     onClick={props.discordValidatorButtonOnClick}
                     size={"small"}
                     value={props.userData?.discord?.username ?? undefined}

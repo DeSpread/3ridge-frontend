@@ -16,10 +16,10 @@ import React, {
   PropsWithChildren,
   useState,
 } from "react";
-import { MouseEventWithParam, Ticket, TicketEventParam } from "../../../types";
+import { MouseEventWithParam, Ticket, TicketEventParam } from "../../types";
 import { useTheme } from "@mui/material/styles";
-import TicketCard from "../molecules/ticket-card";
-import PrimaryButton from "../atoms/primary-button";
+import TicketCard from "../form/ticket-card";
+import PrimaryButton from "../atomic/atoms/primary-button";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import Image from "next/image";

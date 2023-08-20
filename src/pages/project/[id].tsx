@@ -15,7 +15,7 @@ import CheckIcon from "../../components/atomic/atoms/svg/check-icon";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useTicketsQuery } from "../../hooks/tickets-query-hook";
 import { useLoading } from "../../provider/loading/loading-provider";
-import TicketsSection from "../../components/atomic/organisms/tickets-section";
+import TicketsSection from "../../components/section/tickets-section";
 import {
   FILTER_TYPE,
   FilterType,

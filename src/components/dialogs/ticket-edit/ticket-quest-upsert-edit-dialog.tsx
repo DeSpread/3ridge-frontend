@@ -17,13 +17,16 @@ import {
 import { useTheme } from "@mui/material/styles";
 import {
   Verify3ridgePointEditForm,
+  VerifyDiscordQuestEditForm,
   VerifyEmailEditForm,
+  VerifyHasDiscordOrTelegramOrTwitter,
   VerifyHasWalletAddressEditForm,
-  VerifyTelegramOrDiscordQuestEditForm,
+  VerifyQuiz,
+  VerifySurveyEditForm,
+  VerifyTelegramQuestEditForm,
   VerifyTwitterFollowEditForm,
   VerifyTwitterRetweetOrLinkingEditForm,
   VerifyVisitWebsiteEditForm,
-  VerifySurveyEditForm,
 } from "../../form/quest/quest-edit-from";
 import { Quest } from "../../../types";
 
@@ -41,7 +44,8 @@ const TicketQuestUpsertEditDialog = (
   const theme = useTheme();
 
   const [questPolicyType, setQuestPolicyType] = useState<QuestPolicyType>(
-    QuestPolicyType.VerifySurvey
+    // QuestPolicyType.
+    QuestPolicyType.Quiz
   );
   const [questPolicy, setQuestPolicy] = useState<QuestPolicy>();
   const [titleV2, setTitleV2] = useState<ContentMetadata>();
@@ -74,6 +78,14 @@ const TicketQuestUpsertEditDialog = (
         return "웹사이트 방문하기";
       case QuestPolicyType.VerifySurvey:
         return "설문";
+      case QuestPolicyType.VerifyHasDiscord:
+        return "디스코드 연동하기";
+      case QuestPolicyType.VerifyHasTelegram:
+        return "텔레그램 연동하기";
+      case QuestPolicyType.VerifyHasTwitter:
+        return "트위터 연동하기";
+      case QuestPolicyType.Quiz:
+        return "퀴즈";
     }
     return "";
   };
@@ -141,6 +153,18 @@ const TicketQuestUpsertEditDialog = (
                   <MenuItem value={QuestPolicyType.VerifySurvey}>
                     {getPolicyLabel(QuestPolicyType.VerifySurvey)}
                   </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyHasDiscord}>
+                    {getPolicyLabel(QuestPolicyType.VerifyHasDiscord)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyHasTelegram}>
+                    {getPolicyLabel(QuestPolicyType.VerifyHasTelegram)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyHasTwitter}>
+                    {getPolicyLabel(QuestPolicyType.VerifyHasTwitter)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.Quiz}>
+                    {getPolicyLabel(QuestPolicyType.Quiz)}
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -158,11 +182,10 @@ const TicketQuestUpsertEditDialog = (
           }}
         >
           {questPolicyType === QuestPolicyType.VerifyTelegram && (
-            <VerifyTelegramOrDiscordQuestEditForm
+            <VerifyTelegramQuestEditForm
               editedQuest={editedQuest}
               onChange={onChange}
-              questPolicy={QuestPolicyType.VerifyTelegram}
-            ></VerifyTelegramOrDiscordQuestEditForm>
+            ></VerifyTelegramQuestEditForm>
           )}
           {questPolicyType === QuestPolicyType.VerifyTwitterFollow && (
             <VerifyTwitterFollowEditForm
@@ -191,11 +214,10 @@ const TicketQuestUpsertEditDialog = (
             ></Verify3ridgePointEditForm>
           )}
           {questPolicyType === QuestPolicyType.VerifyDiscord && (
-            <VerifyTelegramOrDiscordQuestEditForm
+            <VerifyDiscordQuestEditForm
               editedQuest={editedQuest}
               onChange={onChange}
-              questPolicy={QuestPolicyType.VerifyDiscord}
-            ></VerifyTelegramOrDiscordQuestEditForm>
+            ></VerifyDiscordQuestEditForm>
           )}
           {questPolicyType === QuestPolicyType.VerifyEmail && (
             <VerifyEmailEditForm
@@ -220,6 +242,33 @@ const TicketQuestUpsertEditDialog = (
               editedQuest={editedQuest}
               onChange={onChange}
             ></VerifySurveyEditForm>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyHasDiscord && (
+            <VerifyHasDiscordOrTelegramOrTwitter
+              editedQuest={editedQuest}
+              onChange={onChange}
+              questPolicy={QuestPolicyType.VerifyHasDiscord}
+            ></VerifyHasDiscordOrTelegramOrTwitter>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyHasTelegram && (
+            <VerifyHasDiscordOrTelegramOrTwitter
+              editedQuest={editedQuest}
+              onChange={onChange}
+              questPolicy={QuestPolicyType.VerifyHasTelegram}
+            ></VerifyHasDiscordOrTelegramOrTwitter>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyHasTwitter && (
+            <VerifyHasDiscordOrTelegramOrTwitter
+              editedQuest={editedQuest}
+              onChange={onChange}
+              questPolicy={QuestPolicyType.VerifyHasTwitter}
+            ></VerifyHasDiscordOrTelegramOrTwitter>
+          )}
+          {questPolicyType === QuestPolicyType.Quiz && (
+            <VerifyQuiz
+              editedQuest={editedQuest}
+              onChange={onChange}
+            ></VerifyQuiz>
           )}
         </Box>
         <Stack

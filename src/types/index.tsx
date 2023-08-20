@@ -245,7 +245,10 @@ export type VerifyTwitterFollowQuestContext = {
 };
 
 export type VerifyDiscordQuestContext = {
-  channelId: string;
+  channelId?: string;
+  serverName?: string;
+  inviteLink?: string;
+  serverId?: string;
 };
 
 export type VerifyTelegramQuestContext = {

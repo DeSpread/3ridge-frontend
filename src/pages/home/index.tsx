@@ -17,10 +17,10 @@ import { useTicketsQuery } from "../../hooks/tickets-query-hook";
 import { FILTER_TYPE } from "../../types";
 import { EventType, TicketSortType } from "../../__generated__/graphql";
 import useWindowDimensions from "../../hooks/window-dimensions";
-import BannerOverlayStyleCard from "../../components/atomic/molecules/banner-overlay-style-card";
-import RecommendEventSwiperSection from "../../components/atomic/organisms/recommend-event-swiper-section";
-import BannerSwiperSection from "../../components/atomic/organisms/banner-swiper-section";
-import RecommendProjectSwiperSection from "../../components/atomic/organisms/recommend-project-swiper-section";
+import BannerOverlayStyleCard from "../../components/form/banner-overlay-style-card";
+import RecommendEventSwiperSection from "../../components/section/recommend-event-swiper-section";
+import BannerSwiperSection from "../../components/section/banner-swiper-section";
+import RecommendProjectSwiperSection from "../../components/section/recommend-project-swiper-section";
 import { useProjectsQuery } from "../../hooks/projects-query-hook";
 
 const Home = () => {

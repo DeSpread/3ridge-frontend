@@ -11,10 +11,12 @@ import {
   UPDATE_TICKET_DATE_RANGE_TIME,
   UPDATE_TICKET_DESCRIPTION,
   UPDATE_TICKET_IMAGE_URL,
+  UPDATE_TICKET_PROJECT,
   UPDATE_TICKET_REWARD_POLICY,
   UPDATE_TICKET_TITLE,
   VERIFY_3RIDGE_POINT_QUEST,
   VERIFY_APTOS_QUEST,
+  VERIFY_DISCORD_QUEST,
   VERIFY_SURVEY_QUEST,
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
@@ -28,6 +30,7 @@ import { useMutation } from "@apollo/client";
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
 import Console from "../util/console-util";
 import {
+  CategoryType,
   ContentEncodingType,
   ContentFormatType,
   ContentMetadata,
@@ -53,6 +56,7 @@ export function useTicketQuery({
   const [verifyTwitterLikingQuest] = useMutation(VERIFY_TWITTER_LIKING_QUEST);
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
+  const [verifyDiscordQuest] = useMutation(VERIFY_DISCORD_QUEST);
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [verifySurveyQuest] = useMutation(VERIFY_SURVEY_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
@@ -63,6 +67,7 @@ export function useTicketQuery({
   const [updateTicketDateRangeTime] = useMutation(
     UPDATE_TICKET_DATE_RANGE_TIME
   );
+  const [updateTicketProject] = useMutation(UPDATE_TICKET_PROJECT);
   const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
   const [updateTicketRewardPolicy] = useMutation(UPDATE_TICKET_REWARD_POLICY);
   const [createTicket] = useMutation(CREATE_TICKET);
@@ -76,88 +81,7 @@ export function useTicketQuery({
 
   useEffect(() => {
     (async () => {
-      if (!id) {
-        return;
-      }
-      const { data } = await client.query({
-        query: GET_TICKET_BY_ID,
-        variables: {
-          id,
-        },
-      });
-      const {
-        _id,
-        title,
-        beginTime,
-        untilTime,
-        description,
-        description_v2,
-        completed,
-        participants,
-        participantCount,
-        quests,
-        rewardPolicy,
-        winners,
-        imageUrl,
-        rewardClaimedUsers,
-      } = data.ticketById;
-      const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
-        rewardPolicy?.context ?? undefined,
-        rewardPolicy?.rewardPolicyType ?? undefined
-      );
-
-      setTicketData((prevState) => {
-        return {
-          ...prevState,
-          _id: _id ?? undefined,
-          title: title ?? undefined,
-          beginTime: beginTime ?? undefined,
-          untilTime: untilTime ?? undefined,
-          description: description ?? undefined,
-          description_v2: description_v2 ?? undefined,
-          completed: completed ?? undefined,
-          participants: participants?.map((e) => {
-            return {
-              _id: e._id ?? undefined,
-              name: e.name ?? undefined,
-              profileImageUrl: e.profileImageUrl ?? undefined,
-            };
-          }),
-          participantCount: participantCount ?? undefined,
-          imageUrl: imageUrl ?? undefined,
-          quests: quests?.map((e) => {
-            return {
-              _id: e._id ?? undefined,
-              title: e.title ?? undefined,
-              title_v2: e.title_v2 ?? undefined,
-              description: e.description ?? undefined,
-              questPolicy: {
-                context: TypeParseHelper.parseQuestPolicy(
-                  e.questPolicy?.context,
-                  e.questPolicy?.questPolicy
-                ),
-                questPolicy: e.questPolicy?.questPolicy ?? undefined,
-              },
-              isComplete: false,
-              questGuides: e.questGuides ?? [],
-            };
-          }),
-          rewardPolicy: {
-            context: _rewardPolicy,
-            rewardPoint: rewardPolicy?.rewardPoint ?? undefined,
-            rewardPolicyType: rewardPolicy?.rewardPolicyType ?? undefined,
-          },
-          winners: winners?.map((e) => {
-            return {
-              name: e.name ?? undefined,
-            };
-          }),
-          rewardClaimedUserIds:
-            rewardClaimedUsers?.map((e) => {
-              return e._id ?? "";
-            }) ?? undefined,
-        };
-      });
+      await asyncRefreshTicketData();
     })();
   }, [id]);
 
@@ -186,6 +110,7 @@ export function useTicketQuery({
       winners,
       imageUrl,
       rewardClaimedUsers,
+      project,
     } = data.ticketById;
     // console.log("rewardPolicy", rewardPolicy);
     const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
@@ -241,6 +166,23 @@ export function useTicketQuery({
           rewardClaimedUsers?.map((e) => {
             return e._id ?? "";
           }) ?? undefined,
+        project: {
+          _id: project?._id ?? undefined,
+          categories: project?.categories ?? [],
+          description: project?.description ?? undefined,
+          imageUrl: project?.imageUrl ?? undefined,
+          name: project?.name ?? undefined,
+          projectSocial: project?.projectSocial
+            ? {
+                discordUrl: project?.projectSocial?.discordUrl ?? "",
+                officialUrl: project?.projectSocial?.officialUrl ?? "",
+                telegramUrl: project?.projectSocial?.telegramUrl ?? "",
+                twitterUrl: project?.projectSocial?.twitterUrl ?? "",
+                mediumUrl: project?.projectSocial?.mediumUrl ?? "",
+                naverBlogUrl: project?.projectSocial?.naverBlogUrl ?? "",
+              }
+            : undefined,
+        },
       };
     });
   };
@@ -335,12 +277,29 @@ export function useTicketQuery({
     }
   };
 
+  const asyncVerifyDiscordQuest = async (ticketId: string, questId: string) => {
+    if (ticketId && questId && userId) {
+      Console.log(
+        `VerifyDiscordQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
+      await verifyDiscordQuest({
+        variables: {
+          ticketId,
+          questId,
+          userId,
+        },
+      });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
+    }
+  };
+
   const asyncVerifyAptosQuest = async (ticketId: string, questId: string) => {
     if (ticketId && questId && userId) {
       Console.log(
         `verifyAptosQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
       );
-      const res = await verifyAptosQuest({
+      await verifyAptosQuest({
         variables: {
           ticketId,
           questId,
@@ -462,6 +421,17 @@ export function useTicketQuery({
         variables: {
           ticketId: id,
           description_v2: description,
+        },
+      });
+    }
+  };
+
+  const asyncUpdateTicketProject = async (projectId?: string) => {
+    if (id && projectId) {
+      await updateTicketProject({
+        variables: {
+          ticketId: id,
+          project: projectId,
         },
       });
     }
@@ -624,10 +594,12 @@ export function useTicketQuery({
     asyncDeleteQuest,
     asyncUpdateQuest,
     asyncUpdateTicketRewardPolicy,
+    asyncUpdateTicketProject,
     asyncCreateTicket,
     asyncDeleteTicket,
     asyncDownloadCompletedUserFile,
     asyncDownloadQuestDataFile,
     asyncVerifySurveyQuest,
+    asyncVerifyDiscordQuest,
   };
 }
