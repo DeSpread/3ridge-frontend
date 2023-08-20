@@ -682,7 +682,7 @@ const Profile = () => {
                               variant={"body2"}
                               color={"neutral.100"}
                             >
-                              디스코드를 연동해주세요
+                              Discord에 연동해주세요
                             </Typography>
                           }
                         ></StyledChip>
