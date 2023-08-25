@@ -67,6 +67,8 @@ import QuestSurveyDialog from "../../components/dialogs/quest/quest-survey-dialo
 import TypeHelper from "../../helper/type-helper";
 import StringHelper from "../../helper/string-helper";
 import RouterUtil from "../../util/router-util";
+import { useContractHook } from "../../hooks/contract-hook";
+import ContractLoadingDialog from "../../components/dialogs/contract-loading-dialog";
 
 const Event = (props: AppProps) => {
   const { userData } = useSignedUserQuery();
@@ -92,6 +94,20 @@ const Event = (props: AppProps) => {
     userId: userData._id,
     id: RouterUtil.getStringQuery(router, "id"),
   });
+  const {
+    runContract,
+    isFinish,
+    error,
+    hash,
+    isLoading,
+    chain,
+    switchNetwork,
+    switchNetworkAsync,
+  } = useContractHook({
+    contractInfo: ticketData?.rewardPolicy?.context?.contractInfo,
+  });
+
+  // console.log(error);
 
   const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
   const [simpleWarningDialogShow, setSimpleWarningDialogShow] = useState(false);
@@ -99,6 +115,8 @@ const Event = (props: AppProps) => {
     useState(false);
   const [openAgreementQuestDialog, setOpenAgreementQuestDialog] =
     useState(false);
+  const [loadingOfButton, setLoadingOfButton] = useState(false);
+  const [isContractStarted, setIsContractStarted] = useState(false);
 
   const [openAgreementQuestId, setOpenAgreementQuestId] = useState<string>();
   const [openAgreementQuestContext, setOpenAgreementQuestContext] =
@@ -142,6 +160,10 @@ const Event = (props: AppProps) => {
   useEffect(() => {
     updateVerifyAll();
   }, [ticketData, userData?._id]);
+
+  const openContractLoadingDialog = useMemo(() => {
+    return isLoading && (hash ? true : false) && !error;
+  }, [isLoading, hash, error]);
 
   const updateVerifyAll = () => {
     if (!userData?._id || initVerifiedList) return;
@@ -292,22 +314,20 @@ const Event = (props: AppProps) => {
   const walletConnectedForTicket = useMemo(() => {
     if (ticketData.rewardPolicy?.context?.rewardChain.includes("offchain"))
       return true;
-    return (
-      (userData?.walletAddressInfos
-        ?.filter((e) => e.address)
-        .map((e) => e.network)
-        .filter(
-          (e) =>
-            String(e).toLowerCase() ===
-            (String(
-              ticketData.rewardPolicy?.context?.rewardChain
-            ).toLowerCase() === "polygon"
-              ? SUPPORTED_NETWORKS.EVM
-              : String(
-                  ticketData.rewardPolicy?.context?.rewardChain
-                ).toLowerCase())
-        )?.length ?? 0) !== 0
-    );
+
+    const networksOfUser = userData?.walletAddressInfos
+      ?.filter((e) => e.address)
+      .map((e) => e.network.toString().toUpperCase());
+
+    const ticketRewardChain =
+      ticketData.rewardPolicy?.context?.rewardChain.toUpperCase() ?? "";
+    if (networksOfUser?.includes(ticketRewardChain)) {
+      return true;
+    }
+    if (networksOfUser?.includes("EVM") && ticketRewardChain === "MATIC") {
+      return true;
+    }
+    return false;
   }, [userData?.walletAddressInfos]);
 
   const isExpired = () => {
@@ -589,6 +609,23 @@ const Event = (props: AppProps) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isFinish && isContractStarted && ticketData?._id) {
+      asyncRewardClaim(ticketData?._id).then((res) => {
+        setLoadingOfButton(false);
+        setIsContractStarted(false);
+        setClaimCompleted(true);
+        asyncRefreshTicketData();
+      });
+    }
+  }, [isFinish, setIsContractStarted]);
+
+  useEffect(() => {
+    if (error) {
+      setLoadingOfButton(false);
+    }
+  }, [error]);
 
   const asyncVerifyQuest = async (
     e: React.MouseEvent<Element, MouseEvent>,
@@ -1091,13 +1128,15 @@ const Event = (props: AppProps) => {
                 }}
               ></EventRewardDescription>
               <ButtonWithLoading
+                loading={loadingOfButton}
                 disabled={
                   claimRewardDisabled ||
                   claimCompleted ||
                   // updatingClaimCompleted ||
                   isExpired() ||
                   !isStarted() ||
-                  !ticketData?.rewardPolicy?.context?.rewardClaimable
+                  !ticketData?.rewardPolicy?.context?.rewardClaimable ||
+                  !walletConnectedForTicket
                 }
                 onClick={async (e) => {
                   if (
@@ -1110,40 +1149,87 @@ const Event = (props: AppProps) => {
                     return;
                   }
                   if (
-                    userData?.walletAddressInfos?.[0].address &&
-                    ticketData?._id
+                    ticketData?.rewardPolicy?.context?.rewardChain === "APTOS"
                   ) {
-                    try {
-                      const res = await asyncRewardClaim(ticketData?._id);
-                      console.log("res", res);
-                      //@ts-ignore
-                      const myEvent = e as MouseEventWithParam<{
-                        callback: (msg: string) => void;
-                      }>;
-                      myEvent.params.callback("success");
-                      setClaimCompleted(true);
+                    if (
+                      userData?.walletAddressInfos?.[0].address &&
+                      ticketData?._id
+                    ) {
+                      try {
+                        setLoadingOfButton(true);
+                        const res = await asyncRewardClaim(ticketData?._id);
+                        console.log("res", res);
+                        //@ts-ignore
+                        // const myEvent = e as MouseEventWithParam<{
+                        //   callback: (msg: string) => void;
+                        // }>;
+                        // myEvent.params.callback("success");
+                        setClaimCompleted(true);
+                        showAlert({
+                          title: "축하합니다! 🥳",
+                          content: (
+                            <>
+                              <Stack direction={"column"} spacing={1}>
+                                <Typography sx={{ wordBreak: "keep-all" }}>
+                                  🚨 보상 NFT를 수령하기 위한 추가 작업이
+                                  필요합니다!
+                                </Typography>
+                                <Typography sx={{ wordBreak: "keep-all" }}>
+                                  페트라 지갑을 열고, Library 탭을 클릭하신 후,
+                                  Pending 중인 트랜잭션 옆 Accept 버튼을
+                                  클릭하셔야만 NFT를 정상적으로 수령하실 수
+                                  있습니다. 지갑을 확인해주세요!
+                                </Typography>
+                              </Stack>
+                            </>
+                          ),
+                        });
+                        setLoadingOfButton(false);
+                      } catch (e) {
+                        console.log(e);
+                        showErrorAlert({ content: getLocaleErrorMessage(e) });
+                      }
+                    }
+                    console.log("runContract not");
+                  } else if (
+                    ticketData?.rewardPolicy?.context?.rewardChain === "MATIC"
+                  ) {
+                    const envName = process.env["NEXT_PUBLIC_ENV_NAME"] ?? "";
+                    if (
+                      !(envName === "dev" && chain?.id === 80001) &&
+                      !(envName === "prod" && chain?.id === 137)
+                    ) {
                       showAlert({
-                        title: "축하합니다! 🥳",
+                        title: "지갑에 연결된 네크워크를 변경해주세요",
                         content: (
                           <>
                             <Stack direction={"column"} spacing={1}>
-                              <Typography sx={{ wordBreak: "keep-all" }}>
-                                🚨 보상 NFT를 수령하기 위한 추가 작업이
-                                필요합니다!
-                              </Typography>
-                              <Typography sx={{ wordBreak: "keep-all" }}>
-                                페트라 지갑을 열고, Library 탭을 클릭하신 후,
-                                Pending 중인 트랜잭션 옆 Accept 버튼을
-                                클릭하셔야만 NFT를 정상적으로 수령하실 수
-                                있습니다. 지갑을 확인해주세요!
-                              </Typography>
+                              <SecondaryButton
+                                onClick={async (e) => {
+                                  if (envName === "prod") {
+                                    await switchNetworkAsync?.(137);
+                                  } else {
+                                    await switchNetworkAsync?.(80001);
+                                  }
+                                  closeAlert();
+                                }}
+                              >
+                                {ticketData?.rewardPolicy?.context?.rewardChain}{" "}
+                                으로 변경하기
+                              </SecondaryButton>
                             </Stack>
                           </>
                         ),
                       });
+                      return;
+                    }
+                    setLoadingOfButton(true);
+                    console.log("runContract");
+                    setIsContractStarted(true);
+                    try {
+                      runContract();
                     } catch (e) {
                       console.log(e);
-                      showErrorAlert({ content: getLocaleErrorMessage(e) });
                     }
                   }
                 }}
@@ -1253,6 +1339,16 @@ const Event = (props: AppProps) => {
           setOpenTicketRewardHowToDialog(false);
         }}
       ></TicketRewardHowToDialog>
+      <ContractLoadingDialog
+        open={openContractLoadingDialog}
+        title={"컨트랙트를 실행중입니다"}
+        link={
+          process.env["NEXT_PUBLIC_ENV_NAME"] === "dev"
+            ? `https://mumbai.polygonscan.com/tx/${hash}`
+            : `https://polygonscan.com/tx/${hash}`
+        }
+        linkName={"Polygonscan Explorer"}
+      ></ContractLoadingDialog>
     </>
   );
 };

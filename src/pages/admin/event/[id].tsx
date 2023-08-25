@@ -699,6 +699,7 @@ const Event = () => {
             rewardClaimable,
             rewardUnit,
             overrideRewardChainContent,
+            contractInfo,
           } = res;
           const rewardPolicy = { ...ticketData?.rewardPolicy };
           if (rewardPolicy.context) {
@@ -707,6 +708,8 @@ const Event = () => {
             rewardPolicy.context.rewardUnit = rewardUnit ?? "";
             rewardPolicy.context.overrideRewardChainContent =
               overrideRewardChainContent;
+            if (contractInfo)
+              rewardPolicy.context.contractInfo = { ...contractInfo };
           }
           const newRewardPolicy =
             TypeHelper.convertToServerRewardPolicy(rewardPolicy);
