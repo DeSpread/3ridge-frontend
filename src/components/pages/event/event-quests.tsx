@@ -165,7 +165,7 @@ const EventQuests = (
                 timerLength={
                   quest.questPolicy?.questPolicy ===
                   QuestPolicyType.VerifyOnChain
-                    ? 15
+                    ? 10
                     : 5
                 }
               ></VerifyCard>
