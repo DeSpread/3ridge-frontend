@@ -21,6 +21,7 @@ import {
   VERIFY_TWITTER_FOLLOW_QUEST,
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
+  VERIFY_ONCHAIN_QUEST,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -39,7 +40,6 @@ import {
   RewardPolicyType,
 } from "../__generated__/graphql";
 import add from "date-fns/add";
-import axios, { AxiosResponse } from "axios";
 import AxiosUtil from "../util/axios-util";
 import { useRouter } from "next/router";
 
@@ -59,6 +59,7 @@ export function useTicketQuery({
   const [verifyDiscordQuest] = useMutation(VERIFY_DISCORD_QUEST);
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [verifySurveyQuest] = useMutation(VERIFY_SURVEY_QUEST);
+  const [verifyOnChainQuest] = useMutation(VERIFY_ONCHAIN_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
   const [verifyAptosQuest] = useMutation(VERIFY_APTOS_QUEST);
   const [claimReward] = useMutation(CLAIM_REWARD);
@@ -346,6 +347,18 @@ export function useTicketQuery({
     }
   };
 
+  const asyncVerifyOnChainQuest = async (questId: string) => {
+    if (id && questId && userId) {
+      await verifyOnChainQuest({
+        variables: {
+          questId,
+          ticketId: id,
+          userId,
+        },
+      });
+    }
+  };
+
   const asyncIsCompletedQuestByUserId = async (questId: string) => {
     if (questId && userId) {
       try {
@@ -601,5 +614,6 @@ export function useTicketQuery({
     asyncDownloadQuestDataFile,
     asyncVerifySurveyQuest,
     asyncVerifyDiscordQuest,
+    asyncVerifyOnChainQuest,
   };
 }

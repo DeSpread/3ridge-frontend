@@ -37,9 +37,12 @@ type VerifyCardProps = PropsWithChildren & {
   disabled?: boolean;
   hideStartButton?: boolean;
   overrideConfirmBtnLabel?: string;
+  timerLength?: number;
 };
 
 const VerifyCard = (props: VerifyCardProps) => {
+  const { timerLength = 5 } = props;
+
   const [cardState, setCardState] = useState("IDLE"); // VERIFYING, VERIFIED, DISABLED
   const [verifyingProgress, setVerifyingProgress] = useState(0);
   const theme = useTheme();
@@ -131,13 +134,13 @@ const VerifyCard = (props: VerifyCardProps) => {
               onClick={(e) => {
                 setCardState("VERIFYING");
                 let timer: NodeJS.Timer;
-                let _vDate = addSeconds(new Date(), 5);
+                let _vDate = addSeconds(new Date(), timerLength);
                 function checkRemain() {
                   const now = new Date();
                   //@ts-ignore
                   const distDt = _vDate - now;
                   setVerifyingProgress((prevState) => {
-                    return prevState + 2;
+                    return prevState + 10 / timerLength;
                   });
                   if (distDt < 0) {
                     clearInterval(timer);
@@ -310,13 +313,13 @@ const VerifyCard = (props: VerifyCardProps) => {
                 onClick={(e) => {
                   setCardState("VERIFYING");
                   let timer: NodeJS.Timer;
-                  let _vDate = addSeconds(new Date(), 5);
+                  let _vDate = addSeconds(new Date(), timerLength);
                   function checkRemain() {
                     const now = new Date();
                     //@ts-ignore
                     const distDt = _vDate - now;
                     setVerifyingProgress((prevState) => {
-                      return prevState + 2;
+                      return prevState + 10 / timerLength;
                     });
                     if (distDt < 0) {
                       clearInterval(timer);

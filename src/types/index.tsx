@@ -11,10 +11,6 @@ import {
   RewardPolicyType,
 } from "../__generated__/graphql";
 
-/*
- * Per QUEST_POLICY_TYPE, It is required to implement context parsing
- * LinkingQuestContext, RetweetQuestContext
- * */
 export const LOG_LEVEL = {
   INFO: "info",
   DEBUG: "debug",
@@ -152,6 +148,21 @@ export type ReversibleSvgIconProps = SvgIconProps & {
 
 export type MouseEventWithStateParam = MouseEventWithParam<{ state?: string }>;
 
+export type ContractInfo = {
+  address: `0x${string}`;
+  abi: [
+    {
+      inputs: [];
+      name: "mintBadge";
+      outputs: [];
+      stateMutability: "nonpayable";
+      type: "function";
+    }
+  ];
+  functionName: string;
+  args?: [];
+};
+
 export type RewardContext = {
   limitNumber: number;
   rewardUnit: string;
@@ -161,6 +172,7 @@ export type RewardContext = {
   overrideRewardChainContent?: ContentMetadata;
   nftImageUrl: string;
   rewardName?: string;
+  contractInfo?: ContractInfo;
 };
 
 export type ParticipantInfo = {
@@ -299,6 +311,12 @@ export type QuizContent = {
 
 export type VerifySurveyQuestContext = {
   questions: string[];
+};
+
+export type VerifyOnChainContext = {
+  chainType: ChainType;
+  toAddresses: string[];
+  url: string;
 };
 
 // ---

@@ -1,16 +1,15 @@
 import {
+  Box,
   IconButton,
   Stack,
   Typography,
   useMediaQuery,
-  Box,
 } from "@mui/material";
 import { QuestPolicyType } from "../../../__generated__/graphql";
 import VerifyCard from "../../atomic/molecules/verify-card";
 import { Quest, REWARD_POLICY_TYPE, Ticket, User } from "../../../types";
-import React, { MouseEventHandler, PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
-import CloseIcon from "@mui/icons-material/Close";
 import TypeHelper from "../../../helper/type-helper";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import EditRemoveButton from "../../atomic/atoms/edit-remove-button";
@@ -163,6 +162,12 @@ const EventQuests = (
                   onStartBtnClicked?.(e, quest, index);
                 }}
                 autoVerified={autoVerified}
+                timerLength={
+                  quest.questPolicy?.questPolicy ===
+                  QuestPolicyType.VerifyOnChain
+                    ? 15
+                    : 5
+                }
               ></VerifyCard>
               {/*--- FOR EDIT ---*/}
               {onEditBtnClicked && onDeleteBtnClicked && (

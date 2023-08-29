@@ -4,8 +4,10 @@ import SecondaryButton from "../atoms/secondary-button";
 import { MouseEventWithParam } from "../../../types";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const ButtonWithLoading = (props: ButtonProps) => {
-  const [loading, setLoading] = useState(false);
+const ButtonWithLoading = (props: ButtonProps & { loading?: boolean }) => {
+  // const [loading, setLoading] = useState(false);
+
+  const { loading } = props;
 
   return (
     <div style={{ position: "relative", width: "100%" }}>
@@ -14,17 +16,17 @@ const ButtonWithLoading = (props: ButtonProps) => {
         fullWidth={true}
         disabled={props.disabled || loading}
         onClick={(e) => {
-          setLoading(true);
-          const myEvent = {} as MouseEventWithParam<{
-            callback: (msg: string) => void;
-          }>;
-          myEvent.params = {
-            callback: (msg: string) => {
-              setLoading(false);
-            },
-          };
-          //@ts-ignore
-          props.onClick?.(myEvent);
+          // setLoading(true);
+          // const myEvent = {} as MouseEventWithParam<{
+          //   callback: (msg: string) => void;
+          // }>;
+          // myEvent.params = {
+          //   callback: (msg: string) => {
+          //     setLoading(false);
+          //   },
+          // };
+          // //@ts-ignore
+          props.onClick?.(e);
         }}
       >
         {props.children}

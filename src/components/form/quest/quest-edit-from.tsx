@@ -10,7 +10,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ChainType,
   ContentEncodingType,
@@ -26,6 +26,7 @@ import {
   Verify3ridgePointQuestContext,
   VerifyDiscordQuestContext,
   VerifyHasWalletAddressQuestContext,
+  VerifyOnChainContext,
   VerifyQuizQuestContext,
   VerifySurveyQuestContext,
   VerifyTelegramQuestContext,
@@ -37,7 +38,6 @@ import NumberWithLabel from "../../atomic/atoms/number-with-label";
 import MathUtil from "../../../util/math-util";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
 import NumberInput from "../../atomic/atoms/number-input";
 
@@ -273,6 +273,17 @@ const VerifyVisitWebsiteEditForm = (props: {
             .replace("&nbsp", " ")
             .trim()
         );
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(
+          editedQuest.title_v2?.content ?? "",
+          "text/html"
+        );
+
+        const linkElement = doc.querySelector("a");
+        const linkText = linkElement?.textContent;
+
+        setHandle(linkText ?? "");
       }
     }
   }, [editedQuest]);
@@ -341,6 +352,278 @@ const VerifyVisitWebsiteEditForm = (props: {
           const { value } = e.target;
           setMessage(value);
           updateData(value, url, handle);
+        }}
+      ></InputWithLabel>
+    </Stack>
+  );
+};
+
+// ---
+
+const VerifyOnChainEditForm = (props: {
+  editedQuest?: Quest;
+  onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
+}) => {
+  const { editedQuest, onChange } = props;
+
+  useEffect(() => {
+    if (editedQuest) {
+      if (
+        editedQuest.questPolicy?.questPolicy === QuestPolicyType.VerifyOnChain
+      ) {
+        const context = editedQuest.questPolicy
+          ?.context as VerifyOnChainContext;
+        setChainType(context.chainType);
+        setToAddresses([...context.toAddresses]);
+        setUrl(context.url);
+        setMessage(
+          editedQuest.title_v2?.content
+            .replace(/<\/?[^>]+(>|$)/g, "")
+            .replace("&nbsp", " ")
+            .trim() ?? ""
+        );
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(
+          editedQuest.title_v2?.content ?? "",
+          "text/html"
+        );
+
+        const linkElement = doc.querySelector("a");
+        const linkText = linkElement?.textContent;
+
+        setHandle(linkText ?? "");
+      }
+    }
+  }, [editedQuest]);
+
+  const [message, setMessage] = useState<string>("");
+  const [chainType, setChainType] = useState<ChainType>(ChainType.Evm);
+  const [toAddresses, setToAddresses] = useState([""]);
+  const [handle, setHandle] = useState<string>("");
+  const [url, setUrl] = useState<string>("");
+  const theme = useTheme();
+
+  const updateData = (
+    _message: string,
+    _chainType: ChainType,
+    _toAddresses: string[],
+    _url: string,
+    _handle: string
+  ) => {
+    const context: VerifyOnChainContext = {
+      toAddresses: _toAddresses,
+      chainType: _chainType,
+      url: _url,
+    };
+
+    const _newQuestPolicy = {
+      context: JSON.stringify(context),
+      questPolicy: QuestPolicyType.VerifyOnChain,
+    };
+
+    let content = _message ?? "";
+
+    if (_handle && content?.includes(_handle)) {
+      _handle = _handle?.replace(" ", "&nbsp");
+      content =
+        _message
+          ?.trim()
+          ?.replace(" ", "&nbsp")
+          ?.replace(
+            _handle.replace(" ", "&nbsp"),
+            dedent`<a style="{a-style}" href="${_url}" target="_blank">${_handle.replace(
+              "&nbsp",
+              " "
+            )}</a>`
+          )
+          .trim() ?? "";
+    }
+
+    const _newContentMetaData = {
+      content: dedent`<h6 style="{h6-style}">${content}</h6>`,
+      contentEncodingType: ContentEncodingType.None,
+      contentFormatType: ContentFormatType.Html,
+    };
+
+    onChange?.(_newQuestPolicy, _newContentMetaData);
+  };
+
+  return (
+    <Stack spacing={1}>
+      <FormControl>
+        <InputLabel>체인</InputLabel>
+        <Select
+          value={chainType}
+          label="체인"
+          onChange={(e) => {
+            const { value } = e.target;
+            const chainType = value as ChainType;
+            setChainType(chainType);
+            updateData(message, chainType, toAddresses, url, handle);
+          }}
+          sx={{ width: 120, background: "" }}
+        >
+          <MenuItem value={ChainType.Evm}>이더리움</MenuItem>
+          <MenuItem value={ChainType.Matic}>Matic</MenuItem>
+          <MenuItem value={ChainType.MaticMumbai}>Matic Mumbai</MenuItem>
+          <MenuItem value={ChainType.Arb}>아비트럼</MenuItem>
+          <MenuItem value={ChainType.Bnb}>Bnb</MenuItem>
+        </Select>
+      </FormControl>
+      {toAddresses.map((e, i) => {
+        return (
+          <Stack
+            key={i}
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"flex-end"}
+            sx={{ width: "100%", background: "" }}
+          >
+            <InputWithLabel
+              key={i}
+              label={`toAddress ${i + 1}번째`}
+              labelWidth={"40%"}
+              value={toAddresses[i]}
+              onChange={(e) => {
+                const { value } = e.target;
+                setToAddresses((prevState) => {
+                  const src = [...prevState];
+                  src[i] = value;
+                  return src;
+                });
+                const src = [...toAddresses];
+                src[i] = value;
+                updateData(message, chainType, src, url, handle);
+              }}
+            ></InputWithLabel>
+            {i !== 0 && (
+              <IconButton
+                className={"MuiIconButton"}
+                sx={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 16,
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                  marginLeft: 3,
+                }}
+                onClick={(e) => {
+                  setToAddresses((prevState) => {
+                    const src = [...prevState];
+                    return src.filter((e, _i) => _i !== i);
+                  });
+                  let src = [...toAddresses];
+                  src = src.filter((e, _i) => _i !== i);
+                  updateData(message, chainType, src, url, handle);
+                }}
+              >
+                <RemoveIcon
+                  fontSize={"medium"}
+                  sx={{
+                    borderRadius: 30,
+                    "&:hover": {
+                      borderColor: theme.palette.secondary.main,
+                      background: "#61E1FF55",
+                    },
+                  }}
+                ></RemoveIcon>
+              </IconButton>
+            )}
+            {i === 0 && (
+              <IconButton
+                className={"MuiIconButton"}
+                sx={{
+                  visibility: "hidden",
+                  width: 28,
+                  height: 28,
+                  borderRadius: 16,
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                  marginLeft: 3,
+                }}
+              >
+                <RemoveIcon
+                  fontSize={"medium"}
+                  sx={{
+                    borderRadius: 30,
+                    "&:hover": {
+                      borderColor: theme.palette.secondary.main,
+                      background: "#61E1FF55",
+                    },
+                  }}
+                ></RemoveIcon>
+              </IconButton>
+            )}
+          </Stack>
+        );
+      })}
+      <Stack
+        alignItems={"center"}
+        justifyContent={"center"}
+        sx={{ width: "100%", paddingTop: 2 }}
+      >
+        <IconButton
+          className={"MuiIconButton"}
+          sx={{
+            width: 28,
+            height: 28,
+            borderRadius: 16,
+            borderWidth: 2,
+            borderStyle: "solid",
+          }}
+          onClick={(e) => {
+            setToAddresses((prevState) => {
+              const src = [...prevState, ""];
+              return src;
+            });
+            const src = [...toAddresses, ""];
+            updateData(message, chainType, src, url, handle);
+          }}
+        >
+          <AddIcon
+            fontSize={"medium"}
+            sx={{
+              borderRadius: 30,
+              "&:hover": {
+                borderColor: theme.palette.secondary.main,
+                background: "#61E1FF55",
+              },
+            }}
+          ></AddIcon>
+        </IconButton>
+      </Stack>
+      <Box sx={{ paddingTop: 2, paddingBottom: 2 }}>
+        <Divider></Divider>
+      </Box>
+      <InputWithLabel
+        label={"링크 이름"}
+        labelWidth={"34%"}
+        value={handle}
+        onChange={(e) => {
+          const { value } = e.target;
+          setHandle(value);
+          updateData(message, chainType, toAddresses, url, value);
+        }}
+      ></InputWithLabel>
+      <InputWithLabel
+        label={"링크 URL"}
+        labelWidth={"34%"}
+        value={url}
+        onChange={(e) => {
+          const { value } = e.target;
+          setUrl(value);
+          updateData(message, chainType, toAddresses, value, handle);
+        }}
+      ></InputWithLabel>
+      <InputWithLabel
+        label={"메세지"}
+        labelWidth={"34%"}
+        value={message}
+        onChange={(e) => {
+          const { value } = e.target;
+          setMessage(value);
+          updateData(value, chainType, toAddresses, url, handle);
         }}
       ></InputWithLabel>
     </Stack>
@@ -1516,4 +1799,5 @@ export {
   VerifyDiscordQuestEditForm,
   VerifyHasDiscordOrTelegramOrTwitter,
   VerifyQuiz,
+  VerifyOnChainEditForm,
 };

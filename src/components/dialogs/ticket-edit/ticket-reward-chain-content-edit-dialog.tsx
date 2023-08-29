@@ -7,18 +7,21 @@ import {
 import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 import {
   Box,
+  Divider,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   Stack,
+  Typography,
 } from "@mui/material";
 import SecondaryButton from "../../atomic/atoms/secondary-button";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import InputWithLabel from "../../atomic/atoms/input-with-label";
 import dedent from "dedent";
 import ResourceHelper from "../../../helper/resource-helper";
-import { Ticket } from "../../../types";
+import { ContractInfo, Ticket } from "../../../types";
+import StyledOutlinedInput from "../../atomic/atoms/styled/styled-outlined-input";
 
 const TicketRewardChainContentEditDialog = (
   props: {
@@ -28,6 +31,7 @@ const TicketRewardChainContentEditDialog = (
       rewardClaimable: boolean;
       rewardUnit?: string;
       overrideRewardChainContent?: ContentMetadata;
+      contractInfo?: ContractInfo;
     }) => void;
   } & SimpleDialogProps
 ) => {
@@ -35,6 +39,7 @@ const TicketRewardChainContentEditDialog = (
   const [chainType, setChainType] = useState<ChainType | string>("EMPTY");
   const [claimType, setClaimType] = useState("EMPTY");
   const [messageValue, setMessageValue] = useState("");
+  const [contractInfoValue, setContractInfoValue] = useState("");
 
   useEffect(() => {
     const context = defaultTicketData?.rewardPolicy?.context;
@@ -47,8 +52,14 @@ const TicketRewardChainContentEditDialog = (
           .replace("&nbsp", " ")
           .trim() ?? ""
       );
+      if (context.contractInfo)
+        setContractInfoValue(JSON.stringify(context.contractInfo, null, 2));
     }
   }, [defaultTicketData]);
+
+  const isClaimableChain = useMemo(() => {
+    return chainType === ChainType.Aptos || chainType === ChainType.Matic;
+  }, [chainType]);
 
   return (
     <SimpleDialog {...rest} maxWidth={"sm"}>
@@ -83,7 +94,7 @@ const TicketRewardChainContentEditDialog = (
               <MenuItem value={"EMPTY"}>없음</MenuItem>
             </Select>
           </FormControl>
-          {chainType === ChainType.Aptos && (
+          {isClaimableChain && (
             <FormControl>
               <InputLabel>클레임 타입</InputLabel>
               <Select
@@ -112,6 +123,41 @@ const TicketRewardChainContentEditDialog = (
             }}
           ></InputWithLabel>
         </Box>
+        {chainType === ChainType.Matic && claimType === "NFT" && (
+          <Stack>
+            <Divider sx={{ marginTop: 1 }}></Divider>
+            <Stack
+              sx={{ width: "100%", paddingTop: 2, paddingBottom: 1 }}
+              spacing={2}
+            >
+              <Typography
+                variant={"body2"}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: "1",
+                  WebkitBoxOrient: "vertical",
+                  marginLeft: 0,
+                }}
+              >
+                컨트랙트 정보 (프로그래머가 입력)
+              </Typography>
+              <StyledOutlinedInput
+                fullWidth
+                value={contractInfoValue}
+                onChange={(
+                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                ) => {
+                  console.log(e.target.value);
+                  setContractInfoValue(e.target.value);
+                }}
+                multiline={true}
+                minRows={5}
+              />
+            </Stack>
+          </Stack>
+        )}
         <Stack
           direction={"row"}
           justifyContent={"flex-end"}
@@ -140,12 +186,18 @@ const TicketRewardChainContentEditDialog = (
                 contentEncodingType: ContentEncodingType.None,
               };
 
+              let contractInfo: ContractInfo | undefined = undefined;
+              if (contractInfoValue && claimType === "NFT") {
+                contractInfo = JSON.parse(contractInfoValue) as ContractInfo;
+              }
+
               props.onConfirmBtnClicked?.({
                 //@ts-ignore
                 rewardChain: chainType === "EMPTY" ? undefined : chainType,
                 rewardClaimable: claimType === "EMPTY" ? false : true,
                 rewardUnit: claimType === "EMPTY" ? "" : claimType,
                 overrideRewardChainContent,
+                contractInfo,
               });
             }}
           >
