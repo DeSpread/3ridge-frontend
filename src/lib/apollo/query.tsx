@@ -1074,3 +1074,21 @@ export const UPDATE_PROJECT = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const VERIFY_ONCHAIN_QUEST = gql(/* GraphQL */ `
+  mutation VerifyOnChainQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+    $env: String!
+  ) {
+    verifyOnChainQuest(
+      questId: $questId
+      ticketId: $ticketId
+      userId: $userId
+      env: $env
+    ) {
+      _id
+    }
+  }
+`);

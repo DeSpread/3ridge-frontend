@@ -33,6 +33,8 @@ export const APP_ERROR_MESSAGE = {
   DISCORD_SERVER_NOT_FOUND: "discord server not found",
   DISCORD_SERVER_ID_NOT_FOUND: "discord server id not found",
   DISCORD_CLIENT_NOT_READY: "discord client is not ready",
+  ON_CHAIN_TRANSACTION_NOT_INCLUDE_ANY_TO_ADDRESS:
+    "on-chain transaction not include any toAddress",
 } as const;
 
 export class AppError extends Error {

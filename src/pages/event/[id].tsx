@@ -23,6 +23,7 @@ import {
   VerifyAgreementQuestContext,
   VerifyDiscordQuestContext,
   VerifyHasWalletAddressQuestContext,
+  VerifyOnChainContext,
   VerifyQuizQuestContext,
   VerifySurveyQuestContext,
   VerifyTelegramQuestContext,
@@ -90,6 +91,7 @@ const Event = (props: AppProps) => {
     asyncVerifyAptosQuest,
     asyncRefreshTicketData,
     asyncVerifySurveyQuest,
+    asyncVerifyOnChainQuest,
   } = useTicketQuery({
     userId: userData._id,
     id: RouterUtil.getStringQuery(router, "id"),
@@ -564,6 +566,16 @@ const Event = (props: AppProps) => {
         "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
       );
     } else if (
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyOnChain
+    ) {
+      const questContext = quest.questPolicy?.context as VerifyOnChainContext;
+      const newWindow = window.open(
+        questContext?.url,
+        "_blank",
+        "noopener,noreferrer"
+      );
+      if (newWindow) newWindow.opener = null;
+    } else if (
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram ||
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyVisitWebsite
     ) {
@@ -863,6 +875,26 @@ const Event = (props: AppProps) => {
             ),
           });
           myEvent.params.callback("success");
+        }
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyOnChain
+      ) {
+        try {
+          await asyncVerifyOnChainQuest(
+            quest._id,
+            process.env["NEXT_PUBLIC_ENV_NAME"] ?? "dev"
+          );
+          myEvent.params.callback("success");
+          updateVerifyState(index);
+        } catch (e) {
+          console.log(getErrorMessage(e));
+          if (
+            getErrorMessage(e) ===
+            APP_ERROR_MESSAGE.ON_CHAIN_TRANSACTION_NOT_INCLUDE_ANY_TO_ADDRESS
+          ) {
+            showAlert({ title: "알림", content: "해당 트랜잭션이 없습니다." });
+          }
+          // console.log(e);
         }
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram

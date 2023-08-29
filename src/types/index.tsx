@@ -313,6 +313,12 @@ export type VerifySurveyQuestContext = {
   questions: string[];
 };
 
+export type VerifyOnChainContext = {
+  chainType: ChainType;
+  toAddresses: string[];
+  url: string;
+};
+
 // ---
 
 export type QuizEventParam = {

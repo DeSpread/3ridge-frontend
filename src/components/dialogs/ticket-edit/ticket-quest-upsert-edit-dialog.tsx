@@ -21,6 +21,7 @@ import {
   VerifyEmailEditForm,
   VerifyHasDiscordOrTelegramOrTwitter,
   VerifyHasWalletAddressEditForm,
+  VerifyOnChainEditForm,
   VerifyQuiz,
   VerifySurveyEditForm,
   VerifyTelegramQuestEditForm,
@@ -86,6 +87,8 @@ const TicketQuestUpsertEditDialog = (
         return "트위터 연동하기";
       case QuestPolicyType.Quiz:
         return "퀴즈";
+      case QuestPolicyType.VerifyOnChain:
+        return "온체인 활동";
     }
     return "";
   };
@@ -164,6 +167,9 @@ const TicketQuestUpsertEditDialog = (
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.Quiz}>
                     {getPolicyLabel(QuestPolicyType.Quiz)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyOnChain}>
+                    {getPolicyLabel(QuestPolicyType.VerifyOnChain)}
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -269,6 +275,12 @@ const TicketQuestUpsertEditDialog = (
               editedQuest={editedQuest}
               onChange={onChange}
             ></VerifyQuiz>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyOnChain && (
+            <VerifyOnChainEditForm
+              editedQuest={editedQuest}
+              onChange={onChange}
+            ></VerifyOnChainEditForm>
           )}
         </Box>
         <Stack

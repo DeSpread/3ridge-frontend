@@ -15,6 +15,7 @@ import {
   VerifyVisitWebsiteQuestContext,
   VerifyAgreementQuestContext,
   VerifySurveyQuestContext,
+  VerifyOnChainContext,
 } from "../types";
 import { QuestPolicyType } from "../__generated__/graphql";
 
@@ -49,6 +50,7 @@ class TypeParseHelper {
     try {
       const _context = context.trim();
       const contextJson = JSON.parse(_context);
+      console.log(contextJson);
       if (questPolicyType === QuestPolicyType.Quiz) {
         return contextJson as VerifyQuizQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyTwitterRetweet) {
@@ -77,6 +79,8 @@ class TypeParseHelper {
         return contextJson as VerifyAgreementQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifySurvey) {
         return contextJson as VerifySurveyQuestContext;
+      } else if (questPolicyType === QuestPolicyType.VerifyOnChain) {
+        return contextJson as VerifyOnChainContext;
       }
     } catch (e) {
       console.log(context, questPolicyType);
