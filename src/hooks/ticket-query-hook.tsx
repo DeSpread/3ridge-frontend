@@ -40,7 +40,6 @@ import {
   RewardPolicyType,
 } from "../__generated__/graphql";
 import add from "date-fns/add";
-import axios, { AxiosResponse } from "axios";
 import AxiosUtil from "../util/axios-util";
 import { useRouter } from "next/router";
 
@@ -348,14 +347,13 @@ export function useTicketQuery({
     }
   };
 
-  const asyncVerifyOnChainQuest = async (questId: string, env: string) => {
+  const asyncVerifyOnChainQuest = async (questId: string) => {
     if (id && questId && userId) {
       await verifyOnChainQuest({
         variables: {
           questId,
           ticketId: id,
           userId,
-          env,
         },
       });
     }

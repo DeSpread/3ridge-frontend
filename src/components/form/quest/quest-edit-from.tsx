@@ -466,6 +466,7 @@ const VerifyOnChainEditForm = (props: {
         >
           <MenuItem value={ChainType.Evm}>이더리움</MenuItem>
           <MenuItem value={ChainType.Matic}>Matic</MenuItem>
+          <MenuItem value={ChainType.MaticMumbai}>Matic Mumbai</MenuItem>
           <MenuItem value={ChainType.Arb}>아비트럼</MenuItem>
           <MenuItem value={ChainType.Bnb}>Bnb</MenuItem>
         </Select>

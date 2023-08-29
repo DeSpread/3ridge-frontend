@@ -323,6 +323,9 @@ const Event = (props: AppProps) => {
 
     const ticketRewardChain =
       ticketData.rewardPolicy?.context?.rewardChain.toUpperCase() ?? "";
+
+    // console.log(networksOfUser, ticketRewardChain);
+
     if (networksOfUser?.includes(ticketRewardChain)) {
       return true;
     }
@@ -330,7 +333,7 @@ const Event = (props: AppProps) => {
       return true;
     }
     return false;
-  }, [userData?.walletAddressInfos]);
+  }, [userData?.walletAddressInfos, ticketData]);
 
   const isExpired = () => {
     return TypeHelper.isTicketExpired(ticketData);
@@ -523,7 +526,7 @@ const Event = (props: AppProps) => {
     ) {
       const likingQuestContext = quest.questPolicy
         .context as VerifyTwitterLikingQuestContext;
-      console.log(likingQuestContext);
+      // console.log(likingQuestContext);
       window.open(
         `https://twitter.com/intent/like?tweet_id=${likingQuestContext.tweetId}`,
         "twitter",
@@ -535,7 +538,7 @@ const Event = (props: AppProps) => {
       try {
         const retweetQuestContext = quest.questPolicy
           .context as VerifyTwitterRetweetQuestContext;
-        console.log(retweetQuestContext);
+        // console.log(retweetQuestContext);
         window.open(
           `https://twitter.com/intent/retweet?tweet_id=${retweetQuestContext.tweetId}`,
           "twitter",
@@ -880,10 +883,8 @@ const Event = (props: AppProps) => {
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyOnChain
       ) {
         try {
-          await asyncVerifyOnChainQuest(
-            quest._id,
-            process.env["NEXT_PUBLIC_ENV_NAME"] ?? "dev"
-          );
+          await asyncVerifyOnChainQuest(quest._id);
+          console.log("success");
           myEvent.params.callback("success");
           updateVerifyState(index);
         } catch (e) {

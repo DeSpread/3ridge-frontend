@@ -1080,13 +1080,11 @@ export const VERIFY_ONCHAIN_QUEST = gql(/* GraphQL */ `
     $questId: String!
     $ticketId: String!
     $userId: String!
-    $env: String!
   ) {
     verifyOnChainQuest(
       questId: $questId
       ticketId: $ticketId
       userId: $userId
-      env: $env
     ) {
       _id
     }

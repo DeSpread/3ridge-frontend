@@ -50,7 +50,7 @@ class TypeParseHelper {
     try {
       const _context = context.trim();
       const contextJson = JSON.parse(_context);
-      console.log(contextJson);
+      // console.log(contextJson);
       if (questPolicyType === QuestPolicyType.Quiz) {
         return contextJson as VerifyQuizQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyTwitterRetweet) {
