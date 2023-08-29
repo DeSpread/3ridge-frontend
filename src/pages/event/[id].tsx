@@ -891,13 +891,15 @@ const Event = (props: AppProps) => {
           updateVerifyState(index);
         } catch (e) {
           console.log(getErrorMessage(e));
+          myEvent.params.callback("success");
           if (
             getErrorMessage(e) ===
             APP_ERROR_MESSAGE.ON_CHAIN_TRANSACTION_NOT_INCLUDE_ANY_TO_ADDRESS
           ) {
             showAlert({ title: "알림", content: "해당 트랜잭션이 없습니다." });
+          } else {
+            showErrorAlert({ content: getErrorMessage(e) });
           }
-          // console.log(e);
         }
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
