@@ -8,6 +8,7 @@ import {
   LinearProgress,
   Stack,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import React, { MouseEventHandler } from "react";
 import { useTheme } from "@mui/material/styles";
@@ -79,9 +80,13 @@ const ContractLoadingDialog = (props: ContractLoadingDialogProps) => {
             sx={{ background: "" }}
             spacing={2}
           >
-            <Box sx={{ width: "100%" }}>
-              <LinearProgress />
-            </Box>
+            <Stack
+              sx={{ width: "100%" }}
+              alignItems={"center"}
+              justifyContent={"center"}
+            >
+              <CircularProgress size={"1.25rem"} />
+            </Stack>
             {linkName && link && (
               <LinkTypography href={link}>{linkName}</LinkTypography>
             )}

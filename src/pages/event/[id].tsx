@@ -631,7 +631,7 @@ const Event = (props: AppProps) => {
         setLoadingOfButton(false);
         setIsContractStarted(false);
         setClaimCompleted(true);
-        asyncRefreshTicketData();
+        showAlert({ title: "알림", content: "클레임을 완료하셨습니다." });
       });
     }
   }, [isFinish, setIsContractStarted]);
@@ -1228,6 +1228,7 @@ const Event = (props: AppProps) => {
                     ticketData?.rewardPolicy?.context?.rewardChain === "MATIC"
                   ) {
                     const envName = process.env["NEXT_PUBLIC_ENV_NAME"] ?? "";
+
                     if (
                       !(envName === "dev" && chain?.id === 80001) &&
                       !(envName === "prod" && chain?.id === 137)
@@ -1373,6 +1374,7 @@ const Event = (props: AppProps) => {
         }}
       ></TicketRewardHowToDialog>
       <ContractLoadingDialog
+        // open={true}
         open={openContractLoadingDialog}
         title={"컨트랙트를 실행중입니다"}
         link={
@@ -1380,7 +1382,7 @@ const Event = (props: AppProps) => {
             ? `https://mumbai.polygonscan.com/tx/${hash}`
             : `https://polygonscan.com/tx/${hash}`
         }
-        linkName={"Polygonscan Explorer"}
+        linkName={"Polygonscan로 이동하기"}
       ></ContractLoadingDialog>
     </>
   );
