@@ -65,6 +65,7 @@ const documents = {
     "\n  mutation RemoveProject($projectId: String!) {\n    removeProject(projectId: $projectId) {\n      _id\n    }\n  }\n": types.RemoveProjectDocument,
     "\n  mutation CreateProject(\n    $name: String!\n    $categories: [CategoryType!]\n    $priority: Float\n    $description: String\n    $imageUrl: String\n    $projectSocial: ProjectSocialInputType\n  ) {\n    createProject(\n      name: $name\n      categories: $categories\n      priority: $priority\n      description: $description\n      imageUrl: $imageUrl\n      projectSocial: $projectSocial\n    ) {\n      _id\n    }\n  }\n": types.CreateProjectDocument,
     "\n  mutation UpdateProject(\n    $projectId: String!\n    $description: String\n    $imageUrl: String\n    $name: String\n    $priority: Float\n    $projectSocial: ProjectSocialInputType\n  ) {\n    updateProject(\n      projectId: $projectId\n      description: $description\n      imageUrl: $imageUrl\n      name: $name\n      priority: $priority\n      projectSocial: $projectSocial\n    ) {\n      _id\n    }\n  }\n": types.UpdateProjectDocument,
+    "\n  mutation VerifyOnChainQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyOnChainQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n": types.VerifyOnChainQuestDocument,
 };
 
 /**
@@ -275,6 +276,10 @@ export function gql(source: "\n  mutation CreateProject(\n    $name: String!\n  
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateProject(\n    $projectId: String!\n    $description: String\n    $imageUrl: String\n    $name: String\n    $priority: Float\n    $projectSocial: ProjectSocialInputType\n  ) {\n    updateProject(\n      projectId: $projectId\n      description: $description\n      imageUrl: $imageUrl\n      name: $name\n      priority: $priority\n      projectSocial: $projectSocial\n    ) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateProject(\n    $projectId: String!\n    $description: String\n    $imageUrl: String\n    $name: String\n    $priority: Float\n    $projectSocial: ProjectSocialInputType\n  ) {\n    updateProject(\n      projectId: $projectId\n      description: $description\n      imageUrl: $imageUrl\n      name: $name\n      priority: $priority\n      projectSocial: $projectSocial\n    ) {\n      _id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation VerifyOnChainQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyOnChainQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation VerifyOnChainQuest(\n    $questId: String!\n    $ticketId: String!\n    $userId: String!\n  ) {\n    verifyOnChainQuest(\n      questId: $questId\n      ticketId: $ticketId\n      userId: $userId\n    ) {\n      _id\n    }\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
