@@ -1250,8 +1250,7 @@ const Event = (props: AppProps) => {
                                   closeAlert();
                                 }}
                               >
-                                {"폴리곤"}
-                                으로 변경하기
+                                Polygon으로 변경하기
                               </SecondaryButton>
                             </Stack>
                           </>
