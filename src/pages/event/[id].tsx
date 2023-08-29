@@ -470,6 +470,7 @@ const Event = (props: AppProps) => {
               },
               color: theme.palette.warning.main,
             }}
+            notOpenNewTab={true}
             onClick={async (e) => {
               closeAlert();
               setTimeout(() => {
@@ -742,6 +743,7 @@ const Event = (props: AppProps) => {
                       },
                       color: theme.palette.warning.main,
                     }}
+                    notOpenNewTab={true}
                     onClick={async (e) => {
                       closeAlert();
                       setTimeout(() => {
@@ -1248,7 +1250,7 @@ const Event = (props: AppProps) => {
                                   closeAlert();
                                 }}
                               >
-                                {ticketData?.rewardPolicy?.context?.rewardChain}{" "}
+                                {"폴리곤"}
                                 으로 변경하기
                               </SecondaryButton>
                             </Stack>
