@@ -379,8 +379,8 @@ const Event = (props: AppProps) => {
   const asyncGoToProfileAndEditDialogOpen = async () => {
     try {
       showLoading();
-      setShowProfileEditDialog(true);
       setBackDirectionPath(`/event/${ticketData?._id}`);
+      setShowProfileEditDialog(true);
       await router.push(`/profile/${userData?.name}`);
       closeLoading();
     } catch (e) {
@@ -1387,6 +1387,34 @@ const Event = (props: AppProps) => {
         }
         linkName={"Polygonscan로 확인하기"}
       ></ContractLoadingDialog>
+      {/*<SimpleDialog open={true} title={"aabc"}>*/}
+      {/*  <Stack spacing={1}>*/}
+      {/*    <Typography variant={"body1"}>*/}
+      {/*      프로필 페이지에서 지갑을 연동해주세요.*/}
+      {/*    </Typography>*/}
+      {/*    <LinkTypography*/}
+      {/*      variant={"body1"}*/}
+      {/*      href={"#"}*/}
+      {/*      sx={{*/}
+      {/*        fontWeight: "bold",*/}
+      {/*        "&:hover": {*/}
+      {/*          color: "#914e1d",*/}
+      {/*          textDecoration: "underline",*/}
+      {/*        },*/}
+      {/*        color: theme.palette.warning.main,*/}
+      {/*      }}*/}
+      {/*      notOpenNewTab={true}*/}
+      {/*      onClick={async (e) => {*/}
+      {/*        closeAlert();*/}
+      {/*        setTimeout(() => {*/}
+      {/*          asyncGoToProfileAndEditDialogOpen();*/}
+      {/*        }, 0);*/}
+      {/*      }}*/}
+      {/*    >*/}
+      {/*      이 링크를 누르시면 프로필 페이지로 이동합니다.*/}
+      {/*    </LinkTypography>*/}
+      {/*  </Stack>*/}
+      {/*</SimpleDialog>*/}
     </>
   );
 };
