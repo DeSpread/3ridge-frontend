@@ -297,7 +297,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                 sx={{
                   color: theme.palette.neutral[100],
                   "&:hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.02)",
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
                   },
                 }}
                 startIcon={<ArrowBackIcon></ArrowBackIcon>}

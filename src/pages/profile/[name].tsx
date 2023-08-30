@@ -69,6 +69,7 @@ import PreferenceHelper from "../../helper/preference-helper";
 import KakaoIcon from "../../components/atomic/atoms/svg/kakao-icon";
 import RouterUtil from "../../util/router-util";
 import DiscordIcon from "../../components/atomic/atoms/svg/discord-icon";
+import { DiscordInputType } from "../../__generated__/graphql";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -98,6 +99,7 @@ const Profile = () => {
     asyncRemoveSocialTelegram,
     asyncDeleteKakao,
     asyncDeleteDiscord,
+    asyncUpdateDiscord,
   } = useSignedUserQuery();
   const { isMobile } = useMobile();
   const backDirectionPath = useRecoilValue(backDirectionPathState);
@@ -134,10 +136,53 @@ const Profile = () => {
     state: DeleteConfirmState;
     payload?: string;
   }>({ state: DELETE_CONFIRM_STATE.NONE });
+  const [updatedDiscordUserInfo, setUpdatedDiscordUserInfo] =
+    useState<DiscordInputType>({ id: "", username: "" });
 
   const theme = useTheme();
 
   const { asyncUploadImage } = useSimpleStorage();
+
+  useEffect(() => {
+    const receiveMessage = (msg: any) => {
+      const { data } = msg;
+      console.log(data["type"]);
+      if (data["type"] === "discordAuth") {
+        const { userInfo } = data;
+        setUpdatedDiscordUserInfo({
+          accent_color: userInfo.accent_color,
+          avatar: userInfo.avatar,
+          avatar_decoration: userInfo.avatar_decoration,
+          banner: userInfo.banner,
+          discriminator: userInfo.discriminator,
+          flags: userInfo.flags,
+          global_name: userInfo.global_name,
+          id: userInfo.id,
+          locale: userInfo.locale,
+          mfa_enabled: userInfo.mfa_enabled,
+          premium_type: userInfo.premium_type,
+          public_flags: userInfo.public_flags,
+          username: userInfo.username,
+        });
+      }
+    };
+    window.addEventListener("message", receiveMessage);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
+    return () => {
+      window.removeEventListener("message", receiveMessage);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (userData?.name && updatedDiscordUserInfo.id) {
+      (async () => {
+        await asyncUpdateDiscord(updatedDiscordUserInfo);
+        setUpdatedDiscordUserInfo({ id: "", username: "" });
+        closeLoading();
+      })();
+    }
+  }, [userData, updatedDiscordUserInfo]);
 
   useEffect(() => {
     switch (deleteConfirmState.state) {
@@ -191,8 +236,11 @@ const Profile = () => {
 
   useEffect(() => {
     if (isProfileEditDialogOpen) {
-      setOpenProfileEditDialog(true);
+      setTimeout(() => {
+        setOpenProfileEditDialog(true);
+      });
     }
+    // console.log(window.history);
   }, []);
 
   useEffect(() => {
@@ -970,15 +1018,25 @@ const Profile = () => {
             showLoading();
             if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
               setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.DISCORD });
+              closeLoading();
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
-              location.href = process.env["NEXT_PUBLIC_DISCORD_AUTH_URL"] ?? "";
+              window.open(
+                process.env["NEXT_PUBLIC_DISCORD_AUTH_URL"] ?? "",
+                "telegram",
+                "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+              );
+              // await router.replace(
+              //   process.env["NEXT_PUBLIC_DISCORD_AUTH_URL"] ?? ""
+              // );
+              // history.repl
+              // location.href = process.env["NEXT_PUBLIC_DISCORD_AUTH_URL"] ?? "";
             }
           } catch (e) {
             console.log(e);
-          } finally {
             closeLoading();
+          } finally {
           }
         }}
         isWalletLoggedIn={isWalletLoggedIn}

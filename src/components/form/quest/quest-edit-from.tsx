@@ -298,18 +298,19 @@ const VerifyVisitWebsiteEditForm = (props: {
     let content = _message ?? "";
 
     if (_handle && content?.includes(_handle)) {
-      _handle = _handle?.replace(" ", "&nbsp");
+      _handle = _handle?.replaceAll(" ", "&nbsp");
       content =
         _message
           ?.trim()
-          ?.replace(" ", "&nbsp")
-          ?.replace(
-            _handle.replace(" ", "&nbsp"),
-            dedent`<a style="{a-style}" href="${_url}" target="_blank">${_handle.replace(
+          ?.replaceAll(" ", "&nbsp")
+          ?.replaceAll(
+            _handle,
+            dedent`<a style="{a-style}" href="${_url}" target="_blank">${_handle.replaceAll(
               "&nbsp",
               " "
             )}</a>`
           )
+          ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
     }
 
@@ -425,18 +426,19 @@ const VerifyOnChainEditForm = (props: {
     let content = _message ?? "";
 
     if (_handle && content?.includes(_handle)) {
-      _handle = _handle?.replace(" ", "&nbsp");
+      _handle = _handle?.replaceAll(" ", "&nbsp");
       content =
         _message
           ?.trim()
-          ?.replace(" ", "&nbsp")
-          ?.replace(
-            _handle.replace(" ", "&nbsp"),
-            dedent`<a style="{a-style}" href="${_url}" target="_blank">${_handle.replace(
+          ?.replaceAll(" ", "&nbsp")
+          ?.replaceAll(
+            _handle,
+            dedent`<a style="{a-style}" href="${_url}" target="_blank">${_handle.replaceAll(
               "&nbsp",
               " "
             )}</a>`
           )
+          ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
     }
 
@@ -898,18 +900,19 @@ const VerifyTwitterRetweetOrLinkingEditForm = (props: {
 
     let content = _message ?? "";
     if (_username && content?.includes(_username)) {
-      _username = _username?.replace(" ", "&nbsp");
+      _username = _username?.replaceAll(" ", "&nbsp");
       content =
         _message
           ?.trim()
-          ?.replace(" ", "&nbsp")
-          ?.replace(
+          ?.replaceAll(" ", "&nbsp")
+          ?.replaceAll(
             _username,
-            dedent`<a style="{a-style}" href="https://twitter.com/${onlyUserName}" target="_blank">${_username.replace(
+            dedent`<a style="{a-style}" href="https://twitter.com/${onlyUserName}" target="_blank">${_username.replaceAll(
               "&nbsp",
               " "
             )}</a>`
           )
+          ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
     }
 
@@ -998,18 +1001,19 @@ const VerifyTwitterFollowEditForm = (props: {
 
     let content = _message ?? "";
     if (_username && content?.includes(_username)) {
-      _username = _username?.replace(" ", "&nbsp");
+      _username = _username?.replaceAll(" ", "&nbsp");
       content =
         _message
           ?.trim()
-          ?.replace(" ", "&nbsp")
-          ?.replace(
+          ?.replaceAll(" ", "&nbsp")
+          ?.replaceAll(
             _username,
-            dedent`<a style="{a-style}" href="https://twitter.com/${onlyUserName}" target="_blank">${_username.replace(
+            dedent`<a style="{a-style}" href="https://twitter.com/${onlyUserName}" target="_blank">${_username.replaceAll(
               "&nbsp",
               " "
             )}</a>`
           )
+          ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
     }
 
@@ -1105,18 +1109,19 @@ const VerifyDiscordQuestEditForm = (props: {
     const hrefLink = _inviteLink;
 
     if (_serverName && content?.includes(_serverName)) {
-      _serverName = _serverName?.replace(" ", "&nbsp");
+      _serverName = _serverName?.replaceAll(" ", "&nbsp");
       content =
         _message
           ?.trim()
-          ?.replace(" ", "&nbsp")
-          ?.replace(
+          ?.replaceAll(" ", "&nbsp")
+          ?.replaceAll(
             _serverName,
-            dedent`<a style="{a-style}" href="${hrefLink}" target="_blank">${_serverName.replace(
+            dedent`<a style="{a-style}" href="${hrefLink}" target="_blank">${_serverName.replaceAll(
               "&nbsp",
               " "
             )}</a>`
           )
+          ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
     }
 
@@ -1216,18 +1221,19 @@ const VerifyTelegramQuestEditForm = (props: {
     const hrefLink = `https://t.me/${onlyHandle}`;
 
     if (_handle && content?.includes(_handle)) {
-      _handle = _handle?.replace(" ", "&nbsp");
+      _handle = _handle?.replaceAll(" ", "&nbsp");
       content =
         _message
           ?.trim()
-          ?.replace(" ", "&nbsp")
-          ?.replace(
+          ?.replaceAll(" ", "&nbsp")
+          ?.replaceAll(
             _handle,
-            dedent`<a style="{a-style}" href="${hrefLink}" target="_blank">${_handle.replace(
+            dedent`<a style="{a-style}" href="${hrefLink}" target="_blank">${_handle.replaceAll(
               "&nbsp",
               " "
             )}</a>`
           )
+          ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
     }
 

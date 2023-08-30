@@ -45,25 +45,26 @@ const Discord = () => {
         }
         setUpdateLock(true);
         (async () => {
-          await asyncUpdateDiscord({
-            accent_color: userInfo.accent_color,
-            avatar: userInfo.avatar,
-            avatar_decoration: userInfo.avatar_decoration,
-            banner: userInfo.banner,
-            discriminator: userInfo.discriminator,
-            flags: userInfo.flags,
-            global_name: userInfo.global_name,
-            id: userInfo.id,
-            locale: userInfo.locale,
-            mfa_enabled: userInfo.mfa_enabled,
-            premium_type: userInfo.premium_type,
-            public_flags: userInfo.public_flags,
-            username: userInfo.username,
-          });
+          // await asyncUpdateDiscord({
+          //   accent_color: userInfo.accent_color,
+          //   avatar: userInfo.avatar,
+          //   avatar_decoration: userInfo.avatar_decoration,
+          //   banner: userInfo.banner,
+          //   discriminator: userInfo.discriminator,
+          //   flags: userInfo.flags,
+          //   global_name: userInfo.global_name,
+          //   id: userInfo.id,
+          //   locale: userInfo.locale,
+          //   mfa_enabled: userInfo.mfa_enabled,
+          //   premium_type: userInfo.premium_type,
+          //   public_flags: userInfo.public_flags,
+          //   username: userInfo.username,
+          // });
           setLoading(false);
-          console.log("finish");
-          setShowProfileEditDialog(true);
-          await router.push(`/profile/${userData?.name}`);
+          // console.log("finish");
+          // setShowProfileEditDialog(true);
+          window.opener.postMessage({ type: "discordAuth", userInfo }, "*");
+          window.close();
         })();
       }
     } catch (e) {
