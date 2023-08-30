@@ -615,6 +615,7 @@ const useSignedUserQuery = () => {
   };
 
   const asyncUpdateDiscord = async (discord: DiscordInputType) => {
+    console.log("userData.name", userData.name);
     if (!userData.name) return;
     await UpdateUserDiscordByName({
       variables: {
