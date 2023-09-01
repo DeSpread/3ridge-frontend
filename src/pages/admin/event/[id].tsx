@@ -530,12 +530,10 @@ const Event = () => {
             <TicketEditControllerWidget
               targetTicket={ticketData}
               onDownloadButtonClick={async (res) => {
-                // showLoading();
                 await asyncDownloadCompletedUserFile(
                   res,
                   `${ticketData?.title}.csv`
                 );
-                // closeLoading();
               }}
               projects={projectsData}
               onProjectChanged={async (projectId) => {
