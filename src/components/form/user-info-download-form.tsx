@@ -16,6 +16,8 @@ import { useTheme } from "@mui/material/styles";
 import { ChainType } from "../../__generated__/graphql";
 import Container from "../atomic/atoms/container";
 import { TicketUserQuery } from "../../types";
+import CircularProgress from "@mui/material/CircularProgress";
+import SecondaryButton from "../atomic/atoms/secondary-button";
 
 const UserInfoDownloadForm = (
   props: PropsWithChildren & {
@@ -27,6 +29,7 @@ const UserInfoDownloadForm = (
   const [checked, setChecked] = useState([true, true, true, true]);
   const [chainType, setChainType] = useState<ChainType>(ChainType.Evm);
   const { title, onDownloadButtonClick } = props;
+  const [loading, setLoading] = useState(false);
 
   return (
     <Container>
@@ -121,19 +124,44 @@ const UserInfoDownloadForm = (
             label="트위터"
           />
         </FormGroup>
-        <PrimaryButton
-          size={"small"}
-          onClick={(e) => {
-            onDownloadButtonClick?.({
-              includeEmail: checked[0],
-              includeWalletChainType: checked[1] ? chainType : undefined,
-              includeTelegram: checked[2],
-              includeTwitterId: checked[3],
-            });
-          }}
-        >
-          다운로드
-        </PrimaryButton>
+        <div style={{ position: "relative" }}>
+          <SecondaryButton
+            size={"small"}
+            sx={{ width: "100%" }}
+            onClick={async (e) => {
+              setLoading(true);
+              await onDownloadButtonClick?.({
+                includeEmail: checked[0],
+                includeWalletChainType: checked[1] ? chainType : undefined,
+                includeTelegram: checked[2],
+                includeTwitterId: checked[3],
+              });
+              setLoading(false);
+            }}
+            disabled={loading}
+          >
+            다운로드
+          </SecondaryButton>
+          {loading && (
+            <div
+              style={{
+                position: "absolute",
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                transform: "translateY(-100%)",
+                height: "100%",
+              }}
+            >
+              <CircularProgress
+                size={"1.2rem"}
+                sx={{ color: "white" }}
+              ></CircularProgress>
+            </div>
+          )}
+        </div>
       </Stack>
     </Container>
   );
