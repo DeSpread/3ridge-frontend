@@ -265,6 +265,7 @@ export type VerifyDiscordQuestContext = {
 
 export type VerifyTelegramQuestContext = {
   channelId: string;
+  groupId?: number;
 };
 
 export type Verify3ridgePointQuestContext = {
