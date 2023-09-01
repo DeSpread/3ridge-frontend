@@ -1186,6 +1186,7 @@ const VerifyTelegramQuestEditForm = (props: {
 }) => {
   const [handle, setHandle] = useState<string>();
   const [message, setMessage] = useState<string>();
+  const [groupId, setGroupId] = useState<string>("");
 
   const { editedQuest, onChange } = props;
 
@@ -1203,14 +1204,26 @@ const VerifyTelegramQuestEditForm = (props: {
             .replace("&nbsp", " ")
             .trim()
         );
+        if (context?.groupId) {
+          setGroupId(context?.groupId?.toString());
+        }
       }
     }
   }, [editedQuest]);
 
-  const updateData = (_handle?: string, _message?: string) => {
+  const updateData = (
+    _handle?: string,
+    _message?: string,
+    _groupId?: string
+  ) => {
     _handle = _handle?.trim();
     const onlyHandle = _handle?.replace("@", "");
-    const context = { channelId: _handle?.replace("@", "") };
+    let context = {
+      channelId: _handle?.replace("@", ""),
+    } as VerifyTelegramQuestContext;
+    if (_groupId) {
+      context.groupId = parseInt(_groupId);
+    }
 
     const _newQuestPolicy = {
       context: JSON.stringify(context),
@@ -1249,13 +1262,23 @@ const VerifyTelegramQuestEditForm = (props: {
   return (
     <Stack spacing={1}>
       <InputWithLabel
+        label={"GroupId"}
+        labelWidth={"38%"}
+        value={groupId}
+        onChange={(e) => {
+          const { value } = e.target;
+          setGroupId(value);
+          updateData(handle, message, value);
+        }}
+      ></InputWithLabel>
+      <InputWithLabel
         label={"텔레그램 핸들 (@포함)"}
         labelWidth={"38%"}
         value={handle}
         onChange={(e) => {
           const { value } = e.target;
           setHandle(value);
-          updateData(value, message);
+          updateData(value, message, groupId);
         }}
       ></InputWithLabel>
       <InputWithLabel
@@ -1265,7 +1288,7 @@ const VerifyTelegramQuestEditForm = (props: {
         onChange={(e) => {
           const { value } = e.target;
           setMessage(value);
-          updateData(handle, value);
+          updateData(handle, value, groupId);
         }}
       ></InputWithLabel>
     </Stack>
