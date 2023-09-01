@@ -18,6 +18,8 @@ import Container from "../atomic/atoms/container";
 import { TicketUserQuery } from "../../types";
 import CircularProgress from "@mui/material/CircularProgress";
 import SecondaryButton from "../atomic/atoms/secondary-button";
+import { useAlert } from "../../provider/alert/alert-provider";
+import { getErrorMessage } from "../../error/my-error";
 
 const UserInfoDownloadForm = (
   props: PropsWithChildren & {
@@ -30,6 +32,7 @@ const UserInfoDownloadForm = (
   const [chainType, setChainType] = useState<ChainType>(ChainType.Evm);
   const { title, onDownloadButtonClick } = props;
   const [loading, setLoading] = useState(false);
+  const { showAlert, showErrorAlert } = useAlert();
 
   return (
     <Container>
@@ -129,14 +132,19 @@ const UserInfoDownloadForm = (
             size={"small"}
             sx={{ width: "100%" }}
             onClick={async (e) => {
-              setLoading(true);
-              await onDownloadButtonClick?.({
-                includeEmail: checked[0],
-                includeWalletChainType: checked[1] ? chainType : undefined,
-                includeTelegram: checked[2],
-                includeTwitterId: checked[3],
-              });
-              setLoading(false);
+              try {
+                setLoading(true);
+                await onDownloadButtonClick?.({
+                  includeEmail: checked[0],
+                  includeWalletChainType: checked[1] ? chainType : undefined,
+                  includeTelegram: checked[2],
+                  includeTwitterId: checked[3],
+                });
+              } catch (e) {
+                showErrorAlert({ content: getErrorMessage(e) });
+              } finally {
+                setLoading(false);
+              }
             }}
             disabled={loading}
           >
