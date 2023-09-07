@@ -201,14 +201,14 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                     }
                     payload={""}
                   ></ValidatorButton>
-                  {/*<ValidatorButton*/}
-                  {/*  icon={<KakaoIcon sx={{ color: "black" }}></KakaoIcon>}*/}
-                  {/*  label={"카카오톡"}*/}
-                  {/*  onClick={props.kakaoValidatorButtonOnClick}*/}
-                  {/*  size={"small"}*/}
-                  {/*  value={props.userData?.kakao?.id.toString() ?? undefined}*/}
-                  {/*  payload={""}*/}
-                  {/*></ValidatorButton>*/}
+                  <ValidatorButton
+                    icon={<KakaoIcon sx={{ color: "black" }}></KakaoIcon>}
+                    label={"카카오톡"}
+                    onClick={props.kakaoValidatorButtonOnClick}
+                    size={"small"}
+                    value={props.userData?.kakao?.id.toString() ?? undefined}
+                    payload={""}
+                  ></ValidatorButton>
                   <ValidatorButton
                     icon={<DiscordIcon></DiscordIcon>}
                     label={"Discord"}

@@ -92,10 +92,12 @@ const Event = (props: AppProps) => {
     asyncRefreshTicketData,
     asyncVerifySurveyQuest,
     asyncVerifyOnChainQuest,
+    asyncVerifyTelegramQuest,
   } = useTicketQuery({
     userId: userData._id,
     id: RouterUtil.getStringQuery(router, "id"),
   });
+
   const {
     runContract,
     isFinish,
@@ -108,8 +110,6 @@ const Event = (props: AppProps) => {
   } = useContractHook({
     contractInfo: ticketData?.rewardPolicy?.context?.contractInfo,
   });
-
-  // console.log(error);
 
   const [simpleWarningDialogTitle, setSimpleWarningDialogTitle] = useState("");
   const [simpleWarningDialogShow, setSimpleWarningDialogShow] = useState(false);
@@ -420,13 +420,53 @@ const Event = (props: AppProps) => {
     return false;
   };
 
+  const showTelegramConnectAlert = () => {
+    if (!userData?.userSocial?.telegramUser?.id) {
+      showAlert({
+        title: "알림",
+        content: (
+          <>
+            <Stack spacing={1}>
+              <Typography variant={"body1"}>
+                프로필 페이지에서 텔레그램을 연동해주세요.
+              </Typography>
+              <LinkTypography
+                variant={"body1"}
+                href={"#"}
+                sx={{
+                  fontWeight: "bold",
+                  "&:hover": {
+                    color: "#914e1d",
+                    textDecoration: "underline",
+                  },
+                  color: theme.palette.warning.main,
+                }}
+                onClick={async (e) => {
+                  closeAlert();
+                  setTimeout(() => {
+                    asyncGoToProfileAndEditDialogOpen();
+                  }, 0);
+                }}
+                notOpenNewTab={true}
+              >
+                이 링크를 누르시면 프로필 페이지로 이동합니다.
+              </LinkTypography>
+            </Stack>
+          </>
+        ),
+      });
+      return true;
+    }
+    return false;
+  };
+
   const showTwitterConnectAlert = () => {
     if (!userData?.userSocial?.twitterId) {
       showAlert({
         title: "알림",
         content: (
           <>
-            <Typography>먼저 twitter id를 연동해주세요</Typography>
+            <Typography>프로필 페이지에서 트위터를 연동해주세요.</Typography>
             <ClickTypography
               variant={"body1"}
               onClick={async () => {
@@ -452,38 +492,101 @@ const Event = (props: AppProps) => {
     return false;
   };
 
-  const renderConnectWalletAlertMessage = () => {
-    return (
-      <>
-        <Stack spacing={1}>
-          <Typography variant={"body1"}>
-            프로필 페이지에서 지갑을 연동해주세요.
-          </Typography>
-          <LinkTypography
-            variant={"body1"}
-            href={"#"}
-            sx={{
-              fontWeight: "bold",
-              "&:hover": {
-                color: "#914e1d",
-                textDecoration: "underline",
-              },
-              color: theme.palette.warning.main,
-            }}
-            notOpenNewTab={true}
-            onClick={async (e) => {
-              closeAlert();
-              setTimeout(() => {
-                asyncGoToProfileAndEditDialogOpen();
-              }, 0);
-            }}
-          >
-            이 링크를 누르시면 프로필 페이지로 이동합니다.
-          </LinkTypography>
-        </Stack>
-      </>
-    );
+  const showEmailConnectAlert = () => {
+    if (!userData?.email) {
+      showAlert({
+        title: "알림",
+        content: (
+          <>
+            <Stack spacing={1}>
+              <Typography variant={"body1"}>
+                프로필 페이지에서 이메일을 연결해주세요.
+              </Typography>
+              <LinkTypography
+                variant={"body1"}
+                href={"#"}
+                sx={{
+                  fontWeight: "bold",
+                  "&:hover": {
+                    color: "#914e1d",
+                    textDecoration: "underline",
+                  },
+                  color: theme.palette.warning.main,
+                }}
+                notOpenNewTab={true}
+                onClick={async (e) => {
+                  closeAlert();
+                  setTimeout(() => {
+                    asyncGoToProfileAndEditDialogOpen();
+                  }, 0);
+                }}
+              >
+                이 링크를 누르시면 프로필 페이지로 이동합니다.
+              </LinkTypography>
+            </Stack>
+          </>
+        ),
+      });
+      return true;
+    }
+    return false;
   };
+
+  const showWalletConnectAlert = (chain: string) => {
+    const networks = userData?.walletAddressInfos
+      ?.filter((e) => e.address)
+      .map((e) => e.network.toUpperCase());
+
+    if (chain === "ANY") {
+      if (networks?.length ?? 0 > 0) {
+        return false;
+      }
+    } else if (networks?.includes(chain)) {
+      return false;
+    }
+
+    showAlert({
+      title: "알림",
+      content: (
+        <>
+          <Stack spacing={1}>
+            <Typography variant={"body1"}>
+              프로필 페이지에서 지갑을 연동해주세요.
+            </Typography>
+            <LinkTypography
+              variant={"body1"}
+              href={"#"}
+              sx={{
+                fontWeight: "bold",
+                "&:hover": {
+                  color: "#914e1d",
+                  textDecoration: "underline",
+                },
+                color: theme.palette.warning.main,
+              }}
+              notOpenNewTab={true}
+              onClick={async (e) => {
+                closeAlert();
+                setTimeout(() => {
+                  asyncGoToProfileAndEditDialogOpen();
+                }, 0);
+              }}
+            >
+              이 링크를 누르시면 프로필 페이지로 이동합니다.
+            </LinkTypography>
+          </Stack>
+        </>
+      ),
+    });
+    return true;
+  };
+
+  // const renderConnectWalletAlertMessage = () => {
+  //   return (
+  //     <>
+  //     </>
+  //   );
+  // };
 
   const getLoadingButtonLabel = () => {
     if (isExpired()) {
@@ -527,7 +630,6 @@ const Event = (props: AppProps) => {
     ) {
       const likingQuestContext = quest.questPolicy
         .context as VerifyTwitterLikingQuestContext;
-      // console.log(likingQuestContext);
       window.open(
         `https://twitter.com/intent/like?tweet_id=${likingQuestContext.tweetId}`,
         "twitter",
@@ -539,7 +641,6 @@ const Event = (props: AppProps) => {
       try {
         const retweetQuestContext = quest.questPolicy
           .context as VerifyTwitterRetweetQuestContext;
-        // console.log(retweetQuestContext);
         window.open(
           `https://twitter.com/intent/retweet?tweet_id=${retweetQuestContext.tweetId}`,
           "twitter",
@@ -580,24 +681,13 @@ const Event = (props: AppProps) => {
       );
       if (newWindow) newWindow.opener = null;
     } else if (
-      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram ||
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyVisitWebsite
     ) {
       let questContext;
       switch (quest.questPolicy?.questPolicy) {
-        case QuestPolicyType.VerifyTelegram:
-          questContext = quest.questPolicy
-            ?.context as VerifyTelegramQuestContext;
-          window.open(
-            `https://t.me/${questContext.channelId}`,
-            "telegram",
-            "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-          );
-          break;
         case QuestPolicyType.VerifyVisitWebsite:
           questContext = quest.questPolicy
             ?.context as VerifyVisitWebsiteQuestContext;
-          // console.log(questContext?.url);
           const newWindow = window.open(
             questContext?.url,
             "_blank",
@@ -606,14 +696,8 @@ const Event = (props: AppProps) => {
           if (newWindow) newWindow.opener = null;
           break;
       }
-      if (quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram) {
-        if (quest.questGuides?.[0]?.content) {
-          openSimpleWarningDialog(quest.questGuides[0]);
-        } else {
-          openSimpleWarningDialog(
-            `텔레그램 초대 링크의 참여 상태를 주기적으로 확인할 예정입니다. 방에 참여 상태로 유지해주세요.`
-          );
-        }
+      if (quest.questGuides?.[0]?.content) {
+        openSimpleWarningDialog(quest.questGuides[0]);
       }
       try {
         const res = await asyncCompleteQuestOfUser(ticketData._id, quest?._id);
@@ -623,6 +707,16 @@ const Event = (props: AppProps) => {
           updateVerifyState(index);
         }
       }
+    } else if (
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram
+    ) {
+      const questContext = quest.questPolicy
+        ?.context as VerifyTelegramQuestContext;
+      window.open(
+        `https://t.me/${questContext.channelId}`,
+        "telegram",
+        "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+      );
     }
   };
 
@@ -661,44 +755,64 @@ const Event = (props: AppProps) => {
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterFollow
       ) {
-        if (showTwitterConnectAlert()) {
-          myEvent.params.callback("success");
-          return;
+        if (!showTwitterConnectAlert()) {
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          // await asyncVerifyTwitterFollowQuest(ticketData._id, quest._id ?? "");
+          updateVerifyState(index);
         }
-        // await asyncVerifyTwitterFollowQuest(ticketData._id, quest._id ?? "");
-        await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
         myEvent.params.callback("success");
-        updateVerifyState(index);
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterRetweet
       ) {
-        if (showTwitterConnectAlert()) {
-          myEvent.params.callback("success");
-          return;
+        if (!showTwitterConnectAlert()) {
+          await asyncVerifyTwitterRetweetQuest(ticketData._id, quest._id ?? "");
+          updateVerifyState(index);
         }
-        await asyncVerifyTwitterRetweetQuest(ticketData._id, quest._id ?? "");
         myEvent.params.callback("success");
-        updateVerifyState(index);
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterLiking
       ) {
-        if (showTwitterConnectAlert()) {
-          myEvent.params.callback("success");
-          return;
+        if (!showTwitterConnectAlert()) {
+          await asyncVerifyTwitterLikingQuest(ticketData._id, quest._id ?? "");
+          updateVerifyState(index);
         }
-        await asyncVerifyTwitterLikingQuest(ticketData._id, quest._id ?? "");
         myEvent.params.callback("success");
-        updateVerifyState(index);
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyDiscord
       ) {
-        if (showDiscordConnectAlert()) {
-          myEvent.params.callback("success");
-          return;
+        if (!showDiscordConnectAlert()) {
+          await asyncVerifyDiscordQuest(ticketData._id, quest._id ?? "");
+          updateVerifyState(index);
         }
-        await asyncVerifyDiscordQuest(ticketData._id, quest._id ?? "");
         myEvent.params.callback("success");
-        updateVerifyState(index);
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram
+      ) {
+        if (!showTelegramConnectAlert()) {
+          const verifyTelegramQuestContext = quest.questPolicy
+            ?.context as VerifyTelegramQuestContext;
+          if (verifyTelegramQuestContext.groupId) {
+            console.log(
+              "asyncVerifyTelegramQuest, groupId: ",
+              verifyTelegramQuestContext.groupId
+            );
+            await asyncVerifyTelegramQuest(ticketData._id, quest._id ?? "");
+          } else {
+            console.log("asyncCompleteQuestOfUser");
+            await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          }
+          updateVerifyState(index);
+        }
+        myEvent.params.callback("success");
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
+        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail
+      ) {
+        if (!showEmailConnectAlert()) {
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          updateVerifyState(index);
+        }
+        myEvent.params.callback("success");
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.Verify_3RidgePoint
       ) {
@@ -716,171 +830,33 @@ const Event = (props: AppProps) => {
         myEvent.params.callback("success");
         updateVerifyState(index);
       } else if (
-        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyEmail ||
-        quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasEmail
-      ) {
-        if (userData?.email) {
-          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
-          myEvent.params.callback("success");
-          updateVerifyState(index);
-        } else {
-          showAlert({
-            title: "알림",
-            content: (
-              <>
-                <Stack spacing={1}>
-                  <Typography variant={"body1"}>
-                    프로필 페이지에서 이메일을 연결해주세요.
-                  </Typography>
-                  <LinkTypography
-                    variant={"body1"}
-                    href={"#"}
-                    sx={{
-                      fontWeight: "bold",
-                      "&:hover": {
-                        color: "#914e1d",
-                        textDecoration: "underline",
-                      },
-                      color: theme.palette.warning.main,
-                    }}
-                    notOpenNewTab={true}
-                    onClick={async (e) => {
-                      closeAlert();
-                      setTimeout(() => {
-                        asyncGoToProfileAndEditDialogOpen();
-                      }, 0);
-                    }}
-                  >
-                    이 링크를 누르시면 프로필 페이지로 이동합니다.
-                  </LinkTypography>
-                </Stack>
-              </>
-            ),
-          });
-          myEvent.params.callback("success");
-        }
-      } else if (
         quest.questPolicy?.questPolicy ===
         QuestPolicyType.VerifyHasWalletAddress
       ) {
-        const networks = userData?.walletAddressInfos
-          ?.filter((e) => e.address)
-          .map((e) => e.network.toUpperCase());
         const verifyHasWalletAddressContext = quest.questPolicy
           ?.context as VerifyHasWalletAddressQuestContext;
         const chain = verifyHasWalletAddressContext?.chain?.toUpperCase();
-        // console.log("chain", chain, networks);
-        if (chain === "ANY") {
-          if (networks?.length ?? 0 > 0) {
-            await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
-            myEvent.params.callback("success");
-            updateVerifyState(index);
-          } else {
-            showAlert({
-              title: "알림",
-              content: renderConnectWalletAlertMessage(),
-            });
-            myEvent.params.callback("success");
-          }
-        } else {
-          if (networks?.includes(chain)) {
-            await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
-            myEvent.params.callback("success");
-            updateVerifyState(index);
-          } else {
-            showAlert({
-              title: "알림",
-              content: renderConnectWalletAlertMessage(),
-            });
-            myEvent.params.callback("success");
-          }
+        if (!showWalletConnectAlert(chain)) {
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          updateVerifyState(index);
         }
+        myEvent.params.callback("success");
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasDiscord
       ) {
-        if (userData?.discord?.id) {
+        if (!showDiscordConnectAlert()) {
           await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
-          myEvent.params.callback("success");
           updateVerifyState(index);
-        } else {
-          showAlert({
-            title: "알림",
-            content: (
-              <>
-                <Stack spacing={1}>
-                  <Typography variant={"body1"}>
-                    프로필 페이지에서 디스코드를 연동해주세요.
-                  </Typography>
-                  <LinkTypography
-                    variant={"body1"}
-                    href={"#"}
-                    sx={{
-                      fontWeight: "bold",
-                      "&:hover": {
-                        color: "#914e1d",
-                        textDecoration: "underline",
-                      },
-                      color: theme.palette.warning.main,
-                    }}
-                    onClick={async (e) => {
-                      closeAlert();
-                      setTimeout(() => {
-                        asyncGoToProfileAndEditDialogOpen();
-                      }, 0);
-                    }}
-                    notOpenNewTab={true}
-                  >
-                    이 링크를 누르시면 프로필 페이지로 이동합니다.
-                  </LinkTypography>
-                </Stack>
-              </>
-            ),
-          });
-          myEvent.params.callback("success");
         }
+        myEvent.params.callback("success");
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTwitter
       ) {
-        if (userData?.userSocial?.twitterId) {
+        if (!showTwitterConnectAlert()) {
           await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
-          myEvent.params.callback("success");
           updateVerifyState(index);
-        } else {
-          showAlert({
-            title: "알림",
-            content: (
-              <>
-                <Stack spacing={1}>
-                  <Typography variant={"body1"}>
-                    프로필 페이지에서 트위터를 연동해주세요.
-                  </Typography>
-                  <LinkTypography
-                    variant={"body1"}
-                    href={"#"}
-                    sx={{
-                      fontWeight: "bold",
-                      "&:hover": {
-                        color: "#914e1d",
-                        textDecoration: "underline",
-                      },
-                      color: theme.palette.warning.main,
-                    }}
-                    onClick={async (e) => {
-                      closeAlert();
-                      setTimeout(() => {
-                        asyncGoToProfileAndEditDialogOpen();
-                      }, 0);
-                    }}
-                    notOpenNewTab={true}
-                  >
-                    이 링크를 누르시면 프로필 페이지로 이동합니다.
-                  </LinkTypography>
-                </Stack>
-              </>
-            ),
-          });
-          myEvent.params.callback("success");
         }
+        myEvent.params.callback("success");
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyOnChain
       ) {
@@ -904,46 +880,11 @@ const Event = (props: AppProps) => {
       } else if (
         quest.questPolicy?.questPolicy === QuestPolicyType.VerifyHasTelegram
       ) {
-        if (userData?.userSocial?.telegramUser?.id) {
+        if (!showTelegramConnectAlert()) {
           await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
-          myEvent.params.callback("success");
           updateVerifyState(index);
-        } else {
-          showAlert({
-            title: "알림",
-            content: (
-              <>
-                <Stack spacing={1}>
-                  <Typography variant={"body1"}>
-                    프로필 페이지에서 텔레그램을 연동해주세요.
-                  </Typography>
-                  <LinkTypography
-                    variant={"body1"}
-                    href={"#"}
-                    sx={{
-                      fontWeight: "bold",
-                      "&:hover": {
-                        color: "#914e1d",
-                        textDecoration: "underline",
-                      },
-                      color: theme.palette.warning.main,
-                    }}
-                    onClick={async (e) => {
-                      closeAlert();
-                      setTimeout(() => {
-                        asyncGoToProfileAndEditDialogOpen();
-                      }, 0);
-                    }}
-                    notOpenNewTab={true}
-                  >
-                    이 링크를 누르시면 프로필 페이지로 이동합니다.
-                  </LinkTypography>
-                </Stack>
-              </>
-            ),
-          });
-          myEvent.params.callback("success");
         }
+        myEvent.params.callback("success");
       }
     } catch (e) {
       const errorMessage = getErrorMessage(e);
@@ -956,7 +897,9 @@ const Event = (props: AppProps) => {
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_RETWEET ||
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_TWITTER_LIKING ||
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_HAVE_APTOS_NFT ||
-        errorMessage === APP_ERROR_MESSAGE.DISCORD_USER_NOT_FOUND_IN_SERVER
+        errorMessage === APP_ERROR_MESSAGE.DISCORD_USER_NOT_FOUND_IN_SERVER ||
+        errorMessage ===
+          APP_ERROR_MESSAGE.TELEGRAM_USER_NOT_FOUND_IN_TELEGRAM_GROUP
       ) {
         showAlert({
           title: "알림",
@@ -965,12 +908,9 @@ const Event = (props: AppProps) => {
       } else if (
         errorMessage === APP_ERROR_MESSAGE.DOES_NOT_HAVA_APTOS_WALLET
       ) {
-        showAlert({
-          title: "알림",
-          content: renderConnectWalletAlertMessage(),
-        });
+        showWalletConnectAlert("");
       } else {
-        showErrorAlert({ content: errorMessage });
+        showErrorAlert({ content: getLocaleErrorMessage(e) });
       }
     }
   };
