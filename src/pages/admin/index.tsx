@@ -9,16 +9,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import PrimaryButton from "../../components/atomic/atoms/primary-button";
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import { useAdminQuery } from "../../hooks/admin-query-hook";
 import { useAlert } from "../../provider/alert/alert-provider";
 import { getLocaleErrorMessage } from "../../error/my-error";
-import { useRouter } from "next/router";
-import { useLoading } from "../../provider/loading/loading-provider";
 import EventsEditSection from "../../components/section/events-edit-section";
-import { useProjectsQuery } from "../../hooks/projects-query-hook";
 import ProjectsEditSection from "../../components/section/projects-edit-section";
 
 const Admin = () => {

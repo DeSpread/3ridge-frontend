@@ -12,6 +12,7 @@ import React, {
   CSSProperties,
   MouseEventHandler,
   PropsWithChildren,
+  useEffect,
   useState,
 } from "react";
 import SecondaryButton from "../atoms/secondary-button";
@@ -49,8 +50,23 @@ const VerifyCard = (props: VerifyCardProps) => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
+  const [isStarted, setIsStarted] = useState(false);
+
   const getConfirmBtnLabel = () => {
     return props.overrideConfirmBtnLabel ?? "확인하기";
+  };
+
+  useEffect(() => {
+    if (props.hideStartButton) {
+      setIsStarted(true);
+    }
+  }, [props.hideStartButton]);
+
+  const onStartBtnClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    setIsStarted(true);
+    props.onStartBtnClicked?.(e);
   };
 
   const cardContentsForMdDownSize = () => {
@@ -121,7 +137,7 @@ const VerifyCard = (props: VerifyCardProps) => {
               sx={{ width: 110 }}
               disabled={props.disabled || props.verified}
               size={"medium"}
-              onClick={props.onStartBtnClicked}
+              onClick={onStartBtnClick}
             >
               시작
             </SecondaryButton>
@@ -300,7 +316,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                 sx={{ width: 110 }}
                 disabled={props.disabled || props.verified}
                 size={"medium"}
-                onClick={props.onStartBtnClicked}
+                onClick={onStartBtnClick}
               >
                 시작
               </SecondaryButton>
@@ -345,7 +361,8 @@ const VerifyCard = (props: VerifyCardProps) => {
                   props.disabled ||
                   props.verified ||
                   props.autoVerified ||
-                  cardState === "VERIFYING"
+                  cardState === "VERIFYING" ||
+                  isStarted === false
                 }
               >
                 {cardState === "VERIFYING"
