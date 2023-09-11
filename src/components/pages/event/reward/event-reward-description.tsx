@@ -68,12 +68,13 @@ const EventRewardDescription = (
           >
             {eventRewardImageCompFunc?.(ticketData)}
           </Stack>
-          <Divider></Divider>
+          <Divider />
           <Box>
             {eventRewardPointCompFunc?.(ticketData)}
             {eventRewardLimitNumberCompFunc?.(ticketData)}
-            {eventRewardNameCompFunc?.(ticketData)}
           </Box>
+          <Divider />
+          <Box>{eventRewardNameCompFunc?.(ticketData)}</Box>
         </Stack>
         {eventRewardChainContentCompFunc?.(ticketData, onClick)}
         {/*{ticketData?.rewardPolicy?.context?.rewardChain === ChainType.Aptos &&*/}
