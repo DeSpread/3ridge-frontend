@@ -59,55 +59,55 @@ const EventRewardDescription = (
 
   return (
     <PrimaryCard>
-      <Stack direction={"column"} spacing={5} sx={{}}>
-        <Stack direction={"column"} spacing={2}>
-          <Stack
-            direction={"column"}
-            alignItems={"center"}
-            justifyContent={"center"}
-          >
-            {eventRewardImageCompFunc?.(ticketData)}
-          </Stack>
-          <Divider />
-          <Box>
-            {eventRewardPointCompFunc?.(ticketData)}
-            {eventRewardLimitNumberCompFunc?.(ticketData)}
-          </Box>
-          <Divider />
-          <Box>{eventRewardNameCompFunc?.(ticketData)}</Box>
+      <Stack direction={"column"} spacing={2}>
+        <Stack
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          {eventRewardImageCompFunc?.(ticketData)}
         </Stack>
-        {eventRewardChainContentCompFunc?.(ticketData, onClick)}
-        {/*{ticketData?.rewardPolicy?.context?.rewardChain === ChainType.Aptos &&*/}
-        {/*  ticketData?.rewardPolicy?.context?.rewardClaimable &&*/}
-        {/*  ticketData?.rewardPolicy?.context?.rewardUnit === "NFT" && (*/}
-        {/*    <Stack sx={{ background: "", marginTop: -5 }} alignItems={"center"}>*/}
-        {/*      <ClickTypography*/}
-        {/*        variant={"caption"}*/}
-        {/*        onClick={async () => {*/}
-        {/*          // if (ticketData.rewardPolicy?.context?.rewardInfo?.content) {*/}
-        {/*          // setOpenContentsRendererDialog(true);*/}
-        {/*          // setHtmlContent(*/}
-        {/*          //   decodeBase64(*/}
-        {/*          //     ticketData.rewardPolicy?.context?.rewardInfo?.content*/}
-        {/*          //   )*/}
-        {/*          // );*/}
-        {/*          // }*/}
-        {/*        }}*/}
-        {/*        sx={{*/}
-        {/*          fontWeight: "bold",*/}
-        {/*          "&:hover": {*/}
-        {/*            color: "#914e1d",*/}
-        {/*            textDecoration: "underline",*/}
-        {/*          },*/}
-        {/*          color: theme.palette.warning.main,*/}
-        {/*          cursor: "pointer",*/}
-        {/*        }}*/}
-        {/*      >*/}
-        {/*        앱토스 NFT 수령 방법*/}
-        {/*      </ClickTypography>*/}
-        {/*    </Stack>*/}
-        {/*  )}*/}
+        <Divider />
+        <Box>
+          {eventRewardPointCompFunc?.(ticketData)}
+          {eventRewardLimitNumberCompFunc?.(ticketData)}
+        </Box>
+        <Divider />
+        <Box display={"flex"} flexDirection={"column"} gap={4}>
+          {eventRewardNameCompFunc?.(ticketData)}
+          {eventRewardChainContentCompFunc?.(ticketData, onClick)}
+        </Box>
       </Stack>
+      {/*{ticketData?.rewardPolicy?.context?.rewardChain === ChainType.Aptos &&*/}
+      {/*  ticketData?.rewardPolicy?.context?.rewardClaimable &&*/}
+      {/*  ticketData?.rewardPolicy?.context?.rewardUnit === "NFT" && (*/}
+      {/*    <Stack sx={{ background: "", marginTop: -5 }} alignItems={"center"}>*/}
+      {/*      <ClickTypography*/}
+      {/*        variant={"caption"}*/}
+      {/*        onClick={async () => {*/}
+      {/*          // if (ticketData.rewardPolicy?.context?.rewardInfo?.content) {*/}
+      {/*          // setOpenContentsRendererDialog(true);*/}
+      {/*          // setHtmlContent(*/}
+      {/*          //   decodeBase64(*/}
+      {/*          //     ticketData.rewardPolicy?.context?.rewardInfo?.content*/}
+      {/*          //   )*/}
+      {/*          // );*/}
+      {/*          // }*/}
+      {/*        }}*/}
+      {/*        sx={{*/}
+      {/*          fontWeight: "bold",*/}
+      {/*          "&:hover": {*/}
+      {/*            color: "#914e1d",*/}
+      {/*            textDecoration: "underline",*/}
+      {/*          },*/}
+      {/*          color: theme.palette.warning.main,*/}
+      {/*          cursor: "pointer",*/}
+      {/*        }}*/}
+      {/*      >*/}
+      {/*        앱토스 NFT 수령 방법*/}
+      {/*      </ClickTypography>*/}
+      {/*    </Stack>*/}
+      {/*  )}*/}
     </PrimaryCard>
   );
 };
