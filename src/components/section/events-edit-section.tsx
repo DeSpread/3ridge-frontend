@@ -72,6 +72,7 @@ const EventsEditSection = () => {
       filterType: FILTER_TYPE.ALL,
       sort: TicketSortType.Newest,
       fetchPolicy: "no-cache",
+      ticketIsVisibleOnly: false,
     });
   const { asyncCreateTicket, asyncDeleteTicket } = useTicketQuery({});
   const { showLoading, closeLoading } = useLoading();

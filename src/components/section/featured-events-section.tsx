@@ -37,6 +37,7 @@ const FeaturedEventsSection = () => {
     filterType,
     sort: ticketSortType,
     eventTypes: [EventType.Main],
+    ticketIsVisibleOnly: true,
   });
 
   const [width] = useWindowDimensions();
