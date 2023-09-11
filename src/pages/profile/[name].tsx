@@ -69,7 +69,7 @@ import PreferenceHelper from "../../helper/preference-helper";
 import KakaoIcon from "../../components/atomic/atoms/svg/kakao-icon";
 import RouterUtil from "../../util/router-util";
 import DiscordIcon from "../../components/atomic/atoms/svg/discord-icon";
-import { DiscordInputType } from "../../__generated__/graphql";
+import { DiscordInputType, Kakao } from "../../__generated__/graphql";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -97,6 +97,7 @@ const Profile = () => {
     asyncUpdateSocialTwitter,
     asyncUpdateSocialTelegram,
     asyncRemoveSocialTelegram,
+    asyncUpdateKakao,
     asyncDeleteKakao,
     asyncDeleteDiscord,
     asyncUpdateDiscord,
@@ -285,6 +286,74 @@ const Profile = () => {
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
   }, [selectedNetwork]);
+
+  const kakaoLogin = () => {
+    return new Promise((resolve, reject) => {
+      window.Kakao.Auth.login({
+        success: (response: any) => {
+          window.Kakao.Auth.setAccessToken(response.access_token);
+          resolve(true);
+        },
+        fail: (e: any) => {
+          reject(e);
+        },
+      });
+    });
+  };
+
+  const getKakaoUserInfo = () => {
+    return new Promise<Kakao>((resolve, reject) => {
+      window.Kakao.Auth.getStatusInfo(({ status }: { status: string }) => {
+        try {
+          if (status == "connected") {
+            window.Kakao.API.request({
+              url: "/v2/user/me",
+              success: function (res: any) {
+                const kakao: Kakao = {
+                  id: res.id,
+                  connected_at: res.connected_at ?? "",
+                  properties: {
+                    nickname: res.properties.nickname ?? "",
+                    profile_image: res.properties.profile_image ?? "",
+                    thumbnail_image: res.properties.thumbnail_image ?? "",
+                  },
+                  kakao_account: {
+                    profile_nickname_needs_agreement:
+                      res.kakao_account.profile_nickname_needs_agreement ??
+                      undefined,
+                    profile_image_needs_agreement:
+                      res.kakao_account.profile_nickname_needs_agreement ??
+                      undefined,
+                    has_age_range: res.kakao_account.has_age_range ?? undefined,
+                    age_range_needs_agreement:
+                      res.kakao_account.age_range_needs_agreement ?? undefined,
+                    age_range: res.kakao_account.age_range ?? undefined,
+                    has_birthday: res.kakao_account.has_birthday ?? undefined,
+                    birthday_needs_agreement:
+                      res.kakao_account.birthday_needs_agreement ?? undefined,
+                    birthday: res.kakao_account.birthday ?? undefined,
+                    birthday_type: res.kakao_account.birthday_type ?? undefined,
+                    has_gender: res.kakao_account.has_gender ?? undefined,
+                    gender_needs_agreement:
+                      res.kakao_account.gender_needs_agreement ?? undefined,
+                    gender: res.kakao_account.gender ?? undefined,
+                  },
+                };
+                resolve(kakao);
+              },
+              fail: function (error: any) {
+                reject(error);
+              },
+            });
+          } else {
+            reject(new AppError(APP_ERROR_MESSAGE.FAIL_TO_FETCH_KAKAO_INFO));
+          }
+        } catch (e) {
+          reject(e);
+        }
+      });
+    });
+  };
 
   return (
     <>
@@ -640,60 +709,60 @@ const Profile = () => {
                         ></StyledChip>
                       </Grid>
                     )}
-                    {/*{targetUserData?.kakao?.properties?.nickname && (*/}
-                    {/*  <Grid item>*/}
-                    {/*    <StyledChip*/}
-                    {/*      icon={*/}
-                    {/*        <KakaoIcon*/}
-                    {/*          sx={{ color: "black", fontSize: "1.1rem" }}*/}
-                    {/*          color={"inherit"}*/}
-                    {/*          fontSize={"inherit"}*/}
-                    {/*        ></KakaoIcon>*/}
-                    {/*      }*/}
-                    {/*      label={*/}
-                    {/*        <Typography*/}
-                    {/*          sx={{ marginLeft: 1 }}*/}
-                    {/*          variant={"body2"}*/}
-                    {/*          color={"neutral.100"}*/}
-                    {/*        >*/}
-                    {/*          {targetUserData?.kakao?.properties?.nickname}*/}
-                    {/*        </Typography>*/}
-                    {/*      }*/}
-                    {/*    ></StyledChip>*/}
-                    {/*  </Grid>*/}
-                    {/*)}*/}
-                    {/*{!targetUserData?.kakao?.properties?.nickname && (*/}
-                    {/*  <Grid item>*/}
-                    {/*    <StyledChip*/}
-                    {/*      sx={{*/}
-                    {/*        "&:hover": {*/}
-                    {/*          background: (theme: Theme) =>*/}
-                    {/*            theme.palette.action.hover,*/}
-                    {/*        },*/}
-                    {/*      }}*/}
-                    {/*      onClick={(e: MouseEvent) => {*/}
-                    {/*        e.preventDefault();*/}
-                    {/*        setOpenProfileEditDialog(true);*/}
-                    {/*      }}*/}
-                    {/*      icon={*/}
-                    {/*        <KakaoIcon*/}
-                    {/*          sx={{ color: "black", fontSize: "1.1rem" }}*/}
-                    {/*          color={"inherit"}*/}
-                    {/*          fontSize={"inherit"}*/}
-                    {/*        ></KakaoIcon>*/}
-                    {/*      }*/}
-                    {/*      label={*/}
-                    {/*        <Typography*/}
-                    {/*          sx={{ marginLeft: 1 }}*/}
-                    {/*          variant={"body2"}*/}
-                    {/*          color={"neutral.100"}*/}
-                    {/*        >*/}
-                    {/*          카카오톡을 연동해주세요*/}
-                    {/*        </Typography>*/}
-                    {/*      }*/}
-                    {/*    ></StyledChip>*/}
-                    {/*  </Grid>*/}
-                    {/*)}*/}
+                    {targetUserData?.kakao?.properties?.nickname && (
+                      <Grid item>
+                        <StyledChip
+                          icon={
+                            <KakaoIcon
+                              sx={{ color: "black", fontSize: "1.1rem" }}
+                              color={"inherit"}
+                              fontSize={"inherit"}
+                            ></KakaoIcon>
+                          }
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              {targetUserData?.kakao?.properties?.nickname}
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
+                    {!targetUserData?.kakao?.properties?.nickname && (
+                      <Grid item>
+                        <StyledChip
+                          sx={{
+                            "&:hover": {
+                              background: (theme: Theme) =>
+                                theme.palette.action.hover,
+                            },
+                          }}
+                          onClick={(e: MouseEvent) => {
+                            e.preventDefault();
+                            setOpenProfileEditDialog(true);
+                          }}
+                          icon={
+                            <KakaoIcon
+                              sx={{ color: "black", fontSize: "1.1rem" }}
+                              color={"inherit"}
+                              fontSize={"inherit"}
+                            ></KakaoIcon>
+                          }
+                          label={
+                            <Typography
+                              sx={{ marginLeft: 1 }}
+                              variant={"body2"}
+                              color={"neutral.100"}
+                            >
+                              카카오톡을 연동해주세요
+                            </Typography>
+                          }
+                        ></StyledChip>
+                      </Grid>
+                    )}
                     {targetUserData?.discord?.username && (
                       <Grid item>
                         <StyledChip
@@ -998,16 +1067,12 @@ const Profile = () => {
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {
-              const kakaoLogin = () => {
-                window.Kakao.Auth.authorize({
-                  redirectUri: `${window.location.origin}/kakao`,
-                });
-              };
-              PreferenceHelper.updateKakaoRequest("update");
-              kakaoLogin();
+              await kakaoLogin();
+              const kakaoUserInfo = await getKakaoUserInfo();
+              await asyncUpdateKakao(kakaoUserInfo);
             }
           } catch (e) {
-            console.log(e);
+            showErrorAlert({ content: getErrorMessage(e) });
           } finally {
             closeLoading();
           }

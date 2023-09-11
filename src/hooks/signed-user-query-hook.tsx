@@ -36,7 +36,11 @@ import {
   User,
 } from "../types";
 import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
-import { ChainType, DiscordInputType } from "../__generated__/graphql";
+import {
+  ChainType,
+  DiscordInputType,
+  KakaoInputType,
+} from "../__generated__/graphql";
 import TelegramUtil from "../util/telegram-util";
 import { delay } from "../util/timer";
 import PreferenceHelper from "../helper/preference-helper";
@@ -646,18 +650,16 @@ const useSignedUserQuery = () => {
     });
   };
 
-  const asyncUpdateKakao = async (authCode: string, redirectUri: string) => {
+  const asyncUpdateKakao = async (kakaoInfo: KakaoInputType) => {
     if (!userData.name) return;
     const res = await UpdateKakaoByName({
       variables: {
         name: userData?.name,
-        authCode,
-        redirectUri,
+        kakaoInfo,
       },
     });
     const kakao = res.data?.updateKakaoByName?.kakao;
     if (kakao) {
-      console.log(kakao);
       setUserData((prevState: User) => {
         return {
           ...prevState,

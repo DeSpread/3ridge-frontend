@@ -433,16 +433,8 @@ export const UPDATE_USER_TELEGRAM_BY_NAME = gql(/* GraphQL */ `
 `);
 
 export const UPDATE_KAKAO_BY_NAME = gql(/* GraphQL */ `
-  mutation UpdateKakaoByName(
-    $name: String!
-    $authCode: String!
-    $redirectUri: String!
-  ) {
-    updateKakaoByName(
-      authCode: $authCode
-      name: $name
-      redirectUri: $redirectUri
-    ) {
+  mutation UpdateKakaoByName($name: String!, $kakaoInfo: KakaoInputType!) {
+    updateKakaoByName(name: $name, kakaoInfo: $kakaoInfo) {
       kakao {
         id
         connected_at
@@ -451,9 +443,44 @@ export const UPDATE_KAKAO_BY_NAME = gql(/* GraphQL */ `
           profile_image
           thumbnail_image
         }
+        kakao_account {
+          age_range
+          age_range_needs_agreement
+          birthday
+          birthday_needs_agreement
+          birthday_type
+          gender
+          gender_needs_agreement
+          has_age_range
+          has_birthday
+          has_gender
+          profile_image_needs_agreement
+          profile_nickname_needs_agreement
+        }
       }
     }
   }
+  #  mutation UpdateKakaoByName(
+  #    $name: String!
+  #    $authCode: String!
+  #    $redirectUri: String!
+  #  ) {
+  #    updateKakaoByName(
+  #      authCode: $authCode
+  #      name: $name
+  #      redirectUri: $redirectUri
+  #    ) {
+  #      kakao {
+  #        id
+  #        connected_at
+  #        properties {
+  #          nickname
+  #          profile_image
+  #          thumbnail_image
+  #        }
+  #      }
+  #    }
+  #  }
 `);
 
 export const DELETE_KAKAO_BY_NAME = gql(/* GraphQL */ `
@@ -1082,6 +1109,22 @@ export const VERIFY_ONCHAIN_QUEST = gql(/* GraphQL */ `
     $userId: String!
   ) {
     verifyOnChainQuest(
+      questId: $questId
+      ticketId: $ticketId
+      userId: $userId
+    ) {
+      _id
+    }
+  }
+`);
+
+export const VERIFY_TELEGRAM_QUEST = gql(/* GraphQL */ `
+  mutation VerifyTelegramQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+  ) {
+    verifyTelegramQuest(
       questId: $questId
       ticketId: $ticketId
       userId: $userId
