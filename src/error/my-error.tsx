@@ -35,6 +35,8 @@ export const APP_ERROR_MESSAGE = {
   DISCORD_CLIENT_NOT_READY: "discord client is not ready",
   ON_CHAIN_TRANSACTION_NOT_INCLUDE_ANY_TO_ADDRESS:
     "on-chain transaction not include any toAddress",
+  TELEGRAM_USER_NOT_FOUND_IN_TELEGRAM_GROUP:
+    "telegram user not found in telegram group",
 } as const;
 
 export class AppError extends Error {
@@ -75,6 +77,10 @@ export const getLocaleErrorMessage = (e: any) => {
     return "NFT가 없습니다. 😢";
   } else if (message === APP_ERROR_MESSAGE.DISCORD_USER_NOT_FOUND_IN_SERVER) {
     return "디스코드에 참여하지 않았습니다.\r\n 확인 부탁드립니다.";
+  } else if (
+    message === APP_ERROR_MESSAGE.TELEGRAM_USER_NOT_FOUND_IN_TELEGRAM_GROUP
+  ) {
+    return "유저가 텔레그램 그룹에 참여하지 않았습니다.\r\n 확인 부탁드립니다.";
   }
   return message;
 };

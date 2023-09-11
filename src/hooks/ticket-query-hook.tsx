@@ -22,6 +22,7 @@ import {
   VERIFY_TWITTER_LIKING_QUEST,
   VERIFY_TWITTER_RETWEET_QUEST,
   VERIFY_ONCHAIN_QUEST,
+  VERIFY_TELEGRAM_QUEST,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -60,6 +61,7 @@ export function useTicketQuery({
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [verifySurveyQuest] = useMutation(VERIFY_SURVEY_QUEST);
   const [verifyOnChainQuest] = useMutation(VERIFY_ONCHAIN_QUEST);
+  const [verifyTelegramQuest] = useMutation(VERIFY_TELEGRAM_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
   const [verifyAptosQuest] = useMutation(VERIFY_APTOS_QUEST);
   const [claimReward] = useMutation(CLAIM_REWARD);
@@ -281,9 +283,29 @@ export function useTicketQuery({
   const asyncVerifyDiscordQuest = async (ticketId: string, questId: string) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `VerifyDiscordQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `verifyDiscordQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
       );
       await verifyDiscordQuest({
+        variables: {
+          ticketId,
+          questId,
+          userId,
+        },
+      });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
+    }
+  };
+
+  const asyncVerifyTelegramQuest = async (
+    ticketId: string,
+    questId: string
+  ) => {
+    if (ticketId && questId && userId) {
+      Console.log(
+        `verifyTelegramQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
+      await verifyTelegramQuest({
         variables: {
           ticketId,
           questId,
@@ -615,5 +637,6 @@ export function useTicketQuery({
     asyncVerifySurveyQuest,
     asyncVerifyDiscordQuest,
     asyncVerifyOnChainQuest,
+    asyncVerifyTelegramQuest,
   };
 }
