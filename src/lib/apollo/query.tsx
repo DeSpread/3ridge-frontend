@@ -566,6 +566,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
       winners {
         name
       }
+      visible
     }
   }
 `);
@@ -636,6 +637,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
           naverBlogUrl
         }
       }
+      visible
     }
   }
 `);
@@ -746,6 +748,7 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
       winners {
         name
       }
+      visible
     }
   }
 `);

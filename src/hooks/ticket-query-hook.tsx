@@ -23,6 +23,7 @@ import {
   VERIFY_TWITTER_RETWEET_QUEST,
   VERIFY_ONCHAIN_QUEST,
   VERIFY_TELEGRAM_QUEST,
+  UPDATE_TICKET_VISIBLE,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -73,6 +74,7 @@ export function useTicketQuery({
   const [updateTicketProject] = useMutation(UPDATE_TICKET_PROJECT);
   const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
   const [updateTicketRewardPolicy] = useMutation(UPDATE_TICKET_REWARD_POLICY);
+  const [updateTicketVisibleById] = useMutation(UPDATE_TICKET_VISIBLE);
   const [createTicket] = useMutation(CREATE_TICKET);
   const [deleteTicket] = useMutation(DELETE_TICKET);
 
@@ -114,6 +116,7 @@ export function useTicketQuery({
       imageUrl,
       rewardClaimedUsers,
       project,
+      visible,
     } = data.ticketById;
     // console.log("rewardPolicy", rewardPolicy);
     const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
@@ -186,6 +189,7 @@ export function useTicketQuery({
               }
             : undefined,
         },
+        visible,
       };
     });
   };
@@ -525,6 +529,17 @@ export function useTicketQuery({
     }
   };
 
+  const asyncUpdateTicketVisibleById = async (visible: boolean) => {
+    if (id) {
+      await updateTicketVisibleById({
+        variables: {
+          ticketId: id,
+          visible,
+        },
+      });
+    }
+  };
+
   const asyncCreateTicket = async () => {
     await createTicket({
       variables: {
@@ -638,5 +653,6 @@ export function useTicketQuery({
     asyncVerifyDiscordQuest,
     asyncVerifyOnChainQuest,
     asyncVerifyTelegramQuest,
+    asyncUpdateTicketVisibleById,
   };
 }

@@ -124,6 +124,7 @@ const Event = () => {
     asyncUpdateTicketRewardPolicy,
     asyncDownloadCompletedUserFile,
     asyncDownloadQuestDataFile,
+    asyncUpdateTicketVisibleById,
   } = useTicketQuery({
     userId: userData._id,
     id: ticketId,
@@ -547,6 +548,12 @@ const Event = () => {
                 } finally {
                   closeLoading();
                 }
+              }}
+              onVisibilityChanged={async (visible) => {
+                showLoading();
+                await asyncUpdateTicketVisibleById(visible);
+                await asyncRefreshAll();
+                closeLoading();
               }}
             ></TicketEditControllerWidget>
           </div>

@@ -159,6 +159,7 @@ export function useTicketsQuery(props: {
         rewardPolicyType: RewardPolicyType;
       } | null;
       winners?: Array<{ __typename?: "User"; name?: string | null }> | null;
+      visible?: boolean | null;
     }>
   ) => {
     setTicketsData((prevState) => {
@@ -224,6 +225,7 @@ export function useTicketsQuery(props: {
               naverBlogUrl: e.project?.projectSocial?.naverBlogUrl ?? "",
             },
           },
+          visible: e.visible,
         };
       });
     });

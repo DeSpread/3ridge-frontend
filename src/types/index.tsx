@@ -204,6 +204,7 @@ export type Ticket = {
   }[];
   project?: PartialProject;
   rewardClaimedUserIds?: string[];
+  visible?: boolean | null;
 };
 
 export type PartialProject = Partial<Project>;
