@@ -12,16 +12,15 @@ const EventRewardName = (
       {ticketData?.rewardPolicy?.context?.rewardName && (
         <Stack
           direction={"column"}
-          alignItems={"start"}
+          alignItems={"center"}
           gap={1}
           justifyContent={"space-between"}
-          sx={{ paddingTop: 1 }}
         >
           <Typography variant={"body1"}>리워드</Typography>
-          <Stack direction={"column"} alignItems={"flex-start"}>
+          <Stack>
             {ComponentHelper.renderMultiLineContentText(
               ticketData?.rewardPolicy?.context?.rewardName ?? "",
-              { variant: "body1", textAlign: "right" }
+              { variant: "body1", textAlign: "center" }
             )}
           </Stack>
         </Stack>
