@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 8000",
-    "build": "next build && next export",
+    "build": "npx tailwindcss -o build.css --minify && next build && next export",
     "start": "next start -p 8001",
     "lint": "next lint",
     "compile": "graphql-codegen",
