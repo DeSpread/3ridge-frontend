@@ -23,7 +23,7 @@ export default function Document() {
         <meta name="twitter:title" content="3ridge : Web3 온보딩 플랫폼" />
         <meta
           name="twitter:description"
-          content="여러분의 웹3를 위한 여정, 웹3 온보딩 플랫폼 3ridge에 시작하세요"
+          content="여러분의 웹3를 위한 여정!, 웹3 온보딩 플랫폼 3ridge에 시작하세요"
         />
         <meta name="twitter:site" content="@3ridge_io" />
         <meta name="twitter:creator" content="@3ridge_io" />
