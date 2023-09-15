@@ -14,6 +14,7 @@ import React, {
   CSSProperties,
   MouseEventHandler,
   PropsWithChildren,
+  useRef,
   useState,
 } from "react";
 import { MouseEventWithParam, Ticket, TicketEventParam } from "../../types";
@@ -23,6 +24,7 @@ import PrimaryButton from "../atomic/atoms/primary-button";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import Image from "next/image";
+import { useDetectRef } from "../../hooks/util/use-detect-ref";
 
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
@@ -30,6 +32,7 @@ type TicketSectionProps = PropsWithChildren & {
   onTicketClick?: MouseEventHandler;
   onTabClick?: (newValue: number) => void;
   onTab2Click?: (newValue: number) => void;
+  onListEnd?: () => void;
   sx?: CSSProperties;
 };
 
@@ -178,10 +181,22 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
   );
 };
 
-const TicketsSection = (props: TicketSectionProps) => {
-  const { tickets, loading, onTicketClick, onTabClick, onTab2Click } = props;
+const TicketsSection = ({
+  tickets,
+  loading,
+  onTicketClick,
+  onTabClick,
+  onTab2Click,
+  onListEnd,
+  ...props
+}: TicketSectionProps) => {
+  const lastTicketRef = useRef(null);
+
+  useDetectRef(() => {
+    onListEnd?.();
+  }, lastTicketRef);
+
   const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   const onTicketCardClick = (ticket: Ticket) => {
@@ -240,6 +255,7 @@ const TicketsSection = (props: TicketSectionProps) => {
               return (
                 <Grid key={index} item xs={30} sm={15} md={10} lg={6}>
                   <TicketCard
+                    ref={index === tickets.length - 1 ? lastTicketRef : null}
                     ticket={ticket}
                     onClick={(e) => {
                       onTicketCardClick(ticket);

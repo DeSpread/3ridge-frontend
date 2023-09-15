@@ -18,20 +18,10 @@ const Explore = (props: AppProps) => {
       <Head>
         <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
-      <Box
-        style={{
-          flex: 1,
-          paddingLeft: "32px",
-          paddingRight: "32px",
-          paddingBottom: smUp ? "32px" : "48px",
-          paddingTop: smUp ? "32px" : "48px",
-          backgroundColor: "",
-        }}
-      >
-        <FeaturedEventsSection></FeaturedEventsSection>
-        <Box sx={{ marginTop: 4 }}></Box>
-        <AllEventsSection></AllEventsSection>
-      </Box>
+      <div className="px-8 py-12 sm:py-8 flex flex-col gap-8">
+        <FeaturedEventsSection />
+        <AllEventsSection />
+      </div>
     </>
   );
 };
