@@ -1,23 +1,26 @@
 import { useState, useCallback, useEffect, RefObject } from "react";
 
-const observeOptions = {
+const defaultOptions = {
   root: null,
   threshold: 0.5,
 };
 
 export const useDetectRef = <Element extends HTMLElement>(
   callback: () => void,
-  ref: RefObject<Element>
+  ref: RefObject<Element>,
+  options: IntersectionObserverInit = {}
 ) => {
   const observe = useCallback(
     (node: Element) => {
+      const _options = { ...defaultOptions, ...options };
+
       const observer = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           callback();
           // after callback is called, disconnect observer
           observer.disconnect();
         }
-      }, observeOptions);
+      }, _options);
 
       if (node) observer.observe(node);
 
@@ -25,7 +28,7 @@ export const useDetectRef = <Element extends HTMLElement>(
         if (node) observer.unobserve(node);
       };
     },
-    [callback]
+    [callback, options]
   );
 
   useEffect(() => {
