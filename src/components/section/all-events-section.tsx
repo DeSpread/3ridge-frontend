@@ -11,7 +11,7 @@ import { TicketSortType } from "../../__generated__/graphql";
 import { Stack, Typography } from "@mui/material";
 import TicketsSection from "./tickets-section";
 
-import { useAllTicketsPaginateQuery } from "../../hooks/query/use-all-tickets/use-all-tickets-paginate";
+import { useAllTicketsQuery } from "../../hooks/query/use-all-tickets";
 
 const AllEventsSection = () => {
   const router = useRouter();
@@ -25,14 +25,14 @@ const AllEventsSection = () => {
   const {
     data: ticketsData,
     loading: ticketsDataLoading,
-    paginate,
-  } = useAllTicketsPaginateQuery({
+    fetchMoreTickets,
+  } = useAllTicketsQuery({
     filterType,
     sort: ticketSortType,
   });
 
   const handleListEnd = () => {
-    paginate();
+    fetchMoreTickets();
   };
 
   return (
