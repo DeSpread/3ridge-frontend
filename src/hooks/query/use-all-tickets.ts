@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { FilterType, FILTER_TYPE } from "../../../types";
+import TypeHelper from "../../helper/type-helper";
+import { GET_All_TICKETS } from "../../lib/apollo/query";
+import { FilterType, FILTER_TYPE } from "../../types";
 import {
-  EventType,
   TicketSortType,
+  EventType,
   TicketStatusType,
-} from "../../../__generated__/graphql";
-import { convertTicketData } from "./helper";
-import { GET_All_TICKETS } from "./query";
+} from "../../__generated__/graphql";
 
 export interface AllTicketsQueryProps {
   // FIXME: filterType should be TicketStatusType
@@ -51,8 +51,27 @@ export const useAllTicketsQuery = ({
 
   // convert data type
   const ticketsData = cachedData?.tickets.map((ticket) => {
-    return convertTicketData(ticket);
+    return TypeHelper.convertTicket(ticket);
   });
 
-  return { data: ticketsData, loading, fetchMore };
+  const fetchMoreTickets = (size = 5) => {
+    if (loading || !ticketsData || !ticketsData.length) return;
+
+    fetchMore({
+      variables: {
+        filterType,
+        sort,
+        skip: ticketsData.length,
+        limit: ticketsData.length + size,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        return {
+          tickets: [...prev.tickets, ...fetchMoreResult.tickets],
+        };
+      },
+    });
+  };
+
+  return { data: ticketsData, loading, fetchMore, fetchMoreTickets };
 };
