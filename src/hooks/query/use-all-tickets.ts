@@ -32,7 +32,7 @@ export const useAllTicketsQuery = ({
   filterType,
   sort,
   eventTypes,
-  limit = 30,
+  limit = 10,
   skip = 0,
 }: AllTicketsQueryProps) => {
   const { data, loading, fetchMore, previousData } = useQuery(GET_All_TICKETS, {
