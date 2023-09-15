@@ -67,6 +67,8 @@ const TicketQuestUpsertEditDialog = (
         return "트위터 리트윗하기";
       case QuestPolicyType.VerifyTwitterLiking:
         return "트위터 좋아요하기";
+      case QuestPolicyType.VerifyTwitterLinkingRetweet:
+        return "트위터 좋아요 & 리트윗하기";
       case QuestPolicyType.Verify_3RidgePoint:
         return "3ridge 포인트 보유하기";
       case QuestPolicyType.VerifyDiscord:
@@ -134,6 +136,11 @@ const TicketQuestUpsertEditDialog = (
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyTwitterRetweet}>
                     {getPolicyLabel(QuestPolicyType.VerifyTwitterRetweet)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyTwitterLinkingRetweet}>
+                    {getPolicyLabel(
+                      QuestPolicyType.VerifyTwitterLinkingRetweet
+                    )}
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyTelegram}>
                     {getPolicyLabel(QuestPolicyType.VerifyTelegram)}
@@ -211,6 +218,13 @@ const TicketQuestUpsertEditDialog = (
               editedQuest={editedQuest}
               onChange={onChange}
               questPolicy={QuestPolicyType.VerifyTwitterLiking}
+            ></VerifyTwitterRetweetOrLinkingEditForm>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyTwitterLinkingRetweet && (
+            <VerifyTwitterRetweetOrLinkingEditForm
+              editedQuest={editedQuest}
+              onChange={onChange}
+              questPolicy={QuestPolicyType.VerifyTwitterLinkingRetweet}
             ></VerifyTwitterRetweetOrLinkingEditForm>
           )}
           {questPolicyType === QuestPolicyType.Verify_3RidgePoint && (
