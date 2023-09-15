@@ -15,11 +15,11 @@ import {
 } from "../__generated__/graphql";
 import { FetchPolicy } from "@apollo/client/core/watchQueryOptions";
 
-const ticketIsVisibleOnly =
-  (process.env["NEXT_PUBLIC_TICKET_VISIBLE"] ?? "false").toLowerCase() ===
-  "true"
-    ? true
-    : false;
+// const ticketIsVisibleOnly =
+//   (process.env["NEXT_PUBLIC_TICKET_VISIBLE"] ?? "false").toLowerCase() ===
+//   "true"
+//     ? true
+//     : false;
 
 export function useTicketsQuery(props: {
   projectId?: string;
@@ -27,10 +27,11 @@ export function useTicketsQuery(props: {
   sort?: TicketSortType;
   eventTypes?: EventType[];
   fetchPolicy?: FetchPolicy;
+  ticketIsVisibleOnly?: boolean;
 }) {
   const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
   const [ticketsDataLoading, setTicketsDataLoading] = useState(true);
-  const { fetchPolicy } = props;
+  const { fetchPolicy, ticketIsVisibleOnly } = props;
 
   useEffect(() => {
     (async () => {
@@ -158,6 +159,7 @@ export function useTicketsQuery(props: {
         rewardPolicyType: RewardPolicyType;
       } | null;
       winners?: Array<{ __typename?: "User"; name?: string | null }> | null;
+      visible?: boolean | null;
     }>
   ) => {
     setTicketsData((prevState) => {
@@ -223,6 +225,7 @@ export function useTicketsQuery(props: {
               naverBlogUrl: e.project?.projectSocial?.naverBlogUrl ?? "",
             },
           },
+          visible: e.visible,
         };
       });
     });

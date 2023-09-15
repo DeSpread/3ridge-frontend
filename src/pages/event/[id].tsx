@@ -28,6 +28,7 @@ import {
   VerifySurveyQuestContext,
   VerifyTelegramQuestContext,
   VerifyTwitterFollowQuestContext,
+  VerifyTwitterLikingAndRetweetQuestContext,
   VerifyTwitterLikingQuestContext,
   VerifyTwitterRetweetQuestContext,
   VerifyVisitWebsiteQuestContext,
@@ -93,6 +94,7 @@ const Event = (props: AppProps) => {
     asyncVerifySurveyQuest,
     asyncVerifyOnChainQuest,
     asyncVerifyTelegramQuest,
+    asyncVerifyTwitterLinkingAndRetweetQuest,
   } = useTicketQuery({
     userId: userData._id,
     id: RouterUtil.getStringQuery(router, "id"),
@@ -650,6 +652,27 @@ const Event = (props: AppProps) => {
         closeLoading();
         showErrorAlert({ content: getErrorMessage(e) });
       }
+    } else if (
+      quest.questPolicy?.questPolicy ===
+      QuestPolicyType.VerifyTwitterLinkingRetweet
+    ) {
+      try {
+        const verifyTwitterLinkingRetweetContext = quest.questPolicy
+          ?.context as VerifyTwitterLikingAndRetweetQuestContext;
+        window.open(
+          `https://twitter.com/intent/retweet?tweet_id=${verifyTwitterLinkingRetweetContext.tweetId}`,
+          "twitter-retweet",
+          "left=100, top=100, width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+        );
+        window.open(
+          `https://twitter.com/intent/like?tweet_id=${verifyTwitterLinkingRetweetContext.tweetId}`,
+          "twitter-like",
+          "left=200, top=200, width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+        );
+      } catch (e) {
+        closeLoading();
+        showErrorAlert({ content: getErrorMessage(e) });
+      }
     } else if (quest.questPolicy?.questPolicy === QuestPolicyType.Quiz) {
       const quizQuestContext = quest.questPolicy
         ?.context as VerifyQuizQuestContext;
@@ -774,6 +797,18 @@ const Event = (props: AppProps) => {
       ) {
         if (!showTwitterConnectAlert()) {
           await asyncVerifyTwitterLikingQuest(ticketData._id, quest._id ?? "");
+          updateVerifyState(index);
+        }
+        myEvent.params.callback("success");
+      } else if (
+        quest.questPolicy?.questPolicy ===
+        QuestPolicyType.VerifyTwitterLinkingRetweet
+      ) {
+        if (!showTwitterConnectAlert()) {
+          await asyncVerifyTwitterLinkingAndRetweetQuest(
+            ticketData._id,
+            quest._id ?? ""
+          );
           updateVerifyState(index);
         }
         myEvent.params.callback("success");

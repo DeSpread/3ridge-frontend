@@ -25,7 +25,7 @@ const EventRewardChainContent = (
             }
             htmlComponentFunc={(content) => {
               return (
-                <Stack sx={{ background: "", alignItems: "center" }}>
+                <Stack sx={{ alignItems: "center" }}>
                   <div
                     dangerouslySetInnerHTML={{
                       __html: content ?? "<></>",
@@ -35,10 +35,7 @@ const EventRewardChainContent = (
                     ChainType.Aptos &&
                     ticketData?.rewardPolicy?.context?.rewardClaimable &&
                     ticketData?.rewardPolicy?.context?.rewardUnit === "NFT" && (
-                      <Stack
-                        sx={{ background: "", marginTop: 1 }}
-                        alignItems={"center"}
-                      >
+                      <Stack sx={{ marginTop: 1 }} alignItems={"center"}>
                         <ClickTypography
                           variant={"caption"}
                           onClick={onClick}

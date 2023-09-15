@@ -6,19 +6,26 @@ import LinkToPageForm from "../form/ticket-edit-controller/link-to-page-form";
 import { Ticket, TicketUserQuery } from "../../types";
 import ProjectUpdateForm from "../form/ticket-edit-controller/project-update-form";
 import { Project } from "../../__generated__/graphql";
+import EventVisibilityForm from "../form/ticket-edit-controller/event-visibility-form";
 
 const TicketEditControllerWidget = (
   props: PropsWithChildren & {
     targetTicket?: Ticket;
     projects?: Project[];
     onProjectChanged?: (projectId: string) => void;
+    onVisibilityChanged?: (visible: boolean) => void;
     onDownloadButtonClick?: (res: TicketUserQuery) => void;
   }
 ) => {
   const theme = useTheme();
 
-  const { targetTicket, onDownloadButtonClick, projects, onProjectChanged } =
-    props;
+  const {
+    targetTicket,
+    onDownloadButtonClick,
+    projects,
+    onProjectChanged,
+    onVisibilityChanged,
+  } = props;
 
   return (
     <Card
@@ -37,12 +44,18 @@ const TicketEditControllerWidget = (
           <UserInfoDownloadForm
             title={"완료 유저 정보 다운로드"}
             onDownloadButtonClick={onDownloadButtonClick}
-          ></UserInfoDownloadForm>
+          />
           <ProjectUpdateForm
             targetTicket={targetTicket}
             projects={projects}
             onChange={onProjectChanged}
-          ></ProjectUpdateForm>
+          />
+          <EventVisibilityForm
+            targetTicket={targetTicket}
+            onChange={(checked) => {
+              onVisibilityChanged?.(!checked);
+            }}
+          />
         </Stack>
       </CardContent>
     </Card>

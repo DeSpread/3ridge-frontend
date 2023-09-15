@@ -852,7 +852,8 @@ const VerifyTwitterRetweetOrLinkingEditForm = (props: {
   onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
   questPolicy:
     | QuestPolicyType.VerifyTwitterRetweet
-    | QuestPolicyType.VerifyTwitterLiking;
+    | QuestPolicyType.VerifyTwitterLiking
+    | QuestPolicyType.VerifyTwitterLinkingRetweet;
 }) => {
   const [username, setUsername] = useState<string>();
   const [tweetId, setTweetId] = useState<string>();
@@ -866,7 +867,9 @@ const VerifyTwitterRetweetOrLinkingEditForm = (props: {
         editedQuest.questPolicy?.questPolicy ===
           QuestPolicyType.VerifyTwitterRetweet ||
         editedQuest.questPolicy?.questPolicy ===
-          QuestPolicyType.VerifyTwitterLiking
+          QuestPolicyType.VerifyTwitterLiking ||
+        editedQuest.questPolicy?.questPolicy ===
+          QuestPolicyType.VerifyTwitterLinkingRetweet
       ) {
         const context = editedQuest.questPolicy
           ?.context as VerifyTwitterRetweetQuestContext;

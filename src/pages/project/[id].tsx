@@ -50,6 +50,7 @@ const Project = () => {
         : undefined
       : undefined,
     sort: router.isReady ? ticketSortType : undefined,
+    ticketIsVisibleOnly: true,
   });
   const { projectData, projectDataLoading } = useProjectQuery({
     projectId: router.isReady

@@ -204,6 +204,7 @@ export type Ticket = {
   }[];
   project?: PartialProject;
   rewardClaimedUserIds?: string[];
+  visible?: boolean | null;
 };
 
 export type PartialProject = Partial<Project>;
@@ -223,6 +224,7 @@ export type Quest = {
       | VerifyTwitterLikingQuestContext
       | VerifyTwitterRetweetQuestContext
       | VerifyTwitterFollowQuestContext
+      | VerifyTwitterLikingAndRetweetQuestContext
       | VerifyDiscordQuestContext
       | VerifyTelegramQuestContext
       | Verify3ridgePointQuestContext
@@ -240,6 +242,12 @@ export type Quest = {
 };
 
 export type VerifyTwitterLikingQuestContext = {
+  tweetId: string;
+  twitterUrl: string;
+  username: string;
+};
+
+export type VerifyTwitterLikingAndRetweetQuestContext = {
   tweetId: string;
   twitterUrl: string;
   username: string;

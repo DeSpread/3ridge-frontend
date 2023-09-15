@@ -23,6 +23,8 @@ import {
   VERIFY_TWITTER_RETWEET_QUEST,
   VERIFY_ONCHAIN_QUEST,
   VERIFY_TELEGRAM_QUEST,
+  UPDATE_TICKET_VISIBLE,
+  VERIFY_TWITTER_LIKING_RTWEET_QUEST,
 } from "../lib/apollo/query";
 import { client } from "../lib/apollo/client";
 import { useEffect, useState } from "react";
@@ -57,6 +59,9 @@ export function useTicketQuery({
   const [verifyTwitterLikingQuest] = useMutation(VERIFY_TWITTER_LIKING_QUEST);
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
+  const [verifyTwitterLinkingAndRetweetQuest] = useMutation(
+    VERIFY_TWITTER_LIKING_RTWEET_QUEST
+  );
   const [verifyDiscordQuest] = useMutation(VERIFY_DISCORD_QUEST);
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [verifySurveyQuest] = useMutation(VERIFY_SURVEY_QUEST);
@@ -73,6 +78,7 @@ export function useTicketQuery({
   const [updateTicketProject] = useMutation(UPDATE_TICKET_PROJECT);
   const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
   const [updateTicketRewardPolicy] = useMutation(UPDATE_TICKET_REWARD_POLICY);
+  const [updateTicketVisibleById] = useMutation(UPDATE_TICKET_VISIBLE);
   const [createTicket] = useMutation(CREATE_TICKET);
   const [deleteTicket] = useMutation(DELETE_TICKET);
 
@@ -114,6 +120,7 @@ export function useTicketQuery({
       imageUrl,
       rewardClaimedUsers,
       project,
+      visible,
     } = data.ticketById;
     // console.log("rewardPolicy", rewardPolicy);
     const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
@@ -186,6 +193,7 @@ export function useTicketQuery({
               }
             : undefined,
         },
+        visible,
       };
     });
   };
@@ -198,7 +206,7 @@ export function useTicketQuery({
       Console.log(
         `verifyTwitterFollowQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
       );
-      const res = await verifyTwitterFollowQuest({
+      await verifyTwitterFollowQuest({
         variables: {
           ticketId,
           questId,
@@ -235,6 +243,26 @@ export function useTicketQuery({
         `VerifyTwitterRetweetQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
       );
       const res = await verifyTwitterRetweetQuest({
+        variables: {
+          ticketId,
+          questId,
+          userId,
+        },
+      });
+    } else {
+      throw new AppError(APP_ERROR_MESSAGE.PARAMETER_ERROR);
+    }
+  };
+
+  const asyncVerifyTwitterLinkingAndRetweetQuest = async (
+    ticketId: string,
+    questId: string
+  ) => {
+    if (ticketId && questId && userId) {
+      Console.log(
+        `asyncVerifyTwitterLinkingAndRetweetQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+      );
+      await verifyTwitterLinkingAndRetweetQuest({
         variables: {
           ticketId,
           questId,
@@ -355,9 +383,7 @@ export function useTicketQuery({
     questId: string,
     answers?: string[]
   ) => {
-    console.log("aaa", id, questId, answers, userId);
     if (id && questId && answers && userId) {
-      console.log("bbb", id, questId, answers, userId);
       await verifySurveyQuest({
         variables: {
           questId,
@@ -525,6 +551,17 @@ export function useTicketQuery({
     }
   };
 
+  const asyncUpdateTicketVisibleById = async (visible: boolean) => {
+    if (id) {
+      await updateTicketVisibleById({
+        variables: {
+          ticketId: id,
+          visible,
+        },
+      });
+    }
+  };
+
   const asyncCreateTicket = async () => {
     await createTicket({
       variables: {
@@ -638,5 +675,7 @@ export function useTicketQuery({
     asyncVerifyDiscordQuest,
     asyncVerifyOnChainQuest,
     asyncVerifyTelegramQuest,
+    asyncUpdateTicketVisibleById,
+    asyncVerifyTwitterLinkingAndRetweetQuest,
   };
 }

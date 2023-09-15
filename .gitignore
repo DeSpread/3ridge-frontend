@@ -52,3 +52,6 @@ next.config.original.js
 # Sentry
 next.config.original.js
 .idea/jsLinters/eslint.xml
+
+# VSCode
+.vscode/*

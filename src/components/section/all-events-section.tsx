@@ -25,6 +25,7 @@ const AllEventsSection = () => {
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType,
     sort: ticketSortType,
+    ticketIsVisibleOnly: true,
   });
 
   return (

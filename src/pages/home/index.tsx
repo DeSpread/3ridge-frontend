@@ -32,6 +32,7 @@ const Home = () => {
     filterType: FILTER_TYPE.ALL,
     sort: TicketSortType.Newest,
     eventTypes: [EventType.Recommended],
+    ticketIsVisibleOnly: true,
   });
   const { projectsData, projectsDataLoading } = useProjectsQuery({
     eventTypes: [EventType.Recommended],
