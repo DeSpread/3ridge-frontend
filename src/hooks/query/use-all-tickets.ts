@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { FilterType, FILTER_TYPE } from "../../../types";
+import TypeHelper from "../../helper/type-helper";
+import { GET_All_TICKETS } from "../../lib/apollo/query";
+import { FilterType, FILTER_TYPE } from "../../types";
 import {
-  EventType,
   TicketSortType,
+  EventType,
   TicketStatusType,
-} from "../../../__generated__/graphql";
-import { convertTicketData } from "./helper";
-import { GET_All_TICKETS } from "./query";
+} from "../../__generated__/graphql";
 
 export interface AllTicketsQueryProps {
   // FIXME: filterType should be TicketStatusType
@@ -32,10 +32,15 @@ export const useAllTicketsQuery = ({
   filterType,
   sort,
   eventTypes,
-  limit = 30,
+  limit = 15,
   skip = 0,
 }: AllTicketsQueryProps) => {
-  const { data, loading, fetchMore, previousData } = useQuery(GET_All_TICKETS, {
+  const {
+    data: _data,
+    loading,
+    fetchMore,
+    previousData,
+  } = useQuery(GET_All_TICKETS, {
     variables: {
       sort,
       status: FILTER_TYPE_TO_STATUS[filterType],
@@ -47,12 +52,31 @@ export const useAllTicketsQuery = ({
   });
 
   // TODO: after refactor component tree, remove this
-  const cachedData = data ?? previousData;
+  const data = _data ?? previousData;
 
   // convert data type
-  const ticketsData = cachedData?.tickets.map((ticket) => {
-    return convertTicketData(ticket);
+  const ticketsData = data?.tickets.map((ticket) => {
+    return TypeHelper.convertTicket(ticket);
   });
 
-  return { data: ticketsData, loading, fetchMore };
+  const fetchMoreTickets = (size = 15) => {
+    if (loading || !ticketsData || !ticketsData.length) return;
+
+    return fetchMore({
+      variables: {
+        filterType,
+        sort,
+        skip: ticketsData.length,
+        limit: ticketsData.length + size,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        return {
+          tickets: [...prev.tickets, ...fetchMoreResult.tickets],
+        };
+      },
+    });
+  };
+
+  return { data: ticketsData, loading, fetchMore, fetchMoreTickets };
 };

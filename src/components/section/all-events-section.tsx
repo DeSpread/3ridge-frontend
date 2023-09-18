@@ -11,12 +11,13 @@ import { TicketSortType } from "../../__generated__/graphql";
 import { Stack, Typography } from "@mui/material";
 import TicketsSection from "./tickets-section";
 
-import { useAllTicketsPaginateQuery } from "../../hooks/query/use-all-tickets/use-all-tickets-paginate";
+import { useAllTicketsQuery } from "../../hooks/query/use-all-tickets";
 
 const AllEventsSection = () => {
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
 
+  const [isLastTicketData, setIsLastTicketData] = useState<boolean>(false);
   const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
   const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
     TicketSortType.Trending
@@ -25,14 +26,18 @@ const AllEventsSection = () => {
   const {
     data: ticketsData,
     loading: ticketsDataLoading,
-    paginate,
-  } = useAllTicketsPaginateQuery({
+    fetchMoreTickets,
+  } = useAllTicketsQuery({
     filterType,
     sort: ticketSortType,
   });
 
-  const handleListEnd = () => {
-    paginate();
+  const handleListEnd = async () => {
+    const result = await fetchMoreTickets();
+
+    if (result?.data?.tickets.length === 0) {
+      setIsLastTicketData(true);
+    }
   };
 
   return (
@@ -49,6 +54,7 @@ const AllEventsSection = () => {
         <TicketsSection
           tickets={ticketsData}
           loading={ticketsDataLoading}
+          isLastTicketData={isLastTicketData}
           onTicketClick={async (e) => {
             showLoading();
             const myEvent = e as MouseEventWithParam<TicketEventParam>;
