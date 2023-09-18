@@ -17,6 +17,7 @@ const AllEventsSection = () => {
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
 
+  const [isLastTicketData, setIsLastTicketData] = useState<boolean>(false);
   const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
   const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
     TicketSortType.Trending
@@ -31,8 +32,12 @@ const AllEventsSection = () => {
     sort: ticketSortType,
   });
 
-  const handleListEnd = () => {
-    fetchMoreTickets();
+  const handleListEnd = async () => {
+    const result = await fetchMoreTickets();
+
+    if (result?.data?.tickets.length === 0) {
+      setIsLastTicketData(true);
+    }
   };
 
   return (
@@ -49,6 +54,7 @@ const AllEventsSection = () => {
         <TicketsSection
           tickets={ticketsData}
           loading={ticketsDataLoading}
+          isLastTicketData={isLastTicketData}
           onTicketClick={async (e) => {
             showLoading();
             const myEvent = e as MouseEventWithParam<TicketEventParam>;
