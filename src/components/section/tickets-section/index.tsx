@@ -86,7 +86,9 @@ const TicketsSection = ({ ...props }: TicketSectionProps) => {
     const result = await fetchMoreTickets();
     const isMoreTickets =
       !!result?.data?.tickets && result.data.tickets.length !== 0;
-    setIsLoadMore(isMoreTickets);
+    setTimeout(() => {
+      setIsLoadMore(isMoreTickets);
+    }, 700);
   };
 
   useDetectRef(handleListEnd, loadMoreRef);
