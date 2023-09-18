@@ -32,7 +32,7 @@ export const useAllTicketsQuery = ({
   filterType,
   sort,
   eventTypes,
-  limit = 10,
+  limit = 15,
   skip = 0,
 }: AllTicketsQueryProps) => {
   const {
@@ -59,7 +59,7 @@ export const useAllTicketsQuery = ({
     return TypeHelper.convertTicket(ticket);
   });
 
-  const fetchMoreTickets = (size = 5) => {
+  const fetchMoreTickets = (size = 15) => {
     if (loading || !ticketsData || !ticketsData.length) return;
 
     return fetchMore({
