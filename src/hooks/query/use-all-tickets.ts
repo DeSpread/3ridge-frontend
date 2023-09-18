@@ -57,7 +57,7 @@ export const useAllTicketsQuery = ({
   const fetchMoreTickets = (size = 5) => {
     if (loading || !ticketsData || !ticketsData.length) return;
 
-    fetchMore({
+    return fetchMore({
       variables: {
         filterType,
         sort,
