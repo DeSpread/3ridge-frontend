@@ -21,12 +21,12 @@ import {
 } from "./components";
 import { useDetectRef } from "../../../hooks/util/use-detect-ref";
 
-type TicketSectionProps = PropsWithChildren & {
+interface TicketSectionProps {
   tickets?: Ticket[];
   loading?: boolean;
   onListEnd?: () => void;
   sx?: CSSProperties;
-};
+}
 
 const TicketsSection = ({ ...props }: TicketSectionProps) => {
   const { push } = useRouter();
