@@ -6,12 +6,10 @@ import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AllEventsSection from "../../components/section/all-events-section";
 import FeaturedEventsSection from "../../components/section/featured-events-section";
+import { AllEvents } from "../../components/section/all-events";
 
 const Explore = (props: AppProps) => {
   const theme = useTheme();
-  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
-  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <>
@@ -20,7 +18,7 @@ const Explore = (props: AppProps) => {
       </Head>
       <div className="px-8 py-12 sm:py-8 flex flex-col gap-8">
         <FeaturedEventsSection />
-        <AllEventsSection />
+        <AllEvents />
       </div>
     </>
   );
