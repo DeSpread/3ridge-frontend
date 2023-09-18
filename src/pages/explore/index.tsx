@@ -9,8 +9,6 @@ import FeaturedEventsSection from "../../components/section/featured-events-sect
 import { AllEvents } from "../../components/section/all-events";
 
 const Explore = (props: AppProps) => {
-  const theme = useTheme();
-
   return (
     <>
       <Head>
