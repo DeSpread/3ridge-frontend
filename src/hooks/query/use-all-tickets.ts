@@ -35,7 +35,12 @@ export const useAllTicketsQuery = ({
   limit = 10,
   skip = 0,
 }: AllTicketsQueryProps) => {
-  const { data, loading, fetchMore, previousData } = useQuery(GET_All_TICKETS, {
+  const {
+    data: _data,
+    loading,
+    fetchMore,
+    previousData,
+  } = useQuery(GET_All_TICKETS, {
     variables: {
       sort,
       status: FILTER_TYPE_TO_STATUS[filterType],
@@ -47,10 +52,10 @@ export const useAllTicketsQuery = ({
   });
 
   // TODO: after refactor component tree, remove this
-  const cachedData = data ?? previousData;
+  const data = _data ?? previousData;
 
   // convert data type
-  const ticketsData = cachedData?.tickets.map((ticket) => {
+  const ticketsData = data?.tickets.map((ticket) => {
     return TypeHelper.convertTicket(ticket);
   });
 
