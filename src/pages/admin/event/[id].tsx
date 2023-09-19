@@ -583,6 +583,7 @@ const Event = () => {
               await asyncUpdateTicketRewardPolicy(newRewardPolicy);
               break;
           }
+          }
           await asyncRefreshAll();
           closeTextEditDialog();
           closeLoading();
