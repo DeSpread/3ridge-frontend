@@ -575,7 +575,7 @@ const Event = () => {
             case EVENT_COMPONENT_TARGET.TITLE:
               await asyncUpdateTitle(text);
               break;
-            case EVENT_COMPONENT_TARGET.REWARD_NAME:
+            case EVENT_COMPONENT_TARGET.REWARD_NAME: {
               const rewardPolicy = { ...ticketData?.rewardPolicy };
               if (rewardPolicy.context) rewardPolicy.context.rewardName = text;
               const newRewardPolicy =
