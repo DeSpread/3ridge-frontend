@@ -1,5 +1,6 @@
-import "../styles/tailwindcss.css";
-import "../styles/globals.css";
+import "@/styles/tailwindcss.css";
+import "@/styles/globals.css";
+import "@/styles/shadcn.css";
 import "prismjs/themes/prism-tomorrow.css";
 
 import React, { ReactElement, ReactNode, useEffect } from "react";
