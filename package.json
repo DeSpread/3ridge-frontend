@@ -8,7 +8,8 @@
     "start": "next start -p 8001",
     "lint": "next lint",
     "compile": "graphql-codegen",
-    "watch": "graphql-codegen -w"
+    "watch": "graphql-codegen -w",
+    "test": "jest --watch"
   },
   "dependencies": {
     "@apollo/client": "^3.7.1",
