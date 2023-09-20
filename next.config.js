@@ -18,7 +18,6 @@ const nextConfig = {
       },
     ],
   },
-  pageExtensions: ["!.test.ts(x)"],
   experimental: { esmExternals: true },
 };
 
