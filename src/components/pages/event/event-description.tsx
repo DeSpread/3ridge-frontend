@@ -1,15 +1,17 @@
-import { Ticket } from "../../../types";
-import React, { PropsWithChildren } from "react";
 import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
-import ContentMetaDataRenderComponent from "../../atomic/atoms/content-meta-data-render-component";
 import { useTheme } from "@mui/material/styles";
-import ComponentHelper from "../../../helper/component-helper";
 
-const EventDescription = (
-  props: { ticketData?: Ticket } & PropsWithChildren
-) => {
-  const { ticketData } = props;
+import ContentMetaDataRenderComponent, {
+  MarkDownRenderer,
+} from "@/components/atomic/atoms/content-meta-data-render-component";
+import ComponentHelper from "@/helper/component-helper";
+import { Ticket } from "@/types";
 
+interface EventDescriptionProps {
+  ticketData?: Ticket;
+}
+
+const EventDescription = ({ ticketData }: EventDescriptionProps) => {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
@@ -44,6 +46,13 @@ const EventDescription = (
                   __html: content ?? "<></>",
                 }}
               ></div>
+            );
+          }}
+          markComponentFunc={(content) => {
+            return (
+              <div className="text-center md:text-left">
+                <MarkDownRenderer content={content} />
+              </div>
             );
           }}
         ></ContentMetaDataRenderComponent>
