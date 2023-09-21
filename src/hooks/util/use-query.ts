@@ -1,15 +1,15 @@
-import {
+import type {
   DocumentNode,
   OperationVariables,
   QueryHookOptions,
   QueryResult,
   TypedDocumentNode,
-  useQuery as useQueryOrigin,
 } from "@apollo/client";
+import { useQuery as useQueryOrigin } from "@apollo/client";
 
-export const useQuery = <Data = any, Variables = OperationVariables>(
+export const useQuery = <Data = unknown, Variables = OperationVariables>(
   query: DocumentNode | TypedDocumentNode<Data, Variables>,
-  options?: QueryHookOptions<Data, Variables>
+  options?: QueryHookOptions<Data, Variables>,
 ): QueryResult<Data, Variables> => {
   const shouldSkip = () => {
     const { variables } = options ?? {};
