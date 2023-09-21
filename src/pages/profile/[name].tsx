@@ -1101,7 +1101,6 @@ const Profile = () => {
           } catch (e) {
             console.log(e);
             closeLoading();
-          } finally {
           }
         }}
         isWalletLoggedIn={isWalletLoggedIn}

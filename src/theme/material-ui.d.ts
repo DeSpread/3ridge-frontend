@@ -1,4 +1,4 @@
-import { PaletteOptions } from "@mui/material/styles/createPalette";
+import "@mui/material/styles/createPalette";
 
 interface NeutralColor {
   100: string;
