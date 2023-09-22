@@ -1,4 +1,4 @@
-import { type CardProps, Box, Stack, useMediaQuery } from "@mui/material";
+import { type CardProps, Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import React, { useEffect, useLayoutEffect } from "react";
@@ -14,8 +14,6 @@ const TicketOverlayStyleCard = ({ ticket, sx, onClick }: EventCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [height, setHeight] = React.useState(0);
   const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
-  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   useLayoutEffect(() => {
     setHeight(ref.current?.offsetWidth ?? 0);
