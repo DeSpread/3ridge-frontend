@@ -112,19 +112,19 @@ const TicketOverlayStyleCard = ({ ticket, sx, onClick }: EventCardProps) => {
                 </Box>
                 <Box>
                   {ticket?.project?.name && (
-                    <div className="sm:text-body1-outline text-body2-outline">
+                    <div className="sm:text-body1 sm:text-outline text-body2">
                       {ticket?.project?.name}
                     </div>
                   )}
                   {!ticket?.project?.name && (
-                    <div className="sm:text-body1-outline text-body2-outline">
+                    <div className="sm:text-body1 sm:text-outline text-body2">
                       3ridge
                     </div>
                   )}
                 </Box>
               </Stack>
               <Box>
-                <div className="md:text-body2-outline text-body2-outline sm:text-body1-outline">
+                <div className="md:text-body2 md:text-outline text-body2 sm:text-body1 sm:text-outline">
                   {ticket?.quests?.length ?? 0} 퀘스트
                 </div>
               </Box>
@@ -138,7 +138,7 @@ const TicketOverlayStyleCard = ({ ticket, sx, onClick }: EventCardProps) => {
                 alignItems: "center",
               }}
             >
-              <div className="text-body1-outline line-clamp-2 text-ellipsis break-keep font-lineBold">
+              <div className="text-body1 text-outline line-clamp-2 text-ellipsis break-keep text-center font-lineBold">
                 {ticket?.title}
               </div>
               <TicketInfoTextSet ticket={ticket} />
