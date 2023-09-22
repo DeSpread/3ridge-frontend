@@ -15,19 +15,22 @@ const TicketInfoTextSet = ({ ticket, whiteSpaceMode }: TicketInfoViewProps) => {
   const limitNumber = ticket?.rewardPolicy?.context?.limitNumber;
 
   return (
-    <div>
+    <div className="text-center">
       <div className="flex items-center justify-center">
-        <div className="text-body2-outline break-keep text-center">
+        <span className="text-body2 text-outline break-keep">
           {`${rewardPoint ?? 0} 포인트`}
-        </div>
+        </span>
         {limitNumber && (
-          <div className="text-body2-outline pl-1 text-center">
-            {` / ${StringHelper.getRewardAmountLabel(limitNumber)}`}
+          <div>
+            <span className="px-1">/</span>
+            <span className="text-body2 text-outline">
+              {StringHelper.getRewardAmountLabel(limitNumber)}
+            </span>
           </div>
         )}
       </div>
       {rewardName ? (
-        <div className="text-body2-outline line-clamp-1 text-ellipsis">
+        <div className="text-body2 text-outline line-clamp-1 text-ellipsis">
           {rewardName}
         </div>
       ) : (
