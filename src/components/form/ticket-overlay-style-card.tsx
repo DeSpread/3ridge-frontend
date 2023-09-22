@@ -1,14 +1,8 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import { type CardProps, Box, Stack, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import {
-  Box,
-  CardProps,
-  Grid,
-  Stack,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
 import Image from "next/image";
+import React, { useEffect, useLayoutEffect } from "react";
+
 import { Ticket } from "../../types";
 import TicketInfoTextSet from "../atomic/atoms/ticket-info-text-set";
 
@@ -16,8 +10,7 @@ type EventCardProps = CardProps & {
   ticket?: Ticket;
 };
 
-const TicketOverlayStyleCard = (props: EventCardProps) => {
-  const { ticket } = props;
+const TicketOverlayStyleCard = ({ ticket, sx, onClick }: EventCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [height, setHeight] = React.useState(0);
   const theme = useTheme();
@@ -41,10 +34,10 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
     <Box
       sx={{
         cursor: "pointer",
-        ...props.sx,
+        ...sx,
       }}
       ref={ref}
-      onClick={props.onClick}
+      onClick={onClick}
     >
       <Box
         sx={{
@@ -121,39 +114,21 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                 </Box>
                 <Box>
                   {ticket?.project?.name && (
-                    <Typography
-                      variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
-                      sx={{
-                        textShadow:
-                          "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
-                      }}
-                    >
+                    <div className="sm:text-body1-outline text-body2-outline">
                       {ticket?.project?.name}
-                    </Typography>
+                    </div>
                   )}
                   {!ticket?.project?.name && (
-                    <Typography
-                      variant={mdUp ? "body1" : smUp ? "body1" : "body2"}
-                      sx={{
-                        textShadow:
-                          "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
-                      }}
-                    >
+                    <div className="sm:text-body1-outline text-body2-outline">
                       3ridge
-                    </Typography>
+                    </div>
                   )}
                 </Box>
               </Stack>
               <Box>
-                <Typography
-                  variant={mdUp ? "body2" : smUp ? "body1" : "body2"}
-                  sx={{
-                    textShadow:
-                      "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
-                  }}
-                >
+                <div className="md:text-body2-outline text-body2-outline sm:text-body1-outline">
                   {ticket?.quests?.length ?? 0} 퀘스트
-                </Typography>
+                </div>
               </Box>
             </Stack>
             <Stack
@@ -165,33 +140,10 @@ const TicketOverlayStyleCard = (props: EventCardProps) => {
                 alignItems: "center",
               }}
             >
-              <Box sx={{ display: "flex" }}>
-                <Typography
-                  variant={"body1"}
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: "2",
-                    WebkitBoxOrient: "vertical",
-                    textAlign: "center",
-                    textShadow:
-                      "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
-                    wordBreak: "keep-all",
-                  }}
-                  fontFamily={"LINESeedKR-Bd"}
-                >
-                  {ticket?.title}
-                </Typography>
-              </Box>
-              <TicketInfoTextSet
-                ticket={ticket}
-                sx={{
-                  textShadow:
-                    "-2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;",
-                  wordBreak: "keep-all",
-                }}
-              ></TicketInfoTextSet>
+              <div className="text-body1-outline line-clamp-2 text-ellipsis break-keep font-lineBold">
+                {ticket?.title}
+              </div>
+              <TicketInfoTextSet ticket={ticket} />
             </Stack>
           </Stack>
         </div>
