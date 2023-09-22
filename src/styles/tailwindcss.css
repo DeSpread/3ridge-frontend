@@ -71,19 +71,18 @@
 }
 
 @layer components {
+  .text-outline {
+    filter: drop-shadow(1px 0px 0 var(--text-outline))
+      drop-shadow(-1px 0px 0 var(--text-outline))
+      drop-shadow(0px 1px 0 var(--text-outline))
+      drop-shadow(0px -1px 0 var(--text-outline));
+  }
+
   .text-h1 {
     font-weight: 700;
     font-size: 4.1rem;
     line-height: 1.375;
     color: var(--text);
-  }
-
-  .text-h1-outline {
-    @apply text-h1;
-    filter: drop-shadow(1px 0px 0 var(--text-outline))
-      drop-shadow(-1px 0px 0 var(--text-outline))
-      drop-shadow(0px 1px 0 var(--text-outline))
-      drop-shadow(0px -1px 0 var(--text-outline));
   }
 
   .text-h2 {
@@ -93,27 +92,11 @@
     color: var(--text);
   }
 
-  .text-h2-outline {
-    @apply text-h2;
-    filter: drop-shadow(1px 0px 0 var(--text-outline))
-      drop-shadow(-1px 0px 0 var(--text-outline))
-      drop-shadow(0px 1px 0 var(--text-outline))
-      drop-shadow(0px -1px 0 var(--text-outline));
-  }
-
   .text-h3 {
     font-weight: 700;
     font-size: 2.25rem;
     line-height: 1.375;
     color: var(--text);
-  }
-
-  .text-h3-outline {
-    @apply text-h3;
-    filter: drop-shadow(1px 0px 0 var(--text-outline))
-      drop-shadow(-1px 0px 0 var(--text-outline))
-      drop-shadow(0px 1px 0 var(--text-outline))
-      drop-shadow(0px -1px 0 var(--text-outline));
   }
 
   .text-h4 {
@@ -123,27 +106,11 @@
     color: var(--text);
   }
 
-  .text-h4-outline {
-    @apply text-h4;
-    filter: drop-shadow(1px 0px 0 var(--text-outline))
-      drop-shadow(-1px 0px 0 var(--text-outline))
-      drop-shadow(0px 1px 0 var(--text-outline))
-      drop-shadow(0px -1px 0 var(--text-outline));
-  }
-
   .text-h5 {
     font-weight: 600;
     font-size: 1.5rem;
     line-height: 1.375;
     color: var(--text);
-  }
-
-  .text-h5-outline {
-    @apply text-h5;
-    filter: drop-shadow(1px 0px 0 var(--text-outline))
-      drop-shadow(-1px 0px 0 var(--text-outline))
-      drop-shadow(0px 1px 0 var(--text-outline))
-      drop-shadow(0px -1px 0 var(--text-outline));
   }
 
   .text-h6 {
@@ -153,14 +120,6 @@
     color: var(--text);
   }
 
-  .text-h6-outline {
-    @apply text-h6;
-    filter: drop-shadow(1px 0px 0 var(--text-outline))
-      drop-shadow(-1px 0px 0 var(--text-outline))
-      drop-shadow(0px 1px 0 var(--text-outline))
-      drop-shadow(0px -1px 0 var(--text-outline));
-  }
-
   .text-body1 {
     font-weight: 400;
     font-size: 1rem;
@@ -168,27 +127,11 @@
     color: var(--text);
   }
 
-  .text-body1-outline {
-    @apply text-body1;
-    filter: drop-shadow(1px 0px 0 var(--text-outline))
-      drop-shadow(-1px 0px 0 var(--text-outline))
-      drop-shadow(0px 1px 0 var(--text-outline))
-      drop-shadow(0px -1px 0 var(--text-outline));
-  }
-
   .text-body2 {
     font-weight: 400;
     font-size: 0.875rem;
     line-height: 1.57;
     color: var(--text);
-  }
-
-  .text-body2-outline {
-    @apply text-body2;
-    filter: drop-shadow(1px 0px 0 var(--text-outline))
-      drop-shadow(-1px 0px 0 var(--text-outline))
-      drop-shadow(0px 1px 0 var(--text-outline))
-      drop-shadow(0px -1px 0 var(--text-outline));
   }
 
   .text-subtitle1 {
