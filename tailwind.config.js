@@ -17,6 +17,9 @@ module.exports = {
         lg: "1280px",
         xl: "1920px",
       },
+      fontFamily: {
+        lineBold: ["LINESeedKR-Bd"],
+      },
       colors: {
         neutral: {
           100: "#F3F4F6",
