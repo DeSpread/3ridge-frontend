@@ -13,8 +13,8 @@ module.exports = {
     extend: {
       screens: {
         sm: "600px",
-        md: "960px",
-        lg: "1280px",
+        md: "1000px",
+        lg: "1200px",
         xl: "1920px",
       },
       colors: {
