@@ -1,7 +1,3 @@
-import React, { ReactElement, useEffect, useMemo, useState } from "react";
-import MainLayout from "../../layouts/main-layout";
-import { AppProps } from "next/app";
-import Head from "next/head";
 import {
   Box,
   Card,
@@ -11,10 +7,54 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useTicketQuery } from "../../hooks/ticket-query-hook";
+
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
+import { useAlert } from "../../provider/alert/alert-provider";
+import {
+  APP_ERROR_MESSAGE,
+  getErrorMessage,
+  getLocaleErrorMessage,
+} from "../../error/my-error";
+import { useLoading } from "../../provider/loading/loading-provider";
+import { useRouter } from "next/router";
+import { useTheme } from "@mui/material/styles";
+import { AppProps } from "next/app";
+import Head from "next/head";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
+
+import { useSignDialog } from "../../hooks/sign-dialog-hook";
+import Realistic from "../../components/effects/realistic";
+import { useGetSet, useMountedState } from "react-use";
+import { useSetRecoilState } from "recoil";
+import { ContentMetadata, QuestPolicyType } from "../../__generated__/graphql";
+import { backDirectionPathState } from "../../lib/recoil";
+import ClickTypography from "../../components/atomic/atoms/click-typhography";
+import LinkTypography from "../../components/atomic/atoms/link-typography";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
+import EventDateRange from "../../components/pages/event/event-date-range";
+import EventDescription from "../../components/pages/event/event-description";
+import EventQuests from "../../components/pages/event/event-quests";
+import EventRewardPolicy from "../../components/pages/event/reward/event-reward-policy";
+import EventTimeBoard from "../../components/pages/event/event-time-board";
+import EventRewardDescription from "../../components/pages/event/reward/event-reward-description";
+import ButtonWithLoading from "../../components/atomic/molecules/button-with-loading";
+import AgreementDialog from "../../components/dialogs/agreement-dialog";
+import EventParticipants from "../../components/pages/event/event-participants";
+import QuestSurveyDialog from "../../components/dialogs/quest/quest-survey-dialog";
+import TypeHelper from "../../helper/type-helper";
+import StringHelper from "../../helper/string-helper";
+import RouterUtil from "../../util/router-util";
+import { useContractHook } from "../../hooks/contract/contract-hook";
+import ContractLoadingDialog from "../../components/dialogs/contract-loading-dialog";
 import QuestQuizDialog from "../../components/dialogs/quest/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
+import TicketRewardHowToDialog from "../../components/dialogs/ticket-edit/ticket-reward-how-to-dialog";
+import EventImage from "../../components/pages/event/event-image";
+import EventTitle from "../../components/pages/event/event-title";
+import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
+import { useTicketQuery } from "../../hooks/ticket-query-hook";
+import MainLayout from "../../layouts/main-layout";
+import { useLogin } from "../../provider/login/login-provider";
 import {
   MouseEventWithParam,
   Quest,
@@ -33,44 +73,6 @@ import {
   VerifyTwitterRetweetQuestContext,
   VerifyVisitWebsiteQuestContext,
 } from "../../types";
-import { ContentMetadata, QuestPolicyType } from "../../__generated__/graphql";
-import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
-import { useAlert } from "../../provider/alert/alert-provider";
-import {
-  APP_ERROR_MESSAGE,
-  getErrorMessage,
-  getLocaleErrorMessage,
-} from "../../error/my-error";
-import { useLoading } from "../../provider/loading/loading-provider";
-import { useRouter } from "next/router";
-import { useTheme } from "@mui/material/styles";
-import { useLogin } from "../../provider/login/login-provider";
-import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
-import LinkTypography from "../../components/atomic/atoms/link-typography";
-import { useSignDialog } from "../../hooks/sign-dialog-hook";
-import Realistic from "../../components/effects/realistic";
-import { useGetSet, useMountedState } from "react-use";
-import { useSetRecoilState } from "recoil";
-import { backDirectionPathState } from "../../lib/recoil";
-import ClickTypography from "../../components/atomic/atoms/click-typhography";
-import AgreementDialog from "../../components/dialogs/agreement-dialog";
-import EventTitle from "../../components/pages/event/event-title";
-import EventImage from "../../components/pages/event/event-image";
-import EventDateRange from "../../components/pages/event/event-date-range";
-import EventDescription from "../../components/pages/event/event-description";
-import EventQuests from "../../components/pages/event/event-quests";
-import EventRewardPolicy from "../../components/pages/event/reward/event-reward-policy";
-import EventTimeBoard from "../../components/pages/event/event-time-board";
-import EventRewardDescription from "../../components/pages/event/reward/event-reward-description";
-import ButtonWithLoading from "../../components/atomic/molecules/button-with-loading";
-import EventParticipants from "../../components/pages/event/event-participants";
-import TicketRewardHowToDialog from "../../components/dialogs/ticket-edit/ticket-reward-how-to-dialog";
-import QuestSurveyDialog from "../../components/dialogs/quest/quest-survey-dialog";
-import TypeHelper from "../../helper/type-helper";
-import StringHelper from "../../helper/string-helper";
-import RouterUtil from "../../util/router-util";
-import { useContractHook } from "../../hooks/contract-hook";
-import ContractLoadingDialog from "../../components/dialogs/contract-loading-dialog";
 
 const Event = (props: AppProps) => {
   const { userData } = useSignedUserQuery();
@@ -246,7 +248,7 @@ const Event = (props: AppProps) => {
 
   const openAgreementDialog = (
     questId: string,
-    agreementContext: VerifyAgreementQuestContext
+    agreementContext: VerifyAgreementQuestContext,
   ) => {
     setOpenAgreementQuestDialog(true);
     setOpenAgreementQuestId(questId);
@@ -261,7 +263,7 @@ const Event = (props: AppProps) => {
 
   const openSurveyDialog = (
     questId: string,
-    surveyQuestContext: VerifySurveyQuestContext
+    surveyQuestContext: VerifySurveyQuestContext,
   ) => {
     setOpenSurveyQuestDialog(true);
     setOpenedQuestId(questId);
@@ -276,7 +278,7 @@ const Event = (props: AppProps) => {
 
   const openQuizDialog = (
     questId: string,
-    quizContext: VerifyQuizQuestContext
+    quizContext: VerifyQuizQuestContext,
   ) => {
     setOpenQuizQuestDialog(true);
     setOpenedQuestId(questId);
@@ -310,7 +312,7 @@ const Event = (props: AppProps) => {
     if (verifiedList.length === 0) return true;
     const res = verifiedList.reduce(
       (accumulator, currentValue) => accumulator && currentValue,
-      true
+      true,
     );
     return !res;
   }, [verifiedList, updateIndex]);
@@ -609,7 +611,7 @@ const Event = (props: AppProps) => {
   const asyncStartQuest = async (
     e: React.MouseEvent<Element, MouseEvent>,
     quest: Quest,
-    index: number
+    index: number,
   ) => {
     if (!ticketData._id || !quest._id) return;
     if (
@@ -621,7 +623,7 @@ const Event = (props: AppProps) => {
         window.open(
           `https://twitter.com/intent/follow?screen_name=${followQuestContext.username}`,
           "twitter",
-          "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+          "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no",
         );
       } catch (e) {
         closeLoading();
@@ -635,7 +637,7 @@ const Event = (props: AppProps) => {
       window.open(
         `https://twitter.com/intent/like?tweet_id=${likingQuestContext.tweetId}`,
         "twitter",
-        "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+        "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no",
       );
     } else if (
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterRetweet
@@ -646,7 +648,7 @@ const Event = (props: AppProps) => {
         window.open(
           `https://twitter.com/intent/retweet?tweet_id=${retweetQuestContext.tweetId}`,
           "twitter",
-          "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+          "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no",
         );
       } catch (e) {
         closeLoading();
@@ -662,12 +664,12 @@ const Event = (props: AppProps) => {
         window.open(
           `https://twitter.com/intent/retweet?tweet_id=${verifyTwitterLinkingRetweetContext.tweetId}`,
           "twitter-retweet",
-          "left=100, top=100, width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+          "left=100, top=100, width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no",
         );
         window.open(
           `https://twitter.com/intent/like?tweet_id=${verifyTwitterLinkingRetweetContext.tweetId}`,
           "twitter-like",
-          "left=200, top=200, width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+          "left=200, top=200, width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no",
         );
       } catch (e) {
         closeLoading();
@@ -691,7 +693,7 @@ const Event = (props: AppProps) => {
       window.open(
         questContext.inviteLink,
         "discord",
-        "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+        "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no",
       );
     } else if (
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyOnChain
@@ -700,7 +702,7 @@ const Event = (props: AppProps) => {
       const newWindow = window.open(
         questContext?.url,
         "_blank",
-        "noopener,noreferrer"
+        "noopener,noreferrer",
       );
       if (newWindow) newWindow.opener = null;
     } else if (
@@ -714,11 +716,11 @@ const Event = (props: AppProps) => {
           const newWindow = window.open(
             questContext?.url,
             "_blank",
-            "noopener,noreferrer"
+            "noopener,noreferrer",
           );
           if (newWindow) newWindow.opener = null;
           break;
-      }
+        }
       }
       if (quest.questGuides?.[0]?.content) {
         openSimpleWarningDialog(quest.questGuides[0]);
@@ -739,7 +741,7 @@ const Event = (props: AppProps) => {
       window.open(
         `https://t.me/${questContext.channelId}`,
         "telegram",
-        "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+        "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no",
       );
     }
   };
@@ -764,7 +766,7 @@ const Event = (props: AppProps) => {
   const asyncVerifyQuest = async (
     e: React.MouseEvent<Element, MouseEvent>,
     quest: Quest,
-    index: number
+    index: number,
   ) => {
     const myEvent = e as MouseEventWithParam<{
       callback: (msg: string) => void;
@@ -808,7 +810,7 @@ const Event = (props: AppProps) => {
         if (!showTwitterConnectAlert()) {
           await asyncVerifyTwitterLinkingAndRetweetQuest(
             ticketData._id,
-            quest._id ?? ""
+            quest._id ?? "",
           );
           updateVerifyState(index);
         }
@@ -830,7 +832,7 @@ const Event = (props: AppProps) => {
           if (verifyTelegramQuestContext.groupId) {
             console.log(
               "asyncVerifyTelegramQuest, groupId: ",
-              verifyTelegramQuestContext.groupId
+              verifyTelegramQuestContext.groupId,
             );
             await asyncVerifyTelegramQuest(ticketData._id, quest._id ?? "");
           } else {
@@ -1116,7 +1118,7 @@ const Event = (props: AppProps) => {
               {(ticketData?.winners?.filter(
                 (winner) =>
                   String(winner.name).toUpperCase().trim() ===
-                  userData?.name?.toUpperCase().trim()
+                  userData?.name?.toUpperCase().trim(),
               )?.length ?? 0) > 0 && (
                 <Box>
                   <Card>
@@ -1272,7 +1274,7 @@ const Event = (props: AppProps) => {
               try {
                 asyncCompleteQuestOfUser(
                   ticketData._id,
-                  openAgreementQuestId
+                  openAgreementQuestId,
                 ).then((res) => {
                   updateVerifyState(index);
                 });
@@ -1299,7 +1301,7 @@ const Event = (props: AppProps) => {
                 asyncCompleteQuestOfUser(ticketData._id, openedQuestId).then(
                   (res) => {
                     updateVerifyState(index);
-                  }
+                  },
                 );
               } catch (e) {
                 // FIXME: temporary add comment for lint

@@ -17,6 +17,12 @@ class StringUtil {
     return false;
   };
 
+  public static isValidEthereumAddress = (address?: string) => {
+    if (!address) return false;
+    const ethereumAddressRegex = /^(0x)?[0-9a-fA-F]{40}$/;
+    return ethereumAddressRegex.test(address);
+  };
+
   public static nFormatter = (num: number, digits: number) => {
     const lookup = [
       { value: 1, symbol: "" },
