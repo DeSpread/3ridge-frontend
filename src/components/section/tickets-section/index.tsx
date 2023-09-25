@@ -1,6 +1,4 @@
 import { Box, Grid, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { useRouter } from "next/router";
 import React, {
   CSSProperties,
   PropsWithChildren,
@@ -8,19 +6,23 @@ import React, {
   useState,
 } from "react";
 
-import { TicketSortType } from "../../../__generated__/graphql";
-import { useAllTicketsQuery } from "../../../hooks/query/use-all-tickets";
-import { useDetectRef } from "../../../hooks/util/use-detect-ref";
-import { useLoading } from "../../../provider/loading/loading-provider";
+import { useTheme } from "@mui/material/styles";
 import { Ticket, FILTER_TYPE, FilterType } from "../../../types";
 import TicketCard from "../../form/ticket-card";
+import { Tabs1, Tabs2 } from "./tabs";
+
+import { useAllTicketsQuery } from "../../../hooks/query/use-all-tickets";
+import { TicketSortType } from "../../../__generated__/graphql";
+import { useRouter } from "next/router";
+import { useLoading } from "../../../provider/loading/loading-provider";
 
 import {
   LoadMore,
   TicketsSectionNoData,
   TicketsSectionSkeleton,
 } from "./components";
-import { Tabs1, Tabs2 } from "./tabs";
+
+import { useDetectRef } from "../../../hooks/util/use-detect-ref";
 
 interface TicketSectionProps {
   tickets?: Ticket[];
@@ -39,7 +41,7 @@ const TicketsSection = ({ ...props }: TicketSectionProps) => {
 
   const [filter, setFilter] = useState<FilterType>(FILTER_TYPE.ALL);
   const [sortType, setSortType] = useState<TicketSortType>(
-    TicketSortType.Trending,
+    TicketSortType.Trending
   );
   const [isLoadMore, setIsLoadMore] = useState<boolean>(true);
 
@@ -54,7 +56,7 @@ const TicketsSection = ({ ...props }: TicketSectionProps) => {
 
   const handleTicketClick = async (id: string) => {
     showLoading();
-    await push(`/event/${id}`);
+    await push(`/ticket/${id}`);
     closeLoading();
   };
 
