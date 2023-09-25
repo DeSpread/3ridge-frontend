@@ -14,8 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React, { useState } from "react";
-import { useNetwork } from "wagmi";
+import React, { useEffect, useMemo, useState } from "react";
+import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import Web3 from "web3";
 
 import { ChainType } from "../../__generated__/graphql";
 import NumberInput from "../../components/atomic/atoms/number-input";
@@ -24,29 +25,89 @@ import ValidatedTextInput from "../../components/atomic/molecules/validated-text
 import MathUtil from "../../util/math-util";
 import StringUtil from "../../util/string-util";
 
-import { useApproveContractHook } from "@/hooks/contract/approve/approve-contract-hook";
-
-enum TokenType {
-  USDT = "USDT",
-  USDC = "USDC",
-}
+import ContractLoadingDialog from "@/components/dialogs/contract-loading-dialog";
+import { getErrorMessage, getLocaleErrorMessage } from "@/error/my-error";
+import StringHelper from "@/helper/string-helper";
+import TypeHelper from "@/helper/type-helper";
+import { useApproveReadContractHook } from "@/hooks/contract/approve/approve-read-contract-hook";
+import { useApproveWriteContractHook } from "@/hooks/contract/approve/approve-write-contract-hook";
+import { useMultiSendWriteContractHook } from "@/hooks/contract/multisend/multisend-write-contract-hook";
+import { useAlert } from "@/provider/alert/alert-provider";
+import { useLoading } from "@/provider/loading/loading-provider";
+import { TokenType } from "@/types";
+import Web3Util from "@/util/web3-util";
 
 const MultiSend = () => {
   const theme = useTheme();
   const [addresses, setAddresses] = useState<`0x${string}`[] | string[]>([""]);
-  const [chainType, setChainType] = useState<ChainType>(ChainType.Bnb);
+  const [chainType, setChainType] = useState<ChainType>(ChainType.BnbTestnet);
   const [tokenType, setTokenType] = useState<TokenType>(TokenType.USDT);
   const [amountValue, setAmountValue] = useState(1);
-  const { chain: networkChain } = useNetwork();
+  const { showLoading, closeLoading } = useLoading();
+  const { showAlert } = useAlert();
+  const { chain: connectedChain } = useNetwork();
+  const {
+    chains: switchChains,
+    error: switchError,
+    isLoading: isSwitchLoading,
+    switchNetwork,
+  } = useSwitchNetwork();
+  const { address: userAddress, isConnected } = useAccount();
+
+  const isChainConnected = useMemo(() => {
+    return TypeHelper.convertChainTypeToId(chainType) === connectedChain?.id;
+  }, [chainType, connectedChain]);
 
   const {
-    runContract,
+    runContract: runApproveContract,
     isPrepareSuccess,
     isLoading,
     isSuccess,
     isError,
     error,
-  } = useApproveContractHook({ chain: chainType, amount: 1000 });
+    hash,
+  } = useApproveWriteContractHook({ chain: chainType, amount: 1000 });
+
+  console.log("isLoading", isLoading, "isSuccess", isSuccess);
+
+  const openLoadingDialog = useMemo(() => {
+    return isLoading;
+  }, [isLoading]);
+
+  const recipients: `0x${string}`[] = useMemo(() => {
+    return (
+      addresses?.filter((e) => /^0x/i.test(e)).map((e) => e as `0x${string}`) ??
+      []
+    );
+  }, [addresses]);
+
+  const { runContract: runMultiSendContract } = useMultiSendWriteContractHook({
+    chain: chainType,
+    sender: userAddress,
+    recipients,
+    amounts: [BigInt(1000)],
+  });
+
+  const { data: allowanceAmount } = useApproveReadContractHook({
+    chain: chainType,
+    userAddress,
+  });
+
+  console.log("allowanceAmount", allowanceAmount);
+
+  const isApproved = useMemo(() => {
+    if (allowanceAmount === BigInt(0)) {
+      return false;
+    }
+    return true;
+  }, [allowanceAmount]);
+
+  const buttonLabel = useMemo(() => {
+    if (!isChainConnected) {
+      return "선택한 체인으로 연결하기";
+    }
+    return isApproved ? "보내기" : "승인하기";
+  }, [isChainConnected, isApproved]);
 
   return (
     <>
@@ -63,10 +124,18 @@ const MultiSend = () => {
                 <Select
                   value={chainType}
                   label="체인 선택"
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const { value } = e.target;
                     const chainType = value as ChainType;
+                    const chainId = TypeHelper.convertChainTypeToId(chainType);
+                    if (chainId === -1) {
+                      return;
+                    }
+                    showLoading();
+                    switchNetwork?.(chainId);
+                    // await switchNetworkAsync?.(chainId);
                     setChainType(chainType);
+                    closeLoading();
                   }}
                   sx={{ width: 120, background: "" }}
                 >
@@ -87,7 +156,6 @@ const MultiSend = () => {
                   sx={{ width: 120, background: "" }}
                 >
                   <MenuItem value={TokenType.USDT}>USDT</MenuItem>
-                  {/*<MenuItem value={TokenType.USDC}>USDC</MenuItem>*/}
                 </Select>
               </FormControl>
               <Box>
@@ -215,27 +283,35 @@ const MultiSend = () => {
             <SecondaryButton
               fullWidth={true}
               onClick={async (e) => {
-                runContract();
-                // const res = addresses.reduce(
-                //   (previousValue, currentValue) =>
-                //     previousValue &&
-                //     StringUtil.isValidEthereumAddress(currentValue),
-                //   true
-                // );
-                // if (!res) {
-                //   showAlert({
-                //     title: "오류",
-                //     content: "EVM Address에 오류가 있습니다",
-                //   });
-                //   return;
-                // }
+                try {
+                  if (!isChainConnected) {
+                    const chainId = TypeHelper.convertChainTypeToId(chainType);
+                    if (chainId === -1) {
+                      return;
+                    }
+                    switchNetwork?.(chainId);
+                    return;
+                  }
+                  if (isApproved) await runMultiSendContract();
+                  else await runApproveContract();
+                } catch (e) {
+                  const errorMessage = getLocaleErrorMessage(e);
+                  showAlert({ title: "알림", content: errorMessage });
+                }
               }}
+              suppressHydrationWarning
             >
-              보내기
+              {buttonLabel}
             </SecondaryButton>
           </CardContent>
         </Card>
       </Stack>
+      <ContractLoadingDialog
+        open={openLoadingDialog}
+        title={"컨트랙트를 실행중입니다"}
+        link={StringHelper.makeExplorerLink(chainType, hash)}
+        linkName={"트랜잭션 확인하기"}
+      ></ContractLoadingDialog>
     </>
   );
 };

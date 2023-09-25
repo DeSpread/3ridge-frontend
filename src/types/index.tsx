@@ -380,3 +380,7 @@ export type TicketUserQuery = {
   includeTelegram?: boolean;
   includeDiscord?: boolean;
 };
+
+export enum TokenType {
+  USDT = "USDT",
+}

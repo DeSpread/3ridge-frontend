@@ -1,8 +1,12 @@
 import { usePrepareContractWrite } from "wagmi";
 
-export function useBscApproveContractPrepare({ amount }: { amount: number }) {
+export function useBscTestNetApproveContractPrepare({
+  amount,
+}: {
+  amount: number;
+}) {
   const { config, error, isError, isSuccess } = usePrepareContractWrite({
-    address: "0x55d398326f99059fF775485246999027B3197955",
+    address: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
     abi: [
       {
         constant: false,
@@ -31,11 +35,11 @@ export function useBscApproveContractPrepare({ amount }: { amount: number }) {
         type: "function",
       },
     ],
-    args: ["0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa", BigInt(amount)],
+    args: ["0x81cDC3c61857ACCB4b9851A55910E2AF7FB4DDF1", BigInt(amount)],
     functionName: "approve",
   });
 
-  console.log("mainnet isSuccess", isSuccess);
+  console.log("testnet isSuccess", isSuccess);
 
   return {
     config,

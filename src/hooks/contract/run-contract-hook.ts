@@ -1,31 +1,24 @@
+import { WriteContractMode } from "@wagmi/core";
+import { Abi } from "abitype/src/abi";
 import { useMemo } from "react";
-import { useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  useContractWrite,
+  UseContractWriteConfig,
+  useWaitForTransaction,
+} from "wagmi";
 
-import { ChainType } from "@/__generated__/graphql";
 import { AppError } from "@/error/my-error";
-import { useBscApproveContractPrepare } from "@/hooks/contract/approve/prepare/bsc-approve-contract-prepare-hook";
-import { useBscTestNetApproveContractPrepare } from "@/hooks/contract/approve/prepare/bsc-testnet-approve-contract-prepare-hook";
 
-export function useApproveContractHook({
-  chain,
-  amount,
-}: {
-  chain: ChainType;
-  amount: number;
-}) {
-  const selectedContractPrepareHook = useMemo(() => {
-    if (chain === ChainType.BnbTestnet)
-      return useBscTestNetApproveContractPrepare;
-    return useBscApproveContractPrepare;
-  }, [chain]);
-
-  const {
-    config,
-    error: prepareError,
-    isError: isPrepareError,
-    isSuccess: isPrepareSuccess,
-  } = selectedContractPrepareHook({ amount });
-
+export function useRunContractHook<
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: UseContractWriteConfig<TAbi, TFunctionName, TMode>,
+  isPrepareError: boolean,
+  prepareError: Error | null,
+  isPrepareSuccess: boolean,
+) {
   const {
     data,
     error: writeError,
@@ -68,7 +61,6 @@ export function useApproveContractHook({
           throw new AppError("Contract Prepare Not Yet");
         }
       : runContract,
-    isPrepareSuccess,
     error,
     isError,
     hash,
