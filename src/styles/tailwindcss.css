@@ -72,10 +72,10 @@
 
 @layer components {
   .text-outline {
-    filter: drop-shadow(1px 0px 0 var(--text-outline))
-      drop-shadow(-1px 0px 0 var(--text-outline))
-      drop-shadow(0px 1px 0 var(--text-outline))
-      drop-shadow(0px -1px 0 var(--text-outline));
+    filter: drop-shadow(1.2px 0px 0 var(--text-outline))
+      drop-shadow(-1.2px 0px 0 var(--text-outline))
+      drop-shadow(0px 1.2px 0 var(--text-outline))
+      drop-shadow(0px -1.2px 0 var(--text-outline));
   }
 
   .text-h1 {
