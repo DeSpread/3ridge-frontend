@@ -1,15 +1,14 @@
-import { Stack, Typography } from "@mui/material";
 import TicketsSection from "../tickets-section/index";
 
 export const AllEvents = () => {
   return (
-    <Stack direction={"column"}>
+    <section className="flex flex-col">
       <div className="mt-8">
-        <Typography variant={"h4"}>전체 이벤트</Typography>
+        <div className="text-h4">전체 이벤트</div>
       </div>
-      <section className="mt-4">
+      <div className="mt-4">
         <TicketsSection />
-      </section>
-    </Stack>
+      </div>
+    </section>
   );
 };
