@@ -1,22 +1,22 @@
-import { Ticket } from "../../types";
-import { useTheme } from "@mui/material/styles";
-import { useLoading } from "../../provider/loading/loading-provider";
-import { useRouter } from "next/router";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   Box,
   IconButton,
-  Skeleton,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useEffect, useRef } from "react";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Swiper, SwiperSlide } from "swiper/react";
-import TicketOverlayStyleCard from "../form/ticket-overlay-style-card";
+import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/router";
+import { useRef } from "react";
 import SwiperCore, { Navigation } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import { useLoading } from "../../provider/loading/loading-provider";
+import { Ticket } from "../../types";
 import SkeletonOverlayCard from "../atomic/molecules/skelton-overlay-card";
+import TicketOverlayStyleCard from "../form/ticket-overlay-style-card";
 
 SwiperCore.use([Navigation]);
 
