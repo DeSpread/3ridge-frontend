@@ -10,25 +10,26 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import PrimaryButton from "../atomic/atoms/primary-button";
-import React, { PropsWithChildren, useState } from "react";
-import { useTheme } from "@mui/material/styles";
-import { ChainType } from "../../__generated__/graphql";
-import Container from "../atomic/atoms/container";
-import { TicketUserQuery } from "../../types";
 import CircularProgress from "@mui/material/CircularProgress";
-import SecondaryButton from "../atomic/atoms/secondary-button";
-import { useAlert } from "../../provider/alert/alert-provider";
+import { useTheme } from "@mui/material/styles";
+import React, { PropsWithChildren, useState } from "react";
+
+import { ChainType } from "../../__generated__/graphql";
 import { getErrorMessage } from "../../error/my-error";
+import { useAlert } from "../../provider/alert/alert-provider";
+import { TicketUserQuery } from "../../types";
+import Container from "../atomic/atoms/container";
+import PrimaryButton from "../atomic/atoms/primary-button";
+import SecondaryButton from "../atomic/atoms/secondary-button";
 
 const UserInfoDownloadForm = (
   props: PropsWithChildren & {
     title?: string;
     onDownloadButtonClick?: (res: TicketUserQuery) => void;
-  }
+  },
 ) => {
   const theme = useTheme();
-  const [checked, setChecked] = useState([true, true, true, true]);
+  const [checked, setChecked] = useState([true, true, true, true, true]);
   const [chainType, setChainType] = useState<ChainType>(ChainType.Evm);
   const { title, onDownloadButtonClick } = props;
   const [loading, setLoading] = useState(false);
@@ -126,6 +127,21 @@ const UserInfoDownloadForm = (
             }
             label="트위터"
           />
+          <FormControlLabel
+            checked={checked[4]}
+            control={
+              <Checkbox
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setChecked((prevState) => {
+                    const src = { ...checked };
+                    src[4] = event.target.checked;
+                    return { ...src };
+                  });
+                }}
+              />
+            }
+            label="디스코드"
+          />
         </FormGroup>
         <div style={{ position: "relative" }}>
           <SecondaryButton
@@ -139,6 +155,7 @@ const UserInfoDownloadForm = (
                   includeWalletChainType: checked[1] ? chainType : undefined,
                   includeTelegram: checked[2],
                   includeTwitterId: checked[3],
+                  includeDiscord: checked[3],
                 });
               } catch (e) {
                 showErrorAlert({ content: getErrorMessage(e) });
