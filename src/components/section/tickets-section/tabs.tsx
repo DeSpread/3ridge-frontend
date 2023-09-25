@@ -1,5 +1,7 @@
+import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
+import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import {
-  ButtonProps,
+  type ButtonProps,
   styled,
   Tab,
   useTheme,
@@ -10,9 +12,8 @@ import {
   Grid,
 } from "@mui/material";
 import { useState } from "react";
+
 import PrimaryButton from "../../atomic/atoms/primary-button";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
-import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 
 interface StyledTabProps {
   label: string;
@@ -33,11 +34,11 @@ const AntTab = styled((props: StyledTabProps) => (
   },
 }));
 
-export const TabButton = (props: ButtonProps) => {
+export const TabButton = ({ sx, size, ...rest }: ButtonProps) => {
   const theme = useTheme();
   return (
     <PrimaryButton
-      {...props}
+      {...rest}
       sx={{
         ":disabled": {
           backgroundColor: theme.palette.neutral[900],
@@ -47,9 +48,9 @@ export const TabButton = (props: ButtonProps) => {
         background: "transparent",
         borderColor: "transparent",
         color: theme.palette.neutral[100],
-        ...props.sx,
+        ...sx,
       }}
-      size={props.size}
+      size={size}
     />
   );
 };
