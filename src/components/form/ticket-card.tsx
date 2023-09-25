@@ -27,7 +27,6 @@ const TicketCard = (props: EventCardProps, targetRef?: Ref<HTMLDivElement>) => {
   const [height, setHeight] = React.useState(0);
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
-  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   useLayoutEffect(() => {
     setHeight((ref.current?.offsetWidth ?? 0) * 0.9);
