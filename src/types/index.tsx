@@ -1,6 +1,6 @@
-import { AppError } from "../error/my-error";
-import React from "react";
 import { SvgIconProps } from "@mui/material";
+import React from "react";
+
 import {
   CategoryType,
   ChainType,
@@ -10,6 +10,7 @@ import {
   QuestPolicyType,
   RewardPolicyType,
 } from "../__generated__/graphql";
+import { AppError } from "../error/my-error";
 
 export const LOG_LEVEL = {
   INFO: "info",
@@ -37,7 +38,7 @@ export type SuccessErrorCallbackWithParam<T, K> = (
   }: {
     onSuccess?: (msg?: K) => void;
     onError?: (error: AppError) => void;
-  }
+  },
 ) => void;
 
 export interface MouseEventWithParam<T> extends React.MouseEvent<HTMLElement> {
@@ -157,7 +158,7 @@ export type ContractInfo = {
       outputs: [];
       stateMutability: "nonpayable";
       type: "function";
-    }
+    },
   ];
   functionName: string;
   args?: [];
@@ -368,4 +369,5 @@ export type TicketUserQuery = {
   includeTwitterId?: boolean;
   includeEmail?: boolean;
   includeTelegram?: boolean;
+  includeDiscord?: boolean;
 };
