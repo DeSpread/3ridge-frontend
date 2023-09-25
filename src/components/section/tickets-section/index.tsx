@@ -1,25 +1,23 @@
 import { Box, Grid, useMediaQuery } from "@mui/material";
-import React, {
-  CSSProperties,
-  PropsWithChildren,
-  useRef,
-  useState,
-} from "react";
 import { useTheme } from "@mui/material/styles";
-import { Ticket, FILTER_TYPE, FilterType } from "../../../types";
-import TicketCard from "../../form/ticket-card";
-import { Tabs1, Tabs2 } from "./tabs";
-
-import { useAllTicketsQuery } from "../../../hooks/query/use-all-tickets";
-import { TicketSortType } from "../../../__generated__/graphql";
 import { useRouter } from "next/router";
-import { useLoading } from "../../../provider/loading/loading-provider";
+import { CSSProperties, useRef, useState } from "react";
+
 import {
   LoadMore,
   TicketsSectionNoData,
   TicketsSectionSkeleton,
 } from "./components";
-import { useDetectRef } from "../../../hooks/util/use-detect-ref";
+import { Tabs1, Tabs2 } from "./tabs";
+
+import { TicketSortType } from "@/__generated__/graphql";
+import TicketCard from "@/components/form/ticket-card";
+import { useAllTicketsQuery } from "@/hooks/query/use-all-tickets";
+import { useDetectRef } from "@/hooks/util/use-detect-ref";
+import { useLoading } from "@/provider/loading/loading-provider";
+import { Ticket, FILTER_TYPE, FilterType } from "@/types";
+
+const DEFAULT_LOADING_TIME = 700;
 
 interface TicketSectionProps {
   tickets?: Ticket[];
@@ -28,7 +26,7 @@ interface TicketSectionProps {
   sx?: CSSProperties;
 }
 
-const TicketsSection = ({ ...props }: TicketSectionProps) => {
+const TicketsSection = ({ sx }: TicketSectionProps) => {
   const { push } = useRouter();
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -38,7 +36,7 @@ const TicketsSection = ({ ...props }: TicketSectionProps) => {
 
   const [filter, setFilter] = useState<FilterType>(FILTER_TYPE.ALL);
   const [sortType, setSortType] = useState<TicketSortType>(
-    TicketSortType.Trending
+    TicketSortType.Trending,
   );
   const [isLoadMore, setIsLoadMore] = useState<boolean>(true);
 
@@ -86,15 +84,14 @@ const TicketsSection = ({ ...props }: TicketSectionProps) => {
     const result = await fetchMoreTickets();
     const isMoreTickets =
       !!result?.data?.tickets && result.data.tickets.length !== 0;
-    setTimeout(() => {
-      setIsLoadMore(isMoreTickets);
-    }, 700);
+
+    setTimeout(() => setIsLoadMore(isMoreTickets), DEFAULT_LOADING_TIME);
   };
 
   useDetectRef(handleListEnd, loadMoreRef);
 
   return (
-    <Box sx={{ ...props.sx }}>
+    <Box sx={{ ...sx }}>
       <Grid
         container
         direction={smUp ? "row" : "column"}
@@ -134,6 +131,7 @@ const TicketsSection = ({ ...props }: TicketSectionProps) => {
               <LoadMore ref={loadMoreRef} />
             ) : (
               // default load more section height
+              // TODO: add animation for load more section
               <div className="h-32" />
             )}
           </Grid>
