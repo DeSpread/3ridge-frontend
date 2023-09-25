@@ -5,3 +5,4 @@ coverage
 **/.svn
 **/.hg
 **/node_modules
+src/__generated__

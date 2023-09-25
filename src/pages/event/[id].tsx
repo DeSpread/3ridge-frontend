@@ -708,7 +708,7 @@ const Event = (props: AppProps) => {
     ) {
       let questContext;
       switch (quest.questPolicy?.questPolicy) {
-        case QuestPolicyType.VerifyVisitWebsite:
+        case QuestPolicyType.VerifyVisitWebsite: {
           questContext = quest.questPolicy
             ?.context as VerifyVisitWebsiteQuestContext;
           const newWindow = window.open(
@@ -718,6 +718,7 @@ const Event = (props: AppProps) => {
           );
           if (newWindow) newWindow.opener = null;
           break;
+      }
       }
       if (quest.questGuides?.[0]?.content) {
         openSimpleWarningDialog(quest.questGuides[0]);
@@ -1276,6 +1277,7 @@ const Event = (props: AppProps) => {
                   updateVerifyState(index);
                 });
               } catch (e) {
+                // FIXME: temporary add comment for lint
               } finally {
                 closeAgreementDialog();
               }
@@ -1300,6 +1302,7 @@ const Event = (props: AppProps) => {
                   }
                 );
               } catch (e) {
+                // FIXME: temporary add comment for lint
               } finally {
                 closeQuizDialog();
               }

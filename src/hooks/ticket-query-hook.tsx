@@ -1,3 +1,20 @@
+import { useMutation } from "@apollo/client";
+import add from "date-fns/add";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+
+import {
+  CategoryType,
+  ContentEncodingType,
+  ContentFormatType,
+  ContentMetadata,
+  QuestPolicy,
+  RewardPolicy,
+  RewardPolicyType,
+} from "../__generated__/graphql";
+import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
+import TypeParseHelper from "../helper/type-parse-helper";
+import { client } from "../lib/apollo/client";
 import {
   CLAIM_REWARD,
   COMPLETE_QUEST_OF_USER,
@@ -26,25 +43,9 @@ import {
   UPDATE_TICKET_VISIBLE,
   VERIFY_TWITTER_LIKING_RTWEET_QUEST,
 } from "../lib/apollo/query";
-import { client } from "../lib/apollo/client";
-import { useEffect, useState } from "react";
 import { Ticket, TicketUserQuery } from "../types";
-import TypeParseHelper from "../helper/type-parse-helper";
-import { useMutation } from "@apollo/client";
-import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
-import Console from "../util/console-util";
-import {
-  CategoryType,
-  ContentEncodingType,
-  ContentFormatType,
-  ContentMetadata,
-  QuestPolicy,
-  RewardPolicy,
-  RewardPolicyType,
-} from "../__generated__/graphql";
-import add from "date-fns/add";
 import AxiosUtil from "../util/axios-util";
-import { useRouter } from "next/router";
+import Console from "../util/console-util";
 
 const CLIENT_URI = process.env["NEXT_PUBLIC_APOLLO_CLIENT_URI"];
 
@@ -60,7 +61,7 @@ export function useTicketQuery({
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
   const [verifyTwitterLinkingAndRetweetQuest] = useMutation(
-    VERIFY_TWITTER_LIKING_RTWEET_QUEST
+    VERIFY_TWITTER_LIKING_RTWEET_QUEST,
   );
   const [verifyDiscordQuest] = useMutation(VERIFY_DISCORD_QUEST);
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
@@ -73,7 +74,7 @@ export function useTicketQuery({
   const [updateTicketImageUrl] = useMutation(UPDATE_TICKET_IMAGE_URL);
   const [updateTicketTitle] = useMutation(UPDATE_TICKET_TITLE);
   const [updateTicketDateRangeTime] = useMutation(
-    UPDATE_TICKET_DATE_RANGE_TIME
+    UPDATE_TICKET_DATE_RANGE_TIME,
   );
   const [updateTicketProject] = useMutation(UPDATE_TICKET_PROJECT);
   const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
@@ -125,7 +126,7 @@ export function useTicketQuery({
     // console.log("rewardPolicy", rewardPolicy);
     const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
       rewardPolicy?.context ?? undefined,
-      rewardPolicy?.rewardPolicyType ?? undefined
+      rewardPolicy?.rewardPolicyType ?? undefined,
     );
     setTicketData((prevState) => {
       return {
@@ -154,7 +155,7 @@ export function useTicketQuery({
             questPolicy: {
               context: TypeParseHelper.parseQuestPolicy(
                 e.questPolicy?.context,
-                e.questPolicy?.questPolicy
+                e.questPolicy?.questPolicy,
               ),
               questPolicy: e.questPolicy?.questPolicy ?? undefined,
             },
@@ -200,11 +201,11 @@ export function useTicketQuery({
 
   const asyncVerifyTwitterFollowQuest = async (
     ticketId: string,
-    questId: string
+    questId: string,
   ) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `verifyTwitterFollowQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `verifyTwitterFollowQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`,
       );
       await verifyTwitterFollowQuest({
         variables: {
@@ -218,11 +219,11 @@ export function useTicketQuery({
 
   const asyncVerifyTwitterLikingQuest = async (
     ticketId: string,
-    questId: string
+    questId: string,
   ) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `VerifyTwitterLikingQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `VerifyTwitterLikingQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`,
       );
       const res = await verifyTwitterLikingQuest({
         variables: {
@@ -236,11 +237,11 @@ export function useTicketQuery({
 
   const asyncVerifyTwitterRetweetQuest = async (
     ticketId: string,
-    questId: string
+    questId: string,
   ) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `VerifyTwitterRetweetQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `VerifyTwitterRetweetQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`,
       );
       const res = await verifyTwitterRetweetQuest({
         variables: {
@@ -256,11 +257,11 @@ export function useTicketQuery({
 
   const asyncVerifyTwitterLinkingAndRetweetQuest = async (
     ticketId: string,
-    questId: string
+    questId: string,
   ) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `asyncVerifyTwitterLinkingAndRetweetQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `asyncVerifyTwitterLinkingAndRetweetQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`,
       );
       await verifyTwitterLinkingAndRetweetQuest({
         variables: {
@@ -276,11 +277,11 @@ export function useTicketQuery({
 
   const asyncCompleteQuestOfUser = async (
     ticketId: string,
-    questId: string
+    questId: string,
   ) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `CompleteQuestOfUser(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `CompleteQuestOfUser(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`,
       );
       const res = await completeQuestOfUser({
         variables: {
@@ -311,7 +312,7 @@ export function useTicketQuery({
   const asyncVerifyDiscordQuest = async (ticketId: string, questId: string) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `verifyDiscordQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `verifyDiscordQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`,
       );
       await verifyDiscordQuest({
         variables: {
@@ -327,11 +328,11 @@ export function useTicketQuery({
 
   const asyncVerifyTelegramQuest = async (
     ticketId: string,
-    questId: string
+    questId: string,
   ) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `verifyTelegramQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `verifyTelegramQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`,
       );
       await verifyTelegramQuest({
         variables: {
@@ -348,7 +349,7 @@ export function useTicketQuery({
   const asyncVerifyAptosQuest = async (ticketId: string, questId: string) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `verifyAptosQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `verifyAptosQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`,
       );
       await verifyAptosQuest({
         variables: {
@@ -365,7 +366,7 @@ export function useTicketQuery({
   const asyncVerify3ridgePoint = async (ticketId: string, questId: string) => {
     if (ticketId && questId && userId) {
       Console.log(
-        `verifyAptosQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`
+        `verifyAptosQuest(questId: "${questId}", ticketId: "${ticketId}", userId: "${userId}") {\n _id \n}`,
       );
       const res = await verify3ridgePoint({
         variables: {
@@ -381,7 +382,7 @@ export function useTicketQuery({
 
   const asyncVerifySurveyQuest = async (
     questId: string,
-    answers?: string[]
+    answers?: string[],
   ) => {
     if (id && questId && answers && userId) {
       await verifySurveyQuest({
@@ -461,7 +462,7 @@ export function useTicketQuery({
 
   const asyncUpdateTicketDateRangeTime = async (
     beginTime?: Date,
-    untilTime?: Date
+    untilTime?: Date,
   ) => {
     if (id) {
       await updateTicketDateRangeTime({
@@ -475,7 +476,7 @@ export function useTicketQuery({
   };
 
   const asyncUpdateTicketDescription = async (
-    description?: ContentMetadata
+    description?: ContentMetadata,
   ) => {
     if (id) {
       await updateTicketDescription({
@@ -500,7 +501,7 @@ export function useTicketQuery({
 
   const asyncCreateQuest = async (
     title?: ContentMetadata,
-    questPolicy?: QuestPolicy
+    questPolicy?: QuestPolicy,
   ) => {
     if (id) {
       await createQuest({
@@ -528,7 +529,7 @@ export function useTicketQuery({
   const asyncUpdateQuest = async (
     questId: string,
     questPolicy?: QuestPolicy,
-    title?: ContentMetadata
+    title?: ContentMetadata,
   ) => {
     await updateQuest({
       variables: {
@@ -602,7 +603,7 @@ export function useTicketQuery({
 
   const asyncDownloadCompletedUserFile = async (
     query: TicketUserQuery,
-    filename?: string
+    filename?: string,
   ) => {
     if (id) {
       const clientUri = CLIENT_URI?.replace("/graphql", "");
@@ -616,9 +617,10 @@ export function useTicketQuery({
             includeTwitterId: query?.includeTwitterId,
             includeEmail: query?.includeEmail,
             includeTelegram: query?.includeTelegram,
+            includeDiscord: query?.includeDiscord,
           },
         },
-        filename
+        filename,
       );
     }
   };
@@ -626,7 +628,7 @@ export function useTicketQuery({
   const asyncDownloadQuestDataFile = async (
     questId?: string,
     query?: TicketUserQuery,
-    filename?: string
+    filename?: string,
   ) => {
     if (id && questId) {
       const clientUri = CLIENT_URI?.replace("/graphql", "");
@@ -642,7 +644,7 @@ export function useTicketQuery({
             includeTelegram: query?.includeTelegram,
           },
         },
-        filename
+        filename,
       );
     }
   };

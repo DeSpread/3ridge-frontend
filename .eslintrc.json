@@ -1,14 +1,66 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:tailwindcss/recommended",
+    "plugin:import/recommended",
+    "next/core-web-vitals",
+    "prettier"
+  ],
+  "plugins": ["@typescript-eslint", "import"],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": [
       "warn",
+      { "additionalHooks": "useRecoilCallback" }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "tailwindcss/no-custom-classname": "off",
+    "import/newline-after-import": "warn",
+    "import/no-unresolved": ["warn", { "ignore": ["^@/"] }],
+    "import/order": [
+      "warn",
       {
-        "additionalHooks": "useRecoilCallback"
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
       }
-    ]
+    ],
+    // FIXME: remove this rules after fixing all the errors
+    // @typescript-eslint/ban-ts-comment warning ts-ignore
+    "@typescript-eslint/ban-ts-comment": [
+      "warn",
+      { "ts-ignore": "allow-with-description" }
+    ],
+    // prefer-const warning
+    "prefer-const": [
+      "warn",
+      {
+        "destructuring": "all",
+        "ignoreReadBeforeAssign": false
+      }
+    ],
+    // typescript-eslint/no-explicit-any warning
+    "@typescript-eslint/no-explicit-any": "warn",
+    // import/named warning for import type
+    "import/named": "warn",
+    // typescript-eslint/ban-types warning
+    "@typescript-eslint/ban-types": "warn"
   },
+  // rules for js files
+  "overrides": [
+    {
+      "files": ["**/*.js"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ],
   "settings": {
     "next": {
       "rootDir": "src/"

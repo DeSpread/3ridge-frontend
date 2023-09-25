@@ -9,7 +9,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { forwardRef, Ref, useEffect, useLayoutEffect } from "react";
 import { Ticket } from "../../types";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
@@ -21,7 +21,7 @@ type EventCardProps = CardProps & {
   isWinner?: boolean;
 };
 
-const TicketCard = (props: EventCardProps) => {
+const TicketCard = (props: EventCardProps, targetRef?: Ref<HTMLDivElement>) => {
   const { ticket, username } = props;
   const ref = React.useRef<HTMLDivElement>(null);
   const [height, setHeight] = React.useState(0);
@@ -44,6 +44,7 @@ const TicketCard = (props: EventCardProps) => {
 
   return (
     <Card
+      ref={targetRef}
       sx={{
         background: "transparent",
         transform: "translateY(0%)",
@@ -216,4 +217,4 @@ const TicketCard = (props: EventCardProps) => {
   );
 };
 
-export default TicketCard;
+export default forwardRef(TicketCard);

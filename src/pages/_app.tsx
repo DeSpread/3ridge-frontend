@@ -1,39 +1,40 @@
-import "../styles/tailwindcss.css";
-import "../styles/globals.css";
+import "@/styles/tailwindcss.css";
+import "@/styles/globals.css";
 import "prismjs/themes/prism-tomorrow.css";
 
-import React, { ReactElement, ReactNode, useEffect } from "react";
-import type { AppProps } from "next/app";
-import type { NextPage } from "next";
-import { createTheme } from "../theme";
-import { ThemeProvider } from "@mui/material/styles";
 import { ApolloProvider } from "@apollo/client";
-import { client as apolloClient } from "../lib/apollo/client";
-import { WagmiConfig } from "wagmi";
-import { ethereumClient, projectId, wagmiConfig } from "../lib/wagmi/client";
+import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
+import { ThemeProvider } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { WalletProvider } from "@suiet/wallet-kit";
+import { Web3Modal } from "@web3modal/react";
+import type { NextPage } from "next";
+import type { AppProps } from "next/app";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import Script from "next/script";
+import { PetraWallet } from "petra-plugin-wallet-adapter";
+import React, { ReactElement, ReactNode, useEffect } from "react";
+import { combineProviders } from "react-combine-providers";
+import { isMobile } from "react-device-detect";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
-import { LoginProvider } from "../provider/login/login-provider";
+import { v1 } from "uuid";
+import { WagmiConfig } from "wagmi";
+
+import ErrorBoundary from "../components/error-boundary";
+import * as gtag from "../lib/gtag";
+import { ethereumClient, projectId, wagmiConfig } from "../lib/wagmi/client";
 import { AlertProvider } from "../provider/alert/alert-provider";
 import { LoadingProvider } from "../provider/loading/loading-provider";
-import { combineProviders } from "react-combine-providers";
-import { PetraWallet } from "petra-plugin-wallet-adapter";
-import * as gtag from "../lib/gtag";
-import Head from "next/head";
-import Script from "next/script";
-import { WalletProvider } from "@suiet/wallet-kit";
-import { v1 } from "uuid";
-import { useRouter } from "next/router";
-import { Web3Modal } from "@web3modal/react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
-import { isMobile } from "react-device-detect";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-
+import { LoginProvider } from "../provider/login/login-provider";
 import { MobileContext } from "../provider/mobile/mobile-context";
-import ErrorBoundary from "../components/error-boundary";
 import { SnackbarProvider } from "../provider/snackbar/snackbar-provider";
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import { createTheme } from "../theme";
+
+import { client as apolloClient } from "@/lib/apollo/client";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
