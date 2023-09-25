@@ -143,7 +143,6 @@ const MultiSend = () => {
   });
 
   console.log("allowanceAmount", allowanceAmount);
-  // console.log(Web3Util.weiToEther(allowanceAmount).toFixed(18));
 
   const isApproved = useMemo(() => {
     if (allowanceAmount === BigInt(0)) {
