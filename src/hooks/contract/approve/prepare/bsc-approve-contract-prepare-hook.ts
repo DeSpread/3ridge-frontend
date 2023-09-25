@@ -31,7 +31,7 @@ export function useBscApproveContractPrepare({ amount }: { amount: number }) {
         type: "function",
       },
     ],
-    args: ["0xf638D1de7cCe47678830c928b337cd4D17a62917", BigInt(amount)],
+    args: ["0x81cDC3c61857ACCB4b9851A55910E2AF7FB4DDF1", BigInt(amount)],
     functionName: "approve",
   });
 

@@ -39,4 +39,53 @@ export function useApproveWriteContractHook({
     isLoading,
     isSuccess,
   };
+  // const {
+  //   data,
+  //   error: writeError,
+  //   isError: isWriteError,
+  //   write,
+  //   isSuccess: isWriteSuccess,
+  // } = useContractWrite(config);
+  //
+  // const { isLoading } = useWaitForTransaction({
+  //   hash: data?.hash,
+  //   timeout: 10_000,
+  //   confirmations: 5,
+  // });
+  //
+  // const hash = useMemo(() => {
+  //   return data?.hash;
+  // }, [data]);
+  //
+  // const error = useMemo(() => {
+  //   if (prepareError) return prepareError;
+  //   if (writeError) return writeError;
+  //   return undefined;
+  // }, [prepareError, writeError]);
+  //
+  // const isError = useMemo(() => {
+  //   return isPrepareError || isWriteError;
+  // }, [isPrepareError, isWriteError]);
+  //
+  // const isSuccess = useMemo(() => {
+  //   return isPrepareSuccess && isWriteSuccess;
+  // }, [isPrepareSuccess, isWriteSuccess]);
+  //
+  // const runContract = () => {
+  //   write?.();
+  // };
+  //
+  // return {
+  //   runContract: !isPrepareSuccess
+  //     ? () => {
+  //         throw new AppError("Contract Prepare Not Yet");
+  //       }
+  //     : runContract,
+  //   isPrepareSuccess,
+  //   error,
+  //   isError,
+  //   hash,
+  //   isLoading,
+  //   isSuccess,
+  // };
 }

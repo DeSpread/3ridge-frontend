@@ -10,7 +10,7 @@ export function useBscMultiSendContractPrepare({
   amounts: bigint[];
 }) {
   const { config, error, isError, isSuccess } = usePrepareContractWrite({
-    address: "0xf638D1de7cCe47678830c928b337cd4D17a62917",
+    address: "0x81cDC3c61857ACCB4b9851A55910E2AF7FB4DDF1",
     abi: [
       {
         inputs: [
@@ -42,8 +42,8 @@ export function useBscMultiSendContractPrepare({
       },
     ],
     args: [
-      "0x55d398326f99059fF775485246999027B3197955",
-      sender ?? "0x55d398326f99059fF775485246999027B3197955",
+      "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+      sender ?? "0x81cDC3c61857ACCB4b9851A55910E2AF7FB4DDF1",
       recipients,
       amounts,
     ],
