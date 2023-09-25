@@ -1,6 +1,11 @@
 import { useQuery } from "react-query";
+
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
+
+// FIXME: remove this eslint-disable after check discord-oauth2 types
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const DiscordOauth2 = require("discord-oauth2");
+
 const oauth = new DiscordOauth2();
 
 export default function useDiscordAuth(props: { code?: string }) {

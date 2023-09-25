@@ -19,15 +19,10 @@ const nextConfig = {
     ],
   },
   experimental: { esmExternals: true },
-  async redirects() {
-    return [];
-  },
 };
 
-module.exports = nextConfig;
-
 module.exports = withSentryConfig(
-  module.exports,
+  nextConfig,
   { silent: true },
-  { hideSourcemaps: true }
+  { hideSourcemaps: true },
 );

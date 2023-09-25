@@ -392,7 +392,7 @@ const useSignedUserQuery = () => {
       if (doInsert) {
         newWalletAddressInfos = userData?.walletAddressInfos
           ? [
-              ...userData?.walletAddressInfos,
+              ...(userData?.walletAddressInfos ?? []),
               {
                 address: walletAddress,
                 network: network,

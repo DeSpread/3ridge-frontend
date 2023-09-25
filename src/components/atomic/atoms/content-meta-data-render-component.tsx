@@ -1,27 +1,20 @@
-import { ComponentRenderFunc } from "../../../types";
+import { Typography } from "@mui/material";
+import { marked } from "marked";
+import { PropsWithChildren, useCallback, useMemo } from "react";
+
 import {
   ContentFormatType,
   ContentMetadata,
 } from "../../../__generated__/graphql";
-import {
-  PropsWithChildren,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { Box, Stack, Typography } from "@mui/material";
 import StringHelper from "../../../helper/string-helper";
-import { marked } from "marked";
-import LinkTypography from "./link-typography";
+import { ComponentRenderFunc } from "../../../types";
 
 marked.use({
   gfm: true,
   breaks: true,
 });
 
-const MarkDownRenderer = ({
+export const MarkDownRenderer = ({
   content,
 }: { content?: string } & PropsWithChildren) => {
   const html = useMemo(() => {

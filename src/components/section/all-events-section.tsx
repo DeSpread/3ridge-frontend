@@ -11,22 +11,34 @@ import { TicketSortType } from "../../__generated__/graphql";
 import { Stack, Typography } from "@mui/material";
 import TicketsSection from "./tickets-section";
 
-import { useTicketsQuery } from "../../hooks/tickets-query-hook";
+import { useAllTicketsQuery } from "../../hooks/query/use-all-tickets";
 
 const AllEventsSection = () => {
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
 
+  const [isLastTicketData, setIsLastTicketData] = useState<boolean>(false);
   const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
-
   const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
     TicketSortType.Trending
   );
-  const { ticketsData, ticketsDataLoading } = useTicketsQuery({
+
+  const {
+    data: ticketsData,
+    loading: ticketsDataLoading,
+    fetchMoreTickets,
+  } = useAllTicketsQuery({
     filterType,
     sort: ticketSortType,
-    ticketIsVisibleOnly: true,
   });
+
+  const handleListEnd = async () => {
+    const result = await fetchMoreTickets();
+
+    if (result?.data?.tickets.length === 0) {
+      setIsLastTicketData(true);
+    }
+  };
 
   return (
     <Stack direction={"column"} alignItems={""} sx={{ background: "" }}>
@@ -36,14 +48,13 @@ const AllEventsSection = () => {
         justifyContent={"space-between"}
         sx={{ marginTop: "32px" }}
       >
-        <Stack direction={"row"} spacing={1}>
-          <Typography variant={"h4"}>전체 이벤트</Typography>
-        </Stack>
+        <Typography variant={"h4"}>전체 이벤트</Typography>
       </Stack>
       {ticketsData && (
         <TicketsSection
           tickets={ticketsData}
           loading={ticketsDataLoading}
+          isLastTicketData={isLastTicketData}
           onTicketClick={async (e) => {
             showLoading();
             const myEvent = e as MouseEventWithParam<TicketEventParam>;
@@ -51,9 +62,8 @@ const AllEventsSection = () => {
             await router.push(`/event/${ticket._id}`);
             closeLoading();
           }}
-          sx={{
-            marginTop: 4,
-          }}
+          onListEnd={handleListEnd}
+          sx={{ marginTop: 4 }}
           onTabClick={async (e) => {
             const index = e;
             const filterType =
@@ -71,7 +81,7 @@ const AllEventsSection = () => {
               e === 0 ? TicketSortType.Trending : TicketSortType.Newest;
             setTicketSortType(sortType);
           }}
-        ></TicketsSection>
+        />
       )}
     </Stack>
   );

@@ -12,8 +12,12 @@ import {
 } from "@mui/material";
 import React, {
   CSSProperties,
+  ForwardedRef,
+  forwardRef,
+  HTMLAttributes,
   MouseEventHandler,
   PropsWithChildren,
+  useRef,
   useState,
 } from "react";
 import { MouseEventWithParam, Ticket, TicketEventParam } from "../../types";
@@ -23,13 +27,16 @@ import PrimaryButton from "../atomic/atoms/primary-button";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import Image from "next/image";
+import { useDetectRef } from "../../hooks/util/use-detect-ref";
 
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
   loading?: boolean;
+  isLastTicketData?: boolean;
   onTicketClick?: MouseEventHandler;
   onTabClick?: (newValue: number) => void;
   onTab2Click?: (newValue: number) => void;
+  onListEnd?: () => void;
   sx?: CSSProperties;
 };
 
@@ -178,10 +185,17 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
   );
 };
 
-const TicketsSection = (props: TicketSectionProps) => {
-  const { tickets, loading, onTicketClick, onTabClick, onTab2Click } = props;
+const TicketsSection = ({
+  tickets,
+  loading,
+  isLastTicketData,
+  onTicketClick,
+  onTabClick,
+  onTab2Click,
+  onListEnd,
+  ...props
+}: TicketSectionProps) => {
   const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   const onTicketCardClick = (ticket: Ticket) => {
@@ -200,7 +214,6 @@ const TicketsSection = (props: TicketSectionProps) => {
     >
       <Grid
         container
-        sx={{ background: "" }}
         direction={smUp ? "row" : "column"}
         justifyContent={"space-between"}
         columnSpacing={1}
@@ -244,7 +257,7 @@ const TicketsSection = (props: TicketSectionProps) => {
                     onClick={(e) => {
                       onTicketCardClick(ticket);
                     }}
-                  ></TicketCard>
+                  />
                 </Grid>
               );
             })}
