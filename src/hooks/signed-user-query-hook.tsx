@@ -390,9 +390,10 @@ const useSignedUserQuery = () => {
       console.log("_asyncUpsertWalletAddress - doInsert", doInsert);
       let newWalletAddressInfos = userData?.walletAddressInfos;
       if (doInsert) {
-        newWalletAddressInfos = userData?.walletAddressInfos
+        const userWalletAddress = userData?.walletAddressInfos;
+        newWalletAddressInfos = userWalletAddress
           ? [
-              ...(userData?.walletAddressInfos ?? []),
+              ...userWalletAddress,
               {
                 address: walletAddress,
                 network: network,
