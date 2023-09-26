@@ -1,4 +1,4 @@
-//export function useAdminQuery(userId?: string) {
+import { useMemo } from "react";
 import {
   useAccount,
   useContractWrite,
@@ -7,10 +7,11 @@ import {
   useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
-import { ContractInfo } from "../types";
-import { useMemo, useState } from "react";
-import { AppError } from "../error/my-error";
 
+import { AppError } from "../../error/my-error";
+import { ContractInfo } from "../../types";
+
+// it would be deprecated
 export function useContractHook(props: { contractInfo?: ContractInfo }) {
   const { contractInfo } = props;
 

@@ -1,11 +1,4 @@
 import {
-  ChainType,
-  ContentEncodingType,
-  ContentFormatType,
-  ContentMetadata,
-} from "../../../__generated__/graphql";
-import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
-import {
   Box,
   Divider,
   FormControl,
@@ -15,13 +8,21 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import SecondaryButton from "../../atomic/atoms/secondary-button";
-import React, { useEffect, useMemo, useState } from "react";
-import InputWithLabel from "../../atomic/atoms/input-with-label";
 import dedent from "dedent";
+import React, { useEffect, useMemo, useState } from "react";
+
+import {
+  ChainType,
+  ContentEncodingType,
+  ContentFormatType,
+  ContentMetadata,
+} from "../../../__generated__/graphql";
 import ResourceHelper from "../../../helper/resource-helper";
 import { ContractInfo, Ticket } from "../../../types";
+import InputWithLabel from "../../atomic/atoms/input-with-label";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
 import StyledOutlinedInput from "../../atomic/atoms/styled/styled-outlined-input";
+import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 
 const TicketRewardChainContentEditDialog = (
   props: {
@@ -33,7 +34,7 @@ const TicketRewardChainContentEditDialog = (
       overrideRewardChainContent?: ContentMetadata;
       contractInfo?: ContractInfo;
     }) => void;
-  } & SimpleDialogProps
+  } & SimpleDialogProps,
 ) => {
   const { defaultTicketData, ...rest } = props;
   const [chainType, setChainType] = useState<ChainType | string>("EMPTY");
@@ -50,7 +51,7 @@ const TicketRewardChainContentEditDialog = (
         context.overrideRewardChainContent?.content
           ?.replace(/<\/?[^>]+(>|$)/g, "")
           .replace("&nbsp", " ")
-          .trim() ?? ""
+          .trim() ?? "",
       );
       if (context.contractInfo)
         setContractInfoValue(JSON.stringify(context.contractInfo, null, 2));
@@ -147,7 +148,7 @@ const TicketRewardChainContentEditDialog = (
                 fullWidth
                 value={contractInfoValue}
                 onChange={(
-                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
                 ) => {
                   console.log(e.target.value);
                   setContractInfoValue(e.target.value);

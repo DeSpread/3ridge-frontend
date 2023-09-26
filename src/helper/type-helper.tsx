@@ -1,4 +1,10 @@
 import {
+  AllTicketsQuery,
+  ChainType,
+  RewardPolicy,
+  RewardPolicyType,
+} from "../__generated__/graphql";
+import {
   RewardContext,
   SUPPORTED_NETWORKS,
   SupportedNetwork,
@@ -6,14 +12,9 @@ import {
   User,
   WALLET_NAMES,
 } from "../types";
-import {
-  AllTicketsQuery,
-  ChainType,
-  RewardPolicy,
-  RewardPolicyType,
-} from "../__generated__/graphql";
-import DateUtil from "../util/date-util";
 import { ItemOfArray } from "../types/utill";
+import DateUtil from "../util/date-util";
+
 import TypeParseHelper from "./type-parse-helper";
 
 class TypeHelper {
@@ -124,8 +125,18 @@ class TypeHelper {
     return index;
   };
 
+  public static convertChainTypeToId = (chainType: ChainType) => {
+    switch (chainType) {
+      case ChainType.Bnb:
+        return 56;
+      case ChainType.BnbTestnet:
+        return 97;
+    }
+    return -1;
+  };
+
   public static convertTicket = (
-    ticket: ItemOfArray<AllTicketsQuery["tickets"]>
+    ticket: ItemOfArray<AllTicketsQuery["tickets"]>,
   ) => {
     return {
       _id: ticket._id ?? undefined,
@@ -153,7 +164,7 @@ class TypeHelper {
           questPolicy: {
             context: TypeParseHelper.parseQuestPolicy(
               _e.questPolicy?.context,
-              _e.questPolicy?.questPolicy
+              _e.questPolicy?.questPolicy,
             ),
             questPolicy: _e.questPolicy?.questPolicy ?? undefined,
           },
@@ -163,7 +174,7 @@ class TypeHelper {
       rewardPolicy: {
         context: TypeParseHelper.parseRewardPolicy(
           ticket.rewardPolicy?.context ?? undefined,
-          ticket.rewardPolicy?.rewardPolicyType ?? undefined
+          ticket.rewardPolicy?.rewardPolicyType ?? undefined,
         ),
         rewardPoint: ticket.rewardPolicy?.rewardPoint ?? undefined,
         rewardPolicyType: ticket.rewardPolicy?.rewardPolicyType ?? undefined,
