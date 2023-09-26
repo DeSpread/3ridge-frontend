@@ -18,7 +18,7 @@ export const TicketCardHeader = ({
 }: TicketCardHeaderProps) => {
   // FIXME: why imageUrl, label is empty string not undefined?
   return (
-    <div className="flex items-center justify-between gap-1 px-1 pb-6">
+    <div className="flex items-center justify-between gap-1 px-1">
       <div className="flex items-center gap-2 overflow-hidden">
         <Image
           alt="project logo image"
