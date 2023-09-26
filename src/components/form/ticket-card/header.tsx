@@ -18,8 +18,8 @@ export const TicketCardHeader = ({
 }: TicketCardHeaderProps) => {
   // FIXME: why imageUrl, label is empty string not undefined?
   return (
-    <div className="flex items-center justify-between pb-6 pl-1">
-      <div className="flex items-center gap-2">
+    <div className="flex items-center justify-between gap-1 px-1 pb-6">
+      <div className="flex items-center gap-2 overflow-hidden">
         <Image
           alt="project logo image"
           src={imageUrl || DEFAULT_PROJECT_IMAGE}
@@ -32,10 +32,15 @@ export const TicketCardHeader = ({
             borderRadius: 32,
           }}
         />
-        <label className="md:text-body1 text-h6">{label || "3ridge"}</label>
+        {/* FIXME: temporary sans font for text '...' */}
+        <label className="md:text-body1 text-h6 truncate font-sans">
+          {label || "3ridge"}
+        </label>
       </div>
       {!isWinner ? (
-        <div className="text-body1 md:text-body2">{questCount ?? 0} 퀘스트</div>
+        <div className="text-body1 md:text-body2 whitespace-nowrap">
+          {questCount ?? 0} 퀘스트
+        </div>
       ) : (
         <div className="md:text-h6 text-h5">👑</div>
       )}
