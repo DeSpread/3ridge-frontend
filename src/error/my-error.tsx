@@ -81,6 +81,11 @@ export const getLocaleErrorMessage = (e: any) => {
     message === APP_ERROR_MESSAGE.TELEGRAM_USER_NOT_FOUND_IN_TELEGRAM_GROUP
   ) {
     return "유저가 텔레그램 그룹에 참여하지 않았습니다.\r\n 확인 부탁드립니다.";
+  } else if (
+    message ===
+    "Contract arguments something wrong!!! - recipients, amounts array size must be equal"
+  ) {
+    return "주소 입력에 오류가 있습니다. 완벽하게 채워주세요.";
   }
   return message;
 };
