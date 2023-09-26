@@ -11,6 +11,9 @@ module.exports = {
       },
     },
     extend: {
+      borderWidth: {
+        3: "3px",
+      },
       screens: {
         sm: "600px",
         md: "1000px",
@@ -32,19 +35,18 @@ module.exports = {
           800: "#18151d",
           900: "#100e14",
         },
-        // TODO: check shadcn colors
-        // primary: {
-        //   main: "#F3F4F6",
-        //   light: "#909BEF",
-        //   dark: "#F3F4F6",
-        //   contrastText: "#100e14",
-        // },
-        // secondary: {
-        //   main: "#61E1FF",
-        //   light: "#3FC79A",
-        //   dark: "#374ae9",
-        //   contrastText: "#F3F4F6",
-        // },
+        primary: {
+          main: "#F3F4F6",
+          light: "#909BEF",
+          dark: "#F3F4F6",
+          contrastText: "#100e14",
+        },
+        secondary: {
+          main: "#61E1FF",
+          light: "#3FC79A",
+          dark: "#374ae9",
+          contrastText: "#F3F4F6",
+        },
         success: {
           main: "#14B8A6",
           light: "#43C6B7",
@@ -80,14 +82,15 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
+        // TODO: check shadcn
+        // primary: {
+        //   DEFAULT: "hsl(var(--primary))",
+        //   foreground: "hsl(var(--primary-foreground))",
+        // },
+        // secondary: {
+        //   DEFAULT: "hsl(var(--secondary))",
+        //   foreground: "hsl(var(--secondary-foreground))",
+        // },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
