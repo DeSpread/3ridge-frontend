@@ -39,9 +39,10 @@ export function useBscReadContract({
     ],
     args: [
       userAddress ?? "0x1A28b29107fF10d28760c12b24a2e06d98054389",
-      "0x81cDC3c61857ACCB4b9851A55910E2AF7FB4DDF1",
+      "0xf638D1de7cCe47678830c928b337cd4D17a62917",
     ],
     functionName: "allowance",
+    watch: true,
   });
 
   return {

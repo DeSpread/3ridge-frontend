@@ -34,7 +34,7 @@ class StringUtil {
       { value: 1e18, symbol: "E" },
     ];
     const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-    let item = lookup
+    const item = lookup
       .slice()
       .reverse()
       .find(function (item) {
@@ -59,6 +59,13 @@ class StringUtil {
     const DELIMITER = "-";
     const currentUnixTimestamp = new Date().getTime();
     return currentUnixTimestamp + DELIMITER + uuid();
+  };
+
+  public static removeTrailingZeros = (numberString: string) => {
+    console.log("numberString", numberString);
+    if (numberString === "0") return "0";
+    const trimmedNumberString = numberString.replace(/\.?0+$/, "");
+    return trimmedNumberString;
   };
 }
 

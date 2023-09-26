@@ -14,9 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React, { useEffect, useMemo, useState } from "react";
-import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import Web3 from "web3";
+import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
+import { useAccount, useConnect, useNetwork, useSwitchNetwork } from "wagmi";
 
 import { ChainType } from "../../__generated__/graphql";
 import NumberInput from "../../components/atomic/atoms/number-input";
@@ -25,8 +24,9 @@ import ValidatedTextInput from "../../components/atomic/molecules/validated-text
 import MathUtil from "../../util/math-util";
 import StringUtil from "../../util/string-util";
 
+import ConfirmAlertDialog from "@/components/dialogs/confirm-alert-dialog";
 import ContractLoadingDialog from "@/components/dialogs/contract-loading-dialog";
-import { getErrorMessage, getLocaleErrorMessage } from "@/error/my-error";
+import { getLocaleErrorMessage } from "@/error/my-error";
 import StringHelper from "@/helper/string-helper";
 import TypeHelper from "@/helper/type-helper";
 import { useApproveReadContractHook } from "@/hooks/contract/approve/approve-read-contract-hook";
@@ -38,11 +38,16 @@ import { TokenType } from "@/types";
 import Web3Util from "@/util/web3-util";
 
 const MultiSend = () => {
+  const TEST_RATIO = 1;
+
   const theme = useTheme();
   const [addresses, setAddresses] = useState<`0x${string}`[] | string[]>([""]);
   const [chainType, setChainType] = useState<ChainType>(ChainType.BnbTestnet);
   const [tokenType, setTokenType] = useState<TokenType>(TokenType.USDT);
   const [amountValue, setAmountValue] = useState(1);
+
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
   const { showLoading, closeLoading } = useLoading();
   const { showAlert } = useAlert();
   const { chain: connectedChain } = useNetwork();
@@ -53,26 +58,40 @@ const MultiSend = () => {
     switchNetwork,
   } = useSwitchNetwork();
   const { address: userAddress, isConnected } = useAccount();
+  const { connect } = useConnect();
 
   const isChainConnected = useMemo(() => {
     return TypeHelper.convertChainTypeToId(chainType) === connectedChain?.id;
   }, [chainType, connectedChain]);
 
+  const getApprovedAmount = () => {
+    return (
+      Web3Util.etherToWei(amountValue) * (addresses?.length ?? 0) * TEST_RATIO
+    );
+  };
+
   const {
     runContract: runApproveContract,
-    isPrepareSuccess,
-    isLoading,
+    isPrepareSuccess: isApprovePrepareSuccess,
+    isLoading: isApproveLoading,
     isSuccess,
     isError,
     error,
-    hash,
-  } = useApproveWriteContractHook({ chain: chainType, amount: 1000 });
+    hash: approveHash,
+  } = useApproveWriteContractHook({
+    chain: chainType,
+    amount: getApprovedAmount(),
+  });
 
-  console.log("isLoading", isLoading, "isSuccess", isSuccess);
+  useEffect(() => {}, []);
 
-  const openLoadingDialog = useMemo(() => {
-    return isLoading;
-  }, [isLoading]);
+  const showApproveConfirmDialog = () => {
+    setOpenConfirmDialog(true);
+  };
+
+  const closeApproveConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
 
   const recipients: `0x${string}`[] = useMemo(() => {
     return (
@@ -81,12 +100,42 @@ const MultiSend = () => {
     );
   }, [addresses]);
 
-  const { runContract: runMultiSendContract } = useMultiSendWriteContractHook({
+  const getMultiSendAmounts = () => {
+    const _amount = BigInt(Web3Util.etherToWei(amountValue) * TEST_RATIO);
+    return Array.from({ length: addresses.length ?? 0 }, () => _amount);
+  };
+
+  console.log("getMultiSendAmounts - ", getMultiSendAmounts());
+
+  const {
+    runContract: runMultiSendContract,
+    isLoading: isMultiSendLoading,
+    isPrepareSuccess: isMultiSendPrepareSuccess,
+    hash: multiSendHash,
+  } = useMultiSendWriteContractHook({
     chain: chainType,
     sender: userAddress,
     recipients,
-    amounts: [BigInt(1000)],
+    amounts: getMultiSendAmounts(),
   });
+
+  const hash = useMemo(() => {
+    if (approveHash) return approveHash;
+    if (multiSendHash) return multiSendHash;
+    return undefined;
+  }, [approveHash, multiSendHash]);
+
+  const openLoadingDialog = useMemo(() => {
+    return (
+      (isApproveLoading && isApprovePrepareSuccess) ||
+      (isMultiSendLoading && isMultiSendPrepareSuccess)
+    );
+  }, [
+    isApprovePrepareSuccess,
+    isMultiSendPrepareSuccess,
+    isApproveLoading,
+    isMultiSendLoading,
+  ]);
 
   const { data: allowanceAmount } = useApproveReadContractHook({
     chain: chainType,
@@ -94,6 +143,7 @@ const MultiSend = () => {
   });
 
   console.log("allowanceAmount", allowanceAmount);
+  // console.log(Web3Util.weiToEther(allowanceAmount).toFixed(18));
 
   const isApproved = useMemo(() => {
     if (allowanceAmount === BigInt(0)) {
@@ -180,6 +230,31 @@ const MultiSend = () => {
             </Stack>
             <Divider sx={{ marginTop: 3, marginBottom: 4 }}></Divider>
             <Stack spacing={1}>
+              <Stack
+                direction={"row"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                sx={{
+                  maxWidth: 256,
+                }}
+                spacing={1}
+              >
+                <Stack direction={"row"} alignItems={"center"} spacing={1}>
+                  <Typography>{`토큰`}</Typography>
+                  <Typography>{`허용량: `}</Typography>
+                </Stack>
+                <Stack spacing={1} direction={"row"}>
+                  <Typography suppressHydrationWarning>
+                    {StringUtil.removeTrailingZeros(
+                      Web3Util.weiToEther(allowanceAmount, 18).toString(),
+                    )}
+                  </Typography>
+                  <Typography>USDT</Typography>
+                </Stack>
+              </Stack>
+            </Stack>
+            <Divider sx={{ marginTop: 3, marginBottom: 4 }}></Divider>
+            <Stack spacing={1}>
               {addresses &&
                 addresses.map((e, i) => {
                   return (
@@ -222,6 +297,7 @@ const MultiSend = () => {
                           borderWidth: 2,
                           borderStyle: "solid",
                           marginLeft: 3,
+                          visibility: i === 0 ? "hidden" : "visible",
                         }}
                         onClick={(e) => {
                           setAddresses((prevState) => {
@@ -284,6 +360,9 @@ const MultiSend = () => {
               fullWidth={true}
               onClick={async (e) => {
                 try {
+                  if (!isConnected) {
+                    connect();
+                  }
                   if (!isChainConnected) {
                     const chainId = TypeHelper.convertChainTypeToId(chainType);
                     if (chainId === -1) {
@@ -293,7 +372,7 @@ const MultiSend = () => {
                     return;
                   }
                   if (isApproved) await runMultiSendContract();
-                  else await runApproveContract();
+                  else showApproveConfirmDialog();
                 } catch (e) {
                   const errorMessage = getLocaleErrorMessage(e);
                   showAlert({ title: "알림", content: errorMessage });
@@ -312,6 +391,30 @@ const MultiSend = () => {
         link={StringHelper.makeExplorerLink(chainType, hash)}
         linkName={"트랜잭션 확인하기"}
       ></ContractLoadingDialog>
+      <ConfirmAlertDialog
+        title={"알림"}
+        open={openConfirmDialog}
+        onClose={() => {
+          closeApproveConfirmDialog();
+        }}
+        onCloseBtnClicked={(e) => {
+          closeApproveConfirmDialog();
+        }}
+        onConfirmBtnClicked={async (e) => {
+          await runApproveContract();
+          closeApproveConfirmDialog();
+        }}
+        onCancelBtnClicked={(e) => {
+          closeApproveConfirmDialog();
+        }}
+      >
+        <Stack>
+          <Typography>
+            {(addresses?.length ?? 0) * amountValue * TEST_RATIO} USDT만큼
+            Approve 하시나요?
+          </Typography>
+        </Stack>
+      </ConfirmAlertDialog>
     </>
   );
 };

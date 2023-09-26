@@ -42,6 +42,7 @@ export function useBscTestNetReadContract({
       "0x81cDC3c61857ACCB4b9851A55910E2AF7FB4DDF1",
     ],
     functionName: "allowance",
+    watch: true,
   });
 
   return {
