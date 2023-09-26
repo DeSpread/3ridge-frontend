@@ -51,7 +51,7 @@ const TicketsSection = ({ sx }: TicketSectionProps) => {
 
   const handleTicketClick = async (id: string) => {
     showLoading();
-    await push(`/ticket/${id}`);
+    await push(`/event/${id}`);
     closeLoading();
   };
 
