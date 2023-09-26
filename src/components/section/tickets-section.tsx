@@ -1,6 +1,8 @@
+import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
+import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import {
+  type ButtonProps,
   Box,
-  ButtonProps,
   Grid,
   Skeleton,
   Stack,
@@ -10,24 +12,18 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
 import React, {
   CSSProperties,
-  ForwardedRef,
-  forwardRef,
-  HTMLAttributes,
   MouseEventHandler,
   PropsWithChildren,
-  useRef,
   useState,
 } from "react";
+
 import { MouseEventWithParam, Ticket, TicketEventParam } from "../../types";
-import { useTheme } from "@mui/material/styles";
-import TicketCard from "../form/ticket-card";
 import PrimaryButton from "../atomic/atoms/primary-button";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
-import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
-import Image from "next/image";
-import { useDetectRef } from "../../hooks/util/use-detect-ref";
+import { TicketCard } from "../form/_ticket-card";
 
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
@@ -69,7 +65,7 @@ const TabButton = (props: TabButtonProps) => {
         color: theme.palette.neutral[100],
         ...props.sx,
       }}
-      onClick={(e) => {
+      onClick={() => {
         const myEvent = {} as MouseEventWithParam<{ index: number }>;
         myEvent.params = {
           index: props.index,
@@ -127,7 +123,7 @@ const TabButtonGroup2 = (props: TabButtonGroupProps) => {
                   borderRadius: 1,
                 }}
                 index={index}
-                onChange={(e) => {
+                onChange={() => {
                   setSelectedIdx(index);
                   props?.onChange?.(index);
                 }}
@@ -188,12 +184,10 @@ const TabButtonGroup = (props: TabButtonGroupProps) => {
 const TicketsSection = ({
   tickets,
   loading,
-  isLastTicketData,
   onTicketClick,
   onTabClick,
   onTab2Click,
-  onListEnd,
-  ...props
+  sx,
 }: TicketSectionProps) => {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -207,11 +201,7 @@ const TicketsSection = ({
   };
 
   return (
-    <Box
-      sx={{
-        ...props.sx,
-      }}
-    >
+    <Box sx={{ ...sx }}>
       <Grid
         container
         direction={smUp ? "row" : "column"}
@@ -254,9 +244,7 @@ const TicketsSection = ({
                 <Grid key={index} item xs={30} sm={15} md={10} lg={6}>
                   <TicketCard
                     ticket={ticket}
-                    onClick={(e) => {
-                      onTicketCardClick(ticket);
-                    }}
+                    onClick={() => onTicketCardClick(ticket)}
                   />
                 </Grid>
               );
