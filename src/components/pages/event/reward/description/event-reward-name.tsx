@@ -1,12 +1,16 @@
-import { Ticket } from "../../../../../types";
-import React, { PropsWithChildren } from "react";
-import { Skeleton, Stack, Typography, Box } from "@mui/material";
-import ComponentHelper from "../../../../../helper/component-helper";
+import { Box } from "@mui/material";
+import { PropsWithChildren } from "react";
 
-const EventRewardName = (
-  props: { ticketData?: Ticket } & PropsWithChildren
-) => {
-  const { ticketData } = props;
+import ComponentHelper from "@/helper/component-helper";
+import { Ticket } from "@/types";
+
+interface EventRewardNameProps {
+  ticketData?: Ticket;
+}
+
+const EventRewardName = ({
+  ticketData,
+}: PropsWithChildren<EventRewardNameProps>) => {
   return (
     <>
       {ticketData?.rewardPolicy?.context?.rewardName && (
