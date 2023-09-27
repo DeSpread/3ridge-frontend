@@ -12,13 +12,13 @@ import {
 import { Tabs1, Tabs2 } from "./tabs";
 
 import { TicketSortType } from "@/__generated__/graphql";
-import TicketCard from "@/components/form/ticket-card";
+import { TicketCard } from "@/components/form/_ticket-card";
 import { useAllTicketsQuery } from "@/hooks/query/use-all-tickets";
 import { useDetectRef } from "@/hooks/util/use-detect-ref";
 import { useLoading } from "@/provider/loading/loading-provider";
 import { Ticket, FILTER_TYPE, FilterType } from "@/types";
 
-const DEFAULT_LOADING_TIME = 700;
+const DEFAULT_LOADMORE_SPINNER_TIME = 700;
 
 interface TicketSectionProps {
   tickets?: Ticket[];
@@ -27,7 +27,7 @@ interface TicketSectionProps {
   sx?: CSSProperties;
 }
 
-const TicketsSection = ({ sx }: TicketSectionProps) => {
+export const TicketsSection = ({ sx }: TicketSectionProps) => {
   const { push } = useRouter();
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -86,7 +86,10 @@ const TicketsSection = ({ sx }: TicketSectionProps) => {
     const isMoreTickets =
       !!result?.data?.tickets && result.data.tickets.length !== 0;
 
-    setTimeout(() => setIsLoadMore(isMoreTickets), DEFAULT_LOADING_TIME);
+    setTimeout(
+      () => setIsLoadMore(isMoreTickets),
+      DEFAULT_LOADMORE_SPINNER_TIME,
+    );
   };
 
   useDetectRef(handleListEnd, loadMoreRef);
