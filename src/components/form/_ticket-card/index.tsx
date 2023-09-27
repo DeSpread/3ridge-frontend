@@ -5,6 +5,7 @@ import { TicketCardImage } from "./image";
 import { TicketCardInfo } from "./info";
 
 import { Card } from "@/components/atomic/atoms/card";
+import { Image } from "@/components/atomic/atoms/image";
 import { Ticket } from "@/types";
 
 interface TicketCardProps extends HtmlHTMLAttributes<HTMLDivElement> {
@@ -31,7 +32,12 @@ export const TicketCard = ({ ticket, username, onClick }: TicketCardProps) => {
           questCount={ticket?.quests?.length}
           isWinner={isWinner}
         />
-        <TicketCardImage url={ticket?.imageUrl} />
+        <Image
+          alt="ticket image"
+          src={ticket?.imageUrl}
+          className="rounded"
+          skeleton
+        />
         <TicketCardInfo
           whiteSpaceMode
           title={ticket?.title}
