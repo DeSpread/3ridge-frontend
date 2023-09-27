@@ -23,7 +23,7 @@ import React, {
 
 import { MouseEventWithParam, Ticket, TicketEventParam } from "../../types";
 import PrimaryButton from "../atomic/atoms/primary-button";
-import { TicketCard } from "../form/_ticket-card";
+import TicketCard from "../form/ticket-card";
 
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];
