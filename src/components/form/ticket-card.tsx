@@ -1,23 +1,24 @@
 import {
+  type CardProps,
   Box,
   Card,
   CardContent,
-  CardProps,
   Grid,
   Skeleton,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { forwardRef, Ref, useEffect, useLayoutEffect } from "react";
-import { Ticket } from "../../types";
-import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
+import React, { forwardRef, Ref, useEffect, useLayoutEffect } from "react";
+
+import { Ticket } from "../../types";
 import TicketInfoTextSet from "../atomic/atoms/ticket-info-text-set";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;
-  username?: String;
+  username?: string;
   isWinner?: boolean;
 };
 
@@ -121,7 +122,7 @@ const TicketCard = (props: EventCardProps, targetRef?: Ref<HTMLDivElement>) => {
                 (ticket?.winners?.filter(
                   (winner) =>
                     String(winner.name).toUpperCase().trim() ===
-                    String(username).toUpperCase().trim()
+                    String(username).toUpperCase().trim(),
                 )?.length ?? 0) > 0 && (
                   <Box>
                     <Typography variant={mdUp ? "h6" : "h5"}>👑</Typography>
