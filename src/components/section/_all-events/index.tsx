@@ -1,4 +1,4 @@
-import TicketsSection from "../tickets-section/index";
+import { TicketsSection } from "@/components/section/_tickets-section";
 
 export const AllEvents = () => {
   return (
