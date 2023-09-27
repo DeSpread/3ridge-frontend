@@ -13,12 +13,18 @@ export const TicketCardImage = ({ url }: TicketCardImageProps) => {
           alt="ticket image"
           src={url}
           fill
-          style={{ objectFit: "cover" }}
+          style={{
+            position: "absolute",
+            borderRadius: 4,
+            objectFit: "cover",
+          }}
         />
       ) : (
         // TODO: update skeleton with tailwindcss component
         <Skeleton
           style={{
+            position: "absolute",
+            borderRadius: 4,
             width: "100%",
             height: "100%",
           }}
