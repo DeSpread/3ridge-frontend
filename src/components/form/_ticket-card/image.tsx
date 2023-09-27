@@ -5,6 +5,7 @@ interface TicketCardImageProps {
   url?: string;
 }
 
+/** @deprecated */
 export const TicketCardImage = ({ url }: TicketCardImageProps) => {
   return (
     <div className="relative flex aspect-square w-full items-center justify-center rounded-lg">

@@ -1,18 +1,20 @@
+import { Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useLoading } from "../../provider/loading/loading-provider";
 import React, { useState } from "react";
+
+import { TicketSortType } from "../../__generated__/graphql";
+import { useAllTicketsQuery } from "../../hooks/query/use-all-tickets";
+import { useLoading } from "../../provider/loading/loading-provider";
 import {
   FILTER_TYPE,
   FilterType,
   MouseEventWithParam,
   TicketEventParam,
 } from "../../types";
-import { TicketSortType } from "../../__generated__/graphql";
-import { Stack, Typography } from "@mui/material";
+
 import TicketsSection from "./tickets-section";
 
-import { useAllTicketsQuery } from "../../hooks/query/use-all-tickets";
-
+/** @deprecated */
 const AllEventsSection = () => {
   const router = useRouter();
   const { showLoading, closeLoading } = useLoading();
@@ -20,7 +22,7 @@ const AllEventsSection = () => {
   const [isLastTicketData, setIsLastTicketData] = useState<boolean>(false);
   const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
   const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
-    TicketSortType.Trending
+    TicketSortType.Trending,
   );
 
   const {
