@@ -10,8 +10,7 @@ import EventRewardPoint from "./description/event-reward-point";
 import PrimaryCard from "@/components/atomic/atoms/primary-card";
 import { Ticket } from "@/types";
 
-const EventRewardDescription = (
-  props: {
+interface EventRewardDescriptionProps {
     ticketData?: Ticket;
     eventRewardImageCompFunc?: (ticketData?: Ticket) => JSX.Element;
     eventRewardPointCompFunc?: (ticketData?: Ticket) => JSX.Element;
@@ -22,37 +21,34 @@ const EventRewardDescription = (
       onClick?: MouseEventHandler,
     ) => JSX.Element;
     onClick?: MouseEventHandler;
-  } & PropsWithChildren,
-) => {
+}
+
+const defaultEventRewardImageCompFunc = (ticketData?: Ticket) => {
+  return <EventRewardImage ticketData={ticketData}></EventRewardImage>;
+};
+
+const defaultEventRewardPointCompFunc = (ticketData?: Ticket) => {
+  return <EventRewardPoint ticketData={ticketData}></EventRewardPoint>;
+};
+
+const defaultEventRewardLimitNumberCompFunc = (ticketData?: Ticket) => {
+  return <EventRewardLimitNumber ticketData={ticketData} />;
+};
+
+const EventRewardDescription = ({
+  eventRewardImageCompFunc = defaultEventRewardImageCompFunc,
+  eventRewardPointCompFunc = defaultEventRewardPointCompFunc,
+  eventRewardLimitNumberCompFunc = defaultEventRewardLimitNumberCompFunc,
+  ...props
+}: // FIXME: does not used children props
+PropsWithChildren<EventRewardDescriptionProps>) => {
   const {
     ticketData,
-    eventRewardImageCompFunc = (ticketData?: Ticket) => {
-      return <EventRewardImage ticketData={ticketData}></EventRewardImage>;
-    },
-    eventRewardPointCompFunc = (ticketData?: Ticket) => {
-      return <EventRewardPoint ticketData={ticketData}></EventRewardPoint>;
-    },
-    eventRewardLimitNumberCompFunc = (ticketData?: Ticket) => {
-      return (
-        <EventRewardLimitNumber
-          ticketData={ticketData}
-        ></EventRewardLimitNumber>
-      );
-    },
     eventRewardChainContentCompFunc = (
       ticketData?: Ticket,
       onClick?: MouseEventHandler,
-    ) => {
-      return (
-        <EventRewardChainContent
-          ticketData={ticketData}
-          onClick={onClick}
-        ></EventRewardChainContent>
-      );
-    },
-    eventRewardNameCompFunc = () => {
-      return <EventRewardName ticketData={ticketData}></EventRewardName>;
-    },
+    ) => <EventRewardChainContent ticketData={ticketData} onClick={onClick} />,
+    eventRewardNameCompFunc = () => <EventRewardName ticketData={ticketData} />,
     onClick,
   } = props;
 
