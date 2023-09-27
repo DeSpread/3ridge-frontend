@@ -1,8 +1,7 @@
 import { Box, Grid, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { CSSProperties } from "@mui/material/styles/createMixins";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useRef, useState, CSSProperties } from "react";
 
 import {
   LoadMore,
