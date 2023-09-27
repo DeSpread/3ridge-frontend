@@ -1,13 +1,14 @@
-import { Ticket } from "../../../../types";
-import React, { MouseEventHandler, PropsWithChildren } from "react";
 import { Box, Divider, Stack } from "@mui/material";
-import PrimaryCard from "../../../atomic/atoms/primary-card";
-import { useTheme } from "@mui/material/styles";
-import EventRewardImage from "./description/event-reward-image";
-import EventRewardPoint from "./description/event-reward-point";
-import EventRewardLimitNumber from "./description/event-reward-limit-number";
+import { MouseEventHandler, PropsWithChildren } from "react";
+
 import EventRewardChainContent from "./description/event-reward-chain-content";
+import EventRewardImage from "./description/event-reward-image";
+import EventRewardLimitNumber from "./description/event-reward-limit-number";
 import EventRewardName from "./description/event-reward-name";
+import EventRewardPoint from "./description/event-reward-point";
+
+import PrimaryCard from "@/components/atomic/atoms/primary-card";
+import { Ticket } from "@/types";
 
 const EventRewardDescription = (
   props: {
@@ -18,13 +19,11 @@ const EventRewardDescription = (
     eventRewardChainContentCompFunc?: (ticketData?: Ticket) => JSX.Element;
     eventRewardNameCompFunc?: (
       ticketData?: Ticket,
-      onClick?: MouseEventHandler
+      onClick?: MouseEventHandler,
     ) => JSX.Element;
     onClick?: MouseEventHandler;
-  } & PropsWithChildren
+  } & PropsWithChildren,
 ) => {
-  const theme = useTheme();
-
   const {
     ticketData,
     eventRewardImageCompFunc = (ticketData?: Ticket) => {
@@ -42,7 +41,7 @@ const EventRewardDescription = (
     },
     eventRewardChainContentCompFunc = (
       ticketData?: Ticket,
-      onClick?: MouseEventHandler
+      onClick?: MouseEventHandler,
     ) => {
       return (
         <EventRewardChainContent
