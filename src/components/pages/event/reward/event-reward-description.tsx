@@ -78,36 +78,6 @@ const EventRewardDescription = (
           {eventRewardChainContentCompFunc?.(ticketData, onClick)}
         </Box>
       </Stack>
-      {/*{ticketData?.rewardPolicy?.context?.rewardChain === ChainType.Aptos &&*/}
-      {/*  ticketData?.rewardPolicy?.context?.rewardClaimable &&*/}
-      {/*  ticketData?.rewardPolicy?.context?.rewardUnit === "NFT" && (*/}
-      {/*    <Stack sx={{ background: "", marginTop: -5 }} alignItems={"center"}>*/}
-      {/*      <ClickTypography*/}
-      {/*        variant={"caption"}*/}
-      {/*        onClick={async () => {*/}
-      {/*          // if (ticketData.rewardPolicy?.context?.rewardInfo?.content) {*/}
-      {/*          // setOpenContentsRendererDialog(true);*/}
-      {/*          // setHtmlContent(*/}
-      {/*          //   decodeBase64(*/}
-      {/*          //     ticketData.rewardPolicy?.context?.rewardInfo?.content*/}
-      {/*          //   )*/}
-      {/*          // );*/}
-      {/*          // }*/}
-      {/*        }}*/}
-      {/*        sx={{*/}
-      {/*          fontWeight: "bold",*/}
-      {/*          "&:hover": {*/}
-      {/*            color: "#914e1d",*/}
-      {/*            textDecoration: "underline",*/}
-      {/*          },*/}
-      {/*          color: theme.palette.warning.main,*/}
-      {/*          cursor: "pointer",*/}
-      {/*        }}*/}
-      {/*      >*/}
-      {/*        앱토스 NFT 수령 방법*/}
-      {/*      </ClickTypography>*/}
-      {/*    </Stack>*/}
-      {/*  )}*/}
     </PrimaryCard>
   );
 };
