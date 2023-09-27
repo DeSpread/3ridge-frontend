@@ -1,7 +1,6 @@
 import { HtmlHTMLAttributes } from "react";
 
 import { TicketCardHeader } from "./header";
-import { TicketCardImage } from "./image";
 import { TicketCardInfo } from "./info";
 
 import { Card } from "@/components/atomic/atoms/card";
