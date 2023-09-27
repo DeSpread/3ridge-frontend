@@ -11,16 +11,16 @@ import PrimaryCard from "@/components/atomic/atoms/primary-card";
 import { Ticket } from "@/types";
 
 interface EventRewardDescriptionProps {
-    ticketData?: Ticket;
-    eventRewardImageCompFunc?: (ticketData?: Ticket) => JSX.Element;
-    eventRewardPointCompFunc?: (ticketData?: Ticket) => JSX.Element;
-    eventRewardLimitNumberCompFunc?: (ticketData?: Ticket) => JSX.Element;
-    eventRewardChainContentCompFunc?: (ticketData?: Ticket) => JSX.Element;
-    eventRewardNameCompFunc?: (
-      ticketData?: Ticket,
-      onClick?: MouseEventHandler,
-    ) => JSX.Element;
-    onClick?: MouseEventHandler;
+  ticketData?: Ticket;
+  eventRewardImageCompFunc?: (ticketData?: Ticket) => JSX.Element;
+  eventRewardPointCompFunc?: (ticketData?: Ticket) => JSX.Element;
+  eventRewardLimitNumberCompFunc?: (ticketData?: Ticket) => JSX.Element;
+  eventRewardChainContentCompFunc?: (ticketData?: Ticket) => JSX.Element;
+  eventRewardNameCompFunc?: (
+    ticketData?: Ticket,
+    onClick?: MouseEventHandler,
+  ) => JSX.Element;
+  onClick?: MouseEventHandler;
 }
 
 const defaultEventRewardImageCompFunc = (ticketData?: Ticket) => {
@@ -68,10 +68,12 @@ PropsWithChildren<EventRewardDescriptionProps>) => {
           {eventRewardLimitNumberCompFunc?.(ticketData)}
         </Box>
         <Divider />
-        <Box display={"flex"} flexDirection={"column"} gap={4}>
-          {eventRewardNameCompFunc?.(ticketData)}
+        <div className="flex flex-col gap-8">
+          <div className="rounded bg-gradient-to-r from-purple-950/40 via-purple-800 to-purple-950/40 py-4 backdrop-blur-lg">
+            {eventRewardNameCompFunc?.(ticketData)}
+          </div>
           {eventRewardChainContentCompFunc?.(ticketData, onClick)}
-        </Box>
+        </div>
       </Stack>
     </PrimaryCard>
   );
