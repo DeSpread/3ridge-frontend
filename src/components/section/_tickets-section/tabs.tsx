@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-import PrimaryButton from "../../atomic/atoms/primary-button";
+import PrimaryButton from "@/components/atomic/atoms/primary-button";
 
 interface StyledTabProps {
   label: string;
