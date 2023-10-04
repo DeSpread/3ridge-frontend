@@ -11,23 +11,24 @@ interface EventRewardNameProps {
 const EventRewardName = ({
   ticketData,
 }: PropsWithChildren<EventRewardNameProps>) => {
+  const rewardName = ticketData?.rewardPolicy?.context?.rewardName;
+
+  if (!ticketData || !rewardName) {
+    return <Box sx={{ width: "100%", height: 30 }} />;
+  }
+
   return (
-    <>
-      {ticketData?.rewardPolicy?.context?.rewardName && (
-        <div className="text-outline flex flex-col items-center gap-2">
-          <div className="text-body1">리워드</div>
-          <div>
-            {ComponentHelper.renderMultiLineContentText(
-              ticketData?.rewardPolicy?.context?.rewardName ?? "",
-              { variant: "body1", textAlign: "center" },
-            )}
-          </div>
-        </div>
-      )}
-      {(!ticketData || !ticketData?.rewardPolicy?.context?.rewardName) && (
-        <Box sx={{ width: "100%", height: 30 }}></Box>
-      )}
-    </>
+    <div className="border-3 rounded border-solid border-neutral-700 py-4">
+      <div className="flex flex-col items-center gap-2">
+        <div className="text-body1">리워드</div>
+        <p>
+          {ComponentHelper.renderMultiLineContentText(rewardName ?? "", {
+            variant: "body1",
+            textAlign: "center",
+          })}
+        </p>
+      </div>
+    </div>
   );
 };
 
