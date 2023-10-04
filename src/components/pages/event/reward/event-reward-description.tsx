@@ -15,7 +15,11 @@ interface EventRewardDescriptionProps {
   eventRewardImageCompFunc?: (ticketData?: Ticket) => JSX.Element;
   eventRewardPointCompFunc?: (ticketData?: Ticket) => JSX.Element;
   eventRewardLimitNumberCompFunc?: (ticketData?: Ticket) => JSX.Element;
-  eventRewardChainContentCompFunc?: (ticketData?: Ticket) => JSX.Element;
+  // FIXME: check this interface / different from old one
+  eventRewardChainContentCompFunc?: (
+    ticketData?: Ticket,
+    onClick?: MouseEventHandler,
+  ) => JSX.Element;
   eventRewardNameCompFunc?: (
     ticketData?: Ticket,
     onClick?: MouseEventHandler,
@@ -35,23 +39,26 @@ const defaultEventRewardLimitNumberCompFunc = (ticketData?: Ticket) => {
   return <EventRewardLimitNumber ticketData={ticketData} />;
 };
 
+const defaultEventRewardNameCompFunc = (ticketData?: Ticket) => {
+  return <EventRewardName ticketData={ticketData} />;
+};
+
+const defaultEventRewardChainContentCompFunc = (
+  ticketData?: Ticket,
+  onClick?: MouseEventHandler,
+) => {
+  return <EventRewardChainContent ticketData={ticketData} onClick={onClick} />;
+};
+
 const EventRewardDescription = ({
+  ticketData,
   eventRewardImageCompFunc = defaultEventRewardImageCompFunc,
   eventRewardPointCompFunc = defaultEventRewardPointCompFunc,
+  eventRewardNameCompFunc = defaultEventRewardNameCompFunc,
   eventRewardLimitNumberCompFunc = defaultEventRewardLimitNumberCompFunc,
-  ...props
-}: // FIXME: does not used children props
-PropsWithChildren<EventRewardDescriptionProps>) => {
-  const {
-    ticketData,
-    eventRewardChainContentCompFunc = (
-      ticketData?: Ticket,
-      onClick?: MouseEventHandler,
-    ) => <EventRewardChainContent ticketData={ticketData} onClick={onClick} />,
-    eventRewardNameCompFunc = () => <EventRewardName ticketData={ticketData} />,
-    onClick,
-  } = props;
-
+  eventRewardChainContentCompFunc = defaultEventRewardChainContentCompFunc,
+  onClick,
+}: PropsWithChildren<EventRewardDescriptionProps>) => {
   return (
     <PrimaryCard>
       <Stack direction={"column"} spacing={2}>
@@ -69,9 +76,7 @@ PropsWithChildren<EventRewardDescriptionProps>) => {
         </Box>
         <Divider />
         <div className="flex flex-col gap-8">
-          <div className="rounded bg-gradient-to-r from-purple-950/40 via-purple-800 to-purple-950/40 py-4 backdrop-blur-lg">
-            {eventRewardNameCompFunc?.(ticketData)}
-          </div>
+          {eventRewardNameCompFunc?.(ticketData)}
           {eventRewardChainContentCompFunc?.(ticketData, onClick)}
         </div>
       </Stack>
