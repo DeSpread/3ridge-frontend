@@ -1,4 +1,5 @@
-import InputWithLabel from "../../atomic/atoms/input-with-label";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import {
   Box,
   Divider,
@@ -10,7 +11,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import dedent from "dedent";
 import React, { useEffect, useState } from "react";
+
 import {
   ChainType,
   ContentEncodingType,
@@ -19,7 +23,6 @@ import {
   QuestPolicy,
   QuestPolicyType,
 } from "../../../__generated__/graphql";
-import dedent from "dedent";
 import {
   Quest,
   QuizContent,
@@ -34,12 +37,10 @@ import {
   VerifyTwitterRetweetQuestContext,
   VerifyVisitWebsiteQuestContext,
 } from "../../../types";
-import NumberWithLabel from "../../atomic/atoms/number-with-label";
 import MathUtil from "../../../util/math-util";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import { useTheme } from "@mui/material/styles";
+import InputWithLabel from "../../atomic/atoms/input-with-label";
 import NumberInput from "../../atomic/atoms/number-input";
+import NumberWithLabel from "../../atomic/atoms/number-with-label";
 
 const VerifySurveyEditForm = (props: {
   editedQuest?: Quest;
@@ -271,13 +272,13 @@ const VerifyVisitWebsiteEditForm = (props: {
           editedQuest.title_v2?.content
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace("&nbsp", " ")
-            .trim()
+            .trim(),
         );
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(
           editedQuest.title_v2?.content ?? "",
-          "text/html"
+          "text/html",
         );
 
         const linkElement = doc.querySelector("a");
@@ -307,8 +308,8 @@ const VerifyVisitWebsiteEditForm = (props: {
             _handle,
             dedent`<a style="{a-style}" href="${_url}" target="_blank">${_handle.replaceAll(
               "&nbsp",
-              " "
-            )}</a>`
+              " ",
+            )}</a>`,
           )
           ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
@@ -381,13 +382,13 @@ const VerifyOnChainEditForm = (props: {
           editedQuest.title_v2?.content
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace("&nbsp", " ")
-            .trim() ?? ""
+            .trim() ?? "",
         );
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(
           editedQuest.title_v2?.content ?? "",
-          "text/html"
+          "text/html",
         );
 
         const linkElement = doc.querySelector("a");
@@ -410,7 +411,7 @@ const VerifyOnChainEditForm = (props: {
     _chainType: ChainType,
     _toAddresses: string[],
     _url: string,
-    _handle: string
+    _handle: string,
   ) => {
     const context: VerifyOnChainContext = {
       toAddresses: _toAddresses,
@@ -435,8 +436,8 @@ const VerifyOnChainEditForm = (props: {
             _handle,
             dedent`<a style="{a-style}" href="${_url}" target="_blank">${_handle.replaceAll(
               "&nbsp",
-              " "
-            )}</a>`
+              " ",
+            )}</a>`,
           )
           ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
@@ -471,6 +472,7 @@ const VerifyOnChainEditForm = (props: {
           <MenuItem value={ChainType.MaticMumbai}>Matic Mumbai</MenuItem>
           <MenuItem value={ChainType.Arb}>아비트럼</MenuItem>
           <MenuItem value={ChainType.Bnb}>Bnb</MenuItem>
+          <MenuItem value={ChainType.Stacks}>Stacks</MenuItem>
         </Select>
       </FormControl>
       {toAddresses.map((e, i) => {
@@ -656,7 +658,7 @@ const VerifyHasWalletAddressEditForm = (props: {
           editedQuest.title_v2?.content
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace("&nbsp", " ")
-            .trim()
+            .trim(),
         );
       }
     }
@@ -733,7 +735,7 @@ const VerifyEmailEditForm = (props: {
           editedQuest.title_v2?.content
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace("&nbsp", " ")
-            .trim()
+            .trim(),
         );
       }
     }
@@ -795,7 +797,7 @@ const Verify3ridgePointEditForm = (props: {
           editedQuest.title_v2?.content
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace("&nbsp", " ")
-            .trim()
+            .trim(),
         );
       }
     }
@@ -879,7 +881,7 @@ const VerifyTwitterRetweetOrLinkingEditForm = (props: {
           editedQuest.title_v2?.content
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace("&nbsp", " ")
-            .trim()
+            .trim(),
         );
       }
     }
@@ -888,7 +890,7 @@ const VerifyTwitterRetweetOrLinkingEditForm = (props: {
   const updateData = (
     _username?: string,
     _message?: string,
-    _tweetId?: string
+    _tweetId?: string,
   ) => {
     const onlyUserName = _username?.replace("@", "");
     const context = {
@@ -912,8 +914,8 @@ const VerifyTwitterRetweetOrLinkingEditForm = (props: {
             _username,
             dedent`<a style="{a-style}" href="https://twitter.com/${onlyUserName}" target="_blank">${_username.replaceAll(
               "&nbsp",
-              " "
-            )}</a>`
+              " ",
+            )}</a>`,
           )
           ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
@@ -988,7 +990,7 @@ const VerifyTwitterFollowEditForm = (props: {
           editedQuest.title_v2?.content
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace("&nbsp", " ")
-            .trim()
+            .trim(),
         );
       }
     }
@@ -1013,8 +1015,8 @@ const VerifyTwitterFollowEditForm = (props: {
             _username,
             dedent`<a style="{a-style}" href="https://twitter.com/${onlyUserName}" target="_blank">${_username.replaceAll(
               "&nbsp",
-              " "
-            )}</a>`
+              " ",
+            )}</a>`,
           )
           ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
@@ -1082,7 +1084,7 @@ const VerifyDiscordQuestEditForm = (props: {
           editedQuest.title_v2?.content
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace("&nbsp", " ")
-            .trim()
+            .trim(),
         );
       }
     }
@@ -1092,7 +1094,7 @@ const VerifyDiscordQuestEditForm = (props: {
     _serverName?: string,
     _inviteLink?: string,
     _serverId?: string,
-    _message?: string
+    _message?: string,
   ) => {
     _serverName = _serverName?.trim();
 
@@ -1121,8 +1123,8 @@ const VerifyDiscordQuestEditForm = (props: {
             _serverName,
             dedent`<a style="{a-style}" href="${hrefLink}" target="_blank">${_serverName.replaceAll(
               "&nbsp",
-              " "
-            )}</a>`
+              " ",
+            )}</a>`,
           )
           ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
@@ -1205,7 +1207,7 @@ const VerifyTelegramQuestEditForm = (props: {
           editedQuest.title_v2?.content
             .replace(/<\/?[^>]+(>|$)/g, "")
             .replace("&nbsp", " ")
-            .trim()
+            .trim(),
         );
         if (context?.groupId) {
           setGroupId(context?.groupId?.toString());
@@ -1217,11 +1219,11 @@ const VerifyTelegramQuestEditForm = (props: {
   const updateData = (
     _handle?: string,
     _message?: string,
-    _groupId?: string
+    _groupId?: string,
   ) => {
     _handle = _handle?.trim();
     const onlyHandle = _handle?.replace("@", "");
-    let context = {
+    const context = {
       channelId: _handle?.replace("@", ""),
     } as VerifyTelegramQuestContext;
     if (_groupId) {
@@ -1246,8 +1248,8 @@ const VerifyTelegramQuestEditForm = (props: {
             _handle,
             dedent`<a style="{a-style}" href="${hrefLink}" target="_blank">${_handle.replaceAll(
               "&nbsp",
-              " "
-            )}</a>`
+              " ",
+            )}</a>`,
           )
           ?.replaceAll("&nbsp", " ")
           .trim() ?? "";
@@ -1316,7 +1318,7 @@ const VerifyHasDiscordOrTelegramOrTwitter = (props: {
         editedQuest.title_v2?.content
           .replace(/<\/?[^>]+(>|$)/g, "")
           .replace("&nbsp", " ")
-          .trim()
+          .trim(),
       );
     } else {
       setMessage("");
@@ -1376,7 +1378,7 @@ const VerifyQuiz = (props: {
         editedQuest.title_v2?.content
           .replace(/<\/?[^>]+(>|$)/g, "")
           .replace("&nbsp", " ")
-          .trim() ?? ""
+          .trim() ?? "",
       );
 
       const context = editedQuest.questPolicy
@@ -1405,7 +1407,7 @@ const VerifyQuiz = (props: {
     _message: string,
     _titles: string[],
     _optionsSet: [string[]],
-    _answers: number[]
+    _answers: number[],
   ) => {
     const context: VerifyQuizQuestContext = { quizList: [] };
     for (let i = 0; i < _titles.length; i++) {
@@ -1424,7 +1426,7 @@ const VerifyQuiz = (props: {
       questPolicy: QuestPolicyType.Quiz,
     };
 
-    let content = _message ?? "";
+    const content = _message ?? "";
 
     const _newContentMetaData = {
       content,
@@ -1506,7 +1508,7 @@ const VerifyQuiz = (props: {
                     onClick={(e) => {
                       setOptionsSet((prevState) => {
                         const src: [string[]] = JSON.parse(
-                          JSON.stringify(prevState)
+                          JSON.stringify(prevState),
                         );
                         src.splice(i, 1);
                         // prevState.splice(i, 1);
@@ -1522,7 +1524,7 @@ const VerifyQuiz = (props: {
                       const _titles = [...titles];
                       _titles.splice(i, 1);
                       const _optionsSet: [string[]] = JSON.parse(
-                        JSON.stringify(optionsSet)
+                        JSON.stringify(optionsSet),
                       );
                       _optionsSet.splice(i, 1);
                       updateData(message, _titles, _optionsSet, answers);
@@ -1614,7 +1616,7 @@ const VerifyQuiz = (props: {
                         });
 
                         const _optionsSet: [string[]] = JSON.parse(
-                          JSON.stringify(optionsSet)
+                          JSON.stringify(optionsSet),
                         );
                         _optionsSet[i][i2] = value;
 
@@ -1635,14 +1637,14 @@ const VerifyQuiz = (props: {
                         onClick={(e) => {
                           setOptionsSet((prevState) => {
                             const src: [string[]] = JSON.parse(
-                              JSON.stringify(prevState)
+                              JSON.stringify(prevState),
                             );
                             src[i].splice(i2, 1);
                             return [...src];
                           });
 
                           const _optionsSet: [string[]] = JSON.parse(
-                            JSON.stringify(optionsSet)
+                            JSON.stringify(optionsSet),
                           );
                           _optionsSet[i].splice(i2, 1);
                           updateData(message, titles, _optionsSet, answers);
@@ -1705,13 +1707,13 @@ const VerifyQuiz = (props: {
                   onClick={(e) => {
                     setOptionsSet((prevState) => {
                       const src: [string[]] = JSON.parse(
-                        JSON.stringify(prevState)
+                        JSON.stringify(prevState),
                       );
                       src[i].push("");
                       return [...src];
                     });
                     const _optionsSet: [string[]] = JSON.parse(
-                      JSON.stringify(optionsSet)
+                      JSON.stringify(optionsSet),
                     );
                     _optionsSet[i].push("");
                     updateData(message, titles, _optionsSet, answers);
@@ -1745,7 +1747,7 @@ const VerifyQuiz = (props: {
                       const value = MathUtil.clamp(
                         parseInt(e.target.value),
                         1,
-                        optionsSet[i].length
+                        optionsSet[i].length,
                       );
                       setAnswers((prevState) => {
                         const src = [...prevState];
@@ -1796,7 +1798,7 @@ const VerifyQuiz = (props: {
             });
             const _titles = [...titles, ""];
             const _optionsSet: [string[]] = JSON.parse(
-              JSON.stringify(optionsSet)
+              JSON.stringify(optionsSet),
             );
             _optionsSet.push([""]);
             const _answers = [...answers, 1];
