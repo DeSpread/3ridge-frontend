@@ -7,33 +7,18 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-
-import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
-import { useAlert } from "../../provider/alert/alert-provider";
-import {
-  APP_ERROR_MESSAGE,
-  getErrorMessage,
-  getLocaleErrorMessage,
-} from "../../error/my-error";
-import { useLoading } from "../../provider/loading/loading-provider";
-import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import { AppProps } from "next/app";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
-
-import { useSignDialog } from "../../hooks/sign-dialog-hook";
-import Realistic from "../../components/effects/realistic";
 import { useGetSet, useMountedState } from "react-use";
 import { useSetRecoilState } from "recoil";
+
 import { ContentMetadata, QuestPolicyType } from "../../__generated__/graphql";
-import { backDirectionPathState } from "../../lib/recoil";
 import ClickTypography from "../../components/atomic/atoms/click-typhography";
 import LinkTypography from "../../components/atomic/atoms/link-typography";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
-import EventDateRange from "../../components/pages/event/event-date-range";
-import EventDescription from "../../components/pages/event/event-description";
-import EventQuests from "../../components/pages/event/event-quests";
 import EventRewardPolicy from "../../components/pages/event/reward/event-reward-policy";
 import EventTimeBoard from "../../components/pages/event/event-time-board";
 import EventRewardDescription from "../../components/pages/event/reward/event-reward-description";
@@ -49,11 +34,25 @@ import ContractLoadingDialog from "../../components/dialogs/contract-loading-dia
 import QuestQuizDialog from "../../components/dialogs/quest/quest-quiz-dialog";
 import SimpleDialog from "../../components/dialogs/simple-dialog";
 import TicketRewardHowToDialog from "../../components/dialogs/ticket-edit/ticket-reward-how-to-dialog";
+import Realistic from "../../components/effects/realistic";
+import EventDateRange from "../../components/pages/event/event-date-range";
+import EventDescription from "../../components/pages/event/event-description";
 import EventImage from "../../components/pages/event/event-image";
+import EventQuests from "../../components/pages/event/event-quests";
 import EventTitle from "../../components/pages/event/event-title";
+import {
+  APP_ERROR_MESSAGE,
+  getErrorMessage,
+  getLocaleErrorMessage,
+} from "../../error/my-error";
 import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
+import { useSignDialog } from "../../hooks/sign-dialog-hook";
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import { useTicketQuery } from "../../hooks/ticket-query-hook";
 import MainLayout from "../../layouts/main-layout";
+import { backDirectionPathState } from "../../lib/recoil";
+import { useAlert } from "../../provider/alert/alert-provider";
+import { useLoading } from "../../provider/loading/loading-provider";
 import { useLogin } from "../../provider/login/login-provider";
 import {
   MouseEventWithParam,
@@ -721,7 +720,6 @@ const Event = (props: AppProps) => {
           if (newWindow) newWindow.opener = null;
           break;
         }
-      }
       }
       if (quest.questGuides?.[0]?.content) {
         openSimpleWarningDialog(quest.questGuides[0]);
