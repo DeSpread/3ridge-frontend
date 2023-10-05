@@ -23,17 +23,8 @@ import {
 import ClickTypography from "../../components/atomic/atoms/click-typhography";
 import LinkTypography from "../../components/atomic/atoms/link-typography";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
-import EventRewardPolicy from "../../components/pages/event/reward/event-reward-policy";
-import EventTimeBoard from "../../components/pages/event/event-time-board";
-import EventRewardDescription from "../../components/pages/event/reward/event-reward-description";
 import ButtonWithLoading from "../../components/atomic/molecules/button-with-loading";
 import AgreementDialog from "../../components/dialogs/agreement-dialog";
-import EventParticipants from "../../components/pages/event/event-participants";
-import QuestSurveyDialog from "../../components/dialogs/quest/quest-survey-dialog";
-import TypeHelper from "../../helper/type-helper";
-import StringHelper from "../../helper/string-helper";
-import RouterUtil from "../../util/router-util";
-import { useContractHook } from "../../hooks/contract/contract-hook";
 import ContractLoadingDialog from "../../components/dialogs/contract-loading-dialog";
 import QuestQuizDialog from "../../components/dialogs/quest/quest-quiz-dialog";
 import QuestSurveyDialog from "../../components/dialogs/quest/quest-survey-dialog";
@@ -43,13 +34,20 @@ import Realistic from "../../components/effects/realistic";
 import EventDateRange from "../../components/pages/event/event-date-range";
 import EventDescription from "../../components/pages/event/event-description";
 import EventImage from "../../components/pages/event/event-image";
+import EventParticipants from "../../components/pages/event/event-participants";
 import EventQuests from "../../components/pages/event/event-quests";
+import EventTimeBoard from "../../components/pages/event/event-time-board";
 import EventTitle from "../../components/pages/event/event-title";
+import EventRewardDescription from "../../components/pages/event/reward/event-reward-description";
+import EventRewardPolicy from "../../components/pages/event/reward/event-reward-policy";
 import {
   APP_ERROR_MESSAGE,
   getErrorMessage,
   getLocaleErrorMessage,
 } from "../../error/my-error";
+import StringHelper from "../../helper/string-helper";
+import TypeHelper from "../../helper/type-helper";
+import { useContractHook } from "../../hooks/contract/contract-hook";
 import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
 import { useSignDialog } from "../../hooks/sign-dialog-hook";
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
@@ -77,6 +75,7 @@ import {
   VerifyTwitterRetweetQuestContext,
   VerifyVisitWebsiteQuestContext,
 } from "../../types";
+import RouterUtil from "../../util/router-util";
 
 const Event = (props: AppProps) => {
   const { userData } = useSignedUserQuery();
