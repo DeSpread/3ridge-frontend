@@ -1,62 +1,36 @@
-import { Box, Grid, Stack, Typography, TypographyProps } from "@mui/material";
-import React, { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
-import { PartialTicket } from "../../../types";
-import StringHelper from "../../../helper/string-helper";
+import { type TypographyProps } from "@mui/material";
+import React from "react";
 
-type TicketInfoViewProps = TypographyProps & {
+import StringHelper from "../../../helper/string-helper";
+import { PartialTicket } from "../../../types";
+
+type TicketInfoViewProps = {
   ticket?: PartialTicket;
   whiteSpaceMode?: boolean;
-};
+} & TypographyProps;
 
-const TicketInfoTextSet = ({
-  ticket,
-  sx,
-  whiteSpaceMode,
-}: TicketInfoViewProps) => {
+const TicketInfoTextSet = ({ ticket, whiteSpaceMode }: TicketInfoViewProps) => {
+  const rewardName = ticket?.rewardPolicy?.context?.rewardName;
+  const rewardPoint = ticket?.rewardPolicy?.rewardPoint;
+  const limitNumber = ticket?.rewardPolicy?.context?.limitNumber;
+
   return (
-    <Stack>
-      <Stack direction={"row"} alignItems={"center"} justifyContent={"center"}>
-        <Typography variant={"body2"} sx={{ ...sx }} textAlign={"center"}>
-          {`${ticket?.rewardPolicy?.rewardPoint ?? 0} 포인트`}
-        </Typography>
-        {ticket?.rewardPolicy?.context?.limitNumber && (
-          <Box
-            sx={{
-              ...sx,
-              paddingLeft: "4px",
-            }}
-          >
-            <Typography variant={"body2"} textAlign={"center"}>
-              {` / ${StringHelper.getRewardAmountLabel(
-                ticket?.rewardPolicy?.context?.limitNumber
-              )}`}
-            </Typography>
-          </Box>
+    <div className="text-body2 text-outline text-center">
+      <div className="flex items-center justify-center ">
+        <span className="break-keep">{`${rewardPoint ?? 0} 포인트`}</span>
+        {limitNumber && (
+          <div>
+            <span className="px-1">/</span>
+            {StringHelper.getRewardAmountLabel(limitNumber)}
+          </div>
         )}
-      </Stack>
-      {ticket?.rewardPolicy?.context?.rewardName ? (
-        <Box sx={{}}>
-          <Typography
-            variant={"body2"}
-            sx={{
-              ...sx,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              display: "-webkit-box",
-              WebkitLineClamp: "1",
-              WebkitBoxOrient: "vertical",
-            }}
-            textAlign={"center"}
-          >
-            {`${ticket?.rewardPolicy?.context?.rewardName ?? ""}`}
-          </Typography>
-        </Box>
-      ) : whiteSpaceMode ? (
-        <Typography>&nbsp;</Typography>
+      </div>
+      {rewardName ? (
+        <div className="line-clamp-1 text-ellipsis">{rewardName}</div>
       ) : (
-        <></>
+        whiteSpaceMode && <br />
       )}
-    </Stack>
+    </div>
   );
 };
 

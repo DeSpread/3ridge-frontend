@@ -1,11 +1,15 @@
-import { ContentEncodingType, ContentMetadata } from "../__generated__/graphql";
+import {
+  ChainType,
+  ContentEncodingType,
+  ContentMetadata,
+} from "../__generated__/graphql";
 import StringUtil from "../util/string-util";
 
 class StringHelper {
   public static convertAddressToMidEllipsis = (
     src: string | undefined,
     preLen = 6,
-    postLen = 4
+    postLen = 4,
   ): string | undefined => {
     if (src === undefined) return undefined;
     if (src.length < preLen + postLen) {
@@ -32,6 +36,17 @@ class StringHelper {
       return StringUtil.decodeBase64(contentMetaData.content);
     }
     return contentMetaData.content;
+  };
+
+  public static makeExplorerLink = (chain: ChainType, hash?: string) => {
+    if (!hash) return undefined;
+    switch (chain) {
+      case ChainType.BnbTestnet:
+        return `https://testnet.bscscan.com/tx/${hash}`;
+      case ChainType.Bnb:
+        return `https://bscscan.com/tx/${hash}`;
+    }
+    return undefined;
   };
 }
 

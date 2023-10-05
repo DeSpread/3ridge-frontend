@@ -34,6 +34,9 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    --text: #f3f4f6;
+    --text-outline: #000;
   }
 
   .dark {
@@ -64,5 +67,84 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer components {
+  .text-outline {
+    filter: drop-shadow(1.2px 0px 0 var(--text-outline))
+      drop-shadow(-1.2px 0px 0 var(--text-outline))
+      drop-shadow(0px 1.2px 0 var(--text-outline))
+      drop-shadow(0px -1.2px 0 var(--text-outline));
+  }
+
+  .text-h1 {
+    font-weight: 700;
+    font-size: 4.1rem;
+    line-height: 1.375;
+    color: var(--text);
+  }
+
+  .text-h2 {
+    font-weight: 700;
+    font-size: 3rem;
+    line-height: 1.375;
+    color: var(--text);
+  }
+
+  .text-h3 {
+    font-weight: 700;
+    font-size: 2.25rem;
+    line-height: 1.375;
+    color: var(--text);
+  }
+
+  .text-h4 {
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.375;
+    color: var(--text);
+  }
+
+  .text-h5 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.375;
+    color: var(--text);
+  }
+
+  .text-h6 {
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.375;
+    color: var(--text);
+  }
+
+  .text-body1 {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .text-body2 {
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 1.57;
+    color: var(--text);
+  }
+
+  .text-subtitle1 {
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  .text-subtitle2 {
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.57;
+    color: var(--text);
   }
 }

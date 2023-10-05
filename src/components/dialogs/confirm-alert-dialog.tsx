@@ -1,4 +1,4 @@
-import { useTheme } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
   Dialog,
@@ -10,9 +10,13 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Z_INDEX_OFFSET } from "../../types";
-import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material/styles";
 import React, { MouseEventHandler } from "react";
+
+import { Z_INDEX_OFFSET } from "../../types";
+
+import PrimaryButton from "@/components/atomic/atoms/primary-button";
+import SecondaryButton from "@/components/atomic/atoms/secondary-button";
 
 type ConfirmAlertDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
@@ -72,28 +76,26 @@ const ConfirmAlertDialog = (props: ConfirmAlertDialogProps) => {
         </DialogTitle>
         <DialogContent>{props.children}</DialogContent>
         <DialogActions sx={{ marginRight: 1 }}>
-          <Button
+          <SecondaryButton
             sx={{
-              color: theme.palette.neutral[100],
-              "&:hover": {
-                backgroundColor: "rgba(255, 255, 255, 0.02)",
-              },
+              borderRadius: 1,
+              width: 100,
             }}
+            size={"small"}
             onClick={props.onCancelBtnClicked}
           >
             취소
-          </Button>
-          <Button
+          </SecondaryButton>
+          <PrimaryButton
             sx={{
-              color: theme.palette.neutral[100],
-              "&:hover": {
-                backgroundColor: "rgba(255, 255, 255, 0.02)",
-              },
+              borderRadius: 1,
+              width: 100,
             }}
+            size={"small"}
             onClick={props.onConfirmBtnClicked}
           >
             확인
-          </Button>
+          </PrimaryButton>
         </DialogActions>
       </Dialog>
     </>

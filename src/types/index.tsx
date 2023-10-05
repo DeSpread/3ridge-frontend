@@ -1,4 +1,5 @@
 import { SvgIconProps } from "@mui/material";
+import { Abi, AbiFunction } from "abitype/src/abi";
 import React from "react";
 
 import {
@@ -149,9 +150,10 @@ export type ReversibleSvgIconProps = SvgIconProps & {
 
 export type MouseEventWithStateParam = MouseEventWithParam<{ state?: string }>;
 
+// it would be deprecated
 export type ContractInfo = {
-  address: `0x${string}`;
-  abi: [
+  address?: `0x${string}`;
+  abi?: [
     {
       inputs: [];
       name: "mintBadge";
@@ -160,6 +162,13 @@ export type ContractInfo = {
       type: "function";
     },
   ];
+  functionName?: string;
+  args?: unknown[];
+};
+
+export type WriteContractInfo = {
+  address?: `0x${string}`;
+  abi?: AbiFunction[];
   functionName: string;
   args?: [];
 };
@@ -371,3 +380,7 @@ export type TicketUserQuery = {
   includeTelegram?: boolean;
   includeDiscord?: boolean;
 };
+
+export enum TokenType {
+  USDT = "USDT",
+}

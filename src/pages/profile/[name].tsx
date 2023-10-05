@@ -1,6 +1,8 @@
-import React, { ReactElement, useEffect, useMemo, useState } from "react";
-import MainLayout from "../../layouts/main-layout";
-import Head from "next/head";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import EmailIcon from "@mui/icons-material/Email";
+import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import {
   Avatar,
   Box,
@@ -13,16 +15,24 @@ import {
   Typography,
 } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
+import { useTheme } from "@mui/material/styles";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
+import MainLayout from "../../layouts/main-layout";
+
 import StringHelper from "../../helper/string-helper";
 import GradientTypography from "../../components/atomic/atoms/gradient-typography";
-import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
-import EmailIcon from "@mui/icons-material/Email";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import TelegramIcon from "@mui/icons-material/Telegram";
 import PrimaryButton from "../../components/atomic/atoms/primary-button";
 import ProfileEditDialog from "../../components/dialogs/profile-edit-dialog";
+import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
+import { backDirectionPathState } from "../../lib/recoil";
+import { useAlert } from "../../provider/alert/alert-provider";
 import { useLoading } from "../../provider/loading/loading-provider";
+import { useTotalWallet } from "../../provider/login/hook/total-wallet-hook";
 import { useLogin } from "../../provider/login/login-provider";
+import { useMobile } from "../../provider/mobile/mobile-context";
+import { useSnackbar } from "../../provider/snackbar/snackbar-provider";
 import {
   MouseEventWithParam,
   MouseEventWithStateParam,
@@ -31,8 +41,6 @@ import {
   SupportedNetwork,
 } from "../../types";
 import ConnectEmailDialog from "../../components/dialogs/connect-email-dialog";
-import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
-import { useAlert } from "../../provider/alert/alert-provider";
 import {
   APP_ERROR_MESSAGE,
   AppError,
@@ -42,30 +50,27 @@ import {
 import PictureEditDialog from "../../components/dialogs/picture-edit-dialog";
 import { VALIDATOR_BUTTON_STATES } from "../../components/atomic/molecules/validator-button";
 import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
-import { useTheme } from "@mui/material/styles";
+
 import BlockIcon from "../../components/atomic/molecules/block-icon";
-import { useRouter } from "next/router";
+
 import TicketCard from "../../components/form/ticket-card";
+
 import Image from "next/image";
+
 import ResourceHelper from "../../helper/resource-helper";
 import TypeHelper from "../../helper/type-helper";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
-import { useMobile } from "../../provider/mobile/mobile-context";
 import EthUtil from "../../util/eth-util";
 import ConnectTwitterDialog from "../../components/dialogs/connect-twitter-dialog";
 import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
-import { backDirectionPathState, kakaoRequestState } from "../../lib/recoil";
+
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useTotalWallet } from "../../provider/login/hook/total-wallet-hook";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { useSnackbar } from "../../provider/snackbar/snackbar-provider";
 
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import useSimpleStorage from "../../hooks/simple-storage-hook";
 import { useWalletAlert } from "../../hooks/wallet-alert-hook";
 import { useUserQuery } from "../../hooks/user-query-hook";
 import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
-import PreferenceHelper from "../../helper/preference-helper";
 import KakaoIcon from "../../components/atomic/atoms/svg/kakao-icon";
 import RouterUtil from "../../util/router-util";
 import DiscordIcon from "../../components/atomic/atoms/svg/discord-icon";
@@ -210,7 +215,7 @@ const Profile = () => {
       case DELETE_CONFIRM_STATE.WALLET: {
         setDeleteConfirmDialog(true);
         setDeleteConfirmDialogMessage(
-          `${deleteConfirmState.payload?.toUpperCase()} 지갑 연동을 해제 하시겠습니까?`
+          `${deleteConfirmState.payload?.toUpperCase()} 지갑 연동을 해제 하시겠습니까?`,
         );
         break;
       }
@@ -424,7 +429,7 @@ const Profile = () => {
                     <Box sx={{ maxWidth: 260 }}>
                       <GradientTypography variant={"h4"}>
                         {StringHelper.convertAddressToMidEllipsis(
-                          targetUserData?.walletAddressInfos?.[0]?.address
+                          targetUserData?.walletAddressInfos?.[0]?.address,
                         )}
                       </GradientTypography>
                     </Box>
@@ -432,7 +437,7 @@ const Profile = () => {
                       onClick={(e) => {
                         if (targetUserData?.walletAddressInfos?.[0]?.address) {
                           navigator.clipboard.writeText(
-                            targetUserData?.walletAddressInfos?.[0]?.address
+                            targetUserData?.walletAddressInfos?.[0]?.address,
                           );
                           showSnackbar("주소를 복사하였습니다");
                         }
@@ -474,17 +479,18 @@ const Profile = () => {
                         (network) =>
                           network === SUPPORTED_NETWORKS.EVM ||
                           (!isMobile && network === SUPPORTED_NETWORKS.APTOS) ||
-                          network === SUPPORTED_NETWORKS.STACKS
+                          network === SUPPORTED_NETWORKS.STACKS,
                       )
                       .filter(
                         (_, index) =>
-                          index !== Object.values(SUPPORTED_NETWORKS).length - 1
+                          index !==
+                          Object.values(SUPPORTED_NETWORKS).length - 1,
                       )
                       .map((network, index) => {
                         if (connectedWalletNetworks?.includes(network)) {
                           const addressInfo =
                             targetUserData?.walletAddressInfos?.filter(
-                              (w) => w.network === network
+                              (w) => w.network === network,
                             )?.[0];
                           if (!addressInfo) return <></>;
                           return (
@@ -502,17 +508,17 @@ const Profile = () => {
                                   const newWindow = window.open(
                                     ResourceHelper.getExplorerUri(
                                       addressInfo.network,
-                                      addressInfo.address
+                                      addressInfo.address,
                                     ),
                                     "_blank",
-                                    "noopener,noreferrer"
+                                    "noopener,noreferrer",
                                   );
                                   if (newWindow) newWindow.opener = null;
                                 }}
                                 icon={
                                   <img
                                     src={ResourceHelper.getExplorerIconUri(
-                                      addressInfo.network
+                                      addressInfo.network,
                                     )}
                                     width={16}
                                     height={16}
@@ -530,7 +536,7 @@ const Profile = () => {
                                     color={"neutral.100"}
                                   >
                                     {StringHelper.convertAddressToMidEllipsis(
-                                      addressInfo?.address
+                                      addressInfo?.address,
                                     )}
                                   </Typography>
                                 }
@@ -555,7 +561,7 @@ const Profile = () => {
                                 icon={
                                   <img
                                     src={ResourceHelper.getExplorerIconUri(
-                                      network
+                                      network,
                                     )}
                                     width={16}
                                     height={16}
@@ -1090,7 +1096,7 @@ const Profile = () => {
               window.open(
                 process.env["NEXT_PUBLIC_DISCORD_AUTH_URL"] ?? "",
                 "telegram",
-                "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+                "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no",
               );
               // await router.replace(
               //   process.env["NEXT_PUBLIC_DISCORD_AUTH_URL"] ?? ""
@@ -1155,7 +1161,7 @@ const Profile = () => {
                 signedUserData?.profileImageUrl?.includes("?");
               const res = await asyncUploadImage(
                 `profile/${signedUserData?.name}.${ext}`,
-                base64Data
+                base64Data,
               );
               // const data = await res.text();
 
@@ -1191,7 +1197,7 @@ const Profile = () => {
         }}
         walletInfos={(() => {
           return ResourceHelper.getWalletInfos(
-            TypeHelper.convertToSuppoertedNetwork(selectedNetwork)
+            TypeHelper.convertToSuppoertedNetwork(selectedNetwork),
           );
         })()}
         onWalletSelected={({ name, value }) => {
@@ -1205,7 +1211,7 @@ const Profile = () => {
               showLoading();
               const res = await asyncUpsertWalletAddress(
                 selectedNetwork as SupportedNetwork,
-                walletName
+                walletName,
               );
               setSelectedNetwork("");
             } catch (e) {
@@ -1240,7 +1246,7 @@ const Profile = () => {
               await asyncUpdateSocialTwitter("");
             } else if (state === DELETE_CONFIRM_STATE.WALLET) {
               const network = TypeHelper.convertToSuppoertedNetwork(
-                deleteConfirmState.payload
+                deleteConfirmState.payload,
               );
               await asyncDeleteWalletAddress(network);
             } else if (state === DELETE_CONFIRM_STATE.KAKAO) {

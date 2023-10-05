@@ -1,4 +1,10 @@
 import {
+  AllTicketsQuery,
+  ChainType,
+  RewardPolicy,
+  RewardPolicyType,
+} from "../__generated__/graphql";
+import {
   RewardContext,
   SUPPORTED_NETWORKS,
   SupportedNetwork,
@@ -6,12 +12,6 @@ import {
   User,
   WALLET_NAMES,
 } from "../types";
-import {
-  AllTicketsQuery,
-  ChainType,
-  RewardPolicy,
-  RewardPolicyType,
-} from "../__generated__/graphql";
 import DateUtil from "../util/date-util";
 import { ItemOfArray } from "../types/utill";
 import TypeParseHelper from "./type-parse-helper";
@@ -122,6 +122,16 @@ class TypeHelper {
     });
     const index = ids?.indexOf(questId) as number;
     return index;
+  };
+
+  public static convertChainTypeToId = (chainType: ChainType) => {
+    switch (chainType) {
+      case ChainType.Bnb:
+        return 56;
+      case ChainType.BnbTestnet:
+        return 97;
+    }
+    return -1;
   };
 
   public static convertTicket = (
