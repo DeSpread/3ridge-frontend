@@ -5,7 +5,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-
 import { useTheme } from "@mui/material/styles";
 import { Ticket, FILTER_TYPE, FilterType } from "../../../types";
 import TicketCard from "../../form/ticket-card";
@@ -15,13 +14,11 @@ import { useAllTicketsQuery } from "../../../hooks/query/use-all-tickets";
 import { TicketSortType } from "../../../__generated__/graphql";
 import { useRouter } from "next/router";
 import { useLoading } from "../../../provider/loading/loading-provider";
-
 import {
   LoadMore,
   TicketsSectionNoData,
   TicketsSectionSkeleton,
 } from "./components";
-
 import { useDetectRef } from "../../../hooks/util/use-detect-ref";
 
 interface TicketSectionProps {

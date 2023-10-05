@@ -722,6 +722,7 @@ const Event = (props: AppProps) => {
           break;
         }
       }
+      }
       if (quest.questGuides?.[0]?.content) {
         openSimpleWarningDialog(quest.questGuides[0]);
       }
