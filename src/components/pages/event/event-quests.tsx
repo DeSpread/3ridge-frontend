@@ -1,3 +1,4 @@
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import {
   Box,
   IconButton,
@@ -5,14 +6,20 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { QuestPolicyType } from "../../../__generated__/graphql";
-import VerifyCard from "../../atomic/molecules/verify-card";
-import { Quest, REWARD_POLICY_TYPE, Ticket, User } from "../../../types";
-import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
+import React, { PropsWithChildren } from "react";
+
+import { QuestPolicyType } from "../../../__generated__/graphql";
 import TypeHelper from "../../../helper/type-helper";
-import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import {
+  Quest,
+  REWARD_POLICY_TYPE,
+  Ticket,
+  User,
+  VerifyOnChainContext,
+} from "../../../types";
 import EditRemoveButton from "../../atomic/atoms/edit-remove-button";
+import VerifyCard from "../../atomic/molecules/verify-card";
 
 const EventQuests = (
   props: {
@@ -22,29 +29,29 @@ const EventQuests = (
     onVerifyBtnClicked?: (
       e: React.MouseEvent<Element, MouseEvent>,
       quest: Quest,
-      index: number
+      index: number,
     ) => void;
     onStartBtnClicked?: (
       e: React.MouseEvent<Element, MouseEvent>,
       quest: Quest,
-      index: number
+      index: number,
     ) => void;
     onEditBtnClicked?: (
       e: React.MouseEvent<Element, MouseEvent>,
       quest: Quest,
-      index: number
+      index: number,
     ) => void;
     onDeleteBtnClicked?: (
       e: React.MouseEvent<Element, MouseEvent>,
       quest: Quest,
-      index: number
+      index: number,
     ) => void;
     onExtractDataBtnClicked?: (
       e: React.MouseEvent<Element, MouseEvent>,
       quest: Quest,
-      index: number
+      index: number,
     ) => void;
-  } & PropsWithChildren
+  } & PropsWithChildren,
 ) => {
   const {
     ticketData,
@@ -153,7 +160,11 @@ const EventQuests = (
                   quest.questPolicy?.questPolicy ===
                     QuestPolicyType.VerifyHasDiscord ||
                   quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyAgreement
+                    QuestPolicyType.VerifyAgreement ||
+                  (quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyOnChain &&
+                    (quest.questPolicy?.context as VerifyOnChainContext).url ===
+                      "")
                 }
                 onVerifyBtnClicked={async (e) => {
                   onVerifyBtnClicked?.(e, quest, index);
