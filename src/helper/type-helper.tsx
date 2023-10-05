@@ -12,11 +12,9 @@ import {
   User,
   WALLET_NAMES,
 } from "../types";
-
 import DateUtil from "../util/date-util";
 import { ItemOfArray } from "../types/utill";
 import TypeParseHelper from "./type-parse-helper";
-
 
 class TypeHelper {
   public static convertToSuppoertedNetwork = (network?: string | ChainType) => {
