@@ -15,7 +15,11 @@ import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import { useGetSet, useMountedState } from "react-use";
 import { useSetRecoilState } from "recoil";
 
-import { ContentMetadata, QuestPolicyType } from "../../__generated__/graphql";
+import {
+  ChainType,
+  ContentMetadata,
+  QuestPolicyType,
+} from "../../__generated__/graphql";
 import ClickTypography from "../../components/atomic/atoms/click-typhography";
 import LinkTypography from "../../components/atomic/atoms/link-typography";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
@@ -909,7 +913,19 @@ const Event = (props: AppProps) => {
             getErrorMessage(e) ===
             APP_ERROR_MESSAGE.ON_CHAIN_TRANSACTION_NOT_INCLUDE_ANY_TO_ADDRESS
           ) {
-            showAlert({ title: "알림", content: "해당 트랜잭션이 없습니다." });
+            const context = quest?.questPolicy?.context as VerifyOnChainContext;
+            if (context?.chainType === ChainType.Stacks) {
+              showAlert({
+                title: "알림",
+                content:
+                  "Stacks Korea OG NFT 미보유자는 이번 이벤트에 참여하실 수 없습니다.",
+              });
+            } else {
+              showAlert({
+                title: "알림",
+                content: "해당 트랜잭션이 없습니다.",
+              });
+            }
           } else {
             showErrorAlert({ content: getErrorMessage(e) });
           }
