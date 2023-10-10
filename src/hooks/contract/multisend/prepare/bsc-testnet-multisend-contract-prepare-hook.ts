@@ -1,4 +1,7 @@
+import { useMemo } from "react";
 import { usePrepareContractWrite } from "wagmi";
+
+import { ContractAddress } from "@/const";
 
 export function useBscTestnetMultiSendContractPrepare({
   sender,
@@ -9,8 +12,23 @@ export function useBscTestnetMultiSendContractPrepare({
   recipients: `0x${string}`[];
   amounts: bigint[];
 }) {
+  const enabled = useMemo(() => {
+    if (
+      recipients?.length == 0 ||
+      amounts?.length === 0 ||
+      recipients?.length !== amounts?.length
+    ) {
+      return false;
+    }
+    for (let i = 0; i < recipients.length; i++) {
+      const addr = recipients[i];
+      if (/^0x/i.test(addr) === false) return false;
+    }
+    return true;
+  }, [recipients, amounts]);
+
   const { config, error, isError, isSuccess } = usePrepareContractWrite({
-    address: "0x81cDC3c61857ACCB4b9851A55910E2AF7FB4DDF1",
+    address: ContractAddress.BSC_TESTNET_MULTISEND,
     abi: [
       {
         inputs: [
@@ -42,14 +60,16 @@ export function useBscTestnetMultiSendContractPrepare({
       },
     ],
     args: [
-      "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+      ContractAddress.BSC_TESTNET_USDT,
       sender ?? "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
       recipients,
       amounts,
     ],
     functionName: "multiSend",
+    enabled,
   });
 
+  console.log("testnet enabled", enabled);
   console.log("testnet isSuccess", isSuccess);
 
   return {

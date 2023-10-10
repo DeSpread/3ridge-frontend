@@ -20,6 +20,19 @@ class FileUtil {
       reader.onerror = reject;
     });
   };
+
+  public static asyncReadAsText = (file: Blob) => {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = () => {
+        if (reader.result) {
+          resolve(reader.result.toString());
+        }
+      };
+      reader.onerror = reject;
+    });
+  };
 }
 
 export default FileUtil;
