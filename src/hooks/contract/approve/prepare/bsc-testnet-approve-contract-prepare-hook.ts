@@ -1,12 +1,14 @@
 import { usePrepareContractWrite } from "wagmi";
 
+import { ContractAddress } from "@/const";
+
 export function useBscTestNetApproveContractPrepare({
   amount,
 }: {
   amount: number;
 }) {
   const { config, error, isError, isSuccess } = usePrepareContractWrite({
-    address: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+    address: ContractAddress.BSC_TESTNET_USDT,
     abi: [
       {
         constant: false,
@@ -35,7 +37,7 @@ export function useBscTestNetApproveContractPrepare({
         type: "function",
       },
     ],
-    args: ["0x81cDC3c61857ACCB4b9851A55910E2AF7FB4DDF1", BigInt(amount)],
+    args: [ContractAddress.BSC_TESTNET_MULTISEND, BigInt(amount)],
     functionName: "approve",
   });
 
