@@ -1,10 +1,9 @@
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Box, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Image from "next/image";
 import React, { useState } from "react";
 
 import SecondaryButton from "@/components/atomic/atoms/secondary-button";
-import StyledOutlinedInput from "@/components/atomic/atoms/styled/styled-outlined-input";
 import InputButton from "@/components/atomic/molecules/input-button";
 import SimpleDialog, {
   SimpleDialogProps,
@@ -64,7 +63,14 @@ const ScreenshotUploadDialog = (
               justifyContent={"center"}
               alignItems={"center"}
             >
-              <Typography variant={"body1"}>스크린샷 업로드</Typography>
+              <Stack
+                alignItems={"center"}
+                justifyContent={"center"}
+                spacing={1}
+              >
+                <CloudUploadIcon fontSize={"large"}></CloudUploadIcon>
+                <Typography variant={"body1"}>스크린샷 업로드</Typography>
+              </Stack>
             </Stack>
           )}
           {imageFile && (
