@@ -22,14 +22,23 @@ const ScreenshotUploadDialog = (
     }) => void;
   } & SimpleDialogProps,
 ) => {
-  const { ...rest } = props;
+  const { onCloseBtnClicked, ...rest } = props;
   const theme = useTheme();
   const [imageFile, setImageFile] = useState<string>();
   const [base64Data, setBase64Data] = useState<string>();
   const [ext, setExt] = useState<string>();
 
   return (
-    <SimpleDialog {...rest} maxWidth={"sm"}>
+    <SimpleDialog
+      {...rest}
+      maxWidth={"sm"}
+      onCloseBtnClicked={(e) => {
+        setImageFile(undefined);
+        setExt(undefined);
+        setBase64Data(undefined);
+        onCloseBtnClicked?.(e);
+      }}
+    >
       <Stack sx={{ marginTop: 1 }}>
         <Box
           sx={{
