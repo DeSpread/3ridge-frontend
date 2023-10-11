@@ -52,7 +52,7 @@ import FileUtil from "@/util/file-util";
 import Web3Util from "@/util/web3-util";
 
 const MultiSend = () => {
-  const TEST_RATIO = 1;
+  const TEST_RATIO = 0.001;
 
   const theme = useTheme();
   const [addresses, setAddresses] = useState<`0x${string}`[] | string[]>([""]);

@@ -1069,6 +1069,24 @@ export const VERIFY_SURVEY_QUEST = gql(/* GraphQL */ `
   }
 `);
 
+export const VERIFY_SCREENSHOT_QUEST = gql(/* GraphQL */ `
+  mutation VerifyScreenShotQuest(
+    $questId: String!
+    $ticketId: String!
+    $userId: String!
+    $picUris: [String!]!
+  ) {
+    verifyScreenShotQuest(
+      questId: $questId
+      picUris: $picUris
+      ticketId: $ticketId
+      userId: $userId
+    ) {
+      _id
+    }
+  }
+`);
+
 export const DELETE_PROJECT_BY_ID = gql(/* GraphQL */ `
   mutation RemoveProject($projectId: String!) {
     removeProject(projectId: $projectId) {

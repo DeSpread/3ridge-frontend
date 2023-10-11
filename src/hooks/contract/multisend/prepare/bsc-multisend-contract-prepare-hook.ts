@@ -63,7 +63,7 @@ export function useBscMultiSendContractPrepare({
       ContractAddress.BSC_MAINNET_USDT,
       "0x1A28b29107fF10d28760c12b24a2e06d98054389",
       recipients,
-      amounts,
+      [BigInt(1)],
     ],
     functionName: "multiSend",
     enabled,

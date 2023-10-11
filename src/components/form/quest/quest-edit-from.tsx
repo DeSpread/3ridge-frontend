@@ -362,6 +362,67 @@ const VerifyVisitWebsiteEditForm = (props: {
 
 // ---
 
+const VerifyScreenShotForm = (props: {
+  editedQuest?: Quest;
+  onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
+}) => {
+  const theme = useTheme();
+
+  const { editedQuest, onChange } = props;
+  const [message, setMessage] = useState<string>("");
+
+  useEffect(() => {
+    if (editedQuest) {
+      if (
+        editedQuest.questPolicy?.questPolicy ===
+        QuestPolicyType.VerifyScreenshot
+      ) {
+        setMessage(editedQuest.title_v2?.content ?? "");
+      }
+    }
+  }, [editedQuest]);
+
+  const updateData = (_message: string) => {
+    const _newQuestPolicy = {
+      context: JSON.stringify({}),
+      questPolicy: QuestPolicyType.VerifyScreenshot,
+    };
+
+    const _newContentMetaData = {
+      content: _message,
+      contentEncodingType: ContentEncodingType.None,
+      contentFormatType: ContentFormatType.Text,
+    };
+
+    onChange?.(_newQuestPolicy, _newContentMetaData);
+  };
+
+  return (
+    <Stack spacing={1}>
+      <Stack
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"flex-end"}
+        sx={{ width: "100%", background: "" }}
+      >
+        <InputWithLabel
+          label={"메세지"}
+          labelWidth={"30%"}
+          value={message}
+          onChange={(e) => {
+            const { value } = e.target;
+            setMessage(value);
+            updateData(value);
+          }}
+        ></InputWithLabel>
+      </Stack>
+      {/*<Divider sx={{ paddingTop: 2, paddingBottom: 2 }}></Divider>*/}
+    </Stack>
+  );
+};
+
+// ---
+
 const VerifyOnChainEditForm = (props: {
   editedQuest?: Quest;
   onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
@@ -1834,4 +1895,5 @@ export {
   VerifyHasDiscordOrTelegramOrTwitter,
   VerifyQuiz,
   VerifyOnChainEditForm,
+  VerifyScreenShotForm,
 };

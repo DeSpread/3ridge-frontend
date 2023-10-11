@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import { useGetSet, useMountedState } from "react-use";
 import { useSetRecoilState } from "recoil";
+import { v1 } from "uuid";
 
 import {
   ChainType,
@@ -61,7 +62,6 @@ import {
   MouseEventWithParam,
   Quest,
   REWARD_POLICY_TYPE,
-  SUPPORTED_NETWORKS,
   VerifyAgreementQuestContext,
   VerifyDiscordQuestContext,
   VerifyHasWalletAddressQuestContext,
@@ -76,6 +76,9 @@ import {
   VerifyVisitWebsiteQuestContext,
 } from "../../types";
 import RouterUtil from "../../util/router-util";
+
+import ScreenshotUploadDialog from "@/components/dialogs/screenshot-upload-dialog";
+import useSimpleStorage from "@/hooks/simple-storage-hook";
 
 const Event = (props: AppProps) => {
   const { userData } = useSignedUserQuery();
@@ -99,6 +102,7 @@ const Event = (props: AppProps) => {
     asyncVerifySurveyQuest,
     asyncVerifyOnChainQuest,
     asyncVerifyTelegramQuest,
+    asyncVerifyScreenShotQuest,
     asyncVerifyTwitterLinkingAndRetweetQuest,
   } = useTicketQuery({
     userId: userData._id,
@@ -141,6 +145,8 @@ const Event = (props: AppProps) => {
   const [openedQuizQuestContext, setOpenedQuizQuestContext] =
     useState<VerifyQuizQuestContext>({ quizList: [] });
 
+  const [openScreenShotQuestDialog, setOpenScreenShotQuestDialog] =
+    useState(false);
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
   const { showLoading, closeLoading } = useLoading();
   const [verifiedList, setVerifiedList] = useState<boolean[]>([]);
@@ -156,6 +162,7 @@ const Event = (props: AppProps) => {
   const [isFire, setFire] = React.useState(false);
   const [lazyFire, setLazyFire] = React.useState(false);
   const setBackDirectionPath = useSetRecoilState(backDirectionPathState);
+  const { asyncUploadImage } = useSimpleStorage();
 
   useEffect(() => {
     const { ethereum } = window;
@@ -277,6 +284,16 @@ const Event = (props: AppProps) => {
     setOpenSurveyQuestDialog(false);
     setOpenedQuestId(undefined);
     setOpenedSurveyContext({ questions: [] });
+  };
+
+  const openScreenShotDialog = (questId: string) => {
+    setOpenScreenShotQuestDialog(true);
+    setOpenedQuestId(questId);
+  };
+
+  const closeScreenShotDialog = () => {
+    setOpenScreenShotQuestDialog(false);
+    setOpenedQuestId(undefined);
   };
 
   const openQuizDialog = (
@@ -746,6 +763,10 @@ const Event = (props: AppProps) => {
         "telegram",
         "width=800, height=600, status=no, menubar=no, toolbar=no, resizable=no",
       );
+    } else if (
+      quest.questPolicy?.questPolicy === QuestPolicyType.VerifyScreenshot
+    ) {
+      openScreenShotDialog(quest?._id);
     }
   };
 
@@ -1372,7 +1393,6 @@ const Event = (props: AppProps) => {
         }}
       ></TicketRewardHowToDialog>
       <ContractLoadingDialog
-        // open={true}
         open={openContractLoadingDialog}
         title={"컨트랙트를 실행중입니다"}
         link={
@@ -1382,34 +1402,57 @@ const Event = (props: AppProps) => {
         }
         linkName={"Polygonscan로 확인하기"}
       ></ContractLoadingDialog>
-      {/*<SimpleDialog open={true} title={"aabc"}>*/}
-      {/*  <Stack spacing={1}>*/}
-      {/*    <Typography variant={"body1"}>*/}
-      {/*      프로필 페이지에서 지갑을 연동해주세요.*/}
-      {/*    </Typography>*/}
-      {/*    <LinkTypography*/}
-      {/*      variant={"body1"}*/}
-      {/*      href={"#"}*/}
-      {/*      sx={{*/}
-      {/*        fontWeight: "bold",*/}
-      {/*        "&:hover": {*/}
-      {/*          color: "#914e1d",*/}
-      {/*          textDecoration: "underline",*/}
-      {/*        },*/}
-      {/*        color: theme.palette.warning.main,*/}
-      {/*      }}*/}
-      {/*      notOpenNewTab={true}*/}
-      {/*      onClick={async (e) => {*/}
-      {/*        closeAlert();*/}
-      {/*        setTimeout(() => {*/}
-      {/*          asyncGoToProfileAndEditDialogOpen();*/}
-      {/*        }, 0);*/}
-      {/*      }}*/}
-      {/*    >*/}
-      {/*      이 링크를 누르시면 프로필 페이지로 이동합니다.*/}
-      {/*    </LinkTypography>*/}
-      {/*  </Stack>*/}
-      {/*</SimpleDialog>*/}
+      <ScreenshotUploadDialog
+        open={openScreenShotQuestDialog}
+        title={"스크린샷 업로드"}
+        onCloseBtnClicked={(e) => {
+          closeScreenShotDialog();
+        }}
+        onConfirmBtnClicked={async (imageData) => {
+          closeScreenShotDialog();
+          showLoading();
+          const { base64Data, ext } = imageData;
+          if (!base64Data || !ext) {
+            showAlert({
+              title: "알림",
+              content: "이미지가 첨부되지 않았습니다.",
+            });
+            closeScreenShotDialog();
+            return;
+          }
+          const filename = v1();
+          console.log("filename", filename, "ext", ext);
+          const res = await asyncUploadImage(
+            `screenshot/${filename}.${ext}`,
+            base64Data,
+          );
+          if (!res) {
+            showErrorAlert({ content: "업로드 중 문제가 발생하였습니다" });
+            closeScreenShotDialog();
+            return;
+          }
+          const imageUris = [
+            `https://3ridge.s3.ap-northeast-2.amazonaws.com/screenshot/${filename}.${ext}`,
+          ];
+          if (!openedQuestId) {
+            showErrorAlert({ content: "업로드 중 문제가 발생하였습니다" });
+            return;
+          }
+          const index = TypeHelper.findQuestIndex(ticketData, openedQuestId);
+          if (index !== undefined && ticketData._id) {
+            try {
+              await asyncVerifyScreenShotQuest(openedQuestId, imageUris);
+              openSimpleWarningDialog("업로드를 완료하였습니다.");
+              updateVerifyState(index);
+            } catch (e) {
+              showErrorAlert({ content: getErrorMessage(e) });
+            } finally {
+              closeSurveyDialog();
+              closeLoading();
+            }
+          }
+        }}
+      ></ScreenshotUploadDialog>
     </>
   );
 };
