@@ -375,6 +375,7 @@ const VerifyScreenShotForm = (props: {
 }) => {
   const { editedQuest, onChange } = props;
   const [message, setMessage] = useState<string>("");
+
   const [textValue, setTextValue] = useState("");
   const [codeValue, setCodeValue] = useState("");
   const [markdownValue, setMarkdownValue] = useState("");
@@ -439,8 +440,6 @@ const VerifyScreenShotForm = (props: {
       contentEncodingType: ContentEncodingType.None,
       contentFormatType: ContentFormatType.Text,
     };
-
-    // console.log("_newQuestPolicy", _newQuestPolicy);
 
     onChange?.(_newQuestPolicy, _newContentMetaData);
   };
