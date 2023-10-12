@@ -3,15 +3,19 @@ import { Box, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
 
+import { ContentMetadata } from "@/__generated__/graphql";
+import ContentMetaDataRenderComponent from "@/components/atomic/atoms/content-meta-data-render-component";
 import SecondaryButton from "@/components/atomic/atoms/secondary-button";
 import InputButton from "@/components/atomic/molecules/input-button";
 import SimpleDialog, {
   SimpleDialogProps,
 } from "@/components/dialogs/simple-dialog";
+import { VerifyQuizQuestContext, VerifyScreenShotQuestContext } from "@/types";
 import FileUtil from "@/util/file-util";
 
-const ScreenshotUploadDialog = (
+const QuestScreenshotUploadDialog = (
   props: {
+    context?: VerifyScreenShotQuestContext;
     onConfirmBtnClicked?: ({
       base64Data,
       ext,
@@ -21,7 +25,7 @@ const ScreenshotUploadDialog = (
     }) => void;
   } & SimpleDialogProps,
 ) => {
-  const { onCloseBtnClicked, ...rest } = props;
+  const { onCloseBtnClicked, context, ...rest } = props;
   const theme = useTheme();
   const [imageFile, setImageFile] = useState<string>();
   const [base64Data, setBase64Data] = useState<string>();
@@ -38,7 +42,12 @@ const ScreenshotUploadDialog = (
         onCloseBtnClicked?.(e);
       }}
     >
-      <Stack sx={{ marginTop: 1 }}>
+      <Stack sx={{ marginTop: 1 }} spacing={2}>
+        {context && (
+          <ContentMetaDataRenderComponent
+            contentMetaData={context?.description}
+          ></ContentMetaDataRenderComponent>
+        )}
         <Box
           sx={{
             width: "100%",
@@ -140,4 +149,4 @@ const ScreenshotUploadDialog = (
   );
 };
 
-export default ScreenshotUploadDialog;
+export default QuestScreenshotUploadDialog;

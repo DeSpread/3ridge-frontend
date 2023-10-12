@@ -67,6 +67,7 @@ import {
   VerifyHasWalletAddressQuestContext,
   VerifyOnChainContext,
   VerifyQuizQuestContext,
+  VerifyScreenShotQuestContext,
   VerifySurveyQuestContext,
   VerifyTelegramQuestContext,
   VerifyTwitterFollowQuestContext,
@@ -77,7 +78,7 @@ import {
 } from "../../types";
 import RouterUtil from "../../util/router-util";
 
-import ScreenshotUploadDialog from "@/components/dialogs/screenshot-upload-dialog";
+import QuestScreenshotUploadDialog from "@/components/dialogs/quest/quest-screenshot-upload-dialog";
 import useSimpleStorage from "@/hooks/simple-storage-hook";
 
 const Event = (props: AppProps) => {
@@ -147,6 +148,9 @@ const Event = (props: AppProps) => {
 
   const [openScreenShotQuestDialog, setOpenScreenShotQuestDialog] =
     useState(false);
+  const [openedScreenShotContext, setOpenedScreenShotContext] =
+    useState<VerifyScreenShotQuestContext>();
+
   const { showAlert, showErrorAlert, closeAlert } = useAlert();
   const { showLoading, closeLoading } = useLoading();
   const [verifiedList, setVerifiedList] = useState<boolean[]>([]);
@@ -286,14 +290,19 @@ const Event = (props: AppProps) => {
     setOpenedSurveyContext({ questions: [] });
   };
 
-  const openScreenShotDialog = (questId: string) => {
+  const openScreenShotDialog = (
+    questId: string,
+    context: VerifyScreenShotQuestContext,
+  ) => {
     setOpenScreenShotQuestDialog(true);
     setOpenedQuestId(questId);
+    setOpenedScreenShotContext(context);
   };
 
   const closeScreenShotDialog = () => {
     setOpenScreenShotQuestDialog(false);
     setOpenedQuestId(undefined);
+    setOpenedScreenShotContext(undefined);
   };
 
   const openQuizDialog = (
@@ -766,7 +775,9 @@ const Event = (props: AppProps) => {
     } else if (
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyScreenshot
     ) {
-      openScreenShotDialog(quest?._id);
+      const questContext = quest.questPolicy
+        ?.context as VerifyScreenShotQuestContext;
+      openScreenShotDialog(quest?._id, questContext);
     }
   };
 
@@ -1402,9 +1413,10 @@ const Event = (props: AppProps) => {
         }
         linkName={"Polygonscan로 확인하기"}
       ></ContractLoadingDialog>
-      <ScreenshotUploadDialog
+      <QuestScreenshotUploadDialog
         open={openScreenShotQuestDialog}
         title={"스크린샷 업로드"}
+        context={openedScreenShotContext}
         onCloseBtnClicked={(e) => {
           closeScreenShotDialog();
         }}
@@ -1452,7 +1464,7 @@ const Event = (props: AppProps) => {
             }
           }
         }}
-      ></ScreenshotUploadDialog>
+      ></QuestScreenshotUploadDialog>
     </>
   );
 };

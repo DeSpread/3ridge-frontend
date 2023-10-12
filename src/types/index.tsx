@@ -243,6 +243,7 @@ export type Quest = {
       | VerifyHasTwitterQuestContext
       | VerifyHasTelegramQuestContext
       | VerifyVisitWebsiteQuestContext
+      | VerifyScreenShotQuestContext
       | undefined;
     questPolicy?: QuestPolicyType;
   };
@@ -298,6 +299,10 @@ export type VerifyHasTelegramQuestContext = {};
 
 export type VerifyVisitWebsiteQuestContext = {
   url: string;
+};
+
+export type VerifyScreenShotQuestContext = {
+  description: ContentMetadata;
 };
 
 export type VerifyHasWalletAddressQuestContext = {

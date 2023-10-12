@@ -54,6 +54,7 @@ const TicketQuestUpsertEditDialog = (
   const [titleV2, setTitleV2] = useState<ContentMetadata>();
 
   useEffect(() => {
+    console.log("editedQuest", editedQuest);
     if (editedQuest && editedQuest?.questPolicy?.questPolicy) {
       setQuestPolicyType(editedQuest?.questPolicy?.questPolicy);
     }
