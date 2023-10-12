@@ -1,5 +1,5 @@
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
 
@@ -43,10 +43,13 @@ const QuestScreenshotUploadDialog = (
       }}
     >
       <Stack sx={{ marginTop: 1 }} spacing={2}>
-        {context && (
-          <ContentMetaDataRenderComponent
-            contentMetaData={context?.description}
-          ></ContentMetaDataRenderComponent>
+        {context?.description && (
+          <Stack>
+            <ContentMetaDataRenderComponent
+              contentMetaData={context?.description}
+            ></ContentMetaDataRenderComponent>
+            <Divider sx={{ marginTop: 2 }}></Divider>
+          </Stack>
         )}
         <Box
           sx={{
@@ -67,7 +70,6 @@ const QuestScreenshotUploadDialog = (
                 width: "100%",
                 height: "100%",
                 position: "absolute",
-                // background: "red",
               }}
               justifyContent={"center"}
               alignItems={"center"}
