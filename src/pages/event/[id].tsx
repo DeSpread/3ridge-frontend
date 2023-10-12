@@ -1430,6 +1430,7 @@ const Event = (props: AppProps) => {
               content: "이미지가 첨부되지 않았습니다.",
             });
             closeScreenShotDialog();
+            closeLoading();
             return;
           }
           const filename = v1();
@@ -1441,6 +1442,7 @@ const Event = (props: AppProps) => {
           if (!res) {
             showErrorAlert({ content: "업로드 중 문제가 발생하였습니다" });
             closeScreenShotDialog();
+            closeLoading();
             return;
           }
           const imageUris = [
@@ -1448,6 +1450,7 @@ const Event = (props: AppProps) => {
           ];
           if (!openedQuestId) {
             showErrorAlert({ content: "업로드 중 문제가 발생하였습니다" });
+            closeLoading();
             return;
           }
           const index = TypeHelper.findQuestIndex(ticketData, openedQuestId);
