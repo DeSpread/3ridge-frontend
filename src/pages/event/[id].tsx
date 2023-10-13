@@ -365,6 +365,9 @@ const Event = (props: AppProps) => {
     if (networksOfUser?.includes("EVM") && ticketRewardChain === "MATIC") {
       return true;
     }
+    if (networksOfUser?.includes("EVM") && ticketRewardChain === "ARB") {
+      return true;
+    }
     return false;
   }, [userData?.walletAddressInfos, ticketData]);
 
