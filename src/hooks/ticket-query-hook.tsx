@@ -42,6 +42,7 @@ import {
   VERIFY_TELEGRAM_QUEST,
   UPDATE_TICKET_VISIBLE,
   VERIFY_TWITTER_LIKING_RTWEET_QUEST,
+  VERIFY_SCREENSHOT_QUEST,
 } from "../lib/apollo/query";
 import { Ticket, TicketUserQuery } from "../types";
 import AxiosUtil from "../util/axios-util";
@@ -66,6 +67,7 @@ export function useTicketQuery({
   const [verifyDiscordQuest] = useMutation(VERIFY_DISCORD_QUEST);
   const [verify3ridgePoint] = useMutation(VERIFY_3RIDGE_POINT_QUEST);
   const [verifySurveyQuest] = useMutation(VERIFY_SURVEY_QUEST);
+  const [verifyScreenShotQuest] = useMutation(VERIFY_SCREENSHOT_QUEST);
   const [verifyOnChainQuest] = useMutation(VERIFY_ONCHAIN_QUEST);
   const [verifyTelegramQuest] = useMutation(VERIFY_TELEGRAM_QUEST);
   const [completeQuestOfUser] = useMutation(COMPLETE_QUEST_OF_USER);
@@ -396,6 +398,22 @@ export function useTicketQuery({
     }
   };
 
+  const asyncVerifyScreenShotQuest = async (
+    questId: string,
+    picUris: string[],
+  ) => {
+    if (id && questId && picUris && userId) {
+      await verifyScreenShotQuest({
+        variables: {
+          questId,
+          picUris,
+          ticketId: id,
+          userId,
+        },
+      });
+    }
+  };
+
   const asyncVerifyOnChainQuest = async (questId: string) => {
     if (id && questId && userId) {
       await verifyOnChainQuest({
@@ -679,5 +697,6 @@ export function useTicketQuery({
     asyncVerifyTelegramQuest,
     asyncUpdateTicketVisibleById,
     asyncVerifyTwitterLinkingAndRetweetQuest,
+    asyncVerifyScreenShotQuest,
   };
 }

@@ -1,14 +1,19 @@
+import { useMemo } from "react";
 import { useContractRead } from "wagmi";
+
+import { ContractAddress } from "@/const";
 
 export function useBscTestNetReadContract({
   userAddress,
 }: {
   userAddress?: `0x${string}`;
 }) {
-  const CONTRACT_ADDRESS = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
+  const enabled = useMemo(() => {
+    return userAddress && /^0x/i.test(userAddress) ? true : false;
+  }, [userAddress]);
 
   const { data, isError, isLoading, error, isSuccess } = useContractRead({
-    address: CONTRACT_ADDRESS,
+    address: ContractAddress.BSC_TESTNET_USDT,
     abi: [
       {
         constant: true,
@@ -39,10 +44,11 @@ export function useBscTestNetReadContract({
     ],
     args: [
       userAddress ?? "0x1A28b29107fF10d28760c12b24a2e06d98054389",
-      "0x81cDC3c61857ACCB4b9851A55910E2AF7FB4DDF1",
+      ContractAddress.BSC_TESTNET_MULTISEND,
     ],
     functionName: "allowance",
     watch: true,
+    enabled,
   });
 
   return {

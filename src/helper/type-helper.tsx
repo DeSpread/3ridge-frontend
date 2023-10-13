@@ -12,8 +12,9 @@ import {
   User,
   WALLET_NAMES,
 } from "../types";
-import DateUtil from "../util/date-util";
 import { ItemOfArray } from "../types/utill";
+import DateUtil from "../util/date-util";
+
 import TypeParseHelper from "./type-parse-helper";
 
 class TypeHelper {
@@ -135,7 +136,7 @@ class TypeHelper {
   };
 
   public static convertTicket = (
-    ticket: ItemOfArray<AllTicketsQuery["tickets"]>
+    ticket: ItemOfArray<AllTicketsQuery["tickets"]>,
   ) => {
     return {
       _id: ticket._id ?? undefined,
@@ -163,7 +164,7 @@ class TypeHelper {
           questPolicy: {
             context: TypeParseHelper.parseQuestPolicy(
               _e.questPolicy?.context,
-              _e.questPolicy?.questPolicy
+              _e.questPolicy?.questPolicy,
             ),
             questPolicy: _e.questPolicy?.questPolicy ?? undefined,
           },
@@ -173,7 +174,7 @@ class TypeHelper {
       rewardPolicy: {
         context: TypeParseHelper.parseRewardPolicy(
           ticket.rewardPolicy?.context ?? undefined,
-          ticket.rewardPolicy?.rewardPolicyType ?? undefined
+          ticket.rewardPolicy?.rewardPolicyType ?? undefined,
         ),
         rewardPoint: ticket.rewardPolicy?.rewardPoint ?? undefined,
         rewardPolicyType: ticket.rewardPolicy?.rewardPolicyType ?? undefined,
