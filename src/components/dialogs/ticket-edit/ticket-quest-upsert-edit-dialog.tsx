@@ -1,5 +1,3 @@
-import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
-import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   FormControl,
@@ -8,13 +6,16 @@ import {
   Select,
   Stack,
 } from "@mui/material";
-import SecondaryButton from "../../atomic/atoms/secondary-button";
+import { useTheme } from "@mui/material/styles";
+import React, { useEffect, useMemo, useState } from "react";
+
 import {
   ContentMetadata,
   QuestPolicy,
   QuestPolicyType,
 } from "../../../__generated__/graphql";
-import { useTheme } from "@mui/material/styles";
+import { Quest } from "../../../types";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
 import {
   Verify3ridgePointEditForm,
   VerifyDiscordQuestEditForm,
@@ -23,13 +24,14 @@ import {
   VerifyHasWalletAddressEditForm,
   VerifyOnChainEditForm,
   VerifyQuiz,
+  VerifyScreenShotForm,
   VerifySurveyEditForm,
   VerifyTelegramQuestEditForm,
   VerifyTwitterFollowEditForm,
   VerifyTwitterRetweetOrLinkingEditForm,
   VerifyVisitWebsiteEditForm,
 } from "../../form/quest/quest-edit-from";
-import { Quest } from "../../../types";
+import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 
 const TicketQuestUpsertEditDialog = (
   props: {
@@ -37,21 +39,22 @@ const TicketQuestUpsertEditDialog = (
     onConfirmBtnClicked?: (
       questPolicy?: QuestPolicy,
       title_v2?: ContentMetadata,
-      editedQuestId?: string
+      editedQuestId?: string,
     ) => void;
-  } & SimpleDialogProps
+  } & SimpleDialogProps,
 ) => {
   const { editedQuest, onConfirmBtnClicked, ...rest } = props;
   const theme = useTheme();
 
   const [questPolicyType, setQuestPolicyType] = useState<QuestPolicyType>(
     // QuestPolicyType.
-    QuestPolicyType.Quiz
+    QuestPolicyType.Quiz,
   );
   const [questPolicy, setQuestPolicy] = useState<QuestPolicy>();
   const [titleV2, setTitleV2] = useState<ContentMetadata>();
 
   useEffect(() => {
+    console.log("editedQuest", editedQuest);
     if (editedQuest && editedQuest?.questPolicy?.questPolicy) {
       setQuestPolicyType(editedQuest?.questPolicy?.questPolicy);
     }
@@ -91,6 +94,8 @@ const TicketQuestUpsertEditDialog = (
         return "퀴즈";
       case QuestPolicyType.VerifyOnChain:
         return "온체인 활동";
+      case QuestPolicyType.VerifyScreenshot:
+        return "스크릿샷";
     }
     return "";
   };
@@ -139,7 +144,7 @@ const TicketQuestUpsertEditDialog = (
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyTwitterLinkingRetweet}>
                     {getPolicyLabel(
-                      QuestPolicyType.VerifyTwitterLinkingRetweet
+                      QuestPolicyType.VerifyTwitterLinkingRetweet,
                     )}
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyTelegram}>
@@ -177,6 +182,9 @@ const TicketQuestUpsertEditDialog = (
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyOnChain}>
                     {getPolicyLabel(QuestPolicyType.VerifyOnChain)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyScreenshot}>
+                    {getPolicyLabel(QuestPolicyType.VerifyScreenshot)}
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -295,6 +303,12 @@ const TicketQuestUpsertEditDialog = (
               editedQuest={editedQuest}
               onChange={onChange}
             ></VerifyOnChainEditForm>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyScreenshot && (
+            <VerifyScreenShotForm
+              editedQuest={editedQuest}
+              onChange={onChange}
+            ></VerifyScreenShotForm>
           )}
         </Box>
         <Stack

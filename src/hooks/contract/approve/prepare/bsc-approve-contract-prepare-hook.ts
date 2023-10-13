@@ -1,8 +1,10 @@
 import { usePrepareContractWrite } from "wagmi";
 
+import { ContractAddress } from "@/const";
+
 export function useBscApproveContractPrepare({ amount }: { amount: number }) {
   const { config, error, isError, isSuccess } = usePrepareContractWrite({
-    address: "0x55d398326f99059fF775485246999027B3197955",
+    address: ContractAddress.BSC_MAINNET_USDT,
     abi: [
       {
         constant: false,
@@ -31,7 +33,7 @@ export function useBscApproveContractPrepare({ amount }: { amount: number }) {
         type: "function",
       },
     ],
-    args: ["0xf638D1de7cCe47678830c928b337cd4D17a62917", BigInt(amount)],
+    args: [ContractAddress.BSC_MAINNET_MULTISEND, BigInt(amount)],
     functionName: "approve",
   });
 

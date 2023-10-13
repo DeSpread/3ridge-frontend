@@ -119,6 +119,8 @@ const EventQuests = (
             quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
             quest.questPolicy?.questPolicy === QuestPolicyType.VerifySurvey ||
             quest.questPolicy?.questPolicy ===
+              QuestPolicyType.VerifyScreenshot ||
+            quest.questPolicy?.questPolicy ===
               QuestPolicyType.VerifyVisitWebsite;
 
           return (

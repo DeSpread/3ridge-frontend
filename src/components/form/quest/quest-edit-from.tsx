@@ -13,7 +13,9 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import dedent from "dedent";
+import { highlight, languages } from "prismjs";
 import React, { useEffect, useState } from "react";
+import Editor from "react-simple-code-editor";
 
 import {
   ChainType,
@@ -31,6 +33,7 @@ import {
   VerifyHasWalletAddressQuestContext,
   VerifyOnChainContext,
   VerifyQuizQuestContext,
+  VerifyScreenShotQuestContext,
   VerifySurveyQuestContext,
   VerifyTelegramQuestContext,
   VerifyTwitterFollowQuestContext,
@@ -41,6 +44,9 @@ import MathUtil from "../../../util/math-util";
 import InputWithLabel from "../../atomic/atoms/input-with-label";
 import NumberInput from "../../atomic/atoms/number-input";
 import NumberWithLabel from "../../atomic/atoms/number-with-label";
+
+import Container from "@/components/atomic/atoms/container";
+import StringUtil from "@/util/string-util";
 
 const VerifySurveyEditForm = (props: {
   editedQuest?: Quest;
@@ -356,6 +362,208 @@ const VerifyVisitWebsiteEditForm = (props: {
           updateData(value, url, handle);
         }}
       ></InputWithLabel>
+    </Stack>
+  );
+};
+
+// ---
+
+const VerifyScreenShotForm = (props: {
+  editedQuest?: Quest;
+  onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
+}) => {
+  const theme = useTheme();
+
+  const { editedQuest, onChange } = props;
+  const [message, setMessage] = useState<string>("");
+  const [textValue, setTextValue] = useState("");
+  const [codeValue, setCodeValue] = useState("");
+  const [markdownValue, setMarkdownValue] = useState("");
+  const [contentFormatType, setContentFormatType] = useState<ContentFormatType>(
+    ContentFormatType.Text,
+  );
+
+  useEffect(() => {
+    if (editedQuest) {
+      if (
+        editedQuest.questPolicy?.questPolicy ===
+        QuestPolicyType.VerifyScreenshot
+      ) {
+        setMessage(editedQuest.title_v2?.content ?? "");
+        const context = editedQuest.questPolicy
+          ?.context as VerifyScreenShotQuestContext;
+        if (context?.description) {
+          setTextValue("");
+          setCodeValue("");
+          setMarkdownValue("");
+          if (
+            context?.description?.contentFormatType === ContentFormatType.Text
+          ) {
+            setTextValue(context?.description?.content);
+            setContentFormatType(ContentFormatType.Text);
+          } else if (
+            context?.description?.contentFormatType === ContentFormatType.Html
+          ) {
+            setCodeValue(context?.description?.content);
+            setContentFormatType(ContentFormatType.Html);
+          } else if (
+            context?.description?.contentFormatType ===
+            ContentFormatType.Markdown
+          ) {
+            setMarkdownValue(context?.description?.content);
+            setContentFormatType(ContentFormatType.Markdown);
+          }
+        }
+      }
+    }
+  }, [editedQuest]);
+
+  const updateData = (
+    _message: string,
+    _value: string,
+    _contentFormatType: ContentFormatType,
+  ) => {
+    const content = _value;
+    const description = {
+      content,
+      contentEncodingType: ContentEncodingType.None,
+      contentFormatType: _contentFormatType,
+    };
+
+    const _newQuestPolicy = {
+      context: JSON.stringify({ description }),
+      questPolicy: QuestPolicyType.VerifyScreenshot,
+    };
+
+    const _newContentMetaData = {
+      content: _message,
+      contentEncodingType: ContentEncodingType.None,
+      contentFormatType: ContentFormatType.Text,
+    };
+
+    // console.log("_newQuestPolicy", _newQuestPolicy);
+
+    onChange?.(_newQuestPolicy, _newContentMetaData);
+  };
+
+  return (
+    <Stack spacing={1}>
+      <Stack
+        alignItems={"center"}
+        justifyContent={"flex-end"}
+        sx={{ width: "100%", background: "" }}
+        spacing={1}
+      >
+        <Container sx={{ width: "100%", background: "" }}>
+          <Stack
+            sx={{ width: "100%", background: "" }}
+            alignItems={"flex-start"}
+          >
+            <Stack
+              sx={{ width: "100%" }}
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+            >
+              <Typography>내용</Typography>
+              <Box>
+                <FormControl>
+                  <InputLabel>TYPE</InputLabel>
+                  <Select
+                    value={contentFormatType}
+                    label="FormatType"
+                    onChange={(e) => {
+                      const { value } = e.target;
+                      const code =
+                        contentFormatType === ContentFormatType.Html
+                          ? codeValue
+                          : contentFormatType === ContentFormatType.Text
+                          ? textValue
+                          : markdownValue;
+                      if (value === "TEXT") {
+                        setContentFormatType(ContentFormatType.Text);
+                        updateData(message, code, ContentFormatType.Text);
+                      } else if (value === "HTML") {
+                        setContentFormatType(ContentFormatType.Html);
+                        updateData(message, code, ContentFormatType.Html);
+                      } else if (value === "MARKDOWN") {
+                        setContentFormatType(ContentFormatType.Markdown);
+                        updateData(message, code, ContentFormatType.Markdown);
+                      }
+                    }}
+                  >
+                    <MenuItem value={ContentFormatType.Text}>Text</MenuItem>
+                    <MenuItem value={ContentFormatType.Html}>Html</MenuItem>
+                    <MenuItem value={ContentFormatType.Markdown}>
+                      Markdown
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Stack>
+            <Box sx={{ width: "100%", marginTop: 2 }}>
+              {contentFormatType === ContentFormatType.Text && (
+                <Editor
+                  value={textValue}
+                  onValueChange={(code) => {
+                    setTextValue(code);
+                    updateData(message, code, contentFormatType);
+                  }}
+                  highlight={(code) =>
+                    highlight(code, languages.markup!, "markdown")
+                  }
+                  padding={15}
+                  className="container__editor"
+                />
+              )}
+              {contentFormatType === ContentFormatType.Html && (
+                <Editor
+                  value={codeValue}
+                  onValueChange={(code) => {
+                    setCodeValue(code);
+                    updateData(message, code, contentFormatType);
+                  }}
+                  highlight={(code) => highlight(code, languages.jsx!, "jsx")}
+                  padding={15}
+                  className="container__editor"
+                />
+              )}
+              {contentFormatType === ContentFormatType.Markdown && (
+                <Editor
+                  value={markdownValue}
+                  onValueChange={(code) => {
+                    setMarkdownValue(code);
+                    updateData(message, code, contentFormatType);
+                  }}
+                  highlight={(code) =>
+                    highlight(code, languages.markup!, "markdown")
+                  }
+                  padding={15}
+                  className="container__editor"
+                />
+              )}
+            </Box>
+          </Stack>
+        </Container>
+        <InputWithLabel
+          label={"메세지"}
+          labelWidth={"30%"}
+          value={message}
+          onChange={(e) => {
+            const { value } = e.target;
+            setMessage(value);
+            const code =
+              contentFormatType === ContentFormatType.Html
+                ? codeValue
+                : contentFormatType === ContentFormatType.Text
+                ? textValue
+                : markdownValue;
+
+            updateData(message, code, contentFormatType);
+          }}
+        ></InputWithLabel>
+      </Stack>
+      {/*<Divider sx={{ paddingTop: 2, paddingBottom: 2 }}></Divider>*/}
     </Stack>
   );
 };
@@ -1834,4 +2042,5 @@ export {
   VerifyHasDiscordOrTelegramOrTwitter,
   VerifyQuiz,
   VerifyOnChainEditForm,
+  VerifyScreenShotForm,
 };

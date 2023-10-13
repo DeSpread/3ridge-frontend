@@ -23,6 +23,8 @@ export function useMultiSendWriteContractHook({
     return useBscMultiSendContractPrepare;
   }, [chain]);
 
+  console.log("recipients", recipients, "amounts", amounts);
+
   const {
     config,
     error: prepareError,

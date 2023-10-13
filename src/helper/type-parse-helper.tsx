@@ -1,3 +1,4 @@
+import { QuestPolicyType } from "../__generated__/graphql";
 import {
   RewardContext,
   VerifyTwitterFollowQuestContext,
@@ -17,13 +18,13 @@ import {
   VerifySurveyQuestContext,
   VerifyOnChainContext,
   VerifyTwitterLikingAndRetweetQuestContext,
+  VerifyScreenShotQuestContext,
 } from "../types";
-import { QuestPolicyType } from "../__generated__/graphql";
 
 class TypeParseHelper {
   public static parseRewardPolicy = (
     context?: string,
-    rewardPolicyType?: string
+    rewardPolicyType?: string,
   ) => {
     if (!context) return undefined;
     try {
@@ -45,7 +46,7 @@ class TypeParseHelper {
 
   public static parseQuestPolicy = (
     context?: string,
-    questPolicyType?: string
+    questPolicyType?: string,
   ) => {
     if (!context) return undefined;
     try {
@@ -86,6 +87,8 @@ class TypeParseHelper {
         questPolicyType === QuestPolicyType.VerifyTwitterLinkingRetweet
       ) {
         return contextJson as VerifyTwitterLikingAndRetweetQuestContext;
+      } else if (questPolicyType === QuestPolicyType.VerifyScreenshot) {
+        return contextJson as VerifyScreenShotQuestContext;
       }
     } catch (e) {
       console.log(context, questPolicyType);

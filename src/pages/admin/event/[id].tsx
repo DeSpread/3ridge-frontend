@@ -1,3 +1,5 @@
+import AddIcon from "@mui/icons-material/Add";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Box,
   Grid,
@@ -6,30 +8,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { ReactElement, useMemo, useState } from "react";
-import MainLayout from "../../../layouts/main-layout";
-import Head from "next/head";
 import { useTheme } from "@mui/material/styles";
+import Head from "next/head";
 import { useRouter } from "next/router";
-import EventImage from "../../../components/pages/event/event-image";
-import WithEditorContainer from "../../../hoc/with-editor-container";
-import FileUtil from "../../../util/file-util";
-import { useLoading } from "../../../provider/loading/loading-provider";
-import EventTitle from "../../../components/pages/event/event-title";
-import EventEmptyBox from "../../../components/pages/event/event-empty-box";
-import InputButton from "../../../components/atomic/molecules/input-button";
-import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
-import EventDateRange from "../../../components/pages/event/event-date-range";
-import TicketDateEditDialog from "../../../components/dialogs/ticket-edit/ticket-date-range-edit-dialog";
-import DateUtil from "../../../util/date-util";
-import EventDescription from "../../../components/pages/event/event-description";
-import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
-import { ContentMetadata, QuestPolicy } from "../../../__generated__/graphql";
-import EventQuests from "../../../components/pages/event/event-quests";
-import AddIcon from "@mui/icons-material/Add";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import TicketQuestUpsertEditDialog from "../../../components/dialogs/ticket-edit/ticket-quest-upsert-edit-dialog";
-import { Quest } from "../../../types";
+import React, { ReactElement, useMemo, useState } from "react";
+
 import EventRewardPolicy from "../../../components/pages/event/reward/event-reward-policy";
 import EventTimeBoard from "../../../components/pages/event/event-time-board";
 import EventRewardDescription from "../../../components/pages/event/reward/event-reward-description";
@@ -42,16 +25,34 @@ import EventRewardLimitNumber from "../../../components/pages/event/reward/descr
 import EventRewardChainContent from "../../../components/pages/event/reward/description/event-reward-chain-content";
 import EventRewardName from "../../../components/pages/event/reward/description/event-reward-name";
 import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-chain-content-edit-dialog";
-import Draggable from "react-draggable";
 
-import { useSignedUserQuery } from "../../../hooks/signed-user-query-hook";
-import { useTicketQuery } from "../../../hooks/ticket-query-hook";
-import useSimpleStorage from "../../../hooks/simple-storage-hook";
-import TicketEditControllerWidget from "../../../components/widget/ticket-edit-controller-widget";
-import EventParticipants from "../../../components/pages/event/event-participants";
+import Draggable from "react-draggable";
+import { ContentMetadata, QuestPolicy } from "../../../__generated__/graphql";
+import InputButton from "../../../components/atomic/molecules/input-button";
+import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
+import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
+import TicketDateEditDialog from "../../../components/dialogs/ticket-edit/ticket-date-range-edit-dialog";
+import TicketQuestUpsertEditDialog from "../../../components/dialogs/ticket-edit/ticket-quest-upsert-edit-dialog";
 import UserInfoDownloadDialog from "../../../components/dialogs/user-info-download-dialog";
-import RouterUtil from "../../../util/router-util";
+import EventDateRange from "../../../components/pages/event/event-date-range";
+import EventDescription from "../../../components/pages/event/event-description";
+import EventEmptyBox from "../../../components/pages/event/event-empty-box";
+import EventImage from "../../../components/pages/event/event-image";
+import EventParticipants from "../../../components/pages/event/event-participants";
+import EventQuests from "../../../components/pages/event/event-quests";
+import EventTitle from "../../../components/pages/event/event-title";
+import TicketEditControllerWidget from "../../../components/widget/ticket-edit-controller-widget";
+import WithEditorContainer from "../../../hoc/with-editor-container";
 import { useProjectsQuery } from "../../../hooks/projects-query-hook";
+import { useSignedUserQuery } from "../../../hooks/signed-user-query-hook";
+import useSimpleStorage from "../../../hooks/simple-storage-hook";
+import { useTicketQuery } from "../../../hooks/ticket-query-hook";
+import MainLayout from "../../../layouts/main-layout";
+import { useLoading } from "../../../provider/loading/loading-provider";
+import { Quest } from "../../../types";
+import DateUtil from "../../../util/date-util";
+import FileUtil from "../../../util/file-util";
+import RouterUtil from "../../../util/router-util";
 
 const _EventRewardPolicy = WithEditorContainer(EventRewardPolicy);
 const _EventDateRange = WithEditorContainer(EventDateRange);
@@ -190,7 +191,7 @@ const Event = () => {
   };
 
   const showOpenContentMetaDataEditDialog = (
-    target: EVENT_COMPONENT_TARGET
+    target: EVENT_COMPONENT_TARGET,
   ) => {
     setOpenContentMetaDataEditDialog(true);
     setEventComponentTarget(target);
@@ -341,7 +342,7 @@ const Event = () => {
                     ticketData={ticketData}
                     onClickForEdit={async (e) => {
                       showDateEditDialog(
-                        EVENT_COMPONENT_TARGET.DATE_RANGE_TIME
+                        EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
                       );
                     }}
                   ></_EventDateRange>
@@ -357,7 +358,7 @@ const Event = () => {
               ticketData={ticketData}
               onClickForEdit={async (e) => {
                 showOpenContentMetaDataEditDialog(
-                  EVENT_COMPONENT_TARGET.DESCRIPTION
+                  EVENT_COMPONENT_TARGET.DESCRIPTION,
                 );
               }}
             ></_EventDescription>
@@ -368,6 +369,7 @@ const Event = () => {
                 userData={userData}
                 verifiedList={verifiedList}
                 onEditBtnClicked={(e, quest, index) => {
+                  console.log("quest", quest);
                   showOpenQuestUpsertDialog(quest);
                 }}
                 onDeleteBtnClicked={async (e, quest, index) => {
@@ -459,7 +461,7 @@ const Event = () => {
                       ticketData={ticketData}
                       onClickForEdit={(e) => {
                         showOpenNumberEditDialog(
-                          EVENT_COMPONENT_TARGET.LIMIT_NUMBER
+                          EVENT_COMPONENT_TARGET.LIMIT_NUMBER,
                         );
                       }}
                     ></_EventRewardLimitNumber>
@@ -533,7 +535,7 @@ const Event = () => {
               onDownloadButtonClick={async (res) => {
                 await asyncDownloadCompletedUserFile(
                   res,
-                  `${ticketData?.title}.csv`
+                  `${ticketData?.title}.csv`,
                 );
               }}
               projects={projectsData}
@@ -582,7 +584,7 @@ const Event = () => {
                 TypeHelper.convertToServerRewardPolicy(rewardPolicy);
               await asyncUpdateTicketRewardPolicy(newRewardPolicy);
               break;
-          }
+            }
           }
           await asyncRefreshAll();
           closeTextEditDialog();
@@ -637,9 +639,10 @@ const Event = () => {
         onConfirmBtnClicked={async (
           questPolicy?: QuestPolicy,
           title_v2?: ContentMetadata,
-          editedQuestId?: string
+          editedQuestId?: string,
         ) => {
           showLoading();
+          console.log("title_v2", title_v2, "questPolicy", questPolicy);
           if (!editedQuestId) await asyncCreateQuest(title_v2, questPolicy);
           else await asyncUpdateQuest(editedQuestId, questPolicy, title_v2);
           await asyncRefreshAll();
@@ -738,7 +741,7 @@ const Event = () => {
             await asyncDownloadQuestDataFile(
               editedQuest?._id,
               ticketUserQuery,
-              `${editedQuest?.title_v2?.content}.csv`
+              `${editedQuest?.title_v2?.content}.csv`,
             );
           }
         }}

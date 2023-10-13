@@ -1,11 +1,14 @@
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {
   Box,
   Card,
   CardContent,
+  CircularProgress,
   Divider,
   FormControl,
+  Grid,
   IconButton,
   InputLabel,
   MenuItem,
@@ -14,8 +17,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
-import { useAccount, useConnect, useNetwork, useSwitchNetwork } from "wagmi";
+import { InjectedConnector as EvmInjectedConnector } from "@wagmi/connectors/injected";
+import React, { useMemo, useState } from "react";
+import {
+  useAccount,
+  useConnect as useEvmConnect,
+  useNetwork,
+  useSwitchNetwork,
+} from "wagmi";
 
 import { ChainType } from "../../__generated__/graphql";
 import NumberInput from "../../components/atomic/atoms/number-input";
@@ -24,27 +33,33 @@ import ValidatedTextInput from "../../components/atomic/molecules/validated-text
 import MathUtil from "../../util/math-util";
 import StringUtil from "../../util/string-util";
 
+import ConnectLightCircle from "@/components/atomic/atoms/connect-light-circle";
+import PrimaryButton from "@/components/atomic/atoms/primary-button";
+import InputButton from "@/components/atomic/molecules/input-button";
 import ConfirmAlertDialog from "@/components/dialogs/confirm-alert-dialog";
 import ContractLoadingDialog from "@/components/dialogs/contract-loading-dialog";
 import { getLocaleErrorMessage } from "@/error/my-error";
 import StringHelper from "@/helper/string-helper";
 import TypeHelper from "@/helper/type-helper";
+import WithLoginRequiredContainer from "@/hoc/with-login-required-container";
 import { useApproveReadContractHook } from "@/hooks/contract/approve/approve-read-contract-hook";
 import { useApproveWriteContractHook } from "@/hooks/contract/approve/approve-write-contract-hook";
 import { useMultiSendWriteContractHook } from "@/hooks/contract/multisend/multisend-write-contract-hook";
 import { useAlert } from "@/provider/alert/alert-provider";
 import { useLoading } from "@/provider/loading/loading-provider";
 import { TokenType } from "@/types";
+import FileUtil from "@/util/file-util";
 import Web3Util from "@/util/web3-util";
 
 const MultiSend = () => {
-  const TEST_RATIO = 1;
+  const TEST_RATIO = 0.001;
 
   const theme = useTheme();
   const [addresses, setAddresses] = useState<`0x${string}`[] | string[]>([""]);
-  const [chainType, setChainType] = useState<ChainType>(ChainType.BnbTestnet);
+  const [chainType, setChainType] = useState<ChainType>(ChainType.Bnb);
   const [tokenType, setTokenType] = useState<TokenType>(TokenType.USDT);
   const [amountValue, setAmountValue] = useState(1);
+  const [requestTokenAmountValue, setRequestTokenAmountValue] = useState(1);
 
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
@@ -58,17 +73,23 @@ const MultiSend = () => {
     switchNetwork,
   } = useSwitchNetwork();
   const { address: userAddress, isConnected } = useAccount();
-  const { connect } = useConnect();
+  const {
+    connect: evmConnect,
+    connectors: evmConnectors,
+    status: evmConnectStatus,
+  } = useEvmConnect({
+    connector: new EvmInjectedConnector(),
+  });
 
   const isChainConnected = useMemo(() => {
     return TypeHelper.convertChainTypeToId(chainType) === connectedChain?.id;
   }, [chainType, connectedChain]);
 
-  const getApprovedAmount = () => {
+  const approvedAmount = useMemo(() => {
     return (
-      Web3Util.etherToWei(amountValue) * (addresses?.length ?? 0) * TEST_RATIO
+      parseFloat(Web3Util.etherToWei(requestTokenAmountValue)) * TEST_RATIO
     );
-  };
+  }, [requestTokenAmountValue]);
 
   const {
     runContract: runApproveContract,
@@ -80,10 +101,8 @@ const MultiSend = () => {
     hash: approveHash,
   } = useApproveWriteContractHook({
     chain: chainType,
-    amount: getApprovedAmount(),
+    amount: approvedAmount,
   });
-
-  useEffect(() => {}, []);
 
   const showApproveConfirmDialog = () => {
     setOpenConfirmDialog(true);
@@ -101,11 +120,19 @@ const MultiSend = () => {
   }, [addresses]);
 
   const getMultiSendAmounts = () => {
-    const _amount = BigInt(Web3Util.etherToWei(amountValue) * TEST_RATIO);
+    const _amount = BigInt(
+      parseFloat(Web3Util.etherToWei(amountValue)) * TEST_RATIO,
+    );
     return Array.from({ length: addresses.length ?? 0 }, () => _amount);
   };
 
-  console.log("getMultiSendAmounts - ", getMultiSendAmounts());
+  const getTotalMultiSendAmounts = () => {
+    return getMultiSendAmounts().reduce((prev, cur, index) => {
+      return prev + cur;
+    }, BigInt(0));
+  };
+
+  console.log("getTotalMultiSendAmounts - ", getTotalMultiSendAmounts());
 
   const {
     runContract: runMultiSendContract,
@@ -143,7 +170,6 @@ const MultiSend = () => {
   });
 
   console.log("allowanceAmount", allowanceAmount);
-  // console.log(Web3Util.weiToEther(allowanceAmount).toFixed(18));
 
   const isApproved = useMemo(() => {
     if (allowanceAmount === BigInt(0)) {
@@ -156,17 +182,63 @@ const MultiSend = () => {
     if (!isChainConnected) {
       return "선택한 체인으로 연결하기";
     }
-    return isApproved ? "보내기" : "승인하기";
-  }, [isChainConnected, isApproved]);
+    return "보내기";
+  }, [isChainConnected]);
+
+  const asyncImportFile = async (file: File) => {
+    showLoading();
+    const text = await FileUtil.asyncReadAsText(file);
+    const rows = text.split("\n");
+    const srcAddresses: `0x${string}`[] | string[] = [];
+    for (let i = 0; i < rows.length; i++) {
+      const columns = rows[i].split(",");
+      if (columns.length > 0 && columns[0] && /^0x/i.test(columns[0])) {
+        srcAddresses.push(columns[0] as `0x${string}`);
+      }
+    }
+    const target = [...srcAddresses];
+    setAddresses(target);
+    closeLoading();
+  };
 
   return (
     <>
       <Stack sx={{ width: "100%" }} alignItems={"center"}>
         <Card sx={{ maxWidth: 1200, minWidth: 800, marginTop: 4 }}>
           <CardContent>
-            <Stack sx={{ width: "100%", background: "" }} alignItems={"center"}>
-              <Typography variant={"h5"}>EVM MutiSender</Typography>
-            </Stack>
+            <Grid container direction={"row"} alignItems={"center"}>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={4}>
+                <Stack alignItems={"center"}>
+                  <Typography variant={"h5"}>EVM MultiSender</Typography>
+                </Stack>
+              </Grid>
+              <Grid item xs={4}>
+                <Stack
+                  alignItems={"flex-end"}
+                  justifyContent={"center"}
+                  sx={{ background: "" }}
+                >
+                  <ConnectLightCircle
+                    sx={{
+                      width: 16,
+                      height: 16,
+                      borderRadius: 16,
+                    }}
+                    isConnected={isConnected}
+                    onClick={() => {
+                      if (!isConnected) {
+                        const connectors = evmConnectors.filter(
+                          (e) => e.name === "MetaMask",
+                        );
+                        const connector = connectors[0];
+                        evmConnect({ connector });
+                      }
+                    }}
+                  ></ConnectLightCircle>
+                </Stack>
+              </Grid>
+            </Grid>
             <Divider sx={{ marginTop: 3, marginBottom: 4 }}></Divider>
             <Stack direction={"row"} spacing={1}>
               <FormControl>
@@ -230,31 +302,174 @@ const MultiSend = () => {
             </Stack>
             <Divider sx={{ marginTop: 3, marginBottom: 4 }}></Divider>
             <Stack spacing={1}>
+              <Typography>컨트랙트 준비 상태</Typography>
+              <Stack
+                direction={"row"}
+                spacing={2}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                sx={{
+                  maxWidth: 300,
+                }}
+              >
+                <Typography>ApproveContract</Typography>
+                <Stack direction={"row"} spacing={2} alignItems={"center"}>
+                  {isApproveLoading && (
+                    <CircularProgress
+                      sx={{ color: "white" }}
+                      size={"1rem"}
+                    ></CircularProgress>
+                  )}
+                  <ConnectLightCircle
+                    sx={{
+                      width: 16,
+                      height: 16,
+                      borderRadius: 16,
+                    }}
+                    isConnected={isApprovePrepareSuccess}
+                  ></ConnectLightCircle>
+                </Stack>
+              </Stack>
+              <Stack
+                direction={"row"}
+                spacing={2}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                sx={{
+                  maxWidth: 300,
+                }}
+              >
+                <Typography>MultiSendContract</Typography>
+                <Stack direction={"row"} spacing={2} alignItems={"center"}>
+                  <ConnectLightCircle
+                    sx={{
+                      width: 16,
+                      height: 16,
+                      borderRadius: 16,
+                    }}
+                    isConnected={isMultiSendPrepareSuccess}
+                  ></ConnectLightCircle>
+                  {isMultiSendLoading && (
+                    <CircularProgress
+                      sx={{ color: "white" }}
+                      size={"1rem"}
+                    ></CircularProgress>
+                  )}
+                </Stack>
+              </Stack>
+            </Stack>
+            <Divider sx={{ marginTop: 3, marginBottom: 4 }}></Divider>
+            <Stack spacing={1}>
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                sx={{ marginLeft: 0 }}
+              >
+                <Box>
+                  <Typography>토큰 허용량</Typography>
+                </Box>
+                <NumberInput
+                  sx={{ marginLeft: 4 }}
+                  value={requestTokenAmountValue}
+                  onChange={(e) => {
+                    if (isNaN(parseInt(e.target.value))) {
+                      // console.log("aa", parseInt(e.target.value));
+                      return;
+                    }
+                    const value = MathUtil.clamp(parseInt(e.target.value), 1);
+                    setRequestTokenAmountValue(value);
+                  }}
+                ></NumberInput>
+                <PrimaryButton
+                  onClick={async () => {
+                    showLoading();
+                    // console.log(requestTokenAmountValue);
+                    await runApproveContract();
+                    closeLoading();
+                  }}
+                  sx={{ marginLeft: 2 }}
+                >
+                  승인하기
+                </PrimaryButton>
+              </Stack>
+            </Stack>
+            <Divider sx={{ marginTop: 3, marginBottom: 4 }}></Divider>
+            <Stack spacing={1}>
               <Stack
                 direction={"row"}
                 justifyContent={"space-between"}
                 alignItems={"center"}
                 sx={{
-                  maxWidth: 256,
+                  maxWidth: 384,
                 }}
                 spacing={1}
               >
                 <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                  <Typography>{`토큰`}</Typography>
-                  <Typography>{`허용량: `}</Typography>
+                  <Typography>{`현재`}</Typography>
+                  <Typography>{`허용된`}</Typography>
+                  <Typography>{`토큰량`}</Typography>
                 </Stack>
                 <Stack spacing={1} direction={"row"}>
                   <Typography suppressHydrationWarning>
-                    {StringUtil.removeTrailingZeros(
-                      Web3Util.weiToEther(allowanceAmount, 18).toString(),
-                    )}
+                    {/*{StringUtil.removeTrailingZeros(*/}
+                    {Web3Util.weiToEther(allowanceAmount)}
+                    {/*)}*/}
+                  </Typography>
+                  <Typography>USDT</Typography>
+                </Stack>
+              </Stack>
+              <Stack
+                direction={"row"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                sx={{
+                  maxWidth: 384,
+                }}
+                spacing={1}
+              >
+                <Stack direction={"row"} alignItems={"center"} spacing={1}>
+                  <Typography>{`보내는`}</Typography>
+                  <Typography>{`토큰량`}</Typography>
+                </Stack>
+                <Stack spacing={1} direction={"row"}>
+                  <Typography suppressHydrationWarning>
+                    {`${Web3Util.weiToEther(getTotalMultiSendAmounts())}`}
                   </Typography>
                   <Typography>USDT</Typography>
                 </Stack>
               </Stack>
             </Stack>
             <Divider sx={{ marginTop: 3, marginBottom: 4 }}></Divider>
-            <Stack spacing={1}>
+            <Stack spacing={2}>
+              <div style={{ position: "relative" }}>
+                <Stack direction={"row"} spacing={1}>
+                  <Typography>주소 CSV File 업로드</Typography>
+                  <UploadFileIcon></UploadFileIcon>
+                </Stack>
+                <InputButton
+                  sx={{
+                    top: -4,
+                    left: -4,
+                    width: 178,
+                    height: 32,
+                    position: "absolute",
+                    ":hover": {
+                      background: "rgba(255, 255, 255, 0.08)",
+                    },
+                  }}
+                  filterReg={/(csv)$/i}
+                  onChanged={async (file: File) => {
+                    // console.log(file);
+                    await asyncImportFile(file);
+                  }}
+                  onError={(error) => {
+                    showAlert({
+                      title: "알림",
+                      content: "파일 포맷이 csv인지 확인해주세요",
+                    });
+                  }}
+                ></InputButton>
+              </div>
               {addresses &&
                 addresses.map((e, i) => {
                   return (
@@ -278,6 +493,7 @@ const MultiSend = () => {
                         <ValidatedTextInput
                           fullWidth
                           isValid={StringUtil.isValidEthereumAddress(e)}
+                          value={e}
                           onChange={(e) => {
                             const { value } = e.target;
                             setAddresses((prevState) => {
@@ -358,11 +574,9 @@ const MultiSend = () => {
             <Divider sx={{ marginTop: 3, marginBottom: 4 }}></Divider>
             <SecondaryButton
               fullWidth={true}
+              disabled={!isConnected}
               onClick={async (e) => {
                 try {
-                  if (!isConnected) {
-                    connect();
-                  }
                   if (!isChainConnected) {
                     const chainId = TypeHelper.convertChainTypeToId(chainType);
                     if (chainId === -1) {
@@ -371,8 +585,16 @@ const MultiSend = () => {
                     switchNetwork?.(chainId);
                     return;
                   }
-                  if (isApproved) await runMultiSendContract();
-                  else showApproveConfirmDialog();
+                  if (
+                    getTotalMultiSendAmounts() > (allowanceAmount ?? BigInt(0))
+                  ) {
+                    showAlert({
+                      title: "알림",
+                      content: "토큰 허용량이 부족합니다",
+                    });
+                    return;
+                  }
+                  await runMultiSendContract();
                 } catch (e) {
                   const errorMessage = getLocaleErrorMessage(e);
                   showAlert({ title: "알림", content: errorMessage });
@@ -419,4 +641,4 @@ const MultiSend = () => {
   );
 };
 
-export default MultiSend;
+export default WithLoginRequiredContainer(MultiSend);
