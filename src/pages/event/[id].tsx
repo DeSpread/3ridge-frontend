@@ -1263,6 +1263,7 @@ const Event = (props: AppProps) => {
 
                     if (
                       !(envName === "dev" && chain?.id === 80001) &&
+                      !(envName === "staging" && chain?.id === 137) &&
                       !(envName === "prod" && chain?.id === 137)
                     ) {
                       showAlert({
@@ -1272,7 +1273,10 @@ const Event = (props: AppProps) => {
                             <Stack direction={"column"} spacing={1}>
                               <SecondaryButton
                                 onClick={async (e) => {
-                                  if (envName === "prod") {
+                                  if (
+                                    envName === "prod" ||
+                                    envName === "staging"
+                                  ) {
                                     await switchNetworkAsync?.(137);
                                   } else {
                                     await switchNetworkAsync?.(80001);
@@ -1396,7 +1400,10 @@ const Event = (props: AppProps) => {
         }}
       >
         {htmlContent && (
-          <div dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
+          <div
+            className={"h-10"}
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
+          ></div>
         )}
         {!htmlContent && <Typography>{simpleWarningDialogTitle}</Typography>}
       </SimpleDialog>
