@@ -1421,7 +1421,7 @@ const Event = (props: AppProps) => {
             ? `https://mumbai.polygonscan.com/tx/${hash}`
             : `https://polygonscan.com/tx/${hash}`
         }
-        linkName={"Polygonscan로 확인하기"}
+        linkName={"Polygonscan 확인하기"}
       ></ContractLoadingDialog>
       <QuestScreenshotUploadDialog
         open={openScreenShotQuestDialog}
