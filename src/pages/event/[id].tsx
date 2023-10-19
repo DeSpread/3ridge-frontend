@@ -846,10 +846,11 @@ const Event = (props: AppProps) => {
         QuestPolicyType.VerifyTwitterLinkingRetweet
       ) {
         if (!showTwitterConnectAlert()) {
-          await asyncVerifyTwitterLinkingAndRetweetQuest(
-            ticketData._id,
-            quest._id ?? "",
-          );
+          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          // await asyncVerifyTwitterLinkingAndRetweetQuest(
+          //   ticketData._id,
+          //   quest._id ?? "",
+          // );
           updateVerifyState(index);
         }
         myEvent.params.callback("success");
@@ -1421,7 +1422,7 @@ const Event = (props: AppProps) => {
             ? `https://mumbai.polygonscan.com/tx/${hash}`
             : `https://polygonscan.com/tx/${hash}`
         }
-        linkName={"Polygonscan로 확인하기"}
+        linkName={"Polygonscan 확인하기"}
       ></ContractLoadingDialog>
       <QuestScreenshotUploadDialog
         open={openScreenShotQuestDialog}
