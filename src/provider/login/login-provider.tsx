@@ -1,17 +1,18 @@
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
+
 import { AppError, getErrorMessage } from "../../error/my-error";
-import { useMyGoogleLogin } from "./hook/my-google-login-hook";
-import { useWalletLogin } from "./hook/wallet-login-hook";
 import {
+  EmailLoggedInInfo,
   EmailSignUpEventParams,
   GoogleLoggedInInfo,
-  EmailLoggedInInfo,
+  PartialWalletInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
-  PartialWalletInfo,
-  WalletInfo,
 } from "../../types";
+
 import { useEmailLogin } from "./hook/email-login-hook";
+import { useMyGoogleLogin } from "./hook/my-google-login-hook";
+import { useWalletLogin } from "./hook/wallet-login-hook";
 
 const LoginContext = createContext<{
   isGoogleLoggedIn: boolean;

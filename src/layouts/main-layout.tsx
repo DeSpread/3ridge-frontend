@@ -1,5 +1,7 @@
 import { AppBar, Box, Stack, Toolbar, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import React, {
   MouseEventHandler,
   PropsWithChildren,
@@ -7,39 +9,41 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import NavbarAvatar from "../components/atomic/molecules/navbar-avatar";
-import { useRouter } from "next/router";
+
+import MobileNavigatorBar from "../components/atomic/atoms/mobile/mobile-navigator-bar";
+import NavbarButton from "../components/atomic/atoms/navbar-button";
 import SecondaryButton from "../components/atomic/atoms/secondary-button";
-import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
-import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
-import { useLogin } from "../provider/login/login-provider";
+import NavbarAvatar from "../components/atomic/molecules/navbar-avatar";
+import SubMenuButton from "../components/atomic/molecules/sub-menu-button";
 import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
   getLocaleErrorMessage,
 } from "../error/my-error";
-import { useAlert } from "../provider/alert/alert-provider";
+import ResourceHelper from "../helper/resource-helper";
+import TypeHelper from "../helper/type-helper";
+import { useSignDialog } from "../hooks/sign-dialog-hook";
 import { useSignedUserQuery } from "../hooks/signed-user-query-hook";
+import { useWalletAlert } from "../hooks/wallet-alert-hook";
+import { useAlert } from "../provider/alert/alert-provider";
 import { useLoading } from "../provider/loading/loading-provider";
+import { useLogin } from "../provider/login/login-provider";
+import { useMobile } from "../provider/mobile/mobile-context";
 import {
   EmailSignUpEventParams,
   MouseEventWithParam,
   SupportedNetwork,
   Z_INDEX_OFFSET,
 } from "../types";
-import { useSignDialog } from "../hooks/sign-dialog-hook";
-import NavbarButton from "../components/atomic/atoms/navbar-button";
-import SubMenuButton from "../components/atomic/molecules/sub-menu-button";
-import Image from "next/image";
+import EthUtil from "../util/eth-util";
+
+import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
+import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
-import { useWalletAlert } from "../hooks/wallet-alert-hook";
-import TypeHelper from "../helper/type-helper";
-import ResourceHelper from "../helper/resource-helper";
-import MobileNavigatorBar from "../components/atomic/atoms/mobile/mobile-navigator-bar";
-import { useMobile } from "../provider/mobile/mobile-context";
-import EthUtil from "../util/eth-util";
+
+import SignInDialog from "@/layouts/dialog/sign/sign-in-dialog";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -80,21 +84,13 @@ const MainLayout = (props: MainLayoutProps) => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
-  const {
-    isLoggedIn,
-    isWalletLoggedIn,
-    isGoogleLoggedIn,
-    isMailLoggedIn,
-    logout,
-    googleSignUp,
-    walletSignUp,
-  } = useLogin();
+  const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
   const { userData } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
-  // const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
-  //   useState(false);
+  const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
+    useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const { isMobile } = useMobile();
 
@@ -333,29 +329,36 @@ const MainLayout = (props: MainLayoutProps) => {
         <footer>{props?.footerComponent}</footer>
       </Box>
       {/*--- Dialog ---*/}
-      {/*<SignInDialog*/}
-      {/*  title={"안녕하세요 다시 만나서 반가워요!"}*/}
-      {/*  open={isSignDialogOpen}*/}
-      {/*  onCloseBtnClicked={(e) => {*/}
-      {/*    e.preventDefault();*/}
-      {/*    setShowSignInDialog(false);*/}
-      {/*  }}*/}
-      {/*  onSignUpClicked={(e) => {*/}
-      {/*    setShowSignInDialog(false);*/}
-      {/*  }}*/}
-      {/*  onSignInWithClicked={(e) => {*/}
-      {/*    setSignUpWithVisible(true);*/}
-      {/*    setShowSignInDialog(false);*/}
-      {/*  }}*/}
-      {/*  onClose={() => {*/}
-      {/*    setShowSignInDialog(false);*/}
-      {/*  }}*/}
-      {/*  onContinueWithWalletClicked={(e) => {*/}
-      {/*    e.preventDefault();*/}
-      {/*    setShowSignInDialog(false);*/}
-      {/*    setSignInWithNetworkSelectVisible(true);*/}
-      {/*  }}*/}
-      {/*></SignInDialog>*/}
+      <SignInDialog
+        title={"안녕하세요 다시 만나서 반가워요!"}
+        open={isSignDialogOpen}
+        onCloseBtnClicked={(e) => {
+          e.preventDefault();
+          setShowSignInDialog(false);
+        }}
+        onSignUpClicked={(e) => {
+          setShowSignInDialog(false);
+        }}
+        onSignInWithSocialClicked={async (e) => {
+          // setSignUpWithVisible(true);
+          try {
+            // const kakaoInfo = await asyncKakaoSignIn();
+            // console.log(kakaoInfo);
+            // if (kakaoInfo.)
+            // setShowSignInDialog(false);
+          } catch (e) {
+            showErrorAlert({ content: getLocaleErrorMessage(e) });
+          }
+        }}
+        onClose={() => {
+          setShowSignInDialog(false);
+        }}
+        onContinueWithWalletClicked={(e) => {
+          e.preventDefault();
+          setShowSignInDialog(false);
+          setSignInWithNetworkSelectVisible(true);
+        }}
+      ></SignInDialog>
       <SignInWithDialog
         title={"가입하기"}
         open={signUpWithVisible}
@@ -375,7 +378,7 @@ const MainLayout = (props: MainLayoutProps) => {
             onError: (error) => {
               if (
                 getErrorMessage(error).includes(
-                  APP_ERROR_MESSAGE.GOOGLE_LOGIN_POPUP_CLOSED
+                  APP_ERROR_MESSAGE.GOOGLE_LOGIN_POPUP_CLOSED,
                 )
               ) {
                 return;
@@ -417,25 +420,25 @@ const MainLayout = (props: MainLayoutProps) => {
                 setSignUpWithEmailVisible(false);
                 showErrorAlert({ content: getLocaleErrorMessage(e) });
               },
-            }
+            },
           );
         }}
       ></SignInWithEmailDialog>
       <SignInWithNetworkSelectDialog
         title={"연결하려는 네트워크를 선택하세요"}
-        open={isSignDialogOpen}
+        open={signInWithNetworkSelectVisible}
         onCloseBtnClicked={(e) => {
           e.preventDefault();
-          setShowSignInDialog(false);
-          // setSignInWithNetworkSelectVisible(false);
+          // setShowSignInDialog(false);
+          setSignInWithNetworkSelectVisible(false);
         }}
         onClose={() => {
-          setShowSignInDialog(false);
-          // setSignInWithNetworkSelectVisible(false);
+          // setShowSignInDialog(false);
+          setSignInWithNetworkSelectVisible(false);
         }}
         onNetworkButtonClicked={(network) => {
-          setShowSignInDialog(false);
-          // setSignInWithNetworkSelectVisible(false);
+          // setShowSignInDialog(false);
+          setSignInWithNetworkSelectVisible(false);
           setSelectedNetwork(network); // console.log(network);
         }}
       ></SignInWithNetworkSelectDialog>
@@ -451,7 +454,7 @@ const MainLayout = (props: MainLayoutProps) => {
         }}
         walletInfos={(() => {
           return ResourceHelper.getWalletInfos(
-            TypeHelper.convertToSuppoertedNetwork(selectedNetwork)
+            TypeHelper.convertToSuppoertedNetwork(selectedNetwork),
           );
         })()}
         onWalletSelected={({ name, value }) => {
@@ -479,7 +482,7 @@ const MainLayout = (props: MainLayoutProps) => {
                 }
                 setSelectedNetwork("");
               },
-            }
+            },
           );
         }}
       ></SignInWithSupportedWalletDialog>
