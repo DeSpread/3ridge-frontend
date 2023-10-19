@@ -52,8 +52,6 @@ import { delay } from "../util/timer";
 
 import { useProfileEditDialog } from "./profile-edit-dialog-hook";
 
-import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
-
 const useSignedUserQuery = () => {
   const {
     asyncConnectWallet,
