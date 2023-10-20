@@ -80,6 +80,8 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     updateAuthMail,
     emailSignInWithoutPassword,
   } = useEmailLogin();
+  const { isKakaoSignIn, asyncKakoSignIn, kakaoUserInfo, kakaoLogout } =
+    useKakaoLogin();
 
   const {
     isKakaoSignIn,

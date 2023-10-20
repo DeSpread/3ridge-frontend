@@ -89,6 +89,7 @@ export const getLocaleErrorMessage = (e: any) => {
     "Contract arguments something wrong!!! - recipients, amounts array size must be equal"
   ) {
     return "주소 입력에 오류가 있습니다. 완벽하게 채워주세요.";
+  } else if (message === "") {
   }
   return message;
 };
