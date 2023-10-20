@@ -17,14 +17,36 @@ import {
 import LinearProgress from "@mui/material/LinearProgress";
 import { useTheme } from "@mui/material/styles";
 import Head from "next/head";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
-import MainLayout from "../../layouts/main-layout";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import StringHelper from "../../helper/string-helper";
+import { DiscordInputType, Kakao } from "../../__generated__/graphql";
 import GradientTypography from "../../components/atomic/atoms/gradient-typography";
 import PrimaryButton from "../../components/atomic/atoms/primary-button";
+import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
+import DiscordIcon from "../../components/atomic/atoms/svg/discord-icon";
+import KakaoIcon from "../../components/atomic/atoms/svg/kakao-icon";
+import BlockIcon from "../../components/atomic/molecules/block-icon";
+import { VALIDATOR_BUTTON_STATES } from "../../components/atomic/molecules/validator-button";
+import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
+import ConnectEmailDialog from "../../components/dialogs/connect-email-dialog";
+import ConnectTwitterDialog from "../../components/dialogs/connect-twitter-dialog";
+import PictureEditDialog from "../../components/dialogs/picture-edit-dialog";
 import ProfileEditDialog from "../../components/dialogs/profile-edit-dialog";
+import TicketCard from "../../components/form/ticket-card";
+import {
+  APP_ERROR_MESSAGE,
+  AppError,
+  getErrorMessage,
+  getLocaleErrorMessage,
+} from "../../error/my-error";
+import ResourceHelper from "../../helper/resource-helper";
+import StringHelper from "../../helper/string-helper";
+import TypeHelper from "../../helper/type-helper";
+import MainLayout from "../../layouts/main-layout";
+
 import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import { backDirectionPathState } from "../../lib/recoil";
 import { useAlert } from "../../provider/alert/alert-provider";
@@ -40,41 +62,14 @@ import {
   SUPPORTED_NETWORKS,
   SupportedNetwork,
 } from "../../types";
-import ConnectEmailDialog from "../../components/dialogs/connect-email-dialog";
-import {
-  APP_ERROR_MESSAGE,
-  AppError,
-  getErrorMessage,
-  getLocaleErrorMessage,
-} from "../../error/my-error";
-import PictureEditDialog from "../../components/dialogs/picture-edit-dialog";
-import { VALIDATOR_BUTTON_STATES } from "../../components/atomic/molecules/validator-button";
-import StyledChip from "../../components/atomic/atoms/styled/styled-chip";
-
-import BlockIcon from "../../components/atomic/molecules/block-icon";
-
-import TicketCard from "../../components/form/ticket-card";
-
-import Image from "next/image";
-
-import ResourceHelper from "../../helper/resource-helper";
-import TypeHelper from "../../helper/type-helper";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import EthUtil from "../../util/eth-util";
-import ConnectTwitterDialog from "../../components/dialogs/connect-twitter-dialog";
-import ConfirmAlertDialog from "../../components/dialogs/confirm-alert-dialog";
-
-import { useRecoilValue, useSetRecoilState } from "recoil";
-
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import useSimpleStorage from "../../hooks/simple-storage-hook";
 import { useWalletAlert } from "../../hooks/wallet-alert-hook";
 import { useUserQuery } from "../../hooks/user-query-hook";
 import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
-import KakaoIcon from "../../components/atomic/atoms/svg/kakao-icon";
 import RouterUtil from "../../util/router-util";
-import DiscordIcon from "../../components/atomic/atoms/svg/discord-icon";
-import { DiscordInputType, Kakao } from "../../__generated__/graphql";
 
 export const DELETE_CONFIRM_STATE = {
   NONE: "",
@@ -611,10 +606,14 @@ const Profile = () => {
                                 theme.palette.action.hover,
                             },
                           }}
-                          onClick={(e: MouseEvent) => {
-                            e.preventDefault();
-                            setOpenProfileEditDialog(true);
-                          }}
+                          onClick={
+                            signedUserData?._id
+                              ? (e: MouseEvent) => {
+                                  e.preventDefault();
+                                  setOpenProfileEditDialog(true);
+                                }
+                              : undefined
+                          }
                           icon={<EmailIcon></EmailIcon>}
                           label={
                             <Typography

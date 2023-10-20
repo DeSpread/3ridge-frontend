@@ -61,7 +61,7 @@ const useSignedUserQuery = () => {
     isWalletInstalled,
   } = useTotalWallet();
 
-  const { asyncFetchKakaoUserInfo } = useKakaoLogin();
+  const { asyncKakoSignIn, kakaoUserInfo, isKakaoSignIn } = useLogin();
 
   const [UpdateUserWalletByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
   const [UpdateUserProfileImageByName] = useMutation(
@@ -120,7 +120,7 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isGoogleLoggedIn && !isWalletLoggedIn) {
+      if (!isGoogleLoggedIn && !isWalletLoggedIn && !isKakaoSignIn) {
         setUserData({});
       }
     }
@@ -150,7 +150,7 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isMailLoggedIn && !isWalletLoggedIn) {
+      if (!isMailLoggedIn && !isWalletLoggedIn && !isKakaoSignIn) {
         setUserData({});
       }
     }
@@ -181,7 +181,7 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isMailLoggedIn && !isGoogleLoggedIn) {
+      if (!isMailLoggedIn && !isGoogleLoggedIn && !isKakaoSignIn) {
         setUserData({});
       }
     }
@@ -222,6 +222,34 @@ const useSignedUserQuery = () => {
       PreferenceHelper.clearTryConnectWallet();
     }
   }, []);
+
+  useEffect(() => {
+    // console.log(isKakaoSignIn, kakaoUserInfo);
+    if (isKakaoSignIn && kakaoUserInfo) {
+      console.log("bbb");
+      (async () => {
+        try {
+          setLoading(true);
+          const res = await client.query({
+            query: GET_USER_BY_KAKAO_ID,
+            variables: {
+              kakaoId: kakaoUserInfo?.id,
+            },
+          });
+          console.log("ccc", res.data.userByKakaoId);
+          updateUserData(res.data.userByKakaoId);
+        } catch (e) {
+          // throw new AppError(getErrorMessage(e));
+        } finally {
+          setLoading(false);
+        }
+      })();
+    } else {
+      if (!isMailLoggedIn && !isGoogleLoggedIn && !isWalletLoggedIn) {
+        setUserData({});
+      }
+    }
+  }, [isKakaoSignIn, kakaoUserInfo]);
 
   const updateUserData = (data: {
     __typename?: "User";
@@ -693,23 +721,18 @@ const useSignedUserQuery = () => {
   };
 
   const asyncKakaoLogin = async () => {
-    try {
-      setLoading(true);
-      const kakaoUserInfo = await asyncFetchKakaoUserInfo();
-      const { id } = kakaoUserInfo;
+    setLoading(true);
+    await asyncKakoSignIn(async (_kakaoInfo) => {
+      if (!_kakaoInfo) throw new AppError(APP_ERROR_MESSAGE.NOT_FOUND_USER);
       const res = await client.query({
         query: GET_USER_BY_KAKAO_ID,
         variables: {
-          kakaoId: id,
+          kakaoId: _kakaoInfo.id,
         },
       });
       updateUserData(res.data.userByKakaoId);
-    } catch (e) {
-      setLoading(false);
-      throw new AppError(getErrorMessage(e));
-    } finally {
-      setLoading(false);
-    }
+      return true;
+    });
   };
 
   return {

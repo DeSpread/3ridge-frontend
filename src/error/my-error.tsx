@@ -38,6 +38,8 @@ export const APP_ERROR_MESSAGE = {
   TELEGRAM_USER_NOT_FOUND_IN_TELEGRAM_GROUP:
     "telegram user not found in telegram group",
   INPUT_FILE_FORMAT_NOT_SUPPORTED: "input file is not supported",
+  NOT_FOUND_USER: "Does not exist user",
+  FAIL_TO_FETCH_KAKAO_USER_INFO: "Fail to fetch kakao user info",
 } as const;
 
 export class AppError extends Error {
@@ -87,6 +89,7 @@ export const getLocaleErrorMessage = (e: any) => {
     "Contract arguments something wrong!!! - recipients, amounts array size must be equal"
   ) {
     return "주소 입력에 오류가 있습니다. 완벽하게 채워주세요.";
+  } else if (message === "") {
   }
   return message;
 };

@@ -84,8 +84,8 @@ const MainLayout = (props: MainLayoutProps) => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
-  const { isLoggedIn, logout, googleSignUp, walletSignUp } = useLogin();
-  const { userData } = useSignedUserQuery();
+  const { logout, googleSignUp, walletSignUp } = useLogin();
+  const { userData, asyncKakaoLogin } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
@@ -98,6 +98,12 @@ const MainLayout = (props: MainLayoutProps) => {
   const { showWalletAlert } = useWalletAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
+
+  const isLoggedIn = useMemo(() => {
+    return userData?._id ? true : false;
+  }, [userData]);
+
+  console.log("userData", userData);
 
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
@@ -342,12 +348,21 @@ const MainLayout = (props: MainLayoutProps) => {
         onSignInWithSocialClicked={async (e) => {
           // setSignUpWithVisible(true);
           try {
-            // const kakaoInfo = await asyncKakaoSignIn();
-            // console.log(kakaoInfo);
-            // if (kakaoInfo.)
-            // setShowSignInDialog(false);
+            showLoading();
+            await asyncKakaoLogin();
+            setShowSignInDialog(false);
           } catch (e) {
+            if (getErrorMessage(e) === APP_ERROR_MESSAGE.NOT_FOUND_USER) {
+              showAlert({
+                title: "알림",
+                content: "기존계정에 카카오 연동이 필요합니다.",
+              });
+              return;
+            }
             showErrorAlert({ content: getLocaleErrorMessage(e) });
+            closeLoading();
+          } finally {
+            closeLoading();
           }
         }}
         onClose={() => {
