@@ -45,8 +45,13 @@ import {
 import ResourceHelper from "../../helper/resource-helper";
 import StringHelper from "../../helper/string-helper";
 import TypeHelper from "../../helper/type-helper";
+import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
+import useSimpleStorage from "../../hooks/simple-storage-hook";
+import { useUserQuery } from "../../hooks/user-query-hook";
+import { useWalletAlert } from "../../hooks/wallet-alert-hook";
+import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import MainLayout from "../../layouts/main-layout";
-
 import { useFirebaseAuth } from "../../lib/firebase/hook/firebase-hook";
 import { backDirectionPathState } from "../../lib/recoil";
 import { useAlert } from "../../provider/alert/alert-provider";
@@ -62,13 +67,7 @@ import {
   SUPPORTED_NETWORKS,
   SupportedNetwork,
 } from "../../types";
-import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import EthUtil from "../../util/eth-util";
-import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
-import useSimpleStorage from "../../hooks/simple-storage-hook";
-import { useWalletAlert } from "../../hooks/wallet-alert-hook";
-import { useUserQuery } from "../../hooks/user-query-hook";
-import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
 import RouterUtil from "../../util/router-util";
 
 export const DELETE_CONFIRM_STATE = {
@@ -115,6 +114,7 @@ const Profile = () => {
     emailVerify,
     updateAuthMail,
     isLoggedIn,
+    isKakaoSignIn,
   } = useLogin();
   const { showLoading, closeLoading } = useLoading();
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
@@ -1068,7 +1068,16 @@ const Profile = () => {
             const myEvent = e as MouseEventWithStateParam;
             showLoading();
             if (myEvent.params.state === VALIDATOR_BUTTON_STATES.VALID) {
-              setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.KAKAO });
+              // console.log("isKakaoSignIn", isKakaoSignIn);
+              if (!isKakaoSignIn) {
+                setDeleteConfirmState({ state: DELETE_CONFIRM_STATE.KAKAO });
+              } else {
+                showAlert({
+                  title: "알림",
+                  content:
+                    "카카오로 로그인 하신 경우에는 해제하실 수 없습니다.",
+                });
+              }
             } else if (
               myEvent.params.state === VALIDATOR_BUTTON_STATES.NOT_VALID
             ) {

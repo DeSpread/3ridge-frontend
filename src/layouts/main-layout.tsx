@@ -103,7 +103,7 @@ const MainLayout = (props: MainLayoutProps) => {
     return userData?._id ? true : false;
   }, [userData]);
 
-  console.log("userData", userData);
+  // console.log("userData", userData);
 
   const signInWithSupportedWalletVisible = useMemo(() => {
     return selectedNetwork ? true : false;
