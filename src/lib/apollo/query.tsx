@@ -632,6 +632,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
           twitterUrl
           mediumUrl
           naverBlogUrl
+          kakaoUrl
         }
       }
       rewardPolicy {
@@ -712,6 +713,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
           twitterUrl
           mediumUrl
           naverBlogUrl
+          kakaoUrl
         }
       }
       visible
@@ -734,6 +736,7 @@ export const GET_PROJECTS = gql(/* GraphQL */ `
         twitterUrl
         mediumUrl
         naverBlogUrl
+        kakaoUrl
       }
     }
   }
@@ -754,6 +757,7 @@ export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
         twitterUrl
         mediumUrl
         naverBlogUrl
+        kakaoUrl
       }
     }
   }
@@ -814,6 +818,7 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
           twitterUrl
           mediumUrl
           naverBlogUrl
+          kakaoUrl
         }
       }
       rewardPolicy {
@@ -1308,6 +1313,7 @@ export const GET_All_TICKETS = gql(`
           twitterUrl
           mediumUrl
           naverBlogUrl
+          kakaoUrl
         }
       }
       rewardPolicy {

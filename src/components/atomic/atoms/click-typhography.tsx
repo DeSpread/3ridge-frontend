@@ -1,5 +1,3 @@
-import { useTheme } from "@mui/material/styles";
-import NextLink from "next/link";
 import { Typography, TypographyProps } from "@mui/material";
 
 const ClickTypography = (props: TypographyProps) => {
