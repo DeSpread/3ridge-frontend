@@ -11,7 +11,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { GetStaticPaths } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -20,12 +19,10 @@ import React, { ReactElement, useState } from "react";
 import { TicketSortType } from "../../__generated__/graphql";
 import CheckIcon from "../../components/atomic/atoms/svg/check-icon";
 import { LinkIconButton } from "../../components/atomic/molecules/link-icon-button";
-import TicketsSection from "../../components/section/tickets-section";
 import { useProjectQuery } from "../../hooks/project-query-hook";
 import { useTicketsQuery } from "../../hooks/tickets-query-hook";
 import MainLayout from "../../layouts/main-layout";
 import { useLoading } from "../../provider/loading/loading-provider";
-import TicketsSection from "../../components/section/tickets-section";
 import {
   FILTER_TYPE,
   FilterType,
@@ -34,7 +31,7 @@ import {
 } from "../../types";
 
 import KakaoGreyIcon from "@/components/atomic/atoms/svg/kakao-grey-icon";
-import KakaoIcon from "@/components/atomic/atoms/svg/kakao-icon";
+import TicketsSection from "@/components/section/tickets-section";
 
 const Project = () => {
   const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
