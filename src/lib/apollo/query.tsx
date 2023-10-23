@@ -1253,7 +1253,7 @@ export const VERIFY_TELEGRAM_QUEST = gql(/* GraphQL */ `
   }
 `);
 
-export const GET_All_TICKETS = gql(`
+export const GET_All_TICKETS = gql(/* GraphQL */ `
   query AllTickets(
     $sort: TicketSortType
     $status: TicketStatusType

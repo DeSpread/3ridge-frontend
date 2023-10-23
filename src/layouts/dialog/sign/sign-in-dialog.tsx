@@ -15,7 +15,7 @@ import KakaoIcon from "@/components/atomic/atoms/svg/kakao-icon";
 type SignInSelectDialogProps = SignDialogProps & {
   onContinueWithWalletClicked: MouseEventHandler;
   onSignUpClicked: MouseEventHandler;
-  onSignInWithSocialClicked: MouseEventHandler;
+  onSignInWithSocialClicked?: MouseEventHandler;
 };
 
 const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
@@ -36,30 +36,30 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
           </Typography>
         </Stack>
       </SecondaryButton>
-      <br />
-      <Stack sx={{ width: "100%" }}>
-        <Stack direction={"column"} spacing={4}>
-          <PrimaryButton
-            fullWidth={true}
-            onClick={props.onSignInWithSocialClicked}
-          >
-            <Stack direction={"row"} spacing={1}>
-              <Typography
-                className={"MuiTypography"}
-                color={"neutral.900"}
-                variant={"body2"}
-              >
-                카카오 로그인
-              </Typography>
-              <KakaoIcon
-                sx={{ color: "black", fontSize: "1.3rem" }}
-                color={"inherit"}
-                fontSize={"inherit"}
-              />
-            </Stack>
-          </PrimaryButton>
-        </Stack>
-      </Stack>
+      {/*<br />*/}
+      {/*<Stack sx={{ width: "100%" }}>*/}
+      {/*  <Stack direction={"column"} spacing={4}>*/}
+      {/*    <PrimaryButton*/}
+      {/*      fullWidth={true}*/}
+      {/*      onClick={props.onSignInWithSocialClicked}*/}
+      {/*    >*/}
+      {/*      <Stack direction={"row"} spacing={1}>*/}
+      {/*        <Typography*/}
+      {/*          className={"MuiTypography"}*/}
+      {/*          color={"neutral.900"}*/}
+      {/*          variant={"body2"}*/}
+      {/*        >*/}
+      {/*          카카오 로그인*/}
+      {/*        </Typography>*/}
+      {/*        <KakaoIcon*/}
+      {/*          sx={{ color: "black", fontSize: "1.3rem" }}*/}
+      {/*          color={"inherit"}*/}
+      {/*          fontSize={"inherit"}*/}
+      {/*        />*/}
+      {/*      </Stack>*/}
+      {/*    </PrimaryButton>*/}
+      {/*  </Stack>*/}
+      {/*</Stack>*/}
     </>
   );
 };

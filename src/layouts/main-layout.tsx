@@ -276,10 +276,8 @@ const MainLayout = (props: MainLayoutProps) => {
                         }}
                         onClick={(e) => {
                           e.preventDefault();
-                          setShowSignInDialog(true);
-                          // open();
-                          // setSignInWithNetworkSelectVisible(true);
                           // setShowSignInDialog(true);
+                          setSignInWithNetworkSelectVisible(true);
                         }}
                       >
                         지갑 연결
@@ -343,26 +341,25 @@ const MainLayout = (props: MainLayoutProps) => {
         onSignUpClicked={(e) => {
           setShowSignInDialog(false);
         }}
-        onSignInWithSocialClicked={async (e) => {
-          // setSignUpWithVisible(true);
-          try {
-            showLoading();
-            await asyncKakaoLogin();
-            setShowSignInDialog(false);
-          } catch (e) {
-            if (getErrorMessage(e) === APP_ERROR_MESSAGE.NOT_FOUND_USER) {
-              showAlert({
-                title: "알림",
-                content: "기존계정에 카카오 연동이 필요합니다.",
-              });
-              return;
-            }
-            showErrorAlert({ content: getLocaleErrorMessage(e) });
-            closeLoading();
-          } finally {
-            closeLoading();
-          }
-        }}
+        // onSignInWithSocialClicked={async (e) => {
+        //   try {
+        //     showLoading();
+        //     await asyncKakaoLogin();
+        //     setShowSignInDialog(false);
+        //   } catch (e) {
+        //     if (getErrorMessage(e) === APP_ERROR_MESSAGE.NOT_FOUND_USER) {
+        //       showAlert({
+        //         title: "알림",
+        //         content: "기존계정에 카카오 연동이 필요합니다.",
+        //       });
+        //       return;
+        //     }
+        //     showErrorAlert({ content: getLocaleErrorMessage(e) });
+        //     closeLoading();
+        //   } finally {
+        //     closeLoading();
+        //   }
+        // }}
         onClose={() => {
           setShowSignInDialog(false);
         }}
