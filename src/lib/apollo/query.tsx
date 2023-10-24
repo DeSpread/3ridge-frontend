@@ -1001,6 +1001,17 @@ export const UPDATE_TICKET_VISIBLE = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_TICKET_SHORT_DESCRIPTION = gql(/* GraphQL */ `
+  mutation UpdateTicketShortDescription(
+    $ticketId: String!
+    $shortDescription: String
+  ) {
+    updateTicketById(ticketId: $ticketId, shortDescription: $shortDescription) {
+      _id
+    }
+  }
+`);
+
 export const UPDATE_TICKET_IMAGE_URL = gql(/* GraphQL */ `
   mutation UpdateTicketImageUrl($ticketId: String!, $imageUrl: String) {
     updateTicketById(ticketId: $ticketId, imageUrl: $imageUrl) {

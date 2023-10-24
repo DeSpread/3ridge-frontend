@@ -10,9 +10,18 @@ type TicketInfoViewProps = {
 } & TypographyProps;
 
 const TicketInfoTextSet = ({ ticket, whiteSpaceMode }: TicketInfoViewProps) => {
+  const shortDescription = ticket?.shortDescription;
   const rewardName = ticket?.rewardPolicy?.context?.rewardName;
   const rewardPoint = ticket?.rewardPolicy?.rewardPoint;
   const limitNumber = ticket?.rewardPolicy?.context?.limitNumber;
+
+  if (shortDescription) {
+    return (
+      <div className="text-body2 text-outline text-center whitespace-pre-wrap">
+        {shortDescription}
+      </div>
+    );
+  }
 
   return (
     <div className="text-body2 text-outline text-center">

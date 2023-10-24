@@ -52,6 +52,7 @@ const documents = {
     "\n  query IsRegisteredWallet($address: String!, $chain: ChainType!) {\n    isRegisteredWallet(address: $address, chain: $chain)\n  }\n": types.IsRegisteredWalletDocument,
     "\n  mutation ClearParticipatedAllEventsByUserId($userId: String!) {\n    clearParticipatedAllEventsByUserId(userId: $userId)\n  }\n": types.ClearParticipatedAllEventsByUserIdDocument,
     "\n  mutation UpdateTicketVisible($ticketId: String!, $visible: Boolean) {\n    updateTicketById(ticketId: $ticketId, visible: $visible) {\n      _id\n    }\n  }\n": types.UpdateTicketVisibleDocument,
+    "\n  mutation UpdateTicketShortDescription(\n    $ticketId: String!\n    $shortDescription: String\n  ) {\n    updateTicketById(ticketId: $ticketId, shortDescription: $shortDescription) {\n      _id\n    }\n  }\n": types.UpdateTicketShortDescriptionDocument,
     "\n  mutation UpdateTicketImageUrl($ticketId: String!, $imageUrl: String) {\n    updateTicketById(ticketId: $ticketId, imageUrl: $imageUrl) {\n      _id\n    }\n  }\n": types.UpdateTicketImageUrlDocument,
     "\n  mutation UpdateTicketTitle($ticketId: String!, $title: String) {\n    updateTicketById(ticketId: $ticketId, title: $title) {\n      _id\n    }\n  }\n": types.UpdateTicketTitleDocument,
     "\n  mutation UpdateTicketProject($ticketId: String!, $project: String) {\n    updateTicketById(ticketId: $ticketId, project: $project) {\n      _id\n    }\n  }\n": types.UpdateTicketProjectDocument,
@@ -229,6 +230,10 @@ export function gql(source: "\n  mutation ClearParticipatedAllEventsByUserId($us
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateTicketVisible($ticketId: String!, $visible: Boolean) {\n    updateTicketById(ticketId: $ticketId, visible: $visible) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateTicketVisible($ticketId: String!, $visible: Boolean) {\n    updateTicketById(ticketId: $ticketId, visible: $visible) {\n      _id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateTicketShortDescription(\n    $ticketId: String!\n    $shortDescription: String\n  ) {\n    updateTicketById(ticketId: $ticketId, shortDescription: $shortDescription) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateTicketShortDescription(\n    $ticketId: String!\n    $shortDescription: String\n  ) {\n    updateTicketById(ticketId: $ticketId, shortDescription: $shortDescription) {\n      _id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
