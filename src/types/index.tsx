@@ -366,6 +366,7 @@ export type Project = {
     twitterUrl: string;
     mediumUrl: string;
     naverBlogUrl: string;
+    kakaoUrl: string;
   };
 };
 

@@ -3,14 +3,13 @@ import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
 
-import { ContentMetadata } from "@/__generated__/graphql";
 import ContentMetaDataRenderComponent from "@/components/atomic/atoms/content-meta-data-render-component";
 import SecondaryButton from "@/components/atomic/atoms/secondary-button";
 import InputButton from "@/components/atomic/molecules/input-button";
 import SimpleDialog, {
   SimpleDialogProps,
 } from "@/components/dialogs/simple-dialog";
-import { VerifyQuizQuestContext, VerifyScreenShotQuestContext } from "@/types";
+import { VerifyScreenShotQuestContext } from "@/types";
 import FileUtil from "@/util/file-util";
 
 const QuestScreenshotUploadDialog = (

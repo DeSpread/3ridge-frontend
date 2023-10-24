@@ -1,11 +1,28 @@
-import { useLogin } from "../provider/login/login-provider";
-import { client } from "../lib/apollo/client";
+import { useMutation } from "@apollo/client";
 import { useEffect, useRef, useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+
+import {
+  ChainType,
+  DiscordInputType,
+  KakaoInputType,
+} from "../__generated__/graphql";
+import {
+  APP_ERROR_MESSAGE,
+  AppError,
+  getErrorMessage,
+  getLocaleErrorMessage,
+} from "../error/my-error";
+import PreferenceHelper from "../helper/preference-helper";
+import TypeHelper from "../helper/type-helper";
+import { client } from "../lib/apollo/client";
 import {
   DELETE_DISCORD_BY_NAME,
   DELETE_KAKAO_BY_NAME,
   GET_USER_BY_EMAIL,
   GET_USER_BY_GMAIL,
+  GET_USER_BY_KAKAO_ID,
+  GET_USER_BY_NAME,
   GET_USER_BY_WALLET_ADDRESS,
   IS_REGISTER_WALLET,
   UPDATE_KAKAO_BY_NAME,
@@ -18,16 +35,10 @@ import {
   UPDATE_USER_TELEGRAM_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
 } from "../lib/apollo/query";
-import {
-  APP_ERROR_MESSAGE,
-  AppError,
-  getErrorMessage,
-  getLocaleErrorMessage,
-} from "../error/my-error";
-import { useMutation } from "@apollo/client";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userDataState } from "../lib/recoil";
-import TypeHelper from "../helper/type-helper";
+import { useAlert } from "../provider/alert/alert-provider";
+import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
+import { useLogin } from "../provider/login/login-provider";
 import {
   SUPPORTED_NETWORKS,
   SupportedNetwork,
@@ -35,17 +46,12 @@ import {
   WalletName,
   User,
 } from "../types";
-import { useTotalWallet } from "../provider/login/hook/total-wallet-hook";
-import {
-  ChainType,
-  DiscordInputType,
-  KakaoInputType,
-} from "../__generated__/graphql";
 import TelegramUtil from "../util/telegram-util";
 import { delay } from "../util/timer";
-import PreferenceHelper from "../helper/preference-helper";
-import { useAlert } from "../provider/alert/alert-provider";
+
 import { useProfileEditDialog } from "./profile-edit-dialog-hook";
+
+import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
 
 const useSignedUserQuery = () => {
   const {
@@ -55,9 +61,11 @@ const useSignedUserQuery = () => {
     isWalletInstalled,
   } = useTotalWallet();
 
+  const { asyncKakoSignIn, kakaoUserInfo, isKakaoSignIn } = useLogin();
+
   const [UpdateUserWalletByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
   const [UpdateUserProfileImageByName] = useMutation(
-    UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME
+    UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME,
   );
   const [UpdateUserEmailByName] = useMutation(UPDATE_USER_BY_EMAIL);
   const [UpdateUserTwitterByName] = useMutation(UPDATE_USER_BY_TWITTER);
@@ -112,7 +120,7 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isGoogleLoggedIn && !isWalletLoggedIn) {
+      if (!isGoogleLoggedIn && !isWalletLoggedIn && !isKakaoSignIn) {
         setUserData({});
       }
     }
@@ -142,7 +150,7 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isMailLoggedIn && !isWalletLoggedIn) {
+      if (!isMailLoggedIn && !isWalletLoggedIn && !isKakaoSignIn) {
         setUserData({});
       }
     }
@@ -173,7 +181,7 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isMailLoggedIn && !isGoogleLoggedIn) {
+      if (!isMailLoggedIn && !isGoogleLoggedIn && !isKakaoSignIn) {
         setUserData({});
       }
     }
@@ -183,7 +191,7 @@ const useSignedUserQuery = () => {
     try {
       if (tryConnectWalletNetwork.current) {
         const network = TypeHelper.convertToSuppoertedNetwork(
-          tryConnectWalletNetwork.current
+          tryConnectWalletNetwork.current,
         );
         const accountAddress = getAccountAddress(network);
         if (accountAddress) {
@@ -214,6 +222,34 @@ const useSignedUserQuery = () => {
       PreferenceHelper.clearTryConnectWallet();
     }
   }, []);
+
+  useEffect(() => {
+    // console.log(isKakaoSignIn, kakaoUserInfo);
+    if (isKakaoSignIn && kakaoUserInfo) {
+      console.log("bbb");
+      (async () => {
+        try {
+          setLoading(true);
+          const res = await client.query({
+            query: GET_USER_BY_KAKAO_ID,
+            variables: {
+              kakaoId: kakaoUserInfo?.id,
+            },
+          });
+          console.log("ccc", res.data.userByKakaoId);
+          updateUserData(res.data.userByKakaoId);
+        } catch (e) {
+          // throw new AppError(getErrorMessage(e));
+        } finally {
+          setLoading(false);
+        }
+      })();
+    } else {
+      if (!isMailLoggedIn && !isGoogleLoggedIn && !isWalletLoggedIn) {
+        setUserData({});
+      }
+    }
+  }, [isKakaoSignIn, kakaoUserInfo]);
 
   const updateUserData = (data: {
     __typename?: "User";
@@ -329,7 +365,7 @@ const useSignedUserQuery = () => {
 
   const asyncUpsertWalletAddress = async (
     network: SupportedNetwork,
-    walletName: WalletName
+    walletName: WalletName,
   ) => {
     if (!isWalletInstalled(network, walletName)) {
       throw new AppError(APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED, network);
@@ -357,7 +393,7 @@ const useSignedUserQuery = () => {
 
   const _asyncUpsertWalletAddress = async (
     network: SupportedNetwork,
-    walletAddress: string
+    walletAddress: string,
   ) => {
     try {
       console.log("_asyncUpsertWalletAddress", network, walletAddress);
@@ -372,11 +408,11 @@ const useSignedUserQuery = () => {
         });
         console.log(
           "_asyncUpsertWalletAddress, exist.data.isRegisteredWallet",
-          exist.data.isRegisteredWallet
+          exist.data.isRegisteredWallet,
         );
         if (exist.data.isRegisteredWallet) {
           throw new AppError(
-            APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED
+            APP_ERROR_MESSAGE.WALLET_ADDRESS_ALREADY_REGISTERED,
           );
         }
       }
@@ -407,7 +443,7 @@ const useSignedUserQuery = () => {
       }
       console.log(
         "_asyncUpsertWalletAddress - newWalletAddressInfos",
-        newWalletAddressInfos
+        newWalletAddressInfos,
       );
       await UpdateUserWalletByName({
         variables: {
@@ -684,6 +720,21 @@ const useSignedUserQuery = () => {
     });
   };
 
+  const asyncKakaoLogin = async () => {
+    setLoading(true);
+    await asyncKakoSignIn(async (_kakaoInfo) => {
+      if (!_kakaoInfo) throw new AppError(APP_ERROR_MESSAGE.NOT_FOUND_USER);
+      const res = await client.query({
+        query: GET_USER_BY_KAKAO_ID,
+        variables: {
+          kakaoId: _kakaoInfo.id,
+        },
+      });
+      updateUserData(res.data.userByKakaoId);
+      return true;
+    });
+  };
+
   return {
     userData,
     loading,
@@ -699,6 +750,7 @@ const useSignedUserQuery = () => {
     asyncDeleteKakao,
     asyncUpdateDiscord,
     asyncDeleteDiscord,
+    asyncKakaoLogin,
   };
 };
 

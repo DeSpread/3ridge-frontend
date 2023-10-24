@@ -1,17 +1,21 @@
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
+
 import { AppError, getErrorMessage } from "../../error/my-error";
-import { useMyGoogleLogin } from "./hook/my-google-login-hook";
-import { useWalletLogin } from "./hook/wallet-login-hook";
 import {
+  EmailLoggedInInfo,
   EmailSignUpEventParams,
   GoogleLoggedInInfo,
-  EmailLoggedInInfo,
+  PartialWalletInfo,
   SuccessErrorCallback,
   SuccessErrorCallbackWithParam,
-  PartialWalletInfo,
-  WalletInfo,
 } from "../../types";
+
 import { useEmailLogin } from "./hook/email-login-hook";
+import { useMyGoogleLogin } from "./hook/my-google-login-hook";
+import { useWalletLogin } from "./hook/wallet-login-hook";
+
+import { Kakao } from "@/__generated__/graphql";
+import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
 
 const LoginContext = createContext<{
   isGoogleLoggedIn: boolean;
@@ -31,6 +35,11 @@ const LoginContext = createContext<{
   >;
   isMailLoggedIn: boolean;
   emailLoggedInInfo: EmailLoggedInInfo;
+  isKakaoSignIn: boolean;
+  asyncKakoSignIn: (
+    addAuthFunc?: (_kakaoInfo: Kakao) => Promise<boolean>,
+  ) => Promise<Kakao | undefined>;
+  kakaoUserInfo: Kakao | undefined;
 }>({
   isGoogleLoggedIn: false,
   isLoggedIn: false,
@@ -46,6 +55,11 @@ const LoginContext = createContext<{
   emailSignInWithoutPassword: () => {},
   isMailLoggedIn: false,
   emailLoggedInInfo: {},
+  isKakaoSignIn: false,
+  asyncKakoSignIn: async () => {
+    return undefined;
+  },
+  kakaoUserInfo: undefined,
 });
 
 export const LoginProvider = ({ children }: PropsWithChildren) => {
@@ -62,6 +76,8 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     updateAuthMail,
     emailSignInWithoutPassword,
   } = useEmailLogin();
+  const { isKakaoSignIn, asyncKakoSignIn, kakaoUserInfo, kakaoLogout } =
+    useKakaoLogin();
 
   const logout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     try {
@@ -73,6 +89,9 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
       }
       if (isMailLoggedIn) {
         emailLogout({ onSuccess, onError });
+      }
+      if (isKakaoSignIn) {
+        kakaoLogout();
       }
     } catch (e) {
       onError?.(new AppError(getErrorMessage(e)));
@@ -100,6 +119,9 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
         updateAuthMail,
         emailLoggedInInfo: emailLoginInfo,
         emailSignInWithoutPassword,
+        isKakaoSignIn,
+        asyncKakoSignIn,
+        kakaoUserInfo,
       }}
     >
       {children}

@@ -1,8 +1,9 @@
+import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
-import { Project } from "../types";
+
 import { client } from "../lib/apollo/client";
 import { DELETE_PROJECT_BY_ID, GET_PROJECT_BY_ID } from "../lib/apollo/query";
-import { useMutation } from "@apollo/client";
+import { Project } from "../types";
 
 export function useProjectQuery(props: { projectId?: string }) {
   const [projectData, setProjectData] = useState<Project>();
@@ -33,6 +34,7 @@ export function useProjectQuery(props: { projectId?: string }) {
             twitterUrl: data.projectById.projectSocial?.twitterUrl ?? "",
             mediumUrl: data.projectById.projectSocial?.mediumUrl ?? "",
             naverBlogUrl: data.projectById.projectSocial?.naverBlogUrl ?? "",
+            kakaoUrl: data.projectById.projectSocial?.kakaoUrl ?? "",
           },
         };
       });

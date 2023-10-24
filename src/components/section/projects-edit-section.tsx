@@ -1,3 +1,4 @@
+import AddIcon from "@mui/icons-material/Add";
 import {
   Box,
   Card,
@@ -9,22 +10,22 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import ProjectOverlayStyleCard from "../atomic/molecules/project-overlay-style-card";
-import SkeletonOverlayCard from "../atomic/molecules/skelton-overlay-card";
+import { useTheme } from "@mui/material/styles";
 import React, { MouseEventHandler, useState } from "react";
+
+import { Project } from "../../__generated__/graphql";
 import WithEditorContainer from "../../hoc/with-editor-container";
 import { useProjectsQuery } from "../../hooks/projects-query-hook";
-import { useLoading } from "../../provider/loading/loading-provider";
-import { useTheme } from "@mui/material/styles";
-import AddIcon from "@mui/icons-material/Add";
-import ProjectUpsertEditDialog from "../dialogs/project-edit/project-upsert-edit-dialog";
-import { Project } from "../../__generated__/graphql";
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
+import { useLoading } from "../../provider/loading/loading-provider";
+import ProjectOverlayStyleCard from "../atomic/molecules/project-overlay-style-card";
+import SkeletonOverlayCard from "../atomic/molecules/skelton-overlay-card";
+import ProjectUpsertEditDialog from "../dialogs/project-edit/project-upsert-edit-dialog";
 
 const _ProjectOverlayStyleCard = WithEditorContainer(ProjectOverlayStyleCard);
 
 const ProjectAddCard = (
-  props: CardProps & { onAddButtonClicked?: MouseEventHandler }
+  props: CardProps & { onAddButtonClicked?: MouseEventHandler },
 ) => {
   const theme = useTheme();
 
@@ -46,6 +47,7 @@ const ProjectAddCard = (
             twitterUrl: "",
             mediumUrl: "",
             naverBlogUrl: "",
+            kakaoUrl: "",
           },
         }}
       ></ProjectOverlayStyleCard>

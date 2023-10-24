@@ -1,8 +1,6 @@
-import { GET_TICKETS, GET_TICKETS_BY_PROJECT_ID } from "../lib/apollo/query";
-import { client } from "../lib/apollo/client";
+import { FetchPolicy } from "@apollo/client/core/watchQueryOptions";
 import { useEffect, useState } from "react";
-import { FILTER_TYPE, FilterType, Ticket } from "../types";
-import TypeParseHelper from "../helper/type-parse-helper";
+
 import {
   CategoryType,
   ContentEncodingType,
@@ -13,13 +11,10 @@ import {
   TicketSortType,
   TicketStatusType,
 } from "../__generated__/graphql";
-import { FetchPolicy } from "@apollo/client/core/watchQueryOptions";
-
-// const ticketIsVisibleOnly =
-//   (process.env["NEXT_PUBLIC_TICKET_VISIBLE"] ?? "false").toLowerCase() ===
-//   "true"
-//     ? true
-//     : false;
+import TypeParseHelper from "../helper/type-parse-helper";
+import { client } from "../lib/apollo/client";
+import { GET_TICKETS, GET_TICKETS_BY_PROJECT_ID } from "../lib/apollo/query";
+import { FILTER_TYPE, FilterType, Ticket } from "../types";
 
 export function useTicketsQuery(props: {
   projectId?: string;
@@ -40,7 +35,7 @@ export function useTicketsQuery(props: {
   }, [props.filterType, props.projectId, props.sort]);
 
   const asyncRefreshTicketsData = async (
-    fetchPolicy: FetchPolicy = "no-cache"
+    fetchPolicy: FetchPolicy = "no-cache",
   ) => {
     if (!props.filterType || !props.sort) {
       return;
@@ -150,6 +145,7 @@ export function useTicketsQuery(props: {
           twitterUrl?: string | null;
           mediumUrl?: string | null;
           naverBlogUrl?: string | null;
+          kakaoUrl?: string | null;
         } | null;
       } | null;
       rewardPolicy?: {
@@ -160,7 +156,7 @@ export function useTicketsQuery(props: {
       } | null;
       winners?: Array<{ __typename?: "User"; name?: string | null }> | null;
       visible?: boolean | null;
-    }>
+    }>,
   ) => {
     setTicketsData((prevState) => {
       return tickets.map((e) => {
@@ -190,7 +186,7 @@ export function useTicketsQuery(props: {
               questPolicy: {
                 context: TypeParseHelper.parseQuestPolicy(
                   _e.questPolicy?.context,
-                  _e.questPolicy?.questPolicy
+                  _e.questPolicy?.questPolicy,
                 ),
                 questPolicy: _e.questPolicy?.questPolicy ?? undefined,
               },
@@ -200,7 +196,7 @@ export function useTicketsQuery(props: {
           rewardPolicy: {
             context: TypeParseHelper.parseRewardPolicy(
               e.rewardPolicy?.context ?? undefined,
-              e.rewardPolicy?.rewardPolicyType ?? undefined
+              e.rewardPolicy?.rewardPolicyType ?? undefined,
             ),
             rewardPoint: e.rewardPolicy?.rewardPoint ?? undefined,
             rewardPolicyType: e.rewardPolicy?.rewardPolicyType ?? undefined,
@@ -223,6 +219,7 @@ export function useTicketsQuery(props: {
               twitterUrl: e.project?.projectSocial?.twitterUrl ?? "",
               mediumUrl: e.project?.projectSocial?.mediumUrl ?? "",
               naverBlogUrl: e.project?.projectSocial?.naverBlogUrl ?? "",
+              kakaoUrl: e.project?.projectSocial?.kakaoUrl ?? "",
             },
           },
           visible: e.visible,
