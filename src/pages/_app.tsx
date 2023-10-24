@@ -140,6 +140,9 @@ const App = (props: AppPropsWithLayout) => {
                   </QueryClientProvider>
                 </WagmiConfig>
                 <Web3Modal
+                  themeVariables={{
+                    "--w3m-z-index": "1350",
+                  }}
                   projectId={projectId}
                   ethereumClient={ethereumClient}
                 />
