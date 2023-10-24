@@ -1,5 +1,9 @@
+import { useMutation } from "@apollo/client";
+import { FetchPolicy } from "@apollo/client/core/watchQueryOptions";
 import { useEffect, useState } from "react";
-import { Project } from "../types";
+
+import { Project as _Project } from "../../src/__generated__/graphql"; //"../../../../__generated__/graphql";
+import { CategoryType, EventType } from "../__generated__/graphql";
 import { client } from "../lib/apollo/client";
 import {
   CREATE_PROJECT,
@@ -7,10 +11,7 @@ import {
   GET_PROJECTS,
   UPDATE_PROJECT,
 } from "../lib/apollo/query";
-import { CategoryType, EventType } from "../__generated__/graphql";
-import { useMutation } from "@apollo/client";
-import { FetchPolicy } from "@apollo/client/core/watchQueryOptions";
-import { Project as _Project } from "../../src/__generated__/graphql"; //"../../../../__generated__/graphql";
+import { Project } from "../types";
 
 export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
   const [projectsData, setProjectsData] = useState<Project[]>([]);
@@ -26,7 +27,7 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
   }, []);
 
   const asyncRefreshProjectsData = async (
-    fetchPolicy: FetchPolicy = "no-cache"
+    fetchPolicy: FetchPolicy = "no-cache",
   ) => {
     setProjectsDataLoading(true);
     const { data } = await client.query({
@@ -51,6 +52,7 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
             twitterUrl: e.projectSocial?.twitterUrl ?? "",
             mediumUrl: e.projectSocial?.mediumUrl ?? "",
             naverBlogUrl: e.projectSocial?.naverBlogUrl ?? "",
+            kakaoUrl: e.projectSocial?.kakaoUrl ?? "",
           },
         };
       });
@@ -81,6 +83,7 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
           officialUrl: _project.projectSocial?.officialUrl ?? "",
           telegramUrl: _project.projectSocial?.telegramUrl ?? "",
           twitterUrl: _project.projectSocial?.twitterUrl ?? "",
+          kakaoUrl: _project.projectSocial?.kakaoUrl ?? "",
         },
       },
     });
@@ -101,6 +104,7 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
           officialUrl: _project.projectSocial?.officialUrl ?? "",
           telegramUrl: _project.projectSocial?.telegramUrl ?? "",
           twitterUrl: _project.projectSocial?.twitterUrl ?? "",
+          kakaoUrl: _project.projectSocial?.kakaoUrl ?? "",
         },
       },
     });

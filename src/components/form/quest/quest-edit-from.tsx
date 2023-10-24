@@ -372,8 +372,6 @@ const VerifyScreenShotForm = (props: {
   editedQuest?: Quest;
   onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
 }) => {
-  const theme = useTheme();
-
   const { editedQuest, onChange } = props;
   const [message, setMessage] = useState<string>("");
   const [textValue, setTextValue] = useState("");
@@ -558,12 +556,10 @@ const VerifyScreenShotForm = (props: {
                 : contentFormatType === ContentFormatType.Text
                 ? textValue
                 : markdownValue;
-
             updateData(message, code, contentFormatType);
           }}
         ></InputWithLabel>
       </Stack>
-      {/*<Divider sx={{ paddingTop: 2, paddingBottom: 2 }}></Divider>*/}
     </Stack>
   );
 };

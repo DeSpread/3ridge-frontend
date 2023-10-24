@@ -197,6 +197,7 @@ class TypeHelper {
           twitterUrl: ticket.project?.projectSocial?.twitterUrl ?? "",
           mediumUrl: ticket.project?.projectSocial?.mediumUrl ?? "",
           naverBlogUrl: ticket.project?.projectSocial?.naverBlogUrl ?? "",
+          kakaoUrl: ticket.project?.projectSocial?.kakaoUrl ?? "",
         },
       },
       visible: ticket.visible,

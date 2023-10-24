@@ -1,23 +1,24 @@
-import React, { useEffect, useMemo, useState } from "react";
-import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
-import InputWithLabel from "../../atomic/atoms/input-with-label";
 import { Divider, Skeleton, Stack, Typography } from "@mui/material";
-import { Project } from "../../../__generated__/graphql";
-import SecondaryButton from "../../atomic/atoms/secondary-button";
-import Container from "../../atomic/atoms/container";
-import InputButton from "../../atomic/molecules/input-button";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import FileUtil from "../../../util/file-util";
-import { useLoading } from "../../../provider/loading/loading-provider";
-import useSimpleStorage from "../../../hooks/simple-storage-hook";
+import React, { useEffect, useMemo, useState } from "react";
 import { v1 } from "uuid";
+
+import { Project } from "../../../__generated__/graphql";
+import useSimpleStorage from "../../../hooks/simple-storage-hook";
+import { useLoading } from "../../../provider/loading/loading-provider";
+import FileUtil from "../../../util/file-util";
+import Container from "../../atomic/atoms/container";
+import InputWithLabel from "../../atomic/atoms/input-with-label";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
+import InputButton from "../../atomic/molecules/input-button";
+import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 
 const ProjectUpsertEditDialog = (
   props: {
     editedProject?: Project;
     onConfirmBtnClicked?: (project: Project) => void;
-  } & SimpleDialogProps
+  } & SimpleDialogProps,
 ) => {
   const { editedProject, onConfirmBtnClicked, ...rest } = props;
   const [project, setProject] = useState<Project>({
@@ -254,6 +255,23 @@ const ProjectUpsertEditDialog = (
                         projectSocial: {
                           ...prevState.projectSocial,
                           twitterUrl: value,
+                        },
+                      };
+                    });
+                  }}
+                ></InputWithLabel>
+                <InputWithLabel
+                  label={"카카오 URL"}
+                  labelWidth={"38%"}
+                  value={project?.projectSocial?.kakaoUrl}
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    setProject((prevState) => {
+                      return {
+                        ...prevState,
+                        projectSocial: {
+                          ...prevState.projectSocial,
+                          kakaoUrl: value,
                         },
                       };
                     });

@@ -193,6 +193,7 @@ export function useTicketQuery({
                 twitterUrl: project?.projectSocial?.twitterUrl ?? "",
                 mediumUrl: project?.projectSocial?.mediumUrl ?? "",
                 naverBlogUrl: project?.projectSocial?.naverBlogUrl ?? "",
+                kakaoUrl: project?.projectSocial?.kakaoUrl ?? "",
               }
             : undefined,
         },

@@ -1,7 +1,6 @@
-import { GetStaticPaths } from "next";
-import React, { ReactElement, useState } from "react";
-import MainLayout from "../../layouts/main-layout";
-import Head from "next/head";
+import LanguageIcon from "@mui/icons-material/Language";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import {
   Avatar,
   Box,
@@ -11,25 +10,28 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import React, { ReactElement, useState } from "react";
+
+import { TicketSortType } from "../../__generated__/graphql";
 import CheckIcon from "../../components/atomic/atoms/svg/check-icon";
-import LanguageIcon from "@mui/icons-material/Language";
+import { LinkIconButton } from "../../components/atomic/molecules/link-icon-button";
+import { useProjectQuery } from "../../hooks/project-query-hook";
 import { useTicketsQuery } from "../../hooks/tickets-query-hook";
+import MainLayout from "../../layouts/main-layout";
 import { useLoading } from "../../provider/loading/loading-provider";
-import TicketsSection from "../../components/section/tickets-section";
 import {
   FILTER_TYPE,
   FilterType,
   MouseEventWithParam,
   TicketEventParam,
 } from "../../types";
-import { useRouter } from "next/router";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import { useTheme } from "@mui/material/styles";
-import { useProjectQuery } from "../../hooks/project-query-hook";
-import { LinkIconButton } from "../../components/atomic/molecules/link-icon-button";
-import Image from "next/image";
-import { TicketSortType } from "../../__generated__/graphql";
+
+import KakaoGreyIcon from "@/components/atomic/atoms/svg/kakao-grey-icon";
+import TicketsSection from "@/components/section/tickets-section";
 
 const Project = () => {
   const [filterType, setFilterType] = useState<FilterType>(FILTER_TYPE.ALL);
@@ -40,7 +42,7 @@ const Project = () => {
   const { showLoading, closeLoading } = useLoading();
   const router = useRouter();
   const [ticketSortType, setTicketSortType] = useState<TicketSortType>(
-    TicketSortType.Trending
+    TicketSortType.Trending,
   );
   const { ticketsData, ticketsDataLoading } = useTicketsQuery({
     filterType: router.isReady ? filterType : undefined,
@@ -172,7 +174,7 @@ const Project = () => {
                         const newWindow = window.open(
                           projectData?.projectSocial.officialUrl,
                           "_blank",
-                          "noopener,noreferrer"
+                          "noopener,noreferrer",
                         );
                         if (newWindow) newWindow.opener = null;
                       }
@@ -265,6 +267,19 @@ const Project = () => {
                       width={24}
                       height={24}
                     ></Image>
+                  </LinkIconButton>
+                )}
+                {projectData?.projectSocial?.kakaoUrl && (
+                  <LinkIconButton
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      background: (theme) => theme.palette.neutral["900"],
+                      borderRadius: 16,
+                    }}
+                    linkUrl={projectData?.projectSocial?.kakaoUrl}
+                  >
+                    <KakaoGreyIcon width={24} height={24}></KakaoGreyIcon>
                   </LinkIconButton>
                 )}
               </Stack>

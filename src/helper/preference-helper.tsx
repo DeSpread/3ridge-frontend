@@ -1,5 +1,8 @@
 import { SupportedNetwork } from "../types";
+
 import TypeHelper from "./type-helper";
+
+import { Kakao } from "@/__generated__/graphql";
 
 class PreferenceHelper {
   private static KEY_EMAIL_SIGN_IN_CACHE = "KEY_EMAIL_SIGN_IN_CACHE";
@@ -9,6 +12,7 @@ class PreferenceHelper {
   private static KEY_RETRY_NETWORK_CACHE = "KEY_RETRY_NETWORK_CACHE";
   private static KEY_TRY_CONNECT_WALLET_CACHE = "KEY_TRY_CONNECT_WALLET_CACHE";
   private static KEY_KAKAO_REQUEST_CACHE = "KEY_KAKAO_REQUEST_CACHE";
+  private static KEY_KAKAO_SIGN_IN_CACHE = "KEY_KAKAO_SIGN_IN_CACHE";
 
   private static updateCacheByKey = (key: string, value: string) => {
     localStorage.setItem(
@@ -16,7 +20,7 @@ class PreferenceHelper {
       JSON.stringify({
         value,
         timestamp: new Date().toISOString(),
-      })
+      }),
     );
   };
 
@@ -37,13 +41,33 @@ class PreferenceHelper {
   public static updateConnectedNetwork = (network: string) => {
     this.updateCacheByKey(
       PreferenceHelper.KEY_CONNECTED_NETWORK_CACHE,
-      network
+      network,
     );
+  };
+
+  public static updateKakaoSignInInfo = (kakaoUserInfo: Kakao) => {
+    const serialized = JSON.stringify(kakaoUserInfo);
+    this.updateCacheByKey(PreferenceHelper.KEY_KAKAO_SIGN_IN_CACHE, serialized);
+  };
+
+  public static getKakaoSignInInfo = () => {
+    const { value, timestamp } = this.getCacheByKey(
+      PreferenceHelper.KEY_KAKAO_SIGN_IN_CACHE,
+    );
+    if (!value || !timestamp) {
+      return { kakaoUserInfo: undefined, timestamp: undefined };
+    }
+    const kakaoUserInfo = JSON.parse(value) as Kakao;
+    return { kakaoUserInfo, timestamp };
+  };
+
+  public static clearKakaoSignInInfo = () => {
+    localStorage.removeItem(PreferenceHelper.KEY_KAKAO_SIGN_IN_CACHE);
   };
 
   public static getConnectedNetwork = () => {
     const { value, timestamp } = this.getCacheByKey(
-      PreferenceHelper.KEY_CONNECTED_NETWORK_CACHE
+      PreferenceHelper.KEY_CONNECTED_NETWORK_CACHE,
     );
     if (!value || !timestamp) {
       return { network: undefined, timestamp: undefined };
@@ -57,7 +81,7 @@ class PreferenceHelper {
 
   public static getEmailSignIn = () => {
     const { value, timestamp } = this.getCacheByKey(
-      PreferenceHelper.KEY_EMAIL_SIGN_IN_CACHE
+      PreferenceHelper.KEY_EMAIL_SIGN_IN_CACHE,
     );
     if (!value || !timestamp) {
       return { email: undefined, timestamp: undefined };
@@ -71,17 +95,17 @@ class PreferenceHelper {
 
   public static updateWalletSignIn = (
     walletAddress: string,
-    walletNetwork: SupportedNetwork
+    walletNetwork: SupportedNetwork,
   ) => {
     this.updateCacheByKey(
       PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE,
-      JSON.stringify({ walletAddress, walletNetwork })
+      JSON.stringify({ walletAddress, walletNetwork }),
     );
   };
 
   public static getWalletSignIn = () => {
     const { value, timestamp } = this.getCacheByKey(
-      PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE
+      PreferenceHelper.KEY_WALLET_ADDRESS_SIGN_IN_CACHE,
     );
     if (!value || !timestamp) {
       return {
@@ -101,13 +125,13 @@ class PreferenceHelper {
   public static updateRetryNetwork = (walletNetwork: SupportedNetwork) => {
     this.updateCacheByKey(
       PreferenceHelper.KEY_RETRY_NETWORK_CACHE,
-      walletNetwork
+      walletNetwork,
     );
   };
 
   public static getRetryNetwork = () => {
     const { value, timestamp } = this.getCacheByKey(
-      PreferenceHelper.KEY_RETRY_NETWORK_CACHE
+      PreferenceHelper.KEY_RETRY_NETWORK_CACHE,
     );
     if (!value || !timestamp) {
       return { network: undefined, timestamp: undefined };
@@ -122,13 +146,13 @@ class PreferenceHelper {
   public static updateTryConnectWallet = (walletNetwork: SupportedNetwork) => {
     this.updateCacheByKey(
       PreferenceHelper.KEY_TRY_CONNECT_WALLET_CACHE,
-      walletNetwork
+      walletNetwork,
     );
   };
 
   public static getTryConnectWallet = () => {
     const { value, timestamp } = this.getCacheByKey(
-      PreferenceHelper.KEY_TRY_CONNECT_WALLET_CACHE
+      PreferenceHelper.KEY_TRY_CONNECT_WALLET_CACHE,
     );
     if (!value || !timestamp) {
       return { network: undefined, timestamp: undefined };
@@ -146,7 +170,7 @@ class PreferenceHelper {
 
   public static getKakaoRequest = () => {
     const { value, timestamp } = this.getCacheByKey(
-      PreferenceHelper.KEY_KAKAO_REQUEST_CACHE
+      PreferenceHelper.KEY_KAKAO_REQUEST_CACHE,
     );
     if (!value || !timestamp) {
       return { network: undefined, timestamp: undefined };

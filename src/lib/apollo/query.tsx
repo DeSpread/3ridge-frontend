@@ -49,6 +49,83 @@ export const FIND_RANK_BY_USER_ID = gql(/* GraphQL */ `
   }
 `);
 
+export const GET_USER_BY_KAKAO_ID = gql(/* GraphQL */ `
+  query GetUserByKakaoId($kakaoId: Float!) {
+    userByKakaoId(kakaoId: $kakaoId) {
+      _id
+      email
+      gmail
+      name
+      participatingTickets {
+        _id
+        imageUrl
+        description
+        project {
+          _id
+          categories
+          description
+          imageUrl
+          name
+        }
+        rewardPolicy {
+          context
+          rewardPoint
+          rewardPolicyType
+        }
+        title
+        winners {
+          _id
+          name
+        }
+        quests {
+          _id
+        }
+      }
+      profileImageUrl
+      rewardPoint
+      userSocial {
+        twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
+      }
+      wallets {
+        address
+        chain
+      }
+      kakao {
+        id
+        connected_at
+        properties {
+          nickname
+          profile_image
+          thumbnail_image
+        }
+      }
+      discord {
+        accent_color
+        avatar
+        avatar_decoration
+        banner
+        discriminator
+        flags
+        global_name
+        id
+        locale
+        mfa_enabled
+        premium_type
+        public_flags
+        username
+      }
+    }
+  }
+`);
+
 export const GET_USER_BY_NAME = gql(/* GraphQL */ `
   query GetUserByName($name: String!) {
     userByName(name: $name) {
@@ -555,6 +632,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
           twitterUrl
           mediumUrl
           naverBlogUrl
+          kakaoUrl
         }
       }
       rewardPolicy {
@@ -635,6 +713,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
           twitterUrl
           mediumUrl
           naverBlogUrl
+          kakaoUrl
         }
       }
       visible
@@ -657,6 +736,7 @@ export const GET_PROJECTS = gql(/* GraphQL */ `
         twitterUrl
         mediumUrl
         naverBlogUrl
+        kakaoUrl
       }
     }
   }
@@ -677,6 +757,7 @@ export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
         twitterUrl
         mediumUrl
         naverBlogUrl
+        kakaoUrl
       }
     }
   }
@@ -737,6 +818,7 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
           twitterUrl
           mediumUrl
           naverBlogUrl
+          kakaoUrl
         }
       }
       rewardPolicy {
@@ -1171,7 +1253,7 @@ export const VERIFY_TELEGRAM_QUEST = gql(/* GraphQL */ `
   }
 `);
 
-export const GET_All_TICKETS = gql(`
+export const GET_All_TICKETS = gql(/* GraphQL */ `
   query AllTickets(
     $sort: TicketSortType
     $status: TicketStatusType
@@ -1231,6 +1313,7 @@ export const GET_All_TICKETS = gql(`
           twitterUrl
           mediumUrl
           naverBlogUrl
+          kakaoUrl
         }
       }
       rewardPolicy {
