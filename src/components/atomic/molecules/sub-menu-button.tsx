@@ -62,7 +62,7 @@ const SubMenuButton = (
     onProjectsClick?: MouseEventHandler;
     onLeaderBoardClick?: MouseEventHandler;
     onSignInClick?: MouseEventHandler;
-  }
+  },
 ) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -75,9 +75,6 @@ const SubMenuButton = (
         cursor: "pointer",
         "&:hover": {
           color: "white",
-          "& .curtain": {
-            backgroundColor: theme.palette.action.hover,
-          },
         },
       }}
       onClick={(event: MouseEvent) => {
@@ -93,15 +90,14 @@ const SubMenuButton = (
           borderRadius: 2,
           padding: 1,
           "&:hover": {
-            backgroundColor: theme.palette.secondary.main,
-            // borderBottomColor: theme.palette.action.selected,
+            backgroundColor: theme.palette.action.hover,
           },
         }}
       >
         <MoreHorizIcon
           sx={{
             color: "white",
-            "&:hover": {
+            "*:hover > &": {
               color: theme.palette.neutral["900"],
             },
           }}
@@ -151,16 +147,6 @@ const SubMenuButton = (
           </Stack>
         </StyledMenuItem>
       </StyledMenu>
-      <div
-        className={"curtain"}
-        style={{
-          position: "absolute",
-          marginTop: -32,
-          width: 32,
-          height: 32,
-          borderRadius: 32,
-        }}
-      ></div>
     </Box>
   );
 };
