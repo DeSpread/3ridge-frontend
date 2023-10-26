@@ -1,4 +1,6 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
+  Box,
   Dialog,
   DialogContent,
   DialogProps,
@@ -7,10 +9,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { MouseEventHandler } from "react";
-import { VerifyQuizQuestContext, Z_INDEX_OFFSET } from "../../types";
 import { useTheme } from "@mui/material/styles";
-import CloseIcon from "@mui/icons-material/Close";
+import React, { MouseEventHandler } from "react";
+
+import { VerifyQuizQuestContext, Z_INDEX_OFFSET } from "../../types";
 
 export type SimpleDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
@@ -44,7 +46,7 @@ const SimpleDialog = (props: SimpleDialogProps) => {
         }}
         {...rest}
       >
-        <DialogTitle>
+        <Box sx={{ padding: "16px 24px" }}>
           <Stack
             direction={"row"}
             alignItems={"center"}
@@ -66,7 +68,7 @@ const SimpleDialog = (props: SimpleDialogProps) => {
               <CloseIcon></CloseIcon>
             </IconButton>
           </Stack>
-        </DialogTitle>
+        </Box>
         <DialogContent>{props.children}</DialogContent>
       </Dialog>
     </>

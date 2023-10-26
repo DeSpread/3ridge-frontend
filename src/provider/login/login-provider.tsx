@@ -39,7 +39,9 @@ const LoginContext = createContext<{
   asyncKakoSignIn: (
     addAuthFunc?: (_kakaoInfo: Kakao) => Promise<boolean>,
   ) => Promise<Kakao | undefined>;
-  kakaoUserInfo: Kakao | undefined;
+  cachedKakaoUserInfo: Kakao | undefined;
+  fetchKakaoUserInfo?: () => Promise<Kakao>;
+  asyncUpdateCachedKakaoUserInfo: (kakaoUserInfo: Kakao) => void;
 }>({
   isGoogleLoggedIn: false,
   isLoggedIn: false,
@@ -59,7 +61,9 @@ const LoginContext = createContext<{
   asyncKakoSignIn: async () => {
     return undefined;
   },
-  kakaoUserInfo: undefined,
+  cachedKakaoUserInfo: undefined,
+  fetchKakaoUserInfo: undefined,
+  asyncUpdateCachedKakaoUserInfo: () => {},
 });
 
 export const LoginProvider = ({ children }: PropsWithChildren) => {
@@ -76,8 +80,14 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     updateAuthMail,
     emailSignInWithoutPassword,
   } = useEmailLogin();
-  const { isKakaoSignIn, asyncKakoSignIn, kakaoUserInfo, kakaoLogout } =
-    useKakaoLogin();
+  const {
+    isKakaoSignIn,
+    asyncKakoSignIn,
+    cachedKakaoUserInfo,
+    kakaoLogout,
+    asyncUpdateCachedKakaoUserInfo,
+    fetchKakaoUserInfo,
+  } = useKakaoLogin();
 
   const logout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     try {
@@ -121,7 +131,9 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
         emailSignInWithoutPassword,
         isKakaoSignIn,
         asyncKakoSignIn,
-        kakaoUserInfo,
+        cachedKakaoUserInfo,
+        fetchKakaoUserInfo,
+        asyncUpdateCachedKakaoUserInfo,
       }}
     >
       {children}
