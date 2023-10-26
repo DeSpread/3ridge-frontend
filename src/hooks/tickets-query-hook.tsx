@@ -104,7 +104,7 @@ export function useTicketsQuery(props: {
         contentEncodingType: ContentEncodingType;
         content: string;
       } | null;
-      shortDescription?: string;
+      shortDescription?: string | null;
       imageUrl?: string | null;
       title?: string | null;
       participants?: Array<{
