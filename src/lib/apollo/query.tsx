@@ -380,6 +380,14 @@ export const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
   }
 `);
 
+export const CREATE_USER_BY_KAKAO = gql(/* GraphQL */ `
+  mutation CreateUserByKakao($kakaoInfo: KakaoInputType!) {
+    createUserByKakao(kakaoInfo: $kakaoInfo) {
+      name
+    }
+  }
+`);
+
 export const UPDATE_USER_WALLET_BY_NAME = gql(/* GraphQL */ `
   mutation UpdateUserWalletByName(
     $name: String!

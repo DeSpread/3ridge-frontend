@@ -34,6 +34,7 @@ import {
   UPDATE_USER_SOCIAL_BY_NAME,
   UPDATE_USER_TELEGRAM_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
+  CREATE_USER_BY_KAKAO,
 } from "../lib/apollo/query";
 import { userDataState } from "../lib/recoil";
 import { useAlert } from "../provider/alert/alert-provider";
@@ -61,7 +62,22 @@ const useSignedUserQuery = () => {
     isWalletInstalled,
   } = useTotalWallet();
 
-  const { asyncKakoSignIn, kakaoUserInfo, isKakaoSignIn } = useLogin();
+  const {
+    asyncKakoSignIn,
+    cachedKakaoUserInfo,
+    isKakaoSignIn,
+    fetchKakaoUserInfo,
+    asyncUpdateCachedKakaoUserInfo,
+  } = useLogin();
+
+  const {
+    isGoogleLoggedIn,
+    isMailLoggedIn,
+    isWalletLoggedIn,
+    emailLoggedInInfo,
+    googleLoggedInInfo,
+    walletLoggedInInfo,
+  } = useLogin();
 
   const [UpdateUserWalletByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
   const [UpdateUserProfileImageByName] = useMutation(
@@ -74,6 +90,7 @@ const useSignedUserQuery = () => {
   const [UpdateUserSocialByName] = useMutation(UPDATE_USER_SOCIAL_BY_NAME);
   const [UpdateKakaoByName] = useMutation(UPDATE_KAKAO_BY_NAME);
   const [DeleteKakaoByName] = useMutation(DELETE_KAKAO_BY_NAME);
+  const [CreateUserByKakao] = useMutation(CREATE_USER_BY_KAKAO);
   const [UpdateUserDiscordByName] = useMutation(UPDATE_USER_DISCORD_BY_NAME);
   const [DeleteDiscordByName] = useMutation(DELETE_DISCORD_BY_NAME);
 
@@ -86,15 +103,6 @@ const useSignedUserQuery = () => {
   const { showAlert, showErrorAlert } = useAlert();
   const { isProfileEditDialogOpen, setShowProfileEditDialog } =
     useProfileEditDialog();
-
-  const {
-    isGoogleLoggedIn,
-    isMailLoggedIn,
-    isWalletLoggedIn,
-    emailLoggedInInfo,
-    googleLoggedInInfo,
-    walletLoggedInInfo,
-  } = useLogin();
 
   useEffect(() => {
     if (isMailLoggedIn) {
@@ -224,8 +232,8 @@ const useSignedUserQuery = () => {
   }, []);
 
   useEffect(() => {
-    // console.log(isKakaoSignIn, kakaoUserInfo);
-    if (isKakaoSignIn && kakaoUserInfo) {
+    console.log("isKakaoSignIn", isKakaoSignIn, cachedKakaoUserInfo);
+    if (isKakaoSignIn && cachedKakaoUserInfo) {
       console.log("bbb");
       (async () => {
         try {
@@ -233,8 +241,9 @@ const useSignedUserQuery = () => {
           const res = await client.query({
             query: GET_USER_BY_KAKAO_ID,
             variables: {
-              kakaoId: kakaoUserInfo?.id,
+              kakaoId: cachedKakaoUserInfo?.id,
             },
+            fetchPolicy: "no-cache",
           });
           console.log("ccc", res.data.userByKakaoId);
           updateUserData(res.data.userByKakaoId);
@@ -249,7 +258,7 @@ const useSignedUserQuery = () => {
         setUserData({});
       }
     }
-  }, [isKakaoSignIn, kakaoUserInfo]);
+  }, [isKakaoSignIn, cachedKakaoUserInfo]);
 
   const updateUserData = (data: {
     __typename?: "User";
@@ -686,12 +695,16 @@ const useSignedUserQuery = () => {
     });
   };
 
-  const asyncUpdateKakao = async (kakaoInfo: KakaoInputType) => {
+  const asyncUpdateKakao = async () => {
     if (!userData.name) return;
+    const kakaoUserInfo = await fetchKakaoUserInfo?.();
+    if (!kakaoUserInfo?.id) {
+      throw new AppError(APP_ERROR_MESSAGE.FAIL_TO_FETCH_KAKAO_USER_INFO);
+    }
     const res = await UpdateKakaoByName({
       variables: {
         name: userData?.name,
-        kakaoInfo,
+        kakaoInfo: kakaoUserInfo,
       },
     });
     const kakao = res.data?.updateKakaoByName?.kakao;
@@ -729,10 +742,24 @@ const useSignedUserQuery = () => {
         variables: {
           kakaoId: _kakaoInfo.id,
         },
+        fetchPolicy: "no-cache",
       });
       updateUserData(res.data.userByKakaoId);
       return true;
     });
+  };
+
+  const asyncCreateUserByKakaoInfo = async () => {
+    const kakaoUserInfo = await fetchKakaoUserInfo?.();
+    if (!kakaoUserInfo?.id) {
+      throw new AppError(APP_ERROR_MESSAGE.FAIL_TO_FETCH_KAKAO_USER_INFO);
+    }
+    const res = await CreateUserByKakao({
+      variables: {
+        kakaoInfo: kakaoUserInfo,
+      },
+    });
+    await asyncUpdateCachedKakaoUserInfo(kakaoUserInfo);
   };
 
   return {
@@ -751,6 +778,7 @@ const useSignedUserQuery = () => {
     asyncUpdateDiscord,
     asyncDeleteDiscord,
     asyncKakaoLogin,
+    asyncCreateUserByKakaoInfo,
   };
 };
 
