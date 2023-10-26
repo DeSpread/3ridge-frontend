@@ -43,6 +43,7 @@ import {
   UPDATE_TICKET_VISIBLE,
   VERIFY_TWITTER_LIKING_RTWEET_QUEST,
   VERIFY_SCREENSHOT_QUEST,
+  UPDATE_TICKET_SHORT_DESCRIPTION,
 } from "../lib/apollo/query";
 import { Ticket, TicketUserQuery } from "../types";
 import AxiosUtil from "../util/axios-util";
@@ -82,6 +83,9 @@ export function useTicketQuery({
   const [updateTicketDescription] = useMutation(UPDATE_TICKET_DESCRIPTION);
   const [updateTicketRewardPolicy] = useMutation(UPDATE_TICKET_REWARD_POLICY);
   const [updateTicketVisibleById] = useMutation(UPDATE_TICKET_VISIBLE);
+  const [updateTicketShortDescription] = useMutation(
+    UPDATE_TICKET_SHORT_DESCRIPTION,
+  );
   const [createTicket] = useMutation(CREATE_TICKET);
   const [deleteTicket] = useMutation(DELETE_TICKET);
 
@@ -115,6 +119,7 @@ export function useTicketQuery({
       untilTime,
       description,
       description_v2,
+      shortDescription,
       completed,
       participants,
       quests,
@@ -139,6 +144,7 @@ export function useTicketQuery({
         untilTime: untilTime ?? undefined,
         description: description ?? undefined,
         description_v2: description_v2 ?? undefined,
+        shortDescription: shortDescription ?? undefined,
         completed: completed ?? undefined,
         participants: participants?.map((e) => {
           return {
@@ -668,6 +674,17 @@ export function useTicketQuery({
     }
   };
 
+  const asyncUpdateShortDescription = async (description?: string) => {
+    if (id) {
+      await updateTicketShortDescription({
+        variables: {
+          ticketId: id,
+          shortDescription: description,
+        },
+      });
+    }
+  };
+
   return {
     ticketData,
     asyncIsCompletedQuestByUserId,
@@ -699,5 +716,6 @@ export function useTicketQuery({
     asyncUpdateTicketVisibleById,
     asyncVerifyTwitterLinkingAndRetweetQuest,
     asyncVerifyScreenShotQuest,
+    asyncUpdateShortDescription,
   };
 }

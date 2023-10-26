@@ -607,6 +607,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
         contentEncodingType
         content
       }
+      shortDescription
       participants {
         _id
         name
@@ -670,6 +671,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
         contentEncodingType
         content
       }
+      shortDescription
       participants {
         _id
         name
@@ -1004,6 +1006,17 @@ export const CLEAR_PARTICIPATED_ALL_EVENTS_BY_USER_ID = gql(/* GraphQL */ `
 export const UPDATE_TICKET_VISIBLE = gql(/* GraphQL */ `
   mutation UpdateTicketVisible($ticketId: String!, $visible: Boolean) {
     updateTicketById(ticketId: $ticketId, visible: $visible) {
+      _id
+    }
+  }
+`);
+
+export const UPDATE_TICKET_SHORT_DESCRIPTION = gql(/* GraphQL */ `
+  mutation UpdateTicketShortDescription(
+    $ticketId: String!
+    $shortDescription: String
+  ) {
+    updateTicketById(ticketId: $ticketId, shortDescription: $shortDescription) {
       _id
     }
   }

@@ -198,6 +198,7 @@ export type Ticket = {
   untilTime?: string;
   description?: string;
   description_v2?: ContentMetadata;
+  shortDescription?: string;
   completed?: boolean;
   participants?: { _id?: string; name?: string; profileImageUrl?: string }[];
   participantCount?: number;
