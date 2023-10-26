@@ -662,6 +662,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
         contentEncodingType
         content
       }
+      shortDescription
       participants {
         _id
         name

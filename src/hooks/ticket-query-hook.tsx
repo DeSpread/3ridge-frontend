@@ -119,6 +119,7 @@ export function useTicketQuery({
       untilTime,
       description,
       description_v2,
+      shortDescription,
       completed,
       participants,
       quests,
@@ -143,6 +144,7 @@ export function useTicketQuery({
         untilTime: untilTime ?? undefined,
         description: description ?? undefined,
         description_v2: description_v2 ?? undefined,
+        shortDescription: shortDescription ?? undefined,
         completed: completed ?? undefined,
         participants: participants?.map((e) => {
           return {
