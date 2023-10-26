@@ -104,6 +104,7 @@ export function useTicketsQuery(props: {
         contentEncodingType: ContentEncodingType;
         content: string;
       } | null;
+      shortDescription?: string;
       imageUrl?: string | null;
       title?: string | null;
       participants?: Array<{
@@ -167,6 +168,7 @@ export function useTicketsQuery(props: {
           title: e.title ?? undefined,
           description: e.description ?? undefined,
           description_v2: e.description_v2 ?? undefined,
+          shortDescription: e.shortDescription ?? undefined,
           completed: e.completed ?? undefined,
           participants: e.participants?.map((_e) => {
             return {
