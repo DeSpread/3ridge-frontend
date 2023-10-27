@@ -1,13 +1,14 @@
 import { Stack, Typography } from "@mui/material";
 import StyledChip from "../../../atomic/atoms/styled/styled-chip";
-import { REWARD_POLICY_TYPE, Ticket } from "../../../../types";
+import { Ticket } from "../../../../types";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 import React, { PropsWithChildren } from "react";
+import { RewardPolicyType } from "@/__generated__/graphql";
 
 const EventRewardPolicy = (
-  props: { ticketData?: Ticket } & PropsWithChildren
+  props: { ticketData?: Ticket } & PropsWithChildren,
 ) => {
   const { ticketData } = props;
   return (
@@ -19,19 +20,19 @@ const EventRewardPolicy = (
       <Typography variant="h5">리워드</Typography>
       <StyledChip
         label={
-          ticketData?.rewardPolicy?.rewardPolicyType === REWARD_POLICY_TYPE.FCFS
+          ticketData?.rewardPolicy?.rewardPolicyType === RewardPolicyType.Fcfs
             ? "선착순"
             : ticketData?.rewardPolicy?.rewardPolicyType ===
-              REWARD_POLICY_TYPE.LUCKY_DRAW
+              RewardPolicyType.LuckyDraw
             ? "추첨"
             : "전원"
         }
         icon={
           ticketData?.rewardPolicy?.rewardPolicyType ===
-          REWARD_POLICY_TYPE.FCFS ? (
+          RewardPolicyType.Fcfs ? (
             <DirectionsRunIcon />
           ) : ticketData?.rewardPolicy?.rewardPolicyType ===
-            REWARD_POLICY_TYPE.LUCKY_DRAW ? (
+            RewardPolicyType.LuckyDraw ? (
             <RedeemIcon sx={{ paddingRight: "3px" }} />
           ) : (
             <AllInclusiveIcon
