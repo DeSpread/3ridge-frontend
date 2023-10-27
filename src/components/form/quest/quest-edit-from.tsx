@@ -1621,7 +1621,7 @@ const VerifyAgreement = (props: {
       const correctOptionIndex = _answers[i] - 1;
       context.agreementList?.push({
         title: {
-          contentFormatType: ContentFormatType.Text,
+          contentFormatType: ContentFormatType.Markdown,
           contentEncodingType: ContentEncodingType.None,
           content: title,
         },
