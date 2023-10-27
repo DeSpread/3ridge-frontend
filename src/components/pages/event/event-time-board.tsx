@@ -6,6 +6,7 @@ import DateUtil from "../../../util/date-util";
 import PrimaryCard from "../../atomic/atoms/primary-card";
 import React, { PropsWithChildren } from "react";
 import { Ticket } from "../../../types";
+import { RewardPolicyType } from "@/__generated__/graphql";
 
 const EventTimeBoard = (props: { ticketData?: Ticket } & PropsWithChildren) => {
   const { ticketData } = props;
@@ -21,6 +22,10 @@ const EventTimeBoard = (props: { ticketData?: Ticket } & PropsWithChildren) => {
       ? DateUtil.isAfter(new Date(), ticketData?.beginTime)
       : false;
   };
+
+  if (ticketData?.rewardPolicy?.rewardPolicyType === RewardPolicyType.Always) {
+    return null;
+  }
 
   return (
     <PrimaryCard hoverEffect={false}>
@@ -59,7 +64,7 @@ const EventTimeBoard = (props: { ticketData?: Ticket } & PropsWithChildren) => {
                   width: "100%",
                 }}
                 expiryTimestamp={DateUtil.parseStrToDate(
-                  ticketData?.untilTime ?? ""
+                  ticketData?.untilTime ?? "",
                 )}
               />
             ) : (
@@ -70,7 +75,7 @@ const EventTimeBoard = (props: { ticketData?: Ticket } & PropsWithChildren) => {
                   width: "100%",
                 }}
                 expiryTimestamp={DateUtil.parseStrToDate(
-                  ticketData?.beginTime ?? ""
+                  ticketData?.beginTime ?? "",
                 )}
                 onExpire={() => {
                   console.log("refresh all");

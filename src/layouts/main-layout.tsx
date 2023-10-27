@@ -43,7 +43,12 @@ import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
 
+import ClickTyphography from "@/components/atomic/atoms/click-typhography";
+import AccountCreateAlertDialog from "@/layouts/dialog/sign/account-create-alert-dialog";
+import MigrationAlertDialog from "@/layouts/dialog/sign/migration-alert-dialog";
+import MigrationDialog from "@/layouts/dialog/sign/migration-dialog";
 import SignInDialog from "@/layouts/dialog/sign/sign-in-dialog";
+import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -85,13 +90,26 @@ const MainLayout = (props: MainLayoutProps) => {
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
   const { logout, googleSignUp, walletSignUp } = useLogin();
-  const { userData, asyncKakaoLogin } = useSignedUserQuery();
+  const {
+    userData,
+    asyncKakaoLogin,
+    asyncUpdateKakao,
+    asyncCreateUserByKakaoInfo,
+  } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
+
   const [signUpWithVisible, setSignUpWithVisible] = useState(false);
   const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
   const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
     useState(false);
+  const [openMigrationAlertDialog, setOpenMigrationAlertDialog] =
+    useState(false);
+  const [openMigrationDialog, setOpenMigrationDialog] = useState(false);
+  const [openAccountCreateAlertDialog, setOpenAccountCreateAlertDialog] =
+    useState(false);
+
   const [selectedNetwork, setSelectedNetwork] = useState("");
+  const [isMigrationTry, setIsMigrationTry] = useState(false);
   const { isMobile } = useMobile();
 
   const { showErrorAlert, showAlert } = useAlert();
@@ -151,45 +169,8 @@ const MainLayout = (props: MainLayoutProps) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      {/*<div*/}
-      {/*  style={{*/}
-      {/*    position: "absolute",*/}
-      {/*    top: "10%",*/}
-      {/*    left: "50%",*/}
-      {/*    transform: "translate(0%, -50%)",*/}
-      {/*    zIndex: 1300,*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <Backdrop*/}
-      {/*    sx={{*/}
-      {/*      color: "#fff",*/}
-      {/*      overflowY: "auto",*/}
-      {/*      display: "inline-block",*/}
-      {/*      zIndex: (theme) =>*/}
-      {/*        theme.zIndex.drawer + Z_INDEX_OFFSET.LOADING_BACKDROP,*/}
-      {/*    }}*/}
-      {/*    open={true}*/}
-      {/*  >*/}
-      {/*  </Backdrop>*/}
-      {/*</div>*/}
-      {/*<LinearProgress*/}
-      {/*  color={"info"}*/}
-      {/*  sx={{*/}
-      {/*    background: (theme) => theme.palette.action.hover,*/}
-      {/*    width: "100%",*/}
-      {/*    position: "absolute",*/}
-      {/*    top: 0,*/}
-      {/*    borderRadius: 0,*/}
-      {/*    height: "2px",*/}
-      {/*  }}*/}
-      {/*></LinearProgress>*/}
-      {/*<SimpleDialog open={true}>축하합니다.</SimpleDialog>*/}
-      {/*  </div>*/}
-      {/*</div>*/}
-
       {/*--- Navbar ---*/}
       <AppBar
-        // className={myFont.className}
         component="nav"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.NAV_LAYOUT,
@@ -341,25 +322,21 @@ const MainLayout = (props: MainLayoutProps) => {
         onSignUpClicked={(e) => {
           setShowSignInDialog(false);
         }}
-        // onSignInWithSocialClicked={async (e) => {
-        //   try {
-        //     showLoading();
-        //     await asyncKakaoLogin();
-        //     setShowSignInDialog(false);
-        //   } catch (e) {
-        //     if (getErrorMessage(e) === APP_ERROR_MESSAGE.NOT_FOUND_USER) {
-        //       showAlert({
-        //         title: "알림",
-        //         content: "기존계정에 카카오 연동이 필요합니다.",
-        //       });
-        //       return;
-        //     }
-        //     showErrorAlert({ content: getLocaleErrorMessage(e) });
-        //     closeLoading();
-        //   } finally {
-        //     closeLoading();
-        //   }
-        // }}
+        onSignInWithSocialClicked={async (e) => {
+          try {
+            showLoading();
+            await asyncKakaoLogin();
+          } catch (e) {
+            if (getErrorMessage(e) === APP_ERROR_MESSAGE.NOT_FOUND_USER) {
+              setOpenMigrationAlertDialog(true);
+            } else {
+              showErrorAlert({ content: getLocaleErrorMessage(e) });
+            }
+          } finally {
+            setShowSignInDialog(false);
+            closeLoading();
+          }
+        }}
         onClose={() => {
           setShowSignInDialog(false);
         }}
@@ -469,7 +446,6 @@ const MainLayout = (props: MainLayoutProps) => {
         })()}
         onWalletSelected={({ name, value }) => {
           const walletName = TypeHelper.convertToWalletName(value);
-
           if (EthUtil.goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
             return;
           }
@@ -478,8 +454,11 @@ const MainLayout = (props: MainLayoutProps) => {
             { network: selectedNetwork as SupportedNetwork, name: walletName },
             {
               onSuccess: () => {
-                if (router.pathname === "/") {
-                  router.push("/explore").then();
+                if (isMigrationTry) {
+                  setOpenMigrationDialog(true);
+                  setSelectedNetwork("");
+                  setIsMigrationTry(false);
+                  return;
                 }
                 setSelectedNetwork("");
               },
@@ -496,6 +475,58 @@ const MainLayout = (props: MainLayoutProps) => {
           );
         }}
       ></SignInWithSupportedWalletDialog>
+      <MigrationAlertDialog
+        title={"알림"}
+        open={openMigrationAlertDialog}
+        onMigrationAllowedClick={(e) => {
+          setIsMigrationTry(true);
+          setSignInWithNetworkSelectVisible(true);
+          setOpenMigrationAlertDialog(false);
+        }}
+        onMigrationCancelClick={(e) => {
+          setOpenAccountCreateAlertDialog(true);
+          setOpenMigrationAlertDialog(false);
+        }}
+        onClose={() => {
+          setOpenMigrationAlertDialog(false);
+        }}
+      ></MigrationAlertDialog>
+      <MigrationDialog
+        open={openMigrationDialog}
+        address={userData?.walletAddressInfos?.[0]?.address}
+        title={
+          userData?.walletAddressInfos?.[0]?.address
+            ? "계정 연동"
+            : "문제가 발생하였습니다"
+        }
+        onCloseBtnClicked={async () => {
+          await asyncLogoutBtnOnClick();
+          setOpenMigrationDialog(false);
+        }}
+        onMigrationClick={async (e) => {
+          showLoading();
+          await asyncUpdateKakao();
+          setOpenMigrationDialog(false);
+          closeLoading();
+        }}
+      ></MigrationDialog>
+      <AccountCreateAlertDialog
+        open={openAccountCreateAlertDialog}
+        title={"알림"}
+        onCreateAccountClick={async (e) => {
+          try {
+            showLoading();
+            await asyncCreateUserByKakaoInfo();
+            setOpenAccountCreateAlertDialog(false);
+            closeLoading();
+          } catch (e) {
+            showErrorAlert({ content: getLocaleErrorMessage(e) });
+          }
+        }}
+        onCloseBtnClicked={async () => {
+          setOpenAccountCreateAlertDialog(false);
+        }}
+      ></AccountCreateAlertDialog>
     </Box>
   );
 };

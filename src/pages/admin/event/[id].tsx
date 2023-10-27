@@ -27,7 +27,11 @@ import EventRewardName from "../../../components/pages/event/reward/description/
 import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-chain-content-edit-dialog";
 
 import Draggable from "react-draggable";
-import { ContentMetadata, QuestPolicy } from "../../../__generated__/graphql";
+import {
+  ContentMetadata,
+  QuestPolicy,
+  RewardPolicyType,
+} from "../../../__generated__/graphql";
 import InputButton from "../../../components/atomic/molecules/input-button";
 import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
 import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
@@ -661,6 +665,18 @@ const Event = () => {
           showLoading();
           const rewardPolicy = { ...ticketData?.rewardPolicy };
           rewardPolicy.rewardPolicyType = _rewardPolicyType;
+
+          if (rewardPolicy.rewardPolicyType === RewardPolicyType.Always) {
+            if (rewardPolicy.context?.limitNumber !== undefined) {
+              rewardPolicy.context.limitNumber = 4294967296;
+            }
+
+            await asyncUpdateTicketDateRangeTime(
+              DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
+              new Date(2099, 12, 31),
+            );
+          }
+
           const newRewardPolicy =
             TypeHelper.convertToServerRewardPolicy(rewardPolicy);
           await asyncUpdateTicketRewardPolicy(newRewardPolicy);

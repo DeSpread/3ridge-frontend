@@ -4,18 +4,19 @@ import { useEffect, useMemo, useState } from "react";
 import { Kakao } from "@/__generated__/graphql";
 import { APP_ERROR_MESSAGE, AppError } from "@/error/my-error";
 import PreferenceHelper from "@/helper/preference-helper";
-import { EmailLoggedInInfo } from "@/types";
 
 export function useKakaoLogin() {
-  const [kakaoUserInfo, setKakaoUserInfo] = useState<Kakao | undefined>();
+  const [cachedKakaoUserInfo, setCachedKakaoUserInfo] = useState<
+    Kakao | undefined
+  >();
 
   const asyncFetchKakaoUserInfo = async () => {
     await kakaoAuthLogin();
-    const _kakaoUserInfo = await getKakaoUserInfo();
+    const _kakaoUserInfo = await fetchKakaoUserInfo();
     return _kakaoUserInfo;
   };
 
-  const asyncKakoSignIn = async (
+  const asyncKakaoSignIn = async (
     addAuthFunc?: (_kakaoInfo: Kakao) => Promise<boolean>,
   ) => {
     const _kakaoUserInfo = await asyncFetchKakaoUserInfo().catch(
@@ -30,13 +31,17 @@ export function useKakaoLogin() {
     if (!addAuth) {
       return undefined;
     }
-    PreferenceHelper.updateKakaoSignInInfo(_kakaoUserInfo);
-    setKakaoUserInfo(_kakaoUserInfo);
+    await asyncUpdateCachedKakaoUserInfo(_kakaoUserInfo);
     return _kakaoUserInfo;
   };
 
+  const asyncUpdateCachedKakaoUserInfo = async (kakaoUserInfo: Kakao) => {
+    PreferenceHelper.updateKakaoSignInInfo(kakaoUserInfo);
+    setCachedKakaoUserInfo(kakaoUserInfo);
+  };
+
   const kakaoLogout = () => {
-    setKakaoUserInfo(undefined);
+    setCachedKakaoUserInfo(undefined);
     PreferenceHelper.clearKakaoSignInInfo();
   };
 
@@ -53,14 +58,14 @@ export function useKakaoLogin() {
         kakaoLogout();
         return;
       }
-      setKakaoUserInfo(_kakaoUserInfo);
+      setCachedKakaoUserInfo(_kakaoUserInfo);
       PreferenceHelper.updateKakaoSignInInfo(_kakaoUserInfo);
     }
   }, []);
 
   const isKakaoSignIn = useMemo(() => {
-    return kakaoUserInfo !== undefined ? true : false;
-  }, [kakaoUserInfo]);
+    return cachedKakaoUserInfo !== undefined ? true : false;
+  }, [cachedKakaoUserInfo]);
 
   const kakaoAuthLogin = () => {
     return new Promise((resolve, reject) => {
@@ -76,7 +81,7 @@ export function useKakaoLogin() {
     });
   };
 
-  const getKakaoUserInfo = () => {
+  const fetchKakaoUserInfo = () => {
     return new Promise<Kakao>((resolve, reject) => {
       window.Kakao.Auth.getStatusInfo(({ status }: { status: string }) => {
         try {
@@ -130,5 +135,13 @@ export function useKakaoLogin() {
     });
   };
 
-  return { asyncKakoSignIn, isKakaoSignIn, kakaoUserInfo, kakaoLogout };
+  return {
+    asyncKakoSignIn: asyncKakaoSignIn,
+    isKakaoSignIn,
+    cachedKakaoUserInfo,
+    kakaoLogout,
+    kakaoAuthLogin,
+    fetchKakaoUserInfo,
+    asyncUpdateCachedKakaoUserInfo,
+  };
 }

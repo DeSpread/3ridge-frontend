@@ -380,6 +380,14 @@ export const CREATE_USER_BY_WALLET = gql(/* GraphQL */ `
   }
 `);
 
+export const CREATE_USER_BY_KAKAO = gql(/* GraphQL */ `
+  mutation CreateUserByKakao($kakaoInfo: KakaoInputType!) {
+    createUserByKakao(kakaoInfo: $kakaoInfo) {
+      name
+    }
+  }
+`);
+
 export const UPDATE_USER_WALLET_BY_NAME = gql(/* GraphQL */ `
   mutation UpdateUserWalletByName(
     $name: String!
@@ -599,6 +607,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
         contentEncodingType
         content
       }
+      shortDescription
       participants {
         _id
         name
@@ -662,6 +671,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
         contentEncodingType
         content
       }
+      shortDescription
       participants {
         _id
         name
@@ -1001,6 +1011,17 @@ export const UPDATE_TICKET_VISIBLE = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_TICKET_SHORT_DESCRIPTION = gql(/* GraphQL */ `
+  mutation UpdateTicketShortDescription(
+    $ticketId: String!
+    $shortDescription: String
+  ) {
+    updateTicketById(ticketId: $ticketId, shortDescription: $shortDescription) {
+      _id
+    }
+  }
+`);
+
 export const UPDATE_TICKET_IMAGE_URL = gql(/* GraphQL */ `
   mutation UpdateTicketImageUrl($ticketId: String!, $imageUrl: String) {
     updateTicketById(ticketId: $ticketId, imageUrl: $imageUrl) {
@@ -1280,6 +1301,7 @@ export const GET_All_TICKETS = gql(/* GraphQL */ `
         contentEncodingType
         content
       }
+      shortDescription
       participants {
         _id
         name

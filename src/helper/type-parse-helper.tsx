@@ -1,10 +1,9 @@
-import { QuestPolicyType } from "../__generated__/graphql";
+import { QuestPolicyType, RewardPolicyType } from "../__generated__/graphql";
 import {
   RewardContext,
   VerifyTwitterFollowQuestContext,
   VerifyQuizQuestContext,
   VerifyTwitterRetweetQuestContext,
-  REWARD_POLICY_TYPE,
   VerifyTwitterLikingQuestContext,
   VerifyDiscordQuestContext,
   Verify3ridgePointQuestContext,
@@ -29,9 +28,9 @@ class TypeParseHelper {
     if (!context) return undefined;
     try {
       if (
-        rewardPolicyType === REWARD_POLICY_TYPE.FCFS ||
-        rewardPolicyType === REWARD_POLICY_TYPE.LUCKY_DRAW ||
-        rewardPolicyType === REWARD_POLICY_TYPE.ALL
+        rewardPolicyType === RewardPolicyType.Fcfs ||
+        rewardPolicyType === RewardPolicyType.LuckyDraw ||
+        rewardPolicyType === RewardPolicyType.Always
       ) {
         const _context = context.trim();
         const contextJson = JSON.parse(_context);
