@@ -7,6 +7,7 @@ import { Ticket, TicketUserQuery } from "../../types";
 import ProjectUpdateForm from "../form/ticket-edit-controller/project-update-form";
 import { Project } from "../../__generated__/graphql";
 import EventVisibilityForm from "../form/ticket-edit-controller/event-visibility-form";
+import ShortDescriptionUpdateForm from "../form/ticket-edit-controller/short-description-update-form";
 
 const TicketEditControllerWidget = (
   props: PropsWithChildren & {
@@ -15,7 +16,7 @@ const TicketEditControllerWidget = (
     onProjectChanged?: (projectId: string) => void;
     onVisibilityChanged?: (visible: boolean) => void;
     onDownloadButtonClick?: (res: TicketUserQuery) => void;
-  }
+  },
 ) => {
   const theme = useTheme();
 
@@ -56,6 +57,7 @@ const TicketEditControllerWidget = (
               onVisibilityChanged?.(!checked);
             }}
           />
+          <ShortDescriptionUpdateForm ticketId={targetTicket?._id} />
         </Stack>
       </CardContent>
     </Card>

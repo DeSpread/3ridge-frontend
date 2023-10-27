@@ -8,12 +8,12 @@ body {
 }
 
 p {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 @media (max-width: 600px) {
@@ -44,7 +44,7 @@ p {
 }
 
 a {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   color: #f8810a;
   cursor: pointer;
   text-decoration: none;
@@ -57,107 +57,107 @@ a:hover {
 }
 
 h1 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 700;
   font-size: 4.1rem;
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 h2 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 700;
   font-size: 3rem;
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 h3 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 700;
   font-size: 2.25rem;
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 h4 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 700;
   font-size: 2rem;
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 h5 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 600;
   font-size: 1.5rem;
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 h6 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 600;
   font-size: 1.125rem;
   line-height: 1.375;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 body1 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 400;
   font-size: 1rem;
   line-height: 1.5;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 body2 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.57;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 subtitle1 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.75;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 subtitle2 {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 500;
   font-size: 0.875rem;
   line-height: 1.57;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 overline {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 600;
   font-size: 0.75rem;
   line-height: 2.5;
@@ -165,17 +165,17 @@ overline {
   text-transform: uppercase;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6;
+  color: #f3f4f6;
 }
 
 caption {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 1.66;
   word-break: keep-all;
   margin: 0;
-  color: #F3F4F6
+  color: #f3f4f6;
 }
 
 * {
@@ -190,20 +190,21 @@ caption {
     background: rgb(16, 14, 20);
     overflow: hidden scroll;
     overscroll-behavior-y: none;
-    --w3m-z-index: 1105
   }
 }
 
 @font-face {
-  font-family: 'LINESeedKR-Rg';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+  font-family: "LINESeedKR-Rg";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2")
+    format("woff2");
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'LINESeedKR-Bd';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
+  font-family: "LINESeedKR-Bd";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2")
+    format("woff2");
   font-weight: 700;
   font-style: normal;
 }
@@ -213,7 +214,7 @@ caption {
 }
 
 .container__editor {
-  font-family: 'LINESeedKR-Rg';
+  font-family: "LINESeedKR-Rg";
   font-size: 0.9rem;
   line-height: 1.5;
   border-width: 3px;

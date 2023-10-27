@@ -16,8 +16,11 @@ import {
 } from "../../../__generated__/graphql";
 import { Quest } from "../../../types";
 import SecondaryButton from "../../atomic/atoms/secondary-button";
+import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
+
 import {
   Verify3ridgePointEditForm,
+  VerifyAgreement,
   VerifyDiscordQuestEditForm,
   VerifyEmailEditForm,
   VerifyHasDiscordOrTelegramOrTwitter,
@@ -30,8 +33,7 @@ import {
   VerifyTwitterFollowEditForm,
   VerifyTwitterRetweetOrLinkingEditForm,
   VerifyVisitWebsiteEditForm,
-} from "../../form/quest/quest-edit-from";
-import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
+} from "@/components/form/quest/quest-edit-from";
 
 const TicketQuestUpsertEditDialog = (
   props: {
@@ -96,6 +98,8 @@ const TicketQuestUpsertEditDialog = (
         return "온체인 활동";
       case QuestPolicyType.VerifyScreenshot:
         return "스크릿샷";
+      case QuestPolicyType.VerifyAgreement:
+        return "동의하기";
     }
     return "";
   };
@@ -185,6 +189,9 @@ const TicketQuestUpsertEditDialog = (
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyScreenshot}>
                     {getPolicyLabel(QuestPolicyType.VerifyScreenshot)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.VerifyAgreement}>
+                    {getPolicyLabel(QuestPolicyType.VerifyAgreement)}
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -309,6 +316,12 @@ const TicketQuestUpsertEditDialog = (
               editedQuest={editedQuest}
               onChange={onChange}
             ></VerifyScreenShotForm>
+          )}
+          {questPolicyType === QuestPolicyType.VerifyAgreement && (
+            <VerifyAgreement
+              editedQuest={editedQuest}
+              onChange={onChange}
+            ></VerifyAgreement>
           )}
         </Box>
         <Stack

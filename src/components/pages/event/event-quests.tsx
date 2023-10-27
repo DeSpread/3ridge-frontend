@@ -9,15 +9,12 @@ import {
 import { useTheme } from "@mui/material/styles";
 import React, { PropsWithChildren } from "react";
 
-import { QuestPolicyType } from "../../../__generated__/graphql";
-import TypeHelper from "../../../helper/type-helper";
 import {
-  Quest,
-  REWARD_POLICY_TYPE,
-  Ticket,
-  User,
-  VerifyOnChainContext,
-} from "../../../types";
+  QuestPolicyType,
+  RewardPolicyType,
+} from "../../../__generated__/graphql";
+import TypeHelper from "../../../helper/type-helper";
+import { Quest, Ticket, User, VerifyOnChainContext } from "../../../types";
 import EditRemoveButton from "../../atomic/atoms/edit-remove-button";
 import VerifyCard from "../../atomic/molecules/verify-card";
 
@@ -75,7 +72,7 @@ const EventQuests = (
     if (
       ticketData?.participantCount !== undefined &&
       ticketData?.rewardPolicy?.context?.limitNumber !== undefined &&
-      ticketData?.rewardPolicy?.rewardPolicyType === REWARD_POLICY_TYPE.FCFS
+      ticketData?.rewardPolicy?.rewardPolicyType === RewardPolicyType.Fcfs
     ) {
       return (
         ticketData?.participantCount >=
@@ -115,7 +112,6 @@ const EventQuests = (
       >
         {ticketData?.quests?.map((quest, index) => {
           const autoVerified =
-            // quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTelegram ||
             quest.questPolicy?.questPolicy === QuestPolicyType.Quiz ||
             quest.questPolicy?.questPolicy === QuestPolicyType.VerifySurvey ||
             quest.questPolicy?.questPolicy ===

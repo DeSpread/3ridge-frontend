@@ -4,7 +4,7 @@ import "prismjs/themes/prism-tomorrow.css";
 
 import { ApolloProvider } from "@apollo/client";
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
-import { ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, useTheme } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -16,7 +16,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import { PetraWallet } from "petra-plugin-wallet-adapter";
-import React, { ReactElement, ReactNode, useEffect } from "react";
+import React, { ReactElement, ReactNode, useEffect, useMemo } from "react";
 import { combineProviders } from "react-combine-providers";
 import { isMobile } from "react-device-detect";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -35,6 +35,7 @@ import { SnackbarProvider } from "../provider/snackbar/snackbar-provider";
 import { createTheme } from "../theme";
 
 import { client as apolloClient } from "@/lib/apollo/client";
+import { Z_INDEX_OFFSET } from "@/types";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
@@ -67,6 +68,7 @@ const App = (props: AppPropsWithLayout) => {
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
   const wallets = [new PetraWallet()];
   const router = useRouter();
+  const theme = useMemo(createTheme, []);
 
   function kakaoInit() {
     // 페이지가 로드되면 실행
@@ -116,7 +118,7 @@ const App = (props: AppPropsWithLayout) => {
         src="https://developers.kakao.com/sdk/js/kakao.js"
         onLoad={kakaoInit}
       ></Script>
-      <ThemeProvider theme={createTheme()}>
+      <ThemeProvider theme={theme}>
         <GoogleOAuthProvider clientId={clientId ?? ""}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <RecoilRoot>
@@ -140,6 +142,11 @@ const App = (props: AppPropsWithLayout) => {
                   </QueryClientProvider>
                 </WagmiConfig>
                 <Web3Modal
+                  themeVariables={{
+                    "--w3m-z-index": String(
+                      theme.zIndex.modal + Z_INDEX_OFFSET.DIALOG,
+                    ),
+                  }}
                   projectId={projectId}
                   ethereumClient={ethereumClient}
                 />

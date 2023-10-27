@@ -5,6 +5,7 @@ import DateUtil from "../../../util/date-util";
 import { Ticket } from "../../../types";
 import StyledChip from "../../atomic/atoms/styled/styled-chip";
 import { format } from "date-fns";
+import { RewardPolicyType } from "@/__generated__/graphql";
 
 const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {
   const theme = useTheme();
@@ -70,43 +71,44 @@ const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {
           ></StyledChip>
         </Grid>
       )}
-      {ticketData?.beginTime && (
-        <Grid item sx={{ marginLeft: 1 }}>
-          {smUp ? (
-            <StyledChip
-              label={`${format(
-                DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
-                "yyyy/MM/dd"
-              )} ~ ${format(
-                DateUtil.parseStrToDate(ticketData?.untilTime ?? ""),
-                "yyyy/MM/dd"
-              )} (UTC+09:00)`}
-            ></StyledChip>
-          ) : (
-            <StyledChip
-              sx={{ paddingTop: 4, paddingBottom: 4 }}
-              label={
-                <Stack sx={{}}>
-                  <Typography variant={"body2"}>
-                    {`${format(
-                      DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
-                      "yyyy/MM/dd"
-                    )}
+      {ticketData?.rewardPolicy?.rewardPolicyType !== RewardPolicyType.Always &&
+        ticketData?.beginTime && (
+          <Grid item sx={{ marginLeft: 1 }}>
+            {smUp ? (
+              <StyledChip
+                label={`${format(
+                  DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
+                  "yyyy/MM/dd",
+                )} ~ ${format(
+                  DateUtil.parseStrToDate(ticketData?.untilTime ?? ""),
+                  "yyyy/MM/dd",
+                )} (UTC+09:00)`}
+              ></StyledChip>
+            ) : (
+              <StyledChip
+                sx={{ paddingTop: 4, paddingBottom: 4 }}
+                label={
+                  <Stack sx={{}}>
+                    <Typography variant={"body2"}>
+                      {`${format(
+                        DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
+                        "yyyy/MM/dd",
+                      )}
                   ~`}
-                  </Typography>
-                  <Typography variant={"body2"}>
-                    {`${format(
-                      DateUtil.parseStrToDate(ticketData?.untilTime ?? ""),
-                      "yyyy/MM/dd"
-                    )} (UTC+09:00)
+                    </Typography>
+                    <Typography variant={"body2"}>
+                      {`${format(
+                        DateUtil.parseStrToDate(ticketData?.untilTime ?? ""),
+                        "yyyy/MM/dd",
+                      )} (UTC+09:00)
                   `}
-                  </Typography>
-                </Stack>
-              }
-            ></StyledChip>
-          )}
-        </Grid>
-      )}
+                    </Typography>
+                  </Stack>
+                }
+              ></StyledChip>
+            )}
+          </Grid>
+        )}
     </Grid>
   ) : (
     <Stack
@@ -114,20 +116,22 @@ const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {
       justifyContent={"center"}
       sx={{ background: "" }}
     >
-      {ticketData?.beginTime && ticketData?.untilTime && (
-        <>
-          <Typography>{`${format(
-            DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
-            "yyyy/MM/dd"
-          )}`}</Typography>
-          <Typography>
-            {`~ ${format(
-              DateUtil.parseStrToDate(ticketData?.untilTime ?? ""),
-              "yyyy/MM/dd"
-            )} (UTC+09:00)`}
-          </Typography>
-        </>
-      )}
+      {ticketData?.rewardPolicy?.rewardPolicyType !== RewardPolicyType.Always &&
+        ticketData?.beginTime &&
+        ticketData?.untilTime && (
+          <>
+            <Typography>{`${format(
+              DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
+              "yyyy/MM/dd",
+            )}`}</Typography>
+            <Typography>
+              {`~ ${format(
+                DateUtil.parseStrToDate(ticketData?.untilTime ?? ""),
+                "yyyy/MM/dd",
+              )} (UTC+09:00)`}
+            </Typography>
+          </>
+        )}
       {ticketData?.beginTime && !isEventStarted() && (
         <Box sx={{ marginTop: 2 }}>
           <StyledChip
