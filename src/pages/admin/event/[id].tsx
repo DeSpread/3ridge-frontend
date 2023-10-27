@@ -342,14 +342,19 @@ const Event = () => {
                       showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
                     }}
                   ></_EventTitle>
-                  <_EventDateRange
-                    ticketData={ticketData}
-                    onClickForEdit={async (e) => {
-                      showDateEditDialog(
-                        EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
-                      );
-                    }}
-                  ></_EventDateRange>
+                  {ticketData?.rewardPolicy?.rewardPolicyType ===
+                  RewardPolicyType.Always ? (
+                    <EventDateRange ticketData={ticketData} />
+                  ) : (
+                    <_EventDateRange
+                      ticketData={ticketData}
+                      onClickForEdit={async (e) => {
+                        showDateEditDialog(
+                          EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
+                        );
+                      }}
+                    ></_EventDateRange>
+                  )}
                 </Stack>
               </Grid>
             </Grid>
@@ -680,6 +685,12 @@ const Event = () => {
           const newRewardPolicy =
             TypeHelper.convertToServerRewardPolicy(rewardPolicy);
           await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+          if (newRewardPolicy.rewardPolicyType === RewardPolicyType.Always) {
+            await asyncUpdateTicketDateRangeTime(
+              DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
+              new Date(2099, 12, 31),
+            );
+          }
           await asyncRefreshAll();
           setOpenTicketRewardPolicyEditDialog(false);
           closeLoading();
