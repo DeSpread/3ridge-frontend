@@ -26,9 +26,11 @@ import {
   QuestPolicyType,
 } from "../../../__generated__/graphql";
 import {
+  AgreementContent,
   Quest,
   QuizContent,
   Verify3ridgePointQuestContext,
+  VerifyAgreementQuestContext,
   VerifyDiscordQuestContext,
   VerifyHasWalletAddressQuestContext,
   VerifyOnChainContext,
@@ -1563,6 +1565,471 @@ const VerifyHasDiscordOrTelegramOrTwitter = (props: {
   );
 };
 
+const VerifyAgreement = (props: {
+  editedQuest?: Quest;
+  onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
+}) => {
+  const { editedQuest, onChange } = props;
+
+  const [message, setMessage] = useState<string>("");
+  const [titles, setTitles] = useState([""]);
+  const [optionsSet, setOptionsSet] = useState<[string[]]>([[""]]);
+  const [answers, setAnswers] = useState([1]);
+  const theme = useTheme();
+
+  useEffect(() => {
+    if (editedQuest) {
+      setMessage(
+        editedQuest.title_v2?.content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace("&nbsp", " ")
+          .trim() ?? "",
+      );
+
+      const context = editedQuest.questPolicy
+        ?.context as VerifyAgreementQuestContext;
+
+      const agreementContents: AgreementContent[] = context.agreementList ?? [];
+
+      const _titles = [];
+      const _optionsSet: [string[]] = [[]];
+      const _answers = [];
+      for (let i = 0; i < agreementContents.length; i++) {
+        const content = agreementContents[i];
+        const { title, options, correctOptionIndex } = content;
+        _titles.push(title.content);
+        _optionsSet[i] = options;
+        _answers.push(correctOptionIndex + 1);
+      }
+
+      setTitles(_titles);
+      setOptionsSet(_optionsSet);
+      setAnswers(_answers);
+    }
+  }, [editedQuest]);
+
+  const updateData = (
+    _message: string,
+    _titles: string[],
+    _optionsSet: [string[]],
+    _answers: number[],
+  ) => {
+    const context: VerifyAgreementQuestContext = { agreementList: [] };
+    for (let i = 0; i < _titles.length; i++) {
+      const title = _titles[i];
+      const options = _optionsSet[i];
+      const correctOptionIndex = _answers[i] - 1;
+      context.agreementList?.push({
+        title: {
+          contentFormatType: ContentFormatType.Text,
+          contentEncodingType: ContentEncodingType.None,
+          content: title,
+        },
+        options: [...options],
+        correctOptionIndex,
+      });
+    }
+
+    const _newQuestPolicy = {
+      context: JSON.stringify(context),
+      questPolicy: QuestPolicyType.VerifyAgreement,
+    };
+
+    const content = _message ?? "";
+
+    const _newContentMetaData = {
+      content,
+      contentEncodingType: ContentEncodingType.None,
+      contentFormatType: ContentFormatType.Text,
+    };
+
+    onChange?.(_newQuestPolicy, _newContentMetaData);
+  };
+
+  return (
+    <Stack spacing={1}>
+      <Stack
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"flex-end"}
+        sx={{ width: "100%", background: "" }}
+      >
+        <InputWithLabel
+          label={"메세지"}
+          labelWidth={"30%"}
+          value={message}
+          onChange={(e) => {
+            const { value } = e.target;
+            setMessage(value);
+            updateData(value, titles, optionsSet, answers);
+          }}
+        ></InputWithLabel>
+        <IconButton
+          className={"MuiIconButton"}
+          sx={{
+            visibility: "hidden",
+            width: 28,
+            height: 28,
+            borderRadius: 16,
+            borderWidth: 2,
+            borderStyle: "solid",
+            marginLeft: 3,
+          }}
+        >
+          <RemoveIcon
+            fontSize={"medium"}
+            sx={{
+              borderRadius: 30,
+              "&:hover": {
+                borderColor: theme.palette.secondary.main,
+                background: "#61E1FF55",
+              },
+            }}
+          ></RemoveIcon>
+        </IconButton>
+      </Stack>
+      <Box sx={{ paddingTop: 2, paddingBottom: 2 }}>
+        <Divider></Divider>
+      </Box>
+      {titles.map((title, i) => {
+        return (
+          <Stack key={i} spacing={1}>
+            {i !== 0 && (
+              <Stack
+                sx={{
+                  paddingTop: 2,
+                  paddingBottom: 2,
+                  width: "100%",
+                  background: "",
+                }}
+              >
+                <Divider></Divider>
+                <Box sx={{ marginTop: 3 }}>
+                  <IconButton
+                    className={"MuiIconButton"}
+                    sx={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: 16,
+                      borderWidth: 2,
+                      borderStyle: "solid",
+                    }}
+                    onClick={(e) => {
+                      setOptionsSet((prevState) => {
+                        const src: [string[]] = JSON.parse(
+                          JSON.stringify(prevState),
+                        );
+                        src.splice(i, 1);
+                        // prevState.splice(i, 1);
+                        return [...src];
+                      });
+                      setTitles((prevState) => {
+                        const src = [...prevState];
+                        src.splice(i, 1);
+                        // prevState.splice(i, 1);
+                        return [...src];
+                      });
+
+                      const _titles = [...titles];
+                      _titles.splice(i, 1);
+                      const _optionsSet: [string[]] = JSON.parse(
+                        JSON.stringify(optionsSet),
+                      );
+                      _optionsSet.splice(i, 1);
+                      updateData(message, _titles, _optionsSet, answers);
+                    }}
+                  >
+                    <RemoveIcon
+                      fontSize={"medium"}
+                      sx={{
+                        borderRadius: 30,
+                        "&:hover": {
+                          borderColor: theme.palette.secondary.main,
+                          background: "#61E1FF55",
+                        },
+                      }}
+                    ></RemoveIcon>
+                  </IconButton>
+                </Box>
+              </Stack>
+            )}
+            <Stack
+              key={`${i}`}
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"flex-end"}
+              sx={{ width: "100%", background: "" }}
+            >
+              <InputWithLabel
+                key={`${i}`}
+                label={`질문 ${i + 1} 번째`}
+                labelWidth={"30%"}
+                value={title}
+                onChange={(e) => {
+                  const { value } = e.target;
+                  setTitles((prevState) => {
+                    const src = [...prevState];
+                    src[i] = value;
+                    return [...src];
+                  });
+                  const _titles = [...titles];
+                  _titles[i] = value;
+                  updateData(message, _titles, optionsSet, answers);
+                }}
+                multiline={true}
+              ></InputWithLabel>
+              <IconButton
+                className={"MuiIconButton"}
+                sx={{
+                  visibility: "hidden",
+                  width: 28,
+                  height: 28,
+                  borderRadius: 16,
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                  marginLeft: 3,
+                }}
+              >
+                <RemoveIcon
+                  fontSize={"medium"}
+                  sx={{
+                    borderRadius: 30,
+                    "&:hover": {
+                      borderColor: theme.palette.secondary.main,
+                      background: "#61E1FF55",
+                    },
+                  }}
+                ></RemoveIcon>
+              </IconButton>
+            </Stack>
+            <Stack sx={{ width: "100%" }} spacing={1}>
+              {optionsSet[i].map((option, i2) => {
+                return (
+                  <Stack
+                    key={`${i}-${i2}`}
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"flex-end"}
+                    sx={{ width: "100%", background: "" }}
+                  >
+                    <InputWithLabel
+                      key={`${i}-${i2}`}
+                      label={`${i2 + 1}번`}
+                      labelWidth={"30%"}
+                      value={option}
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        setOptionsSet((prevState) => {
+                          prevState[i][i2] = value;
+                          return [...prevState];
+                        });
+
+                        const _optionsSet: [string[]] = JSON.parse(
+                          JSON.stringify(optionsSet),
+                        );
+                        _optionsSet[i][i2] = value;
+
+                        updateData(message, titles, _optionsSet, answers);
+                      }}
+                    ></InputWithLabel>
+                    {i2 !== 0 && (
+                      <IconButton
+                        className={"MuiIconButton"}
+                        sx={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: 16,
+                          borderWidth: 2,
+                          borderStyle: "solid",
+                          marginLeft: 3,
+                        }}
+                        onClick={(e) => {
+                          setOptionsSet((prevState) => {
+                            const src: [string[]] = JSON.parse(
+                              JSON.stringify(prevState),
+                            );
+                            src[i].splice(i2, 1);
+                            return [...src];
+                          });
+
+                          const _optionsSet: [string[]] = JSON.parse(
+                            JSON.stringify(optionsSet),
+                          );
+                          _optionsSet[i].splice(i2, 1);
+                          updateData(message, titles, _optionsSet, answers);
+                        }}
+                      >
+                        <RemoveIcon
+                          fontSize={"medium"}
+                          sx={{
+                            borderRadius: 30,
+                            "&:hover": {
+                              borderColor: theme.palette.secondary.main,
+                              background: "#61E1FF55",
+                            },
+                          }}
+                        ></RemoveIcon>
+                      </IconButton>
+                    )}
+                    {i2 === 0 && (
+                      <IconButton
+                        className={"MuiIconButton"}
+                        sx={{
+                          visibility: "hidden",
+                          width: 28,
+                          height: 28,
+                          borderRadius: 16,
+                          borderWidth: 2,
+                          borderStyle: "solid",
+                          marginLeft: 3,
+                        }}
+                      >
+                        <RemoveIcon
+                          fontSize={"medium"}
+                          sx={{
+                            borderRadius: 30,
+                            "&:hover": {
+                              borderColor: theme.palette.secondary.main,
+                              background: "#61E1FF55",
+                            },
+                          }}
+                        ></RemoveIcon>
+                      </IconButton>
+                    )}
+                  </Stack>
+                );
+              })}
+              <Stack
+                alignItems={"center"}
+                justifyContent={"center"}
+                sx={{ width: "100%", paddingTop: 2 }}
+              >
+                <IconButton
+                  className={"MuiIconButton"}
+                  sx={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 16,
+                    borderWidth: 2,
+                    borderStyle: "solid",
+                  }}
+                  onClick={(e) => {
+                    setOptionsSet((prevState) => {
+                      const src: [string[]] = JSON.parse(
+                        JSON.stringify(prevState),
+                      );
+                      src[i].push("");
+                      return [...src];
+                    });
+                    const _optionsSet: [string[]] = JSON.parse(
+                      JSON.stringify(optionsSet),
+                    );
+                    _optionsSet[i].push("");
+                    updateData(message, titles, _optionsSet, answers);
+                  }}
+                >
+                  <AddIcon
+                    fontSize={"medium"}
+                    sx={{
+                      borderRadius: 30,
+                      "&:hover": {
+                        borderColor: theme.palette.secondary.main,
+                        background: "#61E1FF55",
+                      },
+                    }}
+                  ></AddIcon>
+                </IconButton>
+
+                <Stack
+                  sx={{ width: "100%", paddingTop: 2 }}
+                  direction={"row"}
+                  alignItems={"center"}
+                  spacing={1}
+                >
+                  <Box sx={{ width: "23%" }}>
+                    <Typography>정답</Typography>
+                  </Box>
+                  <NumberInput
+                    sx={{ width: 180 }}
+                    value={answers[i]}
+                    onChange={(e) => {
+                      const value = MathUtil.clamp(
+                        parseInt(e.target.value),
+                        1,
+                        optionsSet[i].length,
+                      );
+                      setAnswers((prevState) => {
+                        const src = [...prevState];
+                        src[i] = value;
+                        return [...src];
+                      });
+
+                      const _answers = [...answers];
+                      _answers[i] = value;
+
+                      updateData(message, titles, optionsSet, _answers);
+                    }}
+                  ></NumberInput>
+                </Stack>
+              </Stack>
+            </Stack>
+          </Stack>
+        );
+      })}
+      <Divider sx={{ paddingTop: 0, paddingBottom: 2 }}></Divider>
+      <Stack
+        alignItems={"center"}
+        justifyContent={"center"}
+        sx={{ width: "100%", paddingTop: 2 }}
+      >
+        <IconButton
+          className={"MuiIconButton"}
+          sx={{
+            width: 28,
+            height: 28,
+            borderRadius: 16,
+            borderWidth: 2,
+            borderStyle: "solid",
+          }}
+          onClick={(e) => {
+            setTitles((prevState) => {
+              const src = [...prevState, ""];
+              return [...src];
+            });
+            setOptionsSet((prevState) => {
+              const src: [string[]] = JSON.parse(JSON.stringify(prevState));
+              src.push([""]);
+              return [...src];
+            });
+            setAnswers((prevState) => {
+              const src = [...prevState, 1];
+              return [...src];
+            });
+            const _titles = [...titles, ""];
+            const _optionsSet: [string[]] = JSON.parse(
+              JSON.stringify(optionsSet),
+            );
+            _optionsSet.push([""]);
+            const _answers = [...answers, 1];
+            updateData(message, _titles, _optionsSet, _answers);
+          }}
+        >
+          <AddIcon
+            fontSize={"medium"}
+            sx={{
+              borderRadius: 30,
+              "&:hover": {
+                borderColor: theme.palette.secondary.main,
+                background: "#61E1FF55",
+              },
+            }}
+          ></AddIcon>
+        </IconButton>
+      </Stack>
+    </Stack>
+  );
+};
+
 const VerifyQuiz = (props: {
   editedQuest?: Quest;
   onChange?: (questPolicy?: QuestPolicy, title_v2?: ContentMetadata) => void;
@@ -2038,4 +2505,5 @@ export {
   VerifyQuiz,
   VerifyOnChainEditForm,
   VerifyScreenShotForm,
+  VerifyAgreement,
 };
