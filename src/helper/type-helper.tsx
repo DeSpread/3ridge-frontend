@@ -145,6 +145,7 @@ class TypeHelper {
       title: ticket.title ?? undefined,
       description: ticket.description ?? undefined,
       description_v2: ticket.description_v2 ?? undefined,
+      shortDescription: ticket.shortDescription ?? undefined,
       completed: ticket.completed ?? undefined,
       participants: ticket.participants?.map((_e) => {
         return {
