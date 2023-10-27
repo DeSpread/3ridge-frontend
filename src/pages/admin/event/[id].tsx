@@ -27,7 +27,11 @@ import EventRewardName from "../../../components/pages/event/reward/description/
 import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-chain-content-edit-dialog";
 
 import Draggable from "react-draggable";
-import { ContentMetadata, QuestPolicy } from "../../../__generated__/graphql";
+import {
+  ContentMetadata,
+  QuestPolicy,
+  RewardPolicyType,
+} from "../../../__generated__/graphql";
 import InputButton from "../../../components/atomic/molecules/input-button";
 import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
 import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
@@ -338,14 +342,19 @@ const Event = () => {
                       showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
                     }}
                   ></_EventTitle>
-                  <_EventDateRange
-                    ticketData={ticketData}
-                    onClickForEdit={async (e) => {
-                      showDateEditDialog(
-                        EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
-                      );
-                    }}
-                  ></_EventDateRange>
+                  {ticketData?.rewardPolicy?.rewardPolicyType ===
+                  RewardPolicyType.Always ? (
+                    <EventDateRange ticketData={ticketData} />
+                  ) : (
+                    <_EventDateRange
+                      ticketData={ticketData}
+                      onClickForEdit={async (e) => {
+                        showDateEditDialog(
+                          EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
+                        );
+                      }}
+                    ></_EventDateRange>
+                  )}
                 </Stack>
               </Grid>
             </Grid>
@@ -664,6 +673,12 @@ const Event = () => {
           const newRewardPolicy =
             TypeHelper.convertToServerRewardPolicy(rewardPolicy);
           await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+          if (newRewardPolicy.rewardPolicyType === RewardPolicyType.Always) {
+            await asyncUpdateTicketDateRangeTime(
+              DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
+              new Date(2099, 12, 31),
+            );
+          }
           await asyncRefreshAll();
           setOpenTicketRewardPolicyEditDialog(false);
           closeLoading();

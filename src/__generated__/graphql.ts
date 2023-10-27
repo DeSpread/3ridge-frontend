@@ -784,7 +784,7 @@ export type RewardPolicyInputType = {
 };
 
 export enum RewardPolicyType {
-  All = 'ALL',
+  Always = 'ALWAYS',
   Fcfs = 'FCFS',
   LuckyDraw = 'LUCKY_DRAW'
 }

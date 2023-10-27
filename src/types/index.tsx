@@ -89,12 +89,6 @@ export const Z_INDEX_OFFSET = {
   LOADING_BACKDROP: 3,
 };
 
-export const REWARD_POLICY_TYPE = {
-  FCFS: "FCFS",
-  LUCKY_DRAW: "LUCKY_DRAW",
-  ALL: "ALL",
-};
-
 export type WalletAddressInfo = {
   address: string;
   network: SupportedNetwork;

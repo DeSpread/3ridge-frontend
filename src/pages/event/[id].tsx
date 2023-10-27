@@ -20,6 +20,7 @@ import {
   ChainType,
   ContentMetadata,
   QuestPolicyType,
+  RewardPolicyType,
 } from "../../__generated__/graphql";
 import ClickTypography from "../../components/atomic/atoms/click-typhography";
 import LinkTypography from "../../components/atomic/atoms/link-typography";
@@ -61,7 +62,6 @@ import { useLogin } from "../../provider/login/login-provider";
 import {
   MouseEventWithParam,
   Quest,
-  REWARD_POLICY_TYPE,
   VerifyAgreementQuestContext,
   VerifyDiscordQuestContext,
   VerifyHasWalletAddressQuestContext,
@@ -402,7 +402,7 @@ const Event = (props: AppProps) => {
     if (
       ticketData?.participantCount !== undefined &&
       ticketData?.rewardPolicy?.context?.limitNumber !== undefined &&
-      ticketData?.rewardPolicy?.rewardPolicyType === REWARD_POLICY_TYPE.FCFS
+      ticketData?.rewardPolicy?.rewardPolicyType === RewardPolicyType.Fcfs
     ) {
       return (
         ticketData?.participantCount >=

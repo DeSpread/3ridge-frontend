@@ -15,11 +15,11 @@ const TicketRewardPolicyEditDialog = (
   props: {
     onConfirmBtnClicked?: (rewardPolicyType?: RewardPolicyType) => void;
     defaultQuestPolicyType?: RewardPolicyType;
-  } & SimpleDialogProps
+  } & SimpleDialogProps,
 ) => {
   const { defaultQuestPolicyType, ...rest } = props;
   const [rewardPolicyType, setRewardPolicyType] = useState<RewardPolicyType>(
-    RewardPolicyType.Fcfs
+    RewardPolicyType.Fcfs,
   );
 
   useEffect(() => {
@@ -46,6 +46,7 @@ const TicketRewardPolicyEditDialog = (
             >
               <MenuItem value={RewardPolicyType.Fcfs}>선착순</MenuItem>
               <MenuItem value={RewardPolicyType.LuckyDraw}>추첨</MenuItem>
+              <MenuItem value={RewardPolicyType.Always}>상시</MenuItem>
             </Select>
           </FormControl>
         </Box>
