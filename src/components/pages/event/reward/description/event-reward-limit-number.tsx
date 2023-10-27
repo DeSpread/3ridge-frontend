@@ -2,9 +2,10 @@ import { Ticket } from "../../../../../types";
 import { PropsWithChildren } from "react";
 import { Stack, Typography } from "@mui/material";
 import StringHelper from "../../../../../helper/string-helper";
+import { RewardPolicyType } from "@/__generated__/graphql";
 
 const EventRewardLimitNumber = (
-  props: { ticketData?: Ticket } & PropsWithChildren
+  props: { ticketData?: Ticket } & PropsWithChildren,
 ) => {
   const { ticketData } = props;
 
@@ -18,9 +19,12 @@ const EventRewardLimitNumber = (
       <Typography variant={"body1"}>대상자 수</Typography>
       <Stack direction={"row"} alignItems={"center"}>
         <Typography variant={"body1"}>
-          {StringHelper.getRewardAmountLabel(
-            ticketData?.rewardPolicy?.context?.limitNumber
-          )}
+          {ticketData?.rewardPolicy?.rewardPolicyType ===
+          RewardPolicyType.Always
+            ? "-"
+            : StringHelper.getRewardAmountLabel(
+                ticketData?.rewardPolicy?.context?.limitNumber,
+              )}
         </Typography>
       </Stack>
     </Stack>

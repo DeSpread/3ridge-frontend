@@ -670,15 +670,21 @@ const Event = () => {
           showLoading();
           const rewardPolicy = { ...ticketData?.rewardPolicy };
           rewardPolicy.rewardPolicyType = _rewardPolicyType;
-          const newRewardPolicy =
-            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
-          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
-          if (newRewardPolicy.rewardPolicyType === RewardPolicyType.Always) {
+
+          if (rewardPolicy.rewardPolicyType === RewardPolicyType.Always) {
+            if (rewardPolicy.context?.limitNumber !== undefined) {
+              rewardPolicy.context.limitNumber = 4294967296;
+            }
+
             await asyncUpdateTicketDateRangeTime(
               DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
               new Date(2099, 12, 31),
             );
           }
+
+          const newRewardPolicy =
+            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
           await asyncRefreshAll();
           setOpenTicketRewardPolicyEditDialog(false);
           closeLoading();
