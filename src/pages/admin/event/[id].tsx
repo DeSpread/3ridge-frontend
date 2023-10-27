@@ -342,19 +342,14 @@ const Event = () => {
                       showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
                     }}
                   ></_EventTitle>
-                  {ticketData?.rewardPolicy?.rewardPolicyType ===
-                  RewardPolicyType.Always ? (
-                    <EventDateRange ticketData={ticketData} />
-                  ) : (
-                    <_EventDateRange
-                      ticketData={ticketData}
-                      onClickForEdit={async (e) => {
-                        showDateEditDialog(
-                          EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
-                        );
-                      }}
-                    ></_EventDateRange>
-                  )}
+                  <_EventDateRange
+                    ticketData={ticketData}
+                    onClickForEdit={async (e) => {
+                      showDateEditDialog(
+                        EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
+                      );
+                    }}
+                  ></_EventDateRange>
                 </Stack>
               </Grid>
             </Grid>
