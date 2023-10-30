@@ -11,6 +11,7 @@ import MarketingAgreementForm from "@/components/form/signup/marketing-agreement
 import StringHelper from "@/helper/string-helper";
 import { useAlert } from "@/provider/alert/alert-provider";
 import { delay } from "@/util/timer";
+import { Z_INDEX_OFFSET } from "@/types";
 
 const MigrationDialog = ({
   onMigrationClick,
@@ -34,7 +35,7 @@ const MigrationDialog = ({
 
   return (
     <>
-      <SimpleDialog {...rest} maxWidth={"sm"} sx={{}}>
+      <SimpleDialog {...rest} maxWidth={"sm"}>
         <Stack sx={{ marginTop: 1 }} alignItems={"center"}>
           {address && (
             <>
