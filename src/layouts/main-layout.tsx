@@ -261,7 +261,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           // setSignInWithNetworkSelectVisible(true);
                         }}
                       >
-                        지갑 연결
+                        로그인
                       </SecondaryButton>
                     </Stack>
                   )}
