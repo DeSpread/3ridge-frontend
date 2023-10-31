@@ -56,7 +56,7 @@ const RecommendProjectSwiperSection = (props: {
               paddingLeft: 1,
             }}
           >
-            추천 프로젝트
+            프로젝트
           </Typography>
         </Box>
         <Box>
