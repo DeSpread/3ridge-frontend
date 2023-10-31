@@ -259,7 +259,7 @@ const Event = () => {
     const includeQuestion =
       ticketData?.rewardPolicy?.context?.nftImageUrl?.includes("?");
     const base64Data = await FileUtil.asyncReadAsBase64Data(file);
-    await asyncUploadImage(`reward/${file.name}`, base64Data);
+    await asyncUploadImage(`reward/${file.name}`, base64Data, file.type);
     let nftImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/reward/${file.name}`;
     if (!includeQuestion) {
       nftImageUrl += "?";
@@ -280,8 +280,12 @@ const Event = () => {
     const includeQuestion = ticketData?.imageUrl?.includes("?");
     const base64Data = await FileUtil.asyncReadAsBase64Data(file);
     const ext = FileUtil.getFileExtension(file);
-    await asyncUploadImage(`event/cover/${ticketData?._id}.${ext}`, base64Data);
-    let ticketImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/event/cover/${ticketData?._id}.${ext}`;
+    await asyncUploadImage(
+      `event/cover/${ticketData?._id}`,
+      base64Data,
+      file.type,
+    );
+    let ticketImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/event/cover/${ticketData?._id}`;
     if (!includeQuestion) {
       ticketImageUrl += "?";
     }
