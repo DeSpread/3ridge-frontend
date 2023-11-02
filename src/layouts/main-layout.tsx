@@ -48,6 +48,7 @@ import AccountCreateAlertDialog from "@/layouts/dialog/sign/account-create-alert
 import MigrationAlertDialog from "@/layouts/dialog/sign/migration-alert-dialog";
 import MigrationDialog from "@/layouts/dialog/sign/migration-dialog";
 import SignInDialog from "@/layouts/dialog/sign/sign-in-dialog";
+import { useConfirm } from "@/provider/confirm/confirm-provider";
 import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
 
 type MainLayoutProps = PropsWithChildren & {
@@ -113,7 +114,8 @@ const MainLayout = (props: MainLayoutProps) => {
   const [isMigrationTry, setIsMigrationTry] = useState(false);
   const { isMobile } = useMobile();
 
-  const { showErrorAlert, showAlert } = useAlert();
+  const { showErrorAlert } = useAlert();
+  const { openConfirm } = useConfirm();
   const { showWalletAlert } = useWalletAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
@@ -507,13 +509,32 @@ const MainLayout = (props: MainLayoutProps) => {
         onMigrationClick={async (e, isAgreeMarketingTerm) => {
           showLoading();
           await asyncUpdateKakao();
-          await asyncUpdateAppAgreement({
-            appAgreement: {
-              marketingPermission: isAgreeMarketingTerm,
-            },
-          });
+
           setOpenMigrationDialog(false);
           closeLoading();
+
+          if (!isAgreeMarketingTerm) {
+            openConfirm({
+              title: "마케팅 정보 수신",
+              contents:
+                "마케팅 정보 수신에 동의하지 않으실 경우,\n포인트를 제외한 모든 경품을 획득하실 수 없어요\n이대로 진행하시겠어요?",
+              cancelLabel: "진행할게요 🥲 ",
+              okLabel: "동의할게요",
+              onClickOk() {
+                asyncUpdateAppAgreement({
+                  appAgreement: {
+                    marketingPermission: true,
+                  },
+                });
+              },
+            });
+          } else {
+            await asyncUpdateAppAgreement({
+              appAgreement: {
+                marketingPermission: isAgreeMarketingTerm,
+              },
+            });
+          }
         }}
       ></MigrationDialog>
       <AccountCreateAlertDialog
@@ -523,14 +544,34 @@ const MainLayout = (props: MainLayoutProps) => {
           try {
             showLoading();
             const kakaoInfo = await asyncCreateUserByKakaoInfo();
-            await asyncUpdateAppAgreement({
-              name: kakaoInfo?.name || undefined,
-              appAgreement: {
-                marketingPermission: isAgreeMarketingTerm,
-              },
-            });
+
             setOpenAccountCreateAlertDialog(false);
             closeLoading();
+
+            if (!isAgreeMarketingTerm) {
+              openConfirm({
+                title: "마케팅 정보 수신",
+                contents:
+                  "마케팅 정보 수신에 동의하지 않으실 경우,\n포인트를 제외한 모든 경품을 획득하실 수 없어요\n이대로 진행하시겠어요?",
+                cancelLabel: "진행할게요 🥲 ",
+                okLabel: "동의할게요",
+                onClickOk() {
+                  asyncUpdateAppAgreement({
+                    name: kakaoInfo?.name || undefined,
+                    appAgreement: {
+                      marketingPermission: true,
+                    },
+                  });
+                },
+              });
+            } else {
+              await asyncUpdateAppAgreement({
+                name: kakaoInfo?.name || undefined,
+                appAgreement: {
+                  marketingPermission: isAgreeMarketingTerm,
+                },
+              });
+            }
           } catch (e) {
             showErrorAlert({ content: getLocaleErrorMessage(e) });
           }
