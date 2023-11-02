@@ -55,10 +55,10 @@ const MigrationDialog = ({
               <Stack spacing={2} sx={{ marginTop: 3 }} alignItems={"center"}>
                 <PrimaryButton
                   onClick={(e) => {
-                    if (!(checkedList[0] && checkedList[1])) {
+                    if (!checkedList[0]) {
                       showAlert({
                         title: "알림",
-                        content: "마케팅 수신에 모두 동의 부탁드립니다",
+                        content: "(필수) 개인정보 수집·이용 동의가 필요해요",
                       });
                       return;
                     }
