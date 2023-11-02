@@ -94,6 +94,7 @@ const MainLayout = (props: MainLayoutProps) => {
     userData,
     asyncKakaoLogin,
     asyncUpdateKakao,
+    asyncUpdateAppAgreement,
     asyncCreateUserByKakaoInfo,
   } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
@@ -503,9 +504,14 @@ const MainLayout = (props: MainLayoutProps) => {
           await asyncLogoutBtnOnClick();
           setOpenMigrationDialog(false);
         }}
-        onMigrationClick={async (e) => {
+        onMigrationClick={async (e, isAgreeMarketingTerm) => {
           showLoading();
           await asyncUpdateKakao();
+          await asyncUpdateAppAgreement({
+            appAgreement: {
+              marketingPermission: isAgreeMarketingTerm,
+            },
+          });
           setOpenMigrationDialog(false);
           closeLoading();
         }}
@@ -513,10 +519,16 @@ const MainLayout = (props: MainLayoutProps) => {
       <AccountCreateAlertDialog
         open={openAccountCreateAlertDialog}
         title={"알림"}
-        onCreateAccountClick={async (e) => {
+        onCreateAccountClick={async (e, isAgreeMarketingTerm) => {
           try {
             showLoading();
-            await asyncCreateUserByKakaoInfo();
+            const kakaoInfo = await asyncCreateUserByKakaoInfo();
+            await asyncUpdateAppAgreement({
+              name: kakaoInfo?.name || undefined,
+              appAgreement: {
+                marketingPermission: isAgreeMarketingTerm,
+              },
+            });
             setOpenAccountCreateAlertDialog(false);
             closeLoading();
           } catch (e) {

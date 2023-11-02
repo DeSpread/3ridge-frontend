@@ -16,6 +16,15 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type AppAgreement = {
+  __typename?: 'AppAgreement';
+  marketingPermission: Scalars['Boolean'];
+};
+
+export type AppAgreementInputType = {
+  marketingPermission: Scalars['Boolean'];
+};
+
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   accessToken?: Maybe<Scalars['String']>;
@@ -872,6 +881,7 @@ export enum TicketStatusType {
 export type User = {
   __typename?: 'User';
   _id?: Maybe<Scalars['String']>;
+  appAgreement?: Maybe<AppAgreement>;
   discord?: Maybe<Discord>;
   email?: Maybe<Scalars['String']>;
   gmail?: Maybe<Scalars['String']>;
@@ -881,12 +891,14 @@ export type User = {
   participatingTickets?: Maybe<Array<Ticket>>;
   profileImageUrl?: Maybe<Scalars['String']>;
   rewardPoint?: Maybe<Scalars['Float']>;
+  type?: Maybe<Scalars['String']>;
   userSocial?: Maybe<UserSocial>;
   wallets?: Maybe<Array<UserWallet>>;
 };
 
 export type UserInputType = {
   _id?: InputMaybe<Scalars['String']>;
+  appAgreement?: InputMaybe<AppAgreementInputType>;
   discord?: InputMaybe<DiscordInputType>;
   email?: InputMaybe<Scalars['String']>;
   gmail?: InputMaybe<Scalars['String']>;
@@ -896,6 +908,7 @@ export type UserInputType = {
   participatingTickets?: InputMaybe<Array<TicketInputType>>;
   profileImageUrl?: InputMaybe<Scalars['String']>;
   rewardPoint?: InputMaybe<Scalars['Float']>;
+  type?: InputMaybe<Scalars['String']>;
   userSocial?: InputMaybe<UserSocialInputType>;
   wallets?: InputMaybe<Array<UserWalletInputType>>;
 };
@@ -912,11 +925,13 @@ export type UserSocialInputType = {
 };
 
 export type UserUpdateInput = {
+  appAgreement?: InputMaybe<AppAgreementInputType>;
   discord?: InputMaybe<DiscordInputType>;
   email?: InputMaybe<Scalars['String']>;
   gmail?: InputMaybe<Scalars['String']>;
   profileImageUrl?: InputMaybe<Scalars['String']>;
   rewardPoint?: InputMaybe<Scalars['Float']>;
+  type?: InputMaybe<Scalars['String']>;
   userSocial?: InputMaybe<UserSocialInputType>;
   wallets?: InputMaybe<Array<UserWalletInputType>>;
 };
@@ -1027,6 +1042,14 @@ export type UpdateUserProfileImageByNameMutationVariables = Exact<{
 
 
 export type UpdateUserProfileImageByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', profileImageUrl?: string | null } };
+
+export type UpdateUserAppAgreementByNameMutationVariables = Exact<{
+  name: Scalars['String'];
+  appAgreement: AppAgreementInputType;
+}>;
+
+
+export type UpdateUserAppAgreementByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', appAgreement?: { __typename?: 'AppAgreement', marketingPermission: boolean } | null } };
 
 export type UpdateUserEmailByNameMutationVariables = Exact<{
   name: Scalars['String'];
@@ -1450,6 +1473,7 @@ export const CreateUserByWalletDocument = {"kind":"Document","definitions":[{"ki
 export const CreateUserByKakaoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUserByKakao"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"kakaoInfo"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"KakaoInputType"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUserByKakao"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"kakaoInfo"},"value":{"kind":"Variable","name":{"kind":"Name","value":"kakaoInfo"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateUserByKakaoMutation, CreateUserByKakaoMutationVariables>;
 export const UpdateUserWalletByNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserWalletByName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"wallets"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserWalletInputType"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserByName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"userUpdateInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"wallets"},"value":{"kind":"Variable","name":{"kind":"Name","value":"wallets"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"wallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateUserWalletByNameMutation, UpdateUserWalletByNameMutationVariables>;
 export const UpdateUserProfileImageByNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserProfileImageByName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"profileImageUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserByName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"userUpdateInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"profileImageUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"profileImageUrl"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}}]}}]}}]} as unknown as DocumentNode<UpdateUserProfileImageByNameMutation, UpdateUserProfileImageByNameMutationVariables>;
+export const UpdateUserAppAgreementByNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserAppAgreementByName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"appAgreement"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AppAgreementInputType"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserByName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"userUpdateInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"appAgreement"},"value":{"kind":"Variable","name":{"kind":"Name","value":"appAgreement"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appAgreement"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"marketingPermission"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateUserAppAgreementByNameMutation, UpdateUserAppAgreementByNameMutationVariables>;
 export const UpdateUserEmailByNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserEmailByName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserByName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"userUpdateInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<UpdateUserEmailByNameMutation, UpdateUserEmailByNameMutationVariables>;
 export const UpdateUserRewardByNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserRewardByName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"rewardPoint"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserByName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"userUpdateInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"rewardPoint"},"value":{"kind":"Variable","name":{"kind":"Name","value":"rewardPoint"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}}]}}]}}]} as unknown as DocumentNode<UpdateUserRewardByNameMutation, UpdateUserRewardByNameMutationVariables>;
 export const UpdateUserSocialByNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserSocialByName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userSocial"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserSocialInputType"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserByName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"userUpdateInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userSocial"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userSocial"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userSocial"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"twitterId"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authDate"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"hash"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"photoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]}}]}}]} as unknown as DocumentNode<UpdateUserSocialByNameMutation, UpdateUserSocialByNameMutationVariables>;
