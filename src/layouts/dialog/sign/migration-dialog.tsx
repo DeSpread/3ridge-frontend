@@ -1,5 +1,10 @@
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, {
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 
 import GradientTypography from "@/components/atomic/atoms/gradient-typography";
 import PrimaryButton from "@/components/atomic/atoms/primary-button";
@@ -11,7 +16,6 @@ import MarketingAgreementForm from "@/components/form/signup/marketing-agreement
 import StringHelper from "@/helper/string-helper";
 import { useAlert } from "@/provider/alert/alert-provider";
 import { delay } from "@/util/timer";
-import { Z_INDEX_OFFSET } from "@/types";
 
 const MigrationDialog = ({
   onMigrationClick,
@@ -19,7 +23,10 @@ const MigrationDialog = ({
   ...rest
 }: {
   address?: string;
-  onMigrationClick?: MouseEventHandler;
+  onMigrationClick?(
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+    isAgreeMarketingTerm: boolean,
+  ): void;
 } & SimpleDialogProps) => {
   const [checkedList, setCheckedList] = useState([false, false]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +62,7 @@ const MigrationDialog = ({
                       });
                       return;
                     }
-                    onMigrationClick?.(e);
+                    onMigrationClick?.(e, checkedList[1]);
                   }}
                 >
                   해당 계정으로 카카오 연동하기

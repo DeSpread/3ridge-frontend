@@ -26,6 +26,7 @@ const documents = {
     "\n  mutation CreateUserByKakao($kakaoInfo: KakaoInputType!) {\n    createUserByKakao(kakaoInfo: $kakaoInfo) {\n      name\n    }\n  }\n": types.CreateUserByKakaoDocument,
     "\n  mutation UpdateUserWalletByName(\n    $name: String!\n    $wallets: [UserWalletInputType!]\n  ) {\n    updateUserByName(name: $name, userUpdateInput: { wallets: $wallets }) {\n      wallets {\n        address\n        chain\n      }\n    }\n  }\n": types.UpdateUserWalletByNameDocument,
     "\n  mutation UpdateUserProfileImageByName(\n    $name: String!\n    $profileImageUrl: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { profileImageUrl: $profileImageUrl }\n    ) {\n      profileImageUrl\n    }\n  }\n": types.UpdateUserProfileImageByNameDocument,
+    "\n  mutation UpdateUserAppAgreementByName(\n    $name: String!\n    $appAgreement: AppAgreementInputType!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { appAgreement: $appAgreement }\n    ) {\n      appAgreement {\n        marketingPermission\n      }\n    }\n  }\n": types.UpdateUserAppAgreementByNameDocument,
     "\n  mutation UpdateUserEmailByName($name: String!, $email: String!) {\n    updateUserByName(name: $name, userUpdateInput: { email: $email }) {\n      email\n    }\n  }\n": types.UpdateUserEmailByNameDocument,
     "\n  mutation UpdateUserRewardByName($name: String!, $rewardPoint: Float!) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { rewardPoint: $rewardPoint }\n    ) {\n      rewardPoint\n    }\n  }\n": types.UpdateUserRewardByNameDocument,
     "\n  mutation UpdateUserSocialByName(\n    $name: String!\n    $userSocial: UserSocialInputType!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { userSocial: $userSocial }\n    ) {\n      userSocial {\n        twitterId\n        telegramUser {\n          authDate\n          firstName\n          hash\n          id\n          photoUrl\n          username\n        }\n      }\n    }\n  }\n": types.UpdateUserSocialByNameDocument,
@@ -127,6 +128,10 @@ export function gql(source: "\n  mutation UpdateUserWalletByName(\n    $name: St
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateUserProfileImageByName(\n    $name: String!\n    $profileImageUrl: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { profileImageUrl: $profileImageUrl }\n    ) {\n      profileImageUrl\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserProfileImageByName(\n    $name: String!\n    $profileImageUrl: String!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { profileImageUrl: $profileImageUrl }\n    ) {\n      profileImageUrl\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateUserAppAgreementByName(\n    $name: String!\n    $appAgreement: AppAgreementInputType!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { appAgreement: $appAgreement }\n    ) {\n      appAgreement {\n        marketingPermission\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserAppAgreementByName(\n    $name: String!\n    $appAgreement: AppAgreementInputType!\n  ) {\n    updateUserByName(\n      name: $name\n      userUpdateInput: { appAgreement: $appAgreement }\n    ) {\n      appAgreement {\n        marketingPermission\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

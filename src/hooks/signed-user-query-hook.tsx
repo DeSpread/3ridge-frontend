@@ -3,9 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import {
+  AppAgreementInputType,
   ChainType,
   DiscordInputType,
   KakaoInputType,
+  UserUpdateInput,
 } from "../__generated__/graphql";
 import {
   APP_ERROR_MESSAGE,
@@ -35,6 +37,7 @@ import {
   UPDATE_USER_TELEGRAM_BY_NAME,
   UPDATE_USER_WALLET_BY_NAME,
   CREATE_USER_BY_KAKAO,
+  UPDATE_USER_APP_AGREEMENT_BY_NAME,
 } from "../lib/apollo/query";
 import { userDataState } from "../lib/recoil";
 import { useAlert } from "../provider/alert/alert-provider";
@@ -86,6 +89,9 @@ const useSignedUserQuery = () => {
   const [UpdateUserTelegramByName] = useMutation(UPDATE_USER_TELEGRAM_BY_NAME);
   const [UpdateUserRewardByName] = useMutation(UPDATE_USER_REWARD_BY_NAME);
   const [UpdateUserSocialByName] = useMutation(UPDATE_USER_SOCIAL_BY_NAME);
+  const [UpdateUserAppAgreementByName] = useMutation(
+    UPDATE_USER_APP_AGREEMENT_BY_NAME,
+  );
   const [UpdateKakaoByName] = useMutation(UPDATE_KAKAO_BY_NAME);
   const [DeleteKakaoByName] = useMutation(DELETE_KAKAO_BY_NAME);
   const [CreateUserByKakao] = useMutation(CREATE_USER_BY_KAKAO);
@@ -548,6 +554,31 @@ const useSignedUserQuery = () => {
     }
   };
 
+  const asyncUpdateAppAgreement = async (
+    input: Required<Pick<UserUpdateInput, "appAgreement">> &
+      Partial<Pick<User, "name">>,
+  ) => {
+    try {
+      if (!input.appAgreement) return;
+      if (!input.name && !userData.name) return;
+
+      await UpdateUserAppAgreementByName({
+        variables: {
+          name: input.name || userData.name!,
+          appAgreement: input.appAgreement,
+        },
+      });
+      setUserData((prevState: User) => {
+        return {
+          ...prevState,
+          appAgreement: input,
+        };
+      });
+    } catch (e) {
+      throw new AppError(getErrorMessage(e));
+    }
+  };
+
   const asyncUpdateSocialTwitter = async (twitterId: string) => {
     console.log(twitterId, userData.userSocial?.telegramUser);
     try {
@@ -758,6 +789,8 @@ const useSignedUserQuery = () => {
       },
     });
     await asyncUpdateCachedKakaoUserInfo(kakaoUserInfo);
+
+    return res.data?.createUserByKakao;
   };
 
   return {
@@ -768,6 +801,7 @@ const useSignedUserQuery = () => {
     asyncUpdateEmail,
     asyncUpdateSocialTwitter,
     asyncUpdateRewardPoint,
+    asyncUpdateAppAgreement,
     asyncDeleteWalletAddress,
     asyncUpdateSocialTelegram,
     asyncRemoveSocialTelegram,
