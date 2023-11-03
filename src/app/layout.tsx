@@ -1,3 +1,7 @@
+import "@/styles/tailwindcss.css";
+import "@/styles/globals.css";
+
+import Header from "./header.layout";
 import Providers from "./providers";
 
 export const metadata = {
@@ -13,7 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );
