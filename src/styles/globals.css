@@ -2,13 +2,13 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: LINESeedKR-Rg, LINESeedKR-Bd;
+  font-family: LINESeedKR, LINESeedKR-Rg, LINESeedKR-Bd;
   background: rgb(16, 14, 20);
   word-break: keep-all;
 }
 
 p {
-  font-family: "LINESeedKR-Rg";
+  font-family: LINESeedKR, "LINESeedKR-Rg";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -194,10 +194,26 @@ caption {
 }
 
 @font-face {
+  font-family: "LINESeedKR";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "LINESeedKR";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "LINESeedKR-Rg";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2")
     format("woff2");
-  font-weight: 700;
+  font-weight: 400;
   font-style: normal;
 }
 
