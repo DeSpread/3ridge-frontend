@@ -683,16 +683,6 @@ const Event = () => {
           const newRewardPolicy =
             TypeHelper.convertToServerRewardPolicy(rewardPolicy);
           await asyncUpdateTicketRewardPolicy(newRewardPolicy);
-          if (newRewardPolicy.rewardPolicyType === RewardPolicyType.Always) {
-            await asyncUpdateTicketDateRangeTime(
-              DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
-              new Date(2099, 12, 31),
-            );
-          }
-
-          const newRewardPolicy =
-            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
-          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
           await asyncRefreshAll();
           setOpenTicketRewardPolicyEditDialog(false);
           closeLoading();
