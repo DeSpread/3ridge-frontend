@@ -7,12 +7,13 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
-import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
-import ErrorInfoForm from "../../components/form/error-info-form";
+
 import Container from "../../components/atomic/atoms/container";
-import PreferenceHelper from "../../helper/preference-helper";
+import ErrorInfoForm from "../../components/form/error-info-form";
 import { APP_ERROR_MESSAGE, getErrorMessage } from "../../error/my-error";
+import PreferenceHelper from "../../helper/preference-helper";
+import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 
 const Kakao = () => {
   const router = useRouter();

@@ -14,6 +14,7 @@ import {
   addressToString,
 } from "@stacks/transactions";
 import { useEffect, useState } from "react";
+
 import { callWithRetry } from "../../util/retry-backoff";
 
 function getStacksAccount(appPrivateKey: string) {

@@ -1,6 +1,6 @@
 import { styled, Tabs } from "@mui/material";
-import React from "react";
 import { TabsProps } from "@mui/material/Tabs/Tabs";
+import React from "react";
 
 interface StyledTabsProps {
   children?: React.ReactNode;

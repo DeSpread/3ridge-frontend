@@ -1,7 +1,5 @@
-import { Project, Ticket } from "../../types";
-import { useTheme } from "@mui/material/styles";
-import { useLoading } from "../../provider/loading/loading-provider";
-import { useRouter } from "next/router";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   Box,
   IconButton,
@@ -9,11 +7,14 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/router";
 import React, { useRef } from "react";
 import SwiperCore, { Navigation } from "swiper";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Swiper, SwiperSlide } from "swiper/react";
+
+import { useLoading } from "../../provider/loading/loading-provider";
+import { Project, Ticket } from "../../types";
 import ProjectOverlayStyleCard from "../atomic/molecules/project-overlay-style-card";
 import SkeletonOverlayCard from "../atomic/molecules/skelton-overlay-card";
 

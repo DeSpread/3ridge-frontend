@@ -1,8 +1,9 @@
-import { useAlert } from "../provider/alert/alert-provider";
 import { Box, Link as MuiLink, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import React from "react";
-import { useTheme } from "@mui/material/styles";
+
+import { useAlert } from "../provider/alert/alert-provider";
 import { SupportedNetwork } from "../types";
 
 export function useWalletAlert() {

@@ -1,10 +1,16 @@
+import { useMutation } from "@apollo/client";
+import addHours from "date-fns/addHours";
+import addMinutes from "date-fns/addMinutes";
+import { useEffect, useRef, useState } from "react";
+
 import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
 } from "../../../error/my-error";
-import { useMutation } from "@apollo/client";
-import { useEffect, useRef, useState } from "react";
+import PreferenceHelper from "../../../helper/preference-helper";
+import TypeHelper from "../../../helper/type-helper";
+import { CREATE_USER_BY_WALLET } from "../../../lib/apollo/query";
 import {
   PartialWalletAddressInfo,
   PartialWalletInfo,
@@ -12,12 +18,7 @@ import {
   SuccessErrorCallbackWithParam,
   SUPPORTED_NETWORKS,
 } from "../../../types";
-import { CREATE_USER_BY_WALLET } from "../../../lib/apollo/query";
-import PreferenceHelper from "../../../helper/preference-helper";
-import addHours from "date-fns/addHours";
-import addMinutes from "date-fns/addMinutes";
 
-import TypeHelper from "../../../helper/type-helper";
 import { useTotalWallet } from "./total-wallet-hook";
 
 export function useWalletLogin() {

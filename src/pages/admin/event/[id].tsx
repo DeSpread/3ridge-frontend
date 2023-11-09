@@ -12,10 +12,8 @@ import { useTheme } from "@mui/material/styles";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { ReactElement, useMemo, useState } from "react";
-
-import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-chain-content-edit-dialog";
-
 import Draggable from "react-draggable";
+
 import {
   ContentMetadata,
   QuestPolicy,
@@ -27,6 +25,7 @@ import NumberEditDialog from "../../../components/dialogs/number-edit-dialog";
 import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
 import TicketDateEditDialog from "../../../components/dialogs/ticket-edit/ticket-date-range-edit-dialog";
 import TicketQuestUpsertEditDialog from "../../../components/dialogs/ticket-edit/ticket-quest-upsert-edit-dialog";
+import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-chain-content-edit-dialog";
 import TicketRewardPolicyEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-policy-edit-dialog";
 import UserInfoDownloadDialog from "../../../components/dialogs/user-info-download-dialog";
 import EventDateRange from "../../../components/pages/event/event-date-range";

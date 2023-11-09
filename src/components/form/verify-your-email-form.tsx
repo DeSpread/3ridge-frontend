@@ -1,6 +1,7 @@
 import { Stack, Typography, useMediaQuery } from "@mui/material";
-import { MouseEventHandler, PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
+import { MouseEventHandler, PropsWithChildren } from "react";
+
 import LinkTypography from "../atomic/atoms/link-typography";
 
 type VerifyYourEmailFormProps = PropsWithChildren & {

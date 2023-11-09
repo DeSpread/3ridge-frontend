@@ -1,7 +1,8 @@
-import { Ticket } from "../../../../../types";
-import React, { PropsWithChildren } from "react";
 import { Skeleton, Stack, Typography, Box } from "@mui/material";
+import React, { PropsWithChildren } from "react";
+
 import ComponentHelper from "../../../../../helper/component-helper";
+import { Ticket } from "../../../../../types";
 
 const EventRewardName = (
   props: { ticketData?: Ticket } & PropsWithChildren

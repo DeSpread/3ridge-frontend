@@ -1,5 +1,3 @@
-import React, { useEffect, useLayoutEffect } from "react";
-import { useTheme } from "@mui/material/styles";
 import {
   Box,
   CardProps,
@@ -7,7 +5,10 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
+import React, { useEffect, useLayoutEffect } from "react";
+
 import { Project } from "../../../types";
 import CheckIcon from "../atoms/svg/check-icon";
 

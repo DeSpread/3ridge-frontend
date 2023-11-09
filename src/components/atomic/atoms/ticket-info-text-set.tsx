@@ -17,7 +17,7 @@ const TicketInfoTextSet = ({ ticket, whiteSpaceMode }: TicketInfoViewProps) => {
 
   if (shortDescription) {
     return (
-      <div className="text-body2 text-outline text-center whitespace-pre-wrap">
+      <div className="text-body2 text-outline whitespace-pre-wrap text-center">
         {shortDescription}
       </div>
     );

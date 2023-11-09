@@ -8,7 +8,7 @@ const BlockIcon = (props: {
   bgColor?: string;
   spotColor?: string;
 }) => {
-  let canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     if (canvasRef.current) {

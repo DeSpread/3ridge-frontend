@@ -1,13 +1,14 @@
 import { Card, CardContent, Stack } from "@mui/material";
-import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
-import UserInfoDownloadForm from "../form/user-info-download-form";
-import LinkToPageForm from "../form/ticket-edit-controller/link-to-page-form";
-import { Ticket, TicketUserQuery } from "../../types";
-import ProjectUpdateForm from "../form/ticket-edit-controller/project-update-form";
+import React, { PropsWithChildren } from "react";
+
 import { Project } from "../../__generated__/graphql";
+import { Ticket, TicketUserQuery } from "../../types";
 import EventVisibilityForm from "../form/ticket-edit-controller/event-visibility-form";
+import LinkToPageForm from "../form/ticket-edit-controller/link-to-page-form";
+import ProjectUpdateForm from "../form/ticket-edit-controller/project-update-form";
 import ShortDescriptionUpdateForm from "../form/ticket-edit-controller/short-description-update-form";
+import UserInfoDownloadForm from "../form/user-info-download-form";
 
 const TicketEditControllerWidget = (
   props: PropsWithChildren & {

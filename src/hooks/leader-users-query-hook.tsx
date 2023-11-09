@@ -1,7 +1,8 @@
-import { GET_USERS_ORDER_BY_REWARD_POINT_DESC } from "../lib/apollo/query";
 import { useEffect, useState } from "react";
-import { User } from "../types";
+
 import { client } from "../lib/apollo/client";
+import { GET_USERS_ORDER_BY_REWARD_POINT_DESC } from "../lib/apollo/query";
+import { User } from "../types";
 
 export function useLeaderUsersQuery() {
   const [leaderUsersData, setLeaderUsersData] = useState<User[]>();

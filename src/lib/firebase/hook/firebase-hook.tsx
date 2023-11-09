@@ -4,10 +4,12 @@ import {
   signInWithEmailAndPassword,
   getAuth,
 } from "firebase/auth";
+
 import { AppError, getErrorMessage } from "../../../error/my-error";
 import { MAIL_VERIFY, MailVerified } from "../../../types";
-import { asyncJSTwitterSignInPopUp } from "./js-firebase";
 import { firebaseApp } from "../firebase-client";
+
+import { asyncJSTwitterSignInPopUp } from "./js-firebase";
 
 const auth = getAuth(firebaseApp);
 auth.languageCode = "it";

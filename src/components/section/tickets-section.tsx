@@ -1,3 +1,5 @@
+import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
+import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import {
   Box,
   ButtonProps,
@@ -10,6 +12,8 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
 import React, {
   CSSProperties,
   ForwardedRef,
@@ -20,14 +24,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { MouseEventWithParam, Ticket, TicketEventParam } from "../../types";
-import { useTheme } from "@mui/material/styles";
-import TicketCard from "../form/ticket-card";
-import PrimaryButton from "../atomic/atoms/primary-button";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
-import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
-import Image from "next/image";
+
 import { useDetectRef } from "../../hooks/util/use-detect-ref";
+import { MouseEventWithParam, Ticket, TicketEventParam } from "../../types";
+import PrimaryButton from "../atomic/atoms/primary-button";
+import TicketCard from "../form/ticket-card";
+
+
 
 type TicketSectionProps = PropsWithChildren & {
   tickets?: Ticket[];

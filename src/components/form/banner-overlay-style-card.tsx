@@ -1,5 +1,3 @@
-import React from "react";
-import { useTheme } from "@mui/material/styles";
 import {
   Box,
   CardProps,
@@ -7,10 +5,14 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import React from "react";
+
 import { Ticket } from "../../types";
 import PrimaryButton from "../atomic/atoms/primary-button";
-import { useRouter } from "next/router";
+
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;

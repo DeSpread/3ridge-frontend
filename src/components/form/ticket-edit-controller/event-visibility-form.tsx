@@ -1,9 +1,10 @@
+import { Checkbox, FormControlLabel } from "@mui/material";
 import React, { PropsWithChildren, useEffect } from "react";
-import { Ticket } from "../../../types";
+
 import { Project } from "../../../__generated__/graphql";
+import { Ticket } from "../../../types";
 import Container from "../../atomic/atoms/container";
 import LinkTypography from "../../atomic/atoms/link-typography";
-import { Checkbox, FormControlLabel } from "@mui/material";
 
 const EventVisibilityForm = ({
   targetTicket,

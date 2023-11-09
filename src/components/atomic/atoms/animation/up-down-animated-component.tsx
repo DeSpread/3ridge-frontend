@@ -1,5 +1,5 @@
-import { CSSProperties, PropsWithChildren } from "react";
 import { motion } from "framer-motion";
+import { CSSProperties, PropsWithChildren } from "react";
 
 type UpDownAnimatedComponentProps = PropsWithChildren & {
   width?: string | number;

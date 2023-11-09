@@ -1,5 +1,4 @@
-import Head from "next/head";
-import React, { MouseEventHandler, ReactElement, useMemo } from "react";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import {
   Avatar,
   Box,
@@ -10,21 +9,24 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import MainLayout from "../../layouts/main-layout";
-import { useLeaderUsersQuery } from "../../hooks/leader-users-query-hook";
+import { useTheme } from "@mui/material/styles";
+import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import React, { MouseEventHandler, ReactElement, useMemo } from "react";
+
+import GradientTypography from "../../components/atomic/atoms/gradient-typography";
 import XpChip from "../../components/atomic/atoms/styled/xp-chip";
+import BlockIcon from "../../components/atomic/molecules/block-icon";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
+import { useLeaderUsersQuery } from "../../hooks/leader-users-query-hook";
+import MainLayout from "../../layouts/main-layout";
+import { useLoading } from "../../provider/loading/loading-provider";
 import { User } from "../../types";
 import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import StringHelper from "../../helper/string-helper";
-import GradientTypography from "../../components/atomic/atoms/gradient-typography";
-import { useTheme } from "@mui/material/styles";
 import { useLeaderUserRankQuery } from "../../hooks/leader-user-rank-query-hook";
-import BlockIcon from "../../components/atomic/molecules/block-icon";
-import { useRouter } from "next/router";
-import { useLoading } from "../../provider/loading/loading-provider";
-import Image from "next/image";
+
 
 const RankCard = ({
   user,

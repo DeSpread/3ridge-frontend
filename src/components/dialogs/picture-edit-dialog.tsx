@@ -1,3 +1,6 @@
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import {
   Box,
   Dialog,
@@ -12,11 +15,10 @@ import {
 import React, { MouseEventHandler, useMemo, useState, useRef } from "react";
 //@ts-ignore
 import AvatarEditor from "react-avatar-editor";
+
 import { Z_INDEX_OFFSET } from "../../types";
-import ZoomInIcon from "@mui/icons-material/ZoomIn";
-import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import SecondaryButton from "../atomic/atoms/secondary-button";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 
 type ConnectEmailDialogProps = DialogProps & {
   imageFile?: File;

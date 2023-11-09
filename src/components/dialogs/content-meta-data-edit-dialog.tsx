@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
 import {
   Box,
   FormControl,
@@ -8,16 +6,20 @@ import {
   Select,
   Stack,
 } from "@mui/material";
-import SecondaryButton from "../atomic/atoms/secondary-button";
+import { useTheme } from "@mui/material/styles";
+import { highlight, languages } from "prismjs";
+import React, { useEffect, useState } from "react";
+import Editor from "react-simple-code-editor";
+
 import {
   ContentEncodingType,
   ContentFormatType,
   ContentMetadata,
 } from "../../__generated__/graphql";
-import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs";
-import { useTheme } from "@mui/material/styles";
 import StringUtil from "../../util/string-util";
+import SecondaryButton from "../atomic/atoms/secondary-button";
+
+import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
 
 require("prismjs/components/prism-jsx");
 require("prismjs/components/prism-markdown");

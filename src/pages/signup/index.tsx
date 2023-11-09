@@ -1,21 +1,28 @@
-import React, { MouseEvent, ReactElement, useMemo, useState } from "react";
-import MainLayout from "../../layouts/main-layout";
 import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
-import HomeFooter from "../../layouts/footer/home-footer";
+import { useTheme } from "@mui/material/styles";
 import Head from "next/head";
-import LinkTypography from "../../components/atomic/atoms/link-typography";
-import SignUpSelectForm from "../../components/form/signup/sign-up-select-form";
-import SignUpOthersForm from "../../components/form/signup/sign-up-others-form";
 import { useRouter } from "next/router";
-import { useLogin } from "../../provider/login/login-provider";
+import React, { MouseEvent, ReactElement, useMemo, useState } from "react";
+
+import LinkTypography from "../../components/atomic/atoms/link-typography";
+import SignUpOthersForm from "../../components/form/signup/sign-up-others-form";
+import SignUpSelectForm from "../../components/form/signup/sign-up-select-form";
+import SignUpWithEmailForm from "../../components/form/signup/sign-up-with-email-form";
 import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
   getLocaleErrorMessage,
 } from "../../error/my-error";
+import HomeFooter from "../../layouts/footer/home-footer";
+import MainLayout from "../../layouts/main-layout";
+
+
 import { useAlert } from "../../provider/alert/alert-provider";
-import SignUpWithEmailForm from "../../components/form/signup/sign-up-with-email-form";
+import { useLoading } from "../../provider/loading/loading-provider";
+import { useLogin } from "../../provider/login/login-provider";
+import { useMobile } from "../../provider/mobile/mobile-context";
+import AwsClient from "../../remote/aws-client";
 import {
   EmailSignUpEventParams,
   MouseEventWithParam,
@@ -23,15 +30,11 @@ import {
   SupportedNetwork,
 } from "../../types";
 import VerifyYourEmailForm from "../../components/form/verify-your-email-form";
-import { useLoading } from "../../provider/loading/loading-provider";
 import { useSignDialog } from "../../hooks/sign-dialog-hook";
-import AwsClient from "../../remote/aws-client";
 import SignInWithNetworkSelectDialog from "../../layouts/dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import TypeHelper from "../../helper/type-helper";
 import ResourceHelper from "../../helper/resource-helper";
-import { useTheme } from "@mui/material/styles";
-import { useMobile } from "../../provider/mobile/mobile-context";
 import EthUtil from "../../util/eth-util";
 
 const FORM_TYPE = {

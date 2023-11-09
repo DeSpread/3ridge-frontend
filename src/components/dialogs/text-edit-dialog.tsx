@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
-import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
 import { Box, Stack } from "@mui/material";
-import StyledOutlinedInput from "../atomic/atoms/styled/styled-outlined-input";
+import React, { useEffect, useState } from "react";
+
 import SecondaryButton from "../atomic/atoms/secondary-button";
+import StyledOutlinedInput from "../atomic/atoms/styled/styled-outlined-input";
+
+import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
 
 const TextEditDialog = (
   props: {

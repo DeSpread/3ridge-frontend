@@ -1,6 +1,7 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { showProfileEditDialogState } from "../lib/recoil";
 import { useMemo } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+
+import { showProfileEditDialogState } from "../lib/recoil";
 
 export function useProfileEditDialog() {
   const showProfileEditDialog = useRecoilValue(showProfileEditDialogState);

@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Dialog,
   DialogContent,
@@ -10,10 +11,10 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import React, { MouseEventHandler } from "react";
 import { useTheme } from "@mui/material/styles";
+import React, { MouseEventHandler } from "react";
+
 import { Z_INDEX_OFFSET } from "../../types";
-import CloseIcon from "@mui/icons-material/Close";
 import LinkTypography from "../atomic/atoms/link-typography";
 
 export type ContractLoadingDialogProps = DialogProps & {

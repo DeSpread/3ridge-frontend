@@ -1,14 +1,15 @@
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
-import Head from "next/head";
-import React, { ReactElement } from "react";
-import MainLayout from "../../layouts/main-layout";
 import { useTheme } from "@mui/material/styles";
+import Head from "next/head";
 import { useRouter } from "next/router";
-import { useLoading } from "../../provider/loading/loading-provider";
-import { useProjectsQuery } from "../../hooks/projects-query-hook";
-import HomeFooter from "../../layouts/footer/home-footer";
+import React, { ReactElement } from "react";
+
 import ProjectOverlayStyleCard from "../../components/atomic/molecules/project-overlay-style-card";
 import SkeletonOverlayCard from "../../components/atomic/molecules/skelton-overlay-card";
+import { useProjectsQuery } from "../../hooks/projects-query-hook";
+import HomeFooter from "../../layouts/footer/home-footer";
+import MainLayout from "../../layouts/main-layout";
+import { useLoading } from "../../provider/loading/loading-provider";
 
 const Projects = () => {
   const { projectsData, projectsDataLoading } = useProjectsQuery({});

@@ -1,10 +1,14 @@
-import { Ticket } from "../../../../../types";
-import React, { MouseEventHandler, PropsWithChildren } from "react";
-import ContentMetaDataRenderComponent from "../../../../atomic/atoms/content-meta-data-render-component";
 import { Stack, Skeleton, Box } from "@mui/material";
-import ClickTypography from "../../../../atomic/atoms/click-typhography";
-import { ChainType } from "../../../../../__generated__/graphql";
 import { useTheme } from "@mui/material/styles";
+import React, { MouseEventHandler, PropsWithChildren } from "react";
+
+import { ChainType } from "../../../../../__generated__/graphql";
+import { Ticket } from "../../../../../types";
+import ClickTypography from "../../../../atomic/atoms/click-typhography";
+import ContentMetaDataRenderComponent from "../../../../atomic/atoms/content-meta-data-render-component";
+
+
+
 
 const EventRewardChainContent = (
   props: {

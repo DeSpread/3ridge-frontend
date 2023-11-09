@@ -1,6 +1,6 @@
-import { TimerSettings, useTimer } from "react-timer-hook";
 import { Box, Stack, Typography } from "@mui/material";
 import React, { CSSProperties } from "react";
+import { TimerSettings, useTimer } from "react-timer-hook";
 
 interface MyTimerSettings extends TimerSettings {
   sx?: CSSProperties;

@@ -1,10 +1,12 @@
 import { Avatar, Box, Grid, Stack, Tooltip, Typography } from "@mui/material";
-import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
-import BlockIcon from "../../atomic/molecules/block-icon";
-import StringUtil from "../../../util/string-util";
-import React, { PropsWithChildren } from "react";
-import { Ticket } from "../../../types";
 import { useTheme } from "@mui/material/styles";
+import React, { PropsWithChildren } from "react";
+
+import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
+import { Ticket } from "../../../types";
+import StringUtil from "../../../util/string-util";
+import BlockIcon from "../../atomic/molecules/block-icon";
+
 
 const EventParticipants = (
   props: {

@@ -1,3 +1,9 @@
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloseIcon from "@mui/icons-material/Close";
+import EmailIcon from "@mui/icons-material/Email";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import {
   Avatar,
   Box,
@@ -12,24 +18,22 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { MouseEventHandler } from "react";
-import { SUPPORTED_NETWORKS, User, Z_INDEX_OFFSET } from "../../types";
 import { useTheme } from "@mui/material/styles";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import CloseIcon from "@mui/icons-material/Close";
-import StringHelper from "../../helper/string-helper";
-import EmailIcon from "@mui/icons-material/Email";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import { ValidatorButton } from "../atomic/molecules/validator-button";
-import BlockIcon from "../atomic/molecules/block-icon";
+import { useRouter } from "next/router";
+import React, { MouseEventHandler } from "react";
+
 import ResourceHelper from "../../helper/resource-helper";
+import StringHelper from "../../helper/string-helper";
+import { SUPPORTED_NETWORKS, User, Z_INDEX_OFFSET } from "../../types";
+
+import DiscordIcon from "../atomic/atoms/svg/discord-icon";
+import KakaoIcon from "../atomic/atoms/svg/kakao-icon";
+import BlockIcon from "../atomic/molecules/block-icon";
+import { ValidatorButton } from "../atomic/molecules/validator-button";
 import TypeHelper from "../../helper/type-helper";
 import { useMobile } from "../../provider/mobile/mobile-context";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useRouter } from "next/router";
-import KakaoIcon from "../atomic/atoms/svg/kakao-icon";
-import DiscordIcon from "../atomic/atoms/svg/discord-icon";
+
+
 
 type ProfileEditDialogProps = DialogProps & {
   title: string;
