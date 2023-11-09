@@ -19,13 +19,13 @@ import GradientTypography from "../../components/atomic/atoms/gradient-typograph
 import XpChip from "../../components/atomic/atoms/styled/xp-chip";
 import BlockIcon from "../../components/atomic/molecules/block-icon";
 import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../const";
+import StringHelper from "../../helper/string-helper";
+import { useLeaderUserRankQuery } from "../../hooks/leader-user-rank-query-hook";
 import { useLeaderUsersQuery } from "../../hooks/leader-users-query-hook";
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
 import MainLayout from "../../layouts/main-layout";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { User } from "../../types";
-import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
-import StringHelper from "../../helper/string-helper";
-import { useLeaderUserRankQuery } from "../../hooks/leader-user-rank-query-hook";
 
 
 const RankCard = ({

@@ -8,16 +8,20 @@ import LinkTypography from "../../components/atomic/atoms/link-typography";
 import SignUpOthersForm from "../../components/form/signup/sign-up-others-form";
 import SignUpSelectForm from "../../components/form/signup/sign-up-select-form";
 import SignUpWithEmailForm from "../../components/form/signup/sign-up-with-email-form";
+import VerifyYourEmailForm from "../../components/form/verify-your-email-form";
 import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
   getLocaleErrorMessage,
 } from "../../error/my-error";
+import ResourceHelper from "../../helper/resource-helper";
+import TypeHelper from "../../helper/type-helper";
+import { useSignDialog } from "../../hooks/sign-dialog-hook";
+import SignInWithNetworkSelectDialog from "../../layouts/dialog/sign/sign-in-with-network-select-dialog";
+import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
 import HomeFooter from "../../layouts/footer/home-footer";
 import MainLayout from "../../layouts/main-layout";
-
-
 import { useAlert } from "../../provider/alert/alert-provider";
 import { useLoading } from "../../provider/loading/loading-provider";
 import { useLogin } from "../../provider/login/login-provider";
@@ -29,12 +33,6 @@ import {
   ObjectValues,
   SupportedNetwork,
 } from "../../types";
-import VerifyYourEmailForm from "../../components/form/verify-your-email-form";
-import { useSignDialog } from "../../hooks/sign-dialog-hook";
-import SignInWithNetworkSelectDialog from "../../layouts/dialog/sign/sign-in-with-network-select-dialog";
-import SignInWithSupportedWalletDialog from "../../layouts/dialog/sign/sign-in-with-supported-wallet-dialog";
-import TypeHelper from "../../helper/type-helper";
-import ResourceHelper from "../../helper/resource-helper";
 import EthUtil from "../../util/eth-util";
 
 const FORM_TYPE = {

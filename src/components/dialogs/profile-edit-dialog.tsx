@@ -24,14 +24,13 @@ import React, { MouseEventHandler } from "react";
 
 import ResourceHelper from "../../helper/resource-helper";
 import StringHelper from "../../helper/string-helper";
+import TypeHelper from "../../helper/type-helper";
+import { useMobile } from "../../provider/mobile/mobile-context";
 import { SUPPORTED_NETWORKS, User, Z_INDEX_OFFSET } from "../../types";
-
 import DiscordIcon from "../atomic/atoms/svg/discord-icon";
 import KakaoIcon from "../atomic/atoms/svg/kakao-icon";
 import BlockIcon from "../atomic/molecules/block-icon";
 import { ValidatorButton } from "../atomic/molecules/validator-button";
-import TypeHelper from "../../helper/type-helper";
-import { useMobile } from "../../provider/mobile/mobile-context";
 
 
 
