@@ -1,8 +1,9 @@
-import { useTheme } from "@mui/material/styles";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import GradientTypography from "../atoms/gradient-typography";
 import React from "react";
+
+import GradientTypography from "../atoms/gradient-typography";
 
 const TutorialDescCard = (props: {
   title: string;

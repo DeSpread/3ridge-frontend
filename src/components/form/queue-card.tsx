@@ -1,5 +1,6 @@
 import { Card, CardContent, CardProps, Grid } from "@mui/material";
 import React from "react";
+
 import { Ticket } from "../../types";
 
 type QueueCardProps = CardProps & {

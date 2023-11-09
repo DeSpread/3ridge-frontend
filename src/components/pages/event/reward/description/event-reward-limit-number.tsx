@@ -1,7 +1,9 @@
-import { Ticket } from "../../../../../types";
-import { PropsWithChildren } from "react";
 import { Stack, Typography } from "@mui/material";
+import { PropsWithChildren } from "react";
+
 import StringHelper from "../../../../../helper/string-helper";
+import { Ticket } from "../../../../../types";
+
 import { RewardPolicyType } from "@/__generated__/graphql";
 
 const EventRewardLimitNumber = (

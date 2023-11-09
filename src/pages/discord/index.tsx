@@ -1,7 +1,3 @@
-import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
-import useDiscordAuth from "../../hooks/discord-auth-hook";
-import RouterUtil from "../../util/router-util";
 import {
   Card,
   CardContent,
@@ -9,11 +5,16 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/router";
+import React, { useEffect, useMemo, useState } from "react";
+
 import Container from "../../components/atomic/atoms/container";
 import ErrorInfoForm from "../../components/form/error-info-form";
-import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
-import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
 import { getErrorMessage } from "../../error/my-error";
+import useDiscordAuth from "../../hooks/discord-auth-hook";
+import { useProfileEditDialog } from "../../hooks/profile-edit-dialog-hook";
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
+import RouterUtil from "../../util/router-util";
 
 const Discord = () => {
   const router = useRouter();

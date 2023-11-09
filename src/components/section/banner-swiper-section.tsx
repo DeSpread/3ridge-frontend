@@ -1,10 +1,12 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { Swiper, SwiperSlide } from "swiper/react";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import SwiperCore, { Navigation } from "swiper";
-import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+
 import PrimaryButton from "../atomic/atoms/primary-button";
-import { useRouter } from "next/router";
+
 
 SwiperCore.use([Navigation]);
 

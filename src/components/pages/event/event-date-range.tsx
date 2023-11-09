@@ -1,10 +1,13 @@
-import React, { PropsWithChildren } from "react";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import DateUtil from "../../../util/date-util";
-import { Ticket } from "../../../types";
-import StyledChip from "../../atomic/atoms/styled/styled-chip";
 import { format } from "date-fns";
+import React, { PropsWithChildren } from "react";
+
+import { Ticket } from "../../../types";
+import DateUtil from "../../../util/date-util";
+import StyledChip from "../../atomic/atoms/styled/styled-chip";
+
+
 import { RewardPolicyType } from "@/__generated__/graphql";
 
 const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {

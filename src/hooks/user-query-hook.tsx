@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { client } from "../lib/apollo/client";
-import { GET_USER_BY_NAME } from "../lib/apollo/query";
-import { RewardContext, User } from "../types";
-import TypeParseHelper from "../helper/type-parse-helper";
-import TypeHelper from "../helper/type-helper";
+
 import {
   CategoryType,
   ChainType,
   RewardPolicyType,
 } from "../__generated__/graphql";
+import TypeHelper from "../helper/type-helper";
+import TypeParseHelper from "../helper/type-parse-helper";
+import { client } from "../lib/apollo/client";
+import { GET_USER_BY_NAME } from "../lib/apollo/query";
+import { RewardContext, User } from "../types";
 
 export function useUserQuery(props: { name?: string }) {
   const [userData, setUserData] = useState<User>();

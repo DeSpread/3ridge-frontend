@@ -1,11 +1,13 @@
-import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 import { Stack } from "@mui/material";
-import { DefaultPasswordTextField } from "../../../components/atomic/molecules/password-text-field";
 import React, { MouseEventHandler, useMemo, useState } from "react";
-import MailTextField from "../../../components/atomic/molecules/mail-text-field";
+
 import SecondaryButton from "../../../components/atomic/atoms/secondary-button";
+import MailTextField from "../../../components/atomic/molecules/mail-text-field";
+import { DefaultPasswordTextField } from "../../../components/atomic/molecules/password-text-field";
 import { EmailSignUpEventParams, MouseEventWithParam } from "../../../types";
 import StringUtil from "../../../util/string-util";
+
+import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 
 type SignInWithEmailProps = SignDialogProps & {
   onSignInWithEmailClicked: MouseEventHandler;

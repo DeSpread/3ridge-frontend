@@ -1,5 +1,5 @@
-import NextLink from "next/link";
 import { Typography, TypographyProps } from "@mui/material";
+import NextLink from "next/link";
 
 type LinkTypographyProps = TypographyProps & {
   href?: string;

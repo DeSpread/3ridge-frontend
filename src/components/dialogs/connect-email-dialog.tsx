@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Dialog,
@@ -9,19 +10,20 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import React, { MouseEventHandler, useState } from "react";
-import { ObjectValues, Z_INDEX_OFFSET } from "../../types";
-import MailTextField from "../atomic/molecules/mail-text-field";
-import SecondaryButton from "../atomic/atoms/secondary-button";
-import StringUtil from "../../util/string-util";
-import AwsClient from "../../remote/aws-client";
-import { useAlert } from "../../provider/alert/alert-provider";
-import { getLocaleErrorMessage } from "../../error/my-error";
 import CircularProgress from "@mui/material/CircularProgress";
-import addSeconds from "date-fns/addSeconds";
-import ValidatedTextInput from "../atomic/molecules/validated-text-input";
 import { useTheme } from "@mui/material/styles";
+import addSeconds from "date-fns/addSeconds";
+import React, { MouseEventHandler, useState } from "react";
+
+import { getLocaleErrorMessage } from "../../error/my-error";
+import { useAlert } from "../../provider/alert/alert-provider";
+import AwsClient from "../../remote/aws-client";
+import { ObjectValues, Z_INDEX_OFFSET } from "../../types";
+import StringUtil from "../../util/string-util";
+import SecondaryButton from "../atomic/atoms/secondary-button";
+import MailTextField from "../atomic/molecules/mail-text-field";
+import ValidatedTextInput from "../atomic/molecules/validated-text-input";
+
 
 export const CONNECT_MAIL_DIALOG_FORM_TYPE = {
   SEND_EMAIL: "SEND_EMAIL",
@@ -146,8 +148,8 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                             );
                           if (res.status === 204) {
                             setCount(COUNT);
-                            let _vDate = addSeconds(new Date(), COUNT + 1);
-                            let intervalId = setInterval(() => {
+                            const _vDate = addSeconds(new Date(), COUNT + 1);
+                            const intervalId = setInterval(() => {
                               const now = new Date();
                               //@ts-ignore
                               const distDt = _vDate - now;
@@ -213,8 +215,8 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                           );
                         if (res.status === 204) {
                           setCount(COUNT);
-                          let _vDate = addSeconds(new Date(), COUNT + 1);
-                          let intervalId = setInterval(() => {
+                          const _vDate = addSeconds(new Date(), COUNT + 1);
+                          const intervalId = setInterval(() => {
                             const now = new Date();
                             //@ts-ignore
                             const distDt = _vDate - now;

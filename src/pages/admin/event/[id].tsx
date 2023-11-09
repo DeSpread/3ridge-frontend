@@ -12,21 +12,8 @@ import { useTheme } from "@mui/material/styles";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { ReactElement, useMemo, useState } from "react";
-
-import EventRewardPolicy from "../../../components/pages/event/reward/event-reward-policy";
-import EventTimeBoard from "../../../components/pages/event/event-time-board";
-import EventRewardDescription from "../../../components/pages/event/reward/event-reward-description";
-import EventRewardImage from "../../../components/pages/event/reward/description/event-reward-image";
-import TicketRewardPolicyEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-policy-edit-dialog";
-import TypeHelper from "../../../helper/type-helper";
-import NumberEditDialog from "../../../components/dialogs/number-edit-dialog";
-import EventRewardPoint from "../../../components/pages/event/reward/description/event-reward-point";
-import EventRewardLimitNumber from "../../../components/pages/event/reward/description/event-reward-limit-number";
-import EventRewardChainContent from "../../../components/pages/event/reward/description/event-reward-chain-content";
-import EventRewardName from "../../../components/pages/event/reward/description/event-reward-name";
-import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-chain-content-edit-dialog";
-
 import Draggable from "react-draggable";
+
 import {
   ContentMetadata,
   QuestPolicy,
@@ -34,9 +21,12 @@ import {
 } from "../../../__generated__/graphql";
 import InputButton from "../../../components/atomic/molecules/input-button";
 import ContentMetaDataEditDialog from "../../../components/dialogs/content-meta-data-edit-dialog";
+import NumberEditDialog from "../../../components/dialogs/number-edit-dialog";
 import TextEditDialog from "../../../components/dialogs/text-edit-dialog";
 import TicketDateEditDialog from "../../../components/dialogs/ticket-edit/ticket-date-range-edit-dialog";
 import TicketQuestUpsertEditDialog from "../../../components/dialogs/ticket-edit/ticket-quest-upsert-edit-dialog";
+import TicketRewardChainContentEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-chain-content-edit-dialog";
+import TicketRewardPolicyEditDialog from "../../../components/dialogs/ticket-edit/ticket-reward-policy-edit-dialog";
 import UserInfoDownloadDialog from "../../../components/dialogs/user-info-download-dialog";
 import EventDateRange from "../../../components/pages/event/event-date-range";
 import EventDescription from "../../../components/pages/event/event-description";
@@ -44,8 +34,17 @@ import EventEmptyBox from "../../../components/pages/event/event-empty-box";
 import EventImage from "../../../components/pages/event/event-image";
 import EventParticipants from "../../../components/pages/event/event-participants";
 import EventQuests from "../../../components/pages/event/event-quests";
+import EventTimeBoard from "../../../components/pages/event/event-time-board";
 import EventTitle from "../../../components/pages/event/event-title";
+import EventRewardChainContent from "../../../components/pages/event/reward/description/event-reward-chain-content";
+import EventRewardImage from "../../../components/pages/event/reward/description/event-reward-image";
+import EventRewardLimitNumber from "../../../components/pages/event/reward/description/event-reward-limit-number";
+import EventRewardName from "../../../components/pages/event/reward/description/event-reward-name";
+import EventRewardPoint from "../../../components/pages/event/reward/description/event-reward-point";
+import EventRewardDescription from "../../../components/pages/event/reward/event-reward-description";
+import EventRewardPolicy from "../../../components/pages/event/reward/event-reward-policy";
 import TicketEditControllerWidget from "../../../components/widget/ticket-edit-controller-widget";
+import TypeHelper from "../../../helper/type-helper";
 import WithEditorContainer from "../../../hoc/with-editor-container";
 import { useProjectsQuery } from "../../../hooks/projects-query-hook";
 import { useSignedUserQuery } from "../../../hooks/signed-user-query-hook";
@@ -259,7 +258,7 @@ const Event = () => {
     const includeQuestion =
       ticketData?.rewardPolicy?.context?.nftImageUrl?.includes("?");
     const base64Data = await FileUtil.asyncReadAsBase64Data(file);
-    await asyncUploadImage(`reward/${file.name}`, base64Data);
+    await asyncUploadImage(`reward/${file.name}`, base64Data, file.type);
     let nftImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/reward/${file.name}`;
     if (!includeQuestion) {
       nftImageUrl += "?";
@@ -280,8 +279,12 @@ const Event = () => {
     const includeQuestion = ticketData?.imageUrl?.includes("?");
     const base64Data = await FileUtil.asyncReadAsBase64Data(file);
     const ext = FileUtil.getFileExtension(file);
-    await asyncUploadImage(`event/cover/${ticketData?._id}.${ext}`, base64Data);
-    let ticketImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/event/cover/${ticketData?._id}.${ext}`;
+    await asyncUploadImage(
+      `event/cover/${ticketData?._id}`,
+      base64Data,
+      file.type,
+    );
+    let ticketImageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/event/cover/${ticketData?._id}`;
     if (!includeQuestion) {
       ticketImageUrl += "?";
     }

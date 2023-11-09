@@ -1,6 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { PropsWithChildren } from "react";
+
 import { Ticket } from "../../../../../types";
 
 const EventRewardPoint = (

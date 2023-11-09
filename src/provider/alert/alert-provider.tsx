@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  PropsWithChildren,
-  ReactElement,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Dialog,
   DialogContent,
@@ -18,13 +11,23 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { TransitionProps } from "@mui/material/transitions";
-import CloseIcon from "@mui/icons-material/Close";
-import Draggable from "react-draggable";
-import ComponentHelper from "../../helper/component-helper";
-import LinkTypography from "../../components/atomic/atoms/link-typography";
 import { useTheme } from "@mui/material/styles";
+import { TransitionProps } from "@mui/material/transitions";
+import React, {
+  createContext,
+  PropsWithChildren,
+  ReactElement,
+  useContext,
+  useRef,
+  useState,
+} from "react";
+import Draggable from "react-draggable";
+
+import LinkTypography from "../../components/atomic/atoms/link-typography";
 import ErrorInfoForm from "../../components/form/error-info-form";
+import ComponentHelper from "../../helper/component-helper";
+
+
 
 const AlertContext = createContext<{
   showAlert: ({
@@ -43,8 +46,8 @@ const AlertContext = createContext<{
 });
 
 type AlertDesc = {
-  title?: String;
-  content?: String | ReactElement;
+  title?: string;
+  content?: string | ReactElement;
 };
 
 const Transition = React.forwardRef(function Transition(

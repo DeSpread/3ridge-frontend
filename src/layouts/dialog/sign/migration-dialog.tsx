@@ -1,5 +1,10 @@
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, {
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 
 import GradientTypography from "@/components/atomic/atoms/gradient-typography";
 import PrimaryButton from "@/components/atomic/atoms/primary-button";
@@ -18,7 +23,10 @@ const MigrationDialog = ({
   ...rest
 }: {
   address?: string;
-  onMigrationClick?: MouseEventHandler;
+  onMigrationClick?(
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+    isAgreeMarketingTerm: boolean,
+  ): void;
 } & SimpleDialogProps) => {
   const [checkedList, setCheckedList] = useState([false, false]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +42,7 @@ const MigrationDialog = ({
 
   return (
     <>
-      <SimpleDialog {...rest} maxWidth={"sm"} sx={{}}>
+      <SimpleDialog {...rest} maxWidth={"sm"}>
         <Stack sx={{ marginTop: 1 }} alignItems={"center"}>
           {address && (
             <>
@@ -47,14 +55,14 @@ const MigrationDialog = ({
               <Stack spacing={2} sx={{ marginTop: 3 }} alignItems={"center"}>
                 <PrimaryButton
                   onClick={(e) => {
-                    if (!(checkedList[0] && checkedList[1])) {
+                    if (!checkedList[0]) {
                       showAlert({
                         title: "알림",
-                        content: "마케팅 수신에 모두 동의 부탁드립니다",
+                        content: "(필수) 개인정보 수집·이용 동의가 필요해요",
                       });
                       return;
                     }
-                    onMigrationClick?.(e);
+                    onMigrationClick?.(e, checkedList[1]);
                   }}
                 >
                   해당 계정으로 카카오 연동하기

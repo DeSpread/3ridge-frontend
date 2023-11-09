@@ -9,15 +9,16 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { forwardRef, Ref, useEffect, useLayoutEffect } from "react";
-import { Ticket } from "../../types";
-import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
+import React, { forwardRef, Ref, useEffect, useLayoutEffect } from "react";
+
+import { Ticket } from "../../types";
 import TicketInfoTextSet from "../atomic/atoms/ticket-info-text-set";
 
 type EventCardProps = CardProps & {
   ticket?: Ticket;
-  username?: String;
+  username?: string;
   isWinner?: boolean;
 };
 

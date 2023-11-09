@@ -1,10 +1,12 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IconButton, InputAdornment, OutlinedInputProps } from "@mui/material";
 import React, { useMemo, useState } from "react";
+
 import StringUtil from "../../../util/string-util";
+
 import ValidatedTextInput, {
   ValidatedTextInputProps,
 } from "./validated-text-input";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const DefaultPasswordTextField = (props: ValidatedTextInputProps) => {
   const [showPassword, setShowPassword] = useState(false);

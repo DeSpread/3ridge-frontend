@@ -1,8 +1,10 @@
-import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 import { Grid, IconButton, Stack, Typography } from "@mui/material";
-import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
+
 import { useMobile } from "../../../provider/mobile/mobile-context";
+
+import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 
 type SignInWithSupportedWalletDialogProps = SignDialogProps & {
   walletInfos: {

@@ -4,6 +4,7 @@ import {
   signInWithRedirect,
   TwitterAuthProvider,
 } from "firebase/auth";
+
 import { firebaseApp } from "../firebase-client";
 
 const auth = getAuth(firebaseApp);

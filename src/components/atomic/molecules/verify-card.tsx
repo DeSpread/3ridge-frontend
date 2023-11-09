@@ -1,3 +1,4 @@
+import CheckIcon from "@mui/icons-material/Check";
 import {
   Box,
   Card,
@@ -8,6 +9,8 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import addSeconds from "date-fns/addSeconds";
 import React, {
   CSSProperties,
   MouseEventHandler,
@@ -15,14 +18,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import SecondaryButton from "../atoms/secondary-button";
-import PrimaryButton from "../atoms/primary-button";
-import addSeconds from "date-fns/addSeconds";
-import { MouseEventWithParam } from "../../../types";
-import { useTheme } from "@mui/material/styles";
-import CheckIcon from "@mui/icons-material/Check";
+
 import { ContentMetadata } from "../../../__generated__/graphql";
+import { MouseEventWithParam } from "../../../types";
 import ContentMetaDataRenderComponent from "../atoms/content-meta-data-render-component";
+import PrimaryButton from "../atoms/primary-button";
+import SecondaryButton from "../atoms/secondary-button";
 
 type VerifyCardProps = PropsWithChildren & {
   sx?: CSSProperties;
@@ -150,7 +151,7 @@ const VerifyCard = (props: VerifyCardProps) => {
               onClick={(e) => {
                 setCardState("VERIFYING");
                 let timer: NodeJS.Timer;
-                let _vDate = addSeconds(new Date(), timerLength);
+                const _vDate = addSeconds(new Date(), timerLength);
                 function checkRemain() {
                   const now = new Date();
                   //@ts-ignore
@@ -329,7 +330,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                 onClick={(e) => {
                   setCardState("VERIFYING");
                   let timer: NodeJS.Timer;
-                  let _vDate = addSeconds(new Date(), timerLength);
+                  const _vDate = addSeconds(new Date(), timerLength);
                   function checkRemain() {
                     const now = new Date();
                     //@ts-ignore

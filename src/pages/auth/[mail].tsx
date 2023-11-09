@@ -1,15 +1,16 @@
-import Head from "next/head";
-import React, { ReactElement, useEffect, useState } from "react";
 import { Box, Divider, Link, Skeleton, Stack, Typography } from "@mui/material";
-import MainLayout from "../../layouts/main-layout";
-import { useRouter } from "next/router";
-import PrimaryButton from "../../components/atomic/atoms/primary-button";
-import NextLink from "next/link";
 import { useTheme } from "@mui/material/styles";
+import Head from "next/head";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React, { ReactElement, useEffect, useState } from "react";
+
+import PrimaryButton from "../../components/atomic/atoms/primary-button";
 import { getErrorMessage } from "../../error/my-error";
-import { useLogin } from "../../provider/login/login-provider";
+import MainLayout from "../../layouts/main-layout";
 import { useAlert } from "../../provider/alert/alert-provider";
 import { useLoading } from "../../provider/loading/loading-provider";
+import { useLogin } from "../../provider/login/login-provider";
 
 const Skelton = () => {
   return (

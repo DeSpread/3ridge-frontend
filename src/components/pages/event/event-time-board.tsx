@@ -1,11 +1,13 @@
 import { Box, Stack, Typography } from "@mui/material";
+import React, { PropsWithChildren } from "react";
+
+import { Ticket } from "../../../types";
+import DateUtil from "../../../util/date-util";
+import PrimaryCard from "../../atomic/atoms/primary-card";
 import TimerBoard, {
   DummyTimerBoard,
 } from "../../atomic/molecules/timer-board";
-import DateUtil from "../../../util/date-util";
-import PrimaryCard from "../../atomic/atoms/primary-card";
-import React, { PropsWithChildren } from "react";
-import { Ticket } from "../../../types";
+
 import { RewardPolicyType } from "@/__generated__/graphql";
 
 const EventTimeBoard = (props: { ticketData?: Ticket } & PropsWithChildren) => {

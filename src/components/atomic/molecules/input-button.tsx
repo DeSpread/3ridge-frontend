@@ -10,7 +10,7 @@ const InputButton = (
     filterReg?: RegExp;
   } & ButtonProps,
 ) => {
-  const { filterReg = /(gif|jpe?g|tiff?|png|webp|bmp)$/i } = props;
+  const { filterReg = /(gif|jpe?g|tiff?|png|webp|bmp|svg\+xml)$/i } = props;
 
   return (
     <IconButton component="label" sx={props.sx}>

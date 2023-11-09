@@ -1,9 +1,11 @@
 import { Stack, Typography } from "@mui/material";
-import MailTextField from "../atomic/molecules/mail-text-field";
+import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
+
+import { EmailSignUpEventParams, MouseEventWithParam } from "../../types";
 import StringUtil from "../../util/string-util";
 import SecondaryButton from "../atomic/atoms/secondary-button";
-import { EmailSignUpEventParams, MouseEventWithParam } from "../../types";
-import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
+import MailTextField from "../atomic/molecules/mail-text-field";
+
 
 type SendVerificationEmailFormProps = PropsWithChildren & {
   onClickSendVerification?: MouseEventHandler;

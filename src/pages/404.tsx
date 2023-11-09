@@ -1,8 +1,9 @@
-import NextLink from "next/link";
-import Head from "next/head";
 import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import Head from "next/head";
 import Image from "next/image";
+import NextLink from "next/link";
+
 import PrimaryButton from "../components/atomic/atoms/primary-button";
 
 const NotFound = () => {

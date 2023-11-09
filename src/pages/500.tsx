@@ -1,6 +1,7 @@
-import Head from "next/head";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import Head from "next/head";
+
 import LinkTypography from "../components/atomic/atoms/link-typography";
 
 const ServerError = (props: { error: Error }) => {

@@ -1,5 +1,5 @@
-import { useTheme } from "@mui/material/styles";
 import { Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { StackProps } from "@mui/system";
 
 const EventEmptyBox = (props: { title?: string } & StackProps) => {

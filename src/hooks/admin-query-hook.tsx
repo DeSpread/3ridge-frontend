@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
-import { CLEAR_PARTICIPATED_ALL_EVENTS_BY_USER_ID } from "../lib/apollo/query";
+
 import { APP_ERROR_MESSAGE, AppError } from "../error/my-error";
+import { CLEAR_PARTICIPATED_ALL_EVENTS_BY_USER_ID } from "../lib/apollo/query";
 
 export function useAdminQuery(userId?: string) {
   const [ClearParticipatedAllEventsByUserId] = useMutation(

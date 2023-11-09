@@ -1,5 +1,6 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
 import React from "react";
+
 import { ReversibleSvgIconProps } from "../../../../types";
 
 function EmailIcon(props: ReversibleSvgIconProps) {

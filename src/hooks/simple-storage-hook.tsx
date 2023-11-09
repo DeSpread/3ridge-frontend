@@ -17,8 +17,16 @@ const useSimpleStorage = () => {
     },
   });
 
-  const asyncUploadImage = async (imageName: string, base64Data: string) => {
-    const data = { name: imageName, data: base64Data };
+  const asyncUploadImage = async (
+    imageName: string,
+    base64Data: string,
+    contentType?: string,
+  ) => {
+    const data = {
+      name: imageName,
+      data: base64Data,
+      content_type: contentType,
+    };
     return await mutation.mutateAsync(data);
   };
 

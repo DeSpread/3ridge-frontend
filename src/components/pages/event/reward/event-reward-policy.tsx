@@ -1,10 +1,12 @@
-import { Stack, Typography } from "@mui/material";
-import StyledChip from "../../../atomic/atoms/styled/styled-chip";
-import { Ticket } from "../../../../types";
+import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import RedeemIcon from "@mui/icons-material/Redeem";
-import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
+import { Stack, Typography } from "@mui/material";
 import React, { PropsWithChildren } from "react";
+
+import { Ticket } from "../../../../types";
+import StyledChip from "../../../atomic/atoms/styled/styled-chip";
+
 import { RewardPolicyType } from "@/__generated__/graphql";
 
 const EventRewardPolicy = (

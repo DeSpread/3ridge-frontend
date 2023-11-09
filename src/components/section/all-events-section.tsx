@@ -1,17 +1,19 @@
+import { Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useLoading } from "../../provider/loading/loading-provider";
 import React, { useState } from "react";
+
+import { TicketSortType } from "../../__generated__/graphql";
+import { useAllTicketsQuery } from "../../hooks/query/use-all-tickets";
+import { useLoading } from "../../provider/loading/loading-provider";
 import {
   FILTER_TYPE,
   FilterType,
   MouseEventWithParam,
   TicketEventParam,
 } from "../../types";
-import { TicketSortType } from "../../__generated__/graphql";
-import { Stack, Typography } from "@mui/material";
+
 import TicketsSection from "./tickets-section";
 
-import { useAllTicketsQuery } from "../../hooks/query/use-all-tickets";
 
 const AllEventsSection = () => {
   const router = useRouter();

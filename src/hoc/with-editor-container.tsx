@@ -1,17 +1,21 @@
-import React, { PropsWithChildren } from "react";
-import { Box, IconButton, Stack } from "@mui/material";
+import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
+import { Box, IconButton, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import React, { PropsWithChildren } from "react";
 
 export default function WithEditorContainer<T extends PropsWithChildren>(
-  WrappedComponent: React.ComponentType<T>
+  WrappedComponent: React.ComponentType<T>,
 ) {
   const ComponentWith = (
     props: T & {
+      featureFlagChangeOrder?: boolean;
+      onClickOrderToPrev?: React.MouseEventHandler;
+      onClickOrderToNext?: React.MouseEventHandler;
       onClickForEdit?: React.MouseEventHandler<HTMLDivElement>;
       onClickForDelete?: React.MouseEventHandler<HTMLButtonElement>;
       disableHoverEffect?: boolean;
-    }
+    },
   ) => {
     const theme = useTheme();
     const OFFSET_SIZE = 2;
@@ -82,6 +86,24 @@ export default function WithEditorContainer<T extends PropsWithChildren>(
               <CloseIcon></CloseIcon>
             </IconButton>
           </Stack>
+        )}
+        {props.featureFlagChangeOrder && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-between">
+            <IconButton
+              className="pointer-events-auto m-2 border p-2 hover:bg-white/50"
+              title={`순서변경:앞으로\nshift 누를 시 맨 앞으로`}
+              onClick={props.onClickOrderToPrev}
+            >
+              <ArrowBackIosNew />
+            </IconButton>
+            <IconButton
+              className="pointer-events-auto m-2 border p-2 hover:bg-white/50"
+              title={`순서변경:뒤로\nshift 누를 시 맨 뒤로`}
+              onClick={props.onClickOrderToNext}
+            >
+              <ArrowForwardIos />
+            </IconButton>
+          </div>
         )}
       </div>
     );

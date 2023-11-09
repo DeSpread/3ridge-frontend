@@ -1,11 +1,3 @@
-import * as React from "react";
-import {
-  CSSProperties,
-  MouseEventHandler,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from "react";
 import {
   FormControl,
   FormControlLabel,
@@ -16,13 +8,23 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import PrimaryCard from "../../atomic/atoms/primary-card";
+import { useTheme } from "@mui/material/styles";
+import * as React from "react";
+import {
+  CSSProperties,
+  MouseEventHandler,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from "react";
+
 import {
   MouseEventWithParam,
   QuizContent,
   QuizEventParam,
 } from "../../../types";
-import { useTheme } from "@mui/material/styles";
+import PrimaryCard from "../../atomic/atoms/primary-card";
+
 
 export type QuestQuizFormProps = PropsWithChildren & {
   cardSx?: CSSProperties;

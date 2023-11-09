@@ -1,3 +1,5 @@
+import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
+import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import {
   ButtonProps,
   styled,
@@ -10,9 +12,8 @@ import {
   Grid,
 } from "@mui/material";
 import { useState } from "react";
+
 import PrimaryButton from "../../atomic/atoms/primary-button";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
-import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 
 interface StyledTabProps {
   label: string;

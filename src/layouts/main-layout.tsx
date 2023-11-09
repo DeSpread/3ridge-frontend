@@ -48,6 +48,7 @@ import AccountCreateAlertDialog from "@/layouts/dialog/sign/account-create-alert
 import MigrationAlertDialog from "@/layouts/dialog/sign/migration-alert-dialog";
 import MigrationDialog from "@/layouts/dialog/sign/migration-dialog";
 import SignInDialog from "@/layouts/dialog/sign/sign-in-dialog";
+import { useConfirm } from "@/provider/confirm/confirm-provider";
 import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
 
 type MainLayoutProps = PropsWithChildren & {
@@ -94,6 +95,7 @@ const MainLayout = (props: MainLayoutProps) => {
     userData,
     asyncKakaoLogin,
     asyncUpdateKakao,
+    asyncUpdateAppAgreement,
     asyncCreateUserByKakaoInfo,
   } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
@@ -112,7 +114,8 @@ const MainLayout = (props: MainLayoutProps) => {
   const [isMigrationTry, setIsMigrationTry] = useState(false);
   const { isMobile } = useMobile();
 
-  const { showErrorAlert, showAlert } = useAlert();
+  const { showErrorAlert } = useAlert();
+  const { openConfirm } = useConfirm();
   const { showWalletAlert } = useWalletAlert();
   const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
@@ -208,24 +211,28 @@ const MainLayout = (props: MainLayoutProps) => {
                 marginLeft: -1,
               }}
             >
-              <Stack direction={"row"} alignItems={"flex-start"}>
-                <Image
-                  src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_white.svg"
-                  }
-                  height={smUp ? 52 : 48}
-                  width={smUp ? 132 : 120}
-                  alt={""}
-                />
-                <Image
-                  src={
-                    "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/beta.svg"
-                  }
-                  height={smUp ? 30 : 30}
-                  width={smUp ? 30 : 30}
-                  alt={""}
-                />
-              </Stack>
+              <div className="flex items-start">
+                <div className="relative aspect-[1/0.393] w-28 sm:w-32">
+                  <Image
+                    src={
+                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/3ridge_logo_white.svg"
+                    }
+                    alt={""}
+                    layout="fill"
+                    objectFit="contain"
+                  />
+                </div>
+                <div className="relative aspect-square w-7">
+                  <Image
+                    src={
+                      "https://3ridge.s3.ap-northeast-2.amazonaws.com/logo/02_svg/beta.svg"
+                    }
+                    alt={""}
+                    layout="fill"
+                    objectFit="contain"
+                  />
+                </div>
+              </div>
             </Box>
             {!props.disableNavButtonSet &&
               (smUp ? (
@@ -261,7 +268,7 @@ const MainLayout = (props: MainLayoutProps) => {
                           setSignInWithNetworkSelectVisible(true);
                         }}
                       >
-                        지갑 연결
+                        로그인
                       </SecondaryButton>
                     </Stack>
                   )}
@@ -503,22 +510,72 @@ const MainLayout = (props: MainLayoutProps) => {
           await asyncLogoutBtnOnClick();
           setOpenMigrationDialog(false);
         }}
-        onMigrationClick={async (e) => {
+        onMigrationClick={async (e, isAgreeMarketingTerm) => {
           showLoading();
           await asyncUpdateKakao();
+
           setOpenMigrationDialog(false);
           closeLoading();
+
+          if (!isAgreeMarketingTerm) {
+            openConfirm({
+              title: "마케팅 정보 수신",
+              contents:
+                "마케팅 정보 수신에 동의하지 않으실 경우,\n포인트를 제외한 모든 경품을 획득하실 수 없어요\n이대로 진행하시겠어요?",
+              cancelLabel: "진행할게요 🥲 ",
+              okLabel: "동의할게요",
+              onClickOk() {
+                asyncUpdateAppAgreement({
+                  appAgreement: {
+                    marketingPermission: true,
+                  },
+                });
+              },
+            });
+          } else {
+            await asyncUpdateAppAgreement({
+              appAgreement: {
+                marketingPermission: isAgreeMarketingTerm,
+              },
+            });
+          }
         }}
       ></MigrationDialog>
       <AccountCreateAlertDialog
         open={openAccountCreateAlertDialog}
         title={"알림"}
-        onCreateAccountClick={async (e) => {
+        onCreateAccountClick={async (e, isAgreeMarketingTerm) => {
           try {
             showLoading();
-            await asyncCreateUserByKakaoInfo();
+            const kakaoInfo = await asyncCreateUserByKakaoInfo();
+
             setOpenAccountCreateAlertDialog(false);
             closeLoading();
+
+            if (!isAgreeMarketingTerm) {
+              openConfirm({
+                title: "마케팅 정보 수신",
+                contents:
+                  "마케팅 정보 수신에 동의하지 않으실 경우,\n포인트를 제외한 모든 경품을 획득하실 수 없어요\n이대로 진행하시겠어요?",
+                cancelLabel: "진행할게요 🥲 ",
+                okLabel: "동의할게요",
+                onClickOk() {
+                  asyncUpdateAppAgreement({
+                    name: kakaoInfo?.name || undefined,
+                    appAgreement: {
+                      marketingPermission: true,
+                    },
+                  });
+                },
+              });
+            } else {
+              await asyncUpdateAppAgreement({
+                name: kakaoInfo?.name || undefined,
+                appAgreement: {
+                  marketingPermission: isAgreeMarketingTerm,
+                },
+              });
+            }
           } catch (e) {
             showErrorAlert({ content: getLocaleErrorMessage(e) });
           }

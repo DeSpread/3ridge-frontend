@@ -1,9 +1,9 @@
-import { SUPPORTED_NETWORKS, SupportedNetwork, WALLET_NAMES } from "../types";
+import { ChainType } from "../__generated__/graphql";
 import AptosIcon from "../components/atomic/atoms/svg/aptos-icon";
 import EthIcon from "../components/atomic/atoms/svg/eth-icon";
-import SuiIcon from "../components/atomic/atoms/svg/sui-icon";
 import StacksIcon from "../components/atomic/atoms/svg/stacks-icon";
-import { ChainType } from "../__generated__/graphql";
+import SuiIcon from "../components/atomic/atoms/svg/sui-icon";
+import { SUPPORTED_NETWORKS, SupportedNetwork, WALLET_NAMES } from "../types";
 
 class ResourceHelper {
   public static getExplorerUri = (

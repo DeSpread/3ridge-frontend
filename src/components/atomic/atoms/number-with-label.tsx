@@ -5,9 +5,10 @@ import {
   TextFieldProps,
   Typography,
 } from "@mui/material";
-import StyledOutlinedInput from "./styled/styled-outlined-input";
 import React from "react";
+
 import NumberInput from "./number-input";
+import StyledOutlinedInput from "./styled/styled-outlined-input";
 
 const NumberWithLabel = (
   props: {

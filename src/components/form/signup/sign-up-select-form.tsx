@@ -1,10 +1,12 @@
 import { Avatar, Stack, Typography } from "@mui/material";
-import SecondaryButton from "../../atomic/atoms/secondary-button";
-import PrimaryButton from "../../atomic/atoms/primary-button";
-import EmailIcon from "../../atomic/atoms/svg/email-icon";
-import LinkTypography from "../../atomic/atoms/link-typography";
 import { useTheme } from "@mui/material/styles";
 import { MouseEventHandler, PropsWithChildren } from "react";
+
+import LinkTypography from "../../atomic/atoms/link-typography";
+import PrimaryButton from "../../atomic/atoms/primary-button";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
+import EmailIcon from "../../atomic/atoms/svg/email-icon";
+
 
 type SignUpSelectFormProps = PropsWithChildren & {
   onClickSignUpWith?: MouseEventHandler;

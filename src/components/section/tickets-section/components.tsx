@@ -44,12 +44,12 @@ const LoadMoreInner = (
 ) => {
   return (
     <div
-      className="flex justify-center items-center gap-4 h-32"
+      className="flex h-32 items-center justify-center gap-4"
       ref={ref}
       {...props}
     >
       <svg
-        className="animate-spin h-5 w-5 text-white"
+        className="h-5 w-5 animate-spin text-white"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

@@ -1,6 +1,3 @@
-import React, { ReactElement } from "react";
-import MainLayout from "../../layouts/main-layout";
-import Head from "next/head";
 import {
   Box,
   Card,
@@ -9,13 +6,17 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import Head from "next/head";
+import React, { ReactElement } from "react";
+
 import PrimaryButton from "../../components/atomic/atoms/primary-button";
-import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
-import { useAdminQuery } from "../../hooks/admin-query-hook";
-import { useAlert } from "../../provider/alert/alert-provider";
-import { getLocaleErrorMessage } from "../../error/my-error";
 import EventsEditSection from "../../components/section/events-edit-section";
 import ProjectsEditSection from "../../components/section/projects-edit-section";
+import { getLocaleErrorMessage } from "../../error/my-error";
+import { useAdminQuery } from "../../hooks/admin-query-hook";
+import { useSignedUserQuery } from "../../hooks/signed-user-query-hook";
+import MainLayout from "../../layouts/main-layout";
+import { useAlert } from "../../provider/alert/alert-provider";
 
 const Admin = () => {
   const { asyncClearParticipatedAllEventsByUserId } = useAdminQuery();

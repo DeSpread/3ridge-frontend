@@ -1,10 +1,11 @@
 // Realistic.tsx
 
+import { Box, Typography } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
 import { CreateTypes, GlobalOptions, Options } from "canvas-confetti";
 import React, { Component } from "react";
+
 import ReactCanvasConfetti from "../../lib/confetti/react-canvas-confetti";
-import Backdrop from "@mui/material/Backdrop";
-import { Box, Typography } from "@mui/material";
 
 export interface IProps extends Options, GlobalOptions {
   fire?: boolean;
