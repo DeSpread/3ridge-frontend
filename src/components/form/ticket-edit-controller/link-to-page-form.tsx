@@ -1,6 +1,7 @@
+import { PropsWithChildren } from "react";
+
 import Container from "../../atomic/atoms/container";
 import LinkTypography from "../../atomic/atoms/link-typography";
-import { PropsWithChildren } from "react";
 
 const LinkToPageForm = (props: PropsWithChildren & { ticketId: string }) => {
   return (

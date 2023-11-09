@@ -1,5 +1,3 @@
-import React, { PropsWithChildren, useEffect, useState } from "react";
-import Container from "../../atomic/atoms/container";
 import {
   Divider,
   FormControl,
@@ -9,8 +7,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import React, { PropsWithChildren, useEffect, useState } from "react";
+
 import { Project } from "../../../__generated__/graphql";
 import { Ticket } from "../../../types";
+import Container from "../../atomic/atoms/container";
 
 const ProjectUpdateForm = (
   props: PropsWithChildren & {

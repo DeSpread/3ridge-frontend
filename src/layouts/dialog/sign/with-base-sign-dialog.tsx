@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +9,9 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { MouseEventHandler } from "react";
 import { TransitionProps } from "@mui/material/transitions";
-import CloseIcon from "@mui/icons-material/Close";
+import React, { MouseEventHandler } from "react";
+
 import { Z_INDEX_OFFSET } from "../../../types";
 
 type SignDialogProps = DialogProps & {

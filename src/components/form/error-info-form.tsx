@@ -1,7 +1,9 @@
 import { Stack, Typography, useMediaQuery } from "@mui/material";
-import LinkTypography from "../atomic/atoms/link-typography";
-import React, { ReactElement } from "react";
 import { useTheme } from "@mui/material/styles";
+import React, { ReactElement } from "react";
+
+import LinkTypography from "../atomic/atoms/link-typography";
+
 
 const ErrorInfoForm = (props: { content: string | ReactElement }) => {
   const theme = useTheme();

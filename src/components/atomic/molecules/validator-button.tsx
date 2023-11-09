@@ -1,9 +1,10 @@
-import { Box, ButtonProps, Stack, Typography } from "@mui/material";
-import React, { MouseEventHandler } from "react";
-import { MouseEventWithParam, ReversibleSvgIconProps } from "../../../types";
-import { useTheme } from "@mui/material/styles";
-import PrimaryButton from "../atoms/primary-button";
 import CloseIcon from "@mui/icons-material/Close";
+import { Box, ButtonProps, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React, { MouseEventHandler } from "react";
+
+import { MouseEventWithParam, ReversibleSvgIconProps } from "../../../types";
+import PrimaryButton from "../atoms/primary-button";
 
 type ValidatorButton<T> = ButtonProps & {
   value: string | undefined;

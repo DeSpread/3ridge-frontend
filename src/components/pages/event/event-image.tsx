@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { Skeleton } from "@mui/material";
-import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
+import React, { PropsWithChildren } from "react";
 
 const EventImage = ({
   imageUrl,

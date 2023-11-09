@@ -1,19 +1,7 @@
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { index } from "@zxing/text-encoding/es2015/encoding/indexes";
-import { e } from "msw/lib/glossary-de6278a9";
+import { Box, Checkbox, FormControlLabel, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import ClickTyphography from "@/components/atomic/atoms/click-typhography";
-import PrimaryButton from "@/components/atomic/atoms/primary-button";
-import SimpleDialog from "@/components/dialogs/simple-dialog";
-import { useAlert } from "@/provider/alert/alert-provider";
+import TermAgreeItem from "@/components/atomic/atoms/term-agree-item";
 
 const MarketingAgreementForm = ({
   defaultValue = false,
@@ -22,9 +10,7 @@ const MarketingAgreementForm = ({
   defaultValue?: boolean;
   onChangedValue?: (checked: boolean[]) => void;
 }) => {
-  const { showAlert } = useAlert();
   const [checkedList, setCheckedList] = useState([defaultValue, defaultValue]);
-  const [openSubDialogList, setOpenSubDialogList] = useState([false, false]);
 
   useEffect(() => {
     onChangedValue?.(checkedList);
@@ -50,93 +36,35 @@ const MarketingAgreementForm = ({
                 />
               }
             />
-            <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
-              <Stack direction={"row"} alignItems={"center"}>
-                <FormControlLabel
-                  label=""
-                  control={
-                    <Checkbox
-                      checked={checkedList[0]}
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>,
-                      ) => {
-                        setCheckedList([event.target.checked, checkedList[1]]);
-                      }}
-                    />
-                  }
-                />
-                <Box sx={{ marginLeft: -2 }}>
-                  <Tooltip title={"마케팅 수신 동의 - 1"}>
-                    <Box>
-                      <ClickTyphography
-                        onClick={(e) => {
-                          setOpenSubDialogList((prevState) => {
-                            return [true, prevState[1]];
-                          });
-                        }}
-                      >
-                        마케팅 수신 동의 - 1
-                      </ClickTyphography>
-                    </Box>
-                  </Tooltip>
-                </Box>
-              </Stack>
-              <Stack direction={"row"} alignItems={"center"}>
-                <FormControlLabel
-                  label=""
-                  control={
-                    <Checkbox
-                      checked={checkedList[1]}
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>,
-                      ) => {
-                        setCheckedList([checkedList[0], event.target.checked]);
-                      }}
-                    />
-                  }
-                />
-                <Box sx={{ marginLeft: -2 }}>
-                  <Tooltip title={"마케팅 수신 동의 - 2"}>
-                    <Box>
-                      <ClickTyphography
-                        onClick={(e) => {
-                          setOpenSubDialogList((prevState) => {
-                            return [prevState[0], true];
-                          });
-                        }}
-                      >
-                        마케팅 수신 동의 - 2
-                      </ClickTyphography>
-                    </Box>
-                  </Tooltip>
-                </Box>
-              </Stack>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                ml: 3,
+              }}
+            >
+              <TermAgreeItem
+                checked={checkedList[0]}
+                termLink="/term/kakao"
+                onChangeCheck={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setCheckedList([event.target.checked, checkedList[1]]);
+                }}
+              >
+                (필수) 개인정보 수집·이용 동의
+              </TermAgreeItem>
+              <TermAgreeItem
+                checked={checkedList[1]}
+                termLink="/term/kakao"
+                onChangeCheck={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setCheckedList([checkedList[0], event.target.checked]);
+                }}
+              >
+                (선택) 마케팅 정보 수신 동의
+              </TermAgreeItem>
             </Box>
           </div>
         </Stack>
       </Stack>
-      <SimpleDialog
-        open={openSubDialogList[0]}
-        title={"마케팅 수신 동의 - 1"}
-        onCloseBtnClicked={(e) => {
-          setOpenSubDialogList((prevState) => {
-            return [false, prevState[1]];
-          });
-        }}
-      >
-        <Typography>마케팅 수신 동의</Typography>
-      </SimpleDialog>
-      <SimpleDialog
-        open={openSubDialogList[1]}
-        title={"마케팅 수신 동의 - 2"}
-        onCloseBtnClicked={(e) => {
-          setOpenSubDialogList((prevState) => {
-            return [prevState[0], false];
-          });
-        }}
-      >
-        <Typography>마케팅 수신 동의</Typography>
-      </SimpleDialog>
     </>
   );
 };

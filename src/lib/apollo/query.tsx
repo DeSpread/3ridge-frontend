@@ -416,6 +416,22 @@ export const UPDATE_USER_PROFILE_IMAGE_URL_BY_NAME = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_USER_APP_AGREEMENT_BY_NAME = gql(/* GraphQL */ `
+  mutation UpdateUserAppAgreementByName(
+    $name: String!
+    $appAgreement: AppAgreementInputType!
+  ) {
+    updateUserByName(
+      name: $name
+      userUpdateInput: { appAgreement: $appAgreement }
+    ) {
+      appAgreement {
+        marketingPermission
+      }
+    }
+  }
+`);
+
 export const UPDATE_USER_BY_EMAIL = gql(/* GraphQL */ `
   mutation UpdateUserEmailByName($name: String!, $email: String!) {
     updateUserByName(name: $name, userUpdateInput: { email: $email }) {
@@ -739,6 +755,7 @@ export const GET_PROJECTS = gql(/* GraphQL */ `
       description
       imageUrl
       name
+      priority
       projectSocial {
         discordUrl
         officialUrl
@@ -760,6 +777,7 @@ export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
       description
       imageUrl
       name
+      priority
       projectSocial {
         discordUrl
         officialUrl
@@ -1239,6 +1257,12 @@ export const UPDATE_PROJECT = gql(/* GraphQL */ `
     ) {
       _id
     }
+  }
+`);
+
+export const REORDER_PROJECT = gql(/* GraphQL */ `
+  mutation reorderProject($projectId: String!, $to: Float!) {
+    reorderProject(projectId: $projectId, to: $to)
   }
 `);
 

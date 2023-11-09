@@ -1,6 +1,7 @@
-import { ReversibleSvgIconProps } from "../../../../types";
 import { SvgIcon } from "@mui/material";
 import React from "react";
+
+import { ReversibleSvgIconProps } from "../../../../types";
 
 function SuiIcon(props: ReversibleSvgIconProps) {
   return (

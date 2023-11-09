@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material";
-import React, { MouseEventHandler, useState } from "react";
+import React, { MouseEvent, useState } from "react";
 
 import PrimaryButton from "@/components/atomic/atoms/primary-button";
 import SimpleDialog, {
@@ -12,7 +12,10 @@ const AccountCreateAlertDialog = ({
   onCreateAccountClick,
   ...rest
 }: {
-  onCreateAccountClick?: MouseEventHandler;
+  onCreateAccountClick?(
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+    isAgreeMarketingTerm: boolean,
+  ): void;
 } & SimpleDialogProps) => {
   const [checkedList, setCheckedList] = useState([false, false]);
   const { showAlert } = useAlert();
@@ -28,14 +31,14 @@ const AccountCreateAlertDialog = ({
         <Stack spacing={1} sx={{ marginTop: 3 }}>
           <PrimaryButton
             onClick={(e) => {
-              if (!(checkedList[0] && checkedList[1])) {
+              if (!checkedList[0]) {
                 showAlert({
                   title: "알림",
-                  content: "마케팅 수신에 모두 동의 부탁드립니다",
+                  content: "(필수) 개인정보 수집·이용 동의가 필요해요",
                 });
                 return;
               }
-              onCreateAccountClick?.(e);
+              onCreateAccountClick?.(e, checkedList[1]);
             }}
           >
             예, 생성하겠습니다.

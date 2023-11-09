@@ -1,12 +1,14 @@
-import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
-import React from "react";
 import { Box, Grid, Stack, Typography } from "@mui/material";
-import SecondaryButton from "../../../components/atomic/atoms/secondary-button";
 import Image from "next/image";
+import React from "react";
+
+import SecondaryButton from "../../../components/atomic/atoms/secondary-button";
 import AptosIcon from "../../../components/atomic/atoms/svg/aptos-icon";
-import { SUPPORTED_NETWORKS, SupportedNetwork } from "../../../types";
-import { useMobile } from "../../../provider/mobile/mobile-context";
 import SuiIcon from "../../../components/atomic/atoms/svg/sui-icon";
+import { useMobile } from "../../../provider/mobile/mobile-context";
+import { SUPPORTED_NETWORKS, SupportedNetwork } from "../../../types";
+
+import WithBaseSignInDialog, { SignDialogProps } from "./with-base-sign-dialog";
 
 type SignInWithWalletDialogProps = SignDialogProps & {
   onNetworkButtonClicked: (network: SupportedNetwork) => void;

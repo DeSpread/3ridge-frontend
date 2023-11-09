@@ -1,7 +1,8 @@
+import { OutlinedInputProps } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useMemo } from "react";
+
 import StyledOutlinedInput from "../atoms/styled/styled-outlined-input";
-import { OutlinedInputProps } from "@mui/material";
 
 type ValidatedTextInputProps = OutlinedInputProps & {
   isValid: boolean;

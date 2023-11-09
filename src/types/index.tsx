@@ -354,6 +354,7 @@ export type Project = {
   description: string;
   imageUrl: string;
   name: string;
+  priority: number;
   projectSocial: {
     discordUrl: string;
     officialUrl: string;

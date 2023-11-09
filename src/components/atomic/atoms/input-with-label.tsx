@@ -1,6 +1,7 @@
 import { Box, OutlinedInputProps, Stack, Typography } from "@mui/material";
-import StyledOutlinedInput from "./styled/styled-outlined-input";
 import React from "react";
+
+import StyledOutlinedInput from "./styled/styled-outlined-input";
 
 const InputWithLabel = (
   props: {

@@ -1,4 +1,5 @@
 import { Stack, Typography } from "@mui/material";
+
 import TicketsSection from "../tickets-section/index";
 
 export const AllEvents = () => {

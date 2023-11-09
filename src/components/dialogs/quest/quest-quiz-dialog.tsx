@@ -1,7 +1,4 @@
-import * as React from "react";
-import { MouseEventHandler, useMemo, useState } from "react";
-import DialogTitle from "@mui/material/DialogTitle";
-import Dialog from "@mui/material/Dialog";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   DialogContent,
@@ -10,7 +7,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import QuestQuizForm from "../../form/quest/quest-quiz-form";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useTheme } from "@mui/material/styles";
+import * as React from "react";
+import { MouseEventHandler, useMemo, useState } from "react";
+
 import {
   MouseEventWithParam,
   QuizEventParam,
@@ -18,8 +20,8 @@ import {
   Z_INDEX_OFFSET,
 } from "../../../types";
 import SecondaryButton from "../../atomic/atoms/secondary-button";
-import { useTheme } from "@mui/material/styles";
-import CloseIcon from "@mui/icons-material/Close";
+import QuestQuizForm from "../../form/quest/quest-quiz-form";
+
 
 type QuestQuizDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;

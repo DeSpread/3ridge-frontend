@@ -1,3 +1,4 @@
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import {
   Avatar,
   Box,
@@ -7,12 +8,12 @@ import {
   SvgIconProps,
   Typography,
 } from "@mui/material";
-import XpChip from "../atoms/styled/xp-chip";
-import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
 import React from "react";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { User } from "../../../types";
+
+import { DEFAULT_PROFILE_IMAGE_DATA_SRC } from "../../../const";
 import WithOverlapChildren from "../../../hoc/with-overlap-children";
+import { User } from "../../../types";
+import XpChip from "../atoms/styled/xp-chip";
 import No1Icon from "../atoms/svg/no1-icon";
 import No2Icon from "../atoms/svg/no2-icon";
 import No3Icon from "../atoms/svg/no3-icon";

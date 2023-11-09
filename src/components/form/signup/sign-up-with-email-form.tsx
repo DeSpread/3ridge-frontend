@@ -1,10 +1,11 @@
-import { useTheme } from "@mui/material/styles";
 import { Stack, Typography, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import React, { MouseEventHandler, PropsWithChildren, useState } from "react";
-import SecondaryButton from "../../atomic/atoms/secondary-button";
-import LinkTypography from "../../atomic/atoms/link-typography";
+
 import { EmailSignUpEventParams, MouseEventWithParam } from "../../../types";
 import StringUtil from "../../../util/string-util";
+import LinkTypography from "../../atomic/atoms/link-typography";
+import SecondaryButton from "../../atomic/atoms/secondary-button";
 import MailTextField from "../../atomic/molecules/mail-text-field";
 import {
   ConfirmPasswordTextField,

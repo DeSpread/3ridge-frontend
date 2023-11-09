@@ -1,13 +1,16 @@
-import { Ticket } from "../../../../types";
-import React, { MouseEventHandler, PropsWithChildren } from "react";
 import { Box, Divider, Stack } from "@mui/material";
-import PrimaryCard from "../../../atomic/atoms/primary-card";
 import { useTheme } from "@mui/material/styles";
-import EventRewardImage from "./description/event-reward-image";
-import EventRewardPoint from "./description/event-reward-point";
-import EventRewardLimitNumber from "./description/event-reward-limit-number";
+import React, { MouseEventHandler, PropsWithChildren } from "react";
+
+import { Ticket } from "../../../../types";
+import PrimaryCard from "../../../atomic/atoms/primary-card";
+
+
 import EventRewardChainContent from "./description/event-reward-chain-content";
+import EventRewardImage from "./description/event-reward-image";
+import EventRewardLimitNumber from "./description/event-reward-limit-number";
 import EventRewardName from "./description/event-reward-name";
+import EventRewardPoint from "./description/event-reward-point";
 
 const EventRewardDescription = (
   props: {

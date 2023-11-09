@@ -1,3 +1,5 @@
+import EmailIcon from "@mui/icons-material/Email";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import {
   Box,
   Divider,
@@ -7,14 +9,14 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import SecondaryButton from "../../components/atomic/atoms/secondary-button";
 import { useTheme } from "@mui/material/styles";
-import { useRouter } from "next/router";
-import { useLoading } from "../../provider/loading/loading-provider";
-import React from "react";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import EmailIcon from "@mui/icons-material/Email";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import React from "react";
+
+import SecondaryButton from "../../components/atomic/atoms/secondary-button";
+import { useLoading } from "../../provider/loading/loading-provider";
+
 
 const TWITTER_LINK = "https://twitter.com/3ridge_io";
 const MAIL_LINK = "mailto:support@3ridge.io?Subject=Hello!%203ridge";

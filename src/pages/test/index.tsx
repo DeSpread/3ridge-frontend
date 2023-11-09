@@ -1,11 +1,11 @@
 import React from "react";
-import PrimaryButton from "../../components/atomic/atoms/primary-button";
 import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
-} from "wagmi";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+ useAccount, useConnect, useDisconnect } from "wagmi";
+
+import PrimaryButton from "../../components/atomic/atoms/primary-button";
 
 const useContract = (address?: string) => {
   if (!address) {

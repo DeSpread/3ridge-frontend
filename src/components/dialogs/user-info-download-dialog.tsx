@@ -1,9 +1,11 @@
 import { Stack } from "@mui/material";
 import React from "react";
-import SecondaryButton from "../atomic/atoms/secondary-button";
-import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
-import UserInfoDownloadForm from "../form/user-info-download-form";
+
 import { TicketUserQuery } from "../../types";
+import SecondaryButton from "../atomic/atoms/secondary-button";
+import UserInfoDownloadForm from "../form/user-info-download-form";
+
+import SimpleDialog, { SimpleDialogProps } from "./simple-dialog";
 
 const UserInfoDownloadDialog = (
   props: {

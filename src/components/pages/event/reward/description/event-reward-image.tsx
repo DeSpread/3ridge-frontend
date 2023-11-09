@@ -1,8 +1,9 @@
 import { Box, Skeleton, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import React, { PropsWithChildren } from "react";
+
 import { Ticket } from "../../../../../types";
-import { useTheme } from "@mui/material/styles";
 
 const EventRewardImage = (
   props: { ticketData?: Ticket } & PropsWithChildren

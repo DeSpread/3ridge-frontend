@@ -1,7 +1,8 @@
-import { Avatar, IconButton } from "@mui/material";
-import BlockIcon from "./block-icon";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { Avatar, IconButton } from "@mui/material";
 import React from "react";
+
+import BlockIcon from "./block-icon";
 
 const EditableAvatar = ({
   src,

@@ -1,12 +1,13 @@
 import { useQuery } from "@apollo/client";
-import TypeHelper from "../../helper/type-helper";
-import { GET_All_TICKETS } from "../../lib/apollo/query";
-import { FilterType, FILTER_TYPE } from "../../types";
+
 import {
   TicketSortType,
   EventType,
   TicketStatusType,
 } from "../../__generated__/graphql";
+import TypeHelper from "../../helper/type-helper";
+import { GET_All_TICKETS } from "../../lib/apollo/query";
+import { FilterType, FILTER_TYPE } from "../../types";
 
 export interface AllTicketsQueryProps {
   // FIXME: filterType should be TicketStatusType

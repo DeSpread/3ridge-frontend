@@ -1,3 +1,9 @@
+import { Box, Stack, useMediaQuery } from "@mui/material";
+
+import MainLayout from "../../layouts/main-layout";
+
+import { useTheme } from "@mui/material/styles";
+import Head from "next/head";
 import React, {
   ReactElement,
   useEffect,
@@ -5,23 +11,19 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Box, Stack, useMediaQuery } from "@mui/material";
-import Head from "next/head";
-import MainLayout from "../../layouts/main-layout";
-import HomeFooter from "../../layouts/footer/home-footer";
-import { useTheme } from "@mui/material/styles";
-
 import { Swiper, SwiperSlide } from "swiper/react"; // basic
+
 import "swiper/css"; //basic
-import { useTicketsQuery } from "../../hooks/tickets-query-hook";
-import { FILTER_TYPE } from "../../types";
 import { EventType, TicketSortType } from "../../__generated__/graphql";
-import useWindowDimensions from "../../hooks/window-dimensions";
 import BannerOverlayStyleCard from "../../components/form/banner-overlay-style-card";
-import RecommendEventSwiperSection from "../../components/section/recommend-event-swiper-section";
 import BannerSwiperSection from "../../components/section/banner-swiper-section";
+import RecommendEventSwiperSection from "../../components/section/recommend-event-swiper-section";
 import RecommendProjectSwiperSection from "../../components/section/recommend-project-swiper-section";
 import { useProjectsQuery } from "../../hooks/projects-query-hook";
+import { useTicketsQuery } from "../../hooks/tickets-query-hook";
+import useWindowDimensions from "../../hooks/window-dimensions";
+import HomeFooter from "../../layouts/footer/home-footer";
+import { FILTER_TYPE } from "../../types";
 
 const Home = () => {
   const theme = useTheme();

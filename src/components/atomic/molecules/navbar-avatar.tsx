@@ -1,3 +1,5 @@
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import LogoutIcon from "@mui/icons-material/Logout";
 import {
   Avatar,
   Box,
@@ -8,6 +10,7 @@ import {
   styled,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import {
   MouseEvent,
   MouseEventHandler,
@@ -15,11 +18,10 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useTheme } from "@mui/material/styles";
+
 import StringHelper from "../../../helper/string-helper";
 import GradientTypography from "../atoms/gradient-typography";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import LogoutIcon from "@mui/icons-material/Logout";
+
 import BlockIcon from "./block-icon";
 
 type StyledMenuProps = PropsWithChildren & {

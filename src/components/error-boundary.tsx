@@ -1,5 +1,6 @@
 import Router from "next/router";
 import React from "react";
+
 import { getErrorMessage } from "../error/my-error";
 
 type ErrorBoundaryProps = React.PropsWithChildren<{}>;

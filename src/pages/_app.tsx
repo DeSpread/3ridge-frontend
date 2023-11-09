@@ -35,11 +35,13 @@ import { SnackbarProvider } from "../provider/snackbar/snackbar-provider";
 import { createTheme } from "../theme";
 
 import { client as apolloClient } from "@/lib/apollo/client";
+import ConfirmProvider from "@/provider/confirm/confirm-provider";
 import { Z_INDEX_OFFSET } from "@/types";
 
 const providers = combineProviders();
 providers.push(LoginProvider);
 providers.push(AlertProvider);
+providers.push(ConfirmProvider);
 providers.push(LoadingProvider);
 providers.push(SnackbarProvider);
 

@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   DialogContent,
@@ -6,22 +7,22 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { MouseEventHandler, useMemo, useState } from "react";
+
 import {
   AgreementEventParam,
   MouseEventWithParam,
   VerifyAgreementQuestContext,
   Z_INDEX_OFFSET,
 } from "../../types";
-import { useTheme } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import SecondaryButton from "../atomic/atoms/secondary-button";
 import ContentMetaDataRenderComponent from "../atomic/atoms/content-meta-data-render-component";
-import QuestQuizForm from "../form/quest/quest-quiz-form";
+import SecondaryButton from "../atomic/atoms/secondary-button";
 import QuestAgreementForm from "../form/quest/quest-agreement-form";
-import CloseIcon from "@mui/icons-material/Close";
+import QuestQuizForm from "../form/quest/quest-quiz-form";
 
 type AgreementDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;

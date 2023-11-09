@@ -1,7 +1,7 @@
-import { ButtonProps, IconButton, Stack } from "@mui/material";
-import React from "react";
-import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
+import { ButtonProps, IconButton, Stack } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React from "react";
 
 const EditRemoveButton = (props: ButtonProps) => {
   const ICON_SIZE = 32;

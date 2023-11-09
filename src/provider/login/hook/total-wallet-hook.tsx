@@ -1,28 +1,30 @@
 import { useWallet as useAptosWallet } from "@aptos-labs/wallet-adapter-react";
 import { useWallet as useSuiWallet } from "@suiet/wallet-kit";
-import {
-  SUPPORTED_NETWORKS,
-  SUPPORTED_NETWORKS_VALUES,
-  SupportedNetwork,
-  WalletName,
-} from "../../../types";
-import { useEffect, useMemo, useState } from "react";
-import PreferenceHelper from "../../../helper/preference-helper";
+import { useWeb3Modal } from "@web3modal/react";
 import addHours from "date-fns/addHours";
+import { useEffect, useMemo, useState } from "react";
 import {
   useAccount as useEvmAccount,
   useConnect as useEvmConnect,
   useDisconnect as useEvmDisconnect,
 } from "wagmi";
 import { InjectedConnector as EvmInjectedConnector } from "wagmi/connectors/injected";
+
 import {
   APP_ERROR_MESSAGE,
   AppError,
   getErrorMessage,
 } from "../../../error/my-error";
-import { useStacksWallet } from "../../../lib/stacks/stacks-wallet-hook";
+import PreferenceHelper from "../../../helper/preference-helper";
 import TypeHelper from "../../../helper/type-helper";
-import { useWeb3Modal } from "@web3modal/react";
+import { useStacksWallet } from "../../../lib/stacks/stacks-wallet-hook";
+import {
+  SUPPORTED_NETWORKS,
+  SUPPORTED_NETWORKS_VALUES,
+  SupportedNetwork,
+  WalletName,
+} from "../../../types";
+
 
 export function useTotalWallet() {
   const [connectedNetwork, setConnectedNetwork] = useState("");

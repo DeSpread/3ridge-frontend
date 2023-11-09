@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
-import Tab from "@mui/material/Tab";
 import { ThemeOptions } from "@mui/material/styles/createTheme";
+import Tab from "@mui/material/Tab";
 import { TabProps } from "@mui/material/Tab/Tab";
 
 const StyledTab = styled((props: TabProps) => <Tab disableRipple {...props} />)(

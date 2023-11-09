@@ -1,4 +1,6 @@
-import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   DialogContent,
@@ -7,16 +9,15 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { VerifySurveyQuestContext, Z_INDEX_OFFSET } from "../../../types";
-import DialogTitle from "@mui/material/DialogTitle";
-import CloseIcon from "@mui/icons-material/Close";
 import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
+import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
+
+import { useAlert } from "../../../provider/alert/alert-provider";
+import { VerifySurveyQuestContext, Z_INDEX_OFFSET } from "../../../types";
 import SecondaryButton from "../../atomic/atoms/secondary-button";
 import StyledOutlinedInput from "../../atomic/atoms/styled/styled-outlined-input";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { useAlert } from "../../../provider/alert/alert-provider";
 
 const QuestSurveyDialog = (
   props: {

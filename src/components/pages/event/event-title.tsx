@@ -1,6 +1,6 @@
 import { Box, Typography, useMediaQuery } from "@mui/material";
-import React, { PropsWithChildren } from "react";
 import { useTheme } from "@mui/material/styles";
+import React, { PropsWithChildren } from "react";
 
 const EventTitle = ({ title }: { title?: string } & PropsWithChildren) => {
   const theme = useTheme();

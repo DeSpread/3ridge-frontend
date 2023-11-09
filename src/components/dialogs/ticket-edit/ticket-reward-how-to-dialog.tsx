@@ -1,9 +1,11 @@
 import { Box, Stack, Typography } from "@mui/material";
-import StyledOutlinedInput from "../../atomic/atoms/styled/styled-outlined-input";
-import React from "react";
-import SecondaryButton from "../../atomic/atoms/secondary-button";
-import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 import Image from "next/image";
+import React from "react";
+
+import SecondaryButton from "../../atomic/atoms/secondary-button";
+import StyledOutlinedInput from "../../atomic/atoms/styled/styled-outlined-input";
+import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
+
 
 const TicketRewardHowToDialog = (props: SimpleDialogProps) => {
   const { ...rest } = props;

@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
 import { Box, Skeleton } from "@mui/material";
+import React, { useEffect } from "react";
 
 const SkeletonOverlayCard = () => {
   const ref = React.useRef<HTMLDivElement>(null);

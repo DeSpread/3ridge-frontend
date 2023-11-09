@@ -1,7 +1,7 @@
 // Colors
 
-import { ThemeOptions } from "@mui/material/styles/createTheme";
 import { PaletteColorOptions } from "@mui/material/styles/createPalette";
+import { ThemeOptions } from "@mui/material/styles/createTheme";
 
 const neutral = {
   100: "#F3F4F6",

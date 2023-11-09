@@ -1,6 +1,6 @@
 import { styled, TextField, TextFieldProps } from "@mui/material";
-import { TabProps } from "@mui/material/Tab/Tab";
 import Tab from "@mui/material/Tab";
+import { TabProps } from "@mui/material/Tab/Tab";
 
 const StyledRoundTextField = styled((props: TextFieldProps) => (
   <TextField {...props} />
