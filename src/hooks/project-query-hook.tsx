@@ -20,13 +20,14 @@ export function useProjectQuery(props: { projectId?: string }) {
         },
       });
 
-      setProjectData((prevState) => {
+      setProjectData(() => {
         return {
           _id: data.projectById._id ?? "",
           categories: data.projectById.categories ?? [],
           description: data.projectById.description ?? "",
           imageUrl: data.projectById.imageUrl ?? "",
           name: data.projectById.name ?? "",
+          priority: data.projectById.priority ?? -1,
           projectSocial: {
             discordUrl: data.projectById.projectSocial?.discordUrl ?? "",
             officialUrl: data.projectById.projectSocial?.officialUrl ?? "",

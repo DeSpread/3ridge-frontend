@@ -777,6 +777,7 @@ export const GET_PROJECT_BY_ID = gql(/* GraphQL */ `
       description
       imageUrl
       name
+      priority
       projectSocial {
         discordUrl
         officialUrl
