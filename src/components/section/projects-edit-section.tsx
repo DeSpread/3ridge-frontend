@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { produce } from "immer";
 import React, { MouseEvent, MouseEventHandler, useState } from "react";
 
 import { Project } from "../../__generated__/graphql";
