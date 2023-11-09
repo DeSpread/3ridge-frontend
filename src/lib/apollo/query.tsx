@@ -755,6 +755,7 @@ export const GET_PROJECTS = gql(/* GraphQL */ `
       description
       imageUrl
       name
+      priority
       projectSocial {
         discordUrl
         officialUrl
@@ -1255,6 +1256,12 @@ export const UPDATE_PROJECT = gql(/* GraphQL */ `
     ) {
       _id
     }
+  }
+`);
+
+export const REORDER_PROJECT = gql(/* GraphQL */ `
+  mutation reorderProject($projectId: String!, $to: Float!) {
+    reorderProject(projectId: $projectId, to: $to)
   }
 `);
 

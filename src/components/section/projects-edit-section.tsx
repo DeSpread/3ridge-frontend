@@ -11,7 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React, { MouseEventHandler, useState } from "react";
+import { produce } from "immer";
+import React, { MouseEvent, MouseEventHandler, useState } from "react";
 
 import { Project } from "../../__generated__/graphql";
 import WithEditorContainer from "../../hoc/with-editor-container";
@@ -21,6 +22,8 @@ import { useLoading } from "../../provider/loading/loading-provider";
 import ProjectOverlayStyleCard from "../atomic/molecules/project-overlay-style-card";
 import SkeletonOverlayCard from "../atomic/molecules/skelton-overlay-card";
 import ProjectUpsertEditDialog from "../dialogs/project-edit/project-upsert-edit-dialog";
+
+import { Project as SerializedProject } from "@/types/index";
 
 const _ProjectOverlayStyleCard = WithEditorContainer(ProjectOverlayStyleCard);
 
@@ -40,6 +43,7 @@ const ProjectAddCard = (
           description: "",
           imageUrl: "",
           name: "",
+          priority: -1,
           projectSocial: {
             discordUrl: "",
             officialUrl: "",
@@ -81,6 +85,7 @@ const ProjectsEditSection = () => {
     asyncRefreshProjectsData,
     asyncCreateProject,
     asyncUpdateProject,
+    asyncReorderProject,
   } = useProjectsQuery({});
   const { userData } = useSignedUserQuery();
   const { showLoading, closeLoading } = useLoading();
@@ -96,6 +101,30 @@ const ProjectsEditSection = () => {
     setOpenEditDialog(false);
     setEditedProject(undefined);
   };
+
+  function handleOrderToPrev(e: MouseEvent, project: SerializedProject) {
+    const currentIndex = projectsData.findIndex((p) => p._id === project._id);
+    if (currentIndex === 0) return;
+
+    const prevPriority = e.shiftKey
+      ? projectsData[0].priority
+      : projectsData[currentIndex - 1].priority;
+    asyncReorderProject(project._id, prevPriority).then(() =>
+      asyncRefreshProjectsData(),
+    );
+  }
+
+  function handleOrderToNext(e: MouseEvent, project: SerializedProject) {
+    const currentIndex = projectsData.findIndex((p) => p._id === project._id);
+    if (currentIndex === projectsData.length - 1) return;
+
+    const nextPriority = e.shiftKey
+      ? projectsData[projectsData.length - 1].priority
+      : projectsData[currentIndex + 1].priority;
+    asyncReorderProject(project._id, nextPriority).then(() =>
+      asyncRefreshProjectsData(),
+    );
+  }
 
   // useEffect(() => {
   //   asyncRefreshProjectsData();
@@ -145,18 +174,25 @@ const ProjectsEditSection = () => {
                       </Grid>
                     }
                     {!projectsDataLoading &&
-                      projectsData?.map((e, index) => {
+                      projectsData?.map((project, index) => {
                         return (
                           <Grid item key={index} xs={6} sm={4} md={3} lg={2}>
                             <>
                               <_ProjectOverlayStyleCard
-                                project={e}
+                                project={project}
+                                featureFlagChangeOrder
+                                onClickOrderToPrev={(e) =>
+                                  handleOrderToPrev(e, project)
+                                }
+                                onClickOrderToNext={(e) =>
+                                  handleOrderToNext(e, project)
+                                }
                                 onClickForEdit={(_e) => {
-                                  showOpenEditDialog(e);
+                                  showOpenEditDialog(project);
                                 }}
                                 onClickForDelete={async (_e) => {
                                   showLoading();
-                                  await asyncDeleteProjectById(e._id);
+                                  await asyncDeleteProjectById(project._id);
                                   await asyncRefreshProjectsData();
                                   closeLoading();
                                 }}

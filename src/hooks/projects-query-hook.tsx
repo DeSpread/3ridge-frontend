@@ -9,6 +9,7 @@ import {
   CREATE_PROJECT,
   DELETE_PROJECT_BY_ID,
   GET_PROJECTS,
+  REORDER_PROJECT,
   UPDATE_PROJECT,
 } from "../lib/apollo/query";
 import { Project } from "../types";
@@ -19,6 +20,7 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
   const [deleteProjectById] = useMutation(DELETE_PROJECT_BY_ID);
   const [createProject] = useMutation(CREATE_PROJECT);
   const [updateProject] = useMutation(UPDATE_PROJECT);
+  const [reorderProject] = useMutation(REORDER_PROJECT);
 
   useEffect(() => {
     (async () => {
@@ -45,6 +47,7 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
           description: e.description ?? "",
           imageUrl: e.imageUrl ?? "",
           name: e.name ?? "",
+          priority: e.priority ?? -1,
           projectSocial: {
             discordUrl: e.projectSocial?.discordUrl ?? "",
             officialUrl: e.projectSocial?.officialUrl ?? "",
@@ -110,6 +113,15 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
     });
   };
 
+  const asyncReorderProject = async (projectId: string, to: number) => {
+    await reorderProject({
+      variables: {
+        projectId,
+        to,
+      },
+    });
+  };
+
   return {
     projectsData,
     projectsDataLoading,
@@ -117,5 +129,6 @@ export function useProjectsQuery(props: { eventTypes?: EventType[] }) {
     asyncRefreshProjectsData,
     asyncCreateProject,
     asyncUpdateProject,
+    asyncReorderProject,
   };
 }
