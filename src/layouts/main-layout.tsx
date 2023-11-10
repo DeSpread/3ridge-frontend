@@ -301,8 +301,8 @@ const MainLayout = (props: MainLayoutProps) => {
                   onLeaderBoardClick={asyncGoToLeaderBoard}
                   onSignInClick={async (e) => {
                     e.preventDefault();
-                    // setSignInWithNetworkSelectVisible(true);
-                    setShowSignInDialog(true);
+                    setSignInWithNetworkSelectVisible(true);
+                    // setShowSignInDialog(true);
                   }}
                 ></SubMenuButton>
               ))}
