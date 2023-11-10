@@ -4,7 +4,7 @@ export default function EmailForm() {
   return (
     <div className="flex flex-col gap-2">
       <TextField
-        tabIndex={0}
+        autoFocus
         fullWidth
         label="이메일"
         variant="outlined"
