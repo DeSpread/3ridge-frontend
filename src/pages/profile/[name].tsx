@@ -649,7 +649,7 @@ const Profile = () => {
                         ></StyledChip>
                       </Grid>
                     )}
-                    {targetUserData?.kakao?.properties?.nickname && (
+                    {/* {targetUserData?.kakao?.properties?.nickname && (
                       <Grid item>
                         <StyledChip
                           icon={
@@ -670,8 +670,8 @@ const Profile = () => {
                           }
                         ></StyledChip>
                       </Grid>
-                    )}
-                    {!targetUserData?.kakao?.properties?.nickname && (
+                    )} */}
+                    {/* {!targetUserData?.kakao?.properties?.nickname && (
                       <Grid item>
                         <StyledChip
                           sx={{
@@ -702,7 +702,7 @@ const Profile = () => {
                           }
                         ></StyledChip>
                       </Grid>
-                    )}
+                    )} */}
                     {targetUserData?.discord?.username && (
                       <Grid item>
                         <StyledChip
