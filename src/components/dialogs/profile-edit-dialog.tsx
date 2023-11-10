@@ -32,8 +32,6 @@ import KakaoIcon from "../atomic/atoms/svg/kakao-icon";
 import BlockIcon from "../atomic/molecules/block-icon";
 import { ValidatorButton } from "../atomic/molecules/validator-button";
 
-
-
 type ProfileEditDialogProps = DialogProps & {
   title: string;
   userData: User;
@@ -204,14 +202,14 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                     }
                     payload={""}
                   ></ValidatorButton>
-                  <ValidatorButton
+                  {/* <ValidatorButton
                     icon={<KakaoIcon sx={{ color: "black" }}></KakaoIcon>}
                     label={"카카오톡"}
                     onClick={props.kakaoValidatorButtonOnClick}
                     size={"small"}
                     value={props.userData?.kakao?.id.toString() ?? undefined}
                     payload={""}
-                  ></ValidatorButton>
+                  ></ValidatorButton> */}
                   <ValidatorButton
                     icon={<DiscordIcon></DiscordIcon>}
                     label={"Discord"}
@@ -229,20 +227,20 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                   {Object.values(SUPPORTED_NETWORKS)
                     .filter(
                       (_, index) =>
-                        index !== Object.values(SUPPORTED_NETWORKS).length - 1
+                        index !== Object.values(SUPPORTED_NETWORKS).length - 1,
                     )
                     .filter(
                       (e) =>
                         !(
                           props.isWalletLoggedIn &&
                           props.userData?.walletAddressInfos?.[0].network === e
-                        )
+                        ),
                     )
                     .filter((e) => e !== SUPPORTED_NETWORKS.SUI)
                     .map((e, i) => {
                       const addressInfo =
                         props.userData?.walletAddressInfos?.filter(
-                          (addrInfo) => addrInfo.network === e
+                          (addrInfo) => addrInfo.network === e,
                         )?.[0];
 
                       const disabledBtn = !(
@@ -261,7 +259,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
                               value={StringHelper.convertAddressToMidEllipsis(
-                                addressInfo?.address
+                                addressInfo?.address,
                               )}
                               payload={e}
                               sx={{
@@ -279,7 +277,7 @@ const ProfileEditDialog = (props: ProfileEditDialogProps) => {
                               onClick={props.walletValidatorButtonOnClick}
                               size={"small"}
                               value={StringHelper.convertAddressToMidEllipsis(
-                                addressInfo?.address
+                                addressInfo?.address,
                               )}
                               payload={e}
                               sx={{
