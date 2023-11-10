@@ -15,12 +15,14 @@ export default function WalletSelect(props: WalletSelectProps) {
   const theme = useTheme();
   const { isMobile } = useMobile();
 
+  const wallets = ResourceHelper.getWalletInfos(
+    TypeHelper.convertToSuppoertedNetwork(props.network),
+  );
+
   return (
     <Grid container justifyContent={"center"} spacing={1}>
-      {ResourceHelper.getWalletInfos(
-        TypeHelper.convertToSuppoertedNetwork(props.network),
-      )
-        ?.filter((e) => (isMobile ? e.mobile : true))
+      {wallets
+        .filter((e) => (isMobile ? e.mobile : true))
         ?.map((item, index) => {
           return (
             <Grid key={index} item>
