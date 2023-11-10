@@ -81,7 +81,7 @@ export default function SignInDialog(props: SignInDialogProps) {
   return (
     <Dialog
       open={props.open ?? false}
-      onClose={props.onClose}
+      onClose={() => handleClose()}
       fullWidth
       maxWidth={"xs"}
       sx={{ zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.DIALOG }}
@@ -90,6 +90,7 @@ export default function SignInDialog(props: SignInDialogProps) {
         <Title
           signInType={signInType}
           network={network}
+          onClickClose={() => handleClose()}
           onClickPrev={handleClickPrev}
         />
       </DialogTitle>
