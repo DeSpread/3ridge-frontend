@@ -39,7 +39,7 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
       <br />
       <Stack sx={{ width: "100%" }}>
         <Stack direction={"column"} spacing={4}>
-          {/* <PrimaryButton
+          <PrimaryButton
             fullWidth={true}
             onClick={props.onSignInWithSocialClicked}
           >
@@ -57,7 +57,7 @@ const SignInSelectDialogContent = (props: SignInSelectDialogProps) => {
                 fontSize={"inherit"}
               />
             </Stack>
-          </PrimaryButton> */}
+          </PrimaryButton>
         </Stack>
       </Stack>
     </>
