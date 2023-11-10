@@ -42,12 +42,13 @@ import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
 import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
 import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
 import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
+import SignInDialog from "./dialog/sign/signInDialog";
 
 import ClickTyphography from "@/components/atomic/atoms/click-typhography";
 import AccountCreateAlertDialog from "@/layouts/dialog/sign/account-create-alert-dialog";
 import MigrationAlertDialog from "@/layouts/dialog/sign/migration-alert-dialog";
 import MigrationDialog from "@/layouts/dialog/sign/migration-dialog";
-import SignInDialog from "@/layouts/dialog/sign/sign-in-dialog";
+import SignInDialogOld from "@/layouts/dialog/sign/sign-in-dialog-old";
 import { useConfirm } from "@/provider/confirm/confirm-provider";
 import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
 
@@ -319,7 +320,8 @@ const MainLayout = (props: MainLayoutProps) => {
         <footer>{props?.footerComponent}</footer>
       </Box>
       {/*--- Dialog ---*/}
-      <SignInDialog
+      <SignInDialog open />
+      <SignInDialogOld
         title={"안녕하세요 다시 만나서 반가워요!"}
         open={isSignDialogOpen}
         onCloseBtnClicked={(e) => {
@@ -352,7 +354,7 @@ const MainLayout = (props: MainLayoutProps) => {
           setShowSignInDialog(false);
           setSignInWithNetworkSelectVisible(true);
         }}
-      ></SignInDialog>
+      ></SignInDialogOld>
       <SignInWithDialog
         title={"가입하기"}
         open={signUpWithVisible}
