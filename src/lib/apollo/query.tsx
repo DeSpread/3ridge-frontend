@@ -356,6 +356,12 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
   }
 `);
 
+export const SEND_AUTH_CODE = gql(/* GraphQL */ `
+  mutation sendAuthCode($email: String!) {
+    sendAuthCode(to: $email)
+  }
+`);
+
 export const CREATE_USER_BY_EMAIL = gql(/* GraphQL */ `
   mutation CreateUserByEmail($email: String!) {
     createUserByEmail(email: $email) {

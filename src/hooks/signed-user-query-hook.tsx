@@ -124,6 +124,11 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
+
+          if (!res.data.userByEmail) {
+            throw new AppError("not found email");
+          }
+
           updateUserData(res.data.userByEmail);
         } catch (e) {
           throw new AppError(getErrorMessage(e));
