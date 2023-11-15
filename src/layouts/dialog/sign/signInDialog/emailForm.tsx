@@ -43,7 +43,7 @@ export default function EmailForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <FormControl className="flex flex-col gap-2">
+      <FormControl className="flex w-full flex-col gap-2">
         <EmailInput
           inputRef={input}
           required
