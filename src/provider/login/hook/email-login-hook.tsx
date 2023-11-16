@@ -45,7 +45,7 @@ export function useEmailLogin() {
       try {
         const res = await AwsClient.getInstance().asyncRequestAuthMail(
           email,
-          password
+          password,
         );
         if (res.status === 400 || res.status === 500) {
           const data = await res.text();
@@ -66,7 +66,7 @@ export function useEmailLogin() {
           new AppError(getErrorMessage(e), {
             email,
             password,
-          })
+          }),
         );
       }
     })();
@@ -77,37 +77,7 @@ export function useEmailLogin() {
     void
   > = (params, { onSuccess, onError }) => {
     (async () => {
-      const { mail } = params;
-      try {
-        if (!mail) {
-          onError?.(
-            new AppError("Empty mail", {
-              mail,
-            })
-          );
-          return;
-        }
-
-        const res = await AwsClient.getInstance().asyncUpdateAuthMail(mail);
-        if (res.status === 400 || res.status === 500) {
-          const data = await res.text();
-          const message = JSON.parse(data).message;
-          onError?.(new AppError(message, { mail }));
-          return;
-        }
-        await createUserByEmail({
-          variables: {
-            email: mail,
-          },
-        });
-        onSuccess?.();
-      } catch (e) {
-        onError?.(
-          new AppError(getErrorMessage(e), {
-            mail,
-          })
-        );
-      }
+      throw new Error("this is deprecated function");
     })();
   };
 
@@ -120,7 +90,7 @@ export function useEmailLogin() {
       try {
         const res = await AwsClient.getInstance().asyncLoginWithMail(
           email,
-          password
+          password,
         );
         if (res.status === 400 || res.status === 500) {
           const data = await res.text();
