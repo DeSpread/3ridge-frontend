@@ -82,6 +82,7 @@ export default function SignInDialog(props: SignInDialogProps) {
     <Dialog
       open={props.open ?? false}
       onClose={() => handleClose()}
+      disableRestoreFocus
       fullWidth
       maxWidth={"xs"}
       sx={{ zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.DIALOG }}

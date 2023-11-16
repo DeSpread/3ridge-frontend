@@ -356,6 +356,12 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
   }
 `);
 
+export const VALIDATE_AUTH_CODE = gql(`
+  query validateAuthCode($email: String!, $code: String!) {
+    validateAuthCode(email: $email, code: $code)
+  }
+`);
+
 export const SEND_AUTH_CODE = gql(/* GraphQL */ `
   mutation sendAuthCode($email: String!) {
     sendAuthCode(to: $email)
