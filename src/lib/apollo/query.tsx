@@ -369,8 +369,12 @@ export const SEND_AUTH_CODE = gql(/* GraphQL */ `
 `);
 
 export const CREATE_USER_BY_EMAIL = gql(/* GraphQL */ `
-  mutation CreateUserByEmail($email: String!) {
-    createUserByEmail(email: $email) {
+  mutation CreateUserByEmail(
+    $email: String!
+    $password: String!
+    $authCode: String!
+  ) {
+    createUserByEmail(email: $email, password: $password, authCode: $authCode) {
       name
     }
   }
