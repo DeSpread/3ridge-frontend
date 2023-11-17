@@ -41,7 +41,7 @@ export default function CreateAccountFromEmail(
         type="email"
         name="email"
         autoComplete="username"
-        value={props.email}
+        defaultValue={props.email}
       />
       <TextField
         fullWidth
