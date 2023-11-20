@@ -4,7 +4,11 @@ import CreateAccountFromEmail from "./createAccountFromEmail";
 import EmailAuthCodeForm from "./emailAuthCodeForm";
 import { EmailWithAuthCode } from "./types";
 
-export default function EmailForm() {
+interface EmailFormProps {
+  onSignIn(): void;
+}
+
+export default function EmailForm(props: EmailFormProps) {
   const [emailWithAuthCode, setEmailWithAuthCode] =
     useState<EmailWithAuthCode>();
 
@@ -17,6 +21,7 @@ export default function EmailForm() {
       <CreateAccountFromEmail
         email={emailWithAuthCode.email}
         code={emailWithAuthCode.code}
+        onSignIn={props.onSignIn}
       />
     );
   }

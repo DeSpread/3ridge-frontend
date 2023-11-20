@@ -78,6 +78,10 @@ export default function SignInDialog(props: SignInDialogProps) {
     );
   }
 
+  function handleSignIn() {
+    handleClose();
+  }
+
   return (
     <Dialog
       open={props.open ?? false}
@@ -103,6 +107,7 @@ export default function SignInDialog(props: SignInDialogProps) {
             onChangeSignInType={setSignInType}
             onChangeNetwork={setNetwork}
             onChangeWallet={handleChangeWallet}
+            onSignIn={handleSignIn}
           />
         </div>
       </DialogContent>

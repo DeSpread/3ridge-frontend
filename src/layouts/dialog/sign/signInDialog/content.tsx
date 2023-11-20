@@ -11,6 +11,7 @@ interface ContentProps {
   onChangeSignInType?(type: SignInType): void;
   onChangeNetwork?(network: SupportedNetwork): void;
   onChangeWallet?(value: string): void;
+  onSignIn(): void;
 }
 
 export default function Content(props: ContentProps) {
@@ -27,5 +28,10 @@ export default function Content(props: ContentProps) {
     return <NetworkSelect onChangeNetwork={props.onChangeNetwork} />;
   }
 
-  return <SignInTypeSelect onChangeType={props.onChangeSignInType} />;
+  return (
+    <SignInTypeSelect
+      onChangeType={props.onChangeSignInType}
+      onSignIn={props.onSignIn}
+    />
+  );
 }

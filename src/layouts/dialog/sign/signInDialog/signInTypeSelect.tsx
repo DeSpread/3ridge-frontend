@@ -6,12 +6,13 @@ import { SignInType } from "./types";
 
 interface SignInTypeSelectProps {
   onChangeType?(type: SignInType): void;
+  onSignIn(): void;
 }
 
 export default function SignInTypeSelect(props: SignInTypeSelectProps) {
   return (
     <>
-      <EmailForm />
+      <EmailForm onSignIn={props.onSignIn} />
       <hr className="my-5" />
       <Button
         fullWidth

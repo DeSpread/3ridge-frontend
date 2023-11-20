@@ -5,15 +5,17 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { EmailWithAuthCode } from "./types";
 
 import { CreateUserByEmailDocument } from "@/__generated__/graphql";
+import { useSignIn } from "@/hooks/signIn.hook";
 
 interface CreateAccountFromEmailProps extends EmailWithAuthCode {
-  onCreateUserByEmail(): void;
+  onSignIn(): void;
 }
 
 export default function CreateAccountFromEmail(
   props: CreateAccountFromEmailProps,
 ) {
   const [createUserByEmail] = useMutation(CreateUserByEmailDocument);
+  const { signInByEmail } = useSignIn();
   const [password, setPassword] = useState("");
 
   function handleSubmit(e: FormEvent) {
@@ -26,7 +28,9 @@ export default function CreateAccountFromEmail(
         password: password,
       },
     }).then((res) => {
-      console.log(res.data);
+      if (res.data?.createUserByEmail.name) {
+        signInByEmail(props.email, password).then(props.onSignIn);
+      }
     });
   }
 
