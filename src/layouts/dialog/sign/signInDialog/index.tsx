@@ -1,9 +1,9 @@
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useState } from "react";
 
-import Content from "./signInDialog/content";
-import Title from "./signInDialog/title";
-import { SignInType } from "./signInDialog/types";
+import Content from "./content";
+import Title from "./title";
+import { SignInType } from "./types";
 
 import { APP_ERROR_MESSAGE, AppError } from "@/error/my-error";
 import TypeHelper from "@/helper/type-helper";
