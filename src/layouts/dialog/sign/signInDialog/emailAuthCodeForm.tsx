@@ -1,6 +1,6 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { Button, FormControl, TextField } from "@mui/material";
-import { FormEvent, useRef } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 import EmailInput from "./emailInput";
 import { EmailWithAuthCode } from "./types";
@@ -13,11 +13,13 @@ import {
 
 interface EmailAuthCodeFormProps {
   onValidateAuthCode(data: EmailWithAuthCode): void;
+  onExistsEmail(email: string): void;
 }
 
 export default function EmailAuthCodeForm(props: EmailAuthCodeFormProps) {
   const emailInput = useRef<HTMLInputElement>(null);
   const authCodeInput = useRef<HTMLInputElement>(null);
+
   const [getUserByEmail] = useLazyQuery(GetUserByEmailDocument);
   const [validateAuthCode] = useLazyQuery(ValidateAuthCodeDocument);
   const [sendAuthCode, { reset, called: isSendAuthCode }] =
@@ -74,6 +76,8 @@ export default function EmailAuthCodeForm(props: EmailAuthCodeFormProps) {
               email: emailInput.current.value,
             },
           });
+        } else {
+          props.onExistsEmail(emailInput.current.value);
         }
       });
     }

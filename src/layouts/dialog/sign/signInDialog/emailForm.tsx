@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import CreateAccountFromEmail from "./createAccountFromEmail";
 import EmailAuthCodeForm from "./emailAuthCodeForm";
+import EmailPasswordForm from "./emailPasswordForm";
 import { EmailWithAuthCode } from "./types";
 
 interface EmailFormProps {
@@ -9,11 +10,20 @@ interface EmailFormProps {
 }
 
 export default function EmailForm(props: EmailFormProps) {
+  const [email, setEmail] = useState("");
   const [emailWithAuthCode, setEmailWithAuthCode] =
     useState<EmailWithAuthCode>();
 
   function handleValidateAuthCode(data: EmailWithAuthCode) {
     setEmailWithAuthCode(data);
+  }
+
+  function handleExistsEmail(email: string) {
+    setEmail(email);
+  }
+
+  if (email) {
+    return <EmailPasswordForm email={email} onSignIn={props.onSignIn} />;
   }
 
   if (emailWithAuthCode) {
@@ -26,5 +36,10 @@ export default function EmailForm(props: EmailFormProps) {
     );
   }
 
-  return <EmailAuthCodeForm onValidateAuthCode={handleValidateAuthCode} />;
+  return (
+    <EmailAuthCodeForm
+      onValidateAuthCode={handleValidateAuthCode}
+      onExistsEmail={handleExistsEmail}
+    />
+  );
 }
