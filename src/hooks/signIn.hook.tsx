@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 import {
@@ -13,6 +13,7 @@ export function useSignIn() {
   const setUserData = useSetRecoilState(userDataState);
 
   const accessToken = useRef<string>();
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   const [getUserByAccessToken] = useLazyQuery(GetUserByAccessTokenDocument);
 
@@ -28,9 +29,8 @@ export function useSignIn() {
 
       const user = userRes.data?.userByAccessToken;
 
-      console.log(user);
-
       if (user) {
+        setIsSignedIn(true);
         setUserData({
           _id: user._id ?? undefined,
           email: user.email ?? undefined,
@@ -73,6 +73,7 @@ export function useSignIn() {
           discord: user.discord ?? undefined,
         });
       } else {
+        setIsSignedIn(false);
         setUserData({});
       }
     },
@@ -87,6 +88,7 @@ export function useSignIn() {
   }, [updateUserDataByAccessToken]);
 
   return {
+    isSignedIn,
     async signInByEmail(email: string, password: string) {
       return signInByEmailMutation({
         variables: {

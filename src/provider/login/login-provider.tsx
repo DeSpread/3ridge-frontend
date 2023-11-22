@@ -90,6 +90,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     asyncUpdateCachedKakaoUserInfo,
     fetchKakaoUserInfo,
   } = useKakaoLogin();
+  const { isSignedIn } = useSignIn();
 
   const logout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     try {
@@ -112,8 +113,8 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
   };
 
   const isLoggedIn = useMemo(() => {
-    return isGoogleLoggedIn || isWalletLoggedIn || isMailLoggedIn;
-  }, [isGoogleLoggedIn, isWalletLoggedIn, isMailLoggedIn]);
+    return isGoogleLoggedIn || isWalletLoggedIn || isMailLoggedIn || isSignedIn;
+  }, [isGoogleLoggedIn, isWalletLoggedIn, isMailLoggedIn, isSignedIn]);
 
   return (
     <LoginContext.Provider
