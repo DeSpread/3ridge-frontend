@@ -1,6 +1,8 @@
 import { Button, TextField } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
 
+import PasswordInput from "./passwordInput";
+
 import { useSignIn } from "@/hooks/signIn.hook";
 
 interface EmailPasswordFormProps {
@@ -31,7 +33,7 @@ export default function EmailPasswordForm(props: EmailPasswordFormProps) {
         autoComplete="username"
         defaultValue={props.email}
       />
-      <TextField
+      <PasswordInput
         fullWidth
         autoFocus
         type="password"

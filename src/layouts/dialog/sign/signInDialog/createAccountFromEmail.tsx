@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import { Button, TextField } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
 
+import PasswordInput from "./passwordInput";
 import { EmailWithAuthCode } from "./types";
 
 import { CreateUserByEmailDocument } from "@/__generated__/graphql";
@@ -47,7 +48,7 @@ export default function CreateAccountFromEmail(
         autoComplete="username"
         defaultValue={props.email}
       />
-      <TextField
+      <PasswordInput
         fullWidth
         autoFocus
         type="password"
