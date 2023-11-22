@@ -202,15 +202,12 @@ const MainLayout = (props: MainLayoutProps) => {
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
                       <SecondaryButton
                         size={"small"}
-                        sx={{
-                          width: 100,
-                        }}
                         onClick={(e) => {
                           e.preventDefault();
                           setShowSignInDialog(true);
                         }}
                       >
-                        로그인
+                        로그인 / 회원가입
                       </SecondaryButton>
                     </Stack>
                   )}
