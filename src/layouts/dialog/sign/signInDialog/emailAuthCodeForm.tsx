@@ -19,6 +19,7 @@ interface EmailAuthCodeFormProps {
 export default function EmailAuthCodeForm(props: EmailAuthCodeFormProps) {
   const emailInput = useRef<HTMLInputElement>(null);
   const authCodeInput = useRef<HTMLInputElement>(null);
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const [getUserByEmail] = useLazyQuery(GetUserByEmailDocument);
   const [validateAuthCode] = useLazyQuery(ValidateAuthCodeDocument);
@@ -39,6 +40,8 @@ export default function EmailAuthCodeForm(props: EmailAuthCodeFormProps) {
         email: emailInput.current.value,
         code: authCodeInput.current.value,
       });
+    } else {
+      setErrorMessage("잘못된 인증 번호입니다.");
     }
   }
 
@@ -105,11 +108,13 @@ export default function EmailAuthCodeForm(props: EmailAuthCodeFormProps) {
               메일을 확인하세요.
             </p>
             <TextField
+              error={!!errorMessage}
               inputRef={authCodeInput}
               required
               autoFocus
               autoComplete="one-time-password"
               label="메일 인증 코드"
+              helperText={errorMessage}
             />
             <Button fullWidth variant="contained" type="submit">
               메일 인증 코드로 계속하기
