@@ -15,12 +15,13 @@ export default function SignInTypeSelect(props: SignInTypeSelectProps) {
       <EmailForm onSignIn={props.onSignIn} />
       <hr className="my-5" />
       <Button
+        className="font-normal"
         fullWidth
         variant="text"
         onClick={() => props.onChangeType?.("wallet")}
       >
         지갑 연결하기 &nbsp;
-        <Wallet />
+        <Wallet className="text-xl" />
       </Button>
     </>
   );

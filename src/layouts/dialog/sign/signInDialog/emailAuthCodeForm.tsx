@@ -117,7 +117,7 @@ export default function EmailAuthCodeForm(props: EmailAuthCodeFormProps) {
           </>
         ) : (
           <Button fullWidth variant="contained" type="submit">
-            이메일로 계속하기
+            이메일로 계속하기 / 가입하기
           </Button>
         )}
       </FormControl>
