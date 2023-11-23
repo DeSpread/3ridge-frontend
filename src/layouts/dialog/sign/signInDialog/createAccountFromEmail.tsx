@@ -1,8 +1,6 @@
 import { useMutation } from "@apollo/client";
-import { Button, TextField } from "@mui/material";
-import { ChangeEvent, FormEvent, useState } from "react";
 
-import PasswordInput from "./passwordInput";
+import NewPasswordForm from "./newPasswordForm";
 import { EmailWithAuthCode } from "./types";
 
 import { CreateUserByEmailDocument } from "@/__generated__/graphql";
@@ -17,11 +15,8 @@ export default function CreateAccountFromEmail(
 ) {
   const [createUserByEmail] = useMutation(CreateUserByEmailDocument);
   const { signInByEmail } = useSignIn();
-  const [password, setPassword] = useState("");
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-
+  function handleSubmit(password: string) {
     createUserByEmail({
       variables: {
         email: props.email,
@@ -35,33 +30,5 @@ export default function CreateAccountFromEmail(
     });
   }
 
-  function handleChangePassword(e: ChangeEvent<HTMLInputElement>) {
-    setPassword(e.target.value);
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        className="hidden"
-        type="email"
-        name="email"
-        autoComplete="username"
-        defaultValue={props.email}
-      />
-      <PasswordInput
-        fullWidth
-        autoFocus
-        type="password"
-        name="new-password"
-        autoComplete="new-password"
-        label="비밀번호 설정"
-        placeholder="새 비밀번호"
-        value={password}
-        onChange={handleChangePassword}
-      />
-      <Button className="mt-5" fullWidth variant="contained" type="submit">
-        계속
-      </Button>
-    </form>
-  );
+  return <NewPasswordForm email={props.email} handleSubmit={handleSubmit} />;
 }
