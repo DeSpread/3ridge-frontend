@@ -1,7 +1,7 @@
 import { Wallet } from "@mui/icons-material";
 import { Button } from "@mui/material";
 
-import EmailForm from "./emailForm";
+import EmailRoute from "./emailRoute";
 import { SignInType } from "./types";
 
 interface SignInTypeSelectProps {
@@ -12,7 +12,7 @@ interface SignInTypeSelectProps {
 export default function SignInTypeSelect(props: SignInTypeSelectProps) {
   return (
     <>
-      <EmailForm onSignIn={props.onSignIn} />
+      <EmailRoute onSignIn={props.onSignIn} />
       <hr className="my-5" />
       <Button
         className="font-normal"

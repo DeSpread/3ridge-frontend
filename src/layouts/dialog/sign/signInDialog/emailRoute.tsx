@@ -5,11 +5,11 @@ import EmailAuthCodeForm from "./emailAuthCodeForm";
 import EmailPasswordForm from "./emailPasswordForm";
 import { EmailWithAuthCode } from "./types";
 
-interface EmailFormProps {
+interface EmailRouteProps {
   onSignIn(): void;
 }
 
-export default function EmailForm(props: EmailFormProps) {
+export default function EmailRoute(props: EmailRouteProps) {
   const [email, setEmail] = useState("");
   const [emailWithAuthCode, setEmailWithAuthCode] =
     useState<EmailWithAuthCode>();
