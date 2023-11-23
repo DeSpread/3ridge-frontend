@@ -439,6 +439,22 @@ export const CREATE_USER_BY_EMAIL = gql(/* GraphQL */ `
   }
 `);
 
+export const IS_NEED_EMAIL_ACCOUNT_MIGRATION = gql(`
+  query IsNeedEmailAccountMigration($email: String!) {
+    isNeedEmailAccountMigration(email: $email)
+  }
+`);
+
+export const UPDATE_PASSWORD_BY_EMAIL = gql(`
+  mutation UpdatePasswordByEmail(
+    $email: String!
+    $password: String!
+    $authCode: String!
+  ) {
+    updatePasswordByEmail(email: $email, password: $password, authCode: $authCode)
+  }
+`);
+
 export const CREATE_USER_BY_GMAIL = gql(/* GraphQL */ `
   mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {
     createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {
