@@ -12,12 +12,15 @@ interface EmailPasswordFormProps {
 
 export default function EmailPasswordForm(props: EmailPasswordFormProps) {
   const { signInByEmail } = useSignIn();
+  const [error, setError] = useState(false);
   const [password, setPassword] = useState("");
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    signInByEmail(props.email, password).then(props.onSignIn);
+    signInByEmail(props.email, password)
+      .then(props.onSignIn)
+      .catch(() => setError(true));
   }
 
   function handleChangePassword(e: ChangeEvent<HTMLInputElement>) {
@@ -34,6 +37,7 @@ export default function EmailPasswordForm(props: EmailPasswordFormProps) {
         defaultValue={props.email}
       />
       <PasswordInput
+        error={error}
         fullWidth
         autoFocus
         type="password"
@@ -41,6 +45,7 @@ export default function EmailPasswordForm(props: EmailPasswordFormProps) {
         autoComplete="current-password"
         label="비밀번호"
         placeholder="비밀번호"
+        helperText={error && "잘못된 비밀번호입니다."}
         value={password}
         onChange={handleChangePassword}
       />
