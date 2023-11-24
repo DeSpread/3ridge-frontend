@@ -1,43 +1,32 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { Button, FormControl, TextField } from "@mui/material";
-import { FormEvent, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useRef, useState } from "react";
 
 import EmailInput from "./emailInput";
 import { EmailWithAuthCode } from "./types";
 
-import {
-  GetUserByEmailDocument,
-  SendAuthCodeDocument,
-  ValidateAuthCodeDocument,
-} from "@/__generated__/graphql";
+import { ValidateAuthCodeDocument } from "@/__generated__/graphql";
 
 interface EmailAuthCodeFormProps {
+  email: string;
+  onChangeEmail?(email: string): void;
   onValidateAuthCode(data: EmailWithAuthCode): void;
-  onExistsEmail(email: string): void;
 }
 
 export default function EmailAuthCodeForm(props: EmailAuthCodeFormProps) {
-  const emailInput = useRef<HTMLInputElement>(null);
   const authCodeInput = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const [getUserByEmail] = useLazyQuery(GetUserByEmailDocument);
   const [validateAuthCode] = useLazyQuery(ValidateAuthCodeDocument);
-  const [sendAuthCode, { reset, called: isSendAuthCode }] =
-    useMutation(SendAuthCodeDocument);
 
   function handleValidateAuthCode(isValidated: boolean) {
-    if (!emailInput.current) {
-      throw new Error("input ref is undefined");
-    }
-
     if (!authCodeInput.current) {
       throw new Error("input ref is undefined");
     }
 
     if (isValidated) {
       props.onValidateAuthCode({
-        email: emailInput.current.value,
+        email: props.email,
         code: authCodeInput.current.value,
       });
     } else {
@@ -48,49 +37,22 @@ export default function EmailAuthCodeForm(props: EmailAuthCodeFormProps) {
   function handleSubmit(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
 
-    if (!emailInput.current) {
+    if (!authCodeInput.current) {
       throw new Error("input ref is undefined");
     }
 
-    if (isSendAuthCode) {
-      if (!authCodeInput.current) {
-        throw new Error("input ref is undefined");
-      }
-
-      validateAuthCode({
-        variables: {
-          email: emailInput.current.value,
-          code: authCodeInput.current.value,
-        },
-      }).then(({ data }) => handleValidateAuthCode(!!data?.validateAuthCode));
-    } else {
-      getUserByEmail({
-        variables: {
-          email: emailInput.current.value,
-        },
-      }).then((res) => {
-        if (!emailInput.current) {
-          throw new Error("input ref is undefined");
-        }
-
-        if (res.data?.userByEmail === null) {
-          sendAuthCode({
-            variables: {
-              email: emailInput.current.value,
-            },
-          });
-        } else {
-          props.onExistsEmail(emailInput.current.value);
-        }
-      });
-    }
+    validateAuthCode({
+      variables: {
+        email: props.email,
+        code: authCodeInput.current.value,
+      },
+    }).then(({ data }) => handleValidateAuthCode(!!data?.validateAuthCode));
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <FormControl className="flex w-full flex-col gap-2">
         <EmailInput
-          inputRef={emailInput}
           required
           autoFocus
           fullWidth
@@ -99,32 +61,27 @@ export default function EmailAuthCodeForm(props: EmailAuthCodeFormProps) {
           label="이메일"
           variant="outlined"
           placeholder="이메일 주소를 입력하세요."
-          onInput={() => reset()}
+          defaultValue={props.email}
+          onInput={(e: ChangeEvent<HTMLInputElement>) =>
+            props.onChangeEmail?.(e.target.value)
+          }
         />
-        {isSendAuthCode === true ? (
-          <>
-            <p className="text-center">
-              방금 메일 인증 코드를 보냈습니다. <br />
-              메일을 확인하세요.
-            </p>
-            <TextField
-              error={!!errorMessage}
-              inputRef={authCodeInput}
-              required
-              autoFocus
-              autoComplete="one-time-password"
-              label="메일 인증 코드"
-              helperText={errorMessage}
-            />
-            <Button fullWidth variant="contained" type="submit">
-              메일 인증 코드로 계속하기
-            </Button>
-          </>
-        ) : (
-          <Button fullWidth variant="contained" type="submit">
-            이메일로 계속하기 / 가입하기
-          </Button>
-        )}
+        <p className="text-center">
+          방금 메일 인증 코드를 보냈습니다. <br />
+          메일을 확인하세요.
+        </p>
+        <TextField
+          error={!!errorMessage}
+          inputRef={authCodeInput}
+          required
+          autoFocus
+          autoComplete="one-time-password"
+          label="메일 인증 코드"
+          helperText={errorMessage}
+        />
+        <Button fullWidth variant="contained" type="submit">
+          메일 인증 코드로 계속하기
+        </Button>
       </FormControl>
     </form>
   );
