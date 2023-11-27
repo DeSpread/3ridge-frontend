@@ -1,9 +1,9 @@
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useState } from "react";
 
-import Content from "./signInDialog/content";
-import Title from "./signInDialog/title";
-import { SignInType } from "./signInDialog/types";
+import Content from "./content";
+import Title from "./title";
+import { SignInType } from "./types";
 
 import { APP_ERROR_MESSAGE, AppError } from "@/error/my-error";
 import TypeHelper from "@/helper/type-helper";
@@ -78,10 +78,15 @@ export default function SignInDialog(props: SignInDialogProps) {
     );
   }
 
+  function handleSignIn() {
+    handleClose();
+  }
+
   return (
     <Dialog
       open={props.open ?? false}
       onClose={() => handleClose()}
+      disableRestoreFocus
       fullWidth
       maxWidth={"xs"}
       sx={{ zIndex: (theme) => theme.zIndex.drawer + Z_INDEX_OFFSET.DIALOG }}
@@ -102,6 +107,7 @@ export default function SignInDialog(props: SignInDialogProps) {
             onChangeSignInType={setSignInType}
             onChangeNetwork={setNetwork}
             onChangeWallet={handleChangeWallet}
+            onSignIn={handleSignIn}
           />
         </div>
       </DialogContent>

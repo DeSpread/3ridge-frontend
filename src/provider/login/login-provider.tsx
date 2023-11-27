@@ -15,6 +15,7 @@ import { useMyGoogleLogin } from "./hook/my-google-login-hook";
 import { useWalletLogin } from "./hook/wallet-login-hook";
 
 import { Kakao } from "@/__generated__/graphql";
+import { useSignIn } from "@/hooks/signIn.hook";
 import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
 
 const LoginContext = createContext<{
@@ -67,6 +68,7 @@ const LoginContext = createContext<{
 });
 
 export const LoginProvider = ({ children }: PropsWithChildren) => {
+  const { logout: logoutAccessToken } = useSignIn();
   const { isGoogleLoggedIn, googleUserInfo, googleSignUp, googleLogout } =
     useMyGoogleLogin();
   const { walletSignUp, isWalletLoggedIn, walletLogout, walletInfo } =
@@ -88,6 +90,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     asyncUpdateCachedKakaoUserInfo,
     fetchKakaoUserInfo,
   } = useKakaoLogin();
+  const { isSignedIn } = useSignIn();
 
   const logout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {
     try {
@@ -103,14 +106,15 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
       if (isKakaoSignIn) {
         kakaoLogout();
       }
+      logoutAccessToken();
     } catch (e) {
       onError?.(new AppError(getErrorMessage(e)));
     }
   };
 
   const isLoggedIn = useMemo(() => {
-    return isGoogleLoggedIn || isWalletLoggedIn || isMailLoggedIn;
-  }, [isGoogleLoggedIn, isWalletLoggedIn, isMailLoggedIn]);
+    return isGoogleLoggedIn || isWalletLoggedIn || isMailLoggedIn || isSignedIn;
+  }, [isGoogleLoggedIn, isWalletLoggedIn, isMailLoggedIn, isSignedIn]);
 
   return (
     <LoginContext.Provider

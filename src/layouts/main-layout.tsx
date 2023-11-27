@@ -23,6 +23,8 @@ import { Z_INDEX_OFFSET } from "../types";
 
 import SignInDialog from "./dialog/sign/signInDialog";
 
+import { useSignIn } from "@/hooks/signIn.hook";
+
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
   footerComponent?: ReactNode;
@@ -58,6 +60,7 @@ const NavbarButtonSet = ({
 };
 
 const MainLayout = (props: MainLayoutProps) => {
+  useSignIn();
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
@@ -199,15 +202,12 @@ const MainLayout = (props: MainLayoutProps) => {
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
                       <SecondaryButton
                         size={"small"}
-                        sx={{
-                          width: 100,
-                        }}
                         onClick={(e) => {
                           e.preventDefault();
                           setShowSignInDialog(true);
                         }}
                       >
-                        로그인
+                        로그인 / 회원가입
                       </SecondaryButton>
                     </Stack>
                   )}

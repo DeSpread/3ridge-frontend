@@ -54,6 +54,7 @@ import TelegramUtil from "../util/telegram-util";
 import { delay } from "../util/timer";
 
 import { useProfileEditDialog } from "./profile-edit-dialog-hook";
+import { useSignIn } from "./signIn.hook";
 
 const useSignedUserQuery = () => {
   const {
@@ -79,6 +80,8 @@ const useSignedUserQuery = () => {
     googleLoggedInInfo,
     walletLoggedInInfo,
   } = useLogin();
+
+  const { isSignedIn } = useSignIn();
 
   const [UpdateUserWalletByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
   const [UpdateUserProfileImageByName] = useMutation(
@@ -124,6 +127,11 @@ const useSignedUserQuery = () => {
             },
             fetchPolicy: "no-cache",
           });
+
+          if (!res.data.userByEmail) {
+            throw new AppError("not found email");
+          }
+
           updateUserData(res.data.userByEmail);
         } catch (e) {
           throw new AppError(getErrorMessage(e));
@@ -132,7 +140,12 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isGoogleLoggedIn && !isWalletLoggedIn && !isKakaoSignIn) {
+      if (
+        !isGoogleLoggedIn &&
+        !isWalletLoggedIn &&
+        !isKakaoSignIn &&
+        !isSignedIn
+      ) {
         setUserData({});
       }
     }
@@ -162,7 +175,12 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isMailLoggedIn && !isWalletLoggedIn && !isKakaoSignIn) {
+      if (
+        !isMailLoggedIn &&
+        !isWalletLoggedIn &&
+        !isKakaoSignIn &&
+        !isSignedIn
+      ) {
         setUserData({});
       }
     }
@@ -193,7 +211,12 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isMailLoggedIn && !isGoogleLoggedIn && !isKakaoSignIn) {
+      if (
+        !isMailLoggedIn &&
+        !isGoogleLoggedIn &&
+        !isKakaoSignIn &&
+        !isSignedIn
+      ) {
         setUserData({});
       }
     }
@@ -258,7 +281,12 @@ const useSignedUserQuery = () => {
         }
       })();
     } else {
-      if (!isMailLoggedIn && !isGoogleLoggedIn && !isWalletLoggedIn) {
+      if (
+        !isMailLoggedIn &&
+        !isGoogleLoggedIn &&
+        !isWalletLoggedIn &&
+        !isSignedIn
+      ) {
         setUserData({});
       }
     }
