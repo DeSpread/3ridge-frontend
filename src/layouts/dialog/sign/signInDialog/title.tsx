@@ -25,17 +25,6 @@ export default function Title(props: TitleProps) {
       );
     }
 
-    if (process.env["NEXT_PUBLIC_ENV_NAME"] === "production") {
-      return (
-        <div className="flex items-center justify-between">
-          연결하려는 네트워크를 선택하세요
-          <IconButton onClick={props.onClickClose}>
-            <Close />
-          </IconButton>
-        </div>
-      );
-    }
-
     return (
       <div className="flex items-center">
         <IconButton onClick={props.onClickPrev}>
