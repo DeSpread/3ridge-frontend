@@ -19,23 +19,18 @@ interface SignInDialogProps {
   onClose?(): void;
 }
 
-const signInTypeDefaultValue =
-  process.env["NEXT_PUBLIC_ENV_NAME"] === "dev" ? undefined : "wallet";
-
 export default function SignInDialog(props: SignInDialogProps) {
   const { isMobile } = useMobile();
   const { walletSignUp } = useLogin();
   const { showErrorAlert } = useAlert();
   const { showWalletAlert } = useWalletAlert();
 
-  const [signInType, setSignInType] = useState<SignInType | undefined>(
-    signInTypeDefaultValue,
-  );
+  const [signInType, setSignInType] = useState<SignInType>();
   const [network, setNetwork] = useState<SupportedNetwork>();
 
   function handleClose() {
     setNetwork(undefined);
-    setSignInType(signInTypeDefaultValue);
+    setSignInType(undefined);
     props.onClose?.();
   }
 
@@ -46,7 +41,7 @@ export default function SignInDialog(props: SignInDialogProps) {
     }
 
     if (signInType) {
-      setSignInType(signInTypeDefaultValue);
+      setSignInType(undefined);
       return;
     }
   }
