@@ -369,8 +369,8 @@ export const SEND_AUTH_CODE = gql(/* GraphQL */ `
 `);
 
 export const GET_USER_BY_ACCESS_TOKEN = gql(`
-  query getUserByAccessToken($token: String!) {
-    userByAccessToken(token: $token){
+  query getUserByAccessToken {
+    userByAccessToken {
       _id
       name
       profileImageUrl
