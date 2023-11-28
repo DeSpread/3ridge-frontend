@@ -7,7 +7,6 @@ import React, {
   PropsWithChildren,
   ReactNode,
   useMemo,
-  useState,
 } from "react";
 
 import MobileNavigatorBar from "../components/atomic/atoms/mobile/mobile-navigator-bar";
@@ -15,41 +14,16 @@ import NavbarButton from "../components/atomic/atoms/navbar-button";
 import SecondaryButton from "../components/atomic/atoms/secondary-button";
 import NavbarAvatar from "../components/atomic/molecules/navbar-avatar";
 import SubMenuButton from "../components/atomic/molecules/sub-menu-button";
-import {
-  APP_ERROR_MESSAGE,
-  AppError,
-  getErrorMessage,
-  getLocaleErrorMessage,
-} from "../error/my-error";
-import ResourceHelper from "../helper/resource-helper";
-import TypeHelper from "../helper/type-helper";
 import { useSignDialog } from "../hooks/sign-dialog-hook";
 import { useSignedUserQuery } from "../hooks/signed-user-query-hook";
-import { useWalletAlert } from "../hooks/wallet-alert-hook";
 import { useAlert } from "../provider/alert/alert-provider";
 import { useLoading } from "../provider/loading/loading-provider";
 import { useLogin } from "../provider/login/login-provider";
-import { useMobile } from "../provider/mobile/mobile-context";
-import {
-  EmailSignUpEventParams,
-  MouseEventWithParam,
-  SupportedNetwork,
-  Z_INDEX_OFFSET,
-} from "../types";
-import EthUtil from "../util/eth-util";
+import { Z_INDEX_OFFSET } from "../types";
 
-import SignInWithDialog from "./dialog/sign/sign-in-with-dialog";
-import SignInWithEmailDialog from "./dialog/sign/sign-in-with-email";
-import SignInWithNetworkSelectDialog from "./dialog/sign/sign-in-with-network-select-dialog";
-import SignInWithSupportedWalletDialog from "./dialog/sign/sign-in-with-supported-wallet-dialog";
+import SignInDialog from "./dialog/sign/signInDialog";
 
-import ClickTyphography from "@/components/atomic/atoms/click-typhography";
-import AccountCreateAlertDialog from "@/layouts/dialog/sign/account-create-alert-dialog";
-import MigrationAlertDialog from "@/layouts/dialog/sign/migration-alert-dialog";
-import MigrationDialog from "@/layouts/dialog/sign/migration-dialog";
-import SignInDialog from "@/layouts/dialog/sign/sign-in-dialog";
-import { useConfirm } from "@/provider/confirm/confirm-provider";
-import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
+import { useSignIn } from "@/hooks/signIn.hook";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -86,47 +60,20 @@ const NavbarButtonSet = ({
 };
 
 const MainLayout = (props: MainLayoutProps) => {
+  useSignIn();
   const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
-  const { logout, googleSignUp, walletSignUp } = useLogin();
-  const {
-    userData,
-    asyncKakaoLogin,
-    asyncUpdateKakao,
-    asyncUpdateAppAgreement,
-    asyncCreateUserByKakaoInfo,
-  } = useSignedUserQuery();
+  const { logout } = useLogin();
+  const { userData } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
 
-  const [signUpWithVisible, setSignUpWithVisible] = useState(false);
-  const [signUpWithEmailVisible, setSignUpWithEmailVisible] = useState(false);
-  const [signInWithNetworkSelectVisible, setSignInWithNetworkSelectVisible] =
-    useState(false);
-  const [openMigrationAlertDialog, setOpenMigrationAlertDialog] =
-    useState(false);
-  const [openMigrationDialog, setOpenMigrationDialog] = useState(false);
-  const [openAccountCreateAlertDialog, setOpenAccountCreateAlertDialog] =
-    useState(false);
-
-  const [selectedNetwork, setSelectedNetwork] = useState("");
-  const [isMigrationTry, setIsMigrationTry] = useState(false);
-  const { isMobile } = useMobile();
-
   const { showErrorAlert } = useAlert();
-  const { openConfirm } = useConfirm();
-  const { showWalletAlert } = useWalletAlert();
-  const { emailSignIn } = useLogin();
   const { showLoading, closeLoading } = useLoading();
 
   const isLoggedIn = useMemo(() => {
     return userData?._id ? true : false;
   }, [userData]);
-
-  const signInWithSupportedWalletVisible = useMemo(() => {
-    return selectedNetwork ? true : false;
-  }, [selectedNetwork]);
 
   const asyncGoToExplore = async () => {
     showLoading();
@@ -144,10 +91,6 @@ const MainLayout = (props: MainLayoutProps) => {
     showLoading();
     await router.push(`/leaderboard`);
     closeLoading();
-  };
-
-  const asyncShowSignDialog = async () => {
-    setShowSignInDialog(true);
   };
 
   const asyncSignedProfileBtnOnClick = async () => {
@@ -259,16 +202,12 @@ const MainLayout = (props: MainLayoutProps) => {
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
                       <SecondaryButton
                         size={"small"}
-                        sx={{
-                          width: 100,
-                        }}
                         onClick={(e) => {
                           e.preventDefault();
-                          // setShowSignInDialog(true);
-                          setSignInWithNetworkSelectVisible(true);
+                          setShowSignInDialog(true);
                         }}
                       >
-                        로그인
+                        로그인 / 회원가입
                       </SecondaryButton>
                     </Stack>
                   )}
@@ -301,8 +240,7 @@ const MainLayout = (props: MainLayoutProps) => {
                   onLeaderBoardClick={asyncGoToLeaderBoard}
                   onSignInClick={async (e) => {
                     e.preventDefault();
-                    setSignInWithNetworkSelectVisible(true);
-                    // setShowSignInDialog(true);
+                    setShowSignInDialog(true);
                   }}
                 ></SubMenuButton>
               ))}
@@ -320,270 +258,9 @@ const MainLayout = (props: MainLayoutProps) => {
       </Box>
       {/*--- Dialog ---*/}
       <SignInDialog
-        title={"안녕하세요 다시 만나서 반가워요!"}
         open={isSignDialogOpen}
-        onCloseBtnClicked={(e) => {
-          e.preventDefault();
-          setShowSignInDialog(false);
-        }}
-        onSignUpClicked={(e) => {
-          setShowSignInDialog(false);
-        }}
-        onSignInWithSocialClicked={async (e) => {
-          try {
-            showLoading();
-            await asyncKakaoLogin();
-          } catch (e) {
-            if (getErrorMessage(e) === APP_ERROR_MESSAGE.NOT_FOUND_USER) {
-              setOpenMigrationAlertDialog(true);
-            } else {
-              showErrorAlert({ content: getLocaleErrorMessage(e) });
-            }
-          } finally {
-            setShowSignInDialog(false);
-            closeLoading();
-          }
-        }}
-        onClose={() => {
-          setShowSignInDialog(false);
-        }}
-        onContinueWithWalletClicked={(e) => {
-          e.preventDefault();
-          setShowSignInDialog(false);
-          setSignInWithNetworkSelectVisible(true);
-        }}
-      ></SignInDialog>
-      <SignInWithDialog
-        title={"가입하기"}
-        open={signUpWithVisible}
-        onCloseBtnClicked={(e) => {
-          e.preventDefault();
-          setSignUpWithVisible(false);
-        }}
-        onClose={() => {
-          setSignUpWithVisible(false);
-        }}
-        onSignInWithGoogleClicked={(e) => {
-          googleSignUp({
-            onSuccess: () => {
-              router.push("/").then();
-              setSignUpWithVisible(false);
-            },
-            onError: (error) => {
-              if (
-                getErrorMessage(error).includes(
-                  APP_ERROR_MESSAGE.GOOGLE_LOGIN_POPUP_CLOSED,
-                )
-              ) {
-                return;
-              }
-              setSignUpWithVisible(false);
-              showErrorAlert({ content: getErrorMessage(e) });
-            },
-          });
-        }}
-        onSignInWithEmailClicked={(e) => {
-          setSignUpWithEmailVisible(true);
-          setSignUpWithVisible(false);
-        }}
-      ></SignInWithDialog>
-      <SignInWithEmailDialog
-        title={"이메일로 로그인하기"}
-        open={signUpWithEmailVisible}
-        onCloseBtnClicked={(e) => {
-          e.preventDefault();
-          setSignUpWithEmailVisible(false);
-        }}
-        onClose={() => {
-          setSignUpWithEmailVisible(false);
-        }}
-        onSignInWithEmailClicked={(e) => {
-          const myEvent = e as MouseEventWithParam<EmailSignUpEventParams>;
-          const { email, password } = myEvent.params;
-          showLoading();
-          emailSignIn(
-            { email, password },
-            {
-              onSuccess: () => {
-                closeLoading();
-                setSignUpWithEmailVisible(false);
-                router.push("/").then();
-              },
-              onError: (e) => {
-                closeLoading();
-                setSignUpWithEmailVisible(false);
-                showErrorAlert({ content: getLocaleErrorMessage(e) });
-              },
-            },
-          );
-        }}
-      ></SignInWithEmailDialog>
-      <SignInWithNetworkSelectDialog
-        title={"연결하려는 네트워크를 선택하세요"}
-        open={signInWithNetworkSelectVisible}
-        onCloseBtnClicked={(e) => {
-          e.preventDefault();
-          // setShowSignInDialog(false);
-          setSignInWithNetworkSelectVisible(false);
-        }}
-        onClose={() => {
-          // setShowSignInDialog(false);
-          setSignInWithNetworkSelectVisible(false);
-        }}
-        onNetworkButtonClicked={(network) => {
-          // setShowSignInDialog(false);
-          setSignInWithNetworkSelectVisible(false);
-          setSelectedNetwork(network); // console.log(network);
-        }}
-      ></SignInWithNetworkSelectDialog>
-      <SignInWithSupportedWalletDialog
-        title={"연결하려는 지갑을 선택하세요"}
-        open={signInWithSupportedWalletVisible}
-        onCloseBtnClicked={(e) => {
-          e.preventDefault();
-          setSelectedNetwork("");
-        }}
-        onClose={() => {
-          setSelectedNetwork("");
-        }}
-        walletInfos={(() => {
-          return ResourceHelper.getWalletInfos(
-            TypeHelper.convertToSuppoertedNetwork(selectedNetwork),
-          );
-        })()}
-        onWalletSelected={({ name, value }) => {
-          const walletName = TypeHelper.convertToWalletName(value);
-          if (EthUtil.goToMetaMaskDeppLinkWhenMobile(walletName, isMobile)) {
-            return;
-          }
-
-          walletSignUp(
-            { network: selectedNetwork as SupportedNetwork, name: walletName },
-            {
-              onSuccess: () => {
-                if (isMigrationTry) {
-                  setOpenMigrationDialog(true);
-                  setSelectedNetwork("");
-                  setIsMigrationTry(false);
-                  return;
-                }
-                setSelectedNetwork("");
-              },
-              onError: (error: AppError) => {
-                if (error.message === APP_ERROR_MESSAGE.WALLET_NOT_INSTALLED) {
-                  //@ts-ignore
-                  showWalletAlert(convertToSuppoertedNetwork(error.payload));
-                } else {
-                  showErrorAlert({ content: error.message });
-                }
-                setSelectedNetwork("");
-              },
-            },
-          );
-        }}
-      ></SignInWithSupportedWalletDialog>
-      <MigrationAlertDialog
-        title={"알림"}
-        open={openMigrationAlertDialog}
-        onMigrationAllowedClick={(e) => {
-          setIsMigrationTry(true);
-          setSignInWithNetworkSelectVisible(true);
-          setOpenMigrationAlertDialog(false);
-        }}
-        onMigrationCancelClick={(e) => {
-          setOpenAccountCreateAlertDialog(true);
-          setOpenMigrationAlertDialog(false);
-        }}
-        onClose={() => {
-          setOpenMigrationAlertDialog(false);
-        }}
-      ></MigrationAlertDialog>
-      <MigrationDialog
-        open={openMigrationDialog}
-        address={userData?.walletAddressInfos?.[0]?.address}
-        title={
-          userData?.walletAddressInfos?.[0]?.address
-            ? "계정 연동"
-            : "문제가 발생하였습니다"
-        }
-        onCloseBtnClicked={async () => {
-          await asyncLogoutBtnOnClick();
-          setOpenMigrationDialog(false);
-        }}
-        onMigrationClick={async (e, isAgreeMarketingTerm) => {
-          showLoading();
-          await asyncUpdateKakao();
-
-          setOpenMigrationDialog(false);
-          closeLoading();
-
-          if (!isAgreeMarketingTerm) {
-            openConfirm({
-              title: "마케팅 정보 수신",
-              contents:
-                "마케팅 정보 수신에 동의하지 않으실 경우,\n포인트를 제외한 모든 경품을 획득하실 수 없어요\n이대로 진행하시겠어요?",
-              cancelLabel: "진행할게요 🥲 ",
-              okLabel: "동의할게요",
-              onClickOk() {
-                asyncUpdateAppAgreement({
-                  appAgreement: {
-                    marketingPermission: true,
-                  },
-                });
-              },
-            });
-          } else {
-            await asyncUpdateAppAgreement({
-              appAgreement: {
-                marketingPermission: isAgreeMarketingTerm,
-              },
-            });
-          }
-        }}
-      ></MigrationDialog>
-      <AccountCreateAlertDialog
-        open={openAccountCreateAlertDialog}
-        title={"알림"}
-        onCreateAccountClick={async (e, isAgreeMarketingTerm) => {
-          try {
-            showLoading();
-            const kakaoInfo = await asyncCreateUserByKakaoInfo();
-
-            setOpenAccountCreateAlertDialog(false);
-            closeLoading();
-
-            if (!isAgreeMarketingTerm) {
-              openConfirm({
-                title: "마케팅 정보 수신",
-                contents:
-                  "마케팅 정보 수신에 동의하지 않으실 경우,\n포인트를 제외한 모든 경품을 획득하실 수 없어요\n이대로 진행하시겠어요?",
-                cancelLabel: "진행할게요 🥲 ",
-                okLabel: "동의할게요",
-                onClickOk() {
-                  asyncUpdateAppAgreement({
-                    name: kakaoInfo?.name || undefined,
-                    appAgreement: {
-                      marketingPermission: true,
-                    },
-                  });
-                },
-              });
-            } else {
-              await asyncUpdateAppAgreement({
-                name: kakaoInfo?.name || undefined,
-                appAgreement: {
-                  marketingPermission: isAgreeMarketingTerm,
-                },
-              });
-            }
-          } catch (e) {
-            showErrorAlert({ content: getLocaleErrorMessage(e) });
-          }
-        }}
-        onCloseBtnClicked={async () => {
-          setOpenAccountCreateAlertDialog(false);
-        }}
-      ></AccountCreateAlertDialog>
+        onClose={() => setShowSignInDialog(false)}
+      />
     </Box>
   );
 };

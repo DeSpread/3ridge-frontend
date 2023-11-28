@@ -3,12 +3,17 @@ import AptosIcon from "../components/atomic/atoms/svg/aptos-icon";
 import EthIcon from "../components/atomic/atoms/svg/eth-icon";
 import StacksIcon from "../components/atomic/atoms/svg/stacks-icon";
 import SuiIcon from "../components/atomic/atoms/svg/sui-icon";
-import { SUPPORTED_NETWORKS, SupportedNetwork, WALLET_NAMES } from "../types";
+import {
+  SUPPORTED_NETWORKS,
+  SupportedNetwork,
+  WALLET_NAMES,
+  WalletName,
+} from "../types";
 
 class ResourceHelper {
   public static getExplorerUri = (
     network: SupportedNetwork,
-    address: string
+    address: string,
   ) => {
     if (network === SUPPORTED_NETWORKS.EVM) {
       return `https://etherscan.io/address/${address}`;
@@ -68,7 +73,14 @@ class ResourceHelper {
     return undefined;
   };
 
-  public static getWalletInfos = (network: SupportedNetwork) => {
+  public static getWalletInfos = (
+    network: SupportedNetwork,
+  ): {
+    imageUrl: string;
+    name: string;
+    value: WalletName;
+    mobile: boolean;
+  }[] => {
     if (network === SUPPORTED_NETWORKS.APTOS) {
       return [
         {
@@ -121,7 +133,6 @@ class ResourceHelper {
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/hiro-wallet.jpg",
           name: "Hiro & Xverse",
           value: WALLET_NAMES.HIRO,
-          backgroundColor: "white",
           mobile: true,
         },
       ];

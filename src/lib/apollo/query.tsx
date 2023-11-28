@@ -356,11 +356,102 @@ export const GET_USER_BY_WALLET_ADDRESS = gql(/* GraphQL */ `
   }
 `);
 
+export const VALIDATE_AUTH_CODE = gql(`
+  query validateAuthCode($email: String!, $code: String!) {
+    validateAuthCode(email: $email, code: $code)
+  }
+`);
+
+export const SEND_AUTH_CODE = gql(/* GraphQL */ `
+  mutation sendAuthCode($email: String!) {
+    sendAuthCode(to: $email)
+  }
+`);
+
+export const GET_USER_BY_ACCESS_TOKEN = gql(`
+  query getUserByAccessToken($token: String!) {
+    userByAccessToken(token: $token){
+      _id
+      name
+      profileImageUrl
+      email
+      wallets {
+        address
+        chain
+      }
+      rewardPoint
+      userSocial {
+        twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
+      }
+      kakao {
+        id
+        connected_at
+        properties {
+          nickname
+          profile_image
+          thumbnail_image
+        }
+      }
+      discord {
+        accent_color
+        avatar
+        avatar_decoration
+        banner
+        discriminator
+        flags
+        global_name
+        id
+        locale
+        mfa_enabled
+        premium_type
+        public_flags
+        username
+      }
+    }
+  }
+`);
+
+export const SIGN_IN_BY_EMAIL = gql(`
+  mutation SignInByEmail($email: String!, $password: String!) {
+    signInByEmail(email: $email, password: $password) {
+      accessToken
+    }
+  }
+`);
+
 export const CREATE_USER_BY_EMAIL = gql(/* GraphQL */ `
-  mutation CreateUserByEmail($email: String!) {
-    createUserByEmail(email: $email) {
+  mutation CreateUserByEmail(
+    $email: String!
+    $password: String!
+    $authCode: String!
+  ) {
+    createUserByEmail(email: $email, password: $password, authCode: $authCode) {
       name
     }
+  }
+`);
+
+export const IS_NEED_EMAIL_ACCOUNT_MIGRATION = gql(`
+  query IsNeedEmailAccountMigration($email: String!) {
+    isNeedEmailAccountMigration(email: $email)
+  }
+`);
+
+export const UPDATE_PASSWORD_BY_EMAIL = gql(`
+  mutation UpdatePasswordByEmail(
+    $email: String!
+    $password: String!
+    $authCode: String!
+  ) {
+    updatePasswordByEmail(email: $email, password: $password, authCode: $authCode)
   }
 `);
 
