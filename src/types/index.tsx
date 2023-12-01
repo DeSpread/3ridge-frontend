@@ -118,6 +118,7 @@ export type User = {
   email?: string;
   gmail?: string;
   profileImageUrl?: string;
+  type?: string;
   rewardPoint?: number;
   userSocial?: { twitterId?: string; telegramUser?: TelegramUserInfo };
   participatingTickets?: PartialTicket[];

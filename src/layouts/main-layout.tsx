@@ -23,7 +23,7 @@ import { Z_INDEX_OFFSET } from "../types";
 
 import SignInDialog from "./dialog/sign/signInDialog";
 
-import { useSignIn } from "@/hooks/signIn.hook";
+import { useUser } from "@/hooks/useUser";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -60,7 +60,7 @@ const NavbarButtonSet = ({
 };
 
 const MainLayout = (props: MainLayoutProps) => {
-  useSignIn();
+  useUser();
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
