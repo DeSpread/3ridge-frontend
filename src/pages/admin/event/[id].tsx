@@ -57,6 +57,8 @@ import DateUtil from "../../../util/date-util";
 import FileUtil from "../../../util/file-util";
 import RouterUtil from "../../../util/router-util";
 
+import AdminPageProvider from "@/app/admin/providers";
+
 const _EventRewardPolicy = WithEditorContainer(EventRewardPolicy);
 const _EventDateRange = WithEditorContainer(EventDateRange);
 const _EmptyBox = WithEditorContainer(EventEmptyBox);
@@ -298,473 +300,483 @@ const Event = () => {
       <Head>
         <title>3ridge : Web3 온보딩 플랫폼</title>
       </Head>
-      <Grid
-        container
-        direction={"row"}
-        justifyContent={"center"}
-        columnSpacing={6}
-        rowSpacing={6}
-        sx={{ marginTop: smUp ? 8 : 0, marginBottom: 12 }}
-      >
-        <Grid item>
-          <Stack
-            direction={"column"}
-            spacing={8}
-            sx={{ background: "", padding: mdUp ? 0 : 4 }}
-          >
-            <Grid
-              container
-              spacing={4}
-              direction={"row"}
-              justifyContent={mdUp ? "flex-start" : "center"}
-              sx={{ background: "", marginBottom: 2 }}
+      <AdminPageProvider>
+        <Grid
+          container
+          direction={"row"}
+          justifyContent={"center"}
+          columnSpacing={6}
+          rowSpacing={6}
+          sx={{ marginTop: smUp ? 8 : 0, marginBottom: 12 }}
+        >
+          <Grid item>
+            <Stack
+              direction={"column"}
+              spacing={8}
+              sx={{ background: "", padding: mdUp ? 0 : 4 }}
             >
-              <Grid item>
-                <Box
-                  sx={{
-                    height: 128,
-                    width: 128,
-                    background: "",
-                  }}
-                >
-                  <_EventImage imageUrl={ticketData?.imageUrl}>
-                    <InputButton
-                      sx={{ top: -2, left: -2, width: 126, height: 126 }}
-                      onChanged={async (file: File) => {
-                        await asyncUpdateImageUrlByFile(file);
+              <Grid
+                container
+                spacing={4}
+                direction={"row"}
+                justifyContent={mdUp ? "flex-start" : "center"}
+                sx={{ background: "", marginBottom: 2 }}
+              >
+                <Grid item>
+                  <Box
+                    sx={{
+                      height: 128,
+                      width: 128,
+                      background: "",
+                    }}
+                  >
+                    <_EventImage imageUrl={ticketData?.imageUrl}>
+                      <InputButton
+                        sx={{ top: -2, left: -2, width: 126, height: 126 }}
+                        onChanged={async (file: File) => {
+                          await asyncUpdateImageUrlByFile(file);
+                        }}
+                      ></InputButton>
+                    </_EventImage>
+                  </Box>
+                </Grid>
+                <Grid item>
+                  <Stack spacing={1} sx={{ marginBottom: 2 }}>
+                    <_EventTitle
+                      title={ticketData?.title}
+                      onClickForEdit={async (e) => {
+                        showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
                       }}
-                    ></InputButton>
-                  </_EventImage>
-                </Box>
+                    ></_EventTitle>
+                    <_EventDateRange
+                      ticketData={ticketData}
+                      onClickForEdit={async (e) => {
+                        showDateEditDialog(
+                          EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
+                        );
+                      }}
+                    ></_EventDateRange>
+                  </Stack>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  <_EventTitle
-                    title={ticketData?.title}
-                    onClickForEdit={async (e) => {
-                      showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
-                    }}
-                  ></_EventTitle>
-                  <_EventDateRange
-                    ticketData={ticketData}
-                    onClickForEdit={async (e) => {
-                      showDateEditDialog(
-                        EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
-                      );
-                    }}
-                  ></_EventDateRange>
-                </Stack>
-              </Grid>
-            </Grid>
 
-            {/* isExceededTicketParticipants */}
-            {/* hasMetamask */}
-            {/* walletConnectedForTicket */}
+              {/* isExceededTicketParticipants */}
+              {/* hasMetamask */}
+              {/* walletConnectedForTicket */}
 
-            <_EventDescription
-              ticketData={ticketData}
-              onClickForEdit={async (e) => {
-                showOpenContentMetaDataEditDialog(
-                  EVENT_COMPONENT_TARGET.DESCRIPTION,
-                );
-              }}
-            ></_EventDescription>
-
-            <Stack>
-              <EventQuests
+              <_EventDescription
                 ticketData={ticketData}
-                userData={userData}
-                verifiedList={verifiedList}
-                onEditBtnClicked={(e, quest, index) => {
-                  console.log("quest", quest);
-                  showOpenQuestUpsertDialog(quest);
+                onClickForEdit={async (e) => {
+                  showOpenContentMetaDataEditDialog(
+                    EVENT_COMPONENT_TARGET.DESCRIPTION,
+                  );
                 }}
-                onDeleteBtnClicked={async (e, quest, index) => {
+              ></_EventDescription>
+
+              <Stack>
+                <EventQuests
+                  ticketData={ticketData}
+                  userData={userData}
+                  verifiedList={verifiedList}
+                  onEditBtnClicked={(e, quest, index) => {
+                    console.log("quest", quest);
+                    showOpenQuestUpsertDialog(quest);
+                  }}
+                  onDeleteBtnClicked={async (e, quest, index) => {
+                    showLoading();
+                    if (quest?._id) await asyncDeleteQuest(quest?._id);
+                    await asyncRefreshAll();
+                    closeLoading();
+                  }}
+                  onExtractDataBtnClicked={async (e, quest, index) => {
+                    showOpenUserInfoDownloadDialog(quest);
+                  }}
+                ></EventQuests>
+                <Stack
+                  sx={{ width: "100%", marginTop: 4 }}
+                  alignItems={"center"}
+                >
+                  <IconButton
+                    className={"MuiIconButton"}
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 16,
+                      borderWidth: 2,
+                      borderStyle: "solid",
+                    }}
+                    onClick={(e) => {
+                      showOpenQuestUpsertDialog(undefined);
+                    }}
+                  >
+                    <AddIcon
+                      fontSize={"large"}
+                      sx={{
+                        borderRadius: 30,
+                        "&:hover": {
+                          borderColor: theme.palette.secondary.main,
+                          background: "#61E1FF55",
+                        },
+                      }}
+                    ></AddIcon>
+                  </IconButton>
+                </Stack>
+              </Stack>
+              <Box sx={{ padding: 1 }}></Box>
+            </Stack>
+          </Grid>
+          <Grid item>
+            <Stack
+              direction={"column"}
+              spacing={10}
+              sx={{ minWidth: 260, padding: smUp ? 0 : 4 }}
+            >
+              <Stack direction={"column"} spacing={5}>
+                <_EventRewardPolicy
+                  ticketData={ticketData}
+                  onClickForEdit={(e) => {
+                    setOpenTicketRewardPolicyEditDialog(true);
+                  }}
+                ></_EventRewardPolicy>
+                <EventTimeBoard ticketData={ticketData}></EventTimeBoard>
+                <EventRewardDescription
+                  ticketData={ticketData}
+                  eventRewardImageCompFunc={(ticketData) => {
+                    return (
+                      <_EventRewardImage ticketData={ticketData}>
+                        <InputButton
+                          sx={{
+                            top: -2,
+                            left: -2,
+                            width: smUp ? 300 + 4 : 260 + 4,
+                            height: smUp ? 300 + 4 : 260 + 4,
+                          }}
+                          onChanged={async (file: File) => {
+                            await asyncUpdateRewardImageUrlByFile(file);
+                          }}
+                        ></InputButton>
+                      </_EventRewardImage>
+                    );
+                  }}
+                  eventRewardPointCompFunc={(ticketData) => {
+                    return (
+                      <_EventRewardPoint
+                        ticketData={ticketData}
+                        onClickForEdit={(e) => {
+                          showOpenNumberEditDialog(
+                            EVENT_COMPONENT_TARGET.POINT,
+                          );
+                        }}
+                      ></_EventRewardPoint>
+                    );
+                  }}
+                  eventRewardLimitNumberCompFunc={(ticketData) => {
+                    return (
+                      <_EventRewardLimitNumber
+                        ticketData={ticketData}
+                        onClickForEdit={(e) => {
+                          showOpenNumberEditDialog(
+                            EVENT_COMPONENT_TARGET.LIMIT_NUMBER,
+                          );
+                        }}
+                      ></_EventRewardLimitNumber>
+                    );
+                  }}
+                  eventRewardNameCompFunc={(ticketData) => {
+                    return (
+                      <_EventRewardName
+                        onClickForEdit={async (e) => {
+                          showTextEditDialog(
+                            EVENT_COMPONENT_TARGET.REWARD_NAME,
+                          );
+                        }}
+                        ticketData={ticketData}
+                      ></_EventRewardName>
+                    );
+                  }}
+                  eventRewardChainContentCompFunc={(ticketData) => {
+                    return (
+                      <_EventRewardChainContent
+                        ticketData={ticketData}
+                        onClickForEdit={async (e) => {
+                          showOpenTicketRewardChainContentEditDialog();
+                        }}
+                      ></_EventRewardChainContent>
+                    );
+                  }}
+                ></EventRewardDescription>
+                <EventParticipants ticketData={ticketData}></EventParticipants>
+              </Stack>
+            </Stack>
+          </Grid>
+        </Grid>
+
+        <div style={{ position: "absolute", left: 0, top: 64 + 8 }}>
+          <div style={{ position: "absolute", top: 16, left: 32 }}>
+            <Stack direction={"row"} alignItems={"center"}>
+              <IconButton
+                onClick={async (e) => {
                   showLoading();
-                  if (quest?._id) await asyncDeleteQuest(quest?._id);
+                  await router.push("/admin");
+                  closeLoading();
+                }}
+                sx={{
+                  borderRadius: 32,
+                  width: 36,
+                  height: 36,
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                  "&:hover": {
+                    borderColor: theme.palette.secondary.main,
+                    background: "#61E1FF55",
+                  },
+                }}
+              >
+                <ArrowBackIcon></ArrowBackIcon>
+              </IconButton>
+              <Typography variant={"h6"} sx={{ marginLeft: 2 }} noWrap>
+                ADMIN으로 돌아가기
+              </Typography>
+            </Stack>
+            {/*<PrimaryButton*/}
+            {/*  startIcon={ <ArrowBackIcon></ArrowBackIcon>}*/}
+            {/*>explore</PrimaryButton>*/}
+          </div>
+        </div>
+
+        <div style={{ position: "absolute", right: -380, top: 64 + 8 }}>
+          <Draggable defaultPosition={{ x: -380, y: 0 }}>
+            <div className="box">
+              <TicketEditControllerWidget
+                targetTicket={ticketData}
+                onDownloadButtonClick={async (res) => {
+                  await asyncDownloadCompletedUserFile(
+                    res,
+                    `${ticketData?.title}.csv`,
+                  );
+                }}
+                projects={projectsData}
+                onProjectChanged={async (projectId) => {
+                  try {
+                    showLoading();
+                    // console.log("projectId", projectId);
+                    await asyncUpdateTicketProject(projectId);
+                    // console.log("projectId - finish");
+                  } catch (e) {
+                    console.log(e);
+                  } finally {
+                    closeLoading();
+                  }
+                }}
+                onVisibilityChanged={async (visible) => {
+                  showLoading();
+                  await asyncUpdateTicketVisibleById(visible);
                   await asyncRefreshAll();
                   closeLoading();
                 }}
-                onExtractDataBtnClicked={async (e, quest, index) => {
-                  showOpenUserInfoDownloadDialog(quest);
-                }}
-              ></EventQuests>
-              <Stack sx={{ width: "100%", marginTop: 4 }} alignItems={"center"}>
-                <IconButton
-                  className={"MuiIconButton"}
-                  sx={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 16,
-                    borderWidth: 2,
-                    borderStyle: "solid",
-                  }}
-                  onClick={(e) => {
-                    showOpenQuestUpsertDialog(undefined);
-                  }}
-                >
-                  <AddIcon
-                    fontSize={"large"}
-                    sx={{
-                      borderRadius: 30,
-                      "&:hover": {
-                        borderColor: theme.palette.secondary.main,
-                        background: "#61E1FF55",
-                      },
-                    }}
-                  ></AddIcon>
-                </IconButton>
-              </Stack>
-            </Stack>
-            <Box sx={{ padding: 1 }}></Box>
-          </Stack>
-        </Grid>
-        <Grid item>
-          <Stack
-            direction={"column"}
-            spacing={10}
-            sx={{ minWidth: 260, padding: smUp ? 0 : 4 }}
-          >
-            <Stack direction={"column"} spacing={5}>
-              <_EventRewardPolicy
-                ticketData={ticketData}
-                onClickForEdit={(e) => {
-                  setOpenTicketRewardPolicyEditDialog(true);
-                }}
-              ></_EventRewardPolicy>
-              <EventTimeBoard ticketData={ticketData}></EventTimeBoard>
-              <EventRewardDescription
-                ticketData={ticketData}
-                eventRewardImageCompFunc={(ticketData) => {
-                  return (
-                    <_EventRewardImage ticketData={ticketData}>
-                      <InputButton
-                        sx={{
-                          top: -2,
-                          left: -2,
-                          width: smUp ? 300 + 4 : 260 + 4,
-                          height: smUp ? 300 + 4 : 260 + 4,
-                        }}
-                        onChanged={async (file: File) => {
-                          await asyncUpdateRewardImageUrlByFile(file);
-                        }}
-                      ></InputButton>
-                    </_EventRewardImage>
-                  );
-                }}
-                eventRewardPointCompFunc={(ticketData) => {
-                  return (
-                    <_EventRewardPoint
-                      ticketData={ticketData}
-                      onClickForEdit={(e) => {
-                        showOpenNumberEditDialog(EVENT_COMPONENT_TARGET.POINT);
-                      }}
-                    ></_EventRewardPoint>
-                  );
-                }}
-                eventRewardLimitNumberCompFunc={(ticketData) => {
-                  return (
-                    <_EventRewardLimitNumber
-                      ticketData={ticketData}
-                      onClickForEdit={(e) => {
-                        showOpenNumberEditDialog(
-                          EVENT_COMPONENT_TARGET.LIMIT_NUMBER,
-                        );
-                      }}
-                    ></_EventRewardLimitNumber>
-                  );
-                }}
-                eventRewardNameCompFunc={(ticketData) => {
-                  return (
-                    <_EventRewardName
-                      onClickForEdit={async (e) => {
-                        showTextEditDialog(EVENT_COMPONENT_TARGET.REWARD_NAME);
-                      }}
-                      ticketData={ticketData}
-                    ></_EventRewardName>
-                  );
-                }}
-                eventRewardChainContentCompFunc={(ticketData) => {
-                  return (
-                    <_EventRewardChainContent
-                      ticketData={ticketData}
-                      onClickForEdit={async (e) => {
-                        showOpenTicketRewardChainContentEditDialog();
-                      }}
-                    ></_EventRewardChainContent>
-                  );
-                }}
-              ></EventRewardDescription>
-              <EventParticipants ticketData={ticketData}></EventParticipants>
-            </Stack>
-          </Stack>
-        </Grid>
-      </Grid>
-
-      <div style={{ position: "absolute", left: 0, top: 64 + 8 }}>
-        <div style={{ position: "absolute", top: 16, left: 32 }}>
-          <Stack direction={"row"} alignItems={"center"}>
-            <IconButton
-              onClick={async (e) => {
-                showLoading();
-                await router.push("/admin");
-                closeLoading();
-              }}
-              sx={{
-                borderRadius: 32,
-                width: 36,
-                height: 36,
-                borderWidth: 2,
-                borderStyle: "solid",
-                "&:hover": {
-                  borderColor: theme.palette.secondary.main,
-                  background: "#61E1FF55",
-                },
-              }}
-            >
-              <ArrowBackIcon></ArrowBackIcon>
-            </IconButton>
-            <Typography variant={"h6"} sx={{ marginLeft: 2 }} noWrap>
-              ADMIN으로 돌아가기
-            </Typography>
-          </Stack>
-          {/*<PrimaryButton*/}
-          {/*  startIcon={ <ArrowBackIcon></ArrowBackIcon>}*/}
-          {/*>explore</PrimaryButton>*/}
+              ></TicketEditControllerWidget>
+            </div>
+          </Draggable>
         </div>
-      </div>
 
-      <div style={{ position: "absolute", right: -380, top: 64 + 8 }}>
-        <Draggable defaultPosition={{ x: -380, y: 0 }}>
-          <div className="box">
-            <TicketEditControllerWidget
-              targetTicket={ticketData}
-              onDownloadButtonClick={async (res) => {
-                await asyncDownloadCompletedUserFile(
-                  res,
-                  `${ticketData?.title}.csv`,
-                );
-              }}
-              projects={projectsData}
-              onProjectChanged={async (projectId) => {
-                try {
-                  showLoading();
-                  // console.log("projectId", projectId);
-                  await asyncUpdateTicketProject(projectId);
-                  // console.log("projectId - finish");
-                } catch (e) {
-                  console.log(e);
-                } finally {
-                  closeLoading();
-                }
-              }}
-              onVisibilityChanged={async (visible) => {
-                showLoading();
-                await asyncUpdateTicketVisibleById(visible);
-                await asyncRefreshAll();
-                closeLoading();
-              }}
-            ></TicketEditControllerWidget>
-          </div>
-        </Draggable>
-      </div>
+        {/* --- Dialogs ---- */}
 
-      {/* --- Dialogs ---- */}
-
-      <TextEditDialog
-        open={openTextEditDialog}
-        title={dialogTitle}
-        defaultText={dialogDefaultText}
-        onCloseBtnClicked={(e) => {
-          closeTextEditDialog();
-        }}
-        onConfirmBtnClicked={async (text) => {
-          showLoading();
-          switch (eventComponentTarget) {
-            case EVENT_COMPONENT_TARGET.TITLE:
-              await asyncUpdateTitle(text);
-              break;
-            case EVENT_COMPONENT_TARGET.REWARD_NAME: {
-              const rewardPolicy = { ...ticketData?.rewardPolicy };
-              if (rewardPolicy.context) rewardPolicy.context.rewardName = text;
-              const newRewardPolicy =
-                TypeHelper.convertToServerRewardPolicy(rewardPolicy);
-              await asyncUpdateTicketRewardPolicy(newRewardPolicy);
-              break;
+        <TextEditDialog
+          open={openTextEditDialog}
+          title={dialogTitle}
+          defaultText={dialogDefaultText}
+          onCloseBtnClicked={(e) => {
+            closeTextEditDialog();
+          }}
+          onConfirmBtnClicked={async (text) => {
+            showLoading();
+            switch (eventComponentTarget) {
+              case EVENT_COMPONENT_TARGET.TITLE:
+                await asyncUpdateTitle(text);
+                break;
+              case EVENT_COMPONENT_TARGET.REWARD_NAME: {
+                const rewardPolicy = { ...ticketData?.rewardPolicy };
+                if (rewardPolicy.context)
+                  rewardPolicy.context.rewardName = text;
+                const newRewardPolicy =
+                  TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+                await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+                break;
+              }
             }
-          }
-          await asyncRefreshAll();
-          closeTextEditDialog();
-          closeLoading();
-        }}
-      ></TextEditDialog>
-      <TicketDateEditDialog
-        initBeginDate={DateUtil.parseStrToDate(ticketData?.beginTime ?? "")}
-        initEndDate={DateUtil.parseStrToDate(ticketData?.untilTime ?? "")}
-        open={openDateEditDialog}
-        title={dialogTitle}
-        onCloseBtnClicked={(e) => {
-          closeDateEditDialog();
-        }}
-        onConfirmBtnClicked={async (beginDate, endDate) => {
-          showLoading();
-          switch (eventComponentTarget) {
-            case EVENT_COMPONENT_TARGET.DATE_RANGE_TIME:
-              await asyncUpdateTicketDateRangeTime(beginDate, endDate);
-              break;
-          }
-          await asyncRefreshAll();
-          closeDateEditDialog();
-          closeLoading();
-        }}
-      ></TicketDateEditDialog>
-      <ContentMetaDataEditDialog
-        open={openContentMetaDataEditDialog}
-        title={dialogTitle}
-        content={dialogContent}
-        onCloseBtnClicked={(e) => {
-          closeOpenContentMetaDataEditDialog();
-        }}
-        onConfirmBtnClicked={async (data) => {
-          showLoading();
-          switch (eventComponentTarget) {
-            case EVENT_COMPONENT_TARGET.DESCRIPTION:
-              await asyncUpdateTicketDescription(data);
-              break;
-          }
-          await asyncRefreshAll();
-          closeOpenContentMetaDataEditDialog();
-          closeLoading();
-        }}
-      ></ContentMetaDataEditDialog>
-      <TicketQuestUpsertEditDialog
-        open={openQuestUpsertDialog}
-        onCloseBtnClicked={(e) => {
-          setOpenQuestUpsertDialog(false);
-        }}
-        editedQuest={editedQuest}
-        onConfirmBtnClicked={async (
-          questPolicy?: QuestPolicy,
-          title_v2?: ContentMetadata,
-          editedQuestId?: string,
-        ) => {
-          showLoading();
-          console.log("title_v2", title_v2, "questPolicy", questPolicy);
-          if (!editedQuestId) await asyncCreateQuest(title_v2, questPolicy);
-          else await asyncUpdateQuest(editedQuestId, questPolicy, title_v2);
-          await asyncRefreshAll();
-          closeQuestUpsertDialog();
-          closeLoading();
-        }}
-      ></TicketQuestUpsertEditDialog>
-      <TicketRewardPolicyEditDialog
-        open={openTicketRewardPolicyEditDialog}
-        title={"리워드 정책 편집"}
-        defaultQuestPolicyType={ticketData?.rewardPolicy?.rewardPolicyType}
-        onCloseBtnClicked={(e) => {
-          setOpenTicketRewardPolicyEditDialog(false);
-        }}
-        onConfirmBtnClicked={async (_rewardPolicyType) => {
-          showLoading();
-          const rewardPolicy = { ...ticketData?.rewardPolicy };
-          rewardPolicy.rewardPolicyType = _rewardPolicyType;
+            await asyncRefreshAll();
+            closeTextEditDialog();
+            closeLoading();
+          }}
+        ></TextEditDialog>
+        <TicketDateEditDialog
+          initBeginDate={DateUtil.parseStrToDate(ticketData?.beginTime ?? "")}
+          initEndDate={DateUtil.parseStrToDate(ticketData?.untilTime ?? "")}
+          open={openDateEditDialog}
+          title={dialogTitle}
+          onCloseBtnClicked={(e) => {
+            closeDateEditDialog();
+          }}
+          onConfirmBtnClicked={async (beginDate, endDate) => {
+            showLoading();
+            switch (eventComponentTarget) {
+              case EVENT_COMPONENT_TARGET.DATE_RANGE_TIME:
+                await asyncUpdateTicketDateRangeTime(beginDate, endDate);
+                break;
+            }
+            await asyncRefreshAll();
+            closeDateEditDialog();
+            closeLoading();
+          }}
+        ></TicketDateEditDialog>
+        <ContentMetaDataEditDialog
+          open={openContentMetaDataEditDialog}
+          title={dialogTitle}
+          content={dialogContent}
+          onCloseBtnClicked={(e) => {
+            closeOpenContentMetaDataEditDialog();
+          }}
+          onConfirmBtnClicked={async (data) => {
+            showLoading();
+            switch (eventComponentTarget) {
+              case EVENT_COMPONENT_TARGET.DESCRIPTION:
+                await asyncUpdateTicketDescription(data);
+                break;
+            }
+            await asyncRefreshAll();
+            closeOpenContentMetaDataEditDialog();
+            closeLoading();
+          }}
+        ></ContentMetaDataEditDialog>
+        <TicketQuestUpsertEditDialog
+          open={openQuestUpsertDialog}
+          onCloseBtnClicked={(e) => {
+            setOpenQuestUpsertDialog(false);
+          }}
+          editedQuest={editedQuest}
+          onConfirmBtnClicked={async (
+            questPolicy?: QuestPolicy,
+            title_v2?: ContentMetadata,
+            editedQuestId?: string,
+          ) => {
+            showLoading();
+            console.log("title_v2", title_v2, "questPolicy", questPolicy);
+            if (!editedQuestId) await asyncCreateQuest(title_v2, questPolicy);
+            else await asyncUpdateQuest(editedQuestId, questPolicy, title_v2);
+            await asyncRefreshAll();
+            closeQuestUpsertDialog();
+            closeLoading();
+          }}
+        ></TicketQuestUpsertEditDialog>
+        <TicketRewardPolicyEditDialog
+          open={openTicketRewardPolicyEditDialog}
+          title={"리워드 정책 편집"}
+          defaultQuestPolicyType={ticketData?.rewardPolicy?.rewardPolicyType}
+          onCloseBtnClicked={(e) => {
+            setOpenTicketRewardPolicyEditDialog(false);
+          }}
+          onConfirmBtnClicked={async (_rewardPolicyType) => {
+            showLoading();
+            const rewardPolicy = { ...ticketData?.rewardPolicy };
+            rewardPolicy.rewardPolicyType = _rewardPolicyType;
 
-          if (rewardPolicy.rewardPolicyType === RewardPolicyType.Always) {
-            if (rewardPolicy.context?.limitNumber !== undefined) {
-              rewardPolicy.context.limitNumber = 4294967296;
+            if (rewardPolicy.rewardPolicyType === RewardPolicyType.Always) {
+              if (rewardPolicy.context?.limitNumber !== undefined) {
+                rewardPolicy.context.limitNumber = 4294967296;
+              }
+
+              await asyncUpdateTicketDateRangeTime(
+                DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
+                new Date(2099, 12, 31),
+              );
             }
 
-            await asyncUpdateTicketDateRangeTime(
-              DateUtil.parseStrToDate(ticketData?.beginTime ?? ""),
-              new Date(2099, 12, 31),
-            );
-          }
-
-          const newRewardPolicy =
-            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
-          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
-          await asyncRefreshAll();
-          setOpenTicketRewardPolicyEditDialog(false);
-          closeLoading();
-        }}
-      ></TicketRewardPolicyEditDialog>
-      <NumberEditDialog
-        open={openNumberEditDialog}
-        title={dialogTitle}
-        onCloseBtnClicked={(e) => {
-          closeOpenNumberEditDialog();
-        }}
-        minNumber={0}
-        defaultNumber={numberEditDialogDefaultNumber}
-        onConfirmBtnClicked={async (val) => {
-          showLoading();
-          const rewardPolicy = { ...ticketData?.rewardPolicy };
-          if (eventComponentTarget === EVENT_COMPONENT_TARGET.POINT) {
-            rewardPolicy.rewardPoint = val;
-          } else if (
-            eventComponentTarget === EVENT_COMPONENT_TARGET.LIMIT_NUMBER &&
-            rewardPolicy.context
-          ) {
-            rewardPolicy.context.limitNumber = val ?? 0;
-          }
-          const newRewardPolicy =
-            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
-          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
-          await asyncRefreshAll();
-          closeOpenNumberEditDialog();
-          closeLoading();
-        }}
-      ></NumberEditDialog>
-      <TicketRewardChainContentEditDialog
-        open={openTicketRewardChainContentEditDialog}
-        title={"이벤트 리워드 체인 편집"}
-        defaultTicketData={ticketData}
-        onCloseBtnClicked={(e) => {
-          closeOpenTicketRewardChainContentEditDialog();
-        }}
-        onConfirmBtnClicked={async (res) => {
-          showLoading();
-          const {
-            rewardChain,
-            rewardClaimable,
-            rewardUnit,
-            overrideRewardChainContent,
-            contractInfo,
-          } = res;
-          const rewardPolicy = { ...ticketData?.rewardPolicy };
-          if (rewardPolicy.context) {
-            rewardPolicy.context.rewardChain = rewardChain ?? "";
-            rewardPolicy.context.rewardClaimable = rewardClaimable;
-            rewardPolicy.context.rewardUnit = rewardUnit ?? "";
-            rewardPolicy.context.overrideRewardChainContent =
-              overrideRewardChainContent;
-            if (contractInfo)
-              rewardPolicy.context.contractInfo = { ...contractInfo };
-          }
-          const newRewardPolicy =
-            TypeHelper.convertToServerRewardPolicy(rewardPolicy);
-          await asyncUpdateTicketRewardPolicy(newRewardPolicy);
-          await asyncRefreshAll();
-          closeOpenTicketRewardChainContentEditDialog();
-          closeLoading();
-        }}
-      ></TicketRewardChainContentEditDialog>
-      <UserInfoDownloadDialog
-        open={openUserInfoDownloadDialog}
-        title={"설문 유저 답변 다운로드"}
-        onCloseBtnClicked={(e) => {
-          closeOpenUserInfoDownloadDialog();
-        }}
-        onConfirmBtnClicked={async (ticketUserQuery) => {
-          if (editedQuest && ticketUserQuery) {
-            await asyncDownloadQuestDataFile(
-              editedQuest?._id,
-              ticketUserQuery,
-              `${editedQuest?.title_v2?.content}.csv`,
-            );
-          }
-        }}
-      ></UserInfoDownloadDialog>
+            const newRewardPolicy =
+              TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+            await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+            await asyncRefreshAll();
+            setOpenTicketRewardPolicyEditDialog(false);
+            closeLoading();
+          }}
+        ></TicketRewardPolicyEditDialog>
+        <NumberEditDialog
+          open={openNumberEditDialog}
+          title={dialogTitle}
+          onCloseBtnClicked={(e) => {
+            closeOpenNumberEditDialog();
+          }}
+          minNumber={0}
+          defaultNumber={numberEditDialogDefaultNumber}
+          onConfirmBtnClicked={async (val) => {
+            showLoading();
+            const rewardPolicy = { ...ticketData?.rewardPolicy };
+            if (eventComponentTarget === EVENT_COMPONENT_TARGET.POINT) {
+              rewardPolicy.rewardPoint = val;
+            } else if (
+              eventComponentTarget === EVENT_COMPONENT_TARGET.LIMIT_NUMBER &&
+              rewardPolicy.context
+            ) {
+              rewardPolicy.context.limitNumber = val ?? 0;
+            }
+            const newRewardPolicy =
+              TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+            await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+            await asyncRefreshAll();
+            closeOpenNumberEditDialog();
+            closeLoading();
+          }}
+        ></NumberEditDialog>
+        <TicketRewardChainContentEditDialog
+          open={openTicketRewardChainContentEditDialog}
+          title={"이벤트 리워드 체인 편집"}
+          defaultTicketData={ticketData}
+          onCloseBtnClicked={(e) => {
+            closeOpenTicketRewardChainContentEditDialog();
+          }}
+          onConfirmBtnClicked={async (res) => {
+            showLoading();
+            const {
+              rewardChain,
+              rewardClaimable,
+              rewardUnit,
+              overrideRewardChainContent,
+              contractInfo,
+            } = res;
+            const rewardPolicy = { ...ticketData?.rewardPolicy };
+            if (rewardPolicy.context) {
+              rewardPolicy.context.rewardChain = rewardChain ?? "";
+              rewardPolicy.context.rewardClaimable = rewardClaimable;
+              rewardPolicy.context.rewardUnit = rewardUnit ?? "";
+              rewardPolicy.context.overrideRewardChainContent =
+                overrideRewardChainContent;
+              if (contractInfo)
+                rewardPolicy.context.contractInfo = { ...contractInfo };
+            }
+            const newRewardPolicy =
+              TypeHelper.convertToServerRewardPolicy(rewardPolicy);
+            await asyncUpdateTicketRewardPolicy(newRewardPolicy);
+            await asyncRefreshAll();
+            closeOpenTicketRewardChainContentEditDialog();
+            closeLoading();
+          }}
+        ></TicketRewardChainContentEditDialog>
+        <UserInfoDownloadDialog
+          open={openUserInfoDownloadDialog}
+          title={"설문 유저 답변 다운로드"}
+          onCloseBtnClicked={(e) => {
+            closeOpenUserInfoDownloadDialog();
+          }}
+          onConfirmBtnClicked={async (ticketUserQuery) => {
+            if (editedQuest && ticketUserQuery) {
+              await asyncDownloadQuestDataFile(
+                editedQuest?._id,
+                ticketUserQuery,
+                `${editedQuest?.title_v2?.content}.csv`,
+              );
+            }
+          }}
+        ></UserInfoDownloadDialog>
+      </AdminPageProvider>
     </>
   );
 };
