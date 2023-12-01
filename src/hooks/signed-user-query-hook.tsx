@@ -54,7 +54,7 @@ import TelegramUtil from "../util/telegram-util";
 import { delay } from "../util/timer";
 
 import { useProfileEditDialog } from "./profile-edit-dialog-hook";
-import { useSignIn } from "./signIn.hook";
+import { useUser } from "./useUser";
 
 const useSignedUserQuery = () => {
   const {
@@ -81,7 +81,9 @@ const useSignedUserQuery = () => {
     walletLoggedInInfo,
   } = useLogin();
 
-  const { isSignedIn } = useSignIn();
+  const { user } = useUser();
+
+  const isSignedIn = !!user;
 
   const [UpdateUserWalletByName] = useMutation(UPDATE_USER_WALLET_BY_NAME);
   const [UpdateUserProfileImageByName] = useMutation(

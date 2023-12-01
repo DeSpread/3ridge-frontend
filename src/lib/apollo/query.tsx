@@ -368,57 +368,6 @@ export const SEND_AUTH_CODE = gql(/* GraphQL */ `
   }
 `);
 
-export const GET_USER_BY_ACCESS_TOKEN = gql(`
-  query getUserByAccessToken {
-    userByAccessToken {
-      _id
-      name
-      profileImageUrl
-      email
-      wallets {
-        address
-        chain
-      }
-      rewardPoint
-      userSocial {
-        twitterId
-        telegramUser {
-          authDate
-          firstName
-          hash
-          id
-          photoUrl
-          username
-        }
-      }
-      kakao {
-        id
-        connected_at
-        properties {
-          nickname
-          profile_image
-          thumbnail_image
-        }
-      }
-      discord {
-        accent_color
-        avatar
-        avatar_decoration
-        banner
-        discriminator
-        flags
-        global_name
-        id
-        locale
-        mfa_enabled
-        premium_type
-        public_flags
-        username
-      }
-    }
-  }
-`);
-
 export const SIGN_IN_BY_EMAIL = gql(`
   mutation SignInByEmail($email: String!, $password: String!) {
     signInByEmail(email: $email, password: $password) {

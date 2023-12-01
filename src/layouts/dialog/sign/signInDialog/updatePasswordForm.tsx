@@ -4,7 +4,7 @@ import NewPasswordForm from "./newPasswordForm";
 import { EmailWithAuthCode } from "./types";
 
 import { UpdatePasswordByEmailDocument } from "@/__generated__/graphql";
-import { useSignIn } from "@/hooks/signIn.hook";
+import { useUser } from "@/hooks/useUser";
 
 interface UpdatePasswordFormProps extends EmailWithAuthCode {
   onSignIn(): void;
@@ -12,7 +12,7 @@ interface UpdatePasswordFormProps extends EmailWithAuthCode {
 
 export default function UpdatePasswordForm(props: UpdatePasswordFormProps) {
   const [updatePasswordByEmail] = useMutation(UpdatePasswordByEmailDocument);
-  const { signInByEmail } = useSignIn();
+  const { loginByEmail } = useUser();
 
   function handleSubmit(password: string) {
     updatePasswordByEmail({
@@ -23,7 +23,7 @@ export default function UpdatePasswordForm(props: UpdatePasswordFormProps) {
       },
     }).then((res) => {
       if (res.data?.updatePasswordByEmail) {
-        signInByEmail(props.email, password).then(props.onSignIn);
+        loginByEmail(props.email, password).then(props.onSignIn);
       }
     });
   }
