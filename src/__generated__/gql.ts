@@ -13,8 +13,10 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
+    "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n": types.UpdateUserMutationDocument,
     "\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n": types.UserItemFragmentDoc,
     "\n  query getUserByAccessToken {\n    userByAccessToken {\n      ...UserItem\n    }\n  }\n": types.GetUserByAccessTokenDocument,
+    "\n  query users {\n    users {\n      ...UserItem\n    }\n  }\n": types.UsersDocument,
     "\n  query GetUsersOrderByRewardPointDesc($skip: Int = 0, $limit: Int = 25) {\n    usersOrderByRewardPointDesc(skip: $skip, limit: $limit) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n      userSocial {\n        twitterId\n      }\n      kakao {\n        id\n        connected_at\n        properties {\n          nickname\n          profile_image\n          thumbnail_image\n        }\n      }\n      discord {\n        accent_color\n        avatar\n        avatar_decoration\n        banner\n        discriminator\n        flags\n        global_name\n        id\n        locale\n        mfa_enabled\n        premium_type\n        public_flags\n        username\n      }\n    }\n  }\n": types.GetUsersOrderByRewardPointDescDocument,
     "\n  query FindRankByUserId($userId: String!) {\n    findRankByUserId(userId: $userId)\n  }\n": types.FindRankByUserIdDocument,
     "\n  query GetUserByKakaoId($kakaoId: Float!) {\n    userByKakaoId(kakaoId: $kakaoId) {\n      _id\n      email\n      gmail\n      name\n      participatingTickets {\n        _id\n        imageUrl\n        description\n        project {\n          _id\n          categories\n          description\n          imageUrl\n          name\n        }\n        rewardPolicy {\n          context\n          rewardPoint\n          rewardPolicyType\n        }\n        title\n        winners {\n          _id\n          name\n        }\n        quests {\n          _id\n        }\n      }\n      profileImageUrl\n      rewardPoint\n      userSocial {\n        twitterId\n        telegramUser {\n          authDate\n          firstName\n          hash\n          id\n          photoUrl\n          username\n        }\n      }\n      wallets {\n        address\n        chain\n      }\n      kakao {\n        id\n        connected_at\n        properties {\n          nickname\n          profile_image\n          thumbnail_image\n        }\n      }\n      discord {\n        accent_color\n        avatar\n        avatar_decoration\n        banner\n        discriminator\n        flags\n        global_name\n        id\n        locale\n        mfa_enabled\n        premium_type\n        public_flags\n        username\n      }\n    }\n  }\n": types.GetUserByKakaoIdDocument,
@@ -87,11 +89,19 @@ const documents = {
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n"): (typeof documents)["\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query getUserByAccessToken {\n    userByAccessToken {\n      ...UserItem\n    }\n  }\n"): (typeof documents)["\n  query getUserByAccessToken {\n    userByAccessToken {\n      ...UserItem\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query users {\n    users {\n      ...UserItem\n    }\n  }\n"): (typeof documents)["\n  query users {\n    users {\n      ...UserItem\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
