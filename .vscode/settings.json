@@ -7,5 +7,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "cSpell.words": ["clsx", "svgr"]
+  "cSpell.words": ["clsx", "svgr"],
+  "editor.tabSize": 2
 }

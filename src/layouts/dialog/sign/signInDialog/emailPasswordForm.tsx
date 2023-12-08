@@ -3,7 +3,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 
 import PasswordInput from "./passwordInput";
 
-import { useSignIn } from "@/hooks/signIn.hook";
+import { useUser } from "@/hooks/useUser";
 
 interface EmailPasswordFormProps {
   email: string;
@@ -11,14 +11,15 @@ interface EmailPasswordFormProps {
 }
 
 export default function EmailPasswordForm(props: EmailPasswordFormProps) {
-  const { signInByEmail } = useSignIn();
+  const { loginByEmail } = useUser();
+
   const [error, setError] = useState(false);
   const [password, setPassword] = useState("");
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    signInByEmail(props.email, password)
+    loginByEmail(props.email, password)
       .then(props.onSignIn)
       .catch(() => setError(true));
   }

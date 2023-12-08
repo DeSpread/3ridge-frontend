@@ -4,7 +4,7 @@ import NewPasswordForm from "./newPasswordForm";
 import { EmailWithAuthCode } from "./types";
 
 import { CreateUserByEmailDocument } from "@/__generated__/graphql";
-import { useSignIn } from "@/hooks/signIn.hook";
+import { useUser } from "@/hooks/useUser";
 
 interface CreateAccountFromEmailProps extends EmailWithAuthCode {
   onSignIn(): void;
@@ -14,7 +14,7 @@ export default function CreateAccountFromEmail(
   props: CreateAccountFromEmailProps,
 ) {
   const [createUserByEmail] = useMutation(CreateUserByEmailDocument);
-  const { signInByEmail } = useSignIn();
+  const { loginByEmail } = useUser();
 
   function handleSubmit(password: string) {
     createUserByEmail({
@@ -25,7 +25,7 @@ export default function CreateAccountFromEmail(
       },
     }).then((res) => {
       if (res.data?.createUserByEmail.name) {
-        signInByEmail(props.email, password).then(props.onSignIn);
+        loginByEmail(props.email, password).then(props.onSignIn);
       }
     });
   }

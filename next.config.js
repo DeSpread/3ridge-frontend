@@ -9,7 +9,6 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: "export",
   images: {
     unoptimized: true,
     remotePatterns: [
