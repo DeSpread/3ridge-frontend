@@ -37,7 +37,11 @@ const ProjectUpsertEditDialog = (
     const ext = FileUtil.getFileExtension(file);
     const imageName = v1();
     console.log(imageName);
-    await asyncUploadImage(`project/${imageName}`, base64Data, file.type);
+    await asyncUploadImage(
+      `project/${imageName}.${ext}`,
+      base64Data,
+      file.type,
+    );
     let imageUrl = `https://3ridge.s3.ap-northeast-2.amazonaws.com/project/${imageName}.${ext}`;
     if (!includeQuestion) {
       imageUrl += "?";
