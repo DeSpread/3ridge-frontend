@@ -1,9 +1,16 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import {
+  QueryFunctionOptions,
+  useLazyQuery,
+  useMutation,
+} from "@apollo/client";
 import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 
 import { gql, useFragment as getFragment } from "@/__generated__";
-import { SignInByEmailDocument } from "@/__generated__/graphql";
+import {
+  SignInByEmailDocument,
+  UserItemFragment,
+} from "@/__generated__/graphql";
 import { userDataState } from "@/lib/recoil";
 
 const LOCAL_STORAGE_TOKEN_KEY = "accessToken";
@@ -27,10 +34,21 @@ const Query = gql(/* GraphQL */ `
   }
 `);
 
-export function useUser() {
+export function useUser(args?: {
+  onCompleted?: (user?: UserItemFragment) => void;
+}) {
   const setUserData = useSetRecoilState(userDataState);
   const [userByAccessToken, { client, data: userByAccessTokenData }] =
-    useLazyQuery(Query);
+    useLazyQuery(Query, {
+      onCompleted(res) {
+        args?.onCompleted?.(
+          getFragment(Fragment, res.userByAccessToken) ?? undefined,
+        );
+      },
+      onError() {
+        args?.onCompleted?.(undefined);
+      },
+    });
 
   const [signInByEmailMutation] = useMutation(SignInByEmailDocument);
 
@@ -41,23 +59,24 @@ export function useUser() {
   function handleChangeToken(token?: string) {
     setTokenFromStorage(token);
 
-    if (!token) {
-      setUserData({});
-      return;
-    }
+    userByAccessToken()
+      .then((res) => {
+        const user = getFragment(Fragment, res.data?.userByAccessToken);
 
-    userByAccessToken().then((res) => {
-      const user = getFragment(Fragment, res.data?.userByAccessToken);
+        if (!user) {
+          return {};
+        }
 
-      return setUserData({
-        _id: user?._id ?? undefined,
-        email: user?.email ?? undefined,
-        name: user?.name ?? undefined,
-        rewardPoint: user?.rewardPoint ?? undefined,
-        profileImageUrl: user?.profileImageUrl ?? undefined,
-        type: user?.type ?? undefined,
-      });
-    });
+        return {
+          _id: user?._id ?? undefined,
+          email: user?.email ?? undefined,
+          name: user?.name ?? undefined,
+          rewardPoint: user?.rewardPoint ?? undefined,
+          profileImageUrl: user?.profileImageUrl ?? undefined,
+          type: user?.type ?? undefined,
+        };
+      })
+      .then(setUserData);
   }
 
   function getTokenFromStorage() {
