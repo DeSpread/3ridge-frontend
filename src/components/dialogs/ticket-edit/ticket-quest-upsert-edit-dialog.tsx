@@ -97,7 +97,7 @@ const TicketQuestUpsertEditDialog = (
       case QuestPolicyType.VerifyOnChain:
         return "온체인 활동";
       case QuestPolicyType.VerifyScreenshot:
-        return "스크릿샷";
+        return "스크린샷";
       case QuestPolicyType.VerifyAgreement:
         return "동의하기";
     }
