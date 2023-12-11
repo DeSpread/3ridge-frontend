@@ -5393,13 +5393,32 @@
   dependencies:
     "@stencil/core" "^2.17.1"
 
-"@stacks/connect@7.3.1", "@stacks/connect@^7.3.1":
+"@stacks/connect-ui@6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@stacks/connect-ui/-/connect-ui-6.2.0.tgz#7718dbc663532b65e4af8f28015b4348cc14cc31"
+  integrity sha512-8we9cXo7q/ATUNWqwXY7/1EN3F7xCIZC8P/oq2gRWwdO7LWeZkn+sev3zYRgfJ9JKvevjnBIU2BR7r6ZqzyUOA==
+  dependencies:
+    "@stencil/core" "^2.17.1"
+
+"@stacks/connect@7.3.1":
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/@stacks/connect/-/connect-7.3.1.tgz#0e011ade67bee023430ee095b915228f971ce4ca"
   integrity sha512-A2G6kVqx+noCaVl5n9HW+jJtZzxdDRTb93VvtONUl76ZMUhjcYl5b42rZiEQ3kGLBnBUp38R1WrFEUQ57AaXCA==
   dependencies:
     "@stacks/auth" "^6.1.1"
     "@stacks/connect-ui" "6.1.1"
+    "@stacks/network" "^6.1.1"
+    "@stacks/profile" "^6.1.1"
+    "@stacks/transactions" "^6.1.1"
+    jsontokens "^4.0.1"
+
+"@stacks/connect@^7.5.0":
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/@stacks/connect/-/connect-7.5.0.tgz#7c76cf23927acfc3770c4c43c9541d4b52c23df0"
+  integrity sha512-XdacWqWMBYL2ikFoK2lhnIZRgvGQFxiKER6J9ZsHlKJzcCz+tab6NeqMBmctHCdFyHWFGS1LOF8W8IaxFW6N0g==
+  dependencies:
+    "@stacks/auth" "^6.1.1"
+    "@stacks/connect-ui" "6.2.0"
     "@stacks/network" "^6.1.1"
     "@stacks/profile" "^6.1.1"
     "@stacks/transactions" "^6.1.1"
