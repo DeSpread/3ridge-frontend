@@ -1,3 +1,4 @@
+import amplitude from "@amplitude/analytics-browser";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { getAnalytics, setUserId, logEvent } from "firebase/analytics";
 import { useEffect } from "react";
@@ -103,6 +104,7 @@ export function useUser(args?: {
       },
     }).then((res) => {
       if (res.data?.signInByEmail._id) {
+        amplitude.setUserId(res.data.signInByEmail._id);
         const analytics = getAnalytics(firebaseApp);
         setUserId(analytics, res.data?.signInByEmail._id);
         logEvent(analytics, "login", {

@@ -1,3 +1,4 @@
+import amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@apollo/client";
 import { getAnalytics, logEvent, setUserId } from "firebase/analytics";
 
@@ -40,8 +41,9 @@ export function useUserMutation() {
         variables: args,
       }).then((res) => {
         if (res.data?.createUserByEmail._id) {
+          amplitude.setUserId(res.data.createUserByEmail._id);
           const analytics = getAnalytics(firebaseApp);
-          setUserId(analytics, res.data?.createUserByEmail._id);
+          setUserId(analytics, res.data.createUserByEmail._id);
           logEvent(analytics, "sign_up", {
             method: "email",
           });
