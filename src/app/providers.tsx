@@ -6,6 +6,8 @@ import { PropsWithChildren, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
 
+import AmplitudeProvider from "./(providers)/amplitude.provider";
+
 import { client as apolloclient } from "@/lib/apollo/client";
 
 export default function Providers({ children }: PropsWithChildren) {
@@ -13,12 +15,14 @@ export default function Providers({ children }: PropsWithChildren) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <RecoilRoot>
-          <ApolloProvider client={apolloclient}>{children}</ApolloProvider>
-        </RecoilRoot>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <AmplitudeProvider>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <RecoilRoot>
+            <ApolloProvider client={apolloclient}>{children}</ApolloProvider>
+          </RecoilRoot>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </AmplitudeProvider>
   );
 }

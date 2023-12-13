@@ -12,6 +12,7 @@
     "test": "jest --watch"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.3.7",
     "@apollo/client": "^3.7.1",
     "@aptos-labs/wallet-adapter-react": "^0.2.3",
     "@elastic/elasticsearch": "^8.8.1",
