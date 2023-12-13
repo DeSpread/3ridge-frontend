@@ -17,6 +17,7 @@ const documents = {
     "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n": types.UpdateUserMutationDocument,
     "\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n": types.UserItemFragmentDoc,
     "\n  query getUserByAccessToken {\n    userByAccessToken {\n      ...UserItem\n    }\n  }\n": types.GetUserByAccessTokenDocument,
+    "\n  mutation SignInByEmail($email: String!, $password: String!) {\n    signInByEmail(email: $email, password: $password) {\n      _id\n      accessToken\n    }\n  }\n": types.SignInByEmailDocument,
     "\n  query users {\n    users {\n      ...UserItem\n    }\n  }\n": types.UsersDocument,
     "\n  query GetUsersOrderByRewardPointDesc($skip: Int = 0, $limit: Int = 25) {\n    usersOrderByRewardPointDesc(skip: $skip, limit: $limit) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n      userSocial {\n        twitterId\n      }\n      kakao {\n        id\n        connected_at\n        properties {\n          nickname\n          profile_image\n          thumbnail_image\n        }\n      }\n      discord {\n        accent_color\n        avatar\n        avatar_decoration\n        banner\n        discriminator\n        flags\n        global_name\n        id\n        locale\n        mfa_enabled\n        premium_type\n        public_flags\n        username\n      }\n    }\n  }\n": types.GetUsersOrderByRewardPointDescDocument,
     "\n  query FindRankByUserId($userId: String!) {\n    findRankByUserId(userId: $userId)\n  }\n": types.FindRankByUserIdDocument,
@@ -27,7 +28,6 @@ const documents = {
     "\n  query GetUserByWalletAddress($walletAddress: String!) {\n    userByWalletAddress(walletAddress: $walletAddress) {\n      _id\n      name\n      profileImageUrl\n      email\n      wallets {\n        address\n        chain\n      }\n      rewardPoint\n      userSocial {\n        twitterId\n        telegramUser {\n          authDate\n          firstName\n          hash\n          id\n          photoUrl\n          username\n        }\n      }\n      kakao {\n        id\n        connected_at\n        properties {\n          nickname\n          profile_image\n          thumbnail_image\n        }\n      }\n      discord {\n        accent_color\n        avatar\n        avatar_decoration\n        banner\n        discriminator\n        flags\n        global_name\n        id\n        locale\n        mfa_enabled\n        premium_type\n        public_flags\n        username\n      }\n    }\n  }\n": types.GetUserByWalletAddressDocument,
     "\n  query validateAuthCode($email: String!, $code: String!) {\n    validateAuthCode(email: $email, code: $code)\n  }\n": types.ValidateAuthCodeDocument,
     "\n  mutation sendAuthCode($email: String!) {\n    sendAuthCode(to: $email)\n  }\n": types.SendAuthCodeDocument,
-    "\n  mutation SignInByEmail($email: String!, $password: String!) {\n    signInByEmail(email: $email, password: $password) {\n      accessToken\n    }\n  }\n": types.SignInByEmailDocument,
     "\n  query IsNeedEmailAccountMigration($email: String!) {\n    isNeedEmailAccountMigration(email: $email)\n  }\n": types.IsNeedEmailAccountMigrationDocument,
     "\n  mutation UpdatePasswordByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    updatePasswordByEmail(email: $email, password: $password, authCode: $authCode)\n  }\n": types.UpdatePasswordByEmailDocument,
     "\n  mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {\n    createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {\n      name\n    }\n  }\n": types.CreateUserByGmailDocument,
@@ -105,6 +105,10 @@ export function gql(source: "\n  query getUserByAccessToken {\n    userByAccessT
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  mutation SignInByEmail($email: String!, $password: String!) {\n    signInByEmail(email: $email, password: $password) {\n      _id\n      accessToken\n    }\n  }\n"): (typeof documents)["\n  mutation SignInByEmail($email: String!, $password: String!) {\n    signInByEmail(email: $email, password: $password) {\n      _id\n      accessToken\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  query users {\n    users {\n      ...UserItem\n    }\n  }\n"): (typeof documents)["\n  query users {\n    users {\n      ...UserItem\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -142,10 +146,6 @@ export function gql(source: "\n  query validateAuthCode($email: String!, $code: 
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation sendAuthCode($email: String!) {\n    sendAuthCode(to: $email)\n  }\n"): (typeof documents)["\n  mutation sendAuthCode($email: String!) {\n    sendAuthCode(to: $email)\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  mutation SignInByEmail($email: String!, $password: String!) {\n    signInByEmail(email: $email, password: $password) {\n      accessToken\n    }\n  }\n"): (typeof documents)["\n  mutation SignInByEmail($email: String!, $password: String!) {\n    signInByEmail(email: $email, password: $password) {\n      accessToken\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

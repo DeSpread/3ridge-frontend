@@ -368,14 +368,6 @@ export const SEND_AUTH_CODE = gql(/* GraphQL */ `
   }
 `);
 
-export const SIGN_IN_BY_EMAIL = gql(`
-  mutation SignInByEmail($email: String!, $password: String!) {
-    signInByEmail(email: $email, password: $password) {
-      accessToken
-    }
-  }
-`);
-
 export const IS_NEED_EMAIL_ACCOUNT_MIGRATION = gql(`
   query IsNeedEmailAccountMigration($email: String!) {
     isNeedEmailAccountMigration(email: $email)
