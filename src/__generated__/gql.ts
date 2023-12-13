@@ -13,6 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
+    "\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      _id\n    }\n  }\n": types.CreateUserByEmailDocument,
     "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n": types.UpdateUserMutationDocument,
     "\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n": types.UserItemFragmentDoc,
     "\n  query getUserByAccessToken {\n    userByAccessToken {\n      ...UserItem\n    }\n  }\n": types.GetUserByAccessTokenDocument,
@@ -27,7 +28,6 @@ const documents = {
     "\n  query validateAuthCode($email: String!, $code: String!) {\n    validateAuthCode(email: $email, code: $code)\n  }\n": types.ValidateAuthCodeDocument,
     "\n  mutation sendAuthCode($email: String!) {\n    sendAuthCode(to: $email)\n  }\n": types.SendAuthCodeDocument,
     "\n  mutation SignInByEmail($email: String!, $password: String!) {\n    signInByEmail(email: $email, password: $password) {\n      accessToken\n    }\n  }\n": types.SignInByEmailDocument,
-    "\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      name\n    }\n  }\n": types.CreateUserByEmailDocument,
     "\n  query IsNeedEmailAccountMigration($email: String!) {\n    isNeedEmailAccountMigration(email: $email)\n  }\n": types.IsNeedEmailAccountMigrationDocument,
     "\n  mutation UpdatePasswordByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    updatePasswordByEmail(email: $email, password: $password, authCode: $authCode)\n  }\n": types.UpdatePasswordByEmailDocument,
     "\n  mutation CreateUserByGmail($gmail: String!, $profileImageUrl: String!) {\n    createUserByGmail(gmail: $gmail, profileImageUrl: $profileImageUrl) {\n      name\n    }\n  }\n": types.CreateUserByGmailDocument,
@@ -89,6 +89,10 @@ const documents = {
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      _id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -142,10 +146,6 @@ export function gql(source: "\n  mutation sendAuthCode($email: String!) {\n    s
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation SignInByEmail($email: String!, $password: String!) {\n    signInByEmail(email: $email, password: $password) {\n      accessToken\n    }\n  }\n"): (typeof documents)["\n  mutation SignInByEmail($email: String!, $password: String!) {\n    signInByEmail(email: $email, password: $password) {\n      accessToken\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      name\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

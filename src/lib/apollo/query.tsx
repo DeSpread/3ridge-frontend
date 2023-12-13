@@ -376,18 +376,6 @@ export const SIGN_IN_BY_EMAIL = gql(`
   }
 `);
 
-export const CREATE_USER_BY_EMAIL = gql(/* GraphQL */ `
-  mutation CreateUserByEmail(
-    $email: String!
-    $password: String!
-    $authCode: String!
-  ) {
-    createUserByEmail(email: $email, password: $password, authCode: $authCode) {
-      name
-    }
-  }
-`);
-
 export const IS_NEED_EMAIL_ACCOUNT_MIGRATION = gql(`
   query IsNeedEmailAccountMigration($email: String!) {
     isNeedEmailAccountMigration(email: $email)

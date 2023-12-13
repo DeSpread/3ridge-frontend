@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import { AppError, getErrorMessage } from "../../../error/my-error";
 import PreferenceHelper from "../../../helper/preference-helper";
-import { CREATE_USER_BY_EMAIL } from "../../../lib/apollo/query";
 import AwsClient from "../../../remote/aws-client";
 import {
   EmailLoggedInInfo,
@@ -15,7 +14,6 @@ import {
 
 export function useEmailLogin() {
   const [emailLoginInfo, setEmailLoginInfo] = useState<EmailLoggedInInfo>({});
-  const [createUserByEmail] = useMutation(CREATE_USER_BY_EMAIL);
 
   useEffect(() => {
     if (!isMailLoggedIn) {
