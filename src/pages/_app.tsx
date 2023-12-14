@@ -34,6 +34,7 @@ import { MobileContext } from "../provider/mobile/mobile-context";
 import { SnackbarProvider } from "../provider/snackbar/snackbar-provider";
 import { createTheme } from "../theme";
 
+import AmplitudeProvider from "@/app/(providers)/amplitude.provider";
 import { client as apolloClient } from "@/lib/apollo/client";
 import ConfirmProvider from "@/provider/confirm/confirm-provider";
 import { Z_INDEX_OFFSET } from "@/types";
@@ -120,43 +121,45 @@ const App = (props: AppPropsWithLayout) => {
         src="https://developers.kakao.com/sdk/js/kakao.js"
         onLoad={kakaoInit}
       ></Script>
-      <ThemeProvider theme={theme}>
-        <GoogleOAuthProvider clientId={clientId ?? ""}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <RecoilRoot>
-              <ApolloProvider client={apolloClient}>
-                <WagmiConfig config={wagmiConfig}>
-                  <QueryClientProvider client={queryClient}>
-                    <WalletProvider>
-                      <AptosWalletAdapterProvider
-                        plugins={wallets}
-                        autoConnect={true}
-                      >
-                        <MobileContext.Provider value={{ isMobile }}>
-                          <MasterProvider>
-                            <ErrorBoundary>
-                              {getLayout(<Component {...pageProps} />)}
-                            </ErrorBoundary>
-                          </MasterProvider>
-                        </MobileContext.Provider>
-                      </AptosWalletAdapterProvider>
-                    </WalletProvider>
-                  </QueryClientProvider>
-                </WagmiConfig>
-                <Web3Modal
-                  themeVariables={{
-                    "--w3m-z-index": String(
-                      theme.zIndex.modal + Z_INDEX_OFFSET.DIALOG,
-                    ),
-                  }}
-                  projectId={projectId}
-                  ethereumClient={ethereumClient}
-                />
-              </ApolloProvider>
-            </RecoilRoot>
-          </LocalizationProvider>
-        </GoogleOAuthProvider>
-      </ThemeProvider>
+      <AmplitudeProvider>
+        <ThemeProvider theme={theme}>
+          <GoogleOAuthProvider clientId={clientId ?? ""}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <RecoilRoot>
+                <ApolloProvider client={apolloClient}>
+                  <WagmiConfig config={wagmiConfig}>
+                    <QueryClientProvider client={queryClient}>
+                      <WalletProvider>
+                        <AptosWalletAdapterProvider
+                          plugins={wallets}
+                          autoConnect={true}
+                        >
+                          <MobileContext.Provider value={{ isMobile }}>
+                            <MasterProvider>
+                              <ErrorBoundary>
+                                {getLayout(<Component {...pageProps} />)}
+                              </ErrorBoundary>
+                            </MasterProvider>
+                          </MobileContext.Provider>
+                        </AptosWalletAdapterProvider>
+                      </WalletProvider>
+                    </QueryClientProvider>
+                  </WagmiConfig>
+                  <Web3Modal
+                    themeVariables={{
+                      "--w3m-z-index": String(
+                        theme.zIndex.modal + Z_INDEX_OFFSET.DIALOG,
+                      ),
+                    }}
+                    projectId={projectId}
+                    ethereumClient={ethereumClient}
+                  />
+                </ApolloProvider>
+              </RecoilRoot>
+            </LocalizationProvider>
+          </GoogleOAuthProvider>
+        </ThemeProvider>
+      </AmplitudeProvider>
     </>
   );
 };

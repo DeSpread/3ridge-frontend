@@ -131,7 +131,7 @@ class ResourceHelper {
         {
           imageUrl:
             "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/hiro-wallet.jpg",
-          name: "Hiro & Xverse",
+          name: "Leather & Xverse",
           value: WALLET_NAMES.HIRO,
           mobile: true,
         },

@@ -1,9 +1,7 @@
-import { useMutation } from "@apollo/client";
-
 import NewPasswordForm from "./newPasswordForm";
 import { EmailWithAuthCode } from "./types";
 
-import { CreateUserByEmailDocument } from "@/__generated__/graphql";
+import { useUserMutation } from "@/app/admin/useUserMutation";
 import { useUser } from "@/hooks/useUser";
 
 interface CreateAccountFromEmailProps extends EmailWithAuthCode {
@@ -13,18 +11,16 @@ interface CreateAccountFromEmailProps extends EmailWithAuthCode {
 export default function CreateAccountFromEmail(
   props: CreateAccountFromEmailProps,
 ) {
-  const [createUserByEmail] = useMutation(CreateUserByEmailDocument);
+  const { createUserByEmail } = useUserMutation();
   const { loginByEmail } = useUser();
 
   function handleSubmit(password: string) {
     createUserByEmail({
-      variables: {
-        email: props.email,
-        authCode: props.code,
-        password: password,
-      },
+      email: props.email,
+      authCode: props.code,
+      password: password,
     }).then((res) => {
-      if (res.data?.createUserByEmail.name) {
+      if (res.data?.createUserByEmail._id) {
         loginByEmail(props.email, password).then(props.onSignIn);
       }
     });
