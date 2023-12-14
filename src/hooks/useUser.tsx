@@ -1,4 +1,4 @@
-import amplitude from "@amplitude/analytics-browser";
+import * as amplitude from "@amplitude/analytics-browser";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { getAnalytics, setUserId, logEvent } from "firebase/analytics";
 import { useEffect } from "react";

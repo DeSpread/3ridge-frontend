@@ -1,4 +1,4 @@
-import amplitude from "@amplitude/analytics-browser";
+import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@apollo/client";
 import { getAnalytics, logEvent, setUserId } from "firebase/analytics";
 
