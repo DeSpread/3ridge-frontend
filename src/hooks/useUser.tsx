@@ -64,6 +64,11 @@ export function useUser(args?: {
   function handleChangeToken(token?: string) {
     setTokenFromStorage(token);
 
+    if (!token) {
+      setUserData({});
+      return;
+    }
+
     userByAccessToken()
       .then((res) => {
         const user = getFragment(Fragment, res.data?.userByAccessToken);
