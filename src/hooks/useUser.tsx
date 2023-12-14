@@ -6,6 +6,8 @@ import { useSetRecoilState } from "recoil";
 
 import { gql, useFragment as getFragment } from "@/__generated__";
 import { UserItemFragment } from "@/__generated__/graphql";
+import TypeHelper from "@/helper/type-helper";
+import TypeParseHelper from "@/helper/type-parse-helper";
 import { firebaseApp } from "@/lib/firebase/firebase-client";
 import { userDataState } from "@/lib/recoil";
 
@@ -26,6 +28,70 @@ const UserByAccessTokenQuery = gql(/* GraphQL */ `
   query getUserByAccessToken {
     userByAccessToken {
       ...UserItem
+      wallets {
+        address
+        chain
+      }
+      userSocial {
+        twitterId
+        telegramUser {
+          authDate
+          firstName
+          hash
+          id
+          photoUrl
+          username
+        }
+      }
+      kakao {
+        id
+        connected_at
+        properties {
+          nickname
+          profile_image
+          thumbnail_image
+        }
+      }
+      discord {
+        accent_color
+        avatar
+        avatar_decoration
+        banner
+        discriminator
+        flags
+        global_name
+        id
+        locale
+        mfa_enabled
+        premium_type
+        public_flags
+        username
+      }
+      participatingTickets {
+        _id
+        imageUrl
+        description
+        project {
+          _id
+          categories
+          description
+          imageUrl
+          name
+        }
+        rewardPolicy {
+          context
+          rewardPoint
+          rewardPolicyType
+        }
+        title
+        winners {
+          _id
+          name
+        }
+        quests {
+          _id
+        }
+      }
     }
   }
 `);
@@ -71,7 +137,13 @@ export function useUser(args?: {
 
     userByAccessToken()
       .then((res) => {
-        const user = getFragment(Fragment, res.data?.userByAccessToken);
+        if (!res.data?.userByAccessToken) {
+          return {};
+        }
+
+        const user = getFragment(Fragment, res.data.userByAccessToken);
+        const { wallets, userSocial, discord, participatingTickets } =
+          res.data.userByAccessToken;
 
         if (!user) {
           return {};
@@ -84,6 +156,66 @@ export function useUser(args?: {
           rewardPoint: user?.rewardPoint ?? undefined,
           profileImageUrl: user?.profileImageUrl ?? undefined,
           type: user?.type ?? undefined,
+          walletAddressInfos: wallets?.map((e) => {
+            return {
+              address: e.address,
+              network: TypeHelper.convertToSuppoertedNetwork(e.chain),
+            };
+          }),
+          userSocial: {
+            twitterId: userSocial?.twitterId ?? undefined,
+            telegramUser: userSocial?.telegramUser
+              ? {
+                  authDate: userSocial?.telegramUser.authDate ?? 0,
+                  firstName: userSocial?.telegramUser.firstName ?? "",
+                  hash: userSocial?.telegramUser.hash ?? "",
+                  id: userSocial?.telegramUser.id ?? 0,
+                  photoUrl: userSocial?.telegramUser.photoUrl ?? "",
+                  username: userSocial?.telegramUser.username ?? "",
+                }
+              : undefined,
+          },
+          discord: discord ?? undefined,
+          participatingTickets: participatingTickets
+            ?.filter((e, index) => {
+              return participatingTickets?.indexOf(e) === index;
+            })
+            ?.map((e) => {
+              return {
+                _id: e._id ?? undefined,
+                title: e.title ?? undefined,
+                description: e.description ?? undefined,
+                project: e.project
+                  ? {
+                      _id: e.project?._id ?? undefined,
+                      categories: e.project?.categories ?? undefined,
+                      description: e.project?.description ?? undefined,
+                      imageUrl: e.project?.imageUrl ?? undefined,
+                      name: e.project.name,
+                    }
+                  : undefined,
+                imageUrl: e.imageUrl ?? undefined,
+                rewardPolicy: {
+                  context: TypeParseHelper.parseRewardPolicy(
+                    e.rewardPolicy?.context ?? undefined,
+                    e.rewardPolicy?.rewardPolicyType ?? undefined,
+                  ),
+                  rewardPoint: e.rewardPolicy?.rewardPoint ?? undefined,
+                  rewardPolicyType:
+                    e.rewardPolicy?.rewardPolicyType ?? undefined,
+                },
+                quests: e.quests
+                  ? e.quests?.map((e) => {
+                      return { _id: e._id ?? undefined };
+                    })
+                  : undefined,
+                winners: e.winners?.map((_e) => {
+                  return {
+                    name: _e.name ?? undefined,
+                  };
+                }),
+              };
+            }),
         };
       })
       .then(setUserData);
