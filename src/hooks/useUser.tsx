@@ -242,7 +242,10 @@ export function useUser(args?: {
     }).then((res) => {
       if (res.data?.signInByEmail._id) {
         amplitude.setUserId(res.data.signInByEmail._id);
-        amplitude.track("Email Login Submitted");
+        amplitude.track({
+          event_type: "Login",
+          event_properties: { type: "email" },
+        });
         const analytics = getAnalytics(firebaseApp);
         setUserId(analytics, res.data?.signInByEmail._id);
         logEvent(analytics, "login", {
