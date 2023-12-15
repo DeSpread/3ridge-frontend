@@ -42,7 +42,7 @@ export function useUserMutation() {
       }).then((res) => {
         if (res.data?.createUserByEmail._id) {
           amplitude.setUserId(res.data.createUserByEmail._id);
-          amplitude.track("Sign Up Submitted");
+          amplitude.track("Email Sign Up Submitted");
           const analytics = getAnalytics(firebaseApp);
           setUserId(analytics, res.data.createUserByEmail._id);
           logEvent(analytics, "sign_up", {
