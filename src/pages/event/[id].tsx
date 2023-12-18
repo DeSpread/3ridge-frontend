@@ -1,3 +1,4 @@
+import * as amplitude from "@amplitude/analytics-browser";
 import {
   Box,
   Card,
@@ -380,6 +381,43 @@ const Event = (props: AppProps) => {
   };
 
   const updateVerifyState = (index: number) => {
+    if (index === 0) {
+      amplitude.track({
+        event_type: "Participate event",
+        event_properties: {
+          eventId: ticketData._id,
+        },
+      });
+    }
+
+    if (ticketData.quests?.[index]) {
+      amplitude.track({
+        event_type: "Quest complete",
+        event_properties: {
+          eventId: ticketData._id,
+          eventName: ticketData.quests[index].title_v2?.content,
+          questId: ticketData.quests[index]._id,
+          index: index,
+          total: ticketData.quests.length,
+          progress: (index / ticketData.quests.length).toFixed(2),
+        },
+      });
+
+      if (index === ticketData.quests.length - 1) {
+        amplitude.track({
+          event_type: "All quest complete",
+          event_properties: {
+            eventId: ticketData._id,
+            eventName: ticketData.quests[index].title_v2?.content,
+            questId: ticketData.quests[index]._id,
+            index: index,
+            total: ticketData.quests.length,
+            progress: (index / ticketData.quests.length).toFixed(2),
+          },
+        });
+      }
+    }
+
     setVerifiedList((prevState) => {
       prevState[index] = true;
       return prevState;
