@@ -165,13 +165,7 @@ const MainLayout = (props: MainLayoutProps) => {
                     ></NavbarButtonSet>
                   </Box>
                   {isLoggedIn ? (
-                    <NavbarAvatar
-                      rewardPoint={userData?.rewardPoint}
-                      userId={userData?._id}
-                      userName={userData.name}
-                      src={userData?.profileImageUrl}
-                      walletAddress={userData?.walletAddressInfos?.[0]?.address}
-                    ></NavbarAvatar>
+                    <NavbarAvatar />
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
                       <SecondaryButton
@@ -193,13 +187,7 @@ const MainLayout = (props: MainLayoutProps) => {
                   justifyContent={"center"}
                   spacing={2}
                 >
-                  <MobileNavigatorBar
-                    rewardPoint={userData?.rewardPoint}
-                    userId={userData?._id}
-                    userName={userData?.name}
-                    profileImageUrl={userData?.profileImageUrl}
-                    walletAddress={userData?.walletAddressInfos?.[0]?.address}
-                  />
+                  <MobileNavigatorBar />
                 </Stack>
               ) : (
                 <SubMenuButton
