@@ -68,7 +68,7 @@ const LoginContext = createContext<{
 });
 
 export const LoginProvider = ({ children }: PropsWithChildren) => {
-  const { logout: logoutAccessToken } = useUser();
+  const { user, logout: logoutAccessToken } = useUser();
   const { isGoogleLoggedIn, googleUserInfo, googleSignUp, googleLogout } =
     useMyGoogleLogin();
   const { walletSignUp, isWalletLoggedIn, walletLogout, walletInfo } =
@@ -90,7 +90,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     asyncUpdateCachedKakaoUserInfo,
     fetchKakaoUserInfo,
   } = useKakaoLogin();
-  const { user } = useUser();
+
   const isSignedIn = !!user;
 
   const logout: SuccessErrorCallback<void> = ({ onSuccess, onError }) => {

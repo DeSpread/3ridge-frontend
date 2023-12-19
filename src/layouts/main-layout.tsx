@@ -64,16 +64,12 @@ const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
-  const { logout } = useLogin();
+  const { isLoggedIn, logout } = useLogin();
   const { userData } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
 
   const { showErrorAlert } = useAlert();
   const { showLoading, closeLoading } = useLoading();
-
-  const isLoggedIn = useMemo(() => {
-    return userData?._id ? true : false;
-  }, [userData]);
 
   const asyncGoToExplore = async () => {
     showLoading();
