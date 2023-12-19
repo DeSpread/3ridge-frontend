@@ -5,29 +5,26 @@ import SubMenuButton from "../../molecules/sub-menu-button";
 
 type PrimaryCardProps = PropsWithChildren & {
   userId?: string;
+  userName?: string;
   profileImageUrl?: string;
   rewardPoint?: number;
   walletAddress?: string;
-  onSignInClick?: MouseEventHandler;
-  onLogoutInClick?: MouseEventHandler;
 };
 
 const MobileNavigatorBar = ({
   userId,
+  userName,
   profileImageUrl,
   rewardPoint,
   walletAddress,
-  onSignInClick,
-  onLogoutInClick,
 }: PrimaryCardProps) => {
   return (
     <>
       <NavbarAvatar
         rewardPoint={rewardPoint}
         userId={userId}
+        userName={userName}
         src={profileImageUrl}
-        onProfileItemClicked={onSignInClick}
-        onLogoutBtnClicked={onLogoutInClick}
         walletAddress={walletAddress}
       ></NavbarAvatar>
       <SubMenuButton></SubMenuButton>

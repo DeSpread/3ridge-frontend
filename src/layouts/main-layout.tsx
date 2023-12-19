@@ -64,11 +64,10 @@ const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
-  const { isLoggedIn, logout } = useLogin();
+  const { isLoggedIn } = useLogin();
   const { userData } = useSignedUserQuery();
   const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
 
-  const { showErrorAlert } = useAlert();
   const { showLoading, closeLoading } = useLoading();
 
   const asyncGoToExplore = async () => {
@@ -87,26 +86,6 @@ const MainLayout = (props: MainLayoutProps) => {
     showLoading();
     await router.push(`/leaderboard`);
     closeLoading();
-  };
-
-  const asyncSignedProfileBtnOnClick = async () => {
-    showLoading();
-    await router.push(`/profile/${userData.name}`);
-    closeLoading();
-  };
-
-  const asyncLogoutBtnOnClick = async () => {
-    logout({
-      onSuccess: () => {
-        // showLoading();
-        // router.push("/").then((res) => {
-        //   closeLoading();
-        // });
-      },
-      onError: (error) => {
-        showErrorAlert({ content: error.message });
-      },
-    });
   };
 
   return (
@@ -189,10 +168,9 @@ const MainLayout = (props: MainLayoutProps) => {
                     <NavbarAvatar
                       rewardPoint={userData?.rewardPoint}
                       userId={userData?._id}
+                      userName={userData.name}
                       src={userData?.profileImageUrl}
                       walletAddress={userData?.walletAddressInfos?.[0]?.address}
-                      onProfileItemClicked={asyncSignedProfileBtnOnClick}
-                      onLogoutBtnClicked={asyncLogoutBtnOnClick}
                     ></NavbarAvatar>
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
@@ -218,10 +196,9 @@ const MainLayout = (props: MainLayoutProps) => {
                   <MobileNavigatorBar
                     rewardPoint={userData?.rewardPoint}
                     userId={userData?._id}
+                    userName={userData?.name}
                     profileImageUrl={userData?.profileImageUrl}
                     walletAddress={userData?.walletAddressInfos?.[0]?.address}
-                    onSignInClick={asyncSignedProfileBtnOnClick}
-                    onLogoutInClick={asyncLogoutBtnOnClick}
                   />
                 </Stack>
               ) : (
