@@ -235,9 +235,6 @@ const MainLayout = (props: MainLayoutProps) => {
               ) : (
                 <SubMenuButton
                   isLoggedIn={isLoggedIn}
-                  onExploreClick={asyncGoToExplore}
-                  onProjectsClick={asyncGoToProjects}
-                  onLeaderBoardClick={asyncGoToLeaderBoard}
                   onSignInClick={async (e) => {
                     e.preventDefault();
                     setShowSignInDialog(true);

@@ -1,6 +1,9 @@
+"use client";
+
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box, IconButton, Menu, MenuItem, Stack, styled } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import Link from "next/link";
 import {
   MouseEvent,
   MouseEventHandler,
@@ -59,9 +62,6 @@ const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
 const SubMenuButton = (
   props: PropsWithChildren & {
     isLoggedIn?: boolean;
-    onExploreClick?: MouseEventHandler;
-    onProjectsClick?: MouseEventHandler;
-    onLeaderBoardClick?: MouseEventHandler;
     onSignInClick?: MouseEventHandler;
   },
 ) => {
@@ -117,36 +117,39 @@ const SubMenuButton = (
             </Stack>
           </StyledMenuItem>
         )}
-        <StyledMenuItem
-          sx={{
-            borderRadius: 1,
-          }}
-          onClick={props.onExploreClick}
-        >
-          <Stack>
-            <NavbarButton>이벤트</NavbarButton>
-          </Stack>
-        </StyledMenuItem>
-        <StyledMenuItem
-          sx={{
-            borderRadius: 1,
-          }}
-          onClick={props.onProjectsClick}
-        >
-          <Stack>
-            <NavbarButton>프로젝트</NavbarButton>
-          </Stack>
-        </StyledMenuItem>
-        <StyledMenuItem
-          sx={{
-            borderRadius: 1,
-          }}
-          onClick={props.onLeaderBoardClick}
-        >
-          <Stack>
-            <NavbarButton>유저랭킹</NavbarButton>
-          </Stack>
-        </StyledMenuItem>
+        <Link href={"/explore"}>
+          <StyledMenuItem
+            sx={{
+              borderRadius: 1,
+            }}
+          >
+            <Stack>
+              <NavbarButton>이벤트</NavbarButton>
+            </Stack>
+          </StyledMenuItem>
+        </Link>
+        <Link href={"/projects"}>
+          <StyledMenuItem
+            sx={{
+              borderRadius: 1,
+            }}
+          >
+            <Stack>
+              <NavbarButton>프로젝트</NavbarButton>
+            </Stack>
+          </StyledMenuItem>
+        </Link>
+        <Link href={"/leaderboard"}>
+          <StyledMenuItem
+            sx={{
+              borderRadius: 1,
+            }}
+          >
+            <Stack>
+              <NavbarButton>유저랭킹</NavbarButton>
+            </Stack>
+          </StyledMenuItem>
+        </Link>
       </StyledMenu>
     </Box>
   );
