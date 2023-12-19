@@ -13,6 +13,8 @@ import {
 
 import NavbarButton from "../atoms/navbar-button";
 
+import { useLogin } from "@/provider/login/login-provider";
+
 type StyledMenuProps = PropsWithChildren & {
   open: boolean;
   anchorEl?: Element;
@@ -61,10 +63,10 @@ const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
 
 const SubMenuButton = (
   props: PropsWithChildren & {
-    isLoggedIn?: boolean;
     onSignInClick?: MouseEventHandler;
   },
 ) => {
+  const { isLoggedIn } = useLogin();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element>();
@@ -105,7 +107,7 @@ const SubMenuButton = (
         ></MoreHorizIcon>
       </IconButton>
       <StyledMenu open={open} anchorEl={anchorEl}>
-        {!props.isLoggedIn && (
+        {!isLoggedIn && (
           <StyledMenuItem
             sx={{
               borderRadius: 1,

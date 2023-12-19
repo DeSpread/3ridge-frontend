@@ -39,7 +39,6 @@ const MobileNavigatorBar = ({
         walletAddress={walletAddress}
       ></NavbarAvatar>
       <SubMenuButton
-        isLoggedIn={isLoggedIn}
         onExploreClick={onExploreClick}
         onProjectsClick={onProjectsClick}
         onLeaderBoardClick={onLeaderBoardClick}

@@ -230,7 +230,6 @@ const MainLayout = (props: MainLayoutProps) => {
                 </Stack>
               ) : (
                 <SubMenuButton
-                  isLoggedIn={isLoggedIn}
                   onSignInClick={async (e) => {
                     e.preventDefault();
                     setShowSignInDialog(true);
