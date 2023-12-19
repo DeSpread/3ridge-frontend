@@ -15,7 +15,7 @@ import { useMyGoogleLogin } from "./hook/my-google-login-hook";
 import { useWalletLogin } from "./hook/wallet-login-hook";
 
 import { Kakao } from "@/__generated__/graphql";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/user/useUser";
 import { useKakaoLogin } from "@/provider/login/hook/kakao-login-hook";
 
 const LoginContext = createContext<{

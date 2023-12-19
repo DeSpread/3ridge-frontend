@@ -23,7 +23,7 @@ import { Z_INDEX_OFFSET } from "../types";
 
 import SignInDialog from "./dialog/sign/signInDialog";
 
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/user/useUser";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;

@@ -54,7 +54,7 @@ import TelegramUtil from "../util/telegram-util";
 import { delay } from "../util/timer";
 
 import { useProfileEditDialog } from "./profile-edit-dialog-hook";
-import { useUser } from "./useUser";
+import { useUser } from "./user/useUser";
 
 const useSignedUserQuery = () => {
   const {
