@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
 
 import AmplitudeProvider from "./(providers)/amplitude.provider";
+import { UserProvider } from "./(providers)/user.provider";
 
 import { client as apolloclient } from "@/lib/apollo/client";
 import { createTheme } from "@/theme";
@@ -19,9 +20,11 @@ export default function Providers({ children }: PropsWithChildren) {
     <AmplitudeProvider>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <RecoilRoot>
-            <ApolloProvider client={apolloclient}>{children}</ApolloProvider>
-          </RecoilRoot>
+          <UserProvider>
+            <RecoilRoot>
+              <ApolloProvider client={apolloclient}>{children}</ApolloProvider>
+            </RecoilRoot>
+          </UserProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </AmplitudeProvider>
