@@ -100,6 +100,7 @@ const NavbarAvatar = ({
   return (
     <Box
       sx={{
+        height: "max-content",
         marginLeft: 2,
         cursor: "pointer",
         "&:hover": {
