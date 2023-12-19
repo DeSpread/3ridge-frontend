@@ -1,8 +1,10 @@
 import Image from "next/image";
 
+import Nav from "./nav";
+
 export default function Header() {
   return (
-    <nav className="flex h-16 items-center border-0 border-b border-solid border-b-neutral-700 bg-neutral-900 pl-4 pr-6">
+    <nav className="flex h-16 items-center justify-between border-0 border-b border-solid border-b-neutral-700 bg-neutral-900 pl-4 pr-6">
       <div className="flex items-start">
         <div className="relative aspect-[1/0.393] w-28 sm:w-32">
           <Image
@@ -25,6 +27,7 @@ export default function Header() {
           />
         </div>
       </div>
+      <Nav />
     </nav>
   );
 }

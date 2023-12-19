@@ -1,7 +1,7 @@
 "use client";
 
 import { ApolloProvider } from "@apollo/client";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { PropsWithChildren, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
@@ -9,6 +9,7 @@ import { RecoilRoot } from "recoil";
 import AmplitudeProvider from "./(providers)/amplitude.provider";
 
 import { client as apolloclient } from "@/lib/apollo/client";
+import { createTheme } from "@/theme";
 
 export default function Providers({ children }: PropsWithChildren) {
   const theme = useMemo(createTheme, []);
