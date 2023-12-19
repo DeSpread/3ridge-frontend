@@ -216,16 +216,12 @@ const MainLayout = (props: MainLayoutProps) => {
                   spacing={2}
                 >
                   <MobileNavigatorBar
-                    isLoggedIn={isLoggedIn}
                     rewardPoint={userData?.rewardPoint}
                     userId={userData?._id}
                     profileImageUrl={userData?.profileImageUrl}
                     walletAddress={userData?.walletAddressInfos?.[0]?.address}
                     onSignInClick={asyncSignedProfileBtnOnClick}
                     onLogoutInClick={asyncLogoutBtnOnClick}
-                    onExploreClick={asyncGoToExplore}
-                    onProjectsClick={asyncGoToProjects}
-                    onLeaderBoardClick={asyncGoToLeaderBoard}
                   />
                 </Stack>
               ) : (

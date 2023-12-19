@@ -4,29 +4,21 @@ import NavbarAvatar from "../../molecules/navbar-avatar";
 import SubMenuButton from "../../molecules/sub-menu-button";
 
 type PrimaryCardProps = PropsWithChildren & {
-  isLoggedIn?: boolean;
   userId?: string;
   profileImageUrl?: string;
   rewardPoint?: number;
   walletAddress?: string;
   onSignInClick?: MouseEventHandler;
   onLogoutInClick?: MouseEventHandler;
-  onExploreClick?: MouseEventHandler;
-  onProjectsClick?: MouseEventHandler;
-  onLeaderBoardClick?: MouseEventHandler;
 };
 
 const MobileNavigatorBar = ({
-  isLoggedIn = false,
   userId,
   profileImageUrl,
   rewardPoint,
   walletAddress,
   onSignInClick,
   onLogoutInClick,
-  onExploreClick,
-  onProjectsClick,
-  onLeaderBoardClick,
 }: PrimaryCardProps) => {
   return (
     <>
@@ -38,11 +30,7 @@ const MobileNavigatorBar = ({
         onLogoutBtnClicked={onLogoutInClick}
         walletAddress={walletAddress}
       ></NavbarAvatar>
-      <SubMenuButton
-        onExploreClick={onExploreClick}
-        onProjectsClick={onProjectsClick}
-        onLeaderBoardClick={onLeaderBoardClick}
-      ></SubMenuButton>
+      <SubMenuButton></SubMenuButton>
     </>
   );
 };
