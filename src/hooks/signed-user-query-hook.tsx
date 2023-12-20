@@ -1,3 +1,4 @@
+"use client";
 import { useMutation } from "@apollo/client";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";

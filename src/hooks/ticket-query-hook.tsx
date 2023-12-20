@@ -1,10 +1,9 @@
+"use client";
 import { useMutation } from "@apollo/client";
 import add from "date-fns/add";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import {
-  CategoryType,
   ContentEncodingType,
   ContentFormatType,
   ContentMetadata,
@@ -92,8 +91,6 @@ export function useTicketQuery({
   const [createQuest] = useMutation(CREATE_QUEST);
   const [deleteQuest] = useMutation(DELETE_QUEST);
   const [updateQuest] = useMutation(UPDATE_QUEST);
-
-  const router = useRouter();
 
   useEffect(() => {
     (async () => {

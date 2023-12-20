@@ -1,3 +1,4 @@
+"use client";
 import {
   Box,
   Card,
@@ -123,7 +124,7 @@ const TicketCard = (props: EventCardProps, targetRef?: Ref<HTMLDivElement>) => {
                 (ticket?.winners?.filter(
                   (winner) =>
                     String(winner.name).toUpperCase().trim() ===
-                    String(username).toUpperCase().trim()
+                    String(username).toUpperCase().trim(),
                 )?.length ?? 0) > 0 && (
                   <Box>
                     <Typography variant={mdUp ? "h6" : "h5"}>👑</Typography>

@@ -1,3 +1,4 @@
+"use client";
 import AddIcon from "@mui/icons-material/Add";
 import {
   Box,
@@ -13,7 +14,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React, { MouseEventHandler } from "react";
 import { RecoilLoadable } from "recoil";
 
@@ -31,7 +32,7 @@ import loading = RecoilLoadable.loading;
 const _TicketCard = WithEditorContainer(TicketCard);
 
 const TicketAddCard = (
-  props: CardProps & { onAddButtonClicked?: MouseEventHandler }
+  props: CardProps & { onAddButtonClicked?: MouseEventHandler },
 ) => {
   const theme = useTheme();
 
