@@ -4,7 +4,7 @@ import { ReactElement } from "react";
 
 import AdminPageProvider from "@/app/admin/providers";
 import UserList from "@/app/admin/userList";
-import { useUsers } from "@/hooks/useUsers";
+import { useUsers } from "@/hooks/user/useUsers";
 import MainLayout from "@/layouts/main-layout";
 
 export default function AdminUsersPage() {

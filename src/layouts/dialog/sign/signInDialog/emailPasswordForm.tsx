@@ -3,7 +3,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 
 import PasswordInput from "./passwordInput";
 
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/user/useUser";
 
 interface EmailPasswordFormProps {
   email: string;

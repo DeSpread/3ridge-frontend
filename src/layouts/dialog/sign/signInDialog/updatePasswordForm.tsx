@@ -4,7 +4,7 @@ import NewPasswordForm from "./newPasswordForm";
 import { EmailWithAuthCode } from "./types";
 
 import { UpdatePasswordByEmailDocument } from "@/__generated__/graphql";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/user/useUser";
 
 interface UpdatePasswordFormProps extends EmailWithAuthCode {
   onSignIn(): void;

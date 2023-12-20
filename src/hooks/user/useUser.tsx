@@ -1,3 +1,5 @@
+"use client";
+
 import * as amplitude from "@amplitude/analytics-browser";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { getAnalytics, setUserId, logEvent } from "firebase/analytics";
@@ -6,6 +8,7 @@ import { useSetRecoilState } from "recoil";
 
 import { gql, useFragment as getFragment } from "@/__generated__";
 import { UserItemFragment } from "@/__generated__/graphql";
+import { useUserContext } from "@/app/(providers)/user.provider";
 import TypeHelper from "@/helper/type-helper";
 import TypeParseHelper from "@/helper/type-parse-helper";
 import { firebaseApp } from "@/lib/firebase/firebase-client";
@@ -108,18 +111,22 @@ const SignInByEmailMutation = gql(/* GraphQL */ `
 export function useUser(args?: {
   onCompleted?: (user?: UserItemFragment) => void;
 }) {
+  const {
+    userState: [user, setUser],
+  } = useUserContext();
   const setUserData = useSetRecoilState(userDataState);
-  const [userByAccessToken, { client, data: userByAccessTokenData }] =
-    useLazyQuery(UserByAccessTokenQuery, {
-      onCompleted(res) {
-        args?.onCompleted?.(
-          getFragment(Fragment, res.userByAccessToken) ?? undefined,
-        );
-      },
-      onError() {
-        args?.onCompleted?.(undefined);
-      },
-    });
+  const [userByAccessToken, { client }] = useLazyQuery(UserByAccessTokenQuery, {
+    onCompleted(res) {
+      const newUser = getFragment(Fragment, res.userByAccessToken) ?? undefined;
+
+      args?.onCompleted?.(newUser);
+
+      setUser(newUser);
+    },
+    onError() {
+      args?.onCompleted?.(undefined);
+    },
+  });
 
   const [signInByEmailMutation] = useMutation(SignInByEmailMutation);
 
@@ -132,6 +139,7 @@ export function useUser(args?: {
 
     if (!token) {
       setUserData({});
+      setUser(undefined);
       return;
     }
 
@@ -267,9 +275,7 @@ export function useUser(args?: {
   }
 
   return {
-    user:
-      getFragment(Fragment, userByAccessTokenData?.userByAccessToken) ??
-      undefined,
+    user: user,
     loginByEmail,
     logout,
   };

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/user/useUser";
 
 export default function AdminPageProvider(props: PropsWithChildren) {
   const router = useRouter();
