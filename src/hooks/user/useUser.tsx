@@ -8,7 +8,7 @@ import { useSetRecoilState } from "recoil";
 
 import { gql, useFragment as getFragment } from "@/__generated__";
 import { UserItemFragment } from "@/__generated__/graphql";
-import { useUserContext } from "@/app/(providers)/user.provider";
+import { useUserContext } from "@/app/(user)/user.provider";
 import TypeHelper from "@/helper/type-helper";
 import TypeParseHelper from "@/helper/type-parse-helper";
 import { firebaseApp } from "@/lib/firebase/firebase-client";
