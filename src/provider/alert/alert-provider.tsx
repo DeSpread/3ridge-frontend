@@ -1,3 +1,4 @@
+"use client";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Dialog,
@@ -27,8 +28,6 @@ import LinkTypography from "../../components/atomic/atoms/link-typography";
 import ErrorInfoForm from "../../components/form/error-info-form";
 import ComponentHelper from "../../helper/component-helper";
 
-
-
 const AlertContext = createContext<{
   showAlert: ({
     title,
@@ -54,7 +53,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Fade ref={ref} {...props} />;
 });
@@ -145,7 +144,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
           <DialogContentText sx={{ background: "" }}>
             {typeof alertDescRef.current.content === "string" &&
               ComponentHelper.renderMultiLineContentText(
-                alertDescRef.current.content
+                alertDescRef.current.content,
               )}
             {typeof alertDescRef.current.content !== "string" &&
               alertDescRef.current.content}
