@@ -66,7 +66,7 @@ const MainLayout = (props: MainLayoutProps) => {
   const router = useRouter();
   const { isLoggedIn } = useLogin();
   const { userData } = useSignedUserQuery();
-  const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
+  const { setShowSignInDialog } = useSignDialog();
 
   const { showLoading, closeLoading } = useLoading();
 
@@ -210,10 +210,7 @@ const MainLayout = (props: MainLayoutProps) => {
         <footer>{props?.footerComponent}</footer>
       </Box>
       {/*--- Dialog ---*/}
-      <SignInDialog
-        open={isSignDialogOpen}
-        onClose={() => setShowSignInDialog(false)}
-      />
+      <SignInDialog />
     </Box>
   );
 };
