@@ -1,3 +1,5 @@
+"use client";
+
 import * as amplitude from "@amplitude/analytics-browser";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { getAnalytics, setUserId, logEvent } from "firebase/analytics";
