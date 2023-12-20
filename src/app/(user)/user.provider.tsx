@@ -5,13 +5,13 @@ import { PropsWithChildren, createContext, useContext, useState } from "react";
 import { UserItemFragment } from "@/__generated__/graphql";
 
 type UserContextValue = {
-  userState: ReturnType<typeof useState<UserItemFragment>>;
+  userState: ReturnType<typeof useState<UserItemFragment | null | undefined>>;
 };
 
 export const UserContext = createContext<UserContextValue | null>(null);
 
 export function UserProvider(props: PropsWithChildren) {
-  const userState = useState<UserItemFragment>();
+  const userState = useState<UserItemFragment | null | undefined>();
 
   return (
     <UserContext.Provider

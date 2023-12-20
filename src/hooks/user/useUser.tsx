@@ -139,7 +139,7 @@ export function useUser(args?: {
 
     if (!token) {
       setUserData({});
-      setUser(undefined);
+      setUser(null);
       return;
     }
 
