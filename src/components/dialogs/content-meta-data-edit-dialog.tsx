@@ -25,15 +25,15 @@ require("prismjs/components/prism-jsx");
 require("prismjs/components/prism-markdown");
 
 const ContentMetaDataEditDialog = (
-  props: {
+  props: Omit<SimpleDialogProps, "content"> & {
     onConfirmBtnClicked?: (content?: ContentMetadata) => void;
     content?: ContentMetadata;
-  } & SimpleDialogProps
+  },
 ) => {
   const { content, ...rest } = props;
 
   const [contentFormatType, setContentFormatType] = useState<ContentFormatType>(
-    ContentFormatType.Text
+    ContentFormatType.Text,
   );
 
   const [textValue, setTextValue] = useState("");

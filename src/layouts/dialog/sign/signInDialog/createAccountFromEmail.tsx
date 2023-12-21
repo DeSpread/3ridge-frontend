@@ -2,7 +2,7 @@ import NewPasswordForm from "./newPasswordForm";
 import { EmailWithAuthCode } from "./types";
 
 import { useUserMutation } from "@/app/admin/useUserMutation";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/user/useUser";
 
 interface CreateAccountFromEmailProps extends EmailWithAuthCode {
   onSignIn(): void;

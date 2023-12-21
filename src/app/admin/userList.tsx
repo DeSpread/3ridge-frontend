@@ -15,16 +15,15 @@ import { useEffect, useState } from "react";
 import { useUserMutation } from "./useUserMutation";
 
 import { UserItemFragment } from "@/__generated__/graphql";
-
-interface UserListProps {
-  users: readonly UserItemFragment[];
-}
+import { useUsers } from "@/hooks/user/useUsers";
 
 interface UserListRow extends UserItemFragment {
   id: GridRowId;
 }
 
-export default function UserList(props: UserListProps) {
+export default function UserList() {
+  const { users } = useUsers();
+
   const [rows, setRows] = useState<UserListRow[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
@@ -121,9 +120,9 @@ export default function UserList(props: UserListProps) {
   }
 
   useEffect(() => {
-    const newRows = props.users.map((user) => ({ ...user, id: user._id! }));
+    const newRows = users.map((user) => ({ ...user, id: user._id! }));
     setRows(newRows);
-  }, [props.users]);
+  }, [users]);
 
   function processRowUpdate(newRow: typeof rows[number]) {
     if (!newRow._id) {

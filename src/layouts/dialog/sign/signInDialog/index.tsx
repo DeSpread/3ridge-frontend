@@ -1,3 +1,4 @@
+"use client";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useState } from "react";
 
@@ -7,6 +8,7 @@ import { SignInType } from "./types";
 
 import { APP_ERROR_MESSAGE, AppError } from "@/error/my-error";
 import TypeHelper from "@/helper/type-helper";
+import { useSignDialog } from "@/hooks/sign-dialog-hook";
 import { useWalletAlert } from "@/hooks/wallet-alert-hook";
 import { useAlert } from "@/provider/alert/alert-provider";
 import { useLogin } from "@/provider/login/login-provider";
@@ -14,12 +16,8 @@ import { useMobile } from "@/provider/mobile/mobile-context";
 import { SupportedNetwork, Z_INDEX_OFFSET } from "@/types";
 import EthUtil from "@/util/eth-util";
 
-interface SignInDialogProps {
-  open?: boolean;
-  onClose?(): void;
-}
-
-export default function SignInDialog(props: SignInDialogProps) {
+export default function SignInDialog() {
+  const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
   const { isMobile } = useMobile();
   const { walletSignUp } = useLogin();
   const { showErrorAlert } = useAlert();
@@ -31,7 +29,7 @@ export default function SignInDialog(props: SignInDialogProps) {
   function handleClose() {
     setNetwork(undefined);
     setSignInType(undefined);
-    props.onClose?.();
+    setShowSignInDialog(false);
   }
 
   function handleClickPrev() {
@@ -79,7 +77,7 @@ export default function SignInDialog(props: SignInDialogProps) {
 
   return (
     <Dialog
-      open={props.open ?? false}
+      open={isSignDialogOpen ?? false}
       onClose={() => handleClose()}
       disableRestoreFocus
       fullWidth

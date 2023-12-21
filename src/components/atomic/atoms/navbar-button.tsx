@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, AppBar, Stack, Button, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { MouseEventHandler, PropsWithChildren } from "react";

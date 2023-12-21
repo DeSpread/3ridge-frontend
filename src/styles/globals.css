@@ -51,11 +51,6 @@ a {
   margin: 0;
 }
 
-a:hover {
-  color: #904e1d;
-  text-decoration: underline;
-}
-
 h1 {
   font-family: "LINESeedKR-Rg";
   font-weight: 700;

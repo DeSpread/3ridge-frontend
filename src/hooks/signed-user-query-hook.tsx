@@ -1,3 +1,4 @@
+"use client";
 import { useMutation } from "@apollo/client";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -54,7 +55,7 @@ import TelegramUtil from "../util/telegram-util";
 import { delay } from "../util/timer";
 
 import { useProfileEditDialog } from "./profile-edit-dialog-hook";
-import { useUser } from "./useUser";
+import { useUser } from "./user/useUser";
 
 const useSignedUserQuery = () => {
   const {

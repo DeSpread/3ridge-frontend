@@ -23,7 +23,7 @@ import { Z_INDEX_OFFSET } from "../types";
 
 import SignInDialog from "./dialog/sign/signInDialog";
 
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/user/useUser";
 
 type MainLayoutProps = PropsWithChildren & {
   backgroundComponent?: ReactNode;
@@ -64,16 +64,11 @@ const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
-  const { logout } = useLogin();
+  const { isLoggedIn } = useLogin();
   const { userData } = useSignedUserQuery();
-  const { setShowSignInDialog, isSignDialogOpen } = useSignDialog();
+  const { setShowSignInDialog } = useSignDialog();
 
-  const { showErrorAlert } = useAlert();
   const { showLoading, closeLoading } = useLoading();
-
-  const isLoggedIn = useMemo(() => {
-    return userData?._id ? true : false;
-  }, [userData]);
 
   const asyncGoToExplore = async () => {
     showLoading();
@@ -91,26 +86,6 @@ const MainLayout = (props: MainLayoutProps) => {
     showLoading();
     await router.push(`/leaderboard`);
     closeLoading();
-  };
-
-  const asyncSignedProfileBtnOnClick = async () => {
-    showLoading();
-    await router.push(`/profile/${userData.name}`);
-    closeLoading();
-  };
-
-  const asyncLogoutBtnOnClick = async () => {
-    logout({
-      onSuccess: () => {
-        // showLoading();
-        // router.push("/").then((res) => {
-        //   closeLoading();
-        // });
-      },
-      onError: (error) => {
-        showErrorAlert({ content: error.message });
-      },
-    });
   };
 
   return (
@@ -190,14 +165,7 @@ const MainLayout = (props: MainLayoutProps) => {
                     ></NavbarButtonSet>
                   </Box>
                   {isLoggedIn ? (
-                    <NavbarAvatar
-                      rewardPoint={userData?.rewardPoint}
-                      userId={userData?._id}
-                      src={userData?.profileImageUrl}
-                      walletAddress={userData?.walletAddressInfos?.[0]?.address}
-                      onProfileItemClicked={asyncSignedProfileBtnOnClick}
-                      onLogoutBtnClicked={asyncLogoutBtnOnClick}
-                    ></NavbarAvatar>
+                    <NavbarAvatar />
                   ) : (
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
                       <SecondaryButton
@@ -219,25 +187,10 @@ const MainLayout = (props: MainLayoutProps) => {
                   justifyContent={"center"}
                   spacing={2}
                 >
-                  <MobileNavigatorBar
-                    isLoggedIn={isLoggedIn}
-                    rewardPoint={userData?.rewardPoint}
-                    userId={userData?._id}
-                    profileImageUrl={userData?.profileImageUrl}
-                    walletAddress={userData?.walletAddressInfos?.[0]?.address}
-                    onSignInClick={asyncSignedProfileBtnOnClick}
-                    onLogoutInClick={asyncLogoutBtnOnClick}
-                    onExploreClick={asyncGoToExplore}
-                    onProjectsClick={asyncGoToProjects}
-                    onLeaderBoardClick={asyncGoToLeaderBoard}
-                  />
+                  <MobileNavigatorBar />
                 </Stack>
               ) : (
                 <SubMenuButton
-                  isLoggedIn={isLoggedIn}
-                  onExploreClick={asyncGoToExplore}
-                  onProjectsClick={asyncGoToProjects}
-                  onLeaderBoardClick={asyncGoToLeaderBoard}
                   onSignInClick={async (e) => {
                     e.preventDefault();
                     setShowSignInDialog(true);
@@ -257,10 +210,7 @@ const MainLayout = (props: MainLayoutProps) => {
         <footer>{props?.footerComponent}</footer>
       </Box>
       {/*--- Dialog ---*/}
-      <SignInDialog
-        open={isSignDialogOpen}
-        onClose={() => setShowSignInDialog(false)}
-      />
+      <SignInDialog />
     </Box>
   );
 };

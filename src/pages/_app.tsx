@@ -35,6 +35,7 @@ import { SnackbarProvider } from "../provider/snackbar/snackbar-provider";
 import { createTheme } from "../theme";
 
 import AmplitudeProvider from "@/app/(providers)/amplitude.provider";
+import { UserProvider } from "@/app/(user)/user.provider";
 import { client as apolloClient } from "@/lib/apollo/client";
 import ConfirmProvider from "@/provider/confirm/confirm-provider";
 import { Z_INDEX_OFFSET } from "@/types";
@@ -130,18 +131,20 @@ const App = (props: AppPropsWithLayout) => {
                   <WagmiConfig config={wagmiConfig}>
                     <QueryClientProvider client={queryClient}>
                       <WalletProvider>
-                        <AptosWalletAdapterProvider
-                          plugins={wallets}
-                          autoConnect={true}
-                        >
-                          <MobileContext.Provider value={{ isMobile }}>
-                            <MasterProvider>
-                              <ErrorBoundary>
-                                {getLayout(<Component {...pageProps} />)}
-                              </ErrorBoundary>
-                            </MasterProvider>
-                          </MobileContext.Provider>
-                        </AptosWalletAdapterProvider>
+                        <UserProvider>
+                          <AptosWalletAdapterProvider
+                            plugins={wallets}
+                            autoConnect={true}
+                          >
+                            <MobileContext.Provider value={{ isMobile }}>
+                              <MasterProvider>
+                                <ErrorBoundary>
+                                  {getLayout(<Component {...pageProps} />)}
+                                </ErrorBoundary>
+                              </MasterProvider>
+                            </MobileContext.Provider>
+                          </AptosWalletAdapterProvider>
+                        </UserProvider>
                       </WalletProvider>
                     </QueryClientProvider>
                   </WagmiConfig>

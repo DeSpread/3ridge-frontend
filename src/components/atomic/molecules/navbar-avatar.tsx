@@ -11,18 +11,17 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import {
-  MouseEvent,
-  MouseEventHandler,
-  PropsWithChildren,
-  useMemo,
-  useState,
-} from "react";
+import Link from "next/link";
+import { MouseEvent, PropsWithChildren, useMemo, useState } from "react";
 
 import StringHelper from "../../../helper/string-helper";
 import GradientTypography from "../atoms/gradient-typography";
 
 import BlockIcon from "./block-icon";
+
+import { useSignedUserQuery } from "@/hooks/signed-user-query-hook";
+import { useAlert } from "@/provider/alert/alert-provider";
+import { useLogin } from "@/provider/login/login-provider";
 
 type StyledMenuProps = PropsWithChildren & {
   open: boolean;
@@ -69,37 +68,34 @@ const StyledMenu = ({ open, anchorEl, children }: StyledMenuProps) => {
   );
 };
 
-type NavBarAvatarProps = PropsWithChildren & {
-  userId?: string;
-  src?: string;
-  walletAddress?: string;
-  onProfileItemClicked?: MouseEventHandler;
-  onLogoutBtnClicked?: MouseEventHandler;
-  rewardPoint?: number;
-};
-
-const NavbarAvatar = ({
-  userId,
-  src,
-  walletAddress,
-  onProfileItemClicked,
-  onLogoutBtnClicked,
-  rewardPoint,
-}: NavBarAvatarProps) => {
+const NavbarAvatar = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element>();
+  const { logout } = useLogin();
+  const { userData } = useSignedUserQuery();
+
+  const { showErrorAlert } = useAlert();
 
   const levelProgressValue = useMemo(() => {
-    if (rewardPoint === undefined) {
+    if (userData.rewardPoint === undefined) {
       return 0;
     }
-    return (rewardPoint ?? 0) % 100;
-  }, [rewardPoint]);
+    return (userData.rewardPoint ?? 0) % 100;
+  }, [userData.rewardPoint]);
+
+  function handleLogoutButtonClick() {
+    logout({
+      onError: (error) => {
+        showErrorAlert({ content: error.message });
+      },
+    });
+  }
 
   return (
     <Box
       sx={{
+        height: "max-content",
         marginLeft: 2,
         cursor: "pointer",
         "&:hover": {
@@ -114,54 +110,71 @@ const NavbarAvatar = ({
         setOpen(!open);
       }}
     >
-      {src && <Avatar sx={{ width: 32, height: 32 }} src={src}></Avatar>}
-      {!src && userId && <BlockIcon seed={userId}></BlockIcon>}
+      {userData?.profileImageUrl && (
+        <Avatar
+          sx={{ width: 32, height: 32 }}
+          src={userData?.profileImageUrl}
+        ></Avatar>
+      )}
+      {!userData?.profileImageUrl && userData._id && (
+        <BlockIcon seed={userData._id}></BlockIcon>
+      )}
       <StyledMenu open={open} anchorEl={anchorEl}>
-        <StyledMenuItem
-          sx={{
-            borderRadius: 1,
-          }}
-          onClick={onProfileItemClicked}
-        >
-          <Stack
-            direction={"row"}
-            alignItems={"center"}
-            spacing={2}
-            sx={{ flex: 1, marginBottom: 1 }}
+        <Link href={`/profile/${userData.name}`}>
+          <StyledMenuItem
+            sx={{
+              borderRadius: 1,
+            }}
           >
-            {src && <Avatar sx={{ width: 32, height: 32 }} src={src}></Avatar>}
-            {!src && <BlockIcon seed={userId || "jake"}></BlockIcon>}
-            <Stack direction={"column"}>
-              {walletAddress && (
-                <GradientTypography>
-                  {StringHelper.convertAddressToMidEllipsis(`${walletAddress}`)}
-                </GradientTypography>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              spacing={2}
+              sx={{ flex: 1, marginBottom: 1 }}
+            >
+              {userData?.profileImageUrl && (
+                <Avatar
+                  sx={{ width: 32, height: 32 }}
+                  src={userData?.profileImageUrl}
+                ></Avatar>
               )}
-              <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                <Typography variant={"caption"}>
-                  {`Level ${Math.floor((rewardPoint ?? 0) / 100)}`}
-                </Typography>
-                <Box sx={{ width: "100%" }}>
-                  <LinearProgress
-                    variant="determinate"
-                    value={levelProgressValue}
-                    color={"info"}
-                    sx={{
-                      background: theme.palette.action.hover,
-                      minWidth: 80,
-                    }}
-                  ></LinearProgress>
-                </Box>
+              {!userData?.profileImageUrl && (
+                <BlockIcon seed={userData._id || "jake"}></BlockIcon>
+              )}
+              <Stack direction={"column"}>
+                {userData.walletAddressInfos?.[0].address && (
+                  <GradientTypography>
+                    {StringHelper.convertAddressToMidEllipsis(
+                      `${userData.walletAddressInfos?.[0].address}`,
+                    )}
+                  </GradientTypography>
+                )}
+                <Stack direction={"row"} alignItems={"center"} spacing={1}>
+                  <Typography variant={"caption"}>
+                    {`Level ${Math.floor((userData.rewardPoint ?? 0) / 100)}`}
+                  </Typography>
+                  <Box sx={{ width: "100%" }}>
+                    <LinearProgress
+                      variant="determinate"
+                      value={levelProgressValue}
+                      color={"info"}
+                      sx={{
+                        background: theme.palette.action.hover,
+                        minWidth: 80,
+                      }}
+                    ></LinearProgress>
+                  </Box>
+                </Stack>
               </Stack>
+              <KeyboardArrowRightIcon></KeyboardArrowRightIcon>
             </Stack>
-            <KeyboardArrowRightIcon></KeyboardArrowRightIcon>
-          </Stack>
-        </StyledMenuItem>
+          </StyledMenuItem>
+        </Link>
         <StyledMenuItem
           sx={{
             borderRadius: 1,
           }}
-          onClick={onLogoutBtnClicked}
+          onClick={handleLogoutButtonClick}
         >
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
             <Stack
@@ -182,7 +195,7 @@ const NavbarAvatar = ({
         className={"curtain"}
         style={{
           position: "absolute",
-          marginTop: src ? -32 : -35,
+          marginTop: userData?.profileImageUrl ? -32 : -35,
           width: 32,
           height: 32,
           borderRadius: 32,
