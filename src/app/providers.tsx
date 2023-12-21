@@ -9,7 +9,7 @@ import { RecoilRoot } from "recoil";
 import { WagmiConfig } from "wagmi";
 
 import AmplitudeProvider from "./(providers)/amplitude.provider";
-import { UserProvider } from "./(providers)/user.provider";
+import { UserProvider } from "./(user)/user.provider";
 
 import { client as apolloclient } from "@/lib/apollo/client";
 import { wagmiConfig } from "@/lib/wagmi/client";

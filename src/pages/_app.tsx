@@ -35,7 +35,7 @@ import { SnackbarProvider } from "../provider/snackbar/snackbar-provider";
 import { createTheme } from "../theme";
 
 import AmplitudeProvider from "@/app/(providers)/amplitude.provider";
-import { UserProvider } from "@/app/(providers)/user.provider";
+import { UserProvider } from "@/app/(user)/user.provider";
 import { client as apolloClient } from "@/lib/apollo/client";
 import ConfirmProvider from "@/provider/confirm/confirm-provider";
 import { Z_INDEX_OFFSET } from "@/types";

@@ -1,3 +1,4 @@
+"use client";
 import { useQuery } from "@apollo/client";
 
 import { gql, useFragment } from "@/__generated__";

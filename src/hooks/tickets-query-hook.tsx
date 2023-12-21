@@ -1,3 +1,4 @@
+"use client";
 import { FetchPolicy } from "@apollo/client/core/watchQueryOptions";
 import { useEffect, useState } from "react";
 

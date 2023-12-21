@@ -1,3 +1,4 @@
+"use client";
 import { CircularProgress, LinearProgress } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import { useTheme } from "@mui/material/styles";
@@ -10,7 +11,6 @@ import React, {
 } from "react";
 
 import { Z_INDEX_OFFSET } from "../../types";
-
 
 const LoadingContext = createContext<{
   showLoading: () => void;

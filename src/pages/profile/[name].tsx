@@ -277,7 +277,7 @@ const Profile = () => {
     return targetUserData?.walletAddressInfos
       ?.filter((e) => e.address)
       .map((e) => e.network);
-  }, targetUserData?.walletAddressInfos);
+  }, [targetUserData?.walletAddressInfos]);
 
   const levelProgressValue = useMemo(() => {
     if (userData?.rewardPoint === undefined) {
