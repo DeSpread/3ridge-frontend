@@ -8,8 +8,8 @@ import {
   CreateLinkMutationVariables,
 } from "@/__generated__/graphql";
 
-const CreateLinkMutation = gql(/* GraphQL */ `
-  mutation CreateLink($input: LinkInput!) {
+const CreateLinkMutationGQL = gql(/* GraphQL */ `
+  mutation CreateLink($input: CreateLinkInput!) {
     createLink(input: $input) {
       _id
     }
@@ -23,7 +23,7 @@ interface UseCreateLink {
 }
 
 export function useCreateLink(): UseCreateLink {
-  const [createLinkMutation] = useMutation(CreateLinkMutation);
+  const [createLinkMutation] = useMutation(CreateLinkMutationGQL);
 
   return {
     createLink(input) {

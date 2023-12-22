@@ -13,7 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
-    "\n  mutation CreateLink($input: LinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n": types.CreateLinkDocument,
+    "\n  query events {\n    tickets {\n      _id\n      title\n      imageUrl\n    }\n  }\n": types.EventsDocument,
+    "\n  mutation CreateLink($input: CreateLinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n": types.CreateLinkDocument,
     "\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      _id\n    }\n  }\n": types.CreateUserByEmailDocument,
     "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n": types.UpdateUserMutationDocument,
     "\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n": types.UserItemFragmentDoc,
@@ -90,7 +91,11 @@ const documents = {
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation CreateLink($input: LinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateLink($input: LinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n"];
+export function gql(source: "\n  query events {\n    tickets {\n      _id\n      title\n      imageUrl\n    }\n  }\n"): (typeof documents)["\n  query events {\n    tickets {\n      _id\n      title\n      imageUrl\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateLink($input: CreateLinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateLink($input: CreateLinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,9 +1,19 @@
 "use client";
 import { ApolloError } from "@apollo/client/errors";
-import { Alert, Button, Snackbar, TextField } from "@mui/material";
-import { ChangeEvent, FormEvent, useState } from "react";
+import {
+  Alert,
+  Button,
+  SelectChangeEvent,
+  Snackbar,
+  TextField,
+} from "@mui/material";
+import { ChangeEvent, FormEvent, Suspense, useState } from "react";
 
 import { useCreateLink } from "./useCreateLink";
+
+import EventSelect, {
+  EventSelectLoading,
+} from "@/app/(event)/EventSelect/Select";
 
 interface CreateLinkFormProps {
   onSuccess?: VoidFunction;
@@ -13,6 +23,7 @@ export default function CreateLinkForm(props: CreateLinkFormProps) {
   const { createLink } = useCreateLink();
 
   const [href, setHref] = useState("");
+  const [eventId, setEventId] = useState("");
   const [utmSource, setUtmSource] = useState("");
   const [utmMedium, setUtmMedium] = useState("");
 
@@ -63,6 +74,7 @@ export default function CreateLinkForm(props: CreateLinkFormProps) {
           value: utmMedium,
         },
       ],
+      eventId,
     })
       .then(clearInputs)
       .then(handleOpenSuccessMessage)
@@ -72,6 +84,11 @@ export default function CreateLinkForm(props: CreateLinkFormProps) {
 
   function handleChangeHref(e: ChangeEvent<HTMLInputElement>) {
     setHref(e.target.value);
+  }
+
+  function handleChangeEvent(e: SelectChangeEvent) {
+    console.log(e.target.value);
+    setEventId(e.target.value);
   }
 
   function handleChangeUtmSource(e: ChangeEvent<HTMLInputElement>) {
@@ -84,6 +101,7 @@ export default function CreateLinkForm(props: CreateLinkFormProps) {
 
   function clearInputs() {
     setHref("");
+    setEventId("");
     setUtmSource("");
     setUtmMedium("");
   }
@@ -120,7 +138,7 @@ export default function CreateLinkForm(props: CreateLinkFormProps) {
 
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col flex-wrap gap-3">
-          <div>
+          <div className="flex gap-2">
             <TextField
               type="text"
               name="href"
@@ -129,6 +147,15 @@ export default function CreateLinkForm(props: CreateLinkFormProps) {
               value={href}
               onChange={handleChangeHref}
             />
+            <div className="w-64">
+              <Suspense fallback={<EventSelectLoading />}>
+                <EventSelect
+                  required
+                  value={eventId}
+                  onChange={handleChangeEvent}
+                />
+              </Suspense>
+            </div>
           </div>
           <div className="flex gap-2">
             <TextField
