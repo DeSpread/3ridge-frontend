@@ -2,6 +2,8 @@
 
 import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { PropsWithChildren, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -29,11 +31,13 @@ export default function Providers({ children }: PropsWithChildren) {
           <ApolloProvider client={apolloclient}>
             <WagmiConfig config={wagmiConfig}>
               <GoogleOAuthProvider clientId={googleOAuthClientId ?? ""}>
-                <RecoilRoot>
-                  <UserProvider>
-                    <LoginProvider>{children}</LoginProvider>
-                  </UserProvider>
-                </RecoilRoot>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <RecoilRoot>
+                    <UserProvider>
+                      <LoginProvider>{children}</LoginProvider>
+                    </UserProvider>
+                  </RecoilRoot>
+                </LocalizationProvider>
               </GoogleOAuthProvider>
             </WagmiConfig>
           </ApolloProvider>
