@@ -884,11 +884,11 @@ const Event = (props: AppProps) => {
         QuestPolicyType.VerifyTwitterLinkingRetweet
       ) {
         if (!showTwitterConnectAlert()) {
-          await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
-          // await asyncVerifyTwitterLinkingAndRetweetQuest(
-          //   ticketData._id,
-          //   quest._id ?? "",
-          // );
+          // await asyncCompleteQuestOfUser(ticketData?._id, quest._id ?? "");
+          await asyncVerifyTwitterLinkingAndRetweetQuest(
+            ticketData._id,
+            quest._id ?? "",
+          );
           updateVerifyState(index);
         }
         myEvent.params.callback("success");
