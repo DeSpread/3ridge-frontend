@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.3.7",
-    "@apollo/client": "^3.7.1",
+    "@apollo/client": "^3.8.8",
     "@aptos-labs/wallet-adapter-react": "^0.2.3",
     "@elastic/elasticsearch": "^8.8.1",
     "@emotion/react": "^11.10.5",
