@@ -13,6 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
+    "\n  query events {\n    tickets {\n      _id\n      title\n      imageUrl\n    }\n  }\n": types.EventsDocument,
+    "\n  mutation CreateLink($input: CreateLinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n": types.CreateLinkDocument,
     "\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      _id\n    }\n  }\n": types.CreateUserByEmailDocument,
     "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n": types.UpdateUserMutationDocument,
     "\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n": types.UserItemFragmentDoc,
@@ -86,6 +88,14 @@ const documents = {
     "\n  query AllTickets(\n    $sort: TicketSortType\n    $status: TicketStatusType\n    $eventTypes: [EventType!]\n    $isVisibleOnly: Boolean\n    $limit: Int\n    $skip: Int\n  ) {\n    tickets(\n      sort: $sort\n      status: $status\n      eventTypes: $eventTypes\n      isVisibleOnly: $isVisibleOnly\n      limit: $limit\n      skip: $skip\n    ) {\n      _id\n      beginTime\n      untilTime\n      completed\n      description\n      description_v2 {\n        contentFormatType\n        contentEncodingType\n        content\n      }\n      shortDescription\n      participants {\n        _id\n        name\n        profileImageUrl\n      }\n      imageUrl\n      quests {\n        _id\n        title\n        title_v2 {\n          contentFormatType\n          contentEncodingType\n          content\n        }\n        description\n        questPolicy {\n          context\n          questPolicy\n        }\n      }\n      project {\n        _id\n        categories\n        description\n        imageUrl\n        name\n        projectSocial {\n          discordUrl\n          officialUrl\n          telegramUrl\n          twitterUrl\n          mediumUrl\n          naverBlogUrl\n          kakaoUrl\n        }\n      }\n      rewardPolicy {\n        context\n        rewardPoint\n        rewardPolicyType\n      }\n      title\n      winners {\n        name\n      }\n      visible\n    }\n  }\n": types.AllTicketsDocument,
 };
 
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query events {\n    tickets {\n      _id\n      title\n      imageUrl\n    }\n  }\n"): (typeof documents)["\n  query events {\n    tickets {\n      _id\n      title\n      imageUrl\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateLink($input: CreateLinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateLink($input: CreateLinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
