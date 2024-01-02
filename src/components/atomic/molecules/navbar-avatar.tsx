@@ -142,7 +142,7 @@ const NavbarAvatar = () => {
                 <BlockIcon seed={userData._id || "jake"}></BlockIcon>
               )}
               <Stack direction={"column"}>
-                {userData.walletAddressInfos?.[0].address && (
+                {userData.walletAddressInfos?.[0]?.address && (
                   <GradientTypography>
                     {StringHelper.convertAddressToMidEllipsis(
                       `${userData.walletAddressInfos?.[0].address}`,
