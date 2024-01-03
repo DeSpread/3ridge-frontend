@@ -22,7 +22,7 @@ interface CreateLinkFormProps {
 export default function CreateLinkForm(props: CreateLinkFormProps) {
   const { createLink } = useCreateLink();
 
-  const [href, setHref] = useState("");
+  const [href, setHref] = useState(Math.random().toString(36).slice(2));
   const [eventId, setEventId] = useState("");
   const [utmSource, setUtmSource] = useState("");
   const [utmMedium, setUtmMedium] = useState("");
@@ -100,7 +100,7 @@ export default function CreateLinkForm(props: CreateLinkFormProps) {
   }
 
   function clearInputs() {
-    setHref("");
+    setHref(Math.random().toString(36).slice(2));
     setEventId("");
     setUtmSource("");
     setUtmMedium("");
