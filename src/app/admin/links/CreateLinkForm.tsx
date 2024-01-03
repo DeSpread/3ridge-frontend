@@ -87,7 +87,6 @@ export default function CreateLinkForm(props: CreateLinkFormProps) {
   }
 
   function handleChangeEvent(e: SelectChangeEvent) {
-    console.log(e.target.value);
     setEventId(e.target.value);
   }
 
