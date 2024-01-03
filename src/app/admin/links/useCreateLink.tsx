@@ -29,6 +29,7 @@ export function useCreateLink(): UseCreateLink {
     createLink(input) {
       return createLinkMutation({
         variables: { input },
+        refetchQueries: ["Links"],
       });
     },
   };
