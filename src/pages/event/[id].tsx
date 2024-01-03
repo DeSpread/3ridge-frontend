@@ -170,6 +170,12 @@ const Event = (props: AppProps) => {
   const { asyncUploadImage } = useSimpleStorage();
 
   useEffect(() => {
+    if (router.isReady && router.query.devProvider === "shortRouter") {
+      router.replace(`/event/${router.query.id}`, undefined, { shallow: true });
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
     const { ethereum } = window;
     //@ts-ignore
     const _hasMetamask = ethereum ? ethereum.isMetaMask : false;

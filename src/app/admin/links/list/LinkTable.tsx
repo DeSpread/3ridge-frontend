@@ -1,6 +1,12 @@
 "use client";
 
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import { CopyAll } from "@mui/icons-material";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import Image from "next/image";
 
 import { useLinks } from "../useLinks";
@@ -58,6 +64,30 @@ export default function LinkTable() {
   const columns: GridColDef[] = [
     ...baseColumns,
     ...attributeKeys.map((key) => ({ field: key })),
+    {
+      field: "",
+      type: "actions",
+      getActions({ id }) {
+        const link = links.find((link) => link._id === id);
+
+        return [
+          <GridActionsCellItem
+            key="copy"
+            icon={<CopyAll />}
+            label="Copy"
+            sx={{
+              color: "primary.main",
+            }}
+            onClick={() =>
+              navigator.clipboard.writeText(
+                `https://${process.env["NEXT_PUBLIC_HOME_URI"]}/short/${link?.href}` ??
+                  "",
+              )
+            }
+          />,
+        ];
+      },
+    },
   ];
 
   const rows = links.map((link) => ({
