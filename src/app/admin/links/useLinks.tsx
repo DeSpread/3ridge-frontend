@@ -12,6 +12,7 @@ const LinksQueryGql = gql(/* GraphQL */ `
         value
       }
       event {
+        _id
         title
         imageUrl
       }

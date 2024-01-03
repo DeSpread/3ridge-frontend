@@ -15,7 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  query events {\n    tickets {\n      _id\n      title\n      imageUrl\n    }\n  }\n": types.EventsDocument,
     "\n  mutation CreateLink($input: CreateLinkInput!) {\n    createLink(input: $input) {\n      _id\n    }\n  }\n": types.CreateLinkDocument,
-    "\n  query Links {\n    links {\n      _id\n      href\n      attributes {\n        key\n        value\n      }\n      event {\n        title\n        imageUrl\n      }\n    }\n  }\n": types.LinksDocument,
+    "\n  query Links {\n    links {\n      _id\n      href\n      attributes {\n        key\n        value\n      }\n      event {\n        _id\n        title\n        imageUrl\n      }\n    }\n  }\n": types.LinksDocument,
     "\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      _id\n    }\n  }\n": types.CreateUserByEmailDocument,
     "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n": types.UpdateUserMutationDocument,
     "\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n": types.UserItemFragmentDoc,
@@ -100,7 +100,7 @@ export function gql(source: "\n  mutation CreateLink($input: CreateLinkInput!) {
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Links {\n    links {\n      _id\n      href\n      attributes {\n        key\n        value\n      }\n      event {\n        title\n        imageUrl\n      }\n    }\n  }\n"): (typeof documents)["\n  query Links {\n    links {\n      _id\n      href\n      attributes {\n        key\n        value\n      }\n      event {\n        title\n        imageUrl\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query Links {\n    links {\n      _id\n      href\n      attributes {\n        key\n        value\n      }\n      event {\n        _id\n        title\n        imageUrl\n      }\n    }\n  }\n"): (typeof documents)["\n  query Links {\n    links {\n      _id\n      href\n      attributes {\n        key\n        value\n      }\n      event {\n        _id\n        title\n        imageUrl\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
