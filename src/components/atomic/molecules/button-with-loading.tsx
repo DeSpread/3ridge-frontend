@@ -5,10 +5,11 @@ import React, { useState } from "react";
 import { MouseEventWithParam } from "../../../types";
 import SecondaryButton from "../atoms/secondary-button";
 
-const ButtonWithLoading = (props: ButtonProps & { loading?: boolean }) => {
+const ButtonWithLoading = ({
+  loading,
+  ...props
+}: ButtonProps & { loading?: boolean }) => {
   // const [loading, setLoading] = useState(false);
-
-  const { loading } = props;
 
   return (
     <div style={{ position: "relative", width: "100%" }}>
