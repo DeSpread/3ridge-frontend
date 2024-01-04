@@ -4,7 +4,7 @@ import { gql } from "@/__generated__";
 
 const EventQueryGQL = gql(/* GraphQl */ `
   query events {
-    tickets {
+    tickets(isVisibleOnly: false) {
       _id
       title
       imageUrl
