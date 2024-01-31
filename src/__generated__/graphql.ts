@@ -121,6 +121,24 @@ export type DiscordInputType = {
   username: Scalars['String'];
 };
 
+export type EventFormat = {
+  event_type: Scalars['String'];
+  filters?: InputMaybe<Array<EventFormatFilter>>;
+  group_by?: InputMaybe<Array<EventFormatGroupBy>>;
+};
+
+export type EventFormatFilter = {
+  subprop_key: Scalars['String'];
+  subprop_op: Scalars['String'];
+  subprop_type: Scalars['String'];
+  subprop_value: Array<Scalars['String']>;
+};
+
+export type EventFormatGroupBy = {
+  type: Scalars['String'];
+  value: Scalars['String'];
+};
+
 export enum EventType {
   Main = 'MAIN',
   Recommended = 'RECOMMENDED'
@@ -339,6 +357,7 @@ export type MutationCreateUserByKakaoArgs = {
 export type MutationCreateUserByWalletArgs = {
   address: Scalars['String'];
   chain: ChainType;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 
@@ -614,6 +633,7 @@ export type Query = {
   projectById: Project;
   projectByName: Array<Project>;
   projects: Array<Project>;
+  segmentation: Segmentation;
   ticketById: Ticket;
   tickets: Array<Ticket>;
   ticketsByProjectId: Array<Ticket>;
@@ -691,6 +711,7 @@ export type QueryIsNeedEmailAccountMigrationArgs = {
 export type QueryIsRegisteredWalletArgs = {
   address: Scalars['String'];
   chain: ChainType;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 
@@ -726,6 +747,13 @@ export type QueryProjectsArgs = {
   eventTypes?: InputMaybe<Array<EventType>>;
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QuerySegmentationArgs = {
+  e: EventFormat;
+  end: Scalars['String'];
+  start: Scalars['String'];
 };
 
 
@@ -882,6 +910,32 @@ export enum RewardPolicyType {
   LuckyDraw = 'LUCKY_DRAW'
 }
 
+export type Segmentation = {
+  __typename?: 'Segmentation';
+  series: Array<Array<Scalars['Float']>>;
+  seriesCollapsed: Array<Array<SeriesCollapsed>>;
+  seriesLabels: Array<Array<SeriesLabelsUnion>>;
+  xValues: Array<Scalars['String']>;
+};
+
+export type SeriesCollapsed = {
+  __typename?: 'SeriesCollapsed';
+  setId: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type SeriesLabelNumber = {
+  __typename?: 'SeriesLabelNumber';
+  value: Scalars['Float'];
+};
+
+export type SeriesLabelString = {
+  __typename?: 'SeriesLabelString';
+  value: Scalars['String'];
+};
+
+export type SeriesLabelsUnion = SeriesLabelNumber | SeriesLabelString;
+
 export type TelegramUser = {
   __typename?: 'TelegramUser';
   authDate?: Maybe<Scalars['Float']>;
@@ -1024,11 +1078,13 @@ export type UserWallet = {
   __typename?: 'UserWallet';
   address: Scalars['String'];
   chain: ChainType;
+  createdAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type UserWalletInputType = {
   address: Scalars['String'];
   chain: ChainType;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
