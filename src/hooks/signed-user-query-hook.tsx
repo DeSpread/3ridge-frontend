@@ -1,4 +1,5 @@
 "use client";
+import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@apollo/client";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -207,6 +208,13 @@ const useSignedUserQuery = () => {
             fetchPolicy: "no-cache",
           });
           updateUserData(res.data.userByWalletAddress);
+          if (res.data.userByWalletAddress._id) {
+            amplitude.setUserId(res.data.userByWalletAddress._id);
+            amplitude.track({
+              event_type: "Login",
+              event_properties: { type: "wallet" },
+            });
+          }
         } catch (e) {
           console.log(e);
         } finally {
