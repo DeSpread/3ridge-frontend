@@ -114,6 +114,5 @@
     "prettier": "2.8.0",
     "swc-loader": "^0.2.3",
     "tailwindcss": "^3.3.3"
-  },
-  "packageManager": "yarn@1.22.21"
+  }
 }
