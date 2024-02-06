@@ -53,3 +53,6 @@ next.config.original.js
 next.config.original.js
 .idea/jsLinters/eslint.xml
 build.css
+
+# Sentry Config File
+.sentryclirc
