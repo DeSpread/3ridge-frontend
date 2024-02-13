@@ -20,15 +20,12 @@ const nextConfig = {
   experimental: { esmExternals: true },
 };
 
-module.exports = nextConfig;
-
-
 // Injected content via Sentry wizard below
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
 module.exports = withSentryConfig(
-  module.exports,
+  nextConfig,
   {
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options
@@ -36,7 +33,7 @@ module.exports = withSentryConfig(
     // Suppresses source map uploading logs during build
     silent: true,
     org: "despread-labs",
-    project: "javascript-nextjs",
+    project: "3ridge-frontend",
   },
   {
     // For all available options, see:
@@ -62,5 +59,5 @@ module.exports = withSentryConfig(
     // https://docs.sentry.io/product/crons/
     // https://vercel.com/docs/cron-jobs
     automaticVercelMonitors: true,
-  }
+  },
 );
