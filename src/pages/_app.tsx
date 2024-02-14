@@ -94,21 +94,31 @@ const App = (props: AppPropsWithLayout) => {
 
   return (
     <>
-      <Head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
+      <Script
+        src="https://storage.googleapis.com/al-web-sdk/al.min.js"
+        onLoad={() => {
+          if (window) {
+            if (!("ALSDK" in window)) {
+              (window as any).ALSDK = { siteId: "42e420e7" };
+            } else {
+              (window as any).ALSDK.siteId = "42e420e7";
+            }
+          }
+        }}
+      />
+      <Script id="gtag-and-alsdk">
+        {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-              gtag('config', '${gtag.GA_TRACKING_ID}', {
-                page_path: window.location.pathname,
-              });
-            `,
-          }}
-        />
-      </Head>
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+
+            window.ALSDK = window.ALSDK || {}; window.ALSDK.siteId = '42e420e7';
+          `}
+      </Script>
       {/* Global Site Tag (gtag.js) - Google Analytics */}
       <Script
         strategy="afterInteractive"
