@@ -825,6 +825,7 @@ export type Quest = {
   completedUsers: Array<User>;
   dataCollection?: Maybe<Array<QuestData>>;
   description: Scalars['String'];
+  ownerTicketId?: Maybe<Scalars['String']>;
   questGuides?: Maybe<Array<ContentMetadata>>;
   questPolicy?: Maybe<QuestPolicy>;
   title?: Maybe<Scalars['String']>;
@@ -852,6 +853,7 @@ export type QuestInputType = {
   completedUsers?: InputMaybe<Array<UserInputType>>;
   dataCollection?: InputMaybe<Array<DataInputType>>;
   description?: InputMaybe<Scalars['String']>;
+  ownerTicketId?: InputMaybe<Scalars['String']>;
   questGuides?: InputMaybe<Array<ContentMetadataInputType>>;
   questPolicy?: InputMaybe<QuestPolicyInputType>;
   title?: InputMaybe<Scalars['String']>;
