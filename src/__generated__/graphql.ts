@@ -328,7 +328,7 @@ export type MutationCreateTicketArgs = {
   description_v2?: InputMaybe<ContentMetadataInputType>;
   imageUrl?: InputMaybe<Scalars['String']>;
   project?: InputMaybe<Scalars['String']>;
-  quests?: InputMaybe<Array<QuestInputType>>;
+  quests?: InputMaybe<Array<QuestCreateInput>>;
   rewardPolicy?: InputMaybe<RewardPolicyInputType>;
   shortDescription?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
@@ -461,7 +461,7 @@ export type MutationUpdateTicketByIdArgs = {
   imageUrl?: InputMaybe<Scalars['String']>;
   participants?: InputMaybe<Array<UserInputType>>;
   project?: InputMaybe<Scalars['String']>;
-  quests?: InputMaybe<Array<QuestInputType>>;
+  quests?: InputMaybe<Array<QuestCreateInput>>;
   rewardPolicy?: InputMaybe<RewardPolicyInputType>;
   shortDescription?: InputMaybe<Scalars['String']>;
   ticketId: Scalars['String'];
@@ -583,7 +583,7 @@ export type ProjectInputType = {
   eventTypes?: InputMaybe<Array<EventType>>;
   imageUrl?: InputMaybe<Scalars['String']>;
   managedUsers?: InputMaybe<Array<UserInputType>>;
-  name: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
   priority?: InputMaybe<Scalars['Float']>;
   projectSocial?: InputMaybe<ProjectSocialInputType>;
   tickets?: InputMaybe<Array<TicketInputType>>;
@@ -821,14 +821,21 @@ export type QueryValidateAuthCodeArgs = {
 
 export type Quest = {
   __typename?: 'Quest';
-  _id?: Maybe<Scalars['String']>;
-  completedUsers?: Maybe<Array<User>>;
+  _id: Scalars['String'];
+  completedUsers: Array<User>;
   dataCollection?: Maybe<Array<QuestData>>;
-  description?: Maybe<Scalars['String']>;
+  description: Scalars['String'];
   questGuides?: Maybe<Array<ContentMetadata>>;
   questPolicy?: Maybe<QuestPolicy>;
   title?: Maybe<Scalars['String']>;
-  title_v2?: Maybe<ContentMetadata>;
+  title_v2: ContentMetadata;
+};
+
+export type QuestCreateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  questPolicy?: InputMaybe<QuestPolicyInputType>;
+  ticketId: Scalars['String'];
+  title_v2?: InputMaybe<ContentMetadataInputType>;
 };
 
 export type QuestData = {
@@ -1127,7 +1134,7 @@ export type GetUserByAccessTokenQueryVariables = Exact<{ [key: string]: never; }
 
 
 export type GetUserByAccessTokenQuery = { __typename?: 'Query', userByAccessToken: (
-    { __typename?: 'User', wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null, participatingTickets?: Array<{ __typename?: 'Ticket', _id?: string | null, imageUrl?: string | null, description?: string | null, title?: string | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id?: string | null }> | null }> | null }
+    { __typename?: 'User', wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null, participatingTickets?: Array<{ __typename?: 'Ticket', _id?: string | null, imageUrl?: string | null, description?: string | null, title?: string | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string }> | null }> | null }
     & { ' $fragmentRefs'?: { 'UserItemFragment': UserItemFragment } }
   ) };
 
@@ -1167,14 +1174,14 @@ export type GetUserByKakaoIdQueryVariables = Exact<{
 }>;
 
 
-export type GetUserByKakaoIdQuery = { __typename?: 'Query', userByKakaoId: { __typename?: 'User', _id?: string | null, email?: string | null, gmail?: string | null, name?: string | null, profileImageUrl?: string | null, rewardPoint?: number | null, participatingTickets?: Array<{ __typename?: 'Ticket', _id?: string | null, imageUrl?: string | null, description?: string | null, title?: string | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id?: string | null }> | null }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } };
+export type GetUserByKakaoIdQuery = { __typename?: 'Query', userByKakaoId: { __typename?: 'User', _id?: string | null, email?: string | null, gmail?: string | null, name?: string | null, profileImageUrl?: string | null, rewardPoint?: number | null, participatingTickets?: Array<{ __typename?: 'Ticket', _id?: string | null, imageUrl?: string | null, description?: string | null, title?: string | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string }> | null }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } };
 
 export type GetUserByNameQueryVariables = Exact<{
   name: Scalars['String'];
 }>;
 
 
-export type GetUserByNameQuery = { __typename?: 'Query', userByName: { __typename?: 'User', _id?: string | null, email?: string | null, gmail?: string | null, name?: string | null, profileImageUrl?: string | null, rewardPoint?: number | null, participatingTickets?: Array<{ __typename?: 'Ticket', _id?: string | null, imageUrl?: string | null, description?: string | null, title?: string | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id?: string | null }> | null }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } };
+export type GetUserByNameQuery = { __typename?: 'Query', userByName: { __typename?: 'User', _id?: string | null, email?: string | null, gmail?: string | null, name?: string | null, profileImageUrl?: string | null, rewardPoint?: number | null, participatingTickets?: Array<{ __typename?: 'Ticket', _id?: string | null, imageUrl?: string | null, description?: string | null, title?: string | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string }> | null }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } };
 
 export type GetUserByEmailQueryVariables = Exact<{
   email: Scalars['String'];
@@ -1353,14 +1360,14 @@ export type TicketsQueryVariables = Exact<{
 }>;
 
 
-export type TicketsQuery = { __typename?: 'Query', tickets: Array<{ __typename?: 'Ticket', _id?: string | null, beginTime?: any | null, untilTime?: any | null, completed?: boolean | null, description?: string | null, shortDescription?: string | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id?: string | null, title?: string | null, description?: string | null, title_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null }> };
+export type TicketsQuery = { __typename?: 'Query', tickets: Array<{ __typename?: 'Ticket', _id?: string | null, beginTime?: any | null, untilTime?: any | null, completed?: boolean | null, description?: string | null, shortDescription?: string | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string, title?: string | null, description: string, title_v2: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string }, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null }> };
 
 export type GetTicketByIdQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type GetTicketByIdQuery = { __typename?: 'Query', ticketById: { __typename?: 'Ticket', _id?: string | null, beginTime?: any | null, untilTime?: any | null, completed?: boolean | null, description?: string | null, shortDescription?: string | null, participantCount?: number | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id?: string | null, title?: string | null, description?: string | null, title_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null, questGuides?: Array<{ __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, content: string, contentEncodingType: ContentEncodingType }> | null }> | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null, rewardClaimedUsers?: Array<{ __typename?: 'User', _id?: string | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null } };
+export type GetTicketByIdQuery = { __typename?: 'Query', ticketById: { __typename?: 'Ticket', _id?: string | null, beginTime?: any | null, untilTime?: any | null, completed?: boolean | null, description?: string | null, shortDescription?: string | null, participantCount?: number | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string, title?: string | null, description: string, title_v2: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string }, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null, questGuides?: Array<{ __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, content: string, contentEncodingType: ContentEncodingType }> | null }> | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null, rewardClaimedUsers?: Array<{ __typename?: 'User', _id?: string | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null } };
 
 export type ProjectsQueryVariables = Exact<{
   eventTypes?: InputMaybe<Array<EventType> | EventType>;
@@ -1385,7 +1392,7 @@ export type TicketsByProjectIdQueryVariables = Exact<{
 }>;
 
 
-export type TicketsByProjectIdQuery = { __typename?: 'Query', ticketsByProjectId: Array<{ __typename?: 'Ticket', _id?: string | null, completed?: boolean | null, description?: string | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id?: string | null, title?: string | null, description?: string | null, title_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null }> };
+export type TicketsByProjectIdQuery = { __typename?: 'Query', ticketsByProjectId: Array<{ __typename?: 'Ticket', _id?: string | null, completed?: boolean | null, description?: string | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string, title?: string | null, description: string, title_v2: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string }, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null }> };
 
 export type VerifyTwitterLinkingAndRetweetQuestMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -1394,7 +1401,7 @@ export type VerifyTwitterLinkingAndRetweetQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifyTwitterLinkingAndRetweetQuestMutation = { __typename?: 'Mutation', verifyTwitterLinkingAndRetweetQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifyTwitterLinkingAndRetweetQuestMutation = { __typename?: 'Mutation', verifyTwitterLinkingAndRetweetQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyTwitterLikingQuestMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -1403,7 +1410,7 @@ export type VerifyTwitterLikingQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifyTwitterLikingQuestMutation = { __typename?: 'Mutation', verifyTwitterLikingQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifyTwitterLikingQuestMutation = { __typename?: 'Mutation', verifyTwitterLikingQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyTwitterFollowQuestMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -1412,7 +1419,7 @@ export type VerifyTwitterFollowQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifyTwitterFollowQuestMutation = { __typename?: 'Mutation', verifyTwitterFollowQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifyTwitterFollowQuestMutation = { __typename?: 'Mutation', verifyTwitterFollowQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyTwitterRetweetQuestMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -1421,7 +1428,7 @@ export type VerifyTwitterRetweetQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifyTwitterRetweetQuestMutation = { __typename?: 'Mutation', verifyTwitterRetweetQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifyTwitterRetweetQuestMutation = { __typename?: 'Mutation', verifyTwitterRetweetQuest: { __typename?: 'Quest', _id: string } };
 
 export type Verify3ridgePointMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -1430,7 +1437,7 @@ export type Verify3ridgePointMutationVariables = Exact<{
 }>;
 
 
-export type Verify3ridgePointMutation = { __typename?: 'Mutation', verify3ridgePoint: { __typename?: 'Quest', _id?: string | null } };
+export type Verify3ridgePointMutation = { __typename?: 'Mutation', verify3ridgePoint: { __typename?: 'Quest', _id: string } };
 
 export type VerifyDiscordQuestMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -1439,7 +1446,7 @@ export type VerifyDiscordQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifyDiscordQuestMutation = { __typename?: 'Mutation', verifyDiscordQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifyDiscordQuestMutation = { __typename?: 'Mutation', verifyDiscordQuest: { __typename?: 'Quest', _id: string } };
 
 export type IsCompletedQuestByUserIdQueryVariables = Exact<{
   questId: Scalars['String'];
@@ -1456,7 +1463,7 @@ export type CompleteQuestOfUserMutationVariables = Exact<{
 }>;
 
 
-export type CompleteQuestOfUserMutation = { __typename?: 'Mutation', completeQuestOfUser: { __typename?: 'Quest', _id?: string | null, title?: string | null, description?: string | null, title_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null } };
+export type CompleteQuestOfUserMutation = { __typename?: 'Mutation', completeQuestOfUser: { __typename?: 'Quest', _id: string, title?: string | null, description: string, title_v2: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string }, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null } };
 
 export type ClaimRewardMutationVariables = Exact<{
   ticketId: Scalars['String'];
@@ -1473,7 +1480,7 @@ export type VerifyAptosQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifyAptosQuestMutation = { __typename?: 'Mutation', verifyAptosQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifyAptosQuestMutation = { __typename?: 'Mutation', verifyAptosQuest: { __typename?: 'Quest', _id: string } };
 
 export type IsRegisteredWalletQueryVariables = Exact<{
   address: Scalars['String'];
@@ -1563,7 +1570,7 @@ export type CreateQuestMutationVariables = Exact<{
 }>;
 
 
-export type CreateQuestMutation = { __typename?: 'Mutation', createQuest: { __typename?: 'Quest', _id?: string | null } };
+export type CreateQuestMutation = { __typename?: 'Mutation', createQuest: { __typename?: 'Quest', _id: string } };
 
 export type DeleteQuestMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -1581,7 +1588,7 @@ export type UpdateQuestMutationVariables = Exact<{
 }>;
 
 
-export type UpdateQuestMutation = { __typename?: 'Mutation', updateQuest: { __typename?: 'Quest', _id?: string | null } };
+export type UpdateQuestMutation = { __typename?: 'Mutation', updateQuest: { __typename?: 'Quest', _id: string } };
 
 export type CreateTicketMutationVariables = Exact<{
   beginTime?: InputMaybe<Scalars['DateTime']>;
@@ -1610,7 +1617,7 @@ export type VerifySurveyQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifySurveyQuestMutation = { __typename?: 'Mutation', verifySurveyQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifySurveyQuestMutation = { __typename?: 'Mutation', verifySurveyQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyScreenShotQuestMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -1620,7 +1627,7 @@ export type VerifyScreenShotQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifyScreenShotQuestMutation = { __typename?: 'Mutation', verifyScreenShotQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifyScreenShotQuestMutation = { __typename?: 'Mutation', verifyScreenShotQuest: { __typename?: 'Quest', _id: string } };
 
 export type RemoveProjectMutationVariables = Exact<{
   projectId: Scalars['String'];
@@ -1668,7 +1675,7 @@ export type VerifyOnChainQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifyOnChainQuestMutation = { __typename?: 'Mutation', verifyOnChainQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifyOnChainQuestMutation = { __typename?: 'Mutation', verifyOnChainQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyTelegramQuestMutationVariables = Exact<{
   questId: Scalars['String'];
@@ -1677,7 +1684,7 @@ export type VerifyTelegramQuestMutationVariables = Exact<{
 }>;
 
 
-export type VerifyTelegramQuestMutation = { __typename?: 'Mutation', verifyTelegramQuest: { __typename?: 'Quest', _id?: string | null } };
+export type VerifyTelegramQuestMutation = { __typename?: 'Mutation', verifyTelegramQuest: { __typename?: 'Quest', _id: string } };
 
 export type AllTicketsQueryVariables = Exact<{
   sort?: InputMaybe<TicketSortType>;
@@ -1689,7 +1696,7 @@ export type AllTicketsQueryVariables = Exact<{
 }>;
 
 
-export type AllTicketsQuery = { __typename?: 'Query', tickets: Array<{ __typename?: 'Ticket', _id?: string | null, beginTime?: any | null, untilTime?: any | null, completed?: boolean | null, description?: string | null, shortDescription?: string | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id?: string | null, title?: string | null, description?: string | null, title_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null }> };
+export type AllTicketsQuery = { __typename?: 'Query', tickets: Array<{ __typename?: 'Ticket', _id?: string | null, beginTime?: any | null, untilTime?: any | null, completed?: boolean | null, description?: string | null, shortDescription?: string | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string, title?: string | null, description: string, title_v2: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string }, questPolicy?: { __typename?: 'QuestPolicy', context: string, questPolicy: QuestPolicyType } | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null }> };
 
 export const UserItemFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserItem"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}}]}}]} as unknown as DocumentNode<UserItemFragment, unknown>;
 export const EventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tickets"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"isVisibleOnly"},"value":{"kind":"BooleanValue","value":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}}]}}]}}]} as unknown as DocumentNode<EventsQuery, EventsQueryVariables>;
