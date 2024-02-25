@@ -34,7 +34,7 @@ export const MarkDownRenderer = ({
   );
 };
 
-const ContentMetaDataRenderComponent = ({
+export default function ContentMetaDataRenderComponent({
   contentMetaData,
   htmlComponentFunc = (content) => {
     return (
@@ -46,7 +46,7 @@ const ContentMetaDataRenderComponent = ({
     );
   },
   textComponentFunc = (content) => {
-    return <Typography>{content}</Typography>;
+    return <>{content}</>;
   },
   markComponentFunc = (content) => {
     return <MarkDownRenderer content={content}></MarkDownRenderer>;
@@ -56,7 +56,7 @@ const ContentMetaDataRenderComponent = ({
   htmlComponentFunc?: ComponentRenderFunc;
   textComponentFunc?: ComponentRenderFunc;
   markComponentFunc?: ComponentRenderFunc;
-}) => {
+}) {
   const comp = useCallback(() => {
     if (contentMetaData) {
       const content = StringHelper.decodeContentMetaData(contentMetaData);
@@ -83,6 +83,4 @@ const ContentMetaDataRenderComponent = ({
   ]);
 
   return comp();
-};
-
-export default ContentMetaDataRenderComponent;
+}

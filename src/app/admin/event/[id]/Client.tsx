@@ -370,24 +370,6 @@ export default function Client(props: ClientProps) {
             ></_EventDescription>
 
             <Stack>
-              <EventQuests
-                ticketData={ticketData}
-                userData={userData}
-                verifiedList={verifiedList}
-                onEditBtnClicked={(e, quest, index) => {
-                  console.log("quest", quest);
-                  showOpenQuestUpsertDialog(quest);
-                }}
-                onDeleteBtnClicked={async (e, quest, index) => {
-                  showLoading();
-                  if (quest?._id) await asyncDeleteQuest(quest?._id);
-                  await asyncRefreshAll();
-                  closeLoading();
-                }}
-                onExtractDataBtnClicked={async (e, quest, index) => {
-                  showOpenUserInfoDownloadDialog(quest);
-                }}
-              ></EventQuests>
               <Stack sx={{ width: "100%", marginTop: 4 }} alignItems={"center"}>
                 <IconButton
                   className={"MuiIconButton"}
