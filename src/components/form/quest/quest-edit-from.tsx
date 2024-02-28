@@ -86,7 +86,7 @@ const VerifySurveyEditForm = (props: {
     const _newContentMetaData = {
       content: _message,
       contentEncodingType: ContentEncodingType.None,
-      contentFormatType: ContentFormatType.Text,
+      contentFormatType: ContentFormatType.Markdown,
     };
 
     onChange?.(_newQuestPolicy, _newContentMetaData);
@@ -379,7 +379,7 @@ const VerifyScreenShotForm = (props: {
   const [codeValue, setCodeValue] = useState("");
   const [markdownValue, setMarkdownValue] = useState("");
   const [contentFormatType, setContentFormatType] = useState<ContentFormatType>(
-    ContentFormatType.Text,
+    ContentFormatType.Markdown,
   );
 
   useEffect(() => {
@@ -437,7 +437,7 @@ const VerifyScreenShotForm = (props: {
     const _newContentMetaData = {
       content: _message,
       contentEncodingType: ContentEncodingType.None,
-      contentFormatType: ContentFormatType.Text,
+      contentFormatType: ContentFormatType.Markdown,
     };
 
     // console.log("_newQuestPolicy", _newQuestPolicy);
@@ -879,7 +879,7 @@ const VerifyHasWalletAddressEditForm = (props: {
     const _newContentMetaData = {
       content: _message ?? "",
       contentEncodingType: ContentEncodingType.None,
-      contentFormatType: ContentFormatType.Text,
+      contentFormatType: ContentFormatType.Markdown,
     };
 
     onChange?.(_newQuestPolicy, _newContentMetaData);
@@ -956,7 +956,7 @@ const VerifyEmailEditForm = (props: {
     const _newContentMetaData = {
       content: _message ?? "",
       contentEncodingType: ContentEncodingType.None,
-      contentFormatType: ContentFormatType.Text,
+      contentFormatType: ContentFormatType.Markdown,
     };
 
     onChange?.(_newQuestPolicy, _newContentMetaData);
@@ -1020,7 +1020,7 @@ const Verify3ridgePointEditForm = (props: {
     const _newContentMetaData = {
       content: _message ?? "",
       contentEncodingType: ContentEncodingType.None,
-      contentFormatType: ContentFormatType.Text,
+      contentFormatType: ContentFormatType.Markdown,
     };
 
     onChange?.(_newQuestPolicy, _newContentMetaData);
@@ -1543,7 +1543,7 @@ const VerifyHasDiscordOrTelegramOrTwitter = (props: {
     const _newContentMetaData = {
       content: content ?? "",
       contentEncodingType: ContentEncodingType.None,
-      contentFormatType: ContentFormatType.Text,
+      contentFormatType: ContentFormatType.Markdown,
     };
 
     onChange?.(_newQuestPolicy, _newContentMetaData);
@@ -1640,7 +1640,7 @@ const VerifyAgreement = (props: {
     const _newContentMetaData = {
       content,
       contentEncodingType: ContentEncodingType.None,
-      contentFormatType: ContentFormatType.Text,
+      contentFormatType: ContentFormatType.Markdown,
     };
 
     onChange?.(_newQuestPolicy, _newContentMetaData);
@@ -2101,7 +2101,7 @@ const VerifyQuiz = (props: {
     const _newContentMetaData = {
       content,
       contentEncodingType: ContentEncodingType.None,
-      contentFormatType: ContentFormatType.Text,
+      contentFormatType: ContentFormatType.Markdown,
     };
 
     onChange?.(_newQuestPolicy, _newContentMetaData);
