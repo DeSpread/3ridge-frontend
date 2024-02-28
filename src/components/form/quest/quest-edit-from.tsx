@@ -1474,6 +1474,7 @@ const VerifyTelegramQuestEditForm = (props: {
       <InputWithLabel
         label={"GroupId"}
         labelWidth={"38%"}
+        placeholder="ex) -100123456789"
         value={groupId}
         onChange={(e) => {
           const { value } = e.target;
@@ -1484,6 +1485,7 @@ const VerifyTelegramQuestEditForm = (props: {
       <InputWithLabel
         label={"텔레그램 핸들 (@포함)"}
         labelWidth={"38%"}
+        placeholder="ex) @web3ridge_kr"
         value={handle}
         onChange={(e) => {
           const { value } = e.target;
@@ -1494,6 +1496,7 @@ const VerifyTelegramQuestEditForm = (props: {
       <InputWithLabel
         label={"메세지"}
         labelWidth={"38%"}
+        placeholder="ex) @web3ridge_kr 채널 입장하기"
         value={message}
         onChange={(e) => {
           const { value } = e.target;
