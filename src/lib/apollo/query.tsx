@@ -690,6 +690,7 @@ export const GET_TICKETS = gql(/* GraphQL */ `
         name
       }
       visible
+      eventTypes
     }
   }
 `);
@@ -880,6 +881,7 @@ export const GET_TICKETS_BY_PROJECT_ID = gql(/* GraphQL */ `
         name
       }
       visible
+      eventTypes
     }
   }
 `);

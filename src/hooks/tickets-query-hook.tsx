@@ -128,7 +128,7 @@ export function useTicketsQuery(props: {
         description?: string | null;
         questPolicy?: {
           __typename?: "QuestPolicy";
-          context: string;
+          context?: string | null;
           questPolicy: QuestPolicyType;
         } | null;
       }> | null;
@@ -158,6 +158,7 @@ export function useTicketsQuery(props: {
       } | null;
       winners?: Array<{ __typename?: "User"; name?: string | null }> | null;
       visible?: boolean | null;
+      eventTypes: EventType[];
     }>,
   ) => {
     setTicketsData(() => {
@@ -188,7 +189,7 @@ export function useTicketsQuery(props: {
               description: _e.description ?? undefined,
               questPolicy: {
                 context: TypeParseHelper.parseQuestPolicy(
-                  _e.questPolicy?.context,
+                  _e.questPolicy?.context ?? undefined,
                   _e.questPolicy?.questPolicy,
                 ),
                 questPolicy: _e.questPolicy?.questPolicy ?? undefined,
@@ -226,6 +227,7 @@ export function useTicketsQuery(props: {
             },
           },
           visible: e.visible,
+          eventTypes: e.eventTypes,
         };
       });
     });

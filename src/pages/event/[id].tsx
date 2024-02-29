@@ -354,7 +354,7 @@ const Event = (props: AppProps) => {
   }, [verifiedList, updateIndex]);
 
   const walletConnectedForTicket = useMemo(() => {
-    if (ticketData.rewardPolicy?.context?.rewardChain.includes("offchain"))
+    if (ticketData?.rewardPolicy?.context?.rewardChain.includes("offchain"))
       return true;
 
     const networksOfUser = userData?.walletAddressInfos
@@ -362,7 +362,7 @@ const Event = (props: AppProps) => {
       .map((e) => e.network.toString().toUpperCase());
 
     const ticketRewardChain =
-      ticketData.rewardPolicy?.context?.rewardChain.toUpperCase() ?? "";
+      ticketData?.rewardPolicy?.context?.rewardChain.toUpperCase() ?? "";
 
     // console.log(networksOfUser, ticketRewardChain);
 
@@ -391,12 +391,12 @@ const Event = (props: AppProps) => {
       amplitude.track({
         event_type: "Participate event",
         event_properties: {
-          eventId: ticketData._id,
+          eventId: ticketData?._id,
         },
       });
     }
 
-    if (ticketData.quests?.[index]) {
+    if (ticketData?.quests?.[index]) {
       amplitude.track({
         event_type: "Quest complete",
         event_properties: {
@@ -689,7 +689,7 @@ const Event = (props: AppProps) => {
     quest: Quest,
     index: number,
   ) => {
-    if (!ticketData._id || !quest._id) return;
+    if (!ticketData?._id || !quest._id) return;
     if (
       quest.questPolicy?.questPolicy === QuestPolicyType.VerifyTwitterFollow
     ) {
@@ -854,7 +854,7 @@ const Event = (props: AppProps) => {
       callback: (msg: string) => void;
     }>;
     try {
-      if (!ticketData._id || !quest?._id) return;
+      if (!ticketData?._id || !quest?._id) return;
       if (quest.questPolicy?.questPolicy === QuestPolicyType.VerifyAgreement) {
         const verifyAgreementContext = quest.questPolicy
           ?.context as VerifyAgreementQuestContext;
@@ -1154,7 +1154,7 @@ const Event = (props: AppProps) => {
               )}
             {userData?._id &&
               !walletConnectedForTicket &&
-              ticketData.rewardPolicy?.context?.rewardChain && (
+              ticketData?.rewardPolicy?.context?.rewardChain && (
                 <Card>
                   <CardContent>
                     <Stack
@@ -1369,7 +1369,7 @@ const Event = (props: AppProps) => {
               return e._id;
             });
             const index = ids?.indexOf(openAgreementQuestId) as number;
-            if (index !== undefined && ticketData._id) {
+            if (index !== undefined && ticketData?._id) {
               try {
                 asyncCompleteQuestOfUser(
                   ticketData._id,
@@ -1395,7 +1395,7 @@ const Event = (props: AppProps) => {
         onCompleteQuiz={() => {
           if (openedQuestId) {
             const index = TypeHelper.findQuestIndex(ticketData, openedQuestId);
-            if (index !== undefined && ticketData._id) {
+            if (index !== undefined && ticketData?._id) {
               try {
                 asyncCompleteQuestOfUser(ticketData._id, openedQuestId).then(
                   (res) => {
@@ -1421,7 +1421,7 @@ const Event = (props: AppProps) => {
           if (openedQuestId) {
             showLoading();
             const index = TypeHelper.findQuestIndex(ticketData, openedQuestId);
-            if (index !== undefined && ticketData._id) {
+            if (index !== undefined && ticketData?._id) {
               try {
                 await asyncVerifySurveyQuest(openedQuestId, answers);
                 openSimpleWarningDialog("설문 응답을 완료하였습니다.");
@@ -1509,7 +1509,7 @@ const Event = (props: AppProps) => {
             return;
           }
           const index = TypeHelper.findQuestIndex(ticketData, openedQuestId);
-          if (index !== undefined && ticketData._id) {
+          if (index !== undefined && ticketData?._id) {
             try {
               await asyncVerifyScreenShotQuest(openedQuestId, imageUris);
               openSimpleWarningDialog("업로드를 완료하였습니다.");
