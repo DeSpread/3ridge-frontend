@@ -14,11 +14,11 @@ import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import React, { forwardRef, Ref, useEffect, useLayoutEffect } from "react";
 
-import { Ticket } from "../../types";
+import { PartialTicket } from "../../types";
 import TicketInfoTextSet from "../atomic/atoms/ticket-info-text-set";
 
 type EventCardProps = CardProps & {
-  ticket?: Ticket;
+  ticket?: PartialTicket;
   username?: string;
   isWinner?: boolean;
 };

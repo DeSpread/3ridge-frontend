@@ -33,7 +33,7 @@ const ShortDescriptionUpdateForm = ({
       <TextEditDialog
         open={openTextEditDialog}
         title={"설명 문구 설정"}
-        defaultText={ticketData.shortDescription}
+        defaultText={ticketData?.shortDescription}
         onCloseBtnClicked={(e) => {
           setOpenTextEditDialog(false);
         }}
