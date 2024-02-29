@@ -7,6 +7,7 @@ import {
   ChainType,
   ContentMetadata,
   Discord,
+  EventType,
   Kakao,
   QuestPolicyType,
   RewardPolicyType,
@@ -211,6 +212,7 @@ export type Ticket = {
   project?: PartialProject;
   rewardClaimedUserIds?: string[];
   visible?: boolean | null;
+  eventTypes: EventType[];
 };
 
 export type PartialProject = Partial<Project>;

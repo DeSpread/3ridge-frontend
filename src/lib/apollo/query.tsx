@@ -763,6 +763,7 @@ export const GET_TICKET_BY_ID = gql(/* GraphQL */ `
         }
       }
       visible
+      eventTypes
     }
   }
 `);

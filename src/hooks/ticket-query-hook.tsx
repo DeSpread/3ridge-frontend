@@ -126,6 +126,7 @@ export function useTicketQuery({
       rewardClaimedUsers,
       project,
       visible,
+      eventTypes,
     } = data.ticketById;
     // console.log("rewardPolicy", rewardPolicy);
     const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
@@ -201,6 +202,7 @@ export function useTicketQuery({
             : undefined,
         },
         visible,
+        eventTypes: eventTypes,
       };
     });
   };
