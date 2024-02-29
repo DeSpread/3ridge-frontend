@@ -7,9 +7,10 @@ const InputWithLabel = (
   props: {
     label?: string;
     labelWidth?: string | number;
-  } & OutlinedInputProps
+  } & OutlinedInputProps,
 ) => {
   const { label, labelWidth, ...rest } = props;
+  console.log(label, rest);
   return (
     <Stack
       direction={"row"}

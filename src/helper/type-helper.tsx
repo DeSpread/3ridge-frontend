@@ -137,7 +137,7 @@ class TypeHelper {
 
   public static convertTicket = (
     ticket: ItemOfArray<AllTicketsQuery["tickets"]>,
-  ) => {
+  ): Ticket => {
     return {
       _id: ticket._id ?? undefined,
       beginTime: ticket.beginTime ?? undefined,
@@ -164,7 +164,7 @@ class TypeHelper {
           description: _e.description ?? undefined,
           questPolicy: {
             context: TypeParseHelper.parseQuestPolicy(
-              _e.questPolicy?.context,
+              _e.questPolicy?.context ?? undefined,
               _e.questPolicy?.questPolicy,
             ),
             questPolicy: _e.questPolicy?.questPolicy ?? undefined,
@@ -202,6 +202,7 @@ class TypeHelper {
         },
       },
       visible: ticket.visible,
+      eventTypes: ticket.eventTypes,
     };
   };
 }

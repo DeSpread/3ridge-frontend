@@ -57,7 +57,7 @@ export function useTicketQuery({
   userId?: string;
   id?: string;
 }) {
-  const [ticketData, setTicketData] = useState<Ticket>({});
+  const [ticketData, setTicketData] = useState<Ticket>();
   const [verifyTwitterLikingQuest] = useMutation(VERIFY_TWITTER_LIKING_QUEST);
   const [verifyTwitterFollowQuest] = useMutation(VERIFY_TWITTER_FOLLOW_QUEST);
   const [verifyTwitterRetweetQuest] = useMutation(VERIFY_TWITTER_RETWEET_QUEST);
@@ -126,6 +126,7 @@ export function useTicketQuery({
       rewardClaimedUsers,
       project,
       visible,
+      eventTypes,
     } = data.ticketById;
     // console.log("rewardPolicy", rewardPolicy);
     const _rewardPolicy = TypeParseHelper.parseRewardPolicy(
@@ -159,7 +160,7 @@ export function useTicketQuery({
             description: e.description ?? undefined,
             questPolicy: {
               context: TypeParseHelper.parseQuestPolicy(
-                e.questPolicy?.context,
+                e.questPolicy?.context ?? undefined,
                 e.questPolicy?.questPolicy,
               ),
               questPolicy: e.questPolicy?.questPolicy ?? undefined,
@@ -201,6 +202,7 @@ export function useTicketQuery({
             : undefined,
         },
         visible,
+        eventTypes: eventTypes,
       };
     });
   };
