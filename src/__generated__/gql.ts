@@ -18,6 +18,7 @@ const documents = {
     "\n  query Links {\n    links {\n      _id\n      href\n      attributes {\n        key\n        value\n      }\n      event {\n        _id\n        title\n        imageUrl\n      }\n    }\n  }\n": types.LinksDocument,
     "\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      _id\n    }\n  }\n": types.CreateUserByEmailDocument,
     "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n": types.UpdateUserMutationDocument,
+    "\n  mutation UpdateEventToHighestPriority($eventId: String!) {\n    updateEventToHighestPriority(eventId: $eventId) {\n      _id\n      priority\n    }\n  }\n": types.UpdateEventToHighestPriorityDocument,
     "\n  mutation UpdateEventTypes($eventId: String!, $eventTypes: [EventType!]!) {\n    updateEventTypes(eventId: $eventId, eventTypes: $eventTypes)\n  }\n": types.UpdateEventTypesDocument,
     "\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n": types.UserItemFragmentDoc,
     "\n  query getUserByAccessToken {\n    userByAccessToken {\n      ...UserItem\n      wallets {\n        address\n        chain\n      }\n      userSocial {\n        twitterId\n        telegramUser {\n          authDate\n          firstName\n          hash\n          id\n          photoUrl\n          username\n        }\n      }\n      kakao {\n        id\n        connected_at\n        properties {\n          nickname\n          profile_image\n          thumbnail_image\n        }\n      }\n      discord {\n        accent_color\n        avatar\n        avatar_decoration\n        banner\n        discriminator\n        flags\n        global_name\n        id\n        locale\n        mfa_enabled\n        premium_type\n        public_flags\n        username\n      }\n      participatingTickets {\n        _id\n        imageUrl\n        description\n        project {\n          _id\n          categories\n          description\n          imageUrl\n          name\n        }\n        rewardPolicy {\n          context\n          rewardPoint\n          rewardPolicyType\n        }\n        title\n        winners {\n          _id\n          name\n        }\n        quests {\n          _id\n        }\n      }\n    }\n  }\n": types.GetUserByAccessTokenDocument,
@@ -110,6 +111,10 @@ export function gql(source: "\n  mutation CreateUserByEmail(\n    $email: String
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateEventToHighestPriority($eventId: String!) {\n    updateEventToHighestPriority(eventId: $eventId) {\n      _id\n      priority\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateEventToHighestPriority($eventId: String!) {\n    updateEventToHighestPriority(eventId: $eventId) {\n      _id\n      priority\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

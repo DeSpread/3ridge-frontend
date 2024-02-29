@@ -8,6 +8,7 @@ import EventVisibilityForm from "../form/ticket-edit-controller/event-visibility
 import LinkToPageForm from "../form/ticket-edit-controller/link-to-page-form";
 import ProjectUpdateForm from "../form/ticket-edit-controller/project-update-form";
 import ShortDescriptionUpdateForm from "../form/ticket-edit-controller/short-description-update-form";
+import UpdateEventToHighestPriorityButton from "../form/ticket-edit-controller/UpdateEventToHighestPriorityButton";
 import UserInfoDownloadForm from "../form/user-info-download-form";
 
 const TicketEditControllerWidget = (
@@ -58,6 +59,9 @@ const TicketEditControllerWidget = (
               onVisibilityChanged?.(!checked);
             }}
           />
+          {targetTicket?._id && (
+            <UpdateEventToHighestPriorityButton eventId={targetTicket._id} />
+          )}
           <ShortDescriptionUpdateForm ticketId={targetTicket?._id} />
         </Stack>
       </CardContent>
