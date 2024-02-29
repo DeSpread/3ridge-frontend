@@ -1393,6 +1393,7 @@ export const GET_All_TICKETS = gql(/* GraphQL */ `
         name
       }
       visible
+      eventTypes
     }
   }
 `);

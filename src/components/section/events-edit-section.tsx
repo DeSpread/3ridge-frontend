@@ -44,6 +44,7 @@ const TicketAddCard = (
         ticket={{
           _id: "-1",
           title: "스택스 한국 커뮤니티 OG NFT",
+          eventTypes: [],
         }}
       ></TicketCard>
       <Box

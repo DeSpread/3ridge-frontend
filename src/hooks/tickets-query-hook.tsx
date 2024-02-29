@@ -160,7 +160,7 @@ export function useTicketsQuery(props: {
       visible?: boolean | null;
     }>,
   ) => {
-    setTicketsData((prevState) => {
+    setTicketsData(() => {
       return tickets.map((e) => {
         return {
           _id: e._id ?? undefined,
