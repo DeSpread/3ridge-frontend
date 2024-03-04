@@ -1,3 +1,4 @@
+import { Telegram as TelegramIcon } from "@mui/icons-material";
 import EmailIcon from "@mui/icons-material/Email";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import {
@@ -17,7 +18,7 @@ import React from "react";
 import SecondaryButton from "../../components/atomic/atoms/secondary-button";
 import { useLoading } from "../../provider/loading/loading-provider";
 
-
+const TELEGRAM_LINK = "https://t.me/web3ridge_kr";
 const TWITTER_LINK = "https://twitter.com/3ridge_io";
 const MAIL_LINK = "mailto:support@3ridge.io?Subject=Hello!%203ridge";
 
@@ -79,6 +80,24 @@ const HomeFooter = () => {
           {/*    <AppRegistrationIcon></AppRegistrationIcon>*/}
           {/*  </IconButton>*/}
           {/*)}*/}
+          {smUp ? (
+            <Link
+              href={TELEGRAM_LINK}
+              color="inherit"
+              underline="hover"
+              style={{ marginLeft: 16 }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Typography variant={smUp ? "body1" : "caption"}>
+                텔레그램
+              </Typography>
+            </Link>
+          ) : (
+            <IconButton href={TELEGRAM_LINK}>
+              <TelegramIcon></TelegramIcon>
+            </IconButton>
+          )}
           {smUp ? (
             <Link
               href={TWITTER_LINK}
