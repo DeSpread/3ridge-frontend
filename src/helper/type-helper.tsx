@@ -202,7 +202,7 @@ class TypeHelper {
         },
       },
       visible: ticket.visible,
-      eventTypes: ticket.eventTypes,
+      eventTypes: ticket.eventTypes ?? [],
     };
   };
 }
