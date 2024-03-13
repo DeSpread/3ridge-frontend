@@ -10,7 +10,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
  * 3. It does not support dead code elimination, so it will add unused operations.
  *
- * Therefore it is highly recommended to use the babel-plugin for production.
+ * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
     "\n  query events {\n    tickets(isVisibleOnly: false) {\n      _id\n      title\n      imageUrl\n    }\n  }\n": types.EventsDocument,
@@ -18,6 +18,7 @@ const documents = {
     "\n  query Links {\n    links {\n      _id\n      href\n      attributes {\n        key\n        value\n      }\n      event {\n        _id\n        title\n        imageUrl\n      }\n    }\n  }\n": types.LinksDocument,
     "\n  mutation CreateUserByEmail(\n    $email: String!\n    $password: String!\n    $authCode: String!\n  ) {\n    createUserByEmail(email: $email, password: $password, authCode: $authCode) {\n      _id\n    }\n  }\n": types.CreateUserByEmailDocument,
     "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n": types.UpdateUserMutationDocument,
+    "\n  mutation UpdateUserEmailByAuthCode(\n    $name: String!\n    $email: String!\n    $code: String!\n  ) {\n    updateUserEmailByAuthCode(name: $name, email: $email, code: $code) {\n      __typename\n      ... on User {\n        email\n      }\n      ... on HandledError {\n        code\n        reason\n      }\n    }\n  }\n": types.UpdateUserEmailByAuthCodeDocument,
     "\n  mutation UpdateEventToHighestPriority($eventId: String!) {\n    updateEventToHighestPriority(eventId: $eventId) {\n      _id\n      priority\n    }\n  }\n": types.UpdateEventToHighestPriorityDocument,
     "\n  mutation UpdateEventTypes($eventId: String!, $eventTypes: [EventType!]!) {\n    updateEventTypes(eventId: $eventId, eventTypes: $eventTypes)\n  }\n": types.UpdateEventTypesDocument,
     "\n  fragment UserItem on User {\n    _id\n    name\n    profileImageUrl\n    email\n    type\n    rewardPoint\n  }\n": types.UserItemFragmentDoc,
@@ -93,6 +94,20 @@ const documents = {
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ *
+ *
+ * @example
+ * ```ts
+ * const query = gql(`query GetUser($id: ID!) { user(id: $id) { name } }`);
+ * ```
+ *
+ * The query argument is unknown!
+ * Please regenerate the types.
+ */
+export function gql(source: string): unknown;
+
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query events {\n    tickets(isVisibleOnly: false) {\n      _id\n      title\n      imageUrl\n    }\n  }\n"): (typeof documents)["\n  query events {\n    tickets(isVisibleOnly: false) {\n      _id\n      title\n      imageUrl\n    }\n  }\n"];
 /**
@@ -111,6 +126,10 @@ export function gql(source: "\n  mutation CreateUserByEmail(\n    $email: String
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserMutation($id: String!, $input: UserUpdateInput!) {\n    updateUser(id: $id, input: $input) {\n      _id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateUserEmailByAuthCode(\n    $name: String!\n    $email: String!\n    $code: String!\n  ) {\n    updateUserEmailByAuthCode(name: $name, email: $email, code: $code) {\n      __typename\n      ... on User {\n        email\n      }\n      ... on HandledError {\n        code\n        reason\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUserEmailByAuthCode(\n    $name: String!\n    $email: String!\n    $code: String!\n  ) {\n    updateUserEmailByAuthCode(name: $name, email: $email, code: $code) {\n      __typename\n      ... on User {\n        email\n      }\n      ... on HandledError {\n        code\n        reason\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -395,20 +414,6 @@ export function gql(source: "\n  mutation VerifyTelegramQuest(\n    $questId: St
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query AllTickets(\n    $sort: TicketSortType\n    $status: TicketStatusType\n    $eventTypes: [EventType!]\n    $isVisibleOnly: Boolean\n    $limit: Int\n    $skip: Int\n  ) {\n    tickets(\n      sort: $sort\n      status: $status\n      eventTypes: $eventTypes\n      isVisibleOnly: $isVisibleOnly\n      limit: $limit\n      skip: $skip\n    ) {\n      _id\n      beginTime\n      untilTime\n      completed\n      description\n      description_v2 {\n        contentFormatType\n        contentEncodingType\n        content\n      }\n      shortDescription\n      participants {\n        _id\n        name\n        profileImageUrl\n      }\n      imageUrl\n      quests {\n        _id\n        title\n        title_v2 {\n          contentFormatType\n          contentEncodingType\n          content\n        }\n        description\n        questPolicy {\n          context\n          questPolicy\n        }\n      }\n      project {\n        _id\n        categories\n        description\n        imageUrl\n        name\n        projectSocial {\n          discordUrl\n          officialUrl\n          telegramUrl\n          twitterUrl\n          mediumUrl\n          naverBlogUrl\n          kakaoUrl\n        }\n      }\n      rewardPolicy {\n        context\n        rewardPoint\n        rewardPolicyType\n      }\n      title\n      winners {\n        name\n      }\n      visible\n      eventTypes\n    }\n  }\n"): (typeof documents)["\n  query AllTickets(\n    $sort: TicketSortType\n    $status: TicketStatusType\n    $eventTypes: [EventType!]\n    $isVisibleOnly: Boolean\n    $limit: Int\n    $skip: Int\n  ) {\n    tickets(\n      sort: $sort\n      status: $status\n      eventTypes: $eventTypes\n      isVisibleOnly: $isVisibleOnly\n      limit: $limit\n      skip: $skip\n    ) {\n      _id\n      beginTime\n      untilTime\n      completed\n      description\n      description_v2 {\n        contentFormatType\n        contentEncodingType\n        content\n      }\n      shortDescription\n      participants {\n        _id\n        name\n        profileImageUrl\n      }\n      imageUrl\n      quests {\n        _id\n        title\n        title_v2 {\n          contentFormatType\n          contentEncodingType\n          content\n        }\n        description\n        questPolicy {\n          context\n          questPolicy\n        }\n      }\n      project {\n        _id\n        categories\n        description\n        imageUrl\n        name\n        projectSocial {\n          discordUrl\n          officialUrl\n          telegramUrl\n          twitterUrl\n          mediumUrl\n          naverBlogUrl\n          kakaoUrl\n        }\n      }\n      rewardPolicy {\n        context\n        rewardPoint\n        rewardPolicyType\n      }\n      title\n      winners {\n        name\n      }\n      visible\n      eventTypes\n    }\n  }\n"];
-
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- *
- *
- * @example
- * ```ts
- * const query = gql(`query GetUser($id: ID!) { user(id: $id) { name } }`);
- * ```
- *
- * The query argument is unknown!
- * Please regenerate the types.
-**/
-export function gql(source: string): unknown;
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

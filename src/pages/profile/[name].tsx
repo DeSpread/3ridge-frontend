@@ -1070,15 +1070,12 @@ const Profile = () => {
         onClose={() => {
           setOpenConnectEmailDialog(false);
         }}
-        onOauthComplete={async (mail) => {
-          showLoading();
-          await asyncUpdateEmail(mail);
+        onOauthComplete={() => {
           showAlert({
             title: "알림",
             content: "인증되었습니다",
           });
-          setOpenConnectEmailDialog(false);
-          closeLoading();
+          setTimeout(() => router.reload(), 1000);
         }}
       ></ConnectEmailDialog>
       <ConnectTwitterDialog
