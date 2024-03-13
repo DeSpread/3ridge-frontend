@@ -202,7 +202,7 @@ export function useTicketQuery({
             : undefined,
         },
         visible,
-        eventTypes: eventTypes,
+        eventTypes: eventTypes ?? [],
       };
     });
   };
