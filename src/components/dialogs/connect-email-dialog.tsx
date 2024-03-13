@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -24,6 +25,10 @@ import SecondaryButton from "../atomic/atoms/secondary-button";
 import MailTextField from "../atomic/molecules/mail-text-field";
 import ValidatedTextInput from "../atomic/molecules/validated-text-input";
 
+import { gql } from "@/__generated__";
+import { SendAuthCodeDocument, ErrorCodes } from "@/__generated__/graphql";
+import { useSignedUserQuery } from "@/hooks/signed-user-query-hook";
+import { useUser } from "@/hooks/user/useUser";
 
 export const CONNECT_MAIL_DIALOG_FORM_TYPE = {
   SEND_EMAIL: "SEND_EMAIL",
@@ -35,9 +40,28 @@ export type ConnectMailDialogFormType = ObjectValues<
 >;
 
 type ConnectEmailDialogProps = DialogProps & {
-  onOauthComplete: (mail: string) => void;
+  onOauthComplete: () => void;
   onCloseBtnClicked: MouseEventHandler;
 };
+
+const UPDATE_USER_EMAIL_BY_AUTH_CODE = gql(/* GraphQL */ `
+  mutation UpdateUserEmailByAuthCode(
+    $name: String!
+    $email: String!
+    $code: String!
+  ) {
+    updateUserEmailByAuthCode(name: $name, email: $email, code: $code) {
+      __typename
+      ... on User {
+        email
+      }
+      ... on HandledError {
+        code
+        reason
+      }
+    }
+  }
+`);
 
 const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
   const [mail, setMail] = useState("");
@@ -51,7 +75,50 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
+  const [sendAuthCode] = useMutation(SendAuthCodeDocument);
+  const [updateUserEmailByAuthCode] = useMutation(
+    UPDATE_USER_EMAIL_BY_AUTH_CODE,
+  );
+
+  const { userData } = useSignedUserQuery();
+
   const COUNT = 600;
+
+  async function onClickSendMailButton() {
+    try {
+      if (count > 0) {
+        return;
+      }
+      setAuthLoading(true);
+      setCodeErrorMessage("");
+      sendAuthCode({
+        variables: {
+          email: mail,
+        },
+      }).then(() => {
+        setCount(COUNT);
+        const _vDate = addSeconds(new Date(), COUNT + 1);
+        const intervalId = setInterval(() => {
+          const now = new Date();
+          //@ts-ignore
+          const distDt = _vDate - now;
+          setCount((prevState) => {
+            return prevState > 0 ? prevState - 1 : 0;
+          });
+          if (distDt < 0) {
+            clearInterval(intervalId);
+            setCount(0);
+            return;
+          }
+        }, 1000);
+      });
+    } catch (e) {
+      setCount(0);
+      showErrorAlert({ content: getLocaleErrorMessage(e) });
+    } finally {
+      setAuthLoading(false);
+    }
+  }
 
   return (
     <Dialog
@@ -135,45 +202,7 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                         background: "transparent",
                       }}
                       size={"small"}
-                      onClick={async (e) => {
-                        try {
-                          if (count > 0) {
-                            return;
-                          }
-                          setAuthLoading(true);
-                          setCodeErrorMessage("");
-                          const res =
-                            await AwsClient.getInstance().asyncRequestAuthCodeMail(
-                              mail
-                            );
-                          if (res.status === 204) {
-                            setCount(COUNT);
-                            const _vDate = addSeconds(new Date(), COUNT + 1);
-                            const intervalId = setInterval(() => {
-                              const now = new Date();
-                              //@ts-ignore
-                              const distDt = _vDate - now;
-                              setCount((prevState) => {
-                                return prevState > 0 ? prevState - 1 : 0;
-                              });
-                              if (distDt < 0) {
-                                clearInterval(intervalId);
-                                setCount(0);
-                                return;
-                              }
-                            }, 1000);
-                          } else {
-                            const data = await res.text();
-                            const message = JSON.parse(data).message;
-                            showErrorAlert({ content: message });
-                          }
-                        } catch (e) {
-                          setCount(0);
-                          showErrorAlert({ content: getLocaleErrorMessage(e) });
-                        } finally {
-                          setAuthLoading(false);
-                        }
-                      }}
+                      onClick={() => onClickSendMailButton()}
                     >
                       {authLoading && (
                         <CircularProgress size={16}></CircularProgress>
@@ -202,45 +231,7 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                       marginTop: 1,
                     }}
                     size={"small"}
-                    onClick={async (e) => {
-                      try {
-                        if (count > 0) {
-                          return;
-                        }
-                        setAuthLoading(true);
-                        setCodeErrorMessage("");
-                        const res =
-                          await AwsClient.getInstance().asyncRequestAuthCodeMail(
-                            mail
-                          );
-                        if (res.status === 204) {
-                          setCount(COUNT);
-                          const _vDate = addSeconds(new Date(), COUNT + 1);
-                          const intervalId = setInterval(() => {
-                            const now = new Date();
-                            //@ts-ignore
-                            const distDt = _vDate - now;
-                            setCount((prevState) => {
-                              return prevState > 0 ? prevState - 1 : 0;
-                            });
-                            if (distDt < 0) {
-                              clearInterval(intervalId);
-                              setCount(0);
-                              return;
-                            }
-                          }, 1000);
-                        } else {
-                          const data = await res.text();
-                          const message = JSON.parse(data).message;
-                          showErrorAlert({ content: message });
-                        }
-                      } catch (e) {
-                        setCount(0);
-                        showErrorAlert({ content: getLocaleErrorMessage(e) });
-                      } finally {
-                        setAuthLoading(false);
-                      }
-                    }}
+                    onClick={() => onClickSendMailButton()}
                   >
                     {authLoading && (
                       <CircularProgress size={16}></CircularProgress>
@@ -300,16 +291,43 @@ const ConnectEmailDialog = (props: ConnectEmailDialogProps) => {
                         onClick={async (e) => {
                           try {
                             setCodeLoading(true);
-                            const res =
-                              await AwsClient.getInstance().asyncGetAuthCodeOfMail(
-                                mail
+                            if (!userData?.name) {
+                              throw new Error(
+                                "유저 정보를 읽을 수 없습니다. 다시 시도해 주세요",
                               );
-                            const data = await res.text();
-                            const message = JSON.parse(data).message;
-                            if (message === code) {
-                              props.onOauthComplete?.(mail);
+                            }
+
+                            const res = await updateUserEmailByAuthCode({
+                              variables: {
+                                email: mail,
+                                code: code,
+                                name: userData.name,
+                              },
+                            });
+
+                            if (
+                              res.data?.updateUserEmailByAuthCode.__typename ===
+                              "HandledError"
+                            ) {
+                              if (
+                                res.data?.updateUserEmailByAuthCode.code ===
+                                ErrorCodes.Unauthorized
+                              ) {
+                                setCodeErrorMessage(
+                                  "인증 코드가 맞지 않습니다",
+                                );
+                              }
+
+                              if (
+                                res.data?.updateUserEmailByAuthCode.code ===
+                                ErrorCodes.Duplicated
+                              ) {
+                                setCodeErrorMessage(
+                                  "이미 사용중인 이메일입니다.",
+                                );
+                              }
                             } else {
-                              setCodeErrorMessage("인증 코드가 맞지 않습니다");
+                              props.onOauthComplete();
                             }
                           } catch (e) {
                             showErrorAlert({
