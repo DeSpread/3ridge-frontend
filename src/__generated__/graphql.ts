@@ -5,30 +5,32 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
-  DateTime: any;
+  DateTime: { input: any; output: any; }
 };
 
 export type AppAgreement = {
   __typename?: 'AppAgreement';
-  marketingPermission: Scalars['Boolean'];
+  marketingPermission: Scalars['Boolean']['output'];
 };
 
 export type AppAgreementInputType = {
-  marketingPermission: Scalars['Boolean'];
+  marketingPermission: Scalars['Boolean']['input'];
 };
 
 export type AuthResponse = {
   __typename?: 'AuthResponse';
-  _id: Scalars['String'];
-  accessToken: Scalars['String'];
+  _id: Scalars['String']['output'];
+  accessToken: Scalars['String']['output'];
 };
 
 export enum CategoryType {
@@ -63,80 +65,85 @@ export enum ContentFormatType {
 
 export type ContentMetadata = {
   __typename?: 'ContentMetadata';
-  content: Scalars['String'];
+  content: Scalars['String']['output'];
   contentEncodingType: ContentEncodingType;
   contentFormatType: ContentFormatType;
 };
 
 export type ContentMetadataInputType = {
-  content: Scalars['String'];
+  content: Scalars['String']['input'];
   contentEncodingType?: InputMaybe<ContentEncodingType>;
   contentFormatType?: InputMaybe<ContentFormatType>;
 };
 
 export type CreateLinkInput = {
   attributes: Array<LinkAttributeInput>;
-  eventId: Scalars['String'];
-  href: Scalars['String'];
+  eventId: Scalars['String']['input'];
+  href: Scalars['String']['input'];
 };
 
 export type DataInputType = {
-  _id?: InputMaybe<Scalars['String']>;
+  _id?: InputMaybe<Scalars['String']['input']>;
   createdUser?: InputMaybe<UserInputType>;
   ownerQuest?: InputMaybe<QuestInputType>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  values?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  values?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type Discord = {
   __typename?: 'Discord';
-  accent_color?: Maybe<Scalars['Float']>;
-  avatar?: Maybe<Scalars['String']>;
-  avatar_decoration?: Maybe<Scalars['String']>;
-  banner?: Maybe<Scalars['Float']>;
-  discriminator?: Maybe<Scalars['String']>;
-  flags?: Maybe<Scalars['Float']>;
-  global_name?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  locale?: Maybe<Scalars['String']>;
-  mfa_enabled?: Maybe<Scalars['Boolean']>;
-  premium_type?: Maybe<Scalars['Float']>;
-  public_flags?: Maybe<Scalars['Float']>;
-  username: Scalars['String'];
+  accent_color?: Maybe<Scalars['Float']['output']>;
+  avatar?: Maybe<Scalars['String']['output']>;
+  avatar_decoration?: Maybe<Scalars['String']['output']>;
+  banner?: Maybe<Scalars['Float']['output']>;
+  discriminator?: Maybe<Scalars['String']['output']>;
+  flags?: Maybe<Scalars['Float']['output']>;
+  global_name?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  locale?: Maybe<Scalars['String']['output']>;
+  mfa_enabled?: Maybe<Scalars['Boolean']['output']>;
+  premium_type?: Maybe<Scalars['Float']['output']>;
+  public_flags?: Maybe<Scalars['Float']['output']>;
+  username: Scalars['String']['output'];
 };
 
 export type DiscordInputType = {
-  accent_color?: InputMaybe<Scalars['Float']>;
-  avatar?: InputMaybe<Scalars['String']>;
-  avatar_decoration?: InputMaybe<Scalars['String']>;
-  banner?: InputMaybe<Scalars['Float']>;
-  discriminator?: InputMaybe<Scalars['String']>;
-  flags?: InputMaybe<Scalars['Float']>;
-  global_name?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  locale?: InputMaybe<Scalars['String']>;
-  mfa_enabled?: InputMaybe<Scalars['Boolean']>;
-  premium_type?: InputMaybe<Scalars['Float']>;
-  public_flags?: InputMaybe<Scalars['Float']>;
-  username: Scalars['String'];
+  accent_color?: InputMaybe<Scalars['Float']['input']>;
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  avatar_decoration?: InputMaybe<Scalars['String']['input']>;
+  banner?: InputMaybe<Scalars['Float']['input']>;
+  discriminator?: InputMaybe<Scalars['String']['input']>;
+  flags?: InputMaybe<Scalars['Float']['input']>;
+  global_name?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  locale?: InputMaybe<Scalars['String']['input']>;
+  mfa_enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  premium_type?: InputMaybe<Scalars['Float']['input']>;
+  public_flags?: InputMaybe<Scalars['Float']['input']>;
+  username: Scalars['String']['input'];
 };
 
+export enum ErrorCodes {
+  Duplicated = 'Duplicated',
+  Unauthorized = 'Unauthorized'
+}
+
 export type EventFormat = {
-  event_type: Scalars['String'];
+  event_type: Scalars['String']['input'];
   filters?: InputMaybe<Array<EventFormatFilter>>;
   group_by?: InputMaybe<Array<EventFormatGroupBy>>;
 };
 
 export type EventFormatFilter = {
-  subprop_key: Scalars['String'];
-  subprop_op: Scalars['String'];
-  subprop_type: Scalars['String'];
-  subprop_value: Array<Scalars['String']>;
+  subprop_key: Scalars['String']['input'];
+  subprop_op: Scalars['String']['input'];
+  subprop_type: Scalars['String']['input'];
+  subprop_value: Array<Scalars['String']['input']>;
 };
 
 export type EventFormatGroupBy = {
-  type: Scalars['String'];
-  value: Scalars['String'];
+  type: Scalars['String']['input'];
+  value: Scalars['String']['input'];
 };
 
 export enum EventType {
@@ -144,108 +151,114 @@ export enum EventType {
   Recommended = 'RECOMMENDED'
 }
 
+export type HandledError = {
+  __typename?: 'HandledError';
+  code: ErrorCodes;
+  reason?: Maybe<Scalars['String']['output']>;
+};
+
 export type IntegrationEmailQuest = {
   __typename?: 'IntegrationEmailQuest';
-  _id: Scalars['String'];
+  _id: Scalars['String']['output'];
   completedUsers: Array<User>;
-  createdAt: Scalars['DateTime'];
-  ownerTicketId: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  ownerTicketId: Scalars['String']['output'];
   questPolicy: QuestPolicy;
   title_v2: ContentMetadata;
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type IsCompletedQuestByUserIdResponse = {
   __typename?: 'IsCompletedQuestByUserIdResponse';
-  isCompleted: Scalars['Boolean'];
-  questId: Scalars['String'];
+  isCompleted: Scalars['Boolean']['output'];
+  questId: Scalars['String']['output'];
 };
 
 export type Kakao = {
   __typename?: 'Kakao';
-  connected_at: Scalars['String'];
-  id: Scalars['Float'];
+  connected_at: Scalars['String']['output'];
+  id: Scalars['Float']['output'];
   kakao_account?: Maybe<KakaoAccount>;
   properties?: Maybe<KakaoProperties>;
 };
 
 export type KakaoAccount = {
   __typename?: 'KakaoAccount';
-  age_range?: Maybe<Scalars['String']>;
-  age_range_needs_agreement?: Maybe<Scalars['Boolean']>;
-  birthday?: Maybe<Scalars['String']>;
-  birthday_needs_agreement?: Maybe<Scalars['Boolean']>;
-  birthday_type?: Maybe<Scalars['String']>;
-  gender?: Maybe<Scalars['String']>;
-  gender_needs_agreement?: Maybe<Scalars['Boolean']>;
-  has_age_range?: Maybe<Scalars['Boolean']>;
-  has_birthday?: Maybe<Scalars['Boolean']>;
-  has_gender?: Maybe<Scalars['Boolean']>;
-  profile_image_needs_agreement?: Maybe<Scalars['Boolean']>;
-  profile_nickname_needs_agreement?: Maybe<Scalars['Boolean']>;
+  age_range?: Maybe<Scalars['String']['output']>;
+  age_range_needs_agreement?: Maybe<Scalars['Boolean']['output']>;
+  birthday?: Maybe<Scalars['String']['output']>;
+  birthday_needs_agreement?: Maybe<Scalars['Boolean']['output']>;
+  birthday_type?: Maybe<Scalars['String']['output']>;
+  gender?: Maybe<Scalars['String']['output']>;
+  gender_needs_agreement?: Maybe<Scalars['Boolean']['output']>;
+  has_age_range?: Maybe<Scalars['Boolean']['output']>;
+  has_birthday?: Maybe<Scalars['Boolean']['output']>;
+  has_gender?: Maybe<Scalars['Boolean']['output']>;
+  profile_image_needs_agreement?: Maybe<Scalars['Boolean']['output']>;
+  profile_nickname_needs_agreement?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type KakaoAccountInputType = {
-  age_range?: InputMaybe<Scalars['String']>;
-  age_range_needs_agreement?: InputMaybe<Scalars['Boolean']>;
-  birthday?: InputMaybe<Scalars['String']>;
-  birthday_needs_agreement?: InputMaybe<Scalars['Boolean']>;
-  birthday_type?: InputMaybe<Scalars['String']>;
-  gender?: InputMaybe<Scalars['String']>;
-  gender_needs_agreement?: InputMaybe<Scalars['Boolean']>;
-  has_age_range?: InputMaybe<Scalars['Boolean']>;
-  has_birthday?: InputMaybe<Scalars['Boolean']>;
-  has_gender?: InputMaybe<Scalars['Boolean']>;
-  profile_image_needs_agreement?: InputMaybe<Scalars['Boolean']>;
-  profile_nickname_needs_agreement?: InputMaybe<Scalars['Boolean']>;
+  age_range?: InputMaybe<Scalars['String']['input']>;
+  age_range_needs_agreement?: InputMaybe<Scalars['Boolean']['input']>;
+  birthday?: InputMaybe<Scalars['String']['input']>;
+  birthday_needs_agreement?: InputMaybe<Scalars['Boolean']['input']>;
+  birthday_type?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Scalars['String']['input']>;
+  gender_needs_agreement?: InputMaybe<Scalars['Boolean']['input']>;
+  has_age_range?: InputMaybe<Scalars['Boolean']['input']>;
+  has_birthday?: InputMaybe<Scalars['Boolean']['input']>;
+  has_gender?: InputMaybe<Scalars['Boolean']['input']>;
+  profile_image_needs_agreement?: InputMaybe<Scalars['Boolean']['input']>;
+  profile_nickname_needs_agreement?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type KakaoInputType = {
-  connected_at: Scalars['String'];
-  id: Scalars['Float'];
+  connected_at: Scalars['String']['input'];
+  id: Scalars['Float']['input'];
   kakao_account?: InputMaybe<KakaoAccountInputType>;
   properties?: InputMaybe<KakaoPropertiesInputType>;
 };
 
 export type KakaoProperties = {
   __typename?: 'KakaoProperties';
-  nickname: Scalars['String'];
-  profile_image: Scalars['String'];
-  thumbnail_image: Scalars['String'];
+  nickname: Scalars['String']['output'];
+  profile_image: Scalars['String']['output'];
+  thumbnail_image: Scalars['String']['output'];
 };
 
 export type KakaoPropertiesInputType = {
-  nickname: Scalars['String'];
-  profile_image: Scalars['String'];
-  thumbnail_image: Scalars['String'];
+  nickname: Scalars['String']['input'];
+  profile_image: Scalars['String']['input'];
+  thumbnail_image: Scalars['String']['input'];
 };
 
 export type Link = {
   __typename?: 'Link';
-  _id?: Maybe<Scalars['String']>;
+  _id?: Maybe<Scalars['String']['output']>;
   attributes: Array<LinkAttribute>;
   event: Ticket;
-  href: Scalars['String'];
+  href: Scalars['String']['output'];
 };
 
 export type LinkAttribute = {
   __typename?: 'LinkAttribute';
-  key: Scalars['String'];
-  value: Scalars['String'];
+  key: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type LinkAttributeInput = {
-  key: Scalars['String'];
-  value: Scalars['String'];
+  key: Scalars['String']['input'];
+  value: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   checkAndUpdateWinner: Ticket;
-  claimReward: Scalars['Boolean'];
-  clearParticipatedAllEvents: Scalars['Boolean'];
-  clearParticipatedAllEventsByUserId: Scalars['Boolean'];
-  completeIntegrationEmailQuest: Scalars['Boolean'];
+  claimReward: Scalars['Boolean']['output'];
+  clearParticipatedAllEvents: Scalars['Boolean']['output'];
+  clearParticipatedAllEventsByUserId: Scalars['Boolean']['output'];
+  completeIntegrationEmailQuest: Scalars['Boolean']['output'];
   completeQuestOfUser: Quest;
   createIntegrationEmailQuest: IntegrationEmailQuest;
   createLink: Link;
@@ -258,24 +271,25 @@ export type Mutation = {
   createUserByWallet: User;
   deleteDiscordByName: User;
   deleteKakaoByName: User;
-  deleteQuest: Scalars['Boolean'];
-  deleteTicketById: Scalars['Boolean'];
+  deleteQuest: Scalars['Boolean']['output'];
+  deleteTicketById: Scalars['Boolean']['output'];
   participateTicketOfUser: Ticket;
   removeProject: Project;
-  removeTicketById: Scalars['Boolean'];
+  removeTicketById: Scalars['Boolean']['output'];
   removeUserByName: User;
-  reorderProject: Scalars['Boolean'];
-  sendAuthCode: Scalars['Boolean'];
+  reorderProject: Scalars['Boolean']['output'];
+  sendAuthCode: Scalars['Boolean']['output'];
   signInByEmail: AuthResponse;
   updateEventToHighestPriority: Ticket;
-  updateEventTypes: Scalars['Boolean'];
+  updateEventTypes: Scalars['Boolean']['output'];
   updateKakaoByName: User;
-  updatePasswordByEmail: Scalars['Boolean'];
+  updatePasswordByEmail: Scalars['Boolean']['output'];
   updateProject: Project;
   updateQuest: Quest;
   updateTicketById: Ticket;
   updateUser: User;
   updateUserByName: User;
+  updateUserEmailByAuthCode: UpdateUserEmailByAuthCodeResult;
   verify3ridgePoint: Quest;
   verifyAptosQuest: Quest;
   verifyDiscordQuest: Quest;
@@ -291,36 +305,36 @@ export type Mutation = {
 
 
 export type MutationCheckAndUpdateWinnerArgs = {
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationClaimRewardArgs = {
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationClearParticipatedAllEventsByUserIdArgs = {
-  userId: Scalars['String'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationCompleteIntegrationEmailQuestArgs = {
-  eventId: Scalars['String'];
+  eventId: Scalars['String']['input'];
 };
 
 
 export type MutationCompleteQuestOfUserArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationCreateIntegrationEmailQuestArgs = {
-  ownerTicketId: Scalars['String'];
+  ownerTicketId: Scalars['String']['input'];
   title_v2: ContentMetadataInputType;
 };
 
@@ -332,46 +346,46 @@ export type MutationCreateLinkArgs = {
 
 export type MutationCreateProjectArgs = {
   categories?: InputMaybe<Array<CategoryType>>;
-  description?: InputMaybe<Scalars['String']>;
-  imageUrl?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  priority?: InputMaybe<Scalars['Float']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  priority?: InputMaybe<Scalars['Float']['input']>;
   projectSocial?: InputMaybe<ProjectSocialInputType>;
 };
 
 
 export type MutationCreateQuestArgs = {
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   questPolicy?: InputMaybe<QuestPolicyInputType>;
-  ticketId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
   title_v2?: InputMaybe<ContentMetadataInputType>;
 };
 
 
 export type MutationCreateTicketArgs = {
-  beginTime?: InputMaybe<Scalars['DateTime']>;
-  description?: InputMaybe<Scalars['String']>;
+  beginTime?: InputMaybe<Scalars['DateTime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   description_v2?: InputMaybe<ContentMetadataInputType>;
-  imageUrl?: InputMaybe<Scalars['String']>;
-  project?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
+  project?: InputMaybe<Scalars['String']['input']>;
   quests?: InputMaybe<Array<QuestCreateInput>>;
   rewardPolicy?: InputMaybe<RewardPolicyInputType>;
-  shortDescription?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-  untilTime?: InputMaybe<Scalars['DateTime']>;
+  shortDescription?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  untilTime?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
 export type MutationCreateUserByEmailArgs = {
-  authCode: Scalars['String'];
-  email: Scalars['String'];
-  password: Scalars['String'];
+  authCode: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 
 export type MutationCreateUserByGmailArgs = {
-  gmail: Scalars['String'];
-  profileImageUrl?: InputMaybe<Scalars['String']>;
+  gmail: Scalars['String']['input'];
+  profileImageUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -381,271 +395,278 @@ export type MutationCreateUserByKakaoArgs = {
 
 
 export type MutationCreateUserByWalletArgs = {
-  address: Scalars['String'];
+  address: Scalars['String']['input'];
   chain: ChainType;
-  createdAt?: InputMaybe<Scalars['DateTime']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
 export type MutationDeleteDiscordByNameArgs = {
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteKakaoByNameArgs = {
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteQuestArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteTicketByIdArgs = {
-  ticketId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
 };
 
 
 export type MutationParticipateTicketOfUserArgs = {
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationRemoveProjectArgs = {
-  projectId: Scalars['String'];
+  projectId: Scalars['String']['input'];
 };
 
 
 export type MutationRemoveTicketByIdArgs = {
-  ticketId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
 };
 
 
 export type MutationRemoveUserByNameArgs = {
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationReorderProjectArgs = {
-  projectId: Scalars['String'];
-  to: Scalars['Float'];
+  projectId: Scalars['String']['input'];
+  to: Scalars['Float']['input'];
 };
 
 
 export type MutationSendAuthCodeArgs = {
-  to: Scalars['String'];
+  to: Scalars['String']['input'];
 };
 
 
 export type MutationSignInByEmailArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 
 export type MutationUpdateEventToHighestPriorityArgs = {
-  eventId: Scalars['String'];
+  eventId: Scalars['String']['input'];
 };
 
 
 export type MutationUpdateEventTypesArgs = {
-  eventId: Scalars['String'];
+  eventId: Scalars['String']['input'];
   eventTypes: Array<EventType>;
 };
 
 
 export type MutationUpdateKakaoByNameArgs = {
   kakaoInfo: KakaoInputType;
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationUpdatePasswordByEmailArgs = {
-  authCode: Scalars['String'];
-  email: Scalars['String'];
-  password: Scalars['String'];
+  authCode: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 
 export type MutationUpdateProjectArgs = {
   categories?: InputMaybe<Array<CategoryType>>;
-  description?: InputMaybe<Scalars['String']>;
-  imageUrl?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  priority?: InputMaybe<Scalars['Float']>;
-  projectId: Scalars['String'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  priority?: InputMaybe<Scalars['Float']['input']>;
+  projectId: Scalars['String']['input'];
   projectSocial?: InputMaybe<ProjectSocialInputType>;
   tickets?: InputMaybe<Array<TicketInputType>>;
 };
 
 
 export type MutationUpdateQuestArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
   questPolicy?: InputMaybe<QuestPolicyInputType>;
   title_v2?: InputMaybe<ContentMetadataInputType>;
 };
 
 
 export type MutationUpdateTicketByIdArgs = {
-  beginTime?: InputMaybe<Scalars['DateTime']>;
-  completed?: InputMaybe<Scalars['Boolean']>;
-  description?: InputMaybe<Scalars['String']>;
+  beginTime?: InputMaybe<Scalars['DateTime']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   description_v2?: InputMaybe<ContentMetadataInputType>;
   eventTypes?: InputMaybe<Array<EventType>>;
-  imageUrl?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   participants?: InputMaybe<Array<UserInputType>>;
-  project?: InputMaybe<Scalars['String']>;
+  project?: InputMaybe<Scalars['String']['input']>;
   quests?: InputMaybe<Array<QuestCreateInput>>;
   rewardPolicy?: InputMaybe<RewardPolicyInputType>;
-  shortDescription?: InputMaybe<Scalars['String']>;
-  ticketId: Scalars['String'];
-  title?: InputMaybe<Scalars['String']>;
-  untilTime?: InputMaybe<Scalars['DateTime']>;
-  visible?: InputMaybe<Scalars['Boolean']>;
+  shortDescription?: InputMaybe<Scalars['String']['input']>;
+  ticketId: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+  untilTime?: InputMaybe<Scalars['DateTime']['input']>;
+  visible?: InputMaybe<Scalars['Boolean']['input']>;
   winners?: InputMaybe<Array<UserInputType>>;
 };
 
 
 export type MutationUpdateUserArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   input: UserUpdateInput;
 };
 
 
 export type MutationUpdateUserByNameArgs = {
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   userUpdateInput: UserUpdateInput;
 };
 
 
+export type MutationUpdateUserEmailByAuthCodeArgs = {
+  code: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+
 export type MutationVerify3ridgePointArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifyAptosQuestArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifyDiscordQuestArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifyOnChainQuestArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifyScreenShotQuestArgs = {
-  picUris: Array<Scalars['String']>;
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  picUris: Array<Scalars['String']['input']>;
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifySurveyQuestArgs = {
-  questId: Scalars['String'];
-  surveyContents: Array<Scalars['String']>;
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  surveyContents: Array<Scalars['String']['input']>;
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifyTelegramQuestArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifyTwitterFollowQuestArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifyTwitterLikingQuestArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifyTwitterLinkingAndRetweetQuestArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationVerifyTwitterRetweetQuestArgs = {
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 export type Project = {
   __typename?: 'Project';
-  _id?: Maybe<Scalars['String']>;
+  _id?: Maybe<Scalars['String']['output']>;
   categories?: Maybe<Array<CategoryType>>;
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   eventTypes?: Maybe<Array<EventType>>;
-  imageUrl?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']['output']>;
   managedUsers?: Maybe<Array<User>>;
-  name: Scalars['String'];
-  priority?: Maybe<Scalars['Float']>;
+  name: Scalars['String']['output'];
+  priority?: Maybe<Scalars['Float']['output']>;
   projectSocial?: Maybe<ProjectSocial>;
   tickets?: Maybe<Array<Ticket>>;
 };
 
 export type ProjectInputType = {
-  _id?: InputMaybe<Scalars['String']>;
+  _id?: InputMaybe<Scalars['String']['input']>;
   categories?: InputMaybe<Array<CategoryType>>;
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   eventTypes?: InputMaybe<Array<EventType>>;
-  imageUrl?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   managedUsers?: InputMaybe<Array<UserInputType>>;
-  name?: InputMaybe<Scalars['String']>;
-  priority?: InputMaybe<Scalars['Float']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  priority?: InputMaybe<Scalars['Float']['input']>;
   projectSocial?: InputMaybe<ProjectSocialInputType>;
   tickets?: InputMaybe<Array<TicketInputType>>;
 };
 
 export type ProjectSocial = {
   __typename?: 'ProjectSocial';
-  discordUrl?: Maybe<Scalars['String']>;
-  kakaoUrl?: Maybe<Scalars['String']>;
-  mediumUrl?: Maybe<Scalars['String']>;
-  naverBlogUrl?: Maybe<Scalars['String']>;
-  officialUrl?: Maybe<Scalars['String']>;
-  telegramUrl?: Maybe<Scalars['String']>;
-  twitterUrl?: Maybe<Scalars['String']>;
+  discordUrl?: Maybe<Scalars['String']['output']>;
+  kakaoUrl?: Maybe<Scalars['String']['output']>;
+  mediumUrl?: Maybe<Scalars['String']['output']>;
+  naverBlogUrl?: Maybe<Scalars['String']['output']>;
+  officialUrl?: Maybe<Scalars['String']['output']>;
+  telegramUrl?: Maybe<Scalars['String']['output']>;
+  twitterUrl?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProjectSocialInputType = {
-  discordUrl?: InputMaybe<Scalars['String']>;
-  kakaoUrl?: InputMaybe<Scalars['String']>;
-  mediumUrl?: InputMaybe<Scalars['String']>;
-  naverBlogUrl?: InputMaybe<Scalars['String']>;
-  officialUrl?: InputMaybe<Scalars['String']>;
-  telegramUrl?: InputMaybe<Scalars['String']>;
-  twitterUrl?: InputMaybe<Scalars['String']>;
+  discordUrl?: InputMaybe<Scalars['String']['input']>;
+  kakaoUrl?: InputMaybe<Scalars['String']['input']>;
+  mediumUrl?: InputMaybe<Scalars['String']['input']>;
+  naverBlogUrl?: InputMaybe<Scalars['String']['input']>;
+  officialUrl?: InputMaybe<Scalars['String']['input']>;
+  telegramUrl?: InputMaybe<Scalars['String']['input']>;
+  twitterUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Query = {
@@ -655,18 +676,18 @@ export type Query = {
   completedTickets: Array<Ticket>;
   findMissedTickets: Array<Ticket>;
   findQuestById: Quest;
-  findRankByUserId: Scalars['Float'];
-  getWalletAddressOfWinner: Array<Scalars['String']>;
-  hasToAddressTransactionForAddress: Scalars['Boolean'];
+  findRankByUserId: Scalars['Float']['output'];
+  getWalletAddressOfWinner: Array<Scalars['String']['output']>;
+  hasToAddressTransactionForAddress: Scalars['Boolean']['output'];
   isCompletedQuestByUserId: IsCompletedQuestByUserIdResponse;
-  isCompletedTicket: Scalars['Boolean'];
+  isCompletedTicket: Scalars['Boolean']['output'];
   isFollowTwitterByUserId: User;
   isLikingTweetByUserId: User;
-  isNeedEmailAccountMigration: Scalars['Boolean'];
-  isRegisteredWallet: Scalars['Boolean'];
+  isNeedEmailAccountMigration: Scalars['Boolean']['output'];
+  isRegisteredWallet: Scalars['Boolean']['output'];
   isRetweetedTwitterByUserId: User;
-  isUserInDiscordServer: Scalars['Boolean'];
-  isUserInTelegramGroup: Scalars['Boolean'];
+  isUserInDiscordServer: Scalars['Boolean']['output'];
+  isUserInTelegramGroup: Scalars['Boolean']['output'];
   links: Array<Link>;
   projectById: Project;
   projectByName: Array<Project>;
@@ -684,133 +705,133 @@ export type Query = {
   userByWalletAddress: User;
   users: Array<User>;
   usersOrderByRewardPointDesc: Array<User>;
-  validateAuthCode: Scalars['Boolean'];
+  validateAuthCode: Scalars['Boolean']['output'];
 };
 
 
 export type QueryAuthArgs = {
-  userId: Scalars['String'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type QueryFindQuestByIdArgs = {
-  questId: Scalars['String'];
+  questId: Scalars['String']['input'];
 };
 
 
 export type QueryFindRankByUserIdArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  userId: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['String']['input'];
 };
 
 
 export type QueryGetWalletAddressOfWinnerArgs = {
-  chainType: Scalars['String'];
-  ticketId: Scalars['String'];
+  chainType: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
 };
 
 
 export type QueryHasToAddressTransactionForAddressArgs = {
-  chain: Scalars['String'];
-  fromAddress: Scalars['String'];
-  toAddresses?: InputMaybe<Array<Scalars['String']>>;
+  chain: Scalars['String']['input'];
+  fromAddress: Scalars['String']['input'];
+  toAddresses?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type QueryIsCompletedQuestByUserIdArgs = {
-  questId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type QueryIsCompletedTicketArgs = {
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type QueryIsFollowTwitterByUserIdArgs = {
-  targetTwitterUsername: Scalars['String'];
-  userId: Scalars['String'];
+  targetTwitterUsername: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type QueryIsLikingTweetByUserIdArgs = {
-  targetTweetId: Scalars['String'];
-  userId: Scalars['String'];
+  targetTweetId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type QueryIsNeedEmailAccountMigrationArgs = {
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 };
 
 
 export type QueryIsRegisteredWalletArgs = {
-  address: Scalars['String'];
+  address: Scalars['String']['input'];
   chain: ChainType;
-  createdAt?: InputMaybe<Scalars['DateTime']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
 export type QueryIsRetweetedTwitterByUserIdArgs = {
-  targetTweetId: Scalars['String'];
-  userId: Scalars['String'];
+  targetTweetId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type QueryIsUserInDiscordServerArgs = {
-  channelId: Scalars['String'];
-  userId: Scalars['String'];
+  channelId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type QueryIsUserInTelegramGroupArgs = {
-  groupId: Scalars['Float'];
-  userId: Scalars['String'];
+  groupId: Scalars['Float']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type QueryProjectByIdArgs = {
-  projectId: Scalars['String'];
+  projectId: Scalars['String']['input'];
 };
 
 
 export type QueryProjectByNameArgs = {
-  projectName: Scalars['String'];
+  projectName: Scalars['String']['input'];
 };
 
 
 export type QueryProjectsArgs = {
   eventTypes?: InputMaybe<Array<EventType>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryQuestsArgs = {
-  eventId: Scalars['String'];
+  eventId: Scalars['String']['input'];
 };
 
 
 export type QuerySegmentationArgs = {
   e: EventFormat;
-  end: Scalars['String'];
-  start: Scalars['String'];
+  end: Scalars['String']['input'];
+  start: Scalars['String']['input'];
 };
 
 
 export type QueryTicketByIdArgs = {
-  ticketId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
 };
 
 
 export type QueryTicketsArgs = {
   eventTypes?: InputMaybe<Array<EventType>>;
-  isVisibleOnly?: InputMaybe<Scalars['Boolean']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
+  isVisibleOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<TicketSortType>;
   status?: InputMaybe<TicketStatusType>;
 };
@@ -818,103 +839,103 @@ export type QueryTicketsArgs = {
 
 export type QueryTicketsByProjectIdArgs = {
   eventTypes?: InputMaybe<Array<EventType>>;
-  isVisibleOnly?: InputMaybe<Scalars['Boolean']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  projectId: Scalars['String'];
-  skip?: InputMaybe<Scalars['Int']>;
+  isVisibleOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  projectId: Scalars['String']['input'];
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<TicketSortType>;
   status?: InputMaybe<TicketStatusType>;
 };
 
 
 export type QueryUserByEmailArgs = {
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 };
 
 
 export type QueryUserByGmailArgs = {
-  gmail: Scalars['String'];
+  gmail: Scalars['String']['input'];
 };
 
 
 export type QueryUserByKakaoIdArgs = {
-  kakaoId: Scalars['Float'];
+  kakaoId: Scalars['Float']['input'];
 };
 
 
 export type QueryUserByNameArgs = {
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type QueryUserByWalletAddressArgs = {
-  walletAddress: Scalars['String'];
+  walletAddress: Scalars['String']['input'];
 };
 
 
 export type QueryUsersOrderByRewardPointDescArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryValidateAuthCodeArgs = {
-  code: Scalars['String'];
-  email: Scalars['String'];
+  code: Scalars['String']['input'];
+  email: Scalars['String']['input'];
 };
 
 export type Quest = {
   __typename?: 'Quest';
-  _id: Scalars['String'];
+  _id: Scalars['String']['output'];
   completedUsers: Array<User>;
   dataCollection?: Maybe<Array<QuestData>>;
-  description: Scalars['String'];
-  ownerTicketId: Scalars['String'];
+  description: Scalars['String']['output'];
+  ownerTicketId: Scalars['String']['output'];
   questGuides?: Maybe<Array<ContentMetadata>>;
   questPolicy?: Maybe<QuestPolicy>;
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   title_v2: ContentMetadata;
 };
 
 export type QuestCreateInput = {
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   questPolicy?: InputMaybe<QuestPolicyInputType>;
-  ticketId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
   title_v2?: InputMaybe<ContentMetadataInputType>;
 };
 
 export type QuestData = {
   __typename?: 'QuestData';
-  _id?: Maybe<Scalars['String']>;
+  _id?: Maybe<Scalars['String']['output']>;
   createdUser?: Maybe<User>;
   ownerQuest?: Maybe<Quest>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  values?: Maybe<Array<Scalars['String']>>;
+  tags?: Maybe<Array<Scalars['String']['output']>>;
+  values?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type QuestInputType = {
-  _id?: InputMaybe<Scalars['String']>;
+  _id?: InputMaybe<Scalars['String']['input']>;
   completedUsers?: InputMaybe<Array<UserInputType>>;
   dataCollection?: InputMaybe<Array<DataInputType>>;
-  description?: InputMaybe<Scalars['String']>;
-  ownerTicketId?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  ownerTicketId?: InputMaybe<Scalars['String']['input']>;
   questGuides?: InputMaybe<Array<ContentMetadataInputType>>;
   questPolicy?: InputMaybe<QuestPolicyInputType>;
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   title_v2?: InputMaybe<ContentMetadataInputType>;
 };
 
 export type QuestPolicy = {
   __typename?: 'QuestPolicy';
-  context?: Maybe<Scalars['String']>;
+  context?: Maybe<Scalars['String']['output']>;
   questPolicy: QuestPolicyType;
-  rewardPoint?: Maybe<Scalars['Float']>;
+  rewardPoint?: Maybe<Scalars['Float']['output']>;
 };
 
 export type QuestPolicyInputType = {
-  context?: InputMaybe<Scalars['String']>;
+  context?: InputMaybe<Scalars['String']['input']>;
   questPolicy: QuestPolicyType;
-  rewardPoint?: InputMaybe<Scalars['Float']>;
+  rewardPoint?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export enum QuestPolicyType {
@@ -946,14 +967,14 @@ export enum QuestPolicyType {
 
 export type RewardPolicy = {
   __typename?: 'RewardPolicy';
-  context: Scalars['String'];
-  rewardPoint: Scalars['Float'];
+  context: Scalars['String']['output'];
+  rewardPoint: Scalars['Float']['output'];
   rewardPolicyType: RewardPolicyType;
 };
 
 export type RewardPolicyInputType = {
-  context: Scalars['String'];
-  rewardPoint: Scalars['Float'];
+  context: Scalars['String']['input'];
+  rewardPoint: Scalars['Float']['input'];
   rewardPolicyType: RewardPolicyType;
 };
 
@@ -965,95 +986,95 @@ export enum RewardPolicyType {
 
 export type Segmentation = {
   __typename?: 'Segmentation';
-  series: Array<Array<Scalars['Float']>>;
+  series: Array<Array<Scalars['Float']['output']>>;
   seriesCollapsed: Array<Array<SeriesCollapsed>>;
   seriesLabels: Array<Array<SeriesLabelsUnion>>;
-  xValues: Array<Scalars['String']>;
+  xValues: Array<Scalars['String']['output']>;
 };
 
 export type SeriesCollapsed = {
   __typename?: 'SeriesCollapsed';
-  setId: Scalars['String'];
-  value: Scalars['String'];
+  setId: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type SeriesLabelNumber = {
   __typename?: 'SeriesLabelNumber';
-  value: Scalars['Float'];
+  value: Scalars['Float']['output'];
 };
 
 export type SeriesLabelString = {
   __typename?: 'SeriesLabelString';
-  value: Scalars['String'];
+  value: Scalars['String']['output'];
 };
 
 export type SeriesLabelsUnion = SeriesLabelNumber | SeriesLabelString;
 
 export type TelegramUser = {
   __typename?: 'TelegramUser';
-  authDate?: Maybe<Scalars['Float']>;
-  firstName?: Maybe<Scalars['String']>;
-  hash?: Maybe<Scalars['String']>;
-  id: Scalars['Float'];
-  photoUrl?: Maybe<Scalars['String']>;
-  username: Scalars['String'];
+  authDate?: Maybe<Scalars['Float']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  hash?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Float']['output'];
+  photoUrl?: Maybe<Scalars['String']['output']>;
+  username: Scalars['String']['output'];
 };
 
 export type TelegramUserInputType = {
-  authDate?: InputMaybe<Scalars['Float']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  hash?: InputMaybe<Scalars['String']>;
-  id: Scalars['Float'];
-  photoUrl?: InputMaybe<Scalars['String']>;
-  username: Scalars['String'];
+  authDate?: InputMaybe<Scalars['Float']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  hash?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Float']['input'];
+  photoUrl?: InputMaybe<Scalars['String']['input']>;
+  username: Scalars['String']['input'];
 };
 
 export type Ticket = {
   __typename?: 'Ticket';
-  _id?: Maybe<Scalars['String']>;
-  beginTime?: Maybe<Scalars['DateTime']>;
-  completed?: Maybe<Scalars['Boolean']>;
+  _id?: Maybe<Scalars['String']['output']>;
+  beginTime?: Maybe<Scalars['DateTime']['output']>;
+  completed?: Maybe<Scalars['Boolean']['output']>;
   completedUsers?: Maybe<Array<User>>;
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   description_v2?: Maybe<ContentMetadata>;
   eventTypes: Array<EventType>;
-  imageUrl?: Maybe<Scalars['String']>;
-  participantCount?: Maybe<Scalars['Float']>;
+  imageUrl?: Maybe<Scalars['String']['output']>;
+  participantCount?: Maybe<Scalars['Float']['output']>;
   participants?: Maybe<Array<User>>;
-  pointUpdateType?: Maybe<Scalars['String']>;
-  priority?: Maybe<Scalars['Float']>;
+  pointUpdateType?: Maybe<Scalars['String']['output']>;
+  priority?: Maybe<Scalars['Float']['output']>;
   project?: Maybe<Project>;
   quests?: Maybe<Array<Quest>>;
   rewardClaimedUsers?: Maybe<Array<User>>;
   rewardPolicy?: Maybe<RewardPolicy>;
-  shortDescription?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  untilTime?: Maybe<Scalars['DateTime']>;
-  visible?: Maybe<Scalars['Boolean']>;
+  shortDescription?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  untilTime?: Maybe<Scalars['DateTime']['output']>;
+  visible?: Maybe<Scalars['Boolean']['output']>;
   winners?: Maybe<Array<User>>;
 };
 
 export type TicketInputType = {
-  _id?: InputMaybe<Scalars['String']>;
-  beginTime?: InputMaybe<Scalars['DateTime']>;
-  completed?: InputMaybe<Scalars['Boolean']>;
+  _id?: InputMaybe<Scalars['String']['input']>;
+  beginTime?: InputMaybe<Scalars['DateTime']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
   completedUsers?: InputMaybe<Array<UserInputType>>;
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   description_v2?: InputMaybe<ContentMetadataInputType>;
   eventTypes?: InputMaybe<Array<EventType>>;
-  imageUrl?: InputMaybe<Scalars['String']>;
-  participantCount?: InputMaybe<Scalars['Float']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
+  participantCount?: InputMaybe<Scalars['Float']['input']>;
   participants?: InputMaybe<Array<UserInputType>>;
-  pointUpdateType?: InputMaybe<Scalars['String']>;
-  priority?: InputMaybe<Scalars['Float']>;
+  pointUpdateType?: InputMaybe<Scalars['String']['input']>;
+  priority?: InputMaybe<Scalars['Float']['input']>;
   project?: InputMaybe<ProjectInputType>;
   quests?: InputMaybe<Array<QuestInputType>>;
   rewardClaimedUsers?: InputMaybe<Array<UserInputType>>;
   rewardPolicy?: InputMaybe<RewardPolicyInputType>;
-  shortDescription?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-  untilTime?: InputMaybe<Scalars['DateTime']>;
-  visible?: InputMaybe<Scalars['Boolean']>;
+  shortDescription?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  untilTime?: InputMaybe<Scalars['DateTime']['input']>;
+  visible?: InputMaybe<Scalars['Boolean']['input']>;
   winners?: InputMaybe<Array<UserInputType>>;
 };
 
@@ -1069,37 +1090,39 @@ export enum TicketStatusType {
   Missed = 'MISSED'
 }
 
+export type UpdateUserEmailByAuthCodeResult = HandledError | User;
+
 export type User = {
   __typename?: 'User';
-  _id?: Maybe<Scalars['String']>;
+  _id?: Maybe<Scalars['String']['output']>;
   appAgreement?: Maybe<AppAgreement>;
   discord?: Maybe<Discord>;
-  email?: Maybe<Scalars['String']>;
-  gmail?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']['output']>;
+  gmail?: Maybe<Scalars['String']['output']>;
   kakao?: Maybe<Kakao>;
   managedProjects?: Maybe<Array<Project>>;
-  name?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']['output']>;
   participatingTickets?: Maybe<Array<Ticket>>;
-  profileImageUrl?: Maybe<Scalars['String']>;
-  rewardPoint?: Maybe<Scalars['Float']>;
-  type?: Maybe<Scalars['String']>;
+  profileImageUrl?: Maybe<Scalars['String']['output']>;
+  rewardPoint?: Maybe<Scalars['Float']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
   userSocial?: Maybe<UserSocial>;
   wallets?: Maybe<Array<UserWallet>>;
 };
 
 export type UserInputType = {
-  _id?: InputMaybe<Scalars['String']>;
+  _id?: InputMaybe<Scalars['String']['input']>;
   appAgreement?: InputMaybe<AppAgreementInputType>;
   discord?: InputMaybe<DiscordInputType>;
-  email?: InputMaybe<Scalars['String']>;
-  gmail?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  gmail?: InputMaybe<Scalars['String']['input']>;
   kakao?: InputMaybe<KakaoInputType>;
   managedProjects?: InputMaybe<Array<ProjectInputType>>;
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   participatingTickets?: InputMaybe<Array<TicketInputType>>;
-  profileImageUrl?: InputMaybe<Scalars['String']>;
-  rewardPoint?: InputMaybe<Scalars['Float']>;
-  type?: InputMaybe<Scalars['String']>;
+  profileImageUrl?: InputMaybe<Scalars['String']['input']>;
+  rewardPoint?: InputMaybe<Scalars['Float']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
   userSocial?: InputMaybe<UserSocialInputType>;
   wallets?: InputMaybe<Array<UserWalletInputType>>;
 };
@@ -1107,37 +1130,37 @@ export type UserInputType = {
 export type UserSocial = {
   __typename?: 'UserSocial';
   telegramUser?: Maybe<TelegramUser>;
-  twitterId?: Maybe<Scalars['String']>;
+  twitterId?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserSocialInputType = {
   telegramUser?: InputMaybe<TelegramUserInputType>;
-  twitterId?: InputMaybe<Scalars['String']>;
+  twitterId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserUpdateInput = {
   appAgreement?: InputMaybe<AppAgreementInputType>;
   discord?: InputMaybe<DiscordInputType>;
-  email?: InputMaybe<Scalars['String']>;
-  gmail?: InputMaybe<Scalars['String']>;
-  profileImageUrl?: InputMaybe<Scalars['String']>;
-  rewardPoint?: InputMaybe<Scalars['Float']>;
-  type?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  gmail?: InputMaybe<Scalars['String']['input']>;
+  profileImageUrl?: InputMaybe<Scalars['String']['input']>;
+  rewardPoint?: InputMaybe<Scalars['Float']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
   userSocial?: InputMaybe<UserSocialInputType>;
   wallets?: InputMaybe<Array<UserWalletInputType>>;
 };
 
 export type UserWallet = {
   __typename?: 'UserWallet';
-  address: Scalars['String'];
+  address: Scalars['String']['output'];
   chain: ChainType;
-  createdAt?: Maybe<Scalars['DateTime']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type UserWalletInputType = {
-  address: Scalars['String'];
+  address: Scalars['String']['input'];
   chain: ChainType;
-  createdAt?: InputMaybe<Scalars['DateTime']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1158,31 +1181,40 @@ export type LinksQueryVariables = Exact<{ [key: string]: never; }>;
 export type LinksQuery = { __typename?: 'Query', links: Array<{ __typename?: 'Link', _id?: string | null, href: string, attributes: Array<{ __typename?: 'LinkAttribute', key: string, value: string }>, event: { __typename?: 'Ticket', _id?: string | null, title?: string | null, imageUrl?: string | null } }> };
 
 export type CreateUserByEmailMutationVariables = Exact<{
-  email: Scalars['String'];
-  password: Scalars['String'];
-  authCode: Scalars['String'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  authCode: Scalars['String']['input'];
 }>;
 
 
 export type CreateUserByEmailMutation = { __typename?: 'Mutation', createUserByEmail: { __typename?: 'User', _id?: string | null } };
 
 export type UpdateUserMutationMutationVariables = Exact<{
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   input: UserUpdateInput;
 }>;
 
 
 export type UpdateUserMutationMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', _id?: string | null } };
 
+export type UpdateUserEmailByAuthCodeMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  code: Scalars['String']['input'];
+}>;
+
+
+export type UpdateUserEmailByAuthCodeMutation = { __typename?: 'Mutation', updateUserEmailByAuthCode: { __typename: 'HandledError', code: ErrorCodes, reason?: string | null } | { __typename: 'User', email?: string | null } };
+
 export type UpdateEventToHighestPriorityMutationVariables = Exact<{
-  eventId: Scalars['String'];
+  eventId: Scalars['String']['input'];
 }>;
 
 
 export type UpdateEventToHighestPriorityMutation = { __typename?: 'Mutation', updateEventToHighestPriority: { __typename?: 'Ticket', _id?: string | null, priority?: number | null } };
 
 export type UpdateEventTypesMutationVariables = Exact<{
-  eventId: Scalars['String'];
+  eventId: Scalars['String']['input'];
   eventTypes: Array<EventType> | EventType;
 }>;
 
@@ -1200,8 +1232,8 @@ export type GetUserByAccessTokenQuery = { __typename?: 'Query', userByAccessToke
   ) };
 
 export type SignInByEmailMutationVariables = Exact<{
-  email: Scalars['String'];
-  password: Scalars['String'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 }>;
 
 
@@ -1216,96 +1248,96 @@ export type UsersQuery = { __typename?: 'Query', users: Array<(
   )> };
 
 export type GetUsersOrderByRewardPointDescQueryVariables = Exact<{
-  skip?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
 export type GetUsersOrderByRewardPointDescQuery = { __typename?: 'Query', usersOrderByRewardPointDesc: Array<{ __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null, email?: string | null, rewardPoint?: number | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null } | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null }> };
 
 export type FindRankByUserIdQueryVariables = Exact<{
-  userId: Scalars['String'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type FindRankByUserIdQuery = { __typename?: 'Query', findRankByUserId: number };
 
 export type GetUserByKakaoIdQueryVariables = Exact<{
-  kakaoId: Scalars['Float'];
+  kakaoId: Scalars['Float']['input'];
 }>;
 
 
 export type GetUserByKakaoIdQuery = { __typename?: 'Query', userByKakaoId: { __typename?: 'User', _id?: string | null, email?: string | null, gmail?: string | null, name?: string | null, profileImageUrl?: string | null, rewardPoint?: number | null, participatingTickets?: Array<{ __typename?: 'Ticket', _id?: string | null, imageUrl?: string | null, description?: string | null, title?: string | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string }> | null }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } };
 
 export type GetUserByNameQueryVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 }>;
 
 
 export type GetUserByNameQuery = { __typename?: 'Query', userByName: { __typename?: 'User', _id?: string | null, email?: string | null, gmail?: string | null, name?: string | null, profileImageUrl?: string | null, rewardPoint?: number | null, participatingTickets?: Array<{ __typename?: 'Ticket', _id?: string | null, imageUrl?: string | null, description?: string | null, title?: string | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string }> | null }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } };
 
 export type GetUserByEmailQueryVariables = Exact<{
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 }>;
 
 
 export type GetUserByEmailQuery = { __typename?: 'Query', userByEmail?: { __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null, email?: string | null, rewardPoint?: number | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } | null };
 
 export type UserByGmailQueryVariables = Exact<{
-  gmail: Scalars['String'];
+  gmail: Scalars['String']['input'];
 }>;
 
 
 export type UserByGmailQuery = { __typename?: 'Query', userByGmail: { __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null, gmail?: string | null, rewardPoint?: number | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } };
 
 export type GetUserByWalletAddressQueryVariables = Exact<{
-  walletAddress: Scalars['String'];
+  walletAddress: Scalars['String']['input'];
 }>;
 
 
 export type GetUserByWalletAddressQuery = { __typename?: 'Query', userByWalletAddress: { __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null, email?: string | null, rewardPoint?: number | null, wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null, userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null, kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null } | null, discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } };
 
 export type ValidateAuthCodeQueryVariables = Exact<{
-  email: Scalars['String'];
-  code: Scalars['String'];
+  email: Scalars['String']['input'];
+  code: Scalars['String']['input'];
 }>;
 
 
 export type ValidateAuthCodeQuery = { __typename?: 'Query', validateAuthCode: boolean };
 
 export type SendAuthCodeMutationVariables = Exact<{
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 }>;
 
 
 export type SendAuthCodeMutation = { __typename?: 'Mutation', sendAuthCode: boolean };
 
 export type IsNeedEmailAccountMigrationQueryVariables = Exact<{
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 }>;
 
 
 export type IsNeedEmailAccountMigrationQuery = { __typename?: 'Query', isNeedEmailAccountMigration: boolean };
 
 export type UpdatePasswordByEmailMutationVariables = Exact<{
-  email: Scalars['String'];
-  password: Scalars['String'];
-  authCode: Scalars['String'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  authCode: Scalars['String']['input'];
 }>;
 
 
 export type UpdatePasswordByEmailMutation = { __typename?: 'Mutation', updatePasswordByEmail: boolean };
 
 export type CreateUserByGmailMutationVariables = Exact<{
-  gmail: Scalars['String'];
-  profileImageUrl: Scalars['String'];
+  gmail: Scalars['String']['input'];
+  profileImageUrl: Scalars['String']['input'];
 }>;
 
 
 export type CreateUserByGmailMutation = { __typename?: 'Mutation', createUserByGmail: { __typename?: 'User', name?: string | null } };
 
 export type CreateUserByWalletMutationVariables = Exact<{
-  address: Scalars['String'];
+  address: Scalars['String']['input'];
   chain: ChainType;
 }>;
 
@@ -1320,7 +1352,7 @@ export type CreateUserByKakaoMutationVariables = Exact<{
 export type CreateUserByKakaoMutation = { __typename?: 'Mutation', createUserByKakao: { __typename?: 'User', name?: string | null } };
 
 export type UpdateUserWalletByNameMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   wallets?: InputMaybe<Array<UserWalletInputType> | UserWalletInputType>;
 }>;
 
@@ -1328,15 +1360,15 @@ export type UpdateUserWalletByNameMutationVariables = Exact<{
 export type UpdateUserWalletByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', wallets?: Array<{ __typename?: 'UserWallet', address: string, chain: ChainType }> | null } };
 
 export type UpdateUserProfileImageByNameMutationVariables = Exact<{
-  name: Scalars['String'];
-  profileImageUrl: Scalars['String'];
+  name: Scalars['String']['input'];
+  profileImageUrl: Scalars['String']['input'];
 }>;
 
 
 export type UpdateUserProfileImageByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', profileImageUrl?: string | null } };
 
 export type UpdateUserAppAgreementByNameMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   appAgreement: AppAgreementInputType;
 }>;
 
@@ -1344,23 +1376,23 @@ export type UpdateUserAppAgreementByNameMutationVariables = Exact<{
 export type UpdateUserAppAgreementByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', appAgreement?: { __typename?: 'AppAgreement', marketingPermission: boolean } | null } };
 
 export type UpdateUserEmailByNameMutationVariables = Exact<{
-  name: Scalars['String'];
-  email: Scalars['String'];
+  name: Scalars['String']['input'];
+  email: Scalars['String']['input'];
 }>;
 
 
 export type UpdateUserEmailByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', email?: string | null } };
 
 export type UpdateUserRewardByNameMutationVariables = Exact<{
-  name: Scalars['String'];
-  rewardPoint: Scalars['Float'];
+  name: Scalars['String']['input'];
+  rewardPoint: Scalars['Float']['input'];
 }>;
 
 
 export type UpdateUserRewardByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', rewardPoint?: number | null } };
 
 export type UpdateUserSocialByNameMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   userSocial: UserSocialInputType;
 }>;
 
@@ -1368,7 +1400,7 @@ export type UpdateUserSocialByNameMutationVariables = Exact<{
 export type UpdateUserSocialByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', userSocial?: { __typename?: 'UserSocial', twitterId?: string | null, telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null } };
 
 export type UpdateUserDiscordByNameMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   discord?: InputMaybe<DiscordInputType>;
 }>;
 
@@ -1376,15 +1408,15 @@ export type UpdateUserDiscordByNameMutationVariables = Exact<{
 export type UpdateUserDiscordByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', discord?: { __typename?: 'Discord', accent_color?: number | null, avatar?: string | null, avatar_decoration?: string | null, banner?: number | null, discriminator?: string | null, flags?: number | null, global_name?: string | null, id: string, locale?: string | null, mfa_enabled?: boolean | null, premium_type?: number | null, public_flags?: number | null, username: string } | null } };
 
 export type UpdateUserTwitterByNameMutationVariables = Exact<{
-  name: Scalars['String'];
-  twitterId: Scalars['String'];
+  name: Scalars['String']['input'];
+  twitterId: Scalars['String']['input'];
 }>;
 
 
 export type UpdateUserTwitterByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', userSocial?: { __typename?: 'UserSocial', twitterId?: string | null } | null } };
 
 export type UpdateUserTelegramByNameMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   telegramUser: TelegramUserInputType;
 }>;
 
@@ -1392,7 +1424,7 @@ export type UpdateUserTelegramByNameMutationVariables = Exact<{
 export type UpdateUserTelegramByNameMutation = { __typename?: 'Mutation', updateUserByName: { __typename?: 'User', userSocial?: { __typename?: 'UserSocial', telegramUser?: { __typename?: 'TelegramUser', authDate?: number | null, firstName?: string | null, hash?: string | null, id: number, photoUrl?: string | null, username: string } | null } | null } };
 
 export type UpdateKakaoByNameMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   kakaoInfo: KakaoInputType;
 }>;
 
@@ -1400,14 +1432,14 @@ export type UpdateKakaoByNameMutationVariables = Exact<{
 export type UpdateKakaoByNameMutation = { __typename?: 'Mutation', updateKakaoByName: { __typename?: 'User', kakao?: { __typename?: 'Kakao', id: number, connected_at: string, properties?: { __typename?: 'KakaoProperties', nickname: string, profile_image: string, thumbnail_image: string } | null, kakao_account?: { __typename?: 'KakaoAccount', age_range?: string | null, age_range_needs_agreement?: boolean | null, birthday?: string | null, birthday_needs_agreement?: boolean | null, birthday_type?: string | null, gender?: string | null, gender_needs_agreement?: boolean | null, has_age_range?: boolean | null, has_birthday?: boolean | null, has_gender?: boolean | null, profile_image_needs_agreement?: boolean | null, profile_nickname_needs_agreement?: boolean | null } | null } | null } };
 
 export type DeleteKakaoByNameMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 }>;
 
 
 export type DeleteKakaoByNameMutation = { __typename?: 'Mutation', deleteKakaoByName: { __typename?: 'User', _id?: string | null } };
 
 export type DeleteDiscordByNameMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 }>;
 
 
@@ -1417,14 +1449,14 @@ export type TicketsQueryVariables = Exact<{
   sort?: InputMaybe<TicketSortType>;
   status?: InputMaybe<TicketStatusType>;
   eventTypes?: InputMaybe<Array<EventType> | EventType>;
-  isVisibleOnly?: InputMaybe<Scalars['Boolean']>;
+  isVisibleOnly?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type TicketsQuery = { __typename?: 'Query', tickets: Array<{ __typename?: 'Ticket', _id?: string | null, beginTime?: any | null, untilTime?: any | null, completed?: boolean | null, description?: string | null, shortDescription?: string | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, eventTypes: Array<EventType>, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', _id?: string | null, name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string, title?: string | null, description: string, title_v2: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string }, questPolicy?: { __typename?: 'QuestPolicy', context?: string | null, questPolicy: QuestPolicyType } | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null }> };
 
 export type GetTicketByIdQueryVariables = Exact<{
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 }>;
 
 
@@ -1438,113 +1470,113 @@ export type ProjectsQueryVariables = Exact<{
 export type ProjectsQuery = { __typename?: 'Query', projects: Array<{ __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, priority?: number | null, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null }> };
 
 export type ProjectByIdQueryVariables = Exact<{
-  projectId: Scalars['String'];
+  projectId: Scalars['String']['input'];
 }>;
 
 
 export type ProjectByIdQuery = { __typename?: 'Query', projectById: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, priority?: number | null, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } };
 
 export type TicketsByProjectIdQueryVariables = Exact<{
-  projectId: Scalars['String'];
+  projectId: Scalars['String']['input'];
   sort?: InputMaybe<TicketSortType>;
   status?: InputMaybe<TicketStatusType>;
   eventTypes?: InputMaybe<Array<EventType> | EventType>;
-  isVisibleOnly?: InputMaybe<Scalars['Boolean']>;
+  isVisibleOnly?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type TicketsByProjectIdQuery = { __typename?: 'Query', ticketsByProjectId: Array<{ __typename?: 'Ticket', _id?: string | null, completed?: boolean | null, description?: string | null, imageUrl?: string | null, title?: string | null, visible?: boolean | null, eventTypes: Array<EventType>, description_v2?: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string } | null, participants?: Array<{ __typename?: 'User', name?: string | null, profileImageUrl?: string | null }> | null, quests?: Array<{ __typename?: 'Quest', _id: string, title?: string | null, description: string, title_v2: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string }, questPolicy?: { __typename?: 'QuestPolicy', context?: string | null, questPolicy: QuestPolicyType } | null }> | null, project?: { __typename?: 'Project', _id?: string | null, categories?: Array<CategoryType> | null, description?: string | null, imageUrl?: string | null, name: string, projectSocial?: { __typename?: 'ProjectSocial', discordUrl?: string | null, officialUrl?: string | null, telegramUrl?: string | null, twitterUrl?: string | null, mediumUrl?: string | null, naverBlogUrl?: string | null, kakaoUrl?: string | null } | null } | null, rewardPolicy?: { __typename?: 'RewardPolicy', context: string, rewardPoint: number, rewardPolicyType: RewardPolicyType } | null, winners?: Array<{ __typename?: 'User', name?: string | null }> | null }> };
 
 export type VerifyTwitterLinkingAndRetweetQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type VerifyTwitterLinkingAndRetweetQuestMutation = { __typename?: 'Mutation', verifyTwitterLinkingAndRetweetQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyTwitterLikingQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type VerifyTwitterLikingQuestMutation = { __typename?: 'Mutation', verifyTwitterLikingQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyTwitterFollowQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type VerifyTwitterFollowQuestMutation = { __typename?: 'Mutation', verifyTwitterFollowQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyTwitterRetweetQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type VerifyTwitterRetweetQuestMutation = { __typename?: 'Mutation', verifyTwitterRetweetQuest: { __typename?: 'Quest', _id: string } };
 
 export type Verify3ridgePointMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type Verify3ridgePointMutation = { __typename?: 'Mutation', verify3ridgePoint: { __typename?: 'Quest', _id: string } };
 
 export type VerifyDiscordQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type VerifyDiscordQuestMutation = { __typename?: 'Mutation', verifyDiscordQuest: { __typename?: 'Quest', _id: string } };
 
 export type IsCompletedQuestByUserIdQueryVariables = Exact<{
-  questId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type IsCompletedQuestByUserIdQuery = { __typename?: 'Query', isCompletedQuestByUserId: { __typename?: 'IsCompletedQuestByUserIdResponse', isCompleted: boolean, questId: string } };
 
 export type CompleteQuestOfUserMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type CompleteQuestOfUserMutation = { __typename?: 'Mutation', completeQuestOfUser: { __typename?: 'Quest', _id: string, title?: string | null, description: string, title_v2: { __typename?: 'ContentMetadata', contentFormatType: ContentFormatType, contentEncodingType: ContentEncodingType, content: string }, questPolicy?: { __typename?: 'QuestPolicy', context?: string | null, questPolicy: QuestPolicyType } | null } };
 
 export type ClaimRewardMutationVariables = Exact<{
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type ClaimRewardMutation = { __typename?: 'Mutation', claimReward: boolean };
 
 export type VerifyAptosQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type VerifyAptosQuestMutation = { __typename?: 'Mutation', verifyAptosQuest: { __typename?: 'Quest', _id: string } };
 
 export type IsRegisteredWalletQueryVariables = Exact<{
-  address: Scalars['String'];
+  address: Scalars['String']['input'];
   chain: ChainType;
 }>;
 
@@ -1552,63 +1584,63 @@ export type IsRegisteredWalletQueryVariables = Exact<{
 export type IsRegisteredWalletQuery = { __typename?: 'Query', isRegisteredWallet: boolean };
 
 export type ClearParticipatedAllEventsByUserIdMutationVariables = Exact<{
-  userId: Scalars['String'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type ClearParticipatedAllEventsByUserIdMutation = { __typename?: 'Mutation', clearParticipatedAllEventsByUserId: boolean };
 
 export type UpdateTicketVisibleMutationVariables = Exact<{
-  ticketId: Scalars['String'];
-  visible?: InputMaybe<Scalars['Boolean']>;
+  ticketId: Scalars['String']['input'];
+  visible?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type UpdateTicketVisibleMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
 
 export type UpdateTicketShortDescriptionMutationVariables = Exact<{
-  ticketId: Scalars['String'];
-  shortDescription?: InputMaybe<Scalars['String']>;
+  ticketId: Scalars['String']['input'];
+  shortDescription?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
 export type UpdateTicketShortDescriptionMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
 
 export type UpdateTicketImageUrlMutationVariables = Exact<{
-  ticketId: Scalars['String'];
-  imageUrl?: InputMaybe<Scalars['String']>;
+  ticketId: Scalars['String']['input'];
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
 export type UpdateTicketImageUrlMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
 
 export type UpdateTicketTitleMutationVariables = Exact<{
-  ticketId: Scalars['String'];
-  title?: InputMaybe<Scalars['String']>;
+  ticketId: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
 export type UpdateTicketTitleMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
 
 export type UpdateTicketProjectMutationVariables = Exact<{
-  ticketId: Scalars['String'];
-  project?: InputMaybe<Scalars['String']>;
+  ticketId: Scalars['String']['input'];
+  project?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
 export type UpdateTicketProjectMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
 
 export type UpdateTicketDateRangeTimeMutationVariables = Exact<{
-  ticketId: Scalars['String'];
-  beginTime?: InputMaybe<Scalars['DateTime']>;
-  untilTime?: InputMaybe<Scalars['DateTime']>;
+  ticketId: Scalars['String']['input'];
+  beginTime?: InputMaybe<Scalars['DateTime']['input']>;
+  untilTime?: InputMaybe<Scalars['DateTime']['input']>;
 }>;
 
 
 export type UpdateTicketDateRangeTimeMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
 
 export type UpdateTicketDescriptionMutationVariables = Exact<{
-  ticketId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
   description_v2?: InputMaybe<ContentMetadataInputType>;
 }>;
 
@@ -1616,7 +1648,7 @@ export type UpdateTicketDescriptionMutationVariables = Exact<{
 export type UpdateTicketDescriptionMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
 
 export type UpdateTicketRewardPolicyMutationVariables = Exact<{
-  ticketId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
   rewardPolicy?: InputMaybe<RewardPolicyInputType>;
 }>;
 
@@ -1624,9 +1656,9 @@ export type UpdateTicketRewardPolicyMutationVariables = Exact<{
 export type UpdateTicketRewardPolicyMutation = { __typename?: 'Mutation', updateTicketById: { __typename?: 'Ticket', _id?: string | null } };
 
 export type CreateQuestMutationVariables = Exact<{
-  ticketId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
   title_v2?: InputMaybe<ContentMetadataInputType>;
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   questPolicy?: InputMaybe<QuestPolicyInputType>;
 }>;
 
@@ -1634,16 +1666,16 @@ export type CreateQuestMutationVariables = Exact<{
 export type CreateQuestMutation = { __typename?: 'Mutation', createQuest: { __typename?: 'Quest', _id: string } };
 
 export type DeleteQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
 }>;
 
 
 export type DeleteQuestMutation = { __typename?: 'Mutation', deleteQuest: boolean };
 
 export type UpdateQuestMutationVariables = Exact<{
-  description: Scalars['String'];
-  id: Scalars['String'];
+  description: Scalars['String']['input'];
+  id: Scalars['String']['input'];
   questPolicy?: InputMaybe<QuestPolicyInputType>;
   title_v2?: InputMaybe<ContentMetadataInputType>;
 }>;
@@ -1652,11 +1684,11 @@ export type UpdateQuestMutationVariables = Exact<{
 export type UpdateQuestMutation = { __typename?: 'Mutation', updateQuest: { __typename?: 'Quest', _id: string } };
 
 export type CreateTicketMutationVariables = Exact<{
-  beginTime?: InputMaybe<Scalars['DateTime']>;
-  untilTime?: InputMaybe<Scalars['DateTime']>;
-  title?: InputMaybe<Scalars['String']>;
+  beginTime?: InputMaybe<Scalars['DateTime']['input']>;
+  untilTime?: InputMaybe<Scalars['DateTime']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   description_v2?: InputMaybe<ContentMetadataInputType>;
-  imageUrl?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   rewardPolicy?: InputMaybe<RewardPolicyInputType>;
 }>;
 
@@ -1664,45 +1696,45 @@ export type CreateTicketMutationVariables = Exact<{
 export type CreateTicketMutation = { __typename?: 'Mutation', createTicket: { __typename?: 'Ticket', _id?: string | null } };
 
 export type DeleteTicketMutationVariables = Exact<{
-  ticketId: Scalars['String'];
+  ticketId: Scalars['String']['input'];
 }>;
 
 
 export type DeleteTicketMutation = { __typename?: 'Mutation', removeTicketById: boolean };
 
 export type VerifySurveyQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  surveyContents: Array<Scalars['String']> | Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  surveyContents: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type VerifySurveyQuestMutation = { __typename?: 'Mutation', verifySurveyQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyScreenShotQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
-  picUris: Array<Scalars['String']> | Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+  picUris: Array<Scalars['String']['input']> | Scalars['String']['input'];
 }>;
 
 
 export type VerifyScreenShotQuestMutation = { __typename?: 'Mutation', verifyScreenShotQuest: { __typename?: 'Quest', _id: string } };
 
 export type RemoveProjectMutationVariables = Exact<{
-  projectId: Scalars['String'];
+  projectId: Scalars['String']['input'];
 }>;
 
 
 export type RemoveProjectMutation = { __typename?: 'Mutation', removeProject: { __typename?: 'Project', _id?: string | null } };
 
 export type CreateProjectMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   categories?: InputMaybe<Array<CategoryType> | CategoryType>;
-  priority?: InputMaybe<Scalars['Float']>;
-  description?: InputMaybe<Scalars['String']>;
-  imageUrl?: InputMaybe<Scalars['String']>;
+  priority?: InputMaybe<Scalars['Float']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   projectSocial?: InputMaybe<ProjectSocialInputType>;
 }>;
 
@@ -1710,11 +1742,11 @@ export type CreateProjectMutationVariables = Exact<{
 export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', _id?: string | null } };
 
 export type UpdateProjectMutationVariables = Exact<{
-  projectId: Scalars['String'];
-  description?: InputMaybe<Scalars['String']>;
-  imageUrl?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  priority?: InputMaybe<Scalars['Float']>;
+  projectId: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  priority?: InputMaybe<Scalars['Float']['input']>;
   projectSocial?: InputMaybe<ProjectSocialInputType>;
 }>;
 
@@ -1722,26 +1754,26 @@ export type UpdateProjectMutationVariables = Exact<{
 export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject: { __typename?: 'Project', _id?: string | null } };
 
 export type ReorderProjectMutationVariables = Exact<{
-  projectId: Scalars['String'];
-  to: Scalars['Float'];
+  projectId: Scalars['String']['input'];
+  to: Scalars['Float']['input'];
 }>;
 
 
 export type ReorderProjectMutation = { __typename?: 'Mutation', reorderProject: boolean };
 
 export type VerifyOnChainQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
 export type VerifyOnChainQuestMutation = { __typename?: 'Mutation', verifyOnChainQuest: { __typename?: 'Quest', _id: string } };
 
 export type VerifyTelegramQuestMutationVariables = Exact<{
-  questId: Scalars['String'];
-  ticketId: Scalars['String'];
-  userId: Scalars['String'];
+  questId: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 }>;
 
 
@@ -1751,9 +1783,9 @@ export type AllTicketsQueryVariables = Exact<{
   sort?: InputMaybe<TicketSortType>;
   status?: InputMaybe<TicketStatusType>;
   eventTypes?: InputMaybe<Array<EventType> | EventType>;
-  isVisibleOnly?: InputMaybe<Scalars['Boolean']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
+  isVisibleOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -1765,11 +1797,12 @@ export const CreateLinkDocument = {"kind":"Document","definitions":[{"kind":"Ope
 export const LinksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Links"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"links"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"href"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}}]}}]}}]}}]} as unknown as DocumentNode<LinksQuery, LinksQueryVariables>;
 export const CreateUserByEmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUserByEmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUserByEmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}},{"kind":"Argument","name":{"kind":"Name","value":"authCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<CreateUserByEmailMutation, CreateUserByEmailMutationVariables>;
 export const UpdateUserMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserUpdateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutationMutation, UpdateUserMutationMutationVariables>;
+export const UpdateUserEmailByAuthCodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserEmailByAuthCode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserEmailByAuthCode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"HandledError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"reason"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateUserEmailByAuthCodeMutation, UpdateUserEmailByAuthCodeMutationVariables>;
 export const UpdateEventToHighestPriorityDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateEventToHighestPriority"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"eventId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateEventToHighestPriority"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"eventId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"eventId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}}]}}]} as unknown as DocumentNode<UpdateEventToHighestPriorityMutation, UpdateEventToHighestPriorityMutationVariables>;
 export const UpdateEventTypesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateEventTypes"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"eventId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"eventTypes"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EventType"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateEventTypes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"eventId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"eventId"}}},{"kind":"Argument","name":{"kind":"Name","value":"eventTypes"},"value":{"kind":"Variable","name":{"kind":"Name","value":"eventTypes"}}}]}]}}]} as unknown as DocumentNode<UpdateEventTypesMutation, UpdateEventTypesMutationVariables>;
-export const GetUserByAccessTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getUserByAccessToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userByAccessToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserItem"}},{"kind":"Field","name":{"kind":"Name","value":"wallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userSocial"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"twitterId"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authDate"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"hash"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"photoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"kakao"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"connected_at"}},{"kind":"Field","name":{"kind":"Name","value":"properties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"profile_image"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnail_image"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"discord"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accent_color"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"avatar_decoration"}},{"kind":"Field","name":{"kind":"Name","value":"banner"}},{"kind":"Field","name":{"kind":"Name","value":"discriminator"}},{"kind":"Field","name":{"kind":"Name","value":"flags"}},{"kind":"Field","name":{"kind":"Name","value":"global_name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"locale"}},{"kind":"Field","name":{"kind":"Name","value":"mfa_enabled"}},{"kind":"Field","name":{"kind":"Name","value":"premium_type"}},{"kind":"Field","name":{"kind":"Name","value":"public_flags"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}},{"kind":"Field","name":{"kind":"Name","value":"participatingTickets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"categories"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"context"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicyType"}}]}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"winners"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"quests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]}}]}},...UserItemFragmentDoc.definitions]} as unknown as DocumentNode<GetUserByAccessTokenQuery, GetUserByAccessTokenQueryVariables>;
+export const GetUserByAccessTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getUserByAccessToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userByAccessToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserItem"}},{"kind":"Field","name":{"kind":"Name","value":"wallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userSocial"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"twitterId"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authDate"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"hash"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"photoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"kakao"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"connected_at"}},{"kind":"Field","name":{"kind":"Name","value":"properties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"profile_image"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnail_image"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"discord"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accent_color"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"avatar_decoration"}},{"kind":"Field","name":{"kind":"Name","value":"banner"}},{"kind":"Field","name":{"kind":"Name","value":"discriminator"}},{"kind":"Field","name":{"kind":"Name","value":"flags"}},{"kind":"Field","name":{"kind":"Name","value":"global_name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"locale"}},{"kind":"Field","name":{"kind":"Name","value":"mfa_enabled"}},{"kind":"Field","name":{"kind":"Name","value":"premium_type"}},{"kind":"Field","name":{"kind":"Name","value":"public_flags"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}},{"kind":"Field","name":{"kind":"Name","value":"participatingTickets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"categories"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"context"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicyType"}}]}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"winners"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"quests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserItem"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}}]}}]} as unknown as DocumentNode<GetUserByAccessTokenQuery, GetUserByAccessTokenQueryVariables>;
 export const SignInByEmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SignInByEmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signInByEmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"accessToken"}}]}}]}}]} as unknown as DocumentNode<SignInByEmailMutation, SignInByEmailMutationVariables>;
-export const UsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserItem"}}]}}]}},...UserItemFragmentDoc.definitions]} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
+export const UsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserItem"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserItem"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}}]}}]} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
 export const GetUsersOrderByRewardPointDescDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUsersOrderByRewardPointDesc"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"0"}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"25"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersOrderByRewardPointDesc"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"wallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}},{"kind":"Field","name":{"kind":"Name","value":"userSocial"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"twitterId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"kakao"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"connected_at"}},{"kind":"Field","name":{"kind":"Name","value":"properties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"profile_image"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnail_image"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"discord"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accent_color"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"avatar_decoration"}},{"kind":"Field","name":{"kind":"Name","value":"banner"}},{"kind":"Field","name":{"kind":"Name","value":"discriminator"}},{"kind":"Field","name":{"kind":"Name","value":"flags"}},{"kind":"Field","name":{"kind":"Name","value":"global_name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"locale"}},{"kind":"Field","name":{"kind":"Name","value":"mfa_enabled"}},{"kind":"Field","name":{"kind":"Name","value":"premium_type"}},{"kind":"Field","name":{"kind":"Name","value":"public_flags"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]}}]} as unknown as DocumentNode<GetUsersOrderByRewardPointDescQuery, GetUsersOrderByRewardPointDescQueryVariables>;
 export const FindRankByUserIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FindRankByUserId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"findRankByUserId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}]}}]} as unknown as DocumentNode<FindRankByUserIdQuery, FindRankByUserIdQueryVariables>;
 export const GetUserByKakaoIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserByKakaoId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"kakaoId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userByKakaoId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"kakaoId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"kakaoId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"gmail"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"participatingTickets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"categories"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"context"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPolicyType"}}]}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"winners"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"quests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"profileImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPoint"}},{"kind":"Field","name":{"kind":"Name","value":"userSocial"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"twitterId"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authDate"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"hash"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"photoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"wallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"chain"}}]}},{"kind":"Field","name":{"kind":"Name","value":"kakao"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"connected_at"}},{"kind":"Field","name":{"kind":"Name","value":"properties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"profile_image"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnail_image"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"discord"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accent_color"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"avatar_decoration"}},{"kind":"Field","name":{"kind":"Name","value":"banner"}},{"kind":"Field","name":{"kind":"Name","value":"discriminator"}},{"kind":"Field","name":{"kind":"Name","value":"flags"}},{"kind":"Field","name":{"kind":"Name","value":"global_name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"locale"}},{"kind":"Field","name":{"kind":"Name","value":"mfa_enabled"}},{"kind":"Field","name":{"kind":"Name","value":"premium_type"}},{"kind":"Field","name":{"kind":"Name","value":"public_flags"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]}}]} as unknown as DocumentNode<GetUserByKakaoIdQuery, GetUserByKakaoIdQueryVariables>;
