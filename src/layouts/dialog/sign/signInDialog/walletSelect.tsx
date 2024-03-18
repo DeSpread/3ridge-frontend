@@ -4,11 +4,11 @@ import Image from "next/image";
 import ResourceHelper from "@/helper/resource-helper";
 import TypeHelper from "@/helper/type-helper";
 import { useMobile } from "@/provider/mobile/mobile-context";
-import { SupportedNetwork } from "@/types";
+import { SupportedNetwork, WalletName } from "@/types";
 
 interface WalletSelectProps {
   network: SupportedNetwork;
-  onChangeWallet?: (value: string) => void;
+  onChangeWallet?: (value: WalletName) => void;
 }
 
 export default function WalletSelect(props: WalletSelectProps) {

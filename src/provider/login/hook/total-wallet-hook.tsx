@@ -1,3 +1,5 @@
+import { Account } from "@aptos-labs/ts-sdk";
+import { AccountInfo } from "@aptos-labs/wallet-adapter-core";
 import { useWallet as useAptosWallet } from "@aptos-labs/wallet-adapter-react";
 import { useWallet as useSuiWallet } from "@suiet/wallet-kit";
 import { useWeb3Modal } from "@web3modal/react";
@@ -25,7 +27,6 @@ import {
   WalletName,
 } from "../../../types";
 
-
 export function useTotalWallet() {
   const [connectedNetwork, setConnectedNetwork] = useState("");
   const [changedCounter, setChangedCounter] = useState(0);
@@ -36,7 +37,7 @@ export function useTotalWallet() {
     status: evmStatus,
   } = useEvmAccount();
   const {
-    connect: evmConnect,
+    connectAsync: evmConnect,
     connectors: evmConnectors,
     status: evmConnectStatus,
   } = useEvmConnect({
@@ -96,10 +97,10 @@ export function useTotalWallet() {
     ownerStxAddress,
   ]);
 
-  const asyncConnectWallet = async (
+  async function asyncConnectWallet(
     network: SupportedNetwork,
-    walletName: WalletName
-  ) => {
+    walletName: WalletName,
+  ): Promise<{ connected: boolean; msg: string; account?: AccountInfo }> {
     try {
       if (!isWalletInstalled(network, walletName)) {
         return {
@@ -108,35 +109,58 @@ export function useTotalWallet() {
         };
       }
       if (network === SUPPORTED_NETWORKS.APTOS) {
-        aptosConnect(aptosWallets[0].name);
+        if (!aptosConnected) {
+          const result = await aptosConnect(aptosWallets[0].name);
+          return {
+            connected: true,
+            msg: "success",
+            account: result ?? undefined,
+          };
+        }
+        return {
+          connected: true,
+          msg: "success",
+          account: aptosAccount ?? undefined,
+        };
       } else if (network === SUPPORTED_NETWORKS.SUI) {
         const item = [...suiConfiguredWallets, ...suiDetectedWallets].filter(
-          (e) => e.name === "Sui Wallet"
+          (e) => e.name === "Sui Wallet",
         );
         await suiSelect(item[0].name);
       } else if (network === SUPPORTED_NETWORKS.EVM) {
         if (walletName === "WalletConnect") {
-          open();
+          await open();
         } else {
-          const connectors = evmConnectors.filter((e) => e.name === walletName);
-          const connector = connectors[0];
-          evmConnect({ connector });
+          if (!evmConnected) {
+            const connectors = evmConnectors.filter(
+              (e) => e.name === walletName,
+            );
+            const connector = connectors[0];
+            await evmConnect({ connector });
+          }
         }
       } else if (network === SUPPORTED_NETWORKS.STACKS) {
-        stacksConnect();
+        await stacksConnect();
       }
       return {
         connected: true,
         msg: "success",
       };
     } catch (e) {
+      if (e === "Petra wallet is already connected") {
+        console.error(e);
+        return {
+          connected: true,
+          msg: "success",
+        };
+      }
       throw new AppError(getErrorMessage(e));
     }
-  };
+  }
 
   const isWalletInstalled = (
     network: SupportedNetwork,
-    walletName: WalletName
+    walletName: WalletName,
   ) => {
     if (network === SUPPORTED_NETWORKS.APTOS) {
       if (aptosWallets[0].readyState === "NotDetected") {
@@ -145,7 +169,7 @@ export function useTotalWallet() {
       return true;
     } else if (network === SUPPORTED_NETWORKS.SUI) {
       const item = [...suiConfiguredWallets, ...suiDetectedWallets].filter(
-        (e) => e.name === "Sui Wallet"
+        (e) => e.name === "Sui Wallet",
       );
       if (item.length === 0) {
         return false;
@@ -178,7 +202,7 @@ export function useTotalWallet() {
       return {
         network: connectedNetwork,
         address: getAccountAddress(
-          TypeHelper.convertToSuppoertedNetwork(connectedNetwork)
+          TypeHelper.convertToSuppoertedNetwork(connectedNetwork),
         ),
       };
     }

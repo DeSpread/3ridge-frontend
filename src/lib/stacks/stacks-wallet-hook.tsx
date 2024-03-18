@@ -24,7 +24,7 @@ function getStacksAccount(appPrivateKey: string) {
     AddressVersion.MainnetSingleSig,
     AddressHashMode.SerializeP2PKH,
     1,
-    [publicKey]
+    [publicKey],
   );
   return { privateKey, address };
 }
@@ -49,16 +49,22 @@ const useStacksWallet = () => {
   }, [userSession]);
 
   const connect = () => {
-    showConnect({
-      appDetails: {
-        name: "Stacks Next.js Starter",
-        icon: "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/favicon.ico",
-      },
-      redirectTo: "/",
-      onFinish: () => {
-        window.location.reload();
-      },
-      userSession,
+    return new Promise<string>((resolve, reject) => {
+      showConnect({
+        appDetails: {
+          name: "Stacks Next.js Starter",
+          icon: "https://3ridge.s3.ap-northeast-2.amazonaws.com/icon/favicon.ico",
+        },
+        redirectTo: "/",
+        onFinish: ({ authResponse }) => {
+          resolve(authResponse);
+          // window.location.reload();
+        },
+        onCancel: () => {
+          reject();
+        },
+        userSession,
+      });
     });
   };
 
