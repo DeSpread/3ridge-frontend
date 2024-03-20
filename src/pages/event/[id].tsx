@@ -12,6 +12,7 @@ import { useTheme } from "@mui/material/styles";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useSession, signIn } from "next-auth/react";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import { useGetSet, useMountedState } from "react-use";
 import { useSetRecoilState } from "recoil";
@@ -168,6 +169,7 @@ const Event = (props: AppProps) => {
   const [lazyFire, setLazyFire] = React.useState(false);
   const setBackDirectionPath = useSetRecoilState(backDirectionPathState);
   const { asyncUploadImage } = useSimpleStorage();
+  const { data: session } = useSession();
 
   useEffect(() => {
     if (router.isReady && router.query.devProvider === "shortRouter") {
@@ -1018,6 +1020,14 @@ const Event = (props: AppProps) => {
           updateVerifyState(index);
         }
         myEvent.params.callback("success");
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.DiscordGuildJoin
+      ) {
+        if (session && session.provider === "discord") {
+          updateVerifyState(index);
+        } else {
+          signIn("discord");
+        }
       }
     } catch (e) {
       const errorMessage = getErrorMessage(e);

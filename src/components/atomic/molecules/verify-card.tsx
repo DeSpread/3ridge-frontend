@@ -25,7 +25,7 @@ import ContentMetaDataRenderComponent from "../atoms/content-meta-data-render-co
 import PrimaryButton from "../atoms/primary-button";
 import SecondaryButton from "../atoms/secondary-button";
 
-type VerifyCardProps = PropsWithChildren & {
+export type VerifyCardProps = PropsWithChildren & {
   sx?: CSSProperties;
   title?: string;
   title_v2?: ContentMetadata;
@@ -39,6 +39,7 @@ type VerifyCardProps = PropsWithChildren & {
   disabled?: boolean;
   hideStartButton?: boolean;
   overrideConfirmBtnLabel?: string;
+  startButtonLabel?: string;
   timerLength?: number;
 };
 
@@ -64,7 +65,7 @@ const VerifyCard = (props: VerifyCardProps) => {
   }, [props.hideStartButton]);
 
   const onStartBtnClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     setIsStarted(true);
     props.onStartBtnClicked?.(e);
@@ -103,7 +104,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                           content
                             ?.replace(
                               "{a-style}",
-                              "display: block; text-align: center;"
+                              "display: block; text-align: center;",
                             )
                             .replace("{h6-style}", "text-align: center;") ?? "",
                       }}
@@ -319,7 +320,7 @@ const VerifyCard = (props: VerifyCardProps) => {
                 size={"medium"}
                 onClick={onStartBtnClick}
               >
-                시작
+                {props.startButtonLabel ?? '시작'}
               </SecondaryButton>
             )}
             <div style={{ position: "relative" }}>

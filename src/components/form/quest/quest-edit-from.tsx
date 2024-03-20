@@ -2054,10 +2054,11 @@ const VerifyQuiz = (props: {
           .trim() ?? "",
       );
 
-      const context = editedQuest.questPolicy
-        ?.context as VerifyQuizQuestContext;
+      const context = editedQuest.questPolicy?.context as
+        | VerifyQuizQuestContext
+        | undefined;
 
-      const quizList: QuizContent[] = context.quizList ?? [];
+      const quizList: QuizContent[] = context?.quizList ?? [];
 
       const _titles = [];
       const _optionsSet: [string[]] = [[]];

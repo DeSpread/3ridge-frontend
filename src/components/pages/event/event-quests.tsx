@@ -18,6 +18,8 @@ import { Quest, Ticket, User, VerifyOnChainContext } from "../../../types";
 import EditRemoveButton from "../../atomic/atoms/edit-remove-button";
 import VerifyCard from "../../atomic/molecules/verify-card";
 
+import QuestCard from "@/components/quest/QuestCard";
+
 const EventQuests = (
   props: {
     ticketData?: Ticket;
@@ -121,63 +123,90 @@ const EventQuests = (
 
           return (
             <div style={{ position: "relative" }} key={index + 1}>
-              <VerifyCard
-                key={index + 1}
-                sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
-                index={index + 1}
-                title={quest.title}
-                title_v2={quest.title_v2}
-                description={quest.description}
-                disabled={
-                  (userData?._id ? false : true) ||
-                  isExceededTicketParticipants() ||
-                  !isStarted() ||
-                  isExpired()
-                }
-                verified={verifiedList[index]}
-                overrideConfirmBtnLabel={getConfirmBtnLabel(quest)}
-                hideStartButton={
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.Verify_3RidgePoint ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyAptosBridgeToAptos ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyAptosHasNft ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyAptosExistTx ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyEmail ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyHasEmail ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyHasWalletAddress ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyHasTwitter ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyHasTelegram ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyHasDiscord ||
-                  quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyAgreement ||
-                  (quest.questPolicy?.questPolicy ===
-                    QuestPolicyType.VerifyOnChain &&
-                    (quest.questPolicy?.context as VerifyOnChainContext).url ===
-                      "")
-                }
-                onVerifyBtnClicked={async (e) => {
-                  onVerifyBtnClicked?.(e, quest, index);
-                }}
-                onStartBtnClicked={async (e) => {
-                  onStartBtnClicked?.(e, quest, index);
-                }}
-                autoVerified={autoVerified}
-                timerLength={
-                  quest.questPolicy?.questPolicy ===
-                  QuestPolicyType.VerifyOnChain
-                    ? 10
-                    : 5
-                }
-              ></VerifyCard>
+              {quest.questPolicy?.questPolicy ===
+              QuestPolicyType.DiscordGuildJoin ? (
+                <QuestCard
+                  quest={quest}
+                  sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
+                  index={index + 1}
+                  title={quest.title}
+                  title_v2={quest.title_v2}
+                  description={quest.description}
+                  disabled={
+                    (userData?._id ? false : true) ||
+                    isExceededTicketParticipants() ||
+                    !isStarted() ||
+                    isExpired()
+                  }
+                  verified={verifiedList[index]}
+                  onVerifyBtnClicked={async (e) => {
+                    onVerifyBtnClicked?.(e, quest, index);
+                  }}
+                  onStartBtnClicked={async (e) => {
+                    onStartBtnClicked?.(e, quest, index);
+                  }}
+                  autoVerified={autoVerified}
+                  timerLength={5}
+                />
+              ) : (
+                <VerifyCard
+                  key={index + 1}
+                  sx={{ width: mdUp ? 800 : smUp ? 600 : 300 }}
+                  index={index + 1}
+                  title={quest.title}
+                  title_v2={quest.title_v2}
+                  description={quest.description}
+                  disabled={
+                    (userData?._id ? false : true) ||
+                    isExceededTicketParticipants() ||
+                    !isStarted() ||
+                    isExpired()
+                  }
+                  verified={verifiedList[index]}
+                  overrideConfirmBtnLabel={getConfirmBtnLabel(quest)}
+                  hideStartButton={
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.Verify_3RidgePoint ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyAptosBridgeToAptos ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyAptosHasNft ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyAptosExistTx ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyEmail ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyHasEmail ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyHasWalletAddress ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyHasTwitter ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyHasTelegram ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyHasDiscord ||
+                    quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyAgreement ||
+                    (quest.questPolicy?.questPolicy ===
+                      QuestPolicyType.VerifyOnChain &&
+                      (quest.questPolicy?.context as VerifyOnChainContext)
+                        .url === "")
+                  }
+                  onVerifyBtnClicked={async (e) => {
+                    onVerifyBtnClicked?.(e, quest, index);
+                  }}
+                  onStartBtnClicked={async (e) => {
+                    onStartBtnClicked?.(e, quest, index);
+                  }}
+                  autoVerified={autoVerified}
+                  timerLength={
+                    quest.questPolicy?.questPolicy ===
+                    QuestPolicyType.VerifyOnChain
+                      ? 10
+                      : 5
+                  }
+                ></VerifyCard>
+              )}
               {/*--- FOR EDIT ---*/}
               {onEditBtnClicked && onDeleteBtnClicked && (
                 <>
