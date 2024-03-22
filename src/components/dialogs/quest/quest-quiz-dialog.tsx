@@ -22,6 +22,7 @@ import {
 import SecondaryButton from "../../atomic/atoms/secondary-button";
 import QuestQuizForm from "../../form/quest/quest-quiz-form";
 
+import { MarkDownRenderer } from "@/components/atomic/atoms/content-meta-data-render-component";
 
 type QuestQuizDialogProps = DialogProps & {
   onCloseBtnClicked?: MouseEventHandler;
@@ -37,7 +38,7 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
   const theme = useTheme();
 
   const onNextQuestionButtonClicked = (
-    e: React.MouseEvent<HTMLButtonElement>
+    e: React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
     if (questionIndex + 1 < (props.context?.quizList?.length ?? 0)) {
@@ -109,10 +110,10 @@ const QuestQuizDialog = (props: QuestQuizDialogProps) => {
               >
                 {props.context?.quizList &&
                 props.context?.quizList?.length > 0 ? (
-                  <Box sx={{ marginTop: 3 }}>
-                    <Typography variant={"body1"}>
-                      {props.context?.quizList[questionIndex].title}
-                    </Typography>
+                  <Box sx={{ marginTop: 3 }} className="[&_img]:w-full">
+                    <MarkDownRenderer
+                      content={props.context?.quizList[questionIndex].title}
+                    />
                   </Box>
                 ) : (
                   <></>

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
@@ -34,7 +35,9 @@ export default function Providers({ children }: PropsWithChildren) {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <RecoilRoot>
                     <UserProvider>
-                      <LoginProvider>{children}</LoginProvider>
+                      <SessionProvider>
+                        <LoginProvider>{children}</LoginProvider>
+                      </SessionProvider>
                     </UserProvider>
                   </RecoilRoot>
                 </LocalizationProvider>

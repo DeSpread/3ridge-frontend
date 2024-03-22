@@ -12,6 +12,7 @@ import { useTheme } from "@mui/material/styles";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useSession, signIn } from "next-auth/react";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import { useGetSet, useMountedState } from "react-use";
 import { useSetRecoilState } from "recoil";
@@ -168,6 +169,7 @@ const Event = (props: AppProps) => {
   const [lazyFire, setLazyFire] = React.useState(false);
   const setBackDirectionPath = useSetRecoilState(backDirectionPathState);
   const { asyncUploadImage } = useSimpleStorage();
+  const { data: session } = useSession();
 
   useEffect(() => {
     if (router.isReady && router.query.devProvider === "shortRouter") {
@@ -1018,6 +1020,14 @@ const Event = (props: AppProps) => {
           updateVerifyState(index);
         }
         myEvent.params.callback("success");
+      } else if (
+        quest.questPolicy?.questPolicy === QuestPolicyType.DiscordGuildJoin
+      ) {
+        if (session && session.provider === "discord") {
+          updateVerifyState(index);
+        } else {
+          signIn("discord");
+        }
       }
     } catch (e) {
       const errorMessage = getErrorMessage(e);
@@ -1083,31 +1093,24 @@ const Event = (props: AppProps) => {
             spacing={8}
             sx={{ background: "", padding: mdUp ? 0 : 4 }}
           >
-            <Grid
-              container
-              spacing={4}
-              direction={"row"}
-              justifyContent={mdUp ? "flex-start" : "center"}
-              sx={{ background: "", marginBottom: 2 }}
-            >
-              <Grid item>
-                <Box
-                  sx={{
-                    height: 128,
-                    width: 128,
-                    background: "",
-                  }}
-                >
-                  <EventImage imageUrl={ticketData?.imageUrl}></EventImage>
-                </Box>
-              </Grid>
-              <Grid item>
-                <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  <EventTitle title={ticketData?.title}></EventTitle>
-                  <EventDateRange ticketData={ticketData}></EventDateRange>
-                </Stack>
-              </Grid>
-            </Grid>
+            <div className="mb-1 flex flex-col items-center gap-4 text-center md:flex-row md:items-start md:text-left">
+              <Box
+                sx={{
+                  height: 128,
+                  width: 128,
+                  background: "",
+                }}
+              >
+                <EventImage imageUrl={ticketData?.imageUrl}></EventImage>
+              </Box>
+              <Stack spacing={1} sx={{ marginBottom: 2 }}>
+                <EventTitle title={ticketData?.title}></EventTitle>
+                <EventDateRange
+                  ticketData={ticketData}
+                  className="justify-center md:justify-start"
+                ></EventDateRange>
+              </Stack>
+            </div>
             {isExceededTicketParticipants() && (
               <Box sx={{}}>
                 <>

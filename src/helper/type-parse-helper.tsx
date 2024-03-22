@@ -18,6 +18,7 @@ import {
   VerifyOnChainContext,
   VerifyTwitterLikingAndRetweetQuestContext,
   VerifyScreenShotQuestContext,
+  DiscordGuildJoinContext,
 } from "../types";
 
 class TypeParseHelper {
@@ -88,6 +89,8 @@ class TypeParseHelper {
         return contextJson as VerifyTwitterLikingAndRetweetQuestContext;
       } else if (questPolicyType === QuestPolicyType.VerifyScreenshot) {
         return contextJson as VerifyScreenShotQuestContext;
+      } else if (questPolicyType === QuestPolicyType.DiscordGuildJoin) {
+        return contextJson as DiscordGuildJoinContext;
       }
     } catch (e) {
       console.log(context, questPolicyType);

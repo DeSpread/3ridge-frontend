@@ -242,6 +242,7 @@ export type Quest = {
       | VerifyHasTelegramQuestContext
       | VerifyVisitWebsiteQuestContext
       | VerifyScreenShotQuestContext
+      | DiscordGuildJoinContext
       | undefined;
     questPolicy?: QuestPolicyType;
   };
@@ -301,6 +302,11 @@ export type VerifyVisitWebsiteQuestContext = {
 
 export type VerifyScreenShotQuestContext = {
   description: ContentMetadata;
+};
+
+export type DiscordGuildJoinContext = {
+  guildId: string;
+  guildInviteUrl: string;
 };
 
 export type VerifyHasWalletAddressQuestContext = {
