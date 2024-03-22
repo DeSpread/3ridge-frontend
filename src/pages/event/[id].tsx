@@ -1093,31 +1093,24 @@ const Event = (props: AppProps) => {
             spacing={8}
             sx={{ background: "", padding: mdUp ? 0 : 4 }}
           >
-            <Grid
-              container
-              spacing={4}
-              direction={"row"}
-              justifyContent={mdUp ? "flex-start" : "center"}
-              sx={{ background: "", marginBottom: 2 }}
-            >
-              <Grid item>
-                <Box
-                  sx={{
-                    height: 128,
-                    width: 128,
-                    background: "",
-                  }}
-                >
-                  <EventImage imageUrl={ticketData?.imageUrl}></EventImage>
-                </Box>
-              </Grid>
-              <Grid item>
-                <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  <EventTitle title={ticketData?.title}></EventTitle>
-                  <EventDateRange ticketData={ticketData}></EventDateRange>
-                </Stack>
-              </Grid>
-            </Grid>
+            <div className="mb-1 flex flex-col items-center gap-4 text-center md:flex-row md:items-start md:text-left">
+              <Box
+                sx={{
+                  height: 128,
+                  width: 128,
+                  background: "",
+                }}
+              >
+                <EventImage imageUrl={ticketData?.imageUrl}></EventImage>
+              </Box>
+              <Stack spacing={1} sx={{ marginBottom: 2 }}>
+                <EventTitle title={ticketData?.title}></EventTitle>
+                <EventDateRange
+                  ticketData={ticketData}
+                  className="justify-center md:justify-start"
+                ></EventDateRange>
+              </Stack>
+            </div>
             {isExceededTicketParticipants() && (
               <Box sx={{}}>
                 <>
