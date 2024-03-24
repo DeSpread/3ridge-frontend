@@ -311,50 +311,39 @@ export default function Client(props: ClientProps) {
             spacing={8}
             sx={{ background: "", padding: mdUp ? 0 : 4 }}
           >
-            <Grid
-              container
-              spacing={4}
-              direction={"row"}
-              justifyContent={mdUp ? "flex-start" : "center"}
-              sx={{ background: "", marginBottom: 2 }}
-            >
-              <Grid item>
-                <Box
-                  sx={{
-                    height: 128,
-                    width: 128,
-                    background: "",
+            <div className="mb-1 flex flex-col items-center gap-4 text-center md:flex-row md:items-start md:text-left">
+              <Box
+                sx={{
+                  height: 128,
+                  width: 128,
+                  background: "",
+                }}
+              >
+                <_EventImage imageUrl={ticketData?.imageUrl}>
+                  <InputButton
+                    sx={{ top: -2, left: -2, width: 126, height: 126 }}
+                    onChanged={async (file: File) => {
+                      await asyncUpdateImageUrlByFile(file);
+                    }}
+                  ></InputButton>
+                </_EventImage>
+              </Box>
+              <Stack spacing={1} sx={{ marginBottom: 2 }}>
+                <_EventTitle
+                  title={ticketData?.title}
+                  onClickForEdit={async (e) => {
+                    showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
                   }}
-                >
-                  <_EventImage imageUrl={ticketData?.imageUrl}>
-                    <InputButton
-                      sx={{ top: -2, left: -2, width: 126, height: 126 }}
-                      onChanged={async (file: File) => {
-                        await asyncUpdateImageUrlByFile(file);
-                      }}
-                    ></InputButton>
-                  </_EventImage>
-                </Box>
-              </Grid>
-              <Grid item>
-                <Stack spacing={1} sx={{ marginBottom: 2 }}>
-                  <_EventTitle
-                    title={ticketData?.title}
-                    onClickForEdit={async (e) => {
-                      showTextEditDialog(EVENT_COMPONENT_TARGET.TITLE);
-                    }}
-                  ></_EventTitle>
-                  <_EventDateRange
-                    ticketData={ticketData}
-                    onClickForEdit={async (e) => {
-                      showDateEditDialog(
-                        EVENT_COMPONENT_TARGET.DATE_RANGE_TIME,
-                      );
-                    }}
-                  ></_EventDateRange>
-                </Stack>
-              </Grid>
-            </Grid>
+                ></_EventTitle>
+                <_EventDateRange
+                  className="justify-center md:justify-start"
+                  ticketData={ticketData}
+                  onClickForEdit={async (e) => {
+                    showDateEditDialog(EVENT_COMPONENT_TARGET.DATE_RANGE_TIME);
+                  }}
+                ></_EventDateRange>
+              </Stack>
+            </div>
 
             {/* isExceededTicketParticipants */}
             {/* hasMetamask */}
