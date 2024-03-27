@@ -5,6 +5,7 @@ import { signIn, useSession } from "next-auth/react";
 import VerifyCard, { VerifyCardProps } from "../atomic/molecules/verify-card";
 
 import { gql } from "@/__generated__";
+import { useSignedUserQuery } from "@/hooks/signed-user-query-hook";
 import { useAlert } from "@/provider/alert/alert-provider";
 import { Quest } from "@/types";
 
@@ -28,12 +29,13 @@ interface QuestCardProps
 }
 
 const COMPLETE_DISCORD_GUILD_JOIN_QUEST = gql(`
-  mutation CompleteDiscordGuildJoinQuest($questId: String!, $discordAccessToken: String!) {
-    completeDiscordGuildJoinQuest(questId: $questId, discordAccessToken: $discordAccessToken)
+  mutation CompleteDiscordGuildJoinQuest($questId: String!, $discordAccessToken: String!, $userId: String!) {
+    completeDiscordGuildJoinQuest(questId: $questId, discordAccessToken: $discordAccessToken, userId: $userId)
   }
 `);
 
 export default function QuestCard(props: QuestCardProps) {
+  const { userData } = useSignedUserQuery();
   const [completeDiscordGuildJoinQuest] = useMutation(
     COMPLETE_DISCORD_GUILD_JOIN_QUEST,
   );
@@ -59,10 +61,18 @@ export default function QuestCard(props: QuestCardProps) {
       return;
     }
 
+    if (!userData._id) {
+      showErrorAlert({
+        content: "3ridge 계정 정보를 불러올 수 없습니다.",
+      });
+      return;
+    }
+
     const res = await completeDiscordGuildJoinQuest({
       variables: {
         discordAccessToken: session.data.accessToken,
         questId: props.quest._id,
+        userId: userData._id,
       },
     }).catch(() => {
       return { data: undefined };
