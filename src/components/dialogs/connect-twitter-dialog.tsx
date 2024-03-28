@@ -75,7 +75,7 @@ const ConnectTwitterDialog = (props: ConnectTwitterDialogProps) => {
                   sx={{ width: "100%" }}
                   value={twitterId}
                   onChange={(e) => {
-                    setTwitterId(e.target.value);
+                    setTwitterId(e.target.value.replaceAll("@", ""));
                   }}
                   inputProps={{
                     style: {
