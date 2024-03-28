@@ -69,6 +69,7 @@
     "marked": "^5.1.2",
     "mobile-detect": "^1.4.5",
     "next": "^13.4",
+    "next-auth": "^4.24.7",
     "next-language-detector": "^1.0.2",
     "petra-plugin-wallet-adapter": "^0.4.4",
     "pino-pretty": "^10.3.0",

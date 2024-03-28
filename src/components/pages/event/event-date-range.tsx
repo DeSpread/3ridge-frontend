@@ -7,10 +7,11 @@ import { Ticket } from "../../../types";
 import DateUtil from "../../../util/date-util";
 import StyledChip from "../../atomic/atoms/styled/styled-chip";
 
-
 import { RewardPolicyType } from "@/__generated__/graphql";
 
-const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {
+const EventDateRange = (
+  props: { ticketData?: Ticket; className?: string } & PropsWithChildren,
+) => {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
@@ -33,6 +34,7 @@ const EventDateRange = (props: { ticketData?: Ticket } & PropsWithChildren) => {
       alignItems={"left"}
       justifyContent={smUp ? "flex-start" : "center"}
       rowSpacing={1}
+      className={props.className}
     >
       {ticketData?.beginTime && !isEventStarted() && (
         <Grid item>

@@ -18,6 +18,7 @@ import { Quest } from "../../../types";
 import SecondaryButton from "../../atomic/atoms/secondary-button";
 import SimpleDialog, { SimpleDialogProps } from "../simple-dialog";
 
+import DiscordGuildJoinQuestEdit from "@/components/form/quest/DiscordGuildJoinQuestEdit";
 import {
   Verify3ridgePointEditForm,
   VerifyAgreement,
@@ -78,6 +79,8 @@ const TicketQuestUpsertEditDialog = (
         return "3ridge 포인트 보유하기";
       case QuestPolicyType.VerifyDiscord:
         return "디스코드 방문하기";
+      case QuestPolicyType.DiscordGuildJoin:
+        return "디스코드 서버 가입";
       case QuestPolicyType.VerifyEmail:
         return "이메일 연동 인증하기";
       case QuestPolicyType.VerifyHasWalletAddress:
@@ -192,6 +195,9 @@ const TicketQuestUpsertEditDialog = (
                   </MenuItem>
                   <MenuItem value={QuestPolicyType.VerifyAgreement}>
                     {getPolicyLabel(QuestPolicyType.VerifyAgreement)}
+                  </MenuItem>
+                  <MenuItem value={QuestPolicyType.DiscordGuildJoin}>
+                    {getPolicyLabel(QuestPolicyType.DiscordGuildJoin)}
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -322,6 +328,12 @@ const TicketQuestUpsertEditDialog = (
               editedQuest={editedQuest}
               onChange={onChange}
             ></VerifyAgreement>
+          )}
+          {questPolicyType === QuestPolicyType.DiscordGuildJoin && (
+            <DiscordGuildJoinQuestEdit
+              editedQuest={editedQuest}
+              onChange={onChange}
+            />
           )}
         </Box>
         <Stack

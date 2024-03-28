@@ -15,6 +15,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
+import { SessionProvider } from "next-auth/react";
 import { PetraWallet } from "petra-plugin-wallet-adapter";
 import React, { ReactElement, ReactNode, useEffect, useMemo } from "react";
 import { combineProviders } from "react-combine-providers";
@@ -67,7 +68,10 @@ declare global {
 }
 
 const App = (props: AppPropsWithLayout) => {
-  const { Component, pageProps } = props;
+  const {
+    Component,
+    pageProps: { session, ...pageProps },
+  } = props;
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>);
   const clientId = process.env["NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID"];
   const wallets = [new PetraWallet()];
@@ -146,13 +150,15 @@ const App = (props: AppPropsWithLayout) => {
                             plugins={wallets}
                             // autoConnect={true}
                           >
-                            <MobileContext.Provider value={{ isMobile }}>
-                              <MasterProvider>
-                                <ErrorBoundary>
-                                  {getLayout(<Component {...pageProps} />)}
-                                </ErrorBoundary>
-                              </MasterProvider>
-                            </MobileContext.Provider>
+                            <SessionProvider session={session}>
+                              <MobileContext.Provider value={{ isMobile }}>
+                                <MasterProvider>
+                                  <ErrorBoundary>
+                                    {getLayout(<Component {...pageProps} />)}
+                                  </ErrorBoundary>
+                                </MasterProvider>
+                              </MobileContext.Provider>
+                            </SessionProvider>
                           </AptosWalletAdapterProvider>
                         </UserProvider>
                       </WalletProvider>
