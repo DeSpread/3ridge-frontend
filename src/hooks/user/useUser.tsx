@@ -157,6 +157,9 @@ export function useUser(args?: {
           return {};
         }
 
+        if (user._id) {
+          amplitude.setUserId(user._id);
+        }
         return {
           _id: user?._id ?? undefined,
           email: user?.email ?? undefined,
@@ -268,6 +271,15 @@ export function useUser(args?: {
     });
   }
 
+  function loginByWallet(accessToken: string) {
+    amplitude.track({
+      event_type: "Login",
+      event_properties: { type: "wallet" },
+    });
+
+    handleChangeToken(accessToken);
+  }
+
   function logout() {
     client.resetStore().then(() => {
       handleChangeToken(undefined);
@@ -277,6 +289,7 @@ export function useUser(args?: {
   return {
     user: user,
     loginByEmail,
+    loginByWallet,
     logout,
   };
 }

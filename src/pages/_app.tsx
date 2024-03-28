@@ -148,7 +148,7 @@ const App = (props: AppPropsWithLayout) => {
                         <UserProvider>
                           <AptosWalletAdapterProvider
                             plugins={wallets}
-                            autoConnect={true}
+                            // autoConnect={true}
                           >
                             <SessionProvider session={session}>
                               <MobileContext.Provider value={{ isMobile }}>
